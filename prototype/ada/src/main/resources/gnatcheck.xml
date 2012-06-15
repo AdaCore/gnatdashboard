@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<rules>
+    <rule>
+        <key>Non_Tagged_Derived_Types</key>
+        <configkey>Non_Tagged_Derived_Types</configkey>
+        <name>Non tagged derived types.</name>
+        <description>
+            Flag all derived type declarations that do not have a record extension part.
+        </description>
+    </rule>
+    <rule>
+        <key>Outer_Loop_Exits</key>
+        <configkey>Outer_Loop_Exits</configkey>
+        <name>Outer loop exits</name>
+        <description>
+            Flag each exit statement containing a loop name that is not the name of the immediately enclosing loop statement.
+        </description>
+    </rule>
+    <rule>
+        <key>Overloaded_Operators</key>
+        <configkey>Overloaded_Operators</configkey>
+        <name>Overloaded operators</name>
+        <description>
+            Flag each function declaration that overloads an operator symbol. A function body is checked only if the body does not have a separate spec. Formal functions are also checked. For a renaming declaration, only renaming-as-declaration is checked.
+        </description>
+    </rule>
+    <rule>
+        <key>Slices</key>
+        <configkey>Slices</configkey>
+        <name>Slices</name>
+        <description>
+            Flag all uses of array slicing.
+        </description>
+    </rule>
+    <rule>
+        <key>Universal_Ranges</key>
+        <configkey>Universal_Ranges</configkey>
+        <name>Universal ranges</name>
+        <description>
+            Flag discrete ranges that are a part of an index constraint, constrained array definition, or for-loop parameter specification, and whose bounds are both of type universal_integer. Ranges that have at least one bound of a specific type (such as 1 .. N, where N is a variable or an expression of non-universal type) are not flagged.
+        </description>
+    </rule>
+    <rule>
+        <key>Direct_Calls_To_Primitives</key>
+        <configkey>Direct_Calls_To_Primitives</configkey>
+        <name>Direct calls to primitives</name>
+        <description>
+            Flag any non-dispatching call to a dispatching primitive operation, except for :
+            a call to the corresponding primitive of the type's immediate ancestor. (This occurs in the common idiom where a primitive subprogram for a tagged type directly calls the same primitive subprogram of the type's immediate ancestor.)
+            a call to a primitive of an untagged private type, even though the full type may be tagged, when the call is made at a place where the view of the type is untagged.
+        </description>
+    </rule>
+     <rule>
+        <key>Too_Many_Parents</key>
+        <configkey>Too_Many_Parents</configkey>
+        <name>Too many parents</name>
+        <description>
+            Flag any tagged type declaration, interface type declaration, single task declaration or single protected declaration that has more than `N' parents, where `N' is a parameter of the rule. A parent here is either a (sub)type denoted by the subtype mark from the parent_subtype_indication (in case of a derived type declaration), or any of the progenitors from the interface list (if any).
+        </description>
+    </rule>
+     <rule>
+        <key>Visible_Components</key>
+        <configkey>Visible_Components</configkey>
+        <name>Visible components</name>
+        <description>
+            Flag all the type declarations located in the visible part of a library package or a library generic package that can declare a visible component. A visible component can be declared in a record definition which appears on its own or as part of a record extension. The record definition is flagged even if it contains no components.
+        </description>
+    </rule>
+     <rule>
+        <key>Forbidden_Attributes</key>
+        <configkey>Forbidden_Attributes</configkey>
+        <name>Forbidden attributes</name>
+        <description>
+            Flag each use of the specified attributes. The attributes to be detected are named in the rule's parameters.
+        </description>
+    </rule>
+</rules>
+

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profile>
+    <name>Default Ada Profile</name>
+    <language>ada</language>
+    <rules>
+    <!-- ##################################################  -->
+    <!-- ################# GnatCheck rules #################  -->
+    <!-- ##################################################  -->
+        <rule>
+            <repositoryKey>gnatcheck</repositoryKey>
+            <key>Non_Tagged_Derived_Types</key>
+            <priority>MINOR</priority>
+        </rule>
+        <rule>
+            <repositoryKey>gnatcheck</repositoryKey>
+            <key>Outer_Loop_Exits</key>
+            <priority>MAJOR</priority>
+        </rule>
+        <rule>
+            <repositoryKey>gnatcheck</repositoryKey>
+            <key>Overloaded_Operators</key>
+            <priority>MAJOR</priority>
+        </rule>
+        <rule>
+            <repositoryKey>gnatcheck</repositoryKey>
+            <key>Slices</key>
+            <priority>MINOR</priority>
+        </rule>
+        <rule>
+            <repositoryKey>gnatcheck</repositoryKey>
+            <key>Universal_Ranges</key>
+            <priority>CRITICAL</priority>
+        </rule>
+        <rule>
+            <repositoryKey>gnatcheck</repositoryKey>
+            <key>Direct_Calls_To_Primitives</key>
+            <priority>INFO</priority>
+        </rule>
+          <rule>
+            <repositoryKey>gnatcheck</repositoryKey>
+            <key>Too_Many_Parents</key>
+            <priority>INFO</priority>
+        </rule>
+          <rule>
+            <repositoryKey>gnatcheck</repositoryKey>
+            <key>Visible_Components</key>
+            <priority>BLOCKER</priority>
+        </rule>
+          <rule>
+            <repositoryKey>gnatcheck</repositoryKey>
+            <key>Forbidden_Attributes</key>
+            <priority>MINOR</priority>
+        </rule>
+    </rules>
+</profile>
