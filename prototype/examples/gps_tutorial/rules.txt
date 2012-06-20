@@ -1,0 +1,4 @@
++RFloat_Equality_Checks
++RDefault_Parameters
++RAnonymous_Subtypes
++RMetrics_Cyclomatic_Complexity:3
