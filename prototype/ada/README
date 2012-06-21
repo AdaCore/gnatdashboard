@@ -1,0 +1,20 @@
+################################################################
+###                          WHAT IS                         ###
+################################################################
+Ada plugin prototype:
+
+  - process dummy report with violating rules
+  - display the violations on the sonar dashboard
+
+
+################################################################
+###                          USAGE                           ###
+################################################################
+
+How to install the plugin:
+
+  - Make shure you have a sonar installed on your computer
+  - Set values in the makefile according to your environmemt 
+    (PLATEFORM value corresponds to the bin/{plateform}/ directory 
+    in sonar home directory)
+  - run make install
