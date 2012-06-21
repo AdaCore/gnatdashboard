@@ -17,4 +17,4 @@ How to install the plugin:
   - Set values in the makefile according to your environmemt 
     (PLATEFORM value corresponds to the bin/{plateform}/ directory 
     in sonar home directory)
-  - run make install
+  - run make
