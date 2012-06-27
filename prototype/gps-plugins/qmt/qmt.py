@@ -30,17 +30,17 @@ import GPS
 ## ProjectManager #############################################################
 ##
 
-class ProjectManager (object):
+class ProjectManager(object):
   """Implements the flyweight pattern to handle only one instance of each
   project during the script execution time.
   """
 
-  def __init__ (self):
+  def __init__(self):
     """Initializes the Project Manager."""
     self.__projects = {}
 
 
-  def get (self, gps_project):
+  def get(self, gps_project):
     """Returns a unique reference to the Project class associated with the
     given GPS.Project.
     """
@@ -54,7 +54,7 @@ class ProjectManager (object):
 ## Project ####################################################################
 ##
 
-class Project (object):
+class Project(object):
   """References a project as delcared in the associated project file. The class
   is given the project object as input to its contructor, and recursively build
   the project tree from it.
@@ -64,33 +64,33 @@ class Project (object):
 
   _manager = ProjectManager()
 
-  def __init__ (self, gps_project):
+  def __init__(self, gps_project):
     """Initializes the class."""
     self.__gps_project = gps_project
     self.__dependencies = [self._manager.get(p)
                            for p in self.__gps_project.dependencies()]
 
 
-  def name (self):
+  def name(self):
     """Returns the project's name."""
     return self.__gps_project.name()
 
 
-  def path (self):
+  def path(self):
     """Returns the project file path on the filesystem as passed to the class
     constructor.
     """
     return self.__gps_project.file().name()
 
 
-  def sources (self):
+  def sources(self):
     """Returns a list of GPS.File object for each source related to the
     project.
     """
     return self.__gps_project.sources()
 
 
-  def get_flat_dependency_list (self, dependencies=[]):
+  def get_flat_dependency_list(self, dependencies=[]):
     """Returns a flat list of all dependencies for this project.
     The list returned is duplicate-free.
     """
@@ -108,25 +108,25 @@ class Project (object):
 ## RootProject ################################################################
 ##
 
-class RootProject (Project):
+class RootProject(Project):
 
-  def __init__ (self):
+  def __init__(self):
     """Initializes the class. Calls the super class constructor with the root
     project object as argument.
     """
     super(RootProject, self).__init__(GPS.Project.root())
 
 
-  def dump_source_list (self, stream):
+  def dump_source_list(self, stream):
     """Dumps the source list to STREAM.
 
     ??? This method should be re-written to dump that list in the correct format.
     """
 
     for p in self.get_flat_dependency_list():
-      print >>stream, '%s (%i files)' % (p.name(), len(p.sources()))
+      stream.write('%s (%i files)%s' % (p.name(), len(p.sources()), os.linesep))
       for f in p.sources():
-        print >>stream, ' -- %s' % f.name()
+        stream.write(' -- %s%s' % (f.name(), os.linesep))
 
 
 ## Helpers ####################################################################
@@ -135,7 +135,7 @@ class RootProject (Project):
 def __init_module():
   """Initializes the module.
 
-  For now, it simply restores sys.stdout and sys.stderr to there initial value
+  For now, it simply restores sys.stdout and sys.stderr to their initial value
   since the GPS module overrides them.
   """
 
@@ -146,7 +146,7 @@ def __init_module():
 ## Module Entry Point #########################################################
 ##
 
-def __qmt_entry_point (hook):
+def __qmt_entry_point(hook):
   """Entry point for the script. This function is hooked to the 'gps_started'
   event of the GPS API and thus is spawned when GPS starts.
 
@@ -165,8 +165,9 @@ def __qmt_entry_point (hook):
     project.dump_source_list(sys.stdout)
 
   except Exception as e:
-    print >>sys.stderr, 'Exception raised: %s' % str(e)
+    sys.stderr.write('Exception raised: %s%s' % (str(e), os.linesep))
 
+    # Print the stack trace.
     exc_type, exc_value, exc_traceback = sys.exc_info()
     traceback.print_exception(exc_type, exc_value, exc_traceback,
                               file=sys.stderr)
