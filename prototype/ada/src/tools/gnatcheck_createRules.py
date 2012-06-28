@@ -85,7 +85,6 @@ def exportRules():
     # Write in the file
     prettyrules = prettify(rules)
     with open('../main/resources/' + REPOSITORY_KEY  + '.xml', 'w+') as rulerepo:
-        #rulerepo.write(XML_HEADER)
         rulerepo.writelines(prettyrules)
 
 
@@ -115,7 +114,6 @@ def exportProfile():
     # Write in the file
     prettyprofile = prettify(profile)
     with open ('../main/resources/default-profile.xml', 'w+') as defprofile:
-        #defprofile.write(XML_HEADER)
         defprofile.writelines(prettyprofile)
 
 
