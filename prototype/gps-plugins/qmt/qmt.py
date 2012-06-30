@@ -123,7 +123,10 @@ class RootProject(Project):
     ??? This method should be re-written to dump that list in the correct format.
     """
 
-    for p in self.get_flat_dependency_list():
+    projects = [self]
+    projects.extend(self.get_flat_dependency_list())
+
+    for p in projects:
       stream.write('%s (%i files)%s' % (p.name(), len(p.sources()), os.linesep))
       for f in p.sources():
         stream.write(' -- %s%s' % (f.name(), os.linesep))
