@@ -83,10 +83,10 @@ def __get_fullpath(json_data, basename):
   Returns 0 on success (the corresponding full path was found), 1 otherwise.
   """
 
-  for project, sources in json_data.items():
-    for source in sources:
-      if basename == os.path.basename(source):
-        sys.stdout.write(source)
+  for project, source_dirs in json_data.items():
+    for source_dir, sources in source_dirs.items():
+      if basename in sources:
+        sys.stdout.write(source_dir)
         sys.stdout.write(os.linesep)
         return 0
 

@@ -105,6 +105,28 @@ class Project(object):
     return dependencies
 
 
+  def __repr__ (self):
+    """Returns the project representation string following this format:
+
+        {
+          "Source_Dir_1": ["source.ads", "source.adb"],
+          "Source_Dir_2": ["foobar.ads", "foobar.adb"]
+        }
+    """
+
+    source_dirs = {}
+
+    for source_dir in self.__gps_project.source_dirs():
+      source_dirs[source_dir[:-1]] = []
+
+    for source in self.__gps_project.sources():
+      (source_dir, filename) = os.path.split(source.name())
+      assert source_dir in source_dirs.keys()
+      source_dirs[source_dir].append(filename)
+
+    return repr(source_dirs)
+
+
 ## RootProject ################################################################
 ##
 
@@ -122,32 +144,25 @@ class RootProject(Project):
     The output is in JSON format:
 
         {
-          Project_1: ["/full/path/to/source.ads", "/full/path/to/source.adb"],
-          Project_2: ["/full/path/to/foo.ads"],
-          ...
+          "Project_1": {
+            "Source_Dir_1": ["source.ads", "source.adb"],
+            "Source_Dir_2": ["foobar.ads", "foobar.adb"],
+          },
+          "Project_2": {
+            ...
+          }
         }
     """
 
     projects = [self]
     projects.extend(self.get_flat_dependency_list())
 
-    stream.write('{')
+    output = {}
 
-    for (project_index, project) in enumerate(projects):
-      if project_index:
-        stream.write(',')
+    for project in projects:
+      output[project.name()] = project
 
-      stream.write('"%s":[' % project.name())
-
-      for (source_index, source) in enumerate(project.sources()):
-        if source_index:
-          stream.write(',')
-        stream.write('"%s"' % source.name())
-
-      stream.write(']')
-
-    stream.write('}')
-    stream.write(os.linesep)
+    stream.write('%s%s' % (repr(output).replace("'", '"'), os.linesep))
 
 
 ## Helpers ####################################################################
