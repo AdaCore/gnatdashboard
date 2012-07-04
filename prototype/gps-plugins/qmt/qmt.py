@@ -119,17 +119,35 @@ class RootProject(Project):
 
   def dump_source_list(self, stream):
     """Dumps the source list to STREAM.
+    The output is in JSON format:
 
-    ??? This method should be re-written to dump that list in the correct format.
+        {
+          Project_1: ["/full/path/to/source.ads", "/full/path/to/source.adb"],
+          Project_2: ["/full/path/to/foo.ads"],
+          ...
+        }
     """
 
     projects = [self]
     projects.extend(self.get_flat_dependency_list())
 
-    for p in projects:
-      stream.write('%s (%i files)%s' % (p.name(), len(p.sources()), os.linesep))
-      for f in p.sources():
-        stream.write(' -- %s%s' % (f.name(), os.linesep))
+    stream.write('{')
+
+    for (project_index, project) in enumerate(projects):
+      if project_index:
+        stream.write(',')
+
+      stream.write('"%s":[' % project.name())
+
+      for (source_index, source) in enumerate(project.sources()):
+        if source_index:
+          stream.write(',')
+        stream.write('"%s"' % source.name())
+
+      stream.write(']')
+
+    stream.write('}')
+    stream.write(os.linesep)
 
 
 ## Helpers ####################################################################
