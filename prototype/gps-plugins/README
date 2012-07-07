@@ -1,0 +1,16 @@
+################################################################                                                                                        
+###                          WHAT IS                         ###
+################################################################
+
+GnqtCheck report generator:
+
+    create_gc_report.py: Python script that generqte report 
+                         from GnatCheck output using qmt.py
+
+
+################################################################
+###                          USAGE                           ###
+################################################################
+
+For more information about the script usage execute the script 
+with -h option. Details in this README will come soon.
