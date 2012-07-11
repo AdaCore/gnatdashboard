@@ -1,6 +1,7 @@
 /**
  *
  * Sonar Ada Plugin
+ * Copyright AdaCore, 2012
  */
 package org.sonar.plugins.ada.utils;
 
@@ -19,10 +20,6 @@ import org.sonar.api.rules.Violation;
 import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.ada.Ada;
 
-/**
- *
- * @author martin
- */
 public abstract class AdaSensor implements Sensor {
 
     private RuleFinder ruleFinder;

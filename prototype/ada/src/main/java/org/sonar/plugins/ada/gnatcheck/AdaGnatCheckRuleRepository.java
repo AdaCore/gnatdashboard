@@ -1,15 +1,12 @@
 /**
  *
  * Sonar Ada Plugin
+ * Copyright AdaCore, 2012
  */
 package org.sonar.plugins.ada.gnatcheck;
 
 import org.sonar.plugins.ada.utils.AdaAbstractRuleRepository;
 
-/**
- *
- * @author martin
- */
 public class AdaGnatCheckRuleRepository extends AdaAbstractRuleRepository {
 
     static final String KEY = "gnatcheck";

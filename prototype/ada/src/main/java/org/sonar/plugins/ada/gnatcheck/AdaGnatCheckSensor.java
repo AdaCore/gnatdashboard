@@ -1,6 +1,7 @@
 /**
  *
  * Sonar Ada Plugin
+ * Copyright AdaCore, 2012
  */
 package org.sonar.plugins.ada.gnatcheck;
 
@@ -18,10 +19,6 @@ import org.sonar.api.utils.StaxParser;
 import org.sonar.plugins.ada.utils.AdaSensor;
 import org.sonar.plugins.ada.utils.AdaUtils;
 
-/**
- *
- * @author martin
- */
 public class AdaGnatCheckSensor extends AdaSensor {
 
     public static final String REPORT_PATH_KEY = "sonar.ada.gnatcheck.reportPath";

@@ -1,6 +1,7 @@
 /**
  *
  * Sonar Ada Plugin
+ * Copyright AdaCore, 2012
  */
 package org.sonar.plugins.ada;
 
@@ -12,10 +13,6 @@ import net.sourceforge.pmd.cpd.Tokenizer;
 import org.sonar.api.batch.AbstractCpdMapping;
 import org.sonar.api.resources.Language;
 
-/**
- *
- * @author martin
- */
 public class AdaCpdMapping extends AbstractCpdMapping {
 
     private Ada lang;

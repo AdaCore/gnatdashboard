@@ -1,6 +1,7 @@
 /**
  *
  * Sonar Ada Plugin
+ * Copyright AdaCore, 2012
  */
 package org.sonar.plugins.ada;
 
@@ -9,10 +10,6 @@ import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.utils.ValidationMessages;
 
-/**
- *
- * @author martin
- */
 public class AdaDefaultProfile extends ProfileDefinition {
 
     private XMLProfileParser xmlProfileParser;

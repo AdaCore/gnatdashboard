@@ -14,8 +14,8 @@ Ada plugin prototype:
 
 How to install the plugin:
 
-  - make shure you have a sonar installed on your computer
+  - make sure you have a sonar installed on your computer
   - set values in the makefile according to your environmemt 
-    (PLATEFORM value corresponds to the bin/{plateform}/ directory 
+    (PLATFORM value corresponds to the bin/{plateform}/ directory 
     in sonar home directory)
   - run make 

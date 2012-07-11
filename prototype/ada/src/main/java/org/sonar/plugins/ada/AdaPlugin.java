@@ -1,6 +1,7 @@
 /**
  *
  * Sonar Ada Plugin
+ * Copyright AdaCore, 2012
  */
 package org.sonar.plugins.ada;
 
@@ -13,10 +14,6 @@ import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckRuleRepository;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckSensor;
 
-/**
- *
- * @author martin
- */
 @Properties({
     @Property(key = "sonar.ada.gnatmetrics.reportPath",
         name = "Path to gnatmetrics report",
@@ -30,7 +27,7 @@ import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckSensor;
         project = true),
     @Property(
       key = AdaPlugin.FILE_SUFFIXES_KEY,
-      defaultValue = Ada.DEFAULT_FILE_SUFFIXES,
+      defaultValue = "adb,ads",
       name = "File suffixes",
       description = "Comma-separated list of suffixes for files to analyze. Leave empty to use the default.",
       global = true,

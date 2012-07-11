@@ -1,6 +1,7 @@
 /**
  *
  * Sonar Ada Plugin
+ * Copyright AdaCore, 2012
  */
 package org.sonar.plugins.ada;
 
@@ -8,10 +9,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.resources.AbstractLanguage;
 
-/**
- *
- * @author martin
- */
 public class Ada extends AbstractLanguage {
 
     public static final Ada INSTANCE = new Ada();

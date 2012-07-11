@@ -1,6 +1,7 @@
 /**
  *
  * Sonar Ada Plugin
+ * Copyright AdaCore, 2012
  */
 package org.sonar.plugins.ada.utils;
 
@@ -11,10 +12,6 @@ import org.sonar.api.rules.RuleRepository;
 import org.sonar.api.rules.XMLRuleParser;
 import org.sonar.plugins.ada.Ada;
 
-/**
- *
- * @author martin
- */
 public abstract class AdaAbstractRuleRepository extends RuleRepository {
 
     protected abstract String fileName();

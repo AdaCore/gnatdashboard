@@ -1,15 +1,13 @@
 /**
  *
  * Sonar Ada Plugin
+ * Copyright AdaCore, 2012
  */
 package org.sonar.plugins.ada.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Utility class holding various, well, utilities
- */
 public final class AdaUtils {
   
   private AdaUtils() {
