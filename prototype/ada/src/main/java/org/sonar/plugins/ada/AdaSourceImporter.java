@@ -1,10 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * Sonar Ada Plugin
  */
 package org.sonar.plugins.ada;
 
 import org.sonar.api.batch.AbstractSourceImporter;
+import org.sonar.api.batch.Phase;
 
 /**
  *
@@ -12,7 +13,7 @@ import org.sonar.api.batch.AbstractSourceImporter;
  */
 public class AdaSourceImporter extends AbstractSourceImporter {
 
-    public AdaSourceImporter(AdaLanguage lang) {
+    public AdaSourceImporter(Ada lang) {
         super(lang);
     }
 

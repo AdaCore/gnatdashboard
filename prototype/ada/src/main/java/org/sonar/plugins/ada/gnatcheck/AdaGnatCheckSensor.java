@@ -1,6 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * Sonar Ada Plugin
  */
 package org.sonar.plugins.ada.gnatcheck;
 
@@ -34,10 +34,6 @@ public class AdaGnatCheckSensor extends AdaSensor {
         this.profile = profile;
     }
 
-//    public boolean shouldExecuteOnProject(Project project) {
-//    return super.shouldExecuteOnProject(project)
-//      && !profile.getActiveRulesByRepository(CxxCppCheckRuleRepository.KEY).isEmpty();
-//    }
     protected String reportPathKey() {
         return REPORT_PATH_KEY;
     }

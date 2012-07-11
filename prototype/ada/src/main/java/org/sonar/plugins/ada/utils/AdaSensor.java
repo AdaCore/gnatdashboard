@@ -1,6 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * Sonar Ada Plugin
  */
 package org.sonar.plugins.ada.utils;
 
@@ -17,7 +17,7 @@ import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
 import org.sonar.api.utils.SonarException;
-import org.sonar.plugins.ada.AdaLanguage;
+import org.sonar.plugins.ada.Ada;
 
 /**
  *
@@ -41,7 +41,7 @@ public abstract class AdaSensor implements Sensor {
     }
 
     public boolean shouldExecuteOnProject(Project project) {
-        return AdaLanguage.KEY.equals(project.getLanguageKey());
+        return Ada.KEY.equals(project.getLanguageKey());
     }
 
     public void analyse(Project project, SensorContext context) {
@@ -71,7 +71,7 @@ public abstract class AdaSensor implements Sensor {
             reportPath = defaultReportPath;
         }
 
-        AdaUtils.LOG.debug("Using pattern '{}' to find reports", reportPath);
+        AdaUtils.LOG.info("Using pattern '{}' to find reports", reportPath);
 
         DirectoryScanner scanner = new DirectoryScanner();
         String[] includes = new String[1];
@@ -98,11 +98,14 @@ public abstract class AdaSensor implements Sensor {
         if (rule != null) {
         org.sonar.api.resources.File resource =
             org.sonar.api.resources.File.fromIOFile(new File(file), project);
+        AdaUtils.LOG.info("File long name : " + resource.getLongName());
+        AdaUtils.LOG.info("File name : " + resource.getName());
         if (context.getResource(resource) != null) {
             Violation violation = Violation.create(rule, resource).setLineId(line).setMessage(msg);
+            AdaUtils.LOG.info("Saving violation : " + violation.getMessage());
             context.saveViolation(violation);
         } else {
-            AdaUtils.LOG.debug("Cannot find the file '{}', skipping violation '{}'", file, msg);
+            AdaUtils.LOG.info("Cannot find the file '{}', skipping violation '{}'", file, msg);
         }
         } else {
         AdaUtils.LOG.warn("Cannot find the rule {}, skipping violation", ruleId);
