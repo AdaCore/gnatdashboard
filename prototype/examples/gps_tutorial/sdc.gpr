@@ -1,3 +1,5 @@
+with "projects/prj1";
+
 project Sdc is
 
    for Languages use ("ada");
