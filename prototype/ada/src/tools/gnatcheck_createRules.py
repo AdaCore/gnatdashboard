@@ -4,6 +4,7 @@
 
 Retreive rule informations from gnatcheck -hx to generate the
 rule repository and the default profile for the Sonar Ada plugin.
+Those documents are generate in ada/src/main/resources directory.
 Details in functions\'s documentation.
 """
 from xml.etree import ElementTree
@@ -56,9 +57,9 @@ def importRulesInfos():
             allrules.seek(0)
             # Display the unparsable line
             print allrules.readlines()[e.position[0] - 1]
+        finally:
+            # Remove the temporary file
             removeTmpFile()
-    # Remove the temporary file
-    removeTmpFile()
 
 # To be changed: according to snoar xml format style.
 def prettify(elem):
@@ -82,6 +83,11 @@ def exportRules():
         confkey.text = ruleid
         name = SubElement(rule, 'name')
         name.text = labels[ruleid]
+        # For now, the description is set as No description since
+        # the real description will be retieved from the gnatcheck doc.
+        # It is on the todo list.
+        description = SubElement(rule, 'description')
+        description.text = 'No description'
     # Write in the file
     prettyrules = prettify(rules)
     with open('../main/resources/' + REPOSITORY_KEY  + '.xml', 'w+') as rulerepo:
@@ -105,11 +111,11 @@ def exportProfile():
     rules = SubElement(profile, 'rules')
     for ruleid in labels:
         rule = SubElement(rules, 'rule')
-        repositorykey = SubElement(rules, 'repositoryKey')
+        repositorykey = SubElement(rule, 'repositoryKey')
         repositorykey.text = REPOSITORY_KEY
-        key = SubElement(rules, 'key')
+        key = SubElement(rule, 'key')
         key.text = ruleid
-        priority = SubElement(rules, 'priority')
+        priority = SubElement(rule, 'priority')
         priority.text = PRIORITIES['default']
     # Write in the file
     prettyprofile = prettify(profile)
