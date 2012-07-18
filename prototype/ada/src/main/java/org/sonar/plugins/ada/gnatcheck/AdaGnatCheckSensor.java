@@ -1,7 +1,7 @@
 /**
  *
  * Sonar Ada Plugin
- * Copyright AdaCore, 2012
+ * Copyright (C) 2012, AdaCore
  */
 package org.sonar.plugins.ada.gnatcheck;
 
@@ -31,6 +31,7 @@ public class AdaGnatCheckSensor extends AdaSensor {
         this.profile = profile;
     }
 
+    @Override
     protected String reportPathKey() {
         return REPORT_PATH_KEY;
     }
@@ -38,7 +39,8 @@ public class AdaGnatCheckSensor extends AdaSensor {
 //    protected String defaultReportPath() {
 //        return DEFAULT_REPORT_PATH;
 //    }
-    
+
+    @Override
     protected void processReport(final Project project, final SensorContext context, File report)
     throws javax.xml.stream.XMLStreamException
   {
@@ -55,10 +57,13 @@ public class AdaGnatCheckSensor extends AdaSensor {
           String line = errorCursor.getAttrValue("line");
           String id = errorCursor.getAttrValue("id");
           String msg = errorCursor.getAttrValue("msg");
-          
+          String prj = errorCursor.getAttrValue("project");
+          String dir = errorCursor.getAttrValue("directory");
+          AdaUtils.LOG.info("Error in directory : " + dir);
+          AdaUtils.LOG.info("Error in project : " + prj);
           if(isInputValid(file, line, id, msg)) {
             saveViolation(project, context, AdaGnatCheckRuleRepository.KEY,
-                        file, Integer.parseInt(line), id, msg);
+                        file, Integer.parseInt(line), id, msg, prj, dir);
           } else {
             AdaUtils.LOG.warn("AdaCheck warning: {}", msg );
           }
@@ -66,7 +71,7 @@ public class AdaGnatCheckSensor extends AdaSensor {
       }
 
       private boolean isInputValid(String file, String line, String id, String msg) {
-        return !StringUtils.isEmpty(file) && !StringUtils.isEmpty(line) 
+        return !StringUtils.isEmpty(file) && !StringUtils.isEmpty(line)
           && !StringUtils.isEmpty(id) && !StringUtils.isEmpty(msg);
       }
     });

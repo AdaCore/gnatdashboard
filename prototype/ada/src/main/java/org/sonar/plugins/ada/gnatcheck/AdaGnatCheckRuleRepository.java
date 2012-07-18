@@ -1,7 +1,7 @@
 /**
  *
  * Sonar Ada Plugin
- * Copyright AdaCore, 2012
+ * Copyright (C) 2012, AdaCore
  */
 package org.sonar.plugins.ada.gnatcheck;
 

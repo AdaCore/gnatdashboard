@@ -1,12 +1,10 @@
 /**
  *
  * Sonar Ada Plugin
- * Copyright AdaCore, 2012
+ * Copyright (C) 2012, AdaCore
  */
 package org.sonar.plugins.ada;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.lang.StringUtils;
 import org.sonar.api.resources.AbstractLanguage;
 
 public class Ada extends AbstractLanguage {

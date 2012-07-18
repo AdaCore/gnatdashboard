@@ -1,5 +1,5 @@
 PLUGIN_VERSION=1.0-SNAPSHOT
-SONAR_HOME=/usr/local/sonar/sonar-3.0
+SONAR_HOME=/Users/kiwi/tools/sonar-tool/sonar/sonar-3.1.1
 PLATFORM=macosx-universal-64
 
 all:

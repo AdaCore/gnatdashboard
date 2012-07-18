@@ -1,7 +1,6 @@
 /**
- *
- * Sonar Ada Plugin
- * Copyright AdaCore, 2012
+ *  Sonar Ada Plugin
+ *  Copyright (C) 2001-2012, AdaCore
  */
 package org.sonar.plugins.ada.utils;
 
@@ -19,6 +18,7 @@ import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
 import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.ada.Ada;
+import org.sonar.plugins.ada.AdaFile;
 
 public abstract class AdaSensor implements Sensor {
 
@@ -58,13 +58,13 @@ public abstract class AdaSensor implements Sensor {
             throw new SonarException(msg, e);
         }
     }
-    
+
     protected List<File> getReports(Configuration conf,
-                                  String baseDirPath,
-                                  String reportPathPropertyKey,
-                                  String defaultReportPath) {
+            String baseDirPath,
+            String reportPathPropertyKey,
+            String defaultReportPath) {
         String reportPath = conf.getString(reportPathPropertyKey, null);
-        if(reportPath == null){
+        if (reportPath == null) {
             reportPath = defaultReportPath;
         }
 
@@ -79,7 +79,7 @@ public abstract class AdaSensor implements Sensor {
         String[] relPaths = scanner.getIncludedFiles();
 
         List<File> reports = new ArrayList<File>();
-            for (String relPath : relPaths) {
+        for (String relPath : relPaths) {
             reports.add(new File(baseDirPath, relPath));
         }
 
@@ -87,41 +87,45 @@ public abstract class AdaSensor implements Sensor {
     }
 
     protected void saveViolation(Project project, SensorContext context, String ruleRepoKey,
-                               String file, int line, String ruleId, String msg) {
-        RuleQuery ruleQuery = RuleQuery.create()
-        .withRepositoryKey(ruleRepoKey)
-        .withKey(ruleId);
+            String file, int line, String ruleId, String msg, String prj, String dir) {
+        RuleQuery ruleQuery = RuleQuery.create().withRepositoryKey(ruleRepoKey).withKey(ruleId);
         Rule rule = ruleFinder.find(ruleQuery);
         if (rule != null) {
-        org.sonar.api.resources.File resource =
-            org.sonar.api.resources.File.fromIOFile(new File(file), project);
-        AdaUtils.LOG.info("File long name : " + resource.getLongName());
-        AdaUtils.LOG.info("File name : " + resource.getName());
-        if (context.getResource(resource) != null) {
-            Violation violation = Violation.create(rule, resource).setLineId(line).setMessage(msg);
-            AdaUtils.LOG.info("Saving violation : " + violation.getMessage());
-            context.saveViolation(violation);
+            AdaFile resource = AdaFile.fromIOFile(new File(file), project);
+            AdaUtils.LOG.info("***** File " + resource.getLongName());
+            AdaUtils.LOG.info("\tLong name : " + resource.getLongName());
+            AdaUtils.LOG.info("\tName : " + resource.getName());
+            AdaUtils.LOG.info("\tParent : " + resource.getParent().getName());
+            AdaUtils.LOG.info("\tLanguage : " + resource.getParent().getLanguage().getName());
+            if (context.getResource(resource) != null) {
+                Violation violation = Violation.create(rule, resource).setLineId(line).setMessage(msg);
+                AdaUtils.LOG.info("Saving violation : " + violation.getMessage());
+                context.saveViolation(violation);
+            } else {
+                AdaUtils.LOG.info("Cannot find the file '{}', skipping violation '{}'", file, msg);
+            }
         } else {
-            AdaUtils.LOG.info("Cannot find the file '{}', skipping violation '{}'", file, msg);
-        }
-        } else {
-        AdaUtils.LOG.warn("Cannot find the rule {}, skipping violation", ruleId);
+            AdaUtils.LOG.warn("Cannot find the rule {}, skipping violation", ruleId);
         }
     }
-  
+
     @Override
     public String toString() {
         return getClass().getSimpleName();
     }
 
-
     protected void processReport(Project project, SensorContext context, File report)
-            throws Exception {}
+            throws Exception {
+    }
 
-    protected void handleNoReportsCase(SensorContext context) {}
+    protected void handleNoReportsCase(SensorContext context) {
+    }
 
-    protected String reportPathKey() {return "";}
+    protected String reportPathKey() {
+        return "";
+    }
 
-    protected String defaultReportPath() {return "";}
-
+    protected String defaultReportPath() {
+        return "";
+    }
 }

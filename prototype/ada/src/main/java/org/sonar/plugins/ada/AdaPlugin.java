@@ -1,7 +1,6 @@
 /**
- *
- * Sonar Ada Plugin
- * Copyright AdaCore, 2012
+ *  Sonar Ada Plugin
+ *  Copyright (C) 2001-2012, AdaCore
  */
 package org.sonar.plugins.ada;
 

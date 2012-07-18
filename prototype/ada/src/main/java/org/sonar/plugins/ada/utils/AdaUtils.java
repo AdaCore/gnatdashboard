@@ -1,7 +1,7 @@
 /**
  *
  * Sonar Ada Plugin
- * Copyright AdaCore, 2012
+ * Copyright (C) 2012, AdaCore
  */
 package org.sonar.plugins.ada.utils;
 
@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class AdaUtils {
-  
+
   private AdaUtils() {
     // only static methods
   }

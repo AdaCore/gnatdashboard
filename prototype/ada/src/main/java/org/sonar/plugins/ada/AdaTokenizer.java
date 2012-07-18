@@ -1,7 +1,6 @@
 /**
- *
- * Sonar Ada Plugin
- * Copyright AdaCore, 2012
+ *  Sonar Ada Plugin
+ *  Copyright (C) 2001-2012, AdaCore
  */
 package org.sonar.plugins.ada;
 
@@ -12,8 +11,7 @@ import net.sourceforge.pmd.cpd.Tokenizer;
 import net.sourceforge.pmd.cpd.Tokens;
 
 public class AdaTokenizer implements Tokenizer {
-
-  public void tokenize(SourceCode tokens, Tokens tokenEntries) {
+     public void tokenize(SourceCode tokens, Tokens tokenEntries) {
     List<String> code = tokens.getCode();
     for (int i = 0; i < code.size(); i++) {
       String currentLine = (String) code.get(i);
