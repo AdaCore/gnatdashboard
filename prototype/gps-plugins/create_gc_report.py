@@ -24,6 +24,55 @@ class Violation(object):
         self.msg = msg
 
 
+## Project #################################################################
+##
+class Project(object):
+    """"""
+    def __init__(self, name):
+        self.name = name
+
+
+## Directory #################################################################
+##
+class Directory(object):
+    """"""
+    def __init__(self, dir_name, project):
+        #Retrieve the name of the directory without the full path
+        self.dir_name = dir_name.split('/')[-1]
+        self.parent_project = Project(project)
+
+    def get_parent_name(self):
+        return self.parent_project.name
+
+
+## Source #################################################################
+##
+class Source(object):
+    """Represent a source file
+
+      For now a source is represent by its base name, full name and by
+      the project it belong. In the future, the project must be externalized
+      as a class.
+    """
+    def __init__(self, base_name, directory, project):
+        self.base_name = base_name
+        self.full_name = directory + '/' + base_name
+        self.parent_dir = Directory(directory,project)
+
+    def get_base_name(self):
+        """"""
+
+    def get_project(self):
+        return self.parent_dir.get_parent_name()
+
+    def get_directory(self):
+        return self.parent_dir.dir_name
+
+    def get_full_name(self):
+        """"""
+        return self.full_name
+
+
 ## GcOutput #################################################################
 ##
 class GcOutput(object):
@@ -40,12 +89,11 @@ class GcOutput(object):
         self.gc_log = gc_log
         self.violations = []
         self.__process_output()
-        for v in self.violations:
-            print "src " + v.src
 
 
     def __add_violation(self, src, line, rule_id, msg):
         """Add a violation"""
+
         violation = Violation(src, line, rule_id, msg)
         self.violations.append(violation)
 
@@ -61,9 +109,7 @@ class GcOutput(object):
         src_line = split_1[1]
         # Remove rubbish characters
         split_2 = split_1[-1].split(')')
-        print split_2[0]
         rule_id = split_2[0][2:]
-        print rule_id
         msg = split_2[1][1:-1]
         self.__add_violation(src, src_line, rule_id, msg)
 
@@ -127,19 +173,26 @@ class SourceMap(object):
             tree_source = json.loads(output)
         except ValueError:
             print 'Output of script ' + self.script + ' is not a JSon format.'
+            print output
+            exit(1)
         for prj in tree_source:
             for src_dir in tree_source[prj]:
                 for src in tree_source[prj][src_dir]:
-                    src_map[src] = (prj, src_dir)
+                    source = Source(src, src_dir, prj)
+                    src_map[src] = source
         return src_map
 
     def get_src_path(self, src):
         """Return the source full path"""
-        return self.src_map[src][1] + '/' + src
+        return self.src_map[src].get_full_name()
+
+    def get_src_directory(self, src):
+        """"""
+        return self.src_map[src].get_directory()
 
     def get_src_project(self, src):
         """Return the project the source blongs"""
-        return self.src_map[src][0]
+        return self.src_map[src].get_project()
 
 
 ## ReportExporter #################################################################
@@ -179,6 +232,8 @@ class ReportExporter(object):
         for v in gc_output.violations:
             error = SubElement(results, 'error',
                                {'file':src_map.get_src_path(v.src),
+                                'directory':src_map.get_src_directory(v.src),
+                                'project':src_map.get_src_project(v.src),
                                 'line':v.line,
                                 'id':v.rule_id,
                                 'msg':v.msg})

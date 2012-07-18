@@ -2,7 +2,7 @@
 ###                          WHAT IS                         ###
 ################################################################
 
-GnqtCheck report generator:
+GnatCheck report generator:
 
     create_gc_report.py: Python script that generqte report 
                          from GnatCheck output using qmt.py
