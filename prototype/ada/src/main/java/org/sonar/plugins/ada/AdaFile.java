@@ -11,10 +11,9 @@ import org.sonar.api.resources.DefaultProjectFileSystem;
 import org.sonar.api.resources.Language;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
-import org.sonar.plugins.ada.utils.AdaUtils;
 
 /**
- * A class that represents a Ada source file.
+ * A class that represents an Ada source file.
  *
  */
 public class AdaFile extends Resource<AdaDirectory> {
@@ -24,21 +23,16 @@ public class AdaFile extends Resource<AdaDirectory> {
     private String directory;
     private String fileName;
     public static final String SEPARATOR = "/";
+    public static final String DEFAULT_PROJECT_NAME = "Default project";
 
     /**
-     * Creates a AdaFile based on package and file names
+     * Creates an Ada File based on the source name, project parent name and directory name
      */
-    public AdaFile(String sourceName) {
-//        if (project == null || directory == null || sourceName == null) {
-//            throw new IllegalArgumentException("Ada project, directory and file name can not be null");
-//        }
-        this.project = project;
-        this.directory = StringUtils.substringBeforeLast(sourceName, SEPARATOR);
+    public AdaFile(String sourceName, String prj, String dir) {
+        this.project = prj == null ? DEFAULT_PROJECT_NAME : prj;
+        this.directory = dir == null ? StringUtils.substringBeforeLast(sourceName, SEPARATOR) : dir;
         this.fileName = StringUtils.substringAfterLast(sourceName, SEPARATOR);
         setKey(sourceName);
-        AdaUtils.LOG.info("+++ Creating file: {}", this.directory);
-        AdaUtils.LOG.info("With key: {}, with file name: {}", getKey(), fileName);
-        AdaUtils.LOG.info("Class of the file: {}", this.getClass());
 
     }
 
@@ -72,11 +66,13 @@ public class AdaFile extends Resource<AdaDirectory> {
         return Resource.QUALIFIER_FILE;
     }
 
+    /**
+     * Ada file's parent is an Ada directory
+     */
     @Override
     public AdaDirectory getParent() {
         if (parent == null) {
-            AdaUtils.LOG.info("Creating PARENT");
-            parent = new AdaDirectory(directory);
+            parent = new AdaDirectory(directory, project);
         }
         return parent;
     }
@@ -87,19 +83,16 @@ public class AdaFile extends Resource<AdaDirectory> {
         return false;
     }
 
-    /**
-     * Creates a File from its name and a project
-     */
-    public static AdaFile fromIOFile(java.io.File file, List<java.io.File> sourceDirs) {
+    public static AdaFile fromIOFile(java.io.File file, List<java.io.File> sourceDirs, String prj, String dir) {
         String relativePath = DefaultProjectFileSystem.getRelativePath(file, sourceDirs);
         if (relativePath != null) {
-            return new AdaFile(relativePath);
+            return new AdaFile(relativePath, prj, dir);
         }
         return null;
     }
 
-    public static AdaFile fromIOFile(java.io.File file, Project project) {
-        return fromIOFile(file, project.getFileSystem().getSourceDirs());
+    public static AdaFile fromIOFile(java.io.File file, Project project, String prj, String dir) {
+        return fromIOFile(file, project.getFileSystem().getSourceDirs(), prj, dir);
     }
 
     @Override

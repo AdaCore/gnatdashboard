@@ -4,7 +4,6 @@
  */
 package org.sonar.plugins.ada;
 
-import antlr.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.sonar.api.resources.Language;
 import org.sonar.api.resources.Resource;
@@ -19,15 +18,11 @@ public class AdaDirectory extends Resource<AdaProject> {
     private String project;
 
     /**
-     * Creates a AdaDirectory from its key.
+     * Creates a Ada Directory from its name and parent project name.
      */
-    public AdaDirectory(String directoryName) {
-//        if (project == null || directoryName == null) {
-//            throw new IllegalArgumentException("Ada project and directory name can not be null");
-//        }
+    public AdaDirectory(String directoryName, String project) {
         setKey(directoryName);
         this.project = project;
-        this. parent = null;
     }
 
     @Override
@@ -57,15 +52,18 @@ public class AdaDirectory extends Resource<AdaProject> {
 
     @Override
     public String getQualifier() {
-        return Resource.QUALIFIER_DIRECTORY;
+        return Resource.QUALIFIER_PACKAGE;
     }
 
+    /**
+     * Ada directory's parent is an Ada Project
+     */
     @Override
     public AdaProject getParent() {
-//        if (parent == null) {
-//            parent = new AdaProject(project);
-//        }
-        return null;
+        if (parent == null) {
+            parent = new AdaProject(project);
+        }
+        return parent;
     }
 
     @Override

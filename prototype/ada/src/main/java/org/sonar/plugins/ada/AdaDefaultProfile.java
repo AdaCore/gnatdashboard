@@ -1,7 +1,6 @@
 /**
- *
- * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Sonar Ada Plugin
+ *  Copyright (C) 2001-2012, AdaCore
  */
 package org.sonar.plugins.ada;
 
@@ -18,6 +17,9 @@ public class AdaDefaultProfile extends ProfileDefinition {
         this.xmlProfileParser = xmlProfileParser;
     }
 
+    /**
+     * Import the default sonar Ada profile
+     */
     @Override
     public RulesProfile createProfile(ValidationMessages messages) {
         RulesProfile profile = xmlProfileParser.parseResource(getClass().getClassLoader(),

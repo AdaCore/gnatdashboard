@@ -4,17 +4,17 @@
  */
 package org.sonar.plugins.ada;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.sonar.api.resources.Language;
 import org.sonar.api.resources.Resource;
 
 public class AdaProject extends Resource {
 
+    AdaProject() {
+        this(null);
+    }
 
     public AdaProject(String projectName) {
-        if (projectName == null) {
-            throw new IllegalArgumentException("Ada project name can not be null");
-        }
         setKey(projectName);
     }
 
@@ -25,7 +25,7 @@ public class AdaProject extends Resource {
 
     @Override
     public String getLongName() {
-        return getKey();
+        return null;
     }
 
     @Override
@@ -40,21 +40,29 @@ public class AdaProject extends Resource {
 
     @Override
     public String getScope() {
-        return Resource.SCOPE_SET;
+        return Resource.SCOPE_SPACE;
     }
 
     @Override
     public String getQualifier() {
-        return Resource.QUALIFIER_PROJECT;
+        return Resource.QUALIFIER_MODULE;
     }
 
+    /**
+     * Ada project has no parent, is attached to the project root
+     */
     @Override
-    public AdaProject getParent() {
+    public Resource<?> getParent() {
         return null;
     }
 
     @Override
     public boolean matchFilePattern(String string) {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("id", getId()).append("key", getKey()).toString();
     }
 }

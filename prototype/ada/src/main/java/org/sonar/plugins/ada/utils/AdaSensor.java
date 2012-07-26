@@ -20,6 +20,9 @@ import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.ada.Ada;
 import org.sonar.plugins.ada.AdaFile;
 
+/**
+ * Generic Sensor for external tool, retrieve informations from reports.
+ */
 public abstract class AdaSensor implements Sensor {
 
     private RuleFinder ruleFinder;
@@ -59,6 +62,9 @@ public abstract class AdaSensor implements Sensor {
         }
     }
 
+    /**
+     * Retrieve report on the file system.
+     */
     protected List<File> getReports(Configuration conf,
             String baseDirPath,
             String reportPathPropertyKey,
@@ -91,15 +97,10 @@ public abstract class AdaSensor implements Sensor {
         RuleQuery ruleQuery = RuleQuery.create().withRepositoryKey(ruleRepoKey).withKey(ruleId);
         Rule rule = ruleFinder.find(ruleQuery);
         if (rule != null) {
-            AdaFile resource = AdaFile.fromIOFile(new File(file), project);
-            AdaUtils.LOG.info("***** File " + resource.getLongName());
-            AdaUtils.LOG.info("\tLong name : " + resource.getLongName());
-            AdaUtils.LOG.info("\tName : " + resource.getName());
-            AdaUtils.LOG.info("\tParent : " + resource.getParent().getName());
-            AdaUtils.LOG.info("\tLanguage : " + resource.getParent().getLanguage().getName());
-            if (context.getResource(resource) != null) {
-                Violation violation = Violation.create(rule, resource).setLineId(line).setMessage(msg);
-                AdaUtils.LOG.info("Saving violation : " + violation.getMessage());
+            AdaFile resource = AdaFile.fromIOFile(new File(file), project, prj, dir);
+            AdaFile res = context.getResource(resource);
+            if (res != null) {
+                Violation violation = Violation.create(rule, res).setLineId(line).setMessage(msg);
                 context.saveViolation(violation);
             } else {
                 AdaUtils.LOG.info("Cannot find the file '{}', skipping violation '{}'", file, msg);

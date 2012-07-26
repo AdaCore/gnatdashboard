@@ -19,16 +19,17 @@ import org.sonar.api.utils.StaxParser;
 import org.sonar.plugins.ada.utils.AdaSensor;
 import org.sonar.plugins.ada.utils.AdaUtils;
 
+/**
+ * Sensor for GnatCheck external tool, retrieve informations from a report
+ * to create violations.
+ */
 public class AdaGnatCheckSensor extends AdaSensor {
 
     public static final String REPORT_PATH_KEY = "sonar.ada.gnatcheck.reportPath";
-    //private static final String DEFAULT_REPORT_PATH = "gnatcheck-reports/gnatcheck-result-*.xml";
-    private RulesProfile profile;
 
     public AdaGnatCheckSensor(RuleFinder ruleFinder, Configuration conf,
             RulesProfile profile) {
         super(ruleFinder, conf);
-        this.profile = profile;
     }
 
     @Override
@@ -36,9 +37,6 @@ public class AdaGnatCheckSensor extends AdaSensor {
         return REPORT_PATH_KEY;
     }
 
-//    protected String defaultReportPath() {
-//        return DEFAULT_REPORT_PATH;
-//    }
 
     @Override
     protected void processReport(final Project project, final SensorContext context, File report)
@@ -59,8 +57,6 @@ public class AdaGnatCheckSensor extends AdaSensor {
           String msg = errorCursor.getAttrValue("msg");
           String prj = errorCursor.getAttrValue("project");
           String dir = errorCursor.getAttrValue("directory");
-          AdaUtils.LOG.info("Error in directory : " + dir);
-          AdaUtils.LOG.info("Error in project : " + prj);
           if(isInputValid(file, line, id, msg)) {
             saveViolation(project, context, AdaGnatCheckRuleRepository.KEY,
                         file, Integer.parseInt(line), id, msg, prj, dir);
