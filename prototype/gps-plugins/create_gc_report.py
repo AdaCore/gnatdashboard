@@ -9,6 +9,7 @@ from xml.etree.ElementTree import tostring
 from subprocess import Popen
 from subprocess import PIPE
 from subprocess import STDOUT
+import re
 import sys
 import json
 import argparse
@@ -27,7 +28,7 @@ class Violation(object):
 ## Project #################################################################
 ##
 class Project(object):
-    """"""
+    """Represent a project"""
     def __init__(self, name):
         self.name = name
 
@@ -35,7 +36,7 @@ class Project(object):
 ## Directory #################################################################
 ##
 class Directory(object):
-    """"""
+    """Represent a directory"""
     def __init__(self, dir_name, project):
         #Retrieve the name of the directory without the full path
         self.dir_name = dir_name.split('/')[-1]
@@ -49,10 +50,6 @@ class Directory(object):
 ##
 class Source(object):
     """Represent a source file
-
-      For now a source is represent by its base name, full name and by
-      the project it belong. In the future, the project must be externalized
-      as a class.
     """
     def __init__(self, base_name, directory, project):
         self.base_name = base_name
@@ -82,10 +79,11 @@ class GcOutput(object):
        contains the output of GnatCheck, parse it and save all the
        rules violations.
     """
-
     def __init__(self, gc_log):
         """Initializes the class by processing the GnatCheck output
-           and saving the rules violations"""
+
+           and saving the rules violations
+        """
         self.gc_log = gc_log
         self.violations = []
         self.__process_output()
@@ -104,7 +102,8 @@ class GcOutput(object):
            source, rule identification, violation message removing rubbish
            charachters and save those informations as a violation
         """
-        split_1 = line.split(':')
+        #Set maxsplit at 3 because the rule id can contain ':'
+        split_1 = line.split(':', 3)
         src = split_1[0]
         src_line = split_1[1]
         # Remove rubbish characters
@@ -116,14 +115,14 @@ class GcOutput(object):
     def __process_output(self):
         """Process GnatCheck output
 
-           Process the first line separatley because it is needed
-           to remove the progressing informations in the gnatcheck output
+          Retrieve information from  gnatcheck.out file
         """
+        PATTERN = '.*:[0-9]*:[0-9]*:\s[(].*[)]\s.*'
+        prog = re.compile(PATTERN)
         with open(self.gc_log, 'r') as gc_output:
-            first = gc_output.readline().split('\r')
-            self.__parse_line(first[-1])
             for line in gc_output.readlines():
-                self.__parse_line(line)
+                if prog.match(line):
+                    self.__parse_line(line)
 
 
 ## SourceMap #################################################################
@@ -153,7 +152,7 @@ class SourceMap(object):
         cmd = self.interpret + ' ' + self.script + ' -d ' + self.gpr_path
         try:
             p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE,
-                      stderr=STDOUT, close_fds=True)
+                      stderr=PIPE, close_fds=True)
         except OSError as os:
              print 'Connot find the script for the given path: ' + gpr_path
 
