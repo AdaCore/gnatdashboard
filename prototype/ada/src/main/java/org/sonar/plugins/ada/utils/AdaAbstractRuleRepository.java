@@ -1,5 +1,4 @@
-/**
- *
+/*
  * Sonar Ada Plugin
  * Copyright (C) 2012, AdaCore
  */

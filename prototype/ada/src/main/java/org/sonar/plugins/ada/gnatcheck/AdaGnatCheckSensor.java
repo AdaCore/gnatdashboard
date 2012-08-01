@@ -1,5 +1,4 @@
-/**
- *
+/*
  * Sonar Ada Plugin
  * Copyright (C) 2012, AdaCore
  */
@@ -12,7 +11,6 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.utils.StaxParser;
@@ -27,8 +25,7 @@ public class AdaGnatCheckSensor extends AdaSensor {
 
     public static final String REPORT_PATH_KEY = "sonar.ada.gnatcheck.reportPath";
 
-    public AdaGnatCheckSensor(RuleFinder ruleFinder, Configuration conf,
-            RulesProfile profile) {
+    public AdaGnatCheckSensor(RuleFinder ruleFinder, Configuration conf) {
         super(ruleFinder, conf);
     }
 
