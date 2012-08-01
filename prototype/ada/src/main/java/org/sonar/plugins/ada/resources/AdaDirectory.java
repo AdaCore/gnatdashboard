@@ -2,20 +2,29 @@
  *  Sonar Ada Plugin
  *  Copyright (C) 2001-2012, AdaCore
  */
-package org.sonar.plugins.ada;
+package org.sonar.plugins.ada.resources;
 
+import org.sonar.plugins.ada.resources.AdaProject;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.sonar.api.resources.Language;
 import org.sonar.api.resources.Resource;
+import org.sonar.plugins.ada.Ada;
 
-public class AdaProject extends Resource {
+/**
+ * A class that represents a Ada directory in Sonar
+ *
+ */
+public class AdaDirectory extends Resource<AdaProject> {
 
-    AdaProject() {
-        this(null);
-    }
+    private AdaProject parent;
+    private String project;
 
-    public AdaProject(String projectName) {
-        setKey(projectName);
+    /**
+     * Creates a Ada Directory from its name and parent project name.
+     */
+    public AdaDirectory(String directoryName, String project) {
+        setKey(directoryName);
+        this.project = project;
     }
 
     @Override
@@ -25,7 +34,7 @@ public class AdaProject extends Resource {
 
     @Override
     public String getLongName() {
-        return null;
+        return getKey();
     }
 
     @Override
@@ -45,15 +54,18 @@ public class AdaProject extends Resource {
 
     @Override
     public String getQualifier() {
-        return Resource.QUALIFIER_MODULE;
+        return Resource.QUALIFIER_PACKAGE;
     }
 
     /**
-     * Ada project has no parent, is attached to the project root
+     * Ada directory's parent is an Ada Project
      */
     @Override
-    public Resource<?> getParent() {
-        return null;
+    public AdaProject getParent() {
+        if (parent == null) {
+            parent = new AdaProject(project);
+        }
+        return parent;
     }
 
     @Override

@@ -2,15 +2,15 @@
  *  Sonar Ada Plugin
  *  Copyright (C) 2001-2012, AdaCore
  */
-package org.sonar.plugins.ada;
+package org.sonar.plugins.ada.resources;
 
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.sonar.api.resources.DefaultProjectFileSystem;
 import org.sonar.api.resources.Language;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
+import org.sonar.plugins.ada.Ada;
 
 /**
  * A class that represents an Ada source file.
@@ -26,11 +26,21 @@ public class AdaFile extends Resource<AdaDirectory> {
     public static final String DEFAULT_PROJECT_NAME = "Default project";
 
     /**
-     * Creates an Ada File based on the source name, project parent name and directory name
+     * Creates an Ada File based on the source name, project parent name and
+     * directory name
+     * @param source name, contains file's absolute path
+     * @param  project name
+     * @param directory name
      */
     public AdaFile(String sourceName, String prj, String dir) {
-        this.project = prj == null ? DEFAULT_PROJECT_NAME : prj;
-        this.directory = dir == null ? StringUtils.substringBeforeLast(sourceName, SEPARATOR) : dir;
+        if (prj == null) {
+            throw new IllegalArgumentException("Ada source's project name can not be null");
+        }
+        if (dir == null) {
+            throw new IllegalArgumentException("Ada source's directory name can not be null");
+        }
+        this.project = prj;
+        this.directory = dir;
         this.fileName = StringUtils.substringAfterLast(sourceName, SEPARATOR);
         setKey(sourceName);
 
@@ -41,6 +51,9 @@ public class AdaFile extends Resource<AdaDirectory> {
         return fileName;
     }
 
+    /**
+     * @return resource's absolute path
+     */
     @Override
     public String getLongName() {
         return getKey();
@@ -68,6 +81,7 @@ public class AdaFile extends Resource<AdaDirectory> {
 
     /**
      * Ada file's parent is an Ada directory
+     * @return AdaDirectory
      */
     @Override
     public AdaDirectory getParent() {
@@ -84,9 +98,8 @@ public class AdaFile extends Resource<AdaDirectory> {
     }
 
     public static AdaFile fromIOFile(java.io.File file, List<java.io.File> sourceDirs, String prj, String dir) {
-        String relativePath = DefaultProjectFileSystem.getRelativePath(file, sourceDirs);
-        if (relativePath != null) {
-            return new AdaFile(relativePath, prj, dir);
+        if (file != null) {
+            return new AdaFile(file.getPath(), prj, dir);
         }
         return null;
     }
@@ -99,5 +112,4 @@ public class AdaFile extends Resource<AdaDirectory> {
     public String toString() {
         return new ToStringBuilder(this).append("key", getKey()).append("dir", directory).append("filename", getKey()).append("language", getLanguage()).toString();
     }
-
 }
