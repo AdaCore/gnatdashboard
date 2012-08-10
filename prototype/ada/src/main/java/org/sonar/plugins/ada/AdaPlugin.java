@@ -1,6 +1,6 @@
-/**
- *  Sonar Ada Plugin
- *  Copyright (C) 2001-2012, AdaCore
+/*
+ * Sonar Ada Plugin
+ * Copyright (C) 2012, AdaCore
  */
 package org.sonar.plugins.ada;
 
@@ -12,6 +12,9 @@ import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckRuleRepository;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckSensor;
+import org.sonar.plugins.ada.gnatmetric.AdaGnatMetricSensor;
+import org.sonar.plugins.ada.gnatmetric.GnatMetrics;
+import org.sonar.plugins.ada.ui.GnatMetricViewerDefinition;
 
 @Properties({
     @Property(key = AdaSourceImporter.PROJECT_TREE_FILE_PATH_KEY,
@@ -23,9 +26,22 @@ import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckSensor;
     name = "Path to gnatcheck report",
     description = "Relative to the project root",
     global = false,
+    project = true),
+    @Property(key = AdaGnatMetricSensor.REPORT_PATH_KEY,
+    name = "Path to gnatmetric report",
+    description = "Relative to the project root",
+    global = false,
     project = true)})
+/**
+ * Implements Ada Plugin for Sonar
+ */
 public final class AdaPlugin extends SonarPlugin {
 
+    /**
+     * Returns Classes to use into the plugin
+     *
+     * @return the classes to use into the plugin
+     */
     public List getExtensions() {
         List<Class<? extends Extension>> l = new ArrayList<Class<? extends Extension>>();
         l.add(Ada.class);
@@ -33,6 +49,9 @@ public final class AdaPlugin extends SonarPlugin {
         l.add(AdaGnatCheckRuleRepository.class);
         l.add(AdaGnatCheckSensor.class);
         l.add(AdaDefaultProfile.class);
+        l.add(AdaGnatMetricSensor.class);
+        l.add(GnatMetricViewerDefinition.class);
+        l.add(GnatMetrics.class);
         return l;
     }
 

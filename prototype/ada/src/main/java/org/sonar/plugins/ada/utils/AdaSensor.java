@@ -40,6 +40,9 @@ public abstract class AdaSensor implements Sensor {
         this.config = config;
     }
 
+    /**
+     * This sensor is executed only for Ada projects.
+     */
     public boolean shouldExecuteOnProject(Project project) {
         return Ada.KEY.equals(project.getLanguageKey());
     }
@@ -64,6 +67,7 @@ public abstract class AdaSensor implements Sensor {
 
     /**
      * Retrieve report on the file system.
+     * @return List of reports
      */
     protected List<File> getReports(Configuration conf,
             String baseDirPath,
@@ -92,6 +96,9 @@ public abstract class AdaSensor implements Sensor {
         return reports;
     }
 
+    /**
+     * Save a violation if the rule and the file are found.
+     */
     protected void saveViolation(Project project, SensorContext context, String ruleRepoKey,
             String file, int line, String ruleId, String msg, String prj, String dir) {
         RuleQuery ruleQuery = RuleQuery.create().withRepositoryKey(ruleRepoKey).withKey(ruleId);
@@ -115,6 +122,9 @@ public abstract class AdaSensor implements Sensor {
         return getClass().getSimpleName();
     }
 
+    /**
+     * Retrieve information from the report.
+     */
     protected void processReport(Project project, SensorContext context, File report)
             throws Exception {
     }
@@ -122,6 +132,9 @@ public abstract class AdaSensor implements Sensor {
     protected void handleNoReportsCase(SensorContext context) {
     }
 
+    /**
+     * @return property's key of the report path in sonar.properties file
+     */
     protected String reportPathKey() {
         return "";
     }

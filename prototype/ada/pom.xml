@@ -2,47 +2,78 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-  
-    <groupId>org.codehaus.sonar.examples</groupId>
-  
+    <groupId>org.codehaus.sonar.plugins</groupId>
     <artifactId>sonar-ada-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>sonar-plugin</packaging>
+    <version>1.0-SNAPSHOT</version>
     <name>Sonar Ada Plugin</name>
     <description>Ada Plugin for Sonar</description>
     <inceptionYear>2012</inceptionYear>
 
     <properties>
-        <sonar.buildVersion>2.11</sonar.buildVersion>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.buildVersion>2.12</sonar.buildVersion>
         <jdk.min.version>1.5</jdk.min.version>
-        <sonar.version>0.1</sonar.version>
         <sonar.pluginKey>ada</sonar.pluginKey>
         <sonar.pluginClass>org.sonar.plugins.ada.AdaPlugin</sonar.pluginClass>
         <sonar.artifact.path>target/${project.artifactId}-${project.version}.jar</sonar.artifact.path>
     </properties>
     
     <dependencies>
+        <!-- Sonar plugin -->
         <dependency>
             <groupId>org.codehaus.sonar</groupId>
             <artifactId>sonar-plugin-api</artifactId>
-            <version>${sonar.buildVersion}</version>
+            <version>2.12</version>
+            <type>jar</type>
         </dependency>
+        <!-- Unit tests -->
         <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>5.5</version>
+            <groupId>org.codehaus.sonar</groupId>
+            <artifactId>sonar-testing-harness</artifactId>
+            <version>${sonar.buildVersion}</version>
+            <scope>test</scope>
         </dependency>
+        <!-- Ant Tools -->
         <dependency>
             <groupId>ant</groupId>
             <artifactId>ant</artifactId>
             <version>1.6</version>
             <type>jar</type>
         </dependency>
+        <!-- JSON -->
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1</version>
+        </dependency>
+        <!-- GWT -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-incubator</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>2.4.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.sonar</groupId>
+            <artifactId>sonar-gwt-api</artifactId>
+            <version>2.12</version>
+            <scope>provided</scope>
+            <!-- 
+                 Exclude json librairy due to conflict of importation which 
+                 generate a Java exception during the execution.
+            -->
+            <exclusions>
+                <exclusion>
+                    <artifactId>json-simple</artifactId>
+                    <groupId>com.googlecode.json-simple</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -55,7 +86,6 @@
                 <extensions>true</extensions>
                 <configuration>
                     <pluginClass>${sonar.pluginClass}</pluginClass>
-                    <basePlugin>checkstyle</basePlugin>
                 </configuration>
             </plugin>
             <plugin>
@@ -63,10 +93,36 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>${jdk.min.version}</source>
+                    <target>${jdk.min.version}</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
+            </plugin>
+            <!-- GWT -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>2.4.0</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <modules>
+                                <module>org.sonar.plugins.ada.ui.GnatMetricViewer</module>
+                            </modules>
+                            <webappDirectory>target/classes</webappDirectory>
+                            <!-- Do not break this line in two lines-->
+                            <extraJvmArgs>-Xmx512m -Dgwt.jjs.permutationWorkerFactory=com.google.gwt.dev.ThreadedPermutationWorkerFactory</extraJvmArgs>
+                        </configuration>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.8</version>
             </plugin>
         </plugins>
     </build>
