@@ -15,18 +15,18 @@ import org.sonar.api.measures.SumChildValuesFormula;
  * Defines metrics specific to GnatMetric that cannot be
  * bind to existent Sonar's metric.
  */
-public class GnatMetrics implements Metrics {
+public final class GnatMetrics implements Metrics {
 
     public final static GnatMetrics INSTANCE = new GnatMetrics();
-    public static final Metric EOL_COMMENT = new Metric.Builder("eol_comments", "End of line comment", Metric.ValueType.INT)
-            .setDescription("Identified all end of line comment")
+    public static final Metric EOL_COMMENT = new Metric.Builder("eol_comments", "End of line comments", Metric.ValueType.INT)
+            .setDescription("Identified all end of line comments")
             .setDirection(Metric.DIRECTION_NONE)
             .setQualitative(Boolean.FALSE)
             .setDomain(CoreMetrics.DOMAIN_GENERAL)
             .create()
             .setFormula(new SumChildValuesFormula(false));
 
-    public static final Metric BLANK_LINE = new Metric.Builder("blank_lines", "Blank line", Metric.ValueType.INT)
+    public static final Metric BLANK_LINE = new Metric.Builder("blank_lines", "Blank lines", Metric.ValueType.INT)
             .setDescription("Identified blank lines")
             .setDirection(Metric.DIRECTION_WORST)
             .setQualitative(Boolean.FALSE)

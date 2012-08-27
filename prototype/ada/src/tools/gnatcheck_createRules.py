@@ -13,6 +13,7 @@ from xml.etree.ElementTree import (Element,
                                    SubElement,
                                    Comment)
 from xml.dom import minidom
+import tempfile
 import argparse
 import os.path
 import os
@@ -21,11 +22,10 @@ import os
 labels = dict()
 PRIORITIES = {'default' : 'MAJOR'}
 REPOSITORY_KEY = 'gnatcheck'
-TMP_FILE = 'allRules.xml'
 
 
-def removeTmpFile():
-    if os.path.exists(TMP_FILE): os.remove(TMP_FILE)
+def removeTmpFile(file_name):
+    if os.path.exists(file_name): os.remove(file_name)
 
 
 def importRulesInfos():
@@ -39,10 +39,11 @@ def importRulesInfos():
     cmd = 'gnatcheck -hx'
     p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
     output = p.stdout.read()
-    with open(TMP_FILE, 'w+') as allrules:
-        allrules.writelines(output)
+    (fd, file_name) = tempfile.mkstemp(suffix='.xml', prefix='gc_rules')
+    with open(file_name, 'w+') as gc_rules:
+        gc_rules.writelines(output)
     # Parse the temporary file to retreive rules's informations
-    with open(TMP_FILE, 'rt') as allrules:
+    with open(file_name, 'rt') as allrules:
         try:
             tree = ElementTree.parse(allrules)
             for path in ['.//check', './/spin', './/field']:
@@ -59,7 +60,7 @@ def importRulesInfos():
             print allrules.readlines()[e.position[0] - 1]
         finally:
             # Remove the temporary file
-            removeTmpFile()
+            removeTmpFile(file_name)
 
 # To be changed: according to snoar xml format style.
 def prettify(elem):

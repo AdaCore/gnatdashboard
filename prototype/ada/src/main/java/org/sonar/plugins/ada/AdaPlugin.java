@@ -4,6 +4,7 @@
  */
 package org.sonar.plugins.ada;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import org.sonar.api.Extension;
@@ -52,6 +53,7 @@ public final class AdaPlugin extends SonarPlugin {
         l.add(AdaGnatMetricSensor.class);
         l.add(GnatMetricViewerDefinition.class);
         l.add(GnatMetrics.class);
+        l.add(AdaColorizer.class);
         return l;
     }
 
