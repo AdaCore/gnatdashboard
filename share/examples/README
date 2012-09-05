@@ -21,6 +21,6 @@ How to run the example:
     You can find through the following link Sonar documentation page on how to install
     a sonar runner:
   http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+Sonar+Runner
-  - make shure you have a Sonar server running
+  - make sure you have a Sonar server running
   - run make in the project directory.
   - browse http://localhost:9000
