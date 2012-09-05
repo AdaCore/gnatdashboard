@@ -1,0 +1,26 @@
+################################################################################
+###                                    WHAT IS                               ###
+################################################################################
+
+Sonar Ada Plugin:
+
+  Feeds Sonar with:
+    - GNATcheck report information
+    - GNATmetric report information
+
+
+################################################################################
+###                                     USAGE                                ###
+################################################################################
+
+How to install the plugin:
+
+  - make sure you have a sonar installed on your computer
+  - set the environment variable SONAR_HOME with path to Sonar home
+  - run make 
+  - restart Sonar
+
+How to test the plugin:
+
+  Example is provided in directory: qualimetrics/share/examples, for more 
+  infromation, see the README in this directory. 

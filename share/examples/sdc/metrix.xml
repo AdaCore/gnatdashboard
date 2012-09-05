@@ -1,0 +1,967 @@
+<?xml version="1.0"?>
+<global>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/stack.adb">
+      <metric name="all_lines">99</metric>
+      <metric name="code_lines">49</metric>
+      <metric name="comment_lines">24</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">32.87</metric>
+      <metric name="blank_lines">26</metric>
+      <unit name="Stack" kind="package body" line="4" col="1">
+         <metric name="all_lines">96</metric>
+         <metric name="code_lines">47</metric>
+         <metric name="comment_lines">24</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">33.80</metric>
+         <metric name="blank_lines">25</metric>
+         <metric name="all_subprograms">6</metric>
+         <metric name="all_stmts">19</metric>
+         <metric name="all_dcls">13</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">3</metric>
+         <metric name="lsloc">32</metric>
+         <unit name="Clear" kind="procedure body" line="23" col="4">
+            <metric name="all_lines">4</metric>
+            <metric name="code_lines">4</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">1</metric>
+            <metric name="all_dcls">1</metric>
+            <metric name="construct_nesting">1</metric>
+            <metric name="lsloc">2</metric>
+            <metric name="statement_complexity">1</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">1</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Empty" kind="function body" line="32" col="4">
+            <metric name="all_lines">4</metric>
+            <metric name="code_lines">4</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">1</metric>
+            <metric name="all_dcls">1</metric>
+            <metric name="construct_nesting">1</metric>
+            <metric name="lsloc">2</metric>
+            <metric name="statement_complexity">1</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">1</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Push" kind="procedure body" line="41" col="4">
+            <metric name="all_lines">11</metric>
+            <metric name="code_lines">9</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">2</metric>
+            <metric name="all_stmts">5</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">7</metric>
+            <metric name="statement_complexity">2</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">2</metric>
+            <metric name="essential_complexity">2</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">1</metric>
+         </unit>
+         <unit name="Pop" kind="function body" line="57" col="4">
+            <metric name="all_lines">15</metric>
+            <metric name="code_lines">11</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">4</metric>
+            <metric name="all_stmts">6</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">8</metric>
+            <metric name="statement_complexity">2</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">2</metric>
+            <metric name="essential_complexity">2</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">1</metric>
+         </unit>
+         <unit name="Top" kind="function body" line="77" col="4">
+            <metric name="all_lines">8</metric>
+            <metric name="code_lines">7</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">1</metric>
+            <metric name="all_stmts">3</metric>
+            <metric name="all_dcls">1</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">4</metric>
+            <metric name="statement_complexity">2</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">2</metric>
+            <metric name="essential_complexity">2</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">1</metric>
+         </unit>
+         <unit name="View" kind="procedure body" line="90" col="4">
+            <metric name="all_lines">8</metric>
+            <metric name="code_lines">7</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">1</metric>
+            <metric name="all_stmts">3</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">5</metric>
+            <metric name="statement_complexity">2</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">2</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">1</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/stack.ads">
+      <metric name="all_lines">36</metric>
+      <metric name="code_lines">11</metric>
+      <metric name="comment_lines">13</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">54.16</metric>
+      <metric name="blank_lines">12</metric>
+      <unit name="Stack" kind="package" line="6" col="1">
+         <metric name="all_lines">31</metric>
+         <metric name="code_lines">10</metric>
+         <metric name="comment_lines">12</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">54.54</metric>
+         <metric name="blank_lines">9</metric>
+         <metric name="public_subprograms">6</metric>
+         <metric name="all_stmts">0</metric>
+         <metric name="all_dcls">10</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">10</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/screen_output.adb">
+      <metric name="all_lines">95</metric>
+      <metric name="code_lines">57</metric>
+      <metric name="comment_lines">19</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">25.00</metric>
+      <metric name="blank_lines">19</metric>
+      <unit name="Screen_Output" kind="package body" line="4" col="1">
+         <metric name="all_lines">92</metric>
+         <metric name="code_lines">55</metric>
+         <metric name="comment_lines">19</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">25.67</metric>
+         <metric name="blank_lines">18</metric>
+         <metric name="all_subprograms">5</metric>
+         <metric name="all_stmts">28</metric>
+         <metric name="all_dcls">18</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">3</metric>
+         <metric name="lsloc">46</metric>
+         <unit name="Msg" kind="procedure body" line="17" col="4">
+            <metric name="all_lines">12</metric>
+            <metric name="code_lines">12</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">4</metric>
+            <metric name="all_dcls">4</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">8</metric>
+            <metric name="statement_complexity">2</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">2</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Debug_Msg" kind="procedure body" line="34" col="4">
+            <metric name="all_lines">10</metric>
+            <metric name="code_lines">9</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">1</metric>
+            <metric name="all_stmts">5</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">7</metric>
+            <metric name="statement_complexity">2</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">2</metric>
+            <metric name="essential_complexity">2</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">1</metric>
+         </unit>
+         <unit name="Error_Msg" kind="procedure body" line="49" col="4">
+            <metric name="all_lines">9</metric>
+            <metric name="code_lines">9</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">6</metric>
+            <metric name="all_dcls">4</metric>
+            <metric name="construct_nesting">1</metric>
+            <metric name="lsloc">10</metric>
+            <metric name="statement_complexity">1</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">1</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Syntax_Error" kind="procedure body" line="63" col="4">
+            <metric name="all_lines">21</metric>
+            <metric name="code_lines">17</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">4</metric>
+            <metric name="all_stmts">11</metric>
+            <metric name="all_dcls">5</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">16</metric>
+            <metric name="statement_complexity">3</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">3</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">1</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Pause" kind="procedure body" line="89" col="4">
+            <metric name="all_lines">5</metric>
+            <metric name="code_lines">5</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">2</metric>
+            <metric name="all_dcls">1</metric>
+            <metric name="construct_nesting">1</metric>
+            <metric name="lsloc">3</metric>
+            <metric name="statement_complexity">1</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">1</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/screen_output.ads">
+      <metric name="all_lines">26</metric>
+      <metric name="code_lines">7</metric>
+      <metric name="comment_lines">12</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">63.15</metric>
+      <metric name="blank_lines">7</metric>
+      <unit name="Screen_Output" kind="package" line="3" col="1">
+         <metric name="all_lines">24</metric>
+         <metric name="code_lines">7</metric>
+         <metric name="comment_lines">11</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">61.11</metric>
+         <metric name="blank_lines">6</metric>
+         <metric name="public_subprograms">5</metric>
+         <metric name="all_stmts">0</metric>
+         <metric name="all_dcls">15</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">15</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/tokens.adb">
+      <metric name="all_lines">79</metric>
+      <metric name="code_lines">49</metric>
+      <metric name="comment_lines">11</metric>
+      <metric name="eol_comments">1</metric>
+      <metric name="comment_percentage">20.00</metric>
+      <metric name="blank_lines">19</metric>
+      <unit name="Tokens" kind="package body" line="5" col="1">
+         <metric name="all_lines">74</metric>
+         <metric name="code_lines">46</metric>
+         <metric name="comment_lines">11</metric>
+         <metric name="eol_comments">1</metric>
+         <metric name="comment_percentage">21.05</metric>
+         <metric name="blank_lines">17</metric>
+         <metric name="all_subprograms">2</metric>
+         <metric name="all_stmts">16</metric>
+         <metric name="all_dcls">5</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">6</metric>
+         <metric name="lsloc">21</metric>
+         <unit name="Next" kind="function body" line="11" col="4">
+            <metric name="all_lines">48</metric>
+            <metric name="code_lines">33</metric>
+            <metric name="comment_lines">5</metric>
+            <metric name="eol_comments">1</metric>
+            <metric name="comment_percentage">15.78</metric>
+            <metric name="blank_lines">10</metric>
+            <metric name="all_stmts">12</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">5</metric>
+            <metric name="lsloc">14</metric>
+            <metric name="statement_complexity">6</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">6</metric>
+            <metric name="essential_complexity">7</metric>
+            <metric name="max_loop_nesting">1</metric>
+            <metric name="extra_exit_points">4</metric>
+         </unit>
+         <unit name="Process" kind="procedure body" line="64" col="4">
+            <metric name="all_lines">13</metric>
+            <metric name="code_lines">11</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">2</metric>
+            <metric name="all_stmts">4</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">6</metric>
+            <metric name="statement_complexity">3</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">3</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/tokens.ads">
+      <metric name="all_lines">37</metric>
+      <metric name="code_lines">20</metric>
+      <metric name="comment_lines">6</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">23.07</metric>
+      <metric name="blank_lines">11</metric>
+      <unit name="Tokens" kind="package" line="8" col="1">
+         <metric name="all_lines">28</metric>
+         <metric name="code_lines">17</metric>
+         <metric name="comment_lines">4</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">19.04</metric>
+         <metric name="blank_lines">7</metric>
+         <metric name="public_types">2</metric>
+         <metric name="private_types">1</metric>
+         <metric name="all_types">2</metric>
+         <metric name="public_subprograms">2</metric>
+         <metric name="all_stmts">0</metric>
+         <metric name="all_dcls">15</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">15</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/instructions.adb">
+      <metric name="all_lines">59</metric>
+      <metric name="code_lines">31</metric>
+      <metric name="comment_lines">12</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">27.90</metric>
+      <metric name="blank_lines">16</metric>
+      <unit name="Instructions" kind="package body" line="6" col="1">
+         <metric name="all_lines">52</metric>
+         <metric name="code_lines">27</metric>
+         <metric name="comment_lines">12</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">30.76</metric>
+         <metric name="blank_lines">13</metric>
+         <metric name="all_subprograms">2</metric>
+         <metric name="all_stmts">11</metric>
+         <metric name="all_dcls">6</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">4</metric>
+         <metric name="lsloc">17</metric>
+         <unit name="Read" kind="function body" line="12" col="4">
+            <metric name="all_lines">19</metric>
+            <metric name="code_lines">9</metric>
+            <metric name="comment_lines">6</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">40.00</metric>
+            <metric name="blank_lines">4</metric>
+            <metric name="all_stmts">4</metric>
+            <metric name="all_dcls">3</metric>
+            <metric name="construct_nesting">3</metric>
+            <metric name="lsloc">7</metric>
+            <metric name="statement_complexity">3</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">3</metric>
+            <metric name="essential_complexity">3</metric>
+            <metric name="max_loop_nesting">1</metric>
+            <metric name="extra_exit_points">1</metric>
+         </unit>
+         <unit name="Process" kind="procedure body" line="36" col="4">
+            <metric name="all_lines">20</metric>
+            <metric name="code_lines">16</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">4</metric>
+            <metric name="all_stmts">7</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">3</metric>
+            <metric name="lsloc">9</metric>
+            <metric name="statement_complexity">4</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">4</metric>
+            <metric name="essential_complexity">3</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">1</metric>
+         </unit>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/instructions.ads">
+      <metric name="all_lines">21</metric>
+      <metric name="code_lines">7</metric>
+      <metric name="comment_lines">5</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">41.66</metric>
+      <metric name="blank_lines">9</metric>
+      <unit name="Instructions" kind="package" line="3" col="1">
+         <metric name="all_lines">17</metric>
+         <metric name="code_lines">7</metric>
+         <metric name="comment_lines">4</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">36.36</metric>
+         <metric name="blank_lines">6</metric>
+         <metric name="public_types">1</metric>
+         <metric name="private_types">1</metric>
+         <metric name="all_types">1</metric>
+         <metric name="public_subprograms">2</metric>
+         <metric name="all_stmts">0</metric>
+         <metric name="all_dcls">10</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">10</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/input.adb">
+      <metric name="all_lines">282</metric>
+      <metric name="code_lines">141</metric>
+      <metric name="comment_lines">72</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">33.80</metric>
+      <metric name="blank_lines">69</metric>
+      <unit name="Input" kind="package body" line="5" col="1">
+         <metric name="all_lines">278</metric>
+         <metric name="code_lines">138</metric>
+         <metric name="comment_lines">72</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">34.28</metric>
+         <metric name="blank_lines">68</metric>
+         <metric name="all_subprograms">11</metric>
+         <metric name="all_stmts">53</metric>
+         <metric name="all_dcls">41</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">4</metric>
+         <metric name="lsloc">94</metric>
+         <unit name="Column_Number" kind="function body" line="58" col="4">
+            <metric name="all_lines">19</metric>
+            <metric name="code_lines">12</metric>
+            <metric name="comment_lines">4</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">25.00</metric>
+            <metric name="blank_lines">3</metric>
+            <metric name="all_stmts">5</metric>
+            <metric name="all_dcls">3</metric>
+            <metric name="construct_nesting">3</metric>
+            <metric name="lsloc">8</metric>
+            <metric name="statement_complexity">3</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">3</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">1</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Current_Line" kind="function body" line="82" col="4">
+            <metric name="all_lines">4</metric>
+            <metric name="code_lines">4</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">1</metric>
+            <metric name="all_dcls">1</metric>
+            <metric name="construct_nesting">1</metric>
+            <metric name="lsloc">2</metric>
+            <metric name="statement_complexity">1</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">1</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="End_Line" kind="function body" line="91" col="4">
+            <metric name="all_lines">4</metric>
+            <metric name="code_lines">4</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">1</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">1</metric>
+            <metric name="lsloc">3</metric>
+            <metric name="statement_complexity">1</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">1</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Get_Char" kind="function body" line="100" col="4">
+            <metric name="all_lines">15</metric>
+            <metric name="code_lines">10</metric>
+            <metric name="comment_lines">1</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">9.09</metric>
+            <metric name="blank_lines">4</metric>
+            <metric name="all_stmts">5</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">7</metric>
+            <metric name="statement_complexity">2</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">2</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Line_Number" kind="function body" line="120" col="4">
+            <metric name="all_lines">4</metric>
+            <metric name="code_lines">4</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">1</metric>
+            <metric name="all_dcls">1</metric>
+            <metric name="construct_nesting">1</metric>
+            <metric name="lsloc">2</metric>
+            <metric name="statement_complexity">1</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">1</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Read_Number" kind="procedure body" line="129" col="4">
+            <metric name="all_lines">50</metric>
+            <metric name="code_lines">38</metric>
+            <metric name="comment_lines">2</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">5.00</metric>
+            <metric name="blank_lines">10</metric>
+            <metric name="all_stmts">15</metric>
+            <metric name="all_dcls">8</metric>
+            <metric name="construct_nesting">3</metric>
+            <metric name="lsloc">23</metric>
+            <metric name="statement_complexity">3</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">3</metric>
+            <metric name="essential_complexity">3</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">2</metric>
+         </unit>
+         <unit name="Next_Word" kind="function body" line="184" col="4">
+            <metric name="all_lines">24</metric>
+            <metric name="code_lines">17</metric>
+            <metric name="comment_lines">1</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">5.55</metric>
+            <metric name="blank_lines">6</metric>
+            <metric name="all_stmts">8</metric>
+            <metric name="all_dcls">4</metric>
+            <metric name="construct_nesting">3</metric>
+            <metric name="lsloc">12</metric>
+            <metric name="statement_complexity">3</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">3</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">1</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Read_New_Line" kind="procedure body" line="213" col="4">
+            <metric name="all_lines">28</metric>
+            <metric name="code_lines">15</metric>
+            <metric name="comment_lines">6</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">28.57</metric>
+            <metric name="blank_lines">7</metric>
+            <metric name="all_stmts">9</metric>
+            <metric name="all_dcls">1</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">10</metric>
+            <metric name="statement_complexity">3</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">3</metric>
+            <metric name="essential_complexity">2</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">1</metric>
+         </unit>
+         <unit name="Skip_Line" kind="procedure body" line="246" col="4">
+            <metric name="all_lines">4</metric>
+            <metric name="code_lines">4</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">1</metric>
+            <metric name="all_dcls">1</metric>
+            <metric name="construct_nesting">1</metric>
+            <metric name="lsloc">2</metric>
+            <metric name="statement_complexity">1</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">1</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Skip_Spaces" kind="procedure body" line="255" col="4">
+            <metric name="all_lines">13</metric>
+            <metric name="code_lines">9</metric>
+            <metric name="comment_lines">1</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">10.00</metric>
+            <metric name="blank_lines">3</metric>
+            <metric name="all_stmts">4</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">6</metric>
+            <metric name="statement_complexity">2</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">2</metric>
+            <metric name="essential_complexity">2</metric>
+            <metric name="max_loop_nesting">1</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Unread_Char" kind="procedure body" line="273" col="4">
+            <metric name="all_lines">8</metric>
+            <metric name="code_lines">8</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">3</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">5</metric>
+            <metric name="statement_complexity">2</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">2</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/input.ads">
+      <metric name="all_lines">34</metric>
+      <metric name="code_lines">13</metric>
+      <metric name="comment_lines">13</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">50.00</metric>
+      <metric name="blank_lines">8</metric>
+      <unit name="Input" kind="package" line="3" col="1">
+         <metric name="all_lines">32</metric>
+         <metric name="code_lines">13</metric>
+         <metric name="comment_lines">12</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">48.00</metric>
+         <metric name="blank_lines">7</metric>
+         <metric name="public_types">1</metric>
+         <metric name="all_types">1</metric>
+         <metric name="public_subprograms">6</metric>
+         <metric name="all_stmts">0</metric>
+         <metric name="all_dcls">15</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">15</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/values.adb">
+      <metric name="all_lines">52</metric>
+      <metric name="code_lines">24</metric>
+      <metric name="comment_lines">17</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">41.46</metric>
+      <metric name="blank_lines">11</metric>
+      <unit name="Values" kind="package body" line="5" col="1">
+         <metric name="all_lines">48</metric>
+         <metric name="code_lines">21</metric>
+         <metric name="comment_lines">17</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">44.73</metric>
+         <metric name="blank_lines">10</metric>
+         <metric name="all_subprograms">3</metric>
+         <metric name="all_stmts">6</metric>
+         <metric name="all_dcls">10</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">3</metric>
+         <metric name="lsloc">16</metric>
+         <unit name="Process" kind="procedure body" line="11" col="4">
+            <metric name="all_lines">4</metric>
+            <metric name="code_lines">4</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">1</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">1</metric>
+            <metric name="lsloc">3</metric>
+            <metric name="statement_complexity">1</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">1</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+         <unit name="Read" kind="function body" line="20" col="4">
+            <metric name="all_lines">17</metric>
+            <metric name="code_lines">11</metric>
+            <metric name="comment_lines">3</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">21.42</metric>
+            <metric name="blank_lines">3</metric>
+            <metric name="all_stmts">4</metric>
+            <metric name="all_dcls">5</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">9</metric>
+            <metric name="statement_complexity">2</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">2</metric>
+            <metric name="essential_complexity">2</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">1</metric>
+         </unit>
+         <unit name="To_String" kind="function body" line="42" col="4">
+            <metric name="all_lines">9</metric>
+            <metric name="code_lines">4</metric>
+            <metric name="comment_lines">5</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">55.55</metric>
+            <metric name="blank_lines">0</metric>
+            <metric name="all_stmts">1</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">1</metric>
+            <metric name="lsloc">3</metric>
+            <metric name="statement_complexity">1</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">1</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/values.ads">
+      <metric name="all_lines">29</metric>
+      <metric name="code_lines">11</metric>
+      <metric name="comment_lines">8</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">42.10</metric>
+      <metric name="blank_lines">10</metric>
+      <unit name="Values" kind="package" line="4" col="1">
+         <metric name="all_lines">26</metric>
+         <metric name="code_lines">11</metric>
+         <metric name="comment_lines">6</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">35.29</metric>
+         <metric name="blank_lines">9</metric>
+         <metric name="public_types">1</metric>
+         <metric name="private_types">1</metric>
+         <metric name="all_types">2</metric>
+         <metric name="public_subprograms">3</metric>
+         <metric name="all_stmts">0</metric>
+         <metric name="all_dcls">11</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">11</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/sdc.adb">
+      <metric name="all_lines">50</metric>
+      <metric name="code_lines">36</metric>
+      <metric name="comment_lines">2</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">5.26</metric>
+      <metric name="blank_lines">12</metric>
+      <unit name="Sdc" kind="procedure body" line="8" col="1">
+         <metric name="all_lines">43</metric>
+         <metric name="code_lines">30</metric>
+         <metric name="comment_lines">2</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">6.25</metric>
+         <metric name="blank_lines">11</metric>
+         <metric name="all_subprograms">1</metric>
+         <metric name="all_stmts">14</metric>
+         <metric name="all_dcls">2</metric>
+         <metric name="construct_nesting">3</metric>
+         <metric name="lsloc">16</metric>
+         <metric name="statement_complexity">2</metric>
+         <metric name="short_circuit_complexity">0</metric>
+         <metric name="cyclomatic_complexity">2</metric>
+         <metric name="essential_complexity">1</metric>
+         <metric name="max_loop_nesting">1</metric>
+         <metric name="extra_exit_points">0</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/sdc.ads">
+      <metric name="all_lines">25</metric>
+      <metric name="code_lines">1</metric>
+      <metric name="comment_lines">18</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">94.73</metric>
+      <metric name="blank_lines">6</metric>
+      <unit name="Sdc" kind="procedure" line="24" col="1">
+         <metric name="all_lines">1</metric>
+         <metric name="code_lines">1</metric>
+         <metric name="comment_lines">0</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">0.00</metric>
+         <metric name="blank_lines">0</metric>
+         <metric name="public_subprograms">1</metric>
+         <metric name="all_stmts">0</metric>
+         <metric name="all_dcls">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">1</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/values-operations.adb">
+      <metric name="all_lines">71</metric>
+      <metric name="code_lines">39</metric>
+      <metric name="comment_lines">10</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">20.40</metric>
+      <metric name="blank_lines">22</metric>
+      <unit name="Values.Operations" kind="package body" line="5" col="1">
+         <metric name="all_lines">65</metric>
+         <metric name="code_lines">36</metric>
+         <metric name="comment_lines">10</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">21.73</metric>
+         <metric name="blank_lines">19</metric>
+         <metric name="all_subprograms">2</metric>
+         <metric name="all_stmts">13</metric>
+         <metric name="all_dcls">8</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">3</metric>
+         <metric name="lsloc">21</metric>
+         <unit name="Read" kind="function body" line="11" col="4">
+            <metric name="all_lines">18</metric>
+            <metric name="code_lines">14</metric>
+            <metric name="comment_lines">0</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">0.00</metric>
+            <metric name="blank_lines">4</metric>
+            <metric name="all_stmts">6</metric>
+            <metric name="all_dcls">2</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">8</metric>
+            <metric name="statement_complexity">5</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">5</metric>
+            <metric name="essential_complexity">5</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">4</metric>
+         </unit>
+         <unit name="Process" kind="procedure body" line="34" col="4">
+            <metric name="all_lines">34</metric>
+            <metric name="code_lines">20</metric>
+            <metric name="comment_lines">4</metric>
+            <metric name="eol_comments">0</metric>
+            <metric name="comment_percentage">16.66</metric>
+            <metric name="blank_lines">10</metric>
+            <metric name="all_stmts">7</metric>
+            <metric name="all_dcls">5</metric>
+            <metric name="construct_nesting">2</metric>
+            <metric name="lsloc">12</metric>
+            <metric name="statement_complexity">4</metric>
+            <metric name="short_circuit_complexity">0</metric>
+            <metric name="cyclomatic_complexity">4</metric>
+            <metric name="essential_complexity">1</metric>
+            <metric name="max_loop_nesting">0</metric>
+            <metric name="extra_exit_points">0</metric>
+         </unit>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/values-operations.ads">
+      <metric name="all_lines">23</metric>
+      <metric name="code_lines">7</metric>
+      <metric name="comment_lines">7</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">50.00</metric>
+      <metric name="blank_lines">9</metric>
+      <unit name="Values.Operations" kind="package" line="5" col="1">
+         <metric name="all_lines">17</metric>
+         <metric name="code_lines">7</metric>
+         <metric name="comment_lines">4</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">36.36</metric>
+         <metric name="blank_lines">6</metric>
+         <metric name="public_types">1</metric>
+         <metric name="private_types">1</metric>
+         <metric name="all_types">1</metric>
+         <metric name="public_subprograms">2</metric>
+         <metric name="all_stmts">0</metric>
+         <metric name="all_dcls">11</metric>
+         <metric name="unit_nesting">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">11</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/except.ads">
+      <metric name="all_lines">15</metric>
+      <metric name="code_lines">5</metric>
+      <metric name="comment_lines">5</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">50.00</metric>
+      <metric name="blank_lines">5</metric>
+      <unit name="Except" kind="package" line="3" col="1">
+         <metric name="all_lines">13</metric>
+         <metric name="code_lines">5</metric>
+         <metric name="comment_lines">4</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">44.44</metric>
+         <metric name="blank_lines">4</metric>
+         <metric name="public_subprograms">0</metric>
+         <metric name="all_stmts">0</metric>
+         <metric name="all_dcls">4</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">4</metric>
+      </unit>
+   </file>
+   <metric name="all_lines">1033</metric>
+   <metric name="code_lines">508</metric>
+   <metric name="comment_lines">254</metric>
+   <metric name="eol_comments">1</metric>
+   <metric name="comment_percentage">33.46</metric>
+   <metric name="blank_lines">271</metric>
+   <metric name="average_lines_in_bodies">11.59</metric>
+   <metric name="all_stmts">160</metric>
+   <metric name="all_dcls">195</metric>
+   <metric name="lsloc">355</metric>
+   <metric name="public_subprograms">27</metric>
+   <metric name="all_subprograms">32</metric>
+   <metric name="public_types">6</metric>
+   <metric name="all_types">7</metric>
+   <metric name="average_complexity">2.25</metric>
+</global>

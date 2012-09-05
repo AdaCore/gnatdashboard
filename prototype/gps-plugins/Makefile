@@ -3,12 +3,12 @@
 # report: execute the script python create_gc_report to generate gnatcheck report for the given project
 ###
 
-GPR_PATH=$(PWD)/../examples/gps_tutorial/sdc.gpr
+GPR_PATH=$(PWD)/../../share/examples/sdc/sdc.gpr
 SCRIPT=run.sh
-TARGET_PATH=$(PWD)/../examples/gps_tutorial/report/
-LOG_PATH=$(PWD)/../examples/gps_tutorial/gnatcheck.out
+TARGET_PATH=$(PWD)/../../share/examples/sdc/report/
+LOG_PATH=$(PWD)/../../share/examples/sdc/gnatcheck.out
 INTERPRETER=sh
-TREE_FILE_PATH=$(PWD)/../examples/gps_tutorial/project_tree.json
+TREE_FILE_PATH=$(PWD)/../../share/examples/sdc/project_tree.json
 
 all: tree report
 
