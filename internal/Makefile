@@ -1,5 +1,5 @@
 
-PLUGIN_DIR=$(PWD)/../sonar-ada-plugin
+PLUGIN_DIR=$(shell /bin/pwd)/../sonar-ada-plugin
 PLUGIN_VERSION=1.0-SNAPSHOT
 
 all: build install test
