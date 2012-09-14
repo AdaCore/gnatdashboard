@@ -1,0 +1,21 @@
+################################################################################
+###                                    WHAT IS                               ###
+################################################################################
+
+This folder is amed to contain internal matter content, currently composed of:
+
+    - design/ folder: contains information about the qualimetrics project design
+    - test/ folder: contains internal test suite which will not be published
+      with the Sonar plugin.
+
+
+################################################################################
+###                                     USAGE                                ###
+################################################################################
+
+How to run the internal test suite:
+
+  Run make test, ouput file for GAIA will be placed in test/result folder by
+  default, to change this location run make as below:
+    $ make test TEST_RESULTS_DIR="path_to_directory"
+

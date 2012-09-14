@@ -19,7 +19,7 @@ BASEDIR = '../..'
 SUREFIRE_REPORT_DIR = 'sonar-ada-plugin/target/surefire-reports/'
 RESULTS_DIR = 'internal/test/result/'
 
-def process_test_result():
+def process_test_result(test_result_dir):
     """ Process the test results and produce the res files.
     """
 
@@ -80,17 +80,19 @@ def process_test_result():
     for file in glob.glob(path):
         explore(xml.dom.minidom.parse(file))
 
-    results_file = open(os.path.join(RESULTS_DIR, "results"), "w")
+    if not os.path.exists(test_result_dir):
+        os.mkdir(test_result_dir)
+    results_file = open(os.path.join(test_result_dir, "results"), "w")
 
     for a in tests:
         status = tests[a]['status']
         results_file.write("%s:%s:\n" % (a, status))
-        t = open(os.path.join(RESULTS_DIR, a + ".result"), "w")
+        t = open(os.path.join(test_result_dir, a + ".result"), "w")
         t.write("%s:\n" % status)
         t.close()
 
         if status != "OK" and status != 'XFAIL':
-            out = open(os.path.join(RESULTS_DIR, a + ".diff"), "w")
+            out = open(os.path.join(test_result_dir, a + ".diff"), "w")
             test_failure_result = tests[a]['diff'] + "\n"
             out.write(test_failure_result.encode("utf-8"))
             out.close()
@@ -98,7 +100,10 @@ def process_test_result():
     results_file.close()
 
 def __main__():
-    process_test_result()
+    if len(sys.argv) > 1:
+        process_test_result(sys.argv[1])
+    else:
+        process_test_result(RESULTS_DIR)
 
 if __name__ == '__main__':
     __main__()
