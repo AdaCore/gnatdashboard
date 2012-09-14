@@ -75,7 +75,7 @@ class Source(object):
 class GcOutput(object):
     """Represent the ouput of GnatCheck
 
-       Is initialized with the path to the GnatCheck log file wich
+       Is initialized with the path to the GnatCheck log file which
        contains the output of GnatCheck, parse it and save all the
        rules violations.
     """
@@ -100,7 +100,7 @@ class GcOutput(object):
 
            Retrieves following informations: source basename, line in
            source, rule identification, violation message removing rubbish
-           charachters and save those informations as a violation
+           characters and save those informations as a violation
         """
         #Set maxsplit at 3 because the rule id can contain ':'
         split_1 = line.split(':', 3)

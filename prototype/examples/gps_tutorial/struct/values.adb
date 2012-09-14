@@ -44,7 +44,7 @@ package body Values is
       return Integer'Image (V.E);
       --  V is a pointer to a Value_Info record. V.all is the
       --  actual Value_Info record pointed by V. Thus, strictly speaking,
-      --  we shoudl have written V.all.E above. However, Ada allows to
+      --  we should have written V.all.E above. However, Ada allows to
       --  remove the ".all" because the meaning of expression "V.E" is
       --  clear from its context.
    end To_String;
