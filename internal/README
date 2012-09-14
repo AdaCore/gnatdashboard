@@ -2,7 +2,7 @@
 ###                                    WHAT IS                               ###
 ################################################################################
 
-This folder is amed to contain internal matter content, currently composed of:
+This folder is aimed to contain internal matter content, currently composed of:
 
     - design/ folder: contains information about the qualimetrics project design
     - test/ folder: contains internal test suite which will not be published
