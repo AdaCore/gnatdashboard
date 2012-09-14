@@ -6,7 +6,6 @@ package org.sonar.plugins.ada;
 
 import java.util.List;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.sonar.colorizer.Tokenizer;
 
