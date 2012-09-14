@@ -2,7 +2,7 @@
 
 """Generate XML gnat check rule repository for Ada sonar plugin
 
-Retreive rule informations from gnatcheck -hx to generate the
+Retrieve rule informations from gnatcheck -hx to generate the
 rule repository and the default profile for the Sonar Ada plugin.
 Those documents are generate in ada/src/main/resources directory.
 Details in functions\'s documentation.
@@ -29,7 +29,7 @@ def removeTmpFile(file_name):
 
 
 def importRulesInfos():
-    """Retreive rule informations from gnatcheck -hx
+    """Retrieve rule informations from gnatcheck -hx
 
     Attribute "switch" correspond to the rule key
     Attribute "label" correspond to the rule name
@@ -42,7 +42,7 @@ def importRulesInfos():
     (fd, file_name) = tempfile.mkstemp(suffix='.xml', prefix='gc_rules')
     with open(file_name, 'w+') as gc_rules:
         gc_rules.writelines(output)
-    # Parse the temporary file to retreive rules's informations
+    # Parse the temporary file to retrieve rules's informations
     with open(file_name, 'rt') as allrules:
         try:
             tree = ElementTree.parse(allrules)
