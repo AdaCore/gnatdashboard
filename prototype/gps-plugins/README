@@ -4,13 +4,22 @@
 
 GnatCheck report generator:
 
-    create_gc_report.py: Python script that generqte report 
-                         from GnatCheck output using qmt.py
+    create_gc_report.py: Python script that generate report 
+                         from GnatCheck output.
 
-
+    create_cp_report.py: Python script that generate report
+                         from Codepeer output.
 ################################################################
 ###                          USAGE                           ###
 ################################################################
+
+How to generate GNATCheck and Codepeer report:
+  
+    - run make
+    - reports are generated in share/example/sdc/report/
+      directory.
+    - GNATCheck report is generated in XML format
+    - Codepeer report is generated in JSON format
 
 For more information about the script usage execute the script 
 with -h option. Details in this README will come soon.

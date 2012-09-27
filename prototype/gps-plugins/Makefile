@@ -1,13 +1,15 @@
 ###
-# tree: execute qmt.py script to generate a file that contains the logical project tree
-# report: execute the script python create_gc_report to generate gnatcheck report for the given project
+# tree: execute qmt.py script to generate a file that contains the logical
+# 			project tree
+# report: execute the script python create_gc_report to generate gnatcheck
+# 				report for the given project
 ###
 
 GPR_PATH=$(PWD)/../../share/examples/sdc/sdc.gpr
 SCRIPT=run.sh
-TARGET_PATH=$(PWD)/../../share/examples/sdc/report/
-LOG_PATH=$(PWD)/../../share/examples/sdc/gnatcheck.out
-INTERPRETER=sh
+REPORT_DIR_PATH=$(PWD)/../../share/examples/sdc/report/
+GC_OUTPUT_PATH=$(PWD)/../../share/examples/sdc/gnatcheck.out
+CP_OUTPUT_PATH=$(PWD)/../../share/examples/sdc/codepeer.out
 TREE_FILE_PATH=$(PWD)/../../share/examples/sdc/project_tree.json
 
 all: tree report
@@ -15,6 +17,6 @@ all: tree report
 tree:
 	sh $(SCRIPT) -d $(GPR_PATH) 1> $(TREE_FILE_PATH)
 
-report:
-	python create_gc_report.py -P$(GPR_PATH) -S$(SCRIPT) -I$(INTERPRETER) --target=$(TARGET_PATH) --log=$(LOG_PATH)
-	
+report: 
+	python create_gc_report.py --json-tree=$(TREE_FILE_PATH) --target=$(REPORT_DIR_PATH) --log=$(GC_OUTPUT_PATH)
+	python create_cp_report.py --json-tree=$(TREE_FILE_PATH) --output=$(CP_OUTPUT_PATH) --report-dir=$(REPORT_DIR_PATH)

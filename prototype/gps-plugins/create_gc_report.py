@@ -9,6 +9,10 @@ from xml.etree.ElementTree import tostring
 from subprocess import Popen
 from subprocess import PIPE
 from subprocess import STDOUT
+from utils import (Project,
+                   Directory,
+                   Source,
+                   SourceMap)
 import re
 import sys
 import json
@@ -25,52 +29,7 @@ class Violation(object):
         self.msg = msg
 
 
-## Project #################################################################
-##
-class Project(object):
-    """Represent a project"""
-    def __init__(self, name):
-        self.name = name
-
-
-## Directory #################################################################
-##
-class Directory(object):
-    """Represent a directory"""
-    def __init__(self, dir_name, project):
-        #Retrieve the name of the directory without the full path
-        self.dir_name = dir_name.split('/')[-1]
-        self.parent_project = Project(project)
-
-    def get_parent_name(self):
-        return self.parent_project.name
-
-
-## Source #################################################################
-##
-class Source(object):
-    """Represent a source file
-    """
-    def __init__(self, base_name, directory, project):
-        self.base_name = base_name
-        self.full_name = directory + '/' + base_name
-        self.parent_dir = Directory(directory,project)
-
-    def get_base_name(self):
-        """"""
-
-    def get_project(self):
-        return self.parent_dir.get_parent_name()
-
-    def get_directory(self):
-        return self.parent_dir.dir_name
-
-    def get_full_name(self):
-        """"""
-        return self.full_name
-
-
-## GcOutput #################################################################
+# GcOutput #################################################################
 ##
 class GcOutput(object):
     """Represent the ouput of GnatCheck
@@ -123,75 +82,6 @@ class GcOutput(object):
             for line in gc_output.readlines():
                 if prog.match(line):
                     self.__parse_line(line)
-
-
-## SourceMap #################################################################
-##
-class SourceMap(object):
-    """Map a source file with its project and directory
-
-       Execute qmt.py script to retrieve full source path and the project
-       it belongs.
-    """
-
-    def __init__(self, gpr_path, script, interpret):
-        """Initializes the class
-
-           The required arguments may change for the non prototype version
-           since for now the qmt.py is launched by a shell script. So if
-           the python script will be directly launched without the shell
-           script. It will not be needed to change this class.
-        """
-        self.gpr_path = gpr_path
-        self.interpret = interpret
-        self.script = script
-        self.src_map = self.__parse_output()
-
-    def __load_script_output(self):
-        """Execute the qmt.py script and retrive the output"""
-        cmd = self.interpret + ' ' + self.script + ' -d ' + self.gpr_path
-        try:
-            p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE,
-                      stderr=PIPE, close_fds=True)
-        except OSError as os:
-             print 'Connot find the script for the given path: ' + gpr_path
-
-        return p.stdout.read()
-
-
-    def __parse_output(self):
-        """Parse the qmt.py script output
-
-           Save the informations in a dictionnary where the key is the
-           source basename and the value is a tuple of the project and
-           the full path
-        """
-        src_map = dict()
-        output = self.__load_script_output()
-        try:
-            tree_source = json.loads(output)
-        except ValueError:
-            print 'Output of script ' + self.script + ' is not a JSon format.'
-            print output
-            exit(1)
-        for prj in tree_source:
-            for src_dir in tree_source[prj]:
-                for src in tree_source[prj][src_dir]:
-                    source = Source(src, src_dir, prj)
-                    src_map[src] = source
-        return src_map
-
-    def get_src_path(self, src):
-        """Return the source full path"""
-        return self.src_map[src].get_full_name()
-
-    def get_src_directory(self, src):
-        """"""
-        return self.src_map[src].get_directory()
-
-    def get_src_project(self, src):
-        """Return the project the source blongs"""
-        return self.src_map[src].get_project()
 
 
 ## ReportExporter #################################################################
@@ -248,20 +138,14 @@ def _parse_command_line():
     """Parse the command line"""
     parser = argparse.ArgumentParser(description=
                                      'Gnat Check report generator')
-    parser.add_argument('-P', action="store", dest="gpr_path", type=str,
-                        help="Root project file, absolute path, to analyse with GnatCheck",
-                        required=True)
-    parser.add_argument('-S', action="store", dest="script",
-                        type=str, help="Path to the script that execute the qmt.py script, e.g: run.sh",
-                        required=True)
-    parser.add_argument('-I', action="store", dest="interpreter",
-                        type=str, help="Interpreter to use for the script, e.g: sh, python",
-                        required=True)
     parser.add_argument('--target=', action="store", dest="target",
                         type=str, help="Absolute path target for the generated GnatCheck report",
                         required=True)
     parser.add_argument('--log=', action="store", dest="gc_log",
                         type=str, help="Absolute path to gnatcheck.log file", required=True)
+    parser.add_argument('--json-tree=', action='store', dest='json_tree', type=str,
+                        help='Absolute path to json file that contains project tree',
+                        required=True)
     return parser.parse_args()
 
 
@@ -271,8 +155,7 @@ def _parse_command_line():
 def _entry_point():
     """Script entry point"""
     cmd_line = _parse_command_line()
-    src_map = SourceMap(cmd_line.gpr_path, cmd_line.script,
-                        cmd_line.interpreter)
+    src_map = SourceMap(cmd_line.json_tree)
     gc_output = GcOutput(cmd_line.gc_log)
     exporter = ReportExporter(cmd_line.target)
     exporter.export(src_map, gc_output)
