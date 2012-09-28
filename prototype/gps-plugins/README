@@ -4,10 +4,10 @@
 
 GnatCheck report generator:
 
-    create_gc_report.py: Python script that generate report 
+    create_gc_report.py: Python script that generates report 
                          from GnatCheck output.
 
-    create_cp_report.py: Python script that generate report
+    create_cp_report.py: Python script that generates report
                          from Codepeer output.
 ################################################################
 ###                          USAGE                           ###
