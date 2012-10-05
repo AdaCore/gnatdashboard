@@ -25,7 +25,7 @@ class Rule(object):
         self.configkey = key
         self.name = name
         self.description = description
-
+        self.priority = None
 
 
 ## Rule Repository#############################################################
@@ -74,6 +74,10 @@ class RuleRepositoryExporter(object):
                 description_xml = SubElement(rule_xml, 'description')
                 description_xml.text = rule.description
 
+                if rule.priority is not None:
+                    priority_xml = SubElement(rule_xml, 'priority')
+                    priority_xml.text = rule.priority
+
             prettyrules = prettify(rules_xml)
             with open(os.path.join(os.getcwd(), RESOURCES_PATH, rule_repository.repository_key)  + '.xml', 'w+') as repo_file:
                 repo_file.writelines(prettyrules)
@@ -84,45 +88,38 @@ class RuleRepositoryExporter(object):
 
 class ProfileExporter(object):
 
-    def export_profile(self, rule_repository):
+    def export_profile(self, rule_repositories):
         pro_file = os.path.join(os.getcwd(), RESOURCES_PATH, 'default-profile.xml')
 
-        if not os.path.exists(pro_file):
+        profile = Element('profile')
+        profile.append(Comment('Dafault Ada Profile '))
 
-            profile = Element('profile')
-            profile.append(Comment('Dafault Ada Profile '))
+        name = SubElement(profile, 'name')
+        name.text = 'Default Ada Profile'
 
-            name = SubElement(profile, 'name')
-            name.text = 'Default Ada Profile'
+        language = SubElement(profile, 'language')
+        language.text = 'ada'
 
-            language = SubElement(profile, 'language')
-            language.text = 'ada'
+        rules = SubElement(profile, 'rules')
 
-            rules = SubElement(profile, 'rules')
-            self.__rule_to_xml(rule_repository, rules)
-            pretty_profile = prettify(profile)
-            with open (pro_file, 'w+') as profile_xml:
-                profile_xml.writelines(pretty_profile)
+        for repository in rule_repositories:
+            for rule in repository.rules:
+                rule_xml = SubElement(rules, 'rule')
 
-        else:
-            tree = ElementTree.parse(pro_file)
-            rules = tree.find('rules')
-            self.__rule_to_xml(rule_repository, rules)
-            #pretty_profile = prettify(tree)
-            tree.write(pro_file)
+                repositorykey = SubElement(rule_xml, 'repositoryKey')
+                repositorykey.text = repository.repository_key
 
+                key = SubElement(rule_xml, 'key')
+                key.text = rule.key
 
-    def __rule_to_xml(self, rule_repository, rules_sub_element):
+                priority = SubElement(rule_xml, 'priority')
+                if rule.priority is not None:
+                    priority.text = rule.priority
+                else:
+                    priority.text = PRIORITIES['default']
 
-        for rule in rule_repository.rules:
-            rule_xml = SubElement(rules_sub_element, 'rule')
+        pretty_profile = prettify(profile)
+        with open (pro_file, 'w+') as profile_xml:
+            profile_xml.writelines(pretty_profile)
 
-            repositorykey = SubElement(rule_xml, 'repositoryKey')
-            repositorykey.text = rule_repository.repository_key
-
-            key = SubElement(rule_xml, 'key')
-            key.text = rule.key
-
-            priority = SubElement(rule_xml, 'priority')
-            priority.text = PRIORITIES['default']
 

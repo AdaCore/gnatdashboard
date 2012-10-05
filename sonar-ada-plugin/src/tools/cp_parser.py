@@ -5,7 +5,6 @@ from utils import (RuleRepositoryExporter,
                    ProfileExporter,
                    RuleRepository,
                    Rule)
-import argparse
 import re
 import os
 
@@ -16,6 +15,7 @@ import os
 REPOSITORY_KEY = 'codepeer'
 DOC_FILENAME='messages_and_annotations.rst'
 COMMENT = '#### Codepeer rule repository generated from html doc page: messages_and_annotations ####'
+PRIORTIES_LIST = {'CRITICAL', 'MAJOR', 'MINOR', 'INFO'}
 
 
 ## CPDocParser #######################################################################
@@ -65,7 +65,6 @@ class CPDocParser(object):
 
                 # When there is a multiple line for a table
                 if recording and started and line.startswith('|'):
-                    print line
                     infos = line.split('|')
                     rule.key += ' ' + infos[1].strip()
                     rule.description += ' ' + infos[2].strip()
@@ -73,45 +72,27 @@ class CPDocParser(object):
                 # End of a table line
                 if recording and end_rule.match(line):
                     started = False
-                    rule.configkey = rule.key
-                    rule.name = rule.key
-                    rule_repo.rules.append(rule)
+                    rule.name = rule.key.strip()
+                    #Because it is not possible to set the priorit of a
+                    #violation, it is needed to create a rule for each
+                    #priority. See TN [L919-022]
+                    for priority in PRIORTIES_LIST:
+                        new_rule = Rule(rule.key, rule.name, rule.description)
+                        new_rule.key = new_rule.key.strip() + ' - ' + priority
+                        new_rule.configkey = new_rule.key
+                        new_rule.priority = priority
+                        rule_repo.rules.append(new_rule)
+
                     rule = Rule()
 
-
-## _parse_command_line #######################################################################
+## CPParserExecutor #######################################################################
 ##
-def _parse_command_line():
-    """Parse the command line
+class CPParserExecutor(object):
+    def execute_parser(self, cmd_line):
+        rule_repo = RuleRepository(REPOSITORY_KEY, COMMENT)
+        doc_parser = CPDocParser(cmd_line.doc_path)
 
-    Retrieve path to rst codepeer user guide documentation
-    """
-    parser = argparse.ArgumentParser(description=
-                                       'Codepeer rule repository generator')
-    parser.add_argument('--doc=', action='store', dest='doc_path', type=str,
-                         help='Absolute path to rst codepeer user guide documentation',
-                         required=True)
-    return parser.parse_args()
+        doc_parser.parse_doc(rule_repo)
 
+        return rule_repo
 
-## Script entry point #######################################################################
-##
-def __main__():
-    """Script entry point
-
-    Creates rule repository and append the defalut profile with the rules.
-    This entry point must be outsourced to drive the generation of all rule
-    repository (for every integrated tool).
-    """
-    rule_exporter = RuleRepositoryExporter()
-    profile_exporter = ProfileExporter()
-    rule_repo = RuleRepository(REPOSITORY_KEY, COMMENT)
-    cmd_line = _parse_command_line()
-    doc_parser = CPDocParser(cmd_line.doc_path)
-
-    doc_parser.parse_doc(rule_repo)
-    rule_exporter.export_rule(rule_repo)
-    profile_exporter.export_profile(rule_repo)
-
-if __name__ == '__main__':
-    __main__()

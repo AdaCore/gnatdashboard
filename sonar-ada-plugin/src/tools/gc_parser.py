@@ -61,16 +61,14 @@ class GCParser(object):
             finally:
                 if os.path.exists(file_name): os.remove(file_name)
 
+## GCParserExecutor #######################################################################
+##
+class GCParserExecutor(object):
+    def execute_parser(self, cmd_line):
+        rule_repo = RuleRepository(REPOSITORY_KEY, COMMENT)
+        gc_parser = GCParser()
 
-def __main__():
-    rule_exporter = RuleRepositoryExporter()
-    profile_exporter = ProfileExporter()
-    rule_repo = RuleRepository(REPOSITORY_KEY, COMMENT)
-    gc_parser = GCParser()
+        gc_parser.parse_output(rule_repo)
 
-    gc_parser.parse_output(rule_repo)
-    rule_exporter.export_rule(rule_repo)
-    profile_exporter.export_profile(rule_repo)
+        return rule_repo
 
-if __name__ == '__main__':
-    __main__()
