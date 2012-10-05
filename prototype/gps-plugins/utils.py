@@ -117,7 +117,7 @@ class Report(object):
         self.violations.append(violation)
 
     def reprJSON(self):
-        return dict(error=self.violations)
+        return dict(errors=self.violations)
 
 
 ## ComplexEncoder #################################################################
