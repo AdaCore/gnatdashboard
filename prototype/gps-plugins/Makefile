@@ -20,3 +20,6 @@ tree:
 report: 
 	python create_gc_report.py --json-tree=$(TREE_FILE_PATH) --target=$(REPORT_DIR_PATH) --log=$(GC_OUTPUT_PATH)
 	python create_cp_report.py --json-tree=$(TREE_FILE_PATH) --output=$(CP_OUTPUT_PATH) --report-dir=$(REPORT_DIR_PATH)
+
+clean:
+	rm *.pyc

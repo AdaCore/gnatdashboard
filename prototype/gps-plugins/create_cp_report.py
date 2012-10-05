@@ -8,6 +8,12 @@ import argparse
 import os
 
 REPORT='codepeer-report.json'
+PRIORITIES = {'high' : 'CRITICAL',
+              'medium' : 'MAJOR',
+              'low' : 'MINOR',
+              'informational' : 'INFO',
+              'warning' : 'INFO',
+              'check' : 'INFO'}
 
 class CPOutputParser(object):
 
@@ -24,8 +30,11 @@ class CPOutputParser(object):
                     line = line_splited[1]
                     info_rule = line_splited[3].split(')')
                     rule_key = info_rule[0].strip()[1:]
-                    rule_msg = info_rule[1].strip()
-                    msg = rule_key + ' ' + rule_msg + ' ' + line_splited[4].strip()
+                    priority = PRIORITIES[info_rule[1].strip()]
+                    #In Sonar Codepeer rule repository, a rule has been
+                    #duplicated for each priorities. See TN L919-022
+                    rule_key += ' - ' + priority
+                    msg = line_splited[4].strip()
 
                     violation = Violation(prj, directory, source.full_name, line,
                                           rule_key, msg)

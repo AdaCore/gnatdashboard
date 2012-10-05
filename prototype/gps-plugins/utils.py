@@ -12,6 +12,8 @@ class Violation(object):
         self.line = line
         self.rule_key = rule_key
         self.msg = msg
+        # See TN L919-022
+        #self.priority= priority
 
     def reprJSON(self):
         return dict(prj=self.prj, directory=self.directory, src=self.src,
