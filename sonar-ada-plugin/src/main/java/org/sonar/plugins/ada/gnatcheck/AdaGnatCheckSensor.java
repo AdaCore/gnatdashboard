@@ -54,7 +54,7 @@ public class AdaGnatCheckSensor extends AdaSensor {
           String msg = errorCursor.getAttrValue("msg");
           String prj = errorCursor.getAttrValue("project");
           String dir = errorCursor.getAttrValue("directory");
-          if(isInputValid(file, line, id, msg)) {
+          if(isInputValid(file, line, id, msg, prj, dir)) {
             saveViolation(project, context, AdaGnatCheckRuleRepository.KEY,
                         file, Integer.parseInt(line), id, msg, prj, dir);
           } else {
@@ -63,9 +63,11 @@ public class AdaGnatCheckSensor extends AdaSensor {
         }
       }
 
-      private boolean isInputValid(String file, String line, String id, String msg) {
+      private boolean isInputValid(String file, String line, String id, String msg,
+                                   String prj, String dir) {
         return !StringUtils.isEmpty(file) && !StringUtils.isEmpty(line)
-          && !StringUtils.isEmpty(id) && !StringUtils.isEmpty(msg);
+          && !StringUtils.isEmpty(id) && !StringUtils.isEmpty(msg)
+          && !StringUtils.isEmpty(prj) && !StringUtils.isEmpty(dir);
       }
     });
 

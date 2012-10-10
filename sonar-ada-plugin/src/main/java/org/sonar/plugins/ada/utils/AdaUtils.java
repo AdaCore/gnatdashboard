@@ -17,4 +17,4 @@ public final class AdaUtils {
    * Default logger.
    */
   public static final Logger LOG = LoggerFactory.getLogger("AdaPlugin");
-}
+  }

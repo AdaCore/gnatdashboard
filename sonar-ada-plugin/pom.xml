@@ -125,7 +125,7 @@
                 <version>2.8</version>
             </plugin>
             
-            <!-- Internal tests -->
+            <!-- Integrates internal tests -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

@@ -15,6 +15,6 @@ public class AdaPluginTest {
     @Test
     public void testGetExtensions() {
         AdaPlugin plugin = new AdaPlugin();
-        assertEquals(9, plugin.getExtensions().size());
+        assertEquals(11, plugin.getExtensions().size());
     }
 }
