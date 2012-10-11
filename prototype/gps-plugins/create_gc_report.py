@@ -66,22 +66,44 @@ class GcOutput(object):
         src = split_1[0]
         src_line = split_1[1]
         # Remove rubbish characters
-        split_2 = split_1[-1].split(')')
+        split_2 = split_1[-1].split(')', 1)
         rule_id = split_2[0][2:]
-        msg = split_2[1][1:-1]
+        msg = split_2[1].strip()
         self.__add_violation(src, src_line, rule_id, msg)
+
+    def __parse_instance_line(self, line):
+        match = re.search('[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:', line)
+        msg_split = re.split('[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:', line)
+
+        try:
+            start_error = match.group(0).split(':')
+            src = start_error[0]
+            line = start_error[1]
+            ruleid_msg = msg_split[1].split(')', 1)
+            rule_id = ruleid_msg[0][2:]
+            msg = ruleid_msg[1].strip() + ' (' + msg_split[0] + ' ' + start_error[0] + ')'
+            self.__add_violation(src, line, rule_id, msg)
+
+        except IndexError as e:
+            print 'Unable to retrieve information from error:\n' + line + 'Skipping this error...'
 
     def __process_output(self):
         """Process GnatCheck output
 
           Retrieve information from  gnatcheck.out file
         """
-        PATTERN = '.*:[0-9]*:[0-9]*:\s[(].*[)]\s.*'
+        print 'Processing GNAT Check output...'
+        PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:\s[(].*[)]\s.+'
         prog = re.compile(PATTERN)
+
         with open(self.gc_log, 'r') as gc_output:
             for line in gc_output.readlines():
+
                 if prog.match(line):
                     self.__parse_line(line)
+
+                if re.match('.*instance at.*', line):
+                    self.__parse_instance_line(line)
 
 
 ## ReportExporter #################################################################
@@ -114,6 +136,7 @@ class ReportExporter(object):
            This method must change for the non prototype version
            to export the report in the decided format
         """
+        print 'Creating XML tree...'
         results = Element('results')
 
         comment = Comment('Gnatcheck rules violation report')
@@ -128,6 +151,7 @@ class ReportExporter(object):
                                 'msg':v.msg})
         prettyXML = self.prettify(results)
         with open(self.report_path, 'w+') as gc_report:
+            print 'Creating GNAT Check XML report...'
             gc_report.writelines(prettyXML)
 
 
