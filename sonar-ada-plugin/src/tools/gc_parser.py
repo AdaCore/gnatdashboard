@@ -54,7 +54,7 @@ class GCParser(object):
                         if rule_key and label:
                             key = rule_key[2:]
                             #key.split(':') concerns rule with specific category.
-                            rule = Rule(key, label, '<\![CDATA[' + self.doc_by_rule[key.split(':')[0]] + ']]>')
+                            rule = Rule(key, label, self.doc_by_rule[key.split(':')[0]])
                             rule_repo.rules.append(rule)
 
             except Exception as e:
