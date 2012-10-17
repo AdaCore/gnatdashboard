@@ -85,7 +85,7 @@ class GcOutput(object):
             self.__add_violation(src, line, rule_id, msg)
 
         except IndexError as e:
-            print 'Unable to retrieve information from error:\n' + line + 'Skipping this error...'
+            print 'Unable to retrieve information from error:\n' + line + '\nSkipping this error...'
 
     def __process_output(self):
         """Process GnatCheck output
@@ -93,16 +93,18 @@ class GcOutput(object):
           Retrieve information from  gnatcheck.out file
         """
         print 'Processing GNAT Check output...'
-        PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:\s[(].*[)]\s.+'
-        prog = re.compile(PATTERN)
+        ERROR_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:\s[(].*[)]\s.+'
+        INSTANCE_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+ instance at [a-zA-Z-_.0-9]+:[0-9]+:[0-9]+.+'
+        prog_error = re.compile(ERROR_PATTERN)
+        prog_instance = re.compile(INSTANCE_PATTERN)
 
         with open(self.gc_log, 'r') as gc_output:
             for line in gc_output.readlines():
 
-                if prog.match(line):
+                if prog_error.match(line):
                     self.__parse_line(line)
 
-                if re.match('.*instance at.*', line):
+                if prog_instance.match(line):
                     self.__parse_instance_line(line)
 
 
