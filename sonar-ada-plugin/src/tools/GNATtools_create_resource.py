@@ -24,8 +24,11 @@ def _parse_command_line():
     """
     parser = argparse.ArgumentParser(description=
                                        'Codepeer rule repository generator')
-    parser.add_argument('--doc=', action='store', dest='doc_path', type=str,
+    parser.add_argument('--cp_doc=', action='store', dest='cp_doc_path', type=str,
                          help='Absolute path to rst codepeer user guide documentation',
+                         required=True)
+    parser.add_argument('--gc_doc=', action='store', dest='gc_doc_path', type=str,
+                         help='Absolute path to rst gnatcheck_rm documentation',
                          required=True)
     return parser.parse_args()
 

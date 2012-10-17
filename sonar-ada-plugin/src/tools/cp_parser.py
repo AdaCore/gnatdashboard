@@ -90,7 +90,7 @@ class CPDocParser(object):
 class CPParserExecutor(object):
     def execute_parser(self, cmd_line):
         rule_repo = RuleRepository(REPOSITORY_KEY, COMMENT)
-        doc_parser = CPDocParser(cmd_line.doc_path)
+        doc_parser = CPDocParser(cmd_line.cp_doc_path)
 
         doc_parser.parse_doc(rule_repo)
 
