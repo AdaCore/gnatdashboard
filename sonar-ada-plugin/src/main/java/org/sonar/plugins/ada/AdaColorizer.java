@@ -17,6 +17,9 @@ import org.sonar.plugins.ada.tokenizer.AdaLiteralTokenizer;
  */
 public class AdaColorizer extends CodeColorizerFormat {
 
+    /**
+     * Ada reserved key word, used for syntax highlighting
+     */
     private static final String[] KEYWORDS = {
         "abort", "abs", "abstract", "accept", "access", "aliased", "all",
         "and", "array", "at", "begin", "body", "case", "constant", "declare",
@@ -37,6 +40,11 @@ public class AdaColorizer extends CodeColorizerFormat {
         super(Ada.KEY);
     }
 
+    /**
+     * sonar-colorizer tokenizers for HTML output.
+     *
+     * @return a not null list (empty if no tokenizers)
+     */
     @Override
     public List<Tokenizer> getTokenizers() {
         if (tokenizers == null) {
@@ -44,7 +52,7 @@ public class AdaColorizer extends CodeColorizerFormat {
             tokenizers = new ArrayList<Tokenizer>();
             tokenizers.add(new AdaLiteralTokenizer("<span class=\"s\">", tagAfter));
             tokenizers.add(new KeywordsTokenizer("<span class=\"k\">", tagAfter, KEYWORDS));
-            tokenizers.add(new AdaCommentTokenizer("<span class=\"cd\">", tagAfter));
+            tokenizers.add(new AdaCommentTokenizer("<span class=\"c\">", tagAfter));
         }
         return tokenizers;
     }
