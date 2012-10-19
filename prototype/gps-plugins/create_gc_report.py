@@ -14,6 +14,7 @@ from utils import (Project,
                    Source,
                    SourceMap)
 import re
+import os
 import sys
 import json
 import argparse
@@ -114,17 +115,12 @@ class GcOutput(object):
 class ReportExporter(object):
     """Export the GnatCheck output as a formatted report"""
 
-    # Class variable
-    REPORT_NAME = 'gnatcheck-report'
-    EXTENSION = '.xml'
+    REPORT_NAME = 'gnatcheck-report.xml'
 
     def __init__(self, report_path):
         """Initializes the class with the full report path containing
            the name"""
-        # To be re-arranged
-        if not report_path.endswith('/'):
-            report_path += '/'
-        self.report_path = report_path + self.REPORT_NAME + self.EXTENSION
+        self.report_path = os.path.join(report_path, self.REPORT_NAME)
 
     def prettify(self, elem):
         """Return a pretty-printed XML string for the Element"""
@@ -151,10 +147,10 @@ class ReportExporter(object):
                                 'line':v.line,
                                 'id':v.rule_id,
                                 'msg':v.msg})
-        prettyXML = self.prettify(results)
+        pretty_xml = self.prettify(results)
         with open(self.report_path, 'w+') as gc_report:
             print 'Creating GNAT Check XML report...'
-            gc_report.writelines(prettyXML)
+            gc_report.writelines(pretty_xml)
 
 
 ## _parse_command_line ###########################################################

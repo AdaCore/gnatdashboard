@@ -1,0 +1,18 @@
+###############################################################################
+###                                  TODO                                   ###
+###############################################################################
+
+create_gc_report.py:
+ 
+  - Use json file instead of executing the script.                       [DONE]   
+  - Remove violation from script and use the one of utils.py.
+
+create_gm_script.py:
+
+  - Create Metric Object istead of using dictionnary Object.
+  - Manage te non exhaustive list of metrics from GNAT Metric.
+
+all:
+
+  - Use logger instead of print
+  - Centralize execution of all script (when format will be defined)

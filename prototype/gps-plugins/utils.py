@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import json
+
 ## Violation #################################################################
 ##
 class Violation(object):
