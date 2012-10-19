@@ -7,12 +7,15 @@
 
 GPR_PATH=`pwd`/../../share/examples/sdc/sdc.gpr
 SCRIPT=run.sh
-REPORT_DIR_PATH=`pwd`/../../share/examples/sdc/report/
+#REPORT_DIR_PATH=`pwd`/../../share/examples/sdc/report/
+REPORT_DIR_PATH=/Users/kiwi/code/gps/gps/report/
 
+GM_OUTPUT_PATH=/Users/kiwi/code/gps/gps/metrix.xml
 GC_OUTPUT_PATH=`pwd`/../../share/examples/sdc/gnatcheck.out
-GM_OUTPUT_PATH=`pwd`/../../share/examples/sdc/metrix.xml
+#GM_OUTPUT_PATH=`pwd`/../../share/examples/sdc/metrix.xml
 CP_OUTPUT_PATH=`pwd`/../../share/examples/sdc/codepeer.out
-TREE_FILE_PATH=`pwd`/../../share/examples/sdc/project_tree.json
+TREE_FILE_PATH=/Users/kiwi/code/gps/gps/project_tree.json
+#TREE_FILE_PATH=`pwd`/../../share/examples/sdc/project_tree.json
 
 all: tree report
 

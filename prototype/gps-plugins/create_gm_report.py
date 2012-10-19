@@ -79,7 +79,6 @@ class GmOutput(object):
                         # Skip metric that are duplicated in function/method unit
                         # duplicated from package unit
                         if not unit.attrib.get('kind').startswith('package') and key in PACKAGE_METRICS:
-                            print 'unit: ', unit.attrib.get('kind'), ' --> ', unit.attrib.get('name'), ' // ', key
                             continue
 
                         #Retrieves max for max_loop_nesting
