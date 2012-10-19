@@ -5,14 +5,14 @@
 # 				report for the given project
 ###
 
-GPR_PATH=$(PWD)/../../share/examples/sdc/sdc.gpr
+GPR_PATH=`pwd`/../../share/examples/sdc/sdc.gpr
 SCRIPT=run.sh
-REPORT_DIR_PATH=$(PWD)/../../share/examples/sdc/report/
+REPORT_DIR_PATH=`pwd`/../../share/examples/sdc/report/
 
-GC_OUTPUT_PATH=$(PWD)/../../share/examples/sdc/gnatcheck.out
+GC_OUTPUT_PATH=`pwd`/../../share/examples/sdc/gnatcheck.out
 GM_OUTPUT_PATH=`pwd`/../../share/examples/sdc/metrix.xml
-CP_OUTPUT_PATH=$(PWD)/../../share/examples/sdc/codepeer.out
-TREE_FILE_PATH=$(PWD)/../../share/examples/sdc/project_tree.json
+CP_OUTPUT_PATH=`pwd`/../../share/examples/sdc/codepeer.out
+TREE_FILE_PATH=`pwd`/../../share/examples/sdc/project_tree.json
 
 all: tree report
 
