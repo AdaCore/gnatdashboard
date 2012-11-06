@@ -19,25 +19,42 @@ RESOURCES_PATH='../main/resources'
 ## Rule #######################################################################
 ##
 class Rule(object):
+    """Represents a Sonar rule."""
 
-    def __init__(self, key=None, name=None, description=None):
+    def __init__(self, key=None, name=None, description=None, priority=None):
+        """Initializes a rule.
+
+        Keyword arguments:
+        key -- rule identifier
+        configey -- equals to the key (this member needs investigation)
+        name -- name of the rule, displayed in Sonar GUI.
+        description -- description of the rule, displayed in the Sonar GUI
+        priority -- default priority of the rule
+        """
         self.key = key
         self.configkey = key
         self.name = name
         self.description = description
-        self.priority = None
+        self.priority = priority
 
 
 ## Rule Repository#############################################################
 ##
 class RuleRepository(object):
+    """Represents a Sonar rule repository"""
     def __init__(self, repository_key, comment):
+        """Initializes a rule repository
+
+        Keyword arguments:
+        repository_key -- indentifier of a the rule repository
+        comment -- top comment on the rule repository xml file
+        """
         self.repository_key = repository_key
         self.comment = comment
         self.rules = []
 
 
-## __prettify ##################################################################
+## prettify ###################################################################
 ##
 # To be changed: according to snoar xml format style.
 def prettify(xml_element):
@@ -50,11 +67,18 @@ def prettify(xml_element):
 ## Rule Repository Exporter ###################################################
 ##
 class RuleRepositoryExporter(object):
+    """Exporter for Sonar rule repository"""
 
     def export_rule(self, rule_repository):
+        """Exports object representation of Sonar rule repository to xml file
+
+        Keyword arguments:
+        rule_repository -- Object representation of Sonar rule repository.
+        """
+        # Check type of the argument
         if isinstance(rule_repository, RuleRepository):
 
-            # Create the XML tree
+            # Creates the XML tree
             rules_xml = Element('rules')
             rules_xml.append(Comment(rule_repository.comment))
 
@@ -74,10 +98,12 @@ class RuleRepositoryExporter(object):
                 description_xml = SubElement(rule_xml, 'description')
                 description_xml.text = rule.description
 
+                # Add priority field if exists
                 if rule.priority is not None:
                     priority_xml = SubElement(rule_xml, 'priority')
                     priority_xml.text = rule.priority
 
+            #Dumps the xml file
             prettyrules = prettify(rules_xml)
             with open(os.path.join(os.getcwd(), RESOURCES_PATH, rule_repository.repository_key)  + '.xml', 'w+') as repo_file:
                 repo_file.writelines(prettyrules)
@@ -86,11 +112,21 @@ class RuleRepositoryExporter(object):
             print 'Could not export rule repository: argument passed to export function is not an instance of RuleRepository object'
 
 
+## Profile Exporter ###########################################################
+##
 class ProfileExporter(object):
+    """Exporter for default Sonar quality profile """
 
     def export_profile(self, rule_repositories):
+        """Exports Sonar profile to an xml file
+
+        Keyword arguments:
+        rule_repositories -- all the rule repositories that the profile
+                             must contains.
+        """
         pro_file = os.path.join(os.getcwd(), RESOURCES_PATH, 'default-profile.xml')
 
+        # Creates the XML tree
         profile = Element('profile')
         profile.append(Comment('Dafault Ada Profile '))
 

@@ -2,17 +2,26 @@
 ###                                    WHAT IS                               ###
 ################################################################################
 
-Tools for GNAT tools report generation:
+----------------
+--  OVERVIEW  --
+----------------
+
+Tools for GNAT tools Sonar rule repository generation:
   
   This directory contains:
 
     - cp_parser.py: parser for Codepeer documentation
     - gc_parser.py: parser for GNAT Check ouput with -hx switches
-    - GNATtools_create_resource: this script executes GNAT tools parser and
+    - GNATtools_create_resource: main script that executes GNAT tools parser and
                                  generates rule repositories & default profile
                                  for the Ada Sonar plugin.
     - utils.py: used by the other scripts.
     - Makefile: execute the main script and clean the repository.
+
+
+---------------
+--  DETAILS  --
+---------------
 
 
 ################################################################################
@@ -22,3 +31,5 @@ Tools for GNAT tools report generation:
 How to run the script:
 
   - Run make CP_DOC_PATH=/absolute/path/to/codepeer/user_guide/DIRECTORY/*.rst
+             GC_DOC_PATH=/absolute/path/to/gnatcheck/doc/gnatcheck_rm.txt
+

@@ -22,6 +22,8 @@ REPOSITORY_KEY = 'gnatcheck'
 COMMENT = '### GNATCheck rule repository generated from gnatcheck switch: gnatcheck -hx ###'
 
 
+## GCParser #################################################################
+##
 class GCParser(object):
     """Retrieve rule informations from gnatcheck -hx
 
@@ -31,10 +33,32 @@ class GCParser(object):
     """
 
     def __init__(self, doc_path):
+        """Initializes GCParser
+
+        Keyword arguments:
+        doc_path -- path to the GNAT Check documentation.
+                    Doc is parsed to retrieve GNAT Check rule's
+                    description.
+
+        Initializes doc_by_rule dictionnary by parsing GNAT Check
+        documentation.
+        doc_by_rule:
+          - key = rule key
+          - value = rule description.
+        """
         self.doc_path = doc_path
         self.doc_by_rule = self.parse_doc()
 
     def parse_output(self, rule_repo):
+        """Parse gnatcheck -hx output.
+
+        Keyword arguments:
+        rule_repo -- instance of utils.RuleRepository object.
+                     This method will fill RuleRepository#rules by creation
+                     Sonar rules from retrieved GNAT Check output and
+                     documentation.
+        """
+        # Executes gnatcheck -hx and puts the result in a temporary file.
         cmd = 'gnatcheck -hx'
         p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
         output = p.stdout.read()
@@ -43,6 +67,7 @@ class GCParser(object):
         with open(file_name, 'w+') as gc_rules:
             gc_rules.writelines(output)
 
+        # Parses the temporary xml file
         with open(file_name, 'rt') as rules:
             try:
                 tree = ElementTree.parse(rules)
@@ -54,7 +79,8 @@ class GCParser(object):
                         if rule_key and label:
                             key = rule_key[2:]
                             #key.split(':') concerns rule with specific category.
-                            rule = Rule(key, label, self.doc_by_rule[key.split(':')[0]])
+                            rule = Rule(key, label,
+                                      self.doc_by_rule[key.split(':')[0]])
                             rule_repo.rules.append(rule)
 
             except Exception as e:
@@ -64,6 +90,10 @@ class GCParser(object):
                 if os.path.exists(file_name): os.remove(file_name)
 
     def parse_doc(self):
+        """Parse GNAT Check documentation
+
+        Returns a dictionnary to initializes doc_by_rule class member.
+        """
         DOC_TITLE = '[89](\.?[0-9]{0,2}){0,2} [a-zA-Z-`\' 0-9]'
         DOC_RULE_TITLE = '8\.[1-9](\.[0-9]{0,2})+ `[a-zA-Z_]+\''
         prog_title = re.compile(DOC_TITLE)
@@ -78,6 +108,9 @@ class GCParser(object):
 
             for line in doc.readlines():
 
+              # if line matches a rule title,
+              #  if the line followed a rule paragrpah: saves previous desc
+              # In any case retrieve the rule key and affect 1 to recording
                 if prog_rule.match(line):
                     if description != '':
                         doc_by_rule[rule_key] = description.strip()
@@ -85,15 +118,20 @@ class GCParser(object):
                     rule_key = line.strip().split(' ')[1][1:-1].strip()
                     recording = 1
 
+                # Skip the decoration line under the rule title
                 elif recording == 1:
                     recording += 1
 
+                # If the line matches a general title: end of desc paragraph,
+                #   - saves desc and rule key in dictionnary
+                #   - re-initializes all variables
                 elif prog_title.match(line):
                     doc_by_rule[rule_key] = description.strip()
                     recording = 0
                     description = ''
                     rule_key = ''
 
+                # Line is in a rule description paragraph: saves it
                 elif recording == 2:
                     description += line
 
@@ -103,7 +141,19 @@ class GCParser(object):
 ## GCParserExecutor #######################################################################
 ##
 class GCParserExecutor(object):
+    """Represents executor for GNAT Check Pasrser"""
+
     def execute_parser(self, cmd_line):
+        """Executes GNAT Check Parser
+
+        Keyword arguments:
+        cmd_line -- allows to retrieve GNAT Check path documentation,
+                    passed in the command line.
+
+        Initializes a RuleRepository and a GCParser, then executes the
+        GNAT Check parser.
+        Returns the RuleRepository instance.
+        """
         rule_repo = RuleRepository(REPOSITORY_KEY, COMMENT)
         gc_parser = GCParser(cmd_line.gc_doc_path)
 

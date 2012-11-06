@@ -11,16 +11,19 @@ import argparse
 # CONSTANTS #
 #############
 
+# GNAT Tools supported by the Sonar Ada plugin
 GNAT_TOOLS = {'gnatcheck' : GCParserExecutor(),
               'codepeer' : CPParserExecutor()}
 
 
-## _parse_command_line #######################################################################
+## _parse_command_line ########################################################
 ##
 def _parse_command_line():
     """Parse the command line
 
-    Retrieve path to rst codepeer user guide documentation
+    Exepcted arguments:
+      - absolute path to rst codepeer user guide documentation directory
+      - absolute path to gnatcheck_rm.rst file
     """
     parser = argparse.ArgumentParser(description=
                                        'Codepeer rule repository generator')
@@ -32,9 +35,28 @@ def _parse_command_line():
                          required=True)
     return parser.parse_args()
 
-## Script entry point #######################################################################
+## Script entry point #########################################################
 ##
 def __main__():
+    """ Script entry point
+
+    Uses all *_parser.py script and utils.py script.
+    All *_parser.py scripts, correspond to a parser for each supported tools;
+    they contain:
+      - *Parser object: has a parse method, to parse output, documentation,etc.
+      - *ParserExecutor: executes the parser with appropriate arguments.
+                         This object has been added in order to allow
+                         generic external execution of all GNAT Tool's parser
+                         supported (declared in GNAT_TOOLS global var
+                         dictionnary).
+
+    This main function:
+      - retrieves command line arguments for paths to tool's
+        documentation, if necessary.
+      - calls "execute_parser" of all defined GNAT Tools ParserExecutor,
+      - export rule repository for all defined GNAT Tools
+      - export default Sonar quality profile.
+    """
     cmd_line = _parse_command_line()
     rule_repositories = []
     profile_exporter = ProfileExporter()
