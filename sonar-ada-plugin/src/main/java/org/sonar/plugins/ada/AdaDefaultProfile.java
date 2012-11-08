@@ -18,7 +18,7 @@ public class AdaDefaultProfile extends ProfileDefinition {
     }
 
     /**
-     * Import the default sonar Ada profile
+     * Import the default Sonar Ada profile
      */
     @Override
     public RulesProfile createProfile(ValidationMessages messages) {

@@ -9,6 +9,10 @@ import org.sonar.api.resources.Language;
 import org.sonar.api.resources.Resource;
 import org.sonar.plugins.ada.Ada;
 
+/**
+ * A class that represents an Ada sub project.
+ *
+ */
 public class AdaProject extends Resource {
 
     AdaProject() {

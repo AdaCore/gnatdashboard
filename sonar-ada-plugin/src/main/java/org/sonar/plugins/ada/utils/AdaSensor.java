@@ -11,6 +11,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.tools.ant.DirectoryScanner;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
@@ -27,6 +28,7 @@ public abstract class AdaSensor implements Sensor {
 
     private RuleFinder ruleFinder;
     private Configuration config = null;
+    private RulesProfile profile;
 
     public AdaSensor() {
     }
@@ -38,6 +40,12 @@ public abstract class AdaSensor implements Sensor {
     public AdaSensor(RuleFinder ruleFinder, Configuration config) {
         this.ruleFinder = ruleFinder;
         this.config = config;
+    }
+
+    public AdaSensor(RuleFinder ruleFinder, Configuration config, RulesProfile profile) {
+        this.ruleFinder = ruleFinder;
+        this.config = config;
+        this.profile = profile;
     }
 
     /**
@@ -98,17 +106,30 @@ public abstract class AdaSensor implements Sensor {
 
     /**
      * Save a violation if the rule and the file are found.
+     *
+     * @return Boolean: used by Codepeer Sensor to save category/severity
+     *                  violation metric measure as we don't want to save this
+     *                  measure if the violation has not been save. It will may
+     *                  be necessary to manage this differently in the future
+     *                  (through decorator)
      */
     protected void saveViolation(Project project, SensorContext context, String ruleRepoKey,
-            String file, int line, String ruleId, String msg, String prj, String dir) {
+        String file, int line, String ruleId, String msg, String prj, String dir) {
         RuleQuery ruleQuery = RuleQuery.create().withRepositoryKey(ruleRepoKey).withKey(ruleId);
         Rule rule = ruleFinder.find(ruleQuery);
         if (rule != null) {
-            AdaFile resource = AdaFile.fromIOFile(new File(file), project, prj, dir);
-            AdaFile res = context.getResource(resource);
+            AdaFile res = context.getResource(AdaFile.fromIOFile(new File(file), project, prj, dir));
+
             if (res != null) {
                 Violation violation = Violation.create(rule, res).setLineId(line).setMessage(msg);
                 context.saveViolation(violation);
+                /**
+                 * As it is not possible to check right after the call of
+                 * context#saveViolation() if the violation has really been saved or not:
+                 *  - reproduce one condition of DefaultIndex#addViolation()
+                 *  - doesn't manage the case of ViolationFilters (see DefaultIndex#addViolation())
+                 */
+
             } else {
                 AdaUtils.LOG.info("Cannot find the file '{}', skipping violation '{}'", file, msg);
             }

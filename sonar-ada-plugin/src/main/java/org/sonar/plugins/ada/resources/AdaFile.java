@@ -28,6 +28,7 @@ public class AdaFile extends Resource<AdaDirectory> {
     /**
      * Creates an Ada File based on the source name, project parent name and
      * directory name
+     *
      * @param source name, contains file's absolute path
      * @param  project name
      * @param directory name

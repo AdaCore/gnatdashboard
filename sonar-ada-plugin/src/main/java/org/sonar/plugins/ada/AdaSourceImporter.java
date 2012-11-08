@@ -44,9 +44,16 @@ public class AdaSourceImporter extends AbstractSourceImporter {
      */
     public static final String PROJECT_TREE_FILE_PATH_KEY = "sonar.ada.projectTree";
     /**
-     * Contains the mapping between a resource and its name
+     * Contains the mapping of all project's resources:
+     *  key: resource basename
+     *  value: AdaFile Sonar representation of the resource
      */
-    public static Map<String, AdaFile> sourceMap;
+    private static Map<String, AdaFile> sourceMap;
+
+    public static Map<String, AdaFile> getSourceMap() {
+        return sourceMap;
+    }
+
     private ResourceCreationLock lock;
     private Configuration config;
     // </editor-fold>

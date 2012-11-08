@@ -59,6 +59,9 @@ public class AdaDirectory extends Resource<AdaProject> {
 
     /**
      * Ada directory's parent is an Ada Project
+     * Creates the parent if it is null
+     *
+     * @return AdaProject
      */
     @Override
     public AdaProject getParent() {

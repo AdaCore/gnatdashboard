@@ -20,22 +20,39 @@ import org.sonar.plugins.ada.utils.AdaUtils;
 /**
  * Defines metrics used by the Ada Sonar Plugin
  */
-public class AdaMetrics {
+public final class AdaMetrics {
 
-    private static AdaMetrics INSTANCE;
+    public static final AdaMetrics INSTANCE = new AdaMetrics();
     /**
      * GnatMetric keys
      */
     public static final String ALL_LINES = "all_lines";
     public static final String CODE_LINES = "code_lines";
+    public static final String BLANK_LINES = "blank_lines";
+
     public static final String COMMENT_LINES = "comment_lines";
     public static final String EOL_COMMENTS = "eol_comments";
     public static final String COMMENT_PERCENTAGE = "comment_percentage";
-    public static final String BLANK_LINES = "blank_lines";
+
+    public static final String ALL_SATEMENTS = "all_stmts";
+    public static final String ALL_DCLS = "all_dcls";
+    public static final String LSLOC = "lsloc";
+
+    public static final String CONSTRUCT_NESTING = "construct_nesting";
+    public static final String MAX_LOOP_NESTING = "max_loop_nesting";
+    public static final String EXTRA_EXIT_POINTS = "extra_exit_points";
+
+    public static final String STATEMENT_COMPLEXITY = "statement_complexity";
+    public static final String SHORT_CIRCUIT_COMPLEXITY = "short_circuit_complexity";
+    public static final String CYCLOMATIC_COMPLEXITY = "cyclomatic_complexity";
+    public static final String ESSENTIAL_COMPLEXITY = "essential_complexity";
+
     /**
-     * Mapping between GnatMetric keys and Sonar metrics
+     * Mapping between GnatMetric keys and Sonar metrics keys.
+     * This mapping is necessary since metrics from GNAT Tools are binded on
+     * Sonar metrics
      */
-    private Map<String, Metric> METRICS_BY_KEYS;
+    private Map<String, Metric> metricByKey;
 
     /**
      * Property file's name of mapping between GnatMetric's key and Sonar
@@ -44,22 +61,12 @@ public class AdaMetrics {
      * complicated to synchronize this information with the GWT module which
      * is in charge of displaying metrics from GnatMetric
      */
-    public static String METRICS_PROPERTIES_PATH = "conf/metrics.properties".replace("/", System.getProperty("file.separator"));
+    private static final String METRICS_PROPERTIES_PATH = "conf/metrics.properties".replace("/", System.getProperty("file.separator"));
 
     private AdaMetrics() {
-        METRICS_BY_KEYS = new HashMap<String, Metric>();
+        metricByKey = new HashMap<String, Metric>();
         //As the configuration file is not suported for now.
         //loadMetrics(project);
-    }
-
-    /**
-     * This class is implemented as a singleton
-     */
-    public static AdaMetrics getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new AdaMetrics();
-        }
-        return INSTANCE;
     }
 
     /**
@@ -69,23 +76,24 @@ public class AdaMetrics {
      * @return map<String key, Metric metric>
      */
     public Map<String, Metric> getMetricsMap() {
-        if (METRICS_BY_KEYS.isEmpty()) {
+        if (metricByKey.isEmpty()) {
 
-            METRICS_BY_KEYS.put(ALL_LINES, CoreMetrics.LINES);
-            METRICS_BY_KEYS.put(CODE_LINES, CoreMetrics.NCLOC);
-            METRICS_BY_KEYS.put(COMMENT_LINES, CoreMetrics.COMMENT_LINES);
-            METRICS_BY_KEYS.put(COMMENT_PERCENTAGE, CoreMetrics.COMMENT_LINES_DENSITY);
-            GnatMetrics gnatmetric = new GnatMetrics();
-            for (Metric m : gnatmetric.getMetrics()) {
-                METRICS_BY_KEYS.put(m.getKey(), m);
+            metricByKey.put(ALL_LINES, CoreMetrics.LINES);
+            metricByKey.put(CODE_LINES, CoreMetrics.NCLOC);
+            metricByKey.put(COMMENT_LINES, CoreMetrics.COMMENT_LINES);
+            metricByKey.put(COMMENT_PERCENTAGE, CoreMetrics.COMMENT_LINES_DENSITY);
+            metricByKey.put(CYCLOMATIC_COMPLEXITY, CoreMetrics.COMPLEXITY);
+            for (Metric m : GnatMetrics.INSTANCE.getMetrics()) {
+                metricByKey.put(m.getKey(), m);
             }
         }
-        return METRICS_BY_KEYS;
+        return metricByKey;
     }
 
     /**
      * Retrieve metric's key mapping between GnatMetric and Sonar metrics from
      * a property file; creates the file if it does not exist.
+     * Is not use for now, see METRICS_PROPERTIES_PATH attribute comment.
      */
     private void loadMetrics(Project project) {
         Properties prop = new Properties();
@@ -109,7 +117,7 @@ public class AdaMetrics {
                         Metric sonarmetric = getSonarMetricByKey(prop.getProperty(key.toString()));
                         if (sonarmetric != null) {
 
-                            METRICS_BY_KEYS.put(key.toString(), sonarmetric);
+                            metricByKey.put(key.toString(), sonarmetric);
                         } else {
                             AdaUtils.LOG.info("Skipping metric, unable to found associated sonar metric with metric key: {}", prop.getProperty(key.toString()));
                         }
@@ -147,7 +155,7 @@ public class AdaMetrics {
 
                 //Set propety's key to GnatMetric key and property's value
                 //to the corresponding sonar metric's key (or GnatMetrics#Metric)
-                prop.setProperty(key, METRICS_BY_KEYS.get(key).getKey());
+                prop.setProperty(key, metricByKey.get(key).getKey());
             }
             file.createNewFile();
             prop.store(new FileOutputStream(file), "Mapping between GnatMetric's key and correpondant Sonar metric's key");

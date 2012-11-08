@@ -22,11 +22,14 @@ import org.sonar.plugins.ada.utils.AdaSensor;
 import org.sonar.plugins.ada.utils.AdaUtils;
 
 /**
- * Sensor for GnatMetric external tool, retrieve informations from a report
- * and save the measures.
+ * Sensor for GNAT Metric external tool, retrieve informations from a report and
+ * save the measures.
  */
 public class AdaGnatMetricSensor extends AdaSensor {
 
+    /**
+     * Sonar property key for GNAT Metric report absolute path
+     */
     public static final String REPORT_PATH_KEY = "sonar.ada.gnatmetric.reportPath";
 
     public AdaGnatMetricSensor(Configuration conf) {
@@ -38,11 +41,19 @@ public class AdaGnatMetricSensor extends AdaSensor {
         return REPORT_PATH_KEY;
     }
 
+    /**
+     * Parse GNAT Metric XML report to retrieve violations information.
+     *
+     * @param project current analyzed project
+     * @param context Sensor's context
+     * @param report GNAT Metric XML report
+     */
     @Override
     protected void processReport(final Project project, final SensorContext context, File report)
             throws javax.xml.stream.XMLStreamException {
         AdaUtils.LOG.info("---- GnatMetric Analyser");
         StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
+
             /**
              * {@inheritDoc}
              */
@@ -67,6 +78,15 @@ public class AdaGnatMetricSensor extends AdaSensor {
                 }
             }
 
+            /**
+             * Check that retrieved information from GNAT Metric report are
+             * valid: every parameter must not be null or empty
+             *
+             * @param file
+             * @param ruleKey
+             * @param directory
+             * @param line
+             */
             public boolean isInputValid(String file, String name, Double value) {
                 return !StringUtils.isEmpty(file) && !StringUtils.isEmpty(name) && value != null;
             }
@@ -76,18 +96,21 @@ public class AdaGnatMetricSensor extends AdaSensor {
     }
 
     /**
-     * Save a measure if the corresponding file is found.
+     * Save a measure if the corresponding file and metric are found.
+     *
+     * File existence is check via AdaSourceImporter#sourceMap Metric existence
+     * is check via AdaMetrics#metricByKey
      *
      * @param context
      * @param file
      * @param metrickey
      * @param value
      */
-    public void saveMeasure(SensorContext context, String file, String metrickey, Double value) {
-        file = StringUtils.substringAfterLast(file, "/");
-        AdaFile resource = AdaSourceImporter.sourceMap.get(file);
+    public void saveMeasure(SensorContext context, String fileName, String metrickey, Double value) {
+        String file = StringUtils.substringAfterLast(fileName, "/");
+        AdaFile resource = AdaSourceImporter.getSourceMap().get(file);
         if (resource != null) {
-            Metric metric = AdaMetrics.getInstance().getMetricsMap().get(metrickey);
+            Metric metric = AdaMetrics.INSTANCE.getMetricsMap().get(metrickey);
             if (metric != null) {
                 try {
                     context.saveMeasure(resource, metric, value);
