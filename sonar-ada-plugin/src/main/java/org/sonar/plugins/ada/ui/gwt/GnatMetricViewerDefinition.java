@@ -2,7 +2,7 @@
  * Sonar Ada Plugin
  * Copyright (C) 2012, AdaCore
  */
-package org.sonar.plugins.ada.ui;
+package org.sonar.plugins.ada.ui.gwt;
 
 import org.sonar.api.resources.Resource;
 import org.sonar.api.web.UserRole;
@@ -12,10 +12,11 @@ import org.sonar.api.web.ResourceLanguage;
 import org.sonar.api.web.ResourceQualifier;
 import org.sonar.api.web.GwtPage;
 import org.sonar.plugins.ada.Ada;
-import org.sonar.plugins.ada.ui.client.GnatMetricViewer;
+import org.sonar.plugins.ada.ui.gwt.client.GnatMetricViewer;
 
 /**
- * Defines the GnatMetric's view.
+ * Defines the GnatMetric's tab view.
+ * GwtGnatMetrics contains the implementation of the view
  */
 @ResourceQualifier({Resource.QUALIFIER_CLASS,Resource.QUALIFIER_FILE})
 @NavigationSection(NavigationSection.RESOURCE_TAB)

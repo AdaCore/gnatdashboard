@@ -1,0 +1,66 @@
+<%
+  # Total Codepeer violations
+  codepeer_violations=@snapshot.measure('codepeer_violations')
+
+  # Codepeer check violations
+  codepeer_check_critical_violations = @snapshot.measure('codepeer_check_critical_violations')
+  codepeer_check_major_violations = @snapshot.measure('codepeer_check_major_violations')
+  codepeer_check_minor_violations = @snapshot.measure('codepeer_check_minor_violations')
+  codepeer_check_info_violations = @snapshot.measure('codepeer_check_info_violations')
+
+  # Codepeer warning violations
+  codepeer_warning_critical_violations = @snapshot.measure('codepeer_warning_critical_violations')
+  codepeer_warning_major_violations = @snapshot.measure('codepeer_warning_major_violations')
+  codepeer_warning_minor_violations = @snapshot.measure('codepeer_warning_minor_violations')
+  codepeer_warning_info_violations = @snapshot.measure('codepeer_warning_info_violations')
+
+  # Double dimension table:
+  #   - index of categories: check:0, warning:1, race_condition:2, informational:3
+  #   - index of severities: critical:0, major:1, minor:2, info:3
+  measures=[[codepeer_check_critical_violations,codepeer_check_major_violations,codepeer_check_minor_violations,codepeer_check_info_violations],
+            [codepeer_warning_critical_violations,codepeer_warning_major_violations,codepeer_warning_minor_violations,codepeer_warning_info_violations],
+            [codepeer_violations]]
+  codepeer_severities=['HIGH', 'MEDIUM', 'LOW']
+  # Informational category is managed sparetly for Codepeer user interface
+  # as the Codepeer meaning of informational messages is particular.
+  codepeer_categories=['CHECK', 'WARNING', 'RACE CONDITION']
+  # Needs the correspondance between Sonar and Codepeer severities,
+  # because Codepeer's are displayed
+  sonar_severities={'HIGH' => 'CRITICAL', 
+                    'MEDIUM' => 'MAJOR',
+                    'LOW' => 'MINOR'}
+
+%>
+<table class="clear width100">
+
+  <!-- Severities title-->
+  <tr>
+    <!-- Empty cell, above category title-->
+    <td></td>
+
+    <!--Check if something like "codepeer_severities.size.range" is possible-->
+    <% codepeer_severities.size.to_i.times do |severity_index| %>
+      <!--TODO: link message to drilldown page (l.67 widget_lab plugin)-->
+      <td>
+       <%= image_tag 'priority/'.concat(sonar_severities[codepeer_severities[severity_index]]).concat('.png') %>
+        &nbsp;
+        <%= codepeer_severities[severity_index].capitalize %>
+      </td>
+    <% end %>
+  </tr>
+
+  <!-- Categories -->
+  <% for category_index in 0..2 %>
+    <tr>
+      <!-- Category title-->
+      <th><%= codepeer_categories[category_index].capitalize %></th>
+      <!-- Severities-->
+      <% codepeer_severities.size.to_i.times do |severity_index| %> 
+        <!-- Number of violations -->
+        <td valign="center" style="padding: 3px;"><%= format_measure(measures[category_index][severity_index]) %></td>
+      <% end %>
+    </tr>
+  <% end %>
+
+</table>
+

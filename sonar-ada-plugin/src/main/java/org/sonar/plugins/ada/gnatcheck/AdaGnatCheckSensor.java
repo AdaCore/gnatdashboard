@@ -35,6 +35,13 @@ public class AdaGnatCheckSensor extends AdaSensor {
     }
 
 
+    /**
+     * Parse GANT Check XML report to retrieve violations information.
+     *
+     * @param project current analyzed project
+     * @param context Sensor's context
+     * @param report GANT Check XML report
+     */
     @Override
     protected void processReport(final Project project, final SensorContext context, File report)
     throws javax.xml.stream.XMLStreamException
@@ -62,7 +69,15 @@ public class AdaGnatCheckSensor extends AdaSensor {
           }
         }
       }
-
+     /**
+     * Check that retrieved information from Codepeer report are valid:
+     * every parameter must not be null or empty.
+     *
+     * @param file
+     * @param ruleKey
+     * @param directory
+     * @param line
+     */
       private boolean isInputValid(String file, String line, String id, String msg,
                                    String prj, String dir) {
         return !StringUtils.isEmpty(file) && !StringUtils.isEmpty(line)

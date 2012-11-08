@@ -4,5 +4,5 @@
     <inherits name="com.google.gwt.json.JSON"/>
     <inherits name="com.google.gwt.http.HTTP"/>
     <inherits name="org.sonar.Sonar"/>
-    <entry-point class='org.sonar.plugins.ada.ui.client.GnatMetricViewer'/>
+    <entry-point class='org.sonar.plugins.ada.ui.gwt.client.GnatMetricViewer'/>
 </module>

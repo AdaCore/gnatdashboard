@@ -4,7 +4,6 @@
  */
 package org.sonar.plugins.ada;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import org.sonar.api.Extension;
@@ -13,11 +12,14 @@ import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.ada.codepeer.AdaCodepeerRuleRepository;
 import org.sonar.plugins.ada.codepeer.AdaCodepeerSensor;
+import org.sonar.plugins.ada.codepeer.CodepeerDecorator;
+import org.sonar.plugins.ada.codepeer.CodepeerMetrics;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckRuleRepository;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckSensor;
 import org.sonar.plugins.ada.gnatmetric.AdaGnatMetricSensor;
 import org.sonar.plugins.ada.gnatmetric.GnatMetrics;
-import org.sonar.plugins.ada.ui.GnatMetricViewerDefinition;
+import org.sonar.plugins.ada.ui.gwt.GnatMetricViewerDefinition;
+import org.sonar.plugins.ada.ui.rubyWidget.CodepeerViolationsRubyWidget;
 
 @Properties({
     @Property(key = AdaSourceImporter.PROJECT_TREE_FILE_PATH_KEY,
@@ -46,7 +48,7 @@ import org.sonar.plugins.ada.ui.GnatMetricViewerDefinition;
 public final class AdaPlugin extends SonarPlugin {
 
     /**
-     * Returns Classes to use into the plugin
+     * Returns Sonar Extensions used into the plugin
      *
      * @return the classes to use into the plugin
      */
@@ -58,11 +60,14 @@ public final class AdaPlugin extends SonarPlugin {
         l.add(AdaGnatCheckSensor.class);
         l.add(AdaDefaultProfile.class);
         l.add(AdaGnatMetricSensor.class);
-        l.add(GnatMetricViewerDefinition.class);
+        //l.add(GnatMetricViewerDefinition.class);
         l.add(GnatMetrics.class);
         l.add(AdaColorizer.class);
         l.add(AdaCodepeerSensor.class);
         l.add(AdaCodepeerRuleRepository.class);
+        l.add(CodepeerMetrics.class);
+        l.add(CodepeerViolationsRubyWidget.class);
+        l.add(CodepeerDecorator.class);
         return l;
     }
 
