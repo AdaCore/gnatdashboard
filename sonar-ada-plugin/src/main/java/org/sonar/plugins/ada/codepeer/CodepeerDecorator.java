@@ -7,7 +7,6 @@ package org.sonar.plugins.ada.codepeer;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multiset;
-import com.sun.tools.javac.util.Pair;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import org.sonar.api.rules.RulePriority;
 import org.sonar.api.rules.Violation;
 import org.sonar.plugins.ada.Ada;
 import org.sonar.plugins.ada.utils.AdaUtils;
+import org.sonar.plugins.ada.utils.Pair;
 
 /**
  * Decorator for Codepeer metrics.
@@ -69,7 +69,7 @@ public class CodepeerDecorator implements Decorator {
                 Metric metric = AdaUtils.getMetricBySeverityAndCategory(severity.toString(), category.toString());
                 if (metric != null && context.getMeasure(metric) == null) {
                     Collection<Measure> children = context.getChildrenMeasures(MeasuresFilters.metric(metric));
-                    Double sum = MeasureUtils.sum(true, children) + severitiesCategoies.count(new Pair(severity, category));
+                    Double sum = MeasureUtils.sum(true, children) + severitiesCategoies.count(new Pair(severity, category) {});
                     context.saveMeasure(new Measure(metric, sum));
                 }
             }

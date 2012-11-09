@@ -60,7 +60,7 @@ public final class AdaPlugin extends SonarPlugin {
         l.add(AdaGnatCheckSensor.class);
         l.add(AdaDefaultProfile.class);
         l.add(AdaGnatMetricSensor.class);
-        //l.add(GnatMetricViewerDefinition.class);
+        l.add(GnatMetricViewerDefinition.class);
         l.add(GnatMetrics.class);
         l.add(AdaColorizer.class);
         l.add(AdaCodepeerSensor.class);
