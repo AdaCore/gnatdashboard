@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.codehaus.sonar</groupId>
             <artifactId>sonar-plugin-api</artifactId>
-            <version>2.12</version>
+            <version>${sonar.buildVersion}</version>
             <type>jar</type>
         </dependency>
         <!-- Unit tests -->
@@ -107,7 +107,8 @@
                     <execution>
                         <configuration>
                             <modules>
-                                <module>org.sonar.plugins.ada.ui.GnatMetricViewer</module>
+                                <!-- Refers to *.gwt.xml in resource folder-->
+                                <module>org.sonar.plugins.ada.ui.gwt.GnatMetricViewer</module>
                             </modules>
                             <webappDirectory>target/classes</webappDirectory>
                             <!-- Do not break this line in two lines-->
