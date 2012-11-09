@@ -1,44 +1,47 @@
 <%
-  # Total Codepeer violations
-  codepeer_violations=@snapshot.measure('codepeer_violations')
-
-  # Codepeer check violations
-  codepeer_check_critical_violations = @snapshot.measure('codepeer_check_critical_violations')
-  codepeer_check_major_violations = @snapshot.measure('codepeer_check_major_violations')
-  codepeer_check_minor_violations = @snapshot.measure('codepeer_check_minor_violations')
-  codepeer_check_info_violations = @snapshot.measure('codepeer_check_info_violations')
-
-  # Codepeer warning violations
-  codepeer_warning_critical_violations = @snapshot.measure('codepeer_warning_critical_violations')
-  codepeer_warning_major_violations = @snapshot.measure('codepeer_warning_major_violations')
-  codepeer_warning_minor_violations = @snapshot.measure('codepeer_warning_minor_violations')
-  codepeer_warning_info_violations = @snapshot.measure('codepeer_warning_info_violations')
-
-  # Double dimension table:
-  #   - index of categories: check:0, warning:1, race_condition:2, informational:3
-  #   - index of severities: critical:0, major:1, minor:2, info:3
-  measures=[[codepeer_check_critical_violations,codepeer_check_major_violations,codepeer_check_minor_violations,codepeer_check_info_violations],
-            [codepeer_warning_critical_violations,codepeer_warning_major_violations,codepeer_warning_minor_violations,codepeer_warning_info_violations],
-            [codepeer_violations]]
   codepeer_severities=['HIGH', 'MEDIUM', 'LOW']
   # Informational category is managed sparetly for Codepeer user interface
   # as the Codepeer meaning of informational messages is particular.
-  codepeer_categories=['CHECK', 'WARNING', 'RACE CONDITION']
+  codepeer_categories=['CHECK', 'WARNING', 'RACE_CONDITION']
   # Needs the correspondance between Sonar and Codepeer severities,
   # because Codepeer's are displayed
   sonar_severities={'HIGH' => 'CRITICAL', 
                     'MEDIUM' => 'MAJOR',
                     'LOW' => 'MINOR'}
 
+  # Total Codepeer violations
+  codepeer_violations=@snapshot.measure('codepeer_violations')
+#
+  # Codepeer informational violations
+  codepeer_violations=@snapshot.measure('codepeer_informational_info_violations')
+
+  #### 
+  # Retrieves Codepeer violations per category and severity in a double 
+  # dimension array:
+  #  - index of categories: check:0, warning:1, race_condition:2 
+  #  - index of severities: critical:0, major:1, minor:2 
+  ####
+  measures=[]
+  codepeer_categories.each do |category|
+    # Creates an array for each Codepeer category.
+    violation_by_cat=[]
+    codepeer_severities.each do |severity|
+      # Appends number of violations for each severity for the category
+      violation_by_cat << @snapshot.measure('codepeer_' + category.downcase + '_' + sonar_severities[severity].downcase + '_violations')
+    end
+    measures << violation_by_cat
+  end
+
+
 %>
 <table class="clear width100">
 
   <!-- Severities title-->
   <tr>
+
     <!-- Empty cell, above category title-->
     <td></td>
 
-    <!--Check if something like "codepeer_severities.size.range" is possible-->
     <% codepeer_severities.size.to_i.times do |severity_index| %>
       <!--TODO: link message to drilldown page (l.67 widget_lab plugin)-->
       <td>
@@ -47,17 +50,27 @@
         <%= codepeer_severities[severity_index].capitalize %>
       </td>
     <% end %>
+
   </tr>
 
   <!-- Categories -->
+  <% even=-1 %>
   <% for category_index in 0..2 %>
-    <tr>
+    <% even+=1%>
+    <tr class="<%= even.modulo(2)==0 ? "even" : "odd" %>"> 
       <!-- Category title-->
-      <th><%= codepeer_categories[category_index].capitalize %></th>
+      <!-- Manages "_" in race_condition label: to be rearranged -->
+          <td><%= codepeer_categories[category_index].capitalize %></td>
       <!-- Severities-->
       <% codepeer_severities.size.to_i.times do |severity_index| %> 
+      <%
+        metric_key = 'codepeer_' + codepeer_categories[category_index].downcase + '_' + sonar_severities[codepeer_severities[severity_index]].downcase + '_violations'
+        if codepeer_categories[category_index]['_']
+           codepeer_categories[category_index]['_'] = ' '
+         end
+      %>
         <!-- Number of violations -->
-        <td valign="center" style="padding: 3px;"><%= format_measure(measures[category_index][severity_index]) %></td>
+        <td valign="right" style="padding: 3px;"><%= format_measure(measures[category_index][severity_index], :url => url_for_drilldown(metric_key, {:highlight => metric_key})) %></td>
       <% end %>
     </tr>
   <% end %>
