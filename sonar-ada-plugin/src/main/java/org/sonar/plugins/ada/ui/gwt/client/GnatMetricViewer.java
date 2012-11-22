@@ -98,10 +98,10 @@ public class GnatMetricViewer extends Page {
                     resource.getMeasure(GwtGnatMetrics.PRIVATE_TYPES),
                     resource.getMeasure(GwtGnatMetrics.PUBLIC_TYPES));
 
-            addBigCell(panel, resource.getMeasure(GwtGnatMetrics.ALL_SUBPROGRAMS).toString());
-//            addCell(panel,
-//                    resource.getMeasure(GwtGnatMetrics.ALL_SUBPROGRAMS),
-//                    resource.getMeasure(GwtGnatMetrics.PUBLIC_SUBPROGRAMS));
+
+            addCell(panel,
+                    resource.getMeasure(GwtGnatMetrics.ALL_SUBPROGRAMS),
+                    resource.getMeasure(GwtGnatMetrics.PUBLIC_SUBPROGRAMS));
 
             if (panel.getWidgetCount() > 0) {
                 header.add(panel);

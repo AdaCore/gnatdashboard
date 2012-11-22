@@ -11,9 +11,9 @@
 
   # Total Codepeer violations
   codepeer_violations=@snapshot.measure('codepeer_violations')
-#
+
   # Codepeer informational violations
-  codepeer_violations=@snapshot.measure('codepeer_informational_info_violations')
+  codepeer_informational_violations=@snapshot.measure('codepeer_informational_info_violations')
 
   #### 
   # Retrieves Codepeer violations per category and severity in a double 
@@ -34,46 +34,64 @@
 
 
 %>
-<table class="clear width100">
+<table class="dashbox" width="100%">
 
-  <!-- Severities title-->
   <tr>
-
-    <!-- Empty cell, above category title-->
-    <td></td>
-
-    <% codepeer_severities.size.to_i.times do |severity_index| %>
-      <!--TODO: link message to drilldown page (l.67 widget_lab plugin)-->
-      <td>
-       <%= image_tag 'priority/'.concat(sonar_severities[codepeer_severities[severity_index]]).concat('.png') %>
-        &nbsp;
-        <%= codepeer_severities[severity_index].capitalize %>
-      </td>
-    <% end %>
-
+    <td valign="top">
+      <h3><%= message('Codepeer messages') %> </h3>
+      <div valign="left">
+        <span class="big">
+          <%= format_measure(codepeer_violations) %>
+        </span>
+			    <%= dashboard_configuration.selected_period? ? format_variation(codepeer_violations) : trend_icon(codepeer_violations) -%>
+      </div>
+    </td>
   </tr>
 
-  <!-- Categories -->
-  <% even=-1 %>
-  <% for category_index in 0..2 %>
-    <% even+=1%>
-    <tr class="<%= even.modulo(2)==0 ? "even" : "odd" %>"> 
-      <!-- Category title-->
-      <!-- Manages "_" in race_condition label: to be rearranged -->
-          <td><%= codepeer_categories[category_index].capitalize %></td>
-      <!-- Severities-->
-      <% codepeer_severities.size.to_i.times do |severity_index| %> 
-      <%
-        metric_key = 'codepeer_' + codepeer_categories[category_index].downcase + '_' + sonar_severities[codepeer_severities[severity_index]].downcase + '_violations'
-        if codepeer_categories[category_index]['_']
-           codepeer_categories[category_index]['_'] = ' '
-         end
-      %>
-        <!-- Number of violations -->
-        <td valign="right" style="padding: 3px;"><%= format_measure(measures[category_index][severity_index], :url => url_for_drilldown(metric_key, {:highlight => metric_key})) %></td>
+  <tr>
+    <table width="100%" class="table table-bordered">
+      <thead>
+        <!-- Severities title-->
+        <tr>
+
+          <!-- Empty cell, above category title-->
+          <th></th>
+
+          <% codepeer_severities.size.to_i.times do |severity_index| %>
+          <th nowrap="nowrap" style="text-align:center">
+             <%= image_tag 'priority/'.concat(sonar_severities[codepeer_severities[severity_index]]).concat('.png') %>
+              &nbsp;
+             <%= codepeer_severities[severity_index].capitalize %>
+            </th>
+          <% end %>
+
+        </tr>
+      </thead>
+      <!-- Categories -->
+      <% even=-1 %>
+      <% for category_index in 0..2 %>
+        <% even+=1%>
+        <tr class="<%= even.modulo(2)==0 ? "even" : "odd" %>"> 
+          <!-- Category title-->
+          <!-- Manages "_" in race_condition label: TO BE RE-ARRANGED-->
+          <%
+            if codepeer_categories[category_index]['_']
+               codepeer_categories[category_index]['_'] = ' '
+             end
+          %>
+          <td width="1%" nowrap="nowrap" class="left text"><%= codepeer_categories[category_index].capitalize %></td>
+          <!-- Severities-->
+          <% codepeer_severities.size.to_i.times do |severity_index| %> 
+            <!-- Number of violations -->
+            <% metric_key = 'codepeer_' + codepeer_categories[category_index].downcase + '_' + sonar_severities[codepeer_severities[severity_index]].downcase + '_violations' %>
+            <td class="center">
+              <%= format_measure(measures[category_index][severity_index], :url => url_for_drilldown(metric_key, {:highlight => metric_key})) %>
+              <!--%= dashboard_configuration.selected_period? ? format_variation(metric_key) : trend_icon(metric_key, :empty => true) -%>-->
+            </td>
+          <% end %>
+        </tr>
       <% end %>
-    </tr>
-  <% end %>
 
+    </table>
+  </tr>
 </table>
-

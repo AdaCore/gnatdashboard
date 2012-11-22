@@ -11,17 +11,16 @@ import org.sonar.api.web.RubyRailsWidget;
 import org.sonar.api.web.WidgetCategory;
 
 @UserRole(UserRole.USER)
-@Description("Show how to use Ruby Widget API")
+@Description("Shows Codepeer messages, per severity and category")
 @WidgetCategory("Rules")
-
-public class CodepeerViolationsRubyWidget extends AbstractRubyTemplate implements RubyRailsWidget {
+public class CodePeerViolationsRubyWidget extends AbstractRubyTemplate implements RubyRailsWidget {
 
   public String getId() {
-    return "TestOne";
+    return "CodepeerViolations";
   }
 
   public String getTitle() {
-    return "TestOne";
+    return "Codepeer Messages";
   }
 
   @Override

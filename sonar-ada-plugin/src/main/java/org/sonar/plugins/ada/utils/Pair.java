@@ -9,8 +9,27 @@ package org.sonar.plugins.ada.utils;
  */
 public class Pair<L, R> {
 
-    public final L left;
-    public final R right;
+    private L left;
+    private R right;
+
+    //<editor-fold desc="Getters & setters" defaultstate="Collapsed">
+
+    public L getLeft() {
+        return left;
+    }
+
+    public void setLeft(L left) {
+        this.left = left;
+    }
+
+    public R getRight() {
+        return right;
+    }
+
+    public void setRight(R right) {
+        this.right = right;
+    }
+//</editor-fold>
 
     public Pair(L left, R right) {
         this.left = left;
@@ -23,7 +42,7 @@ public class Pair<L, R> {
 
     @Override
     public boolean equals(Object other) {
-        if (this == other){
+        if (this == other) {
             return true;
         }
 

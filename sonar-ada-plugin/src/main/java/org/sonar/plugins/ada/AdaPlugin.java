@@ -10,16 +10,16 @@ import org.sonar.api.Extension;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
-import org.sonar.plugins.ada.codepeer.AdaCodepeerRuleRepository;
-import org.sonar.plugins.ada.codepeer.AdaCodepeerSensor;
-import org.sonar.plugins.ada.codepeer.CodepeerDecorator;
-import org.sonar.plugins.ada.codepeer.CodepeerMetrics;
+import org.sonar.plugins.ada.codepeer.AdaCodePeerRuleRepository;
+import org.sonar.plugins.ada.codepeer.AdaCodePeerSensor;
+import org.sonar.plugins.ada.codepeer.CodePeerDecorator;
+import org.sonar.plugins.ada.codepeer.CodePeerMetrics;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckRuleRepository;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckSensor;
 import org.sonar.plugins.ada.gnatmetric.AdaGnatMetricSensor;
 import org.sonar.plugins.ada.gnatmetric.GnatMetrics;
 import org.sonar.plugins.ada.ui.gwt.GnatMetricViewerDefinition;
-import org.sonar.plugins.ada.ui.rubyWidget.CodepeerViolationsRubyWidget;
+import org.sonar.plugins.ada.ui.rubyWidget.CodePeerViolationsRubyWidget;
 
 @Properties({
     @Property(key = AdaSourceImporter.PROJECT_TREE_FILE_PATH_KEY,
@@ -37,7 +37,7 @@ import org.sonar.plugins.ada.ui.rubyWidget.CodepeerViolationsRubyWidget;
         description = "Relative to the project root",
         global = false,
         project = true),
-    @Property(key = AdaCodepeerSensor.REPORT_PATH_KEY,
+    @Property(key = AdaCodePeerSensor.REPORT_PATH_KEY,
         name = "Path to Codepeer report",
         description = "Relative to the project root",
         global = false,
@@ -63,11 +63,11 @@ public final class AdaPlugin extends SonarPlugin {
         l.add(GnatMetricViewerDefinition.class);
         l.add(GnatMetrics.class);
         l.add(AdaColorizer.class);
-        l.add(AdaCodepeerSensor.class);
-        l.add(AdaCodepeerRuleRepository.class);
-        l.add(CodepeerMetrics.class);
-        l.add(CodepeerViolationsRubyWidget.class);
-        l.add(CodepeerDecorator.class);
+        l.add(AdaCodePeerSensor.class);
+        l.add(AdaCodePeerRuleRepository.class);
+        l.add(CodePeerMetrics.class);
+        l.add(CodePeerViolationsRubyWidget.class);
+        l.add(CodePeerDecorator.class);
         return l;
     }
 

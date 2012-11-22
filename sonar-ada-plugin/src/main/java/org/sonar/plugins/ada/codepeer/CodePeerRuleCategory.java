@@ -8,7 +8,7 @@ package org.sonar.plugins.ada.codepeer;
 /**
  * A class to hold Codepeer rules category
  */
-public enum CodepeerRuleCategory {
+public enum CodePeerRuleCategory {
 
     CHECK, WARNING, RACE_CONDITION, INFORMATIONAL;
 }

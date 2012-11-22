@@ -28,7 +28,7 @@ import org.sonar.plugins.ada.utils.AdaUtils;
  * Sensor for Codepeer external tool, retrieve informations from a report and
  * save the measures.
  */
-public class AdaCodepeerSensor extends AdaSensor {
+public class AdaCodePeerSensor extends AdaSensor {
 
     /**
      * Sonar property key for Codepeer report absolute path
@@ -36,7 +36,7 @@ public class AdaCodepeerSensor extends AdaSensor {
     public static final String REPORT_PATH_KEY = "sonar.ada.codepeer.reportPath";
     public static final String[] CODEPEER_CATEGORY = {"check", "warning"};
 
-    public AdaCodepeerSensor(RuleFinder ruleFinder, Configuration conf, RulesProfile profile) {
+    public AdaCodePeerSensor(RuleFinder ruleFinder, Configuration conf, RulesProfile profile) {
         super(ruleFinder, conf, profile);
     }
 
@@ -73,7 +73,7 @@ public class AdaCodepeerSensor extends AdaSensor {
 
                 if (isInputValid(file, ruleKey, dir, line, msg, prj)) {
 
-                   saveViolation(project, context, AdaCodepeerRuleRepository.KEY,
+                   saveViolation(project, context, AdaCodePeerRuleRepository.KEY,
                             file, Integer.parseInt(line), ruleKey, msg, prj, dir);
                 } else {
                     AdaUtils.LOG.warn("AdaCheck warning: {}", msg);

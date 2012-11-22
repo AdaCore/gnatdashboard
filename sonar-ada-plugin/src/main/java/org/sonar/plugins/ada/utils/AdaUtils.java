@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.utils.SonarException;
-import org.sonar.plugins.ada.codepeer.CodepeerMetrics;
+import org.sonar.plugins.ada.codepeer.CodePeerMetrics;
 
 public final class AdaUtils {
 
@@ -22,14 +22,14 @@ public final class AdaUtils {
     public static final Logger LOG = LoggerFactory.getLogger("AdaPlugin");
 
     public static Metric getMetricBySeverityAndCategory(String severity, String category) {
-        for (Field field : CodepeerMetrics.class.getFields()) {
+        for (Field field : CodePeerMetrics.class.getFields()) {
             if (Metric.class.isAssignableFrom(field.getType())) {
                 try {
                     if (field.getName().contains(severity) && field.getName().contains(category)) {
                         return (Metric) field.get(null);
                     }
                 } catch (IllegalAccessException e) {
-                    throw new SonarException("While saving Codepeer metrics, cannot load metrics from " + CodepeerMetrics.class.getSimpleName(), e);
+                    throw new SonarException("While saving Codepeer metrics, cannot load metrics from " + CodePeerMetrics.class.getSimpleName(), e);
                 }
             }
         }

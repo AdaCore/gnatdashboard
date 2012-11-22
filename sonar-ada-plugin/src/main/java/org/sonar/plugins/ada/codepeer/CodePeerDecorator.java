@@ -30,7 +30,7 @@ import org.sonar.plugins.ada.utils.Pair;
  *
  * Uses same algo than in org.sonar.plugins.core.sensors.ViolationsDecorator
  */
-public class CodepeerDecorator implements Decorator {
+public class CodePeerDecorator implements Decorator {
 
     private Integer total = 0;
     private Map<Rule, RulePriority> ruleToSeverity = Maps.newHashMap();
@@ -61,7 +61,7 @@ public class CodepeerDecorator implements Decorator {
     }
 
     private void saveViolationsBySeverityAndCategory(DecoratorContext context) {
-        for (CodepeerRuleCategory category : CodepeerRuleCategory.values()) {
+        for (CodePeerRuleCategory category : CodePeerRuleCategory.values()) {
             for (RulePriority severity : RulePriority.values()) {
                 if (severity.equals(RulePriority.BLOCKER)) {
                     continue;
@@ -78,12 +78,12 @@ public class CodepeerDecorator implements Decorator {
 
     private void saveTotalViolations(DecoratorContext context) {
         // Finds violations measure for the resource
-        if (context.getMeasure(CodepeerMetrics.CODEPEER_VIOLATIONS) == null) {
-            Collection<Measure> childrenViolations = context.getChildrenMeasures(CodepeerMetrics.CODEPEER_VIOLATIONS);
+        if (context.getMeasure(CodePeerMetrics.CODEPEER_VIOLATIONS) == null) {
+            Collection<Measure> childrenViolations = context.getChildrenMeasures(CodePeerMetrics.CODEPEER_VIOLATIONS);
             //For source files sum of children = 0, for directories total = 0
             Double sum = MeasureUtils.sum(true, childrenViolations) + total;
             //Add the measure for the current resource
-            context.saveMeasure(new Measure(CodepeerMetrics.CODEPEER_VIOLATIONS, sum));
+            context.saveMeasure(new Measure(CodePeerMetrics.CODEPEER_VIOLATIONS, sum));
         }
     }
 
@@ -93,13 +93,13 @@ public class CodepeerDecorator implements Decorator {
         for (Violation violation : violations) {
             Rule rule = violation.getRule();
 
-            if (rule.getRepositoryKey().equals(AdaCodepeerRuleRepository.KEY)) {
+            if (rule.getRepositoryKey().equals(AdaCodePeerRuleRepository.KEY)) {
                 String[] ruleKey = rule.getKey().split(":");
                 //Skipping the violation if the rule key is unparsable,
                 //expected pattern: "SEVERITY:CATEGORY:rule unique key
                 if (!(ruleKey.length < 3)) {
                     try {
-                        CodepeerRuleCategory category = CodepeerRuleCategory.valueOf(ruleKey[1]);
+                        CodePeerRuleCategory category = CodePeerRuleCategory.valueOf(ruleKey[1]);
                         total++;
                         rules.add(violation.getRule());
                         severitiesCategoies.add(new Pair(rule.getSeverity(), category));
