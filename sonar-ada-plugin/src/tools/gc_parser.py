@@ -21,7 +21,6 @@ import re
 REPOSITORY_KEY = 'gnatcheck'
 COMMENT = '### GNATCheck rule repository generated from gnatcheck switch: gnatcheck -hx ###'
 
-
 ## GCParser #################################################################
 ##
 class GCParser(object):
@@ -36,11 +35,11 @@ class GCParser(object):
         """Initializes GCParser
 
         Keyword arguments:
-        doc_path -- path to the GNAT Check documentation.
-                    Doc is parsed to retrieve GNAT Check rule's
+        doc_path -- path to the GNATcheck documentation.
+                    Doc is parsed to retrieve GNATcheck rule's
                     description.
 
-        Initializes doc_by_rule dictionnary by parsing GNAT Check
+        Initializes doc_by_rule dictionnary by parsing GNATcheck
         documentation.
         doc_by_rule:
           - key = rule key
@@ -55,7 +54,7 @@ class GCParser(object):
         Keyword arguments:
         rule_repo -- instance of utils.RuleRepository object.
                      This method will fill RuleRepository#rules by creation
-                     Sonar rules from retrieved GNAT Check output and
+                     Sonar rules from retrieved GNATcheck output and
                      documentation.
         """
         # Executes gnatcheck -hx and puts the result in a temporary file.
@@ -90,7 +89,7 @@ class GCParser(object):
                 if os.path.exists(file_name): os.remove(file_name)
 
     def parse_doc(self):
-        """Parse GNAT Check documentation
+        """Parse GNATcheck documentation
 
         Returns a dictionnary to initializes doc_by_rule class member.
         """
@@ -141,17 +140,17 @@ class GCParser(object):
 ## GCParserExecutor #######################################################################
 ##
 class GCParserExecutor(object):
-    """Represents executor for GNAT Check Pasrser"""
+    """Represents executor for GNATcheck Pasrser"""
 
     def execute_parser(self, cmd_line):
-        """Executes GNAT Check Parser
+        """Executes GNATcheck Parser
 
         Keyword arguments:
-        cmd_line -- allows to retrieve GNAT Check path documentation,
+        cmd_line -- allows to retrieve GNATcheck path documentation,
                     passed in the command line.
 
         Initializes a RuleRepository and a GCParser, then executes the
-        GNAT Check parser.
+        GNATcheck parser.
         Returns the RuleRepository instance.
         """
         rule_repo = RuleRepository(REPOSITORY_KEY, COMMENT)

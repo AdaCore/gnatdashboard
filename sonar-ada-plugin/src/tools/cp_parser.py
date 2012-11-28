@@ -13,7 +13,6 @@ import os
 #############
 
 REPOSITORY_KEY = 'codepeer'
-DOC_FILENAME='messages_and_annotations.rst'
 COMMENT = '#### Codepeer rule repository generated from html doc page: messages_and_annotations ####'
 PRIORTIES_LIST = {'CRITICAL', 'MAJOR', 'MINOR', 'INFO'}
 CATEGORIES_LIST = {'CHECK', 'WARNING', 'RACE CONDITION', 'INFO'}
@@ -50,7 +49,7 @@ class CPDocParser(object):
         started: assigned to True when starts saving info of the first line of
                  a rules table line.
         """
-        with open (os.path.join(self.doc_path,DOC_FILENAME), 'rt') as doc:
+        with open (self.doc_path, 'rt') as doc:
             # Initialisation
             recording = False
             started = False

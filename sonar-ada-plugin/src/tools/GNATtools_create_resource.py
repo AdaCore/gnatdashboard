@@ -6,6 +6,8 @@ from utils import (RuleRepositoryExporter,
 from cp_parser import CPParserExecutor
 from gc_parser import GCParserExecutor
 import argparse
+import utils
+import os
 
 #############
 # CONSTANTS #
@@ -14,7 +16,7 @@ import argparse
 # GNAT Tools supported by the Sonar Ada plugin
 GNAT_TOOLS = {'gnatcheck' : GCParserExecutor(),
               'codepeer' : CPParserExecutor()}
-
+TOOLS_TO_WRAP = ['gnatcheck']
 
 ## _parse_command_line ########################################################
 ##
@@ -28,7 +30,7 @@ def _parse_command_line():
     parser = argparse.ArgumentParser(description=
                                        'Codepeer rule repository generator')
     parser.add_argument('--cp_doc=', action='store', dest='cp_doc_path', type=str,
-                         help='Absolute path to rst codepeer user guide documentation',
+                         help='Absolute path to messages_and_annotations.rst codepeer user guide documentation',
                          required=True)
     parser.add_argument('--gc_doc=', action='store', dest='gc_doc_path', type=str,
                          help='Absolute path to rst gnatcheck_rm documentation',
@@ -66,9 +68,16 @@ def __main__():
 
         rule_repository = GNAT_TOOLS[tool].execute_parser(cmd_line)
         rule_exporter.export_rule(rule_repository)
+
+        # Description wrapper
+        if rule_repository.repository_key in TOOLS_TO_WRAP:
+            utils.description_wrapper(os.path.join(os.getcwd(), utils.RESOURCES_PATH,
+                                             rule_repository.repository_key + utils.RESOURCES_EXTENSION))
         rule_repositories.append(rule_repository)
 
+    # Export Sonar Default Ada Profile
     profile_exporter.export_profile(rule_repositories)
+
     print '-- DONE --'
 
 if __name__ == '__main__':

@@ -11,7 +11,7 @@ Tools for GNAT tools Sonar rule repository generation:
   This directory contains:
 
     - cp_parser.py: parser for Codepeer documentation
-    - gc_parser.py: parser for GNAT Check ouput with -hx switches
+    - gc_parser.py: parser for GNATcheck ouput with -hx switches
     - GNATtools_create_resource: main script that executes GNAT tools parser and
                                  generates rule repositories & default profile
                                  for the Ada Sonar plugin.

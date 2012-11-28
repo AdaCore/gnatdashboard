@@ -14,7 +14,7 @@ import os
 
 PRIORITIES = {'default' : 'MAJOR'}
 RESOURCES_PATH='../main/resources'
-
+RESOURCES_EXTENSION=".xml"
 
 ## Rule #######################################################################
 ##
@@ -105,7 +105,7 @@ class RuleRepositoryExporter(object):
 
             #Dumps the xml file
             prettyrules = prettify(rules_xml)
-            with open(os.path.join(os.getcwd(), RESOURCES_PATH, rule_repository.repository_key)  + '.xml', 'w+') as repo_file:
+            with open(os.path.join(os.getcwd(), RESOURCES_PATH, rule_repository.repository_key)  + RESOURCES_EXTENSION, 'w+') as repo_file:
                 repo_file.writelines(prettyrules)
 
         else:
@@ -158,4 +158,27 @@ class ProfileExporter(object):
         with open (pro_file, 'w+') as profile_xml:
             profile_xml.writelines(pretty_profile)
 
+
+## description_wrapper ###########################################################
+##
+def description_wrapper(file_path):
+    """Wrap text of 'description' tag with <pre> and CDATA tag """
+    content = []
+    BEGIN_TAG = '<description>'
+    END_TAG = '</description>'
+
+    # Creates a array with the content of the file adding:
+    #   -  "<[!CDATA[ <pre>" after every <description> begin tag
+    #   -  "</pre> ]]>" before every </description> end tag
+    with open(file_path, 'r') as resource:
+        for line in resource.readlines():
+            if line.strip() == BEGIN_TAG:
+                line +='<![CDATA[ <pre>'
+            if line.strip() == END_TAG:
+                line='</pre>]]>' + '\n' +line
+            content.append(line)
+
+    # Dumps wrapped content
+    with open(file_path, 'w') as resource:
+        resource.writelines(content)
 
