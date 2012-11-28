@@ -21,18 +21,34 @@ public final class AdaUtils {
      */
     public static final Logger LOG = LoggerFactory.getLogger("AdaPlugin");
 
-    public static Metric getMetricBySeverityAndCategory(String severity, String category) {
-        for (Field field : CodePeerMetrics.class.getFields()) {
-            if (Metric.class.isAssignableFrom(field.getType())) {
-                try {
-                    if (field.getName().contains(severity) && field.getName().contains(category)) {
-                        return (Metric) field.get(null);
+     /**
+      * Retrieves Metric for violations for a given repository, category and severity.
+      * Only category can be null.
+      *
+      * @param repositoryKey
+      * @param severity
+      * @param category
+      * @return Metric
+      */
+     public static Metric getMetricByRuleRepoSeverityAndCategory(String ruleRepoKey, String className, String severity, String category) {
+        try {
+            Class plugin = Class.forName("org.sonar.plugins.ada." + ruleRepoKey + "." + className);
+            for (Field field : plugin.getFields()) {
+                if (Metric.class.isAssignableFrom(field.getType())) {
+                    try {
+                        if ((category == null && field.getName().contains(severity)) ||
+                                (category != null &&field.getName().contains(severity) &&
+                                 field.getName().contains(category))) {
+                            return (Metric) field.get(null);
+                        }
+                    } catch (IllegalAccessException e) {
+                        throw new SonarException("While saving Codepeer metrics, cannot load metrics from " + CodePeerMetrics.class.getSimpleName(), e);
                     }
-                } catch (IllegalAccessException e) {
-                    throw new SonarException("While saving Codepeer metrics, cannot load metrics from " + CodePeerMetrics.class.getSimpleName(), e);
                 }
             }
+            return null;
+        } catch (ClassNotFoundException ex) {
+            throw new SonarException("Plugin metric class not found with rule repository key and class name: " + ruleRepoKey + ", " +className, ex);
         }
-        return null;
     }
 }

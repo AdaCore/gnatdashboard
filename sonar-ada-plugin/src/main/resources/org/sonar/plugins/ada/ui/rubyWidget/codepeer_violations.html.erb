@@ -35,63 +35,66 @@
 
 %>
 <table class="dashbox" width="100%">
-
   <tr>
     <td valign="top">
-      <h3><%= message('Codepeer messages') %> </h3>
-      <div valign="left">
-        <span class="big">
-          <%= format_measure(codepeer_violations) %>
-        </span>
-			    <%= dashboard_configuration.selected_period? ? format_variation(codepeer_violations) : trend_icon(codepeer_violations) -%>
+      <div class="dashbox">
+        <h3>CodePeer messages</h3>
+        <div class="marginbottom10">
+          <span class="big">
+            <%= format_measure(codepeer_violations,:url => url_for_drilldown('codepeer_violations', {:highlight => 'codepeer_violations'})) %>
+          </span>
+            <%= dashboard_configuration.selected_period? ? format_variation(codepeer_violations) : trend_icon(codepeer_violations) -%>
+        </div>
+        <h3>Informational messages</h3>
+        <div>
+          <span class="big">
+            <%= format_measure(codepeer_informational_violations,:url => url_for_drilldown('codepeer_informational_info_violations', {:highlight => 'codepeer_informational_info_violations'})) %>
+          </span>
+          <%= dashboard_configuration.selected_period? ? format_variation(codepeer_informational_violations) : trend_icon(codepeer_informational_violations) -%>
+        </div>
       </div>
     </td>
-  </tr>
 
-  <tr>
-    <table width="100%" class="table table-bordered">
-      <thead>
-        <!-- Severities title-->
-        <tr>
+    <td valign="top" nowrap>
 
-          <!-- Empty cell, above category title-->
-          <th></th>
+      <table width="100%" class="table table-bordered">
+        <thead>
+          <!-- Severities title-->
+          <tr>
 
-          <% codepeer_severities.size.to_i.times do |severity_index| %>
-          <th nowrap="nowrap" style="text-align:center">
-             <%= image_tag 'priority/'.concat(sonar_severities[codepeer_severities[severity_index]]).concat('.png') %>
-              &nbsp;
-             <%= codepeer_severities[severity_index].capitalize %>
-            </th>
-          <% end %>
+            <!-- Empty cell, above category title-->
+            <th></th>
 
-        </tr>
-      </thead>
-      <!-- Categories -->
-      <% even=-1 %>
-      <% for category_index in 0..2 %>
-        <% even+=1%>
-        <tr class="<%= even.modulo(2)==0 ? "even" : "odd" %>"> 
-          <!-- Category title-->
-          <!-- Manages "_" in race_condition label: TO BE RE-ARRANGED-->
-          <%
-            if codepeer_categories[category_index]['_']
-               codepeer_categories[category_index]['_'] = ' '
-             end
-          %>
-          <td width="1%" nowrap="nowrap" class="left text"><%= codepeer_categories[category_index].capitalize %></td>
-          <!-- Severities-->
-          <% codepeer_severities.size.to_i.times do |severity_index| %> 
-            <!-- Number of violations -->
-            <% metric_key = 'codepeer_' + codepeer_categories[category_index].downcase + '_' + sonar_severities[codepeer_severities[severity_index]].downcase + '_violations' %>
-            <td class="center">
-              <%= format_measure(measures[category_index][severity_index], :url => url_for_drilldown(metric_key, {:highlight => metric_key})) %>
-              <!--%= dashboard_configuration.selected_period? ? format_variation(metric_key) : trend_icon(metric_key, :empty => true) -%>-->
-            </td>
-          <% end %>
-        </tr>
-      <% end %>
+            <% codepeer_severities.size.to_i.times do |severity_index| %>
+            <th nowrap="nowrap" style="text-align:center">
+               <%= image_tag 'priority/'.concat(sonar_severities[codepeer_severities[severity_index]]).concat('.png') %>
+                &nbsp;
+               <%= codepeer_severities[severity_index].capitalize %>
+              </th>
+            <% end %>
 
-    </table>
-  </tr>
+          </tr>
+        </thead>
+        <!-- Categories -->
+        <% even=-1 %>
+        <% codepeer_categories.size.to_i.times do |category_index| %>
+          <% even+=1%>
+          <tr class="<%= even.modulo(2)==0 ? "even" : "odd" %>"> 
+            <!-- Category title-->
+            <td width="1%" nowrap="nowrap" class="left text"><%= codepeer_categories[category_index].capitalize %></td>
+            <!-- Severities-->
+            <% codepeer_severities.size.to_i.times do |severity_index| %> 
+              <!-- Number of violations -->
+              <% metric_key = 'codepeer_' + codepeer_categories[category_index].downcase + '_' + sonar_severities[codepeer_severities[severity_index]].downcase + '_violations' %>
+              <td class="center">
+                <%= format_measure(measures[category_index][severity_index], :url => url_for_drilldown(metric_key, {:highlight => metric_key})) -%>
+                <%= dashboard_configuration.selected_period? ? format_variation(metric_key) : trend_icon(metric_key, :empty => true) -%>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+
+      </table>
+      </td>
+    </tr>
 </table>

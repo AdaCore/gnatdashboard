@@ -20,7 +20,7 @@ public class GnatCheckViolationsRubyWidget extends AbstractRubyTemplate implemen
     }
 
     public String getTitle() {
-        return "GNAT Check violations";
+        return "GNATcheck violations";
     }
 
     @Override

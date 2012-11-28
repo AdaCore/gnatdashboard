@@ -10,7 +10,7 @@ public class Ada extends AbstractLanguage {
 
     public static final Ada INSTANCE = new Ada();
     /**
-     * Ada key
+     * Ada key: "ada"
      */
     public static final String KEY = "ada";
     /**

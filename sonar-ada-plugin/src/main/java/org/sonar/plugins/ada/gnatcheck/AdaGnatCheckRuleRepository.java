@@ -7,7 +7,7 @@ package org.sonar.plugins.ada.gnatcheck;
 import org.sonar.plugins.ada.utils.AdaAbstractRuleRepository;
 
 /**
- * Represent GNAT Check rule repository.
+ * Represent GNATcheck rule repository.
  */
 public class AdaGnatCheckRuleRepository extends AdaAbstractRuleRepository {
 
@@ -19,10 +19,10 @@ public class AdaGnatCheckRuleRepository extends AdaAbstractRuleRepository {
     }
 
     /**
-     * Return location of GNAT Check rule repository, from resource directory.
+     * Return location of GNATcheck rule repository, from resource directory.
      *
      * No default severity set in the rule repository.
-     * GNAT Check rules default severity is set to MAJOR in the Sonar Ada
+     * GNATcheck rules default severity is set to MAJOR in the Sonar Ada
      * default profile.
      */
     protected String fileName() {

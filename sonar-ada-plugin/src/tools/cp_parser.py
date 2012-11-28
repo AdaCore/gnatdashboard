@@ -15,7 +15,7 @@ import os
 REPOSITORY_KEY = 'codepeer'
 COMMENT = '#### Codepeer rule repository generated from html doc page: messages_and_annotations ####'
 PRIORTIES_LIST = {'CRITICAL', 'MAJOR', 'MINOR', 'INFO'}
-CATEGORIES_LIST = {'CHECK', 'WARNING', 'RACE CONDITION', 'INFO'}
+CATEGORIES_LIST = {'CHECK', 'WARNING', 'RACE CONDITION', 'INFORMATIONAL'}
 
 ## CPDocParser #################################################################
 ##

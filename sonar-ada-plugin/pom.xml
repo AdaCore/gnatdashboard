@@ -11,7 +11,7 @@
     <inceptionYear>2012</inceptionYear>
 
     <properties>
-        <sonar.buildVersion>2.12</sonar.buildVersion>
+        <sonar.buildVersion>3.2</sonar.buildVersion>
         <jdk.min.version>1.5</jdk.min.version>
         <sonar.pluginKey>ada</sonar.pluginKey>
         <sonar.pluginClass>org.sonar.plugins.ada.AdaPlugin</sonar.pluginClass>
@@ -148,5 +148,12 @@
             </plugin>
         </plugins>
     </build>
+    
+    <repositories>
+    <repository>
+      <id>my-internal-site</id>
+      <url>http://repository.sonarsource.org/content/repositories/sonar</url>
+    </repository>
+  </repositories>
 
 </project>

@@ -22,13 +22,13 @@ import org.sonar.plugins.ada.utils.AdaSensor;
 import org.sonar.plugins.ada.utils.AdaUtils;
 
 /**
- * Sensor for GNAT Metric external tool, retrieve informations from a report and
+ * Sensor for GNATmetric external tool, retrieve informations from a report and
  * save the measures.
  */
 public class AdaGnatMetricSensor extends AdaSensor {
 
     /**
-     * Sonar property key for GNAT Metric report absolute path
+     * Sonar property key for GNATmetric report absolute path
      */
     public static final String REPORT_PATH_KEY = "sonar.ada.gnatmetric.reportPath";
 
@@ -42,11 +42,11 @@ public class AdaGnatMetricSensor extends AdaSensor {
     }
 
     /**
-     * Parse GNAT Metric XML report to retrieve violations information.
+     * Parse GNATmetric XML report to retrieve violations information.
      *
      * @param project current analyzed project
      * @param context Sensor's context
-     * @param report GNAT Metric XML report
+     * @param report GNATmetric XML report
      */
     @Override
     protected void processReport(final Project project, final SensorContext context, File report)
@@ -79,7 +79,7 @@ public class AdaGnatMetricSensor extends AdaSensor {
             }
 
             /**
-             * Check that retrieved information from GNAT Metric report are
+             * Check that retrieved information from GNATmetric report are
              * valid: every parameter must not be null or empty
              *
              * @param file

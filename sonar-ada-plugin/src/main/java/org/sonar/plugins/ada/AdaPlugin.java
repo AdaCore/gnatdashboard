@@ -12,36 +12,41 @@ import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.ada.codepeer.AdaCodePeerRuleRepository;
 import org.sonar.plugins.ada.codepeer.AdaCodePeerSensor;
-import org.sonar.plugins.ada.codepeer.CodePeerDecorator;
 import org.sonar.plugins.ada.codepeer.CodePeerMetrics;
+import org.sonar.plugins.ada.codepeer.CodePeerViolationsDecorator;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckRuleRepository;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckSensor;
+import org.sonar.plugins.ada.gnatcheck.GnatCheckMetrics;
+import org.sonar.plugins.ada.gnatcheck.GnatCheckViolationsDecorator;
+import org.sonar.plugins.ada.gnatcheck.GnatCheckWeightedViolationsDecorator;
+import org.sonar.plugins.ada.gnatcheck.GnatCheckViolationsDensityDecorator;
 import org.sonar.plugins.ada.gnatmetric.AdaGnatMetricSensor;
 import org.sonar.plugins.ada.gnatmetric.GnatMetrics;
 import org.sonar.plugins.ada.ui.gwt.GnatMetricViewerDefinition;
 import org.sonar.plugins.ada.ui.rubyWidget.CodePeerViolationsRubyWidget;
+import org.sonar.plugins.ada.ui.rubyWidget.GnatCheckViolationsRubyWidget;
 
 @Properties({
     @Property(key = AdaSourceImporter.PROJECT_TREE_FILE_PATH_KEY,
-        name = "Project tree file",
-        description = "Path to file which contains project tree in JSON format. Relative to the project root",
-        global = false,
-        project = true),
+    name = "Project tree file",
+    description = "Path to file which contains project tree in JSON format. Relative to the project root",
+    global = false,
+    project = true),
     @Property(key = AdaGnatCheckSensor.REPORT_PATH_KEY,
-        name = "Path to GNAT Check report",
-        description = "Relative to the project root",
-        global = false,
-        project = true),
+    name = "Path to GNATcheck report",
+    description = "Relative to the project root",
+    global = false,
+    project = true),
     @Property(key = AdaGnatMetricSensor.REPORT_PATH_KEY,
-        name = "Path to GNAT Metric report",
-        description = "Relative to the project root",
-        global = false,
-        project = true),
+    name = "Path to GNATmetric report",
+    description = "Relative to the project root",
+    global = false,
+    project = true),
     @Property(key = AdaCodePeerSensor.REPORT_PATH_KEY,
-        name = "Path to Codepeer report",
-        description = "Relative to the project root",
-        global = false,
-        project = true)})
+    name = "Path to Codepeer report",
+    description = "Relative to the project root",
+    global = false,
+    project = true)})
 /**
  * Implements Ada Plugin for Sonar
  */
@@ -56,18 +61,28 @@ public final class AdaPlugin extends SonarPlugin {
         List<Class<? extends Extension>> l = new ArrayList<Class<? extends Extension>>();
         l.add(Ada.class);
         l.add(AdaSourceImporter.class);
-        l.add(AdaGnatCheckRuleRepository.class);
-        l.add(AdaGnatCheckSensor.class);
         l.add(AdaDefaultProfile.class);
+        l.add(AdaColorizer.class);
+        //GNATcheck
+        boolean add = l.add(AdaGnatCheckRuleRepository.class);
+        l.add(AdaGnatCheckSensor.class);
+        l.add(GnatCheckMetrics.class);
+        l.add(GnatCheckViolationsRubyWidget.class);
+        l.add(GnatCheckViolationsDecorator.class);
+        l.add(GnatCheckViolationsDensityDecorator.class);
+        l.add(GnatCheckWeightedViolationsDecorator.class);
+
+        //GNATmetric
         l.add(AdaGnatMetricSensor.class);
         l.add(GnatMetricViewerDefinition.class);
         l.add(GnatMetrics.class);
-        l.add(AdaColorizer.class);
+
+        //CodeePeer
         l.add(AdaCodePeerSensor.class);
         l.add(AdaCodePeerRuleRepository.class);
         l.add(CodePeerMetrics.class);
         l.add(CodePeerViolationsRubyWidget.class);
-        l.add(CodePeerDecorator.class);
+        l.add(CodePeerViolationsDecorator.class);
         return l;
     }
 
