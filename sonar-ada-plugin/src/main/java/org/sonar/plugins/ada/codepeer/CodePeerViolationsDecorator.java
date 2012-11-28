@@ -30,10 +30,9 @@ import org.sonar.plugins.ada.utils.Pair;
  *
  * Uses same algo than in org.sonar.plugins.core.sensors.ViolationsDecorator
  */
-public class CodePeerDecorator implements Decorator {
+public class CodePeerViolationsDecorator implements Decorator {
 
     private Integer total = 0;
-    private Map<Rule, RulePriority> ruleToSeverity = Maps.newHashMap();
     private Multiset<Rule> rules = HashMultiset.create();
     private Multiset<Pair> severitiesCategoies = HashMultiset.create();
 
@@ -55,7 +54,6 @@ public class CodePeerDecorator implements Decorator {
     }
 
     private void resetCounters() {
-        ruleToSeverity.clear();
         severitiesCategoies.clear();
         total = 0;
     }
@@ -66,7 +64,7 @@ public class CodePeerDecorator implements Decorator {
                 if (severity.equals(RulePriority.BLOCKER)) {
                     continue;
                 }
-                Metric metric = AdaUtils.getMetricBySeverityAndCategory(severity.toString(), category.toString());
+                Metric metric = AdaUtils.getMetricByRuleRepoSeverityAndCategory(AdaCodePeerRuleRepository.KEY, "CodePeerMetrics", severity.toString(), category.toString());
                 if (metric != null && context.getMeasure(metric) == null) {
                     Collection<Measure> children = context.getChildrenMeasures(MeasuresFilters.metric(metric));
                     Double sum = MeasureUtils.sum(true, children) + severitiesCategoies.count(new Pair(severity, category) {});
