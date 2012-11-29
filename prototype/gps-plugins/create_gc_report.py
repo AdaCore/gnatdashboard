@@ -40,7 +40,7 @@ class GcOutput(object):
        rules violations.
     """
     def __init__(self, gc_log):
-        """Initializes the class by processing the GnatCheck output
+        """Initializes the object by processing the GnatCheck output
 
            and saving the rules violations
         """

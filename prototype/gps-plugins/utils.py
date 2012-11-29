@@ -5,8 +5,21 @@ import json
 ## Violation #################################################################
 ##
 class Violation(object):
-    """Represent a rule violation in GnatCheck analyse"""
+    """Represent a rule violation from GNAT Tool's analysis
+
+       For now this Object is only use by Codepeer report generator, might be
+       re-arrange after the definition of the standard output format.
+    """
     def __init__(self, prj, directory, src, line, rule_key, msg):
+        """Initialize the object with the following arguments:
+
+          - project: root project which is analysed
+          - directory: logic directory of the source file
+          - source: source file basename
+          - rule key: Identification of the rule, the same that is mentionned in
+                      the Tool's Sonar rule repository.
+          - message: violation's message
+        """
         self.prj = prj
         self.directory = directory
         self.src = src
