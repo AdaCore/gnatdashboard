@@ -173,9 +173,9 @@ def description_wrapper(file_path):
     with open(file_path, 'r') as resource:
         for line in resource.readlines():
             if line.strip() == BEGIN_TAG:
-                line +='<![CDATA[ <pre>'
+                line += '<![CDATA[ <div style="white-space: pre;">'
             if line.strip() == END_TAG:
-                line='</pre>]]>' + '\n' +line
+                line='</div>]]>' + '\n' + line
             content.append(line)
 
     # Dumps wrapped content

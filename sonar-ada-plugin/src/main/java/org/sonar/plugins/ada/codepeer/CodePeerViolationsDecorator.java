@@ -92,9 +92,11 @@ public class CodePeerViolationsDecorator implements Decorator {
             Rule rule = violation.getRule();
 
             if (rule.getRepositoryKey().equals(AdaCodePeerRuleRepository.KEY)) {
-                String[] ruleKey = rule.getKey().split(":");
+                String[] ruleKey = rule.getKey().split(AdaCodePeerRuleRepository.RULE_KEY_SEPARATOR);
                 //Skipping the violation if the rule key is unparsable,
                 //expected pattern: "SEVERITY:CATEGORY:rule unique key
+                for (String s: ruleKey){
+                }
                 if (!(ruleKey.length < 3)) {
                     try {
                         CodePeerRuleCategory category = CodePeerRuleCategory.valueOf(ruleKey[1]);
@@ -105,7 +107,7 @@ public class CodePeerViolationsDecorator implements Decorator {
                         AdaUtils.LOG.warn("Skipping violation: {}, unknown category {}", violation.getMessage(), ruleKey[1]);
                     }
                 } else {
-                    AdaUtils.LOG.warn("Skipping rule's violation: {}, unable to parse Codepeer rule key: {}. Pattern should be: \"SEVERITY:CATEGORY:rule unique key\".", violation.getMessage(), rule.getKey());
+                    AdaUtils.LOG.warn("Skipping rule's violation, unable to parse Codepeer rule key: {}. Pattern should be: \"SEVERITY:CATEGORY:rule unique key\"", rule.getKey());
                 }
             }
         }
