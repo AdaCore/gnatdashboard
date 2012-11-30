@@ -125,7 +125,8 @@ class GCParser(object):
                 #   - saves desc and rule key in dictionnary
                 #   - re-initializes all variables
                 elif prog_title.match(line):
-                    doc_by_rule[rule_key] = description.strip()
+                    if rule_key != '' and description != '':
+                        doc_by_rule[rule_key] = description.strip()
                     recording = 0
                     description = ''
                     rule_key = ''
