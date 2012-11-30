@@ -81,7 +81,7 @@
           <% even+=1%>
           <tr class="<%= even.modulo(2)==0 ? "even" : "odd" %>"> 
             <!-- Category title-->
-            <td width="1%" nowrap="nowrap" class="left text"><%= codepeer_categories[category_index].capitalize %></td>
+            <td width="1%" nowrap="nowrap" class="left text"><%= codepeer_categories[category_index].capitalize.gsub("_", " ") %></td>
             <!-- Severities-->
             <% codepeer_severities.size.to_i.times do |severity_index| %> 
               <!-- Number of violations -->
