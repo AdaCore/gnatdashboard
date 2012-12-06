@@ -16,7 +16,7 @@ REPOSITORY_KEY = 'codepeer'
 COMMENT = '#### Codepeer rule repository generated from html doc page: messages_and_annotations ####'
 PRIORTIES_LIST = {'CRITICAL', 'MAJOR', 'MINOR', 'INFO'}
 CATEGORIES_LIST = {'CHECK', 'WARNING', 'RACE CONDITION', 'INFORMATIONAL'}
-RULE_SEPARATOR = '@'
+RULE_SEPARATOR = '__'
 ## CPDocParser #################################################################
 ##
 class CPDocParser(object):
@@ -89,7 +89,7 @@ class CPDocParser(object):
                     #severity. See TN [L919-022]
                     for category in CATEGORIES_LIST:
                         for priority in PRIORTIES_LIST:
-                            new_rule = Rule(rule.key, rule.name, rule.description, priority)
+                            new_rule = Rule(rule.key, REPOSITORY_KEY + ' - ' + rule.name, rule.description, priority)
                             new_rule.key = priority + RULE_SEPARATOR + category + RULE_SEPARATOR + new_rule.key.strip()
                             new_rule.configkey = new_rule.key
                             rule_repo.rules.append(new_rule)

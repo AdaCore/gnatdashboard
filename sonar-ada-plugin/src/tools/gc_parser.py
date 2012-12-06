@@ -74,7 +74,7 @@ class GCParser(object):
                 for path in ['.//check', './/spin', './/field']:
                     for node in tree.findall(path):
                         rule_key = node.attrib.get('switch')
-                        label = node.attrib.get('label')
+                        label = REPOSITORY_KEY + ' - ' + node.attrib.get('label')
                         if rule_key and label:
                             key = rule_key[2:]
                             #key.split(':') concerns rule with specific category.
