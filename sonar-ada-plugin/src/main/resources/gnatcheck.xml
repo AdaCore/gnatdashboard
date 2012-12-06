@@ -5809,7 +5809,7 @@ specified.
       Name_Clashes
     </configkey>
     <name>
-      gnatcheck - restrictions on name space (specify dictionary of forbidden names) 
+      gnatcheck - restrictions on name space (specify dictionary of forbidden names)
     </name>
     <description>
 <![CDATA[ <div style="white-space: pre;">      Check that certain names are not used as defining identifiers. The
