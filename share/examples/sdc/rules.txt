@@ -2,7 +2,7 @@
 +RControlled_Type_Declarations
 +RExplicit_Full_Discrete_Ranges
 +RGenerics_In_Subprograms
-+RImproperly_Located_Instantiations
+N+RImproperly_Located_Instantiations
 +RUnassigned_OUT_Parameters
 +RFloat_Equality_Checks
 +RFunction_Style_Procedures
@@ -13,7 +13,6 @@
 +RDiscriminated_Records
 +RAnonymous_Subtypes
 +RBlocks
-+RImplicit_IN_Mode_Parameters
 +RNon_Qualified_Aggregates
 +RLibrary_Level_Subprograms
 +RRaising_Predefined_Exceptions

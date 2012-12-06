@@ -1,0 +1,1484 @@
+<?xml version="1.0" ?>
+<global>
+  <!--GNAT Metric results-->
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.ads">
+    <metric name="cyclomatic_complexity">
+      0
+    </metric>
+    <metric name="all_types">
+      1
+    </metric>
+    <metric name="short_circuit_complexity">
+      0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      13
+    </metric>
+    <metric name="construct_nesting">
+      1
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      13
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      0
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      1
+    </metric>
+    <metric name="all_lines">
+      34
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      15
+    </metric>
+    <metric name="statement_complexity">
+      0
+    </metric>
+    <metric name="comment_percentage">
+      50.0
+    </metric>
+    <metric name="blank_lines">
+      8
+    </metric>
+    <metric name="public_subprograms">
+      6
+    </metric>
+    <metric name="lsloc">
+      15
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/values-operations.adb">
+    <metric name="cyclomatic_complexity">
+      4.5
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      39
+    </metric>
+    <metric name="construct_nesting">
+      3
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      10
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      3.0
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      13
+    </metric>
+    <metric name="all_subprograms">
+      2
+    </metric>
+    <metric name="extra_exit_points">
+      4
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      71
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      8
+    </metric>
+    <metric name="statement_complexity">
+      4.5
+    </metric>
+    <metric name="comment_percentage">
+      20.4
+    </metric>
+    <metric name="blank_lines">
+      22
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      21
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/stack.ads">
+    <metric name="cyclomatic_complexity">
+      0
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      11
+    </metric>
+    <metric name="construct_nesting">
+      1
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      13
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      0
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      36
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      10
+    </metric>
+    <metric name="statement_complexity">
+      0
+    </metric>
+    <metric name="comment_percentage">
+      54.16
+    </metric>
+    <metric name="blank_lines">
+      12
+    </metric>
+    <metric name="public_subprograms">
+      6
+    </metric>
+    <metric name="lsloc">
+      10
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/instructions.adb">
+    <metric name="cyclomatic_complexity">
+      3.5
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      31
+    </metric>
+    <metric name="construct_nesting">
+      4
+    </metric>
+    <metric name="max_loop_nesting">
+      1
+    </metric>
+    <metric name="comment_lines">
+      12
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      3.0
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      11
+    </metric>
+    <metric name="all_subprograms">
+      2
+    </metric>
+    <metric name="extra_exit_points">
+      2
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      59
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      6
+    </metric>
+    <metric name="statement_complexity">
+      3.5
+    </metric>
+    <metric name="comment_percentage">
+      27.9
+    </metric>
+    <metric name="blank_lines">
+      16
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      17
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/values-operations.ads">
+    <metric name="cyclomatic_complexity">
+      0
+    </metric>
+    <metric name="all_types">
+      1
+    </metric>
+    <metric name="short_circuit_complexity">
+      0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      7
+    </metric>
+    <metric name="construct_nesting">
+      1
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      7
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      0
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      1
+    </metric>
+    <metric name="all_lines">
+      23
+    </metric>
+    <metric name="private_types">
+      1
+    </metric>
+    <metric name="all_dcls">
+      11
+    </metric>
+    <metric name="statement_complexity">
+      0
+    </metric>
+    <metric name="comment_percentage">
+      50.0
+    </metric>
+    <metric name="blank_lines">
+      9
+    </metric>
+    <metric name="public_subprograms">
+      2
+    </metric>
+    <metric name="lsloc">
+      11
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/tokens.ads">
+    <metric name="cyclomatic_complexity">
+      0
+    </metric>
+    <metric name="all_types">
+      2
+    </metric>
+    <metric name="short_circuit_complexity">
+      0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      20
+    </metric>
+    <metric name="construct_nesting">
+      1
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      6
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      0
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      2
+    </metric>
+    <metric name="all_lines">
+      37
+    </metric>
+    <metric name="private_types">
+      1
+    </metric>
+    <metric name="all_dcls">
+      15
+    </metric>
+    <metric name="statement_complexity">
+      0
+    </metric>
+    <metric name="comment_percentage">
+      23.07
+    </metric>
+    <metric name="blank_lines">
+      11
+    </metric>
+    <metric name="public_subprograms">
+      2
+    </metric>
+    <metric name="lsloc">
+      15
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/screen_output.ads">
+    <metric name="cyclomatic_complexity">
+      0
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      7
+    </metric>
+    <metric name="construct_nesting">
+      1
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      12
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      0
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      26
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      15
+    </metric>
+    <metric name="statement_complexity">
+      0
+    </metric>
+    <metric name="comment_percentage">
+      63.15
+    </metric>
+    <metric name="blank_lines">
+      7
+    </metric>
+    <metric name="public_subprograms">
+      5
+    </metric>
+    <metric name="lsloc">
+      15
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/sdc.ads">
+    <metric name="cyclomatic_complexity">
+      0.0
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      1
+    </metric>
+    <metric name="construct_nesting">
+      0
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      18
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      0.0
+    </metric>
+    <metric name="unit_nesting">
+      0
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      25
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      0
+    </metric>
+    <metric name="statement_complexity">
+      0.0
+    </metric>
+    <metric name="comment_percentage">
+      94.73
+    </metric>
+    <metric name="blank_lines">
+      6
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      0
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/values.ads">
+    <metric name="cyclomatic_complexity">
+      0
+    </metric>
+    <metric name="all_types">
+      2
+    </metric>
+    <metric name="short_circuit_complexity">
+      0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      11
+    </metric>
+    <metric name="construct_nesting">
+      1
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      8
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      0
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      1
+    </metric>
+    <metric name="all_lines">
+      29
+    </metric>
+    <metric name="private_types">
+      1
+    </metric>
+    <metric name="all_dcls">
+      11
+    </metric>
+    <metric name="statement_complexity">
+      0
+    </metric>
+    <metric name="comment_percentage">
+      42.1
+    </metric>
+    <metric name="blank_lines">
+      10
+    </metric>
+    <metric name="public_subprograms">
+      3
+    </metric>
+    <metric name="lsloc">
+      11
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/sdc.adb">
+    <metric name="cyclomatic_complexity">
+      2.0
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      36
+    </metric>
+    <metric name="construct_nesting">
+      0
+    </metric>
+    <metric name="max_loop_nesting">
+      1
+    </metric>
+    <metric name="comment_lines">
+      2
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      1.0
+    </metric>
+    <metric name="unit_nesting">
+      0
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      50
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      0
+    </metric>
+    <metric name="statement_complexity">
+      2.0
+    </metric>
+    <metric name="comment_percentage">
+      5.26
+    </metric>
+    <metric name="blank_lines">
+      12
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      0
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb">
+    <metric name="cyclomatic_complexity">
+      2.0
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      141
+    </metric>
+    <metric name="construct_nesting">
+      4
+    </metric>
+    <metric name="max_loop_nesting">
+      1
+    </metric>
+    <metric name="comment_lines">
+      72
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      1.36363636364
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      53
+    </metric>
+    <metric name="all_subprograms">
+      11
+    </metric>
+    <metric name="extra_exit_points">
+      3
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      282
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      41
+    </metric>
+    <metric name="statement_complexity">
+      2.0
+    </metric>
+    <metric name="comment_percentage">
+      33.8
+    </metric>
+    <metric name="blank_lines">
+      69
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      94
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/projects/prj2/src2.adb">
+    <metric name="cyclomatic_complexity">
+      1.0
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      2
+    </metric>
+    <metric name="construct_nesting">
+      0
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      2
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      1.0
+    </metric>
+    <metric name="unit_nesting">
+      0
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      5
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      0
+    </metric>
+    <metric name="statement_complexity">
+      1.0
+    </metric>
+    <metric name="comment_percentage">
+      50.0
+    </metric>
+    <metric name="blank_lines">
+      1
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      0
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/instructions.ads">
+    <metric name="cyclomatic_complexity">
+      0
+    </metric>
+    <metric name="all_types">
+      1
+    </metric>
+    <metric name="short_circuit_complexity">
+      0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      7
+    </metric>
+    <metric name="construct_nesting">
+      1
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      5
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      0
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      1
+    </metric>
+    <metric name="all_lines">
+      21
+    </metric>
+    <metric name="private_types">
+      1
+    </metric>
+    <metric name="all_dcls">
+      10
+    </metric>
+    <metric name="statement_complexity">
+      0
+    </metric>
+    <metric name="comment_percentage">
+      41.66
+    </metric>
+    <metric name="blank_lines">
+      9
+    </metric>
+    <metric name="public_subprograms">
+      2
+    </metric>
+    <metric name="lsloc">
+      10
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/stack.adb">
+    <metric name="cyclomatic_complexity">
+      1.66666666667
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      49
+    </metric>
+    <metric name="construct_nesting">
+      3
+    </metric>
+    <metric name="max_loop_nesting">
+      1
+    </metric>
+    <metric name="comment_lines">
+      24
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      1.5
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      19
+    </metric>
+    <metric name="all_subprograms">
+      6
+    </metric>
+    <metric name="extra_exit_points">
+      3
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      99
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      13
+    </metric>
+    <metric name="statement_complexity">
+      1.66666666667
+    </metric>
+    <metric name="comment_percentage">
+      32.87
+    </metric>
+    <metric name="blank_lines">
+      26
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      32
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/tokens.adb">
+    <metric name="cyclomatic_complexity">
+      4.5
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      49
+    </metric>
+    <metric name="construct_nesting">
+      6
+    </metric>
+    <metric name="max_loop_nesting">
+      1
+    </metric>
+    <metric name="comment_lines">
+      13
+    </metric>
+    <metric name="eol_comments">
+      1
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      4.0
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      16
+    </metric>
+    <metric name="all_subprograms">
+      2
+    </metric>
+    <metric name="extra_exit_points">
+      4
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      80
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      5
+    </metric>
+    <metric name="statement_complexity">
+      4.5
+    </metric>
+    <metric name="comment_percentage">
+      22.58
+    </metric>
+    <metric name="blank_lines">
+      18
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      21
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/except.ads">
+    <metric name="cyclomatic_complexity">
+      0
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      5
+    </metric>
+    <metric name="construct_nesting">
+      1
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      5
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      0
+    </metric>
+    <metric name="unit_nesting">
+      0
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      15
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      4
+    </metric>
+    <metric name="statement_complexity">
+      0
+    </metric>
+    <metric name="comment_percentage">
+      50.0
+    </metric>
+    <metric name="blank_lines">
+      5
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      4
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/screen_output.adb">
+    <metric name="cyclomatic_complexity">
+      1.8
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      57
+    </metric>
+    <metric name="construct_nesting">
+      3
+    </metric>
+    <metric name="max_loop_nesting">
+      1
+    </metric>
+    <metric name="comment_lines">
+      19
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      1.2
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      28
+    </metric>
+    <metric name="all_subprograms">
+      5
+    </metric>
+    <metric name="extra_exit_points">
+      1
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      95
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      18
+    </metric>
+    <metric name="statement_complexity">
+      1.8
+    </metric>
+    <metric name="comment_percentage">
+      25.0
+    </metric>
+    <metric name="blank_lines">
+      19
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      46
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/projects/prj4/src4.adb">
+    <metric name="cyclomatic_complexity">
+      1.0
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      1
+    </metric>
+    <metric name="construct_nesting">
+      0
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      2
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      1.0
+    </metric>
+    <metric name="unit_nesting">
+      0
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      3
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      0
+    </metric>
+    <metric name="statement_complexity">
+      1.0
+    </metric>
+    <metric name="comment_percentage">
+      66.66
+    </metric>
+    <metric name="blank_lines">
+      0
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      0
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/values.adb">
+    <metric name="cyclomatic_complexity">
+      1.33333333333
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      24
+    </metric>
+    <metric name="construct_nesting">
+      3
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      17
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      1.33333333333
+    </metric>
+    <metric name="unit_nesting">
+      1
+    </metric>
+    <metric name="all_stmts">
+      6
+    </metric>
+    <metric name="all_subprograms">
+      3
+    </metric>
+    <metric name="extra_exit_points">
+      1
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      52
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      10
+    </metric>
+    <metric name="statement_complexity">
+      1.33333333333
+    </metric>
+    <metric name="comment_percentage">
+      41.46
+    </metric>
+    <metric name="blank_lines">
+      11
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      16
+    </metric>
+  </file>
+  <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/projects/prj3/src3.adb">
+    <metric name="cyclomatic_complexity">
+      1.0
+    </metric>
+    <metric name="all_types">
+      0
+    </metric>
+    <metric name="short_circuit_complexity">
+      0.0
+    </metric>
+    <metric name="abstract_types">
+      0
+    </metric>
+    <metric name="code_lines">
+      1
+    </metric>
+    <metric name="construct_nesting">
+      0
+    </metric>
+    <metric name="max_loop_nesting">
+      0
+    </metric>
+    <metric name="comment_lines">
+      2
+    </metric>
+    <metric name="eol_comments">
+      0
+    </metric>
+    <metric name="tagged_types">
+      0
+    </metric>
+    <metric name="essential_complexity">
+      1.0
+    </metric>
+    <metric name="unit_nesting">
+      0
+    </metric>
+    <metric name="all_stmts">
+      0
+    </metric>
+    <metric name="all_subprograms">
+      0
+    </metric>
+    <metric name="extra_exit_points">
+      0
+    </metric>
+    <metric name="public_types">
+      0
+    </metric>
+    <metric name="all_lines">
+      3
+    </metric>
+    <metric name="private_types">
+      0
+    </metric>
+    <metric name="all_dcls">
+      0
+    </metric>
+    <metric name="statement_complexity">
+      1.0
+    </metric>
+    <metric name="comment_percentage">
+      66.66
+    </metric>
+    <metric name="blank_lines">
+      0
+    </metric>
+    <metric name="public_subprograms">
+      0
+    </metric>
+    <metric name="lsloc">
+      0
+    </metric>
+  </file>
+</global>

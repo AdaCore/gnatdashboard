@@ -1,16 +1,17 @@
-input.adb:69:17: (overflow check) low: overflow check might fail: requires Col <= 2**31-2
-input.adb:110:12: (array index check) medium: array index check might fail: requires First_Char <= 1_024
-input.adb:191:13: (array index check) medium: array index check might fail: requires First_Char <= 1_024
-input.adb:202:56: (validity check) low: validity check: S(I) might be uninitialized
-input.adb:260:31: (precondition) medium: precondition might fail on input.get_char: requires First_Char <= Last_Char or Line_Num <= 2**31-2
-sdc.adb:28:6: (loop does not terminate) warning: loop does not terminate
-sdc.adb:30:9: (precondition) medium: precondition might fail on tokens.process: requires T.Kind /= Op or T.Op in range
-sdc.adb:30:9: (precondition) medium: precondition might fail on tokens.process: requires T.Kind <= Op or T.Instr <= Print
-sdc.adb:30:9: (precondition) medium: precondition might fail on tokens.process: requires T.Kind >= Op or Last in (2..199 | 201)
-stack.adb:41:4: (suspicious precondition) warning: suspicious precondition for Last: not a contiguous range of values
-sdc.adb:80:7: (precondition) medium: precondition might fail on main program sdc: requires (soft) Last in 4..200
-sdc.adb:80:7: (precondition) low: precondition might fail on main program sdc: requires (soft) Tab(0..2**31-1) /= null
-instructions.adb:29:7: (conditional check) low: conditional check might raise exception: checking that I < (quit)
-tokens.adb:28:18: (array index check) medium: array index check might fail: requires (Input.Next_Word)'First <= (Input.Next_Word)'First and (Input.Next_Word)'First <= (Input.Next_Word)'Last
-tokens.adb:28:18: (validity check) low: validity check: Word.all((Input.Next_Word)'First) might be uninitialized
-values.adb:11:4: (suspicious precondition) warning: suspicious precondition for Last: not a contiguous range of values
+File,Line,Column,Category,New?,Review?,Ranking,Kind,Message
+/users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb,69,24,overflow check,FALSE,FALSE,low,check,"overflow check might fail: requires Col <= 2**31-2"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb,110,12,array index check,FALSE,FALSE,medium,check,"array index check might fail: requires First_Char <= 1_024"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb,191,13,array index check,FALSE,FALSE,medium,check,"array index check might fail: requires First_Char <= 1_024"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb,202,56,validity check,FALSE,FALSE,low,check,"validity check: S(I) might be uninitialized"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb,260,31,precondition,FALSE,FALSE,medium,check,"precondition might fail on input.get_char: requires First_Char <= Last_Char or Line_Num <= 2**31-2"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/common/sdc.adb,28,6,loop does not terminate,FALSE,FALSE,medium,warning,"loop does not terminate"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/common/sdc.adb,30,9,precondition,FALSE,FALSE,medium,check,"precondition might fail on tokens.process: requires T.Kind /= Op or T.Op in range"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/common/sdc.adb,30,9,precondition,FALSE,FALSE,medium,check,"precondition might fail on tokens.process: requires T.Kind <= Op or T.Instr <= Print"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/common/sdc.adb,30,9,precondition,FALSE,FALSE,medium,check,"precondition might fail on tokens.process: requires T.Kind >= Op or Last in (2..199 | 201)"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/common/stack.adb,41,4,suspicious precondition,FALSE,FALSE,medium,warning,"suspicious precondition for Last: not a contiguous range of values"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/obj/codepeer/b~sdc.adb,80,7,precondition,FALSE,FALSE,medium,check,"precondition might fail on main program sdc: requires (soft) Last in 4..200"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/obj/codepeer/b~sdc.adb,80,7,precondition,FALSE,FALSE,low,check,"precondition might fail on main program sdc: requires (soft) Tab(0..2**31-1) /= null"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/struct/instructions.adb,29,7,conditional check,FALSE,FALSE,low,check,"conditional check might raise exception: checking that I < (quit)"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/struct/tokens.adb,28,18,array index check,FALSE,FALSE,medium,check,"array index check might fail: requires (Input.Next_Word)'First <= (Input.Next_Word)'First and (Input.Next_Word)'First <= (Input.Next_Word)'Last"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/struct/tokens.adb,28,18,validity check,FALSE,FALSE,low,check,"validity check: Word.all((Input.Next_Word)'First) might be uninitialized"
+/users/kiwi/projects/qualimetrics/share/examples/sdc/struct/values.adb,11,4,suspicious precondition,FALSE,FALSE,medium,warning,"suspicious precondition for Last: not a contiguous range of values"

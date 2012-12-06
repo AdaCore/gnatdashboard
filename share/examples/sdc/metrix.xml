@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <global>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/stack.adb">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/stack.adb">
       <metric name="all_lines">99</metric>
       <metric name="code_lines">49</metric>
       <metric name="comment_lines">24</metric>
@@ -130,7 +130,7 @@
          </unit>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/stack.ads">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/stack.ads">
       <metric name="all_lines">36</metric>
       <metric name="code_lines">11</metric>
       <metric name="comment_lines">13</metric>
@@ -152,7 +152,7 @@
          <metric name="lsloc">10</metric>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/screen_output.adb">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/screen_output.adb">
       <metric name="all_lines">95</metric>
       <metric name="code_lines">57</metric>
       <metric name="comment_lines">19</metric>
@@ -264,7 +264,7 @@
          </unit>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/screen_output.ads">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/screen_output.ads">
       <metric name="all_lines">26</metric>
       <metric name="code_lines">7</metric>
       <metric name="comment_lines">12</metric>
@@ -286,14 +286,14 @@
          <metric name="lsloc">15</metric>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/tokens.adb">
-      <metric name="all_lines">79</metric>
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/tokens.adb">
+      <metric name="all_lines">80</metric>
       <metric name="code_lines">49</metric>
-      <metric name="comment_lines">11</metric>
+      <metric name="comment_lines">13</metric>
       <metric name="eol_comments">1</metric>
-      <metric name="comment_percentage">20.00</metric>
-      <metric name="blank_lines">19</metric>
-      <unit name="Tokens" kind="package body" line="5" col="1">
+      <metric name="comment_percentage">22.58</metric>
+      <metric name="blank_lines">18</metric>
+      <unit name="Tokens" kind="package body" line="7" col="1">
          <metric name="all_lines">74</metric>
          <metric name="code_lines">46</metric>
          <metric name="comment_lines">11</metric>
@@ -306,7 +306,7 @@
          <metric name="unit_nesting">1</metric>
          <metric name="construct_nesting">6</metric>
          <metric name="lsloc">21</metric>
-         <unit name="Next" kind="function body" line="11" col="4">
+         <unit name="Next" kind="function body" line="13" col="4">
             <metric name="all_lines">48</metric>
             <metric name="code_lines">33</metric>
             <metric name="comment_lines">5</metric>
@@ -324,7 +324,7 @@
             <metric name="max_loop_nesting">1</metric>
             <metric name="extra_exit_points">4</metric>
          </unit>
-         <unit name="Process" kind="procedure body" line="64" col="4">
+         <unit name="Process" kind="procedure body" line="66" col="4">
             <metric name="all_lines">13</metric>
             <metric name="code_lines">11</metric>
             <metric name="comment_lines">0</metric>
@@ -344,7 +344,7 @@
          </unit>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/tokens.ads">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/tokens.ads">
       <metric name="all_lines">37</metric>
       <metric name="code_lines">20</metric>
       <metric name="comment_lines">6</metric>
@@ -369,7 +369,91 @@
          <metric name="lsloc">15</metric>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/instructions.adb">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/projects/prj2/src2.adb">
+      <metric name="all_lines">5</metric>
+      <metric name="code_lines">2</metric>
+      <metric name="comment_lines">2</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">50.00</metric>
+      <metric name="blank_lines">1</metric>
+      <unit name="src2" kind="procedure body" line="3" col="1">
+         <metric name="all_lines">3</metric>
+         <metric name="code_lines">2</metric>
+         <metric name="comment_lines">0</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">0.00</metric>
+         <metric name="blank_lines">1</metric>
+         <metric name="public_subprograms">1</metric>
+         <metric name="all_subprograms">1</metric>
+         <metric name="all_stmts">1</metric>
+         <metric name="all_dcls">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">2</metric>
+         <metric name="statement_complexity">1</metric>
+         <metric name="short_circuit_complexity">0</metric>
+         <metric name="cyclomatic_complexity">1</metric>
+         <metric name="essential_complexity">1</metric>
+         <metric name="max_loop_nesting">0</metric>
+         <metric name="extra_exit_points">0</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/projects/prj3/src3.adb">
+      <metric name="all_lines">3</metric>
+      <metric name="code_lines">1</metric>
+      <metric name="comment_lines">2</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">66.66</metric>
+      <metric name="blank_lines">0</metric>
+      <unit name="Src3" kind="procedure body" line="3" col="1">
+         <metric name="all_lines">1</metric>
+         <metric name="code_lines">1</metric>
+         <metric name="comment_lines">0</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">0.00</metric>
+         <metric name="blank_lines">0</metric>
+         <metric name="public_subprograms">1</metric>
+         <metric name="all_subprograms">1</metric>
+         <metric name="all_stmts">1</metric>
+         <metric name="all_dcls">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">2</metric>
+         <metric name="statement_complexity">1</metric>
+         <metric name="short_circuit_complexity">0</metric>
+         <metric name="cyclomatic_complexity">1</metric>
+         <metric name="essential_complexity">1</metric>
+         <metric name="max_loop_nesting">0</metric>
+         <metric name="extra_exit_points">0</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/projects/prj4/src4.adb">
+      <metric name="all_lines">3</metric>
+      <metric name="code_lines">1</metric>
+      <metric name="comment_lines">2</metric>
+      <metric name="eol_comments">0</metric>
+      <metric name="comment_percentage">66.66</metric>
+      <metric name="blank_lines">0</metric>
+      <unit name="src4" kind="procedure body" line="3" col="1">
+         <metric name="all_lines">1</metric>
+         <metric name="code_lines">1</metric>
+         <metric name="comment_lines">0</metric>
+         <metric name="eol_comments">0</metric>
+         <metric name="comment_percentage">0.00</metric>
+         <metric name="blank_lines">0</metric>
+         <metric name="public_subprograms">1</metric>
+         <metric name="all_subprograms">1</metric>
+         <metric name="all_stmts">1</metric>
+         <metric name="all_dcls">1</metric>
+         <metric name="construct_nesting">1</metric>
+         <metric name="lsloc">2</metric>
+         <metric name="statement_complexity">1</metric>
+         <metric name="short_circuit_complexity">0</metric>
+         <metric name="cyclomatic_complexity">1</metric>
+         <metric name="essential_complexity">1</metric>
+         <metric name="max_loop_nesting">0</metric>
+         <metric name="extra_exit_points">0</metric>
+      </unit>
+   </file>
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/instructions.adb">
       <metric name="all_lines">59</metric>
       <metric name="code_lines">31</metric>
       <metric name="comment_lines">12</metric>
@@ -427,7 +511,7 @@
          </unit>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/instructions.ads">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/instructions.ads">
       <metric name="all_lines">21</metric>
       <metric name="code_lines">7</metric>
       <metric name="comment_lines">5</metric>
@@ -452,7 +536,7 @@
          <metric name="lsloc">10</metric>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/input.adb">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb">
       <metric name="all_lines">282</metric>
       <metric name="code_lines">141</metric>
       <metric name="comment_lines">72</metric>
@@ -672,7 +756,7 @@
          </unit>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/input.ads">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.ads">
       <metric name="all_lines">34</metric>
       <metric name="code_lines">13</metric>
       <metric name="comment_lines">13</metric>
@@ -696,7 +780,7 @@
          <metric name="lsloc">15</metric>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/values.adb">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/values.adb">
       <metric name="all_lines">52</metric>
       <metric name="code_lines">24</metric>
       <metric name="comment_lines">17</metric>
@@ -772,7 +856,7 @@
          </unit>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/values.ads">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/values.ads">
       <metric name="all_lines">29</metric>
       <metric name="code_lines">11</metric>
       <metric name="comment_lines">8</metric>
@@ -797,7 +881,7 @@
          <metric name="lsloc">11</metric>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/sdc.adb">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/sdc.adb">
       <metric name="all_lines">50</metric>
       <metric name="code_lines">36</metric>
       <metric name="comment_lines">2</metric>
@@ -824,7 +908,7 @@
          <metric name="extra_exit_points">0</metric>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/sdc.ads">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/sdc.ads">
       <metric name="all_lines">25</metric>
       <metric name="code_lines">1</metric>
       <metric name="comment_lines">18</metric>
@@ -845,7 +929,7 @@
          <metric name="lsloc">1</metric>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/values-operations.adb">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/values-operations.adb">
       <metric name="all_lines">71</metric>
       <metric name="code_lines">39</metric>
       <metric name="comment_lines">10</metric>
@@ -903,7 +987,7 @@
          </unit>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/struct/values-operations.ads">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/struct/values-operations.ads">
       <metric name="all_lines">23</metric>
       <metric name="code_lines">7</metric>
       <metric name="comment_lines">7</metric>
@@ -928,7 +1012,7 @@
          <metric name="lsloc">11</metric>
       </unit>
    </file>
-   <file name="/Users/kiwi/projects/qualimetrics/prototype/examples/gps_tutorial/common/except.ads">
+   <file name="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/except.ads">
       <metric name="all_lines">15</metric>
       <metric name="code_lines">5</metric>
       <metric name="comment_lines">5</metric>
@@ -949,19 +1033,19 @@
          <metric name="lsloc">4</metric>
       </unit>
    </file>
-   <metric name="all_lines">1033</metric>
-   <metric name="code_lines">508</metric>
-   <metric name="comment_lines">254</metric>
+   <metric name="all_lines">1045</metric>
+   <metric name="code_lines">512</metric>
+   <metric name="comment_lines">262</metric>
    <metric name="eol_comments">1</metric>
-   <metric name="comment_percentage">33.46</metric>
+   <metric name="comment_percentage">33.97</metric>
    <metric name="blank_lines">271</metric>
-   <metric name="average_lines_in_bodies">11.59</metric>
-   <metric name="all_stmts">160</metric>
-   <metric name="all_dcls">195</metric>
-   <metric name="lsloc">355</metric>
-   <metric name="public_subprograms">27</metric>
-   <metric name="all_subprograms">32</metric>
+   <metric name="average_lines_in_bodies">10.71</metric>
+   <metric name="all_stmts">163</metric>
+   <metric name="all_dcls">198</metric>
+   <metric name="lsloc">361</metric>
+   <metric name="public_subprograms">30</metric>
+   <metric name="all_subprograms">35</metric>
    <metric name="public_types">6</metric>
    <metric name="all_types">7</metric>
-   <metric name="average_complexity">2.25</metric>
+   <metric name="average_complexity">2.14</metric>
 </global>

@@ -1,7 +1,7 @@
 GNATCheck report
 
-date              : 2012-08-13 11:50
-gnatcheck version : gnatcheck Pro 7.1.0w (20120717)
+date              : 2012-11-17 14:16
+gnatcheck version : gnatcheck Pro 7.1.0w (20121025)
 command line      : gnat check --map -Psdc.gpr -U -XBuild=DEBUG -rules -from=rules.txt
 runtime           : <default>
 coding standard   : rules.txt
@@ -15,7 +15,7 @@ list of sources   : gnatcheck-source-list.out
    unverified sources                    : 1
    total sources                         : 21
 
-   non-exempted violations               : 164
+   non-exempted violations               : 124
    rule exemption warnings               : 0
    compilation errors                    : 2
    exempted violations                   : 0
@@ -30,16 +30,13 @@ input.adb:3:19: (USE_PACKAGE_Clauses) use clause for package
 input.adb:16:17: (Anonymous_Subtypes) anonymous subtype
 input.adb:16:27: (Anonymous_Subtypes) anonymous subtype
 input.adb:36:23: (Default_Parameters) default value for subprogram parameter
-input.adb:36:23: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 input.adb:48:27: (Default_Parameters) default value for subprogram parameter
-input.adb:48:27: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 input.adb:67:18: (Anonymous_Subtypes) anonymous subtype
 input.adb:71:26: (Numeric_Literals:Statements_Only) numeric literal (8) outside a constant declaration
 input.adb:71:39: (Numeric_Literals:Statements_Only) numeric literal (8) outside a constant declaration
 input.adb:84:24: (Forbidden_Attributes) use of attribute First
 input.adb:84:31: (Anonymous_Subtypes) anonymous subtype
 input.adb:91:23: (Default_Parameters) default value for subprogram parameter
-input.adb:91:23: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 input.adb:140:7: (Improperly_Located_Instantiations) instantiation in a subprogram body
 input.adb:141:7: (Improperly_Located_Instantiations) instantiation in a subprogram body
 input.adb:148:12: (Numeric_Literals:Statements_Only) numeric literal (0.0) outside a constant declaration
@@ -62,55 +59,32 @@ input.adb:230:42: (Forbidden_Attributes) use of attribute First
 input.adb:230:49: (Anonymous_Subtypes) anonymous subtype
 input.adb:261:10: (EXIT_Statements_With_No_Loop_Name) exit statement with no loop name
 input.adb:273:27: (Default_Parameters) default value for subprogram parameter
-input.adb:273:27: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 input.adb:275:32: (Forbidden_Attributes) use of attribute First
 input.adb:278:28: (Forbidden_Attributes) use of attribute First
 input.ads:5:4: (Unconstrained_Array_Returns) function returns unconstrained array
 input.ads:11:9: (Identifier_Suffixes:Type_Suffix) wrong suffix in type name
 input.ads:25:4: (Unconstrained_Array_Returns) function returns unconstrained array
-instructions.adb:12:19: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 instructions.adb:22:24: (Forbidden_Attributes) use of attribute Image
-instructions.adb:36:23: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 instructions.adb:43:32: (Positional_Parameters) positional parameter association
 instructions.adb:46:35: (Positional_Parameters) positional parameter association
 instructions.adb:48:41: (Positional_Parameters) positional parameter association
 instructions.ads:5:9: (Identifier_Suffixes:Type_Suffix) wrong suffix in type name
-instructions.ads:8:19: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
-instructions.ads:12:23: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.adb:1:19: (USE_PACKAGE_Clauses) use clause for package
 screen_output.adb:10:4: (Identifier_Suffixes:Constant_Suffix) wrong suffix in constant name
-screen_output.adb:18:7: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.adb:19:7: (Default_Parameters) default value for subprogram parameter
-screen_output.adb:19:7: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.adb:20:7: (Default_Parameters) default value for subprogram parameter
-screen_output.adb:20:7: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
-screen_output.adb:34:25: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.adb:37:10: (Improper_Returns) return statement in a procedure body
-screen_output.adb:49:25: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.adb:49:38: (Default_Parameters) default value for subprogram parameter
-screen_output.adb:49:38: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.adb:49:57: (Default_Parameters) default value for subprogram parameter
-screen_output.adb:49:57: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.adb:52:19: (Forbidden_Attributes) use of attribute Image
-screen_output.adb:63:28: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.adb:63:40: (Default_Parameters) default value for subprogram parameter
-screen_output.adb:63:40: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.adb:75:18: (Anonymous_Subtypes) anonymous subtype
 screen_output.adb:81:19: (Forbidden_Attributes) use of attribute Image
-screen_output.ads:5:19: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.ads:5:32: (Default_Parameters) default value for subprogram parameter
-screen_output.ads:5:32: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.ads:5:51: (Default_Parameters) default value for subprogram parameter
-screen_output.ads:5:51: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
-screen_output.ads:9:25: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
-screen_output.ads:13:25: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.ads:13:38: (Default_Parameters) default value for subprogram parameter
-screen_output.ads:13:38: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.ads:13:57: (Default_Parameters) default value for subprogram parameter
-screen_output.ads:13:57: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
-screen_output.ads:16:28: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 screen_output.ads:16:40: (Default_Parameters) default value for subprogram parameter
-screen_output.ads:16:40: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 sdc.adb:2:21: (USE_PACKAGE_Clauses) use clause for package
 sdc.adb:4:14: (USE_PACKAGE_Clauses) use clause for package
 sdc.adb:5:19: (USE_PACKAGE_Clauses) use clause for package
@@ -129,66 +103,52 @@ sdc.adb:35:23: (Positional_Parameters) positional parameter association
 sdc.adb:45:12: (Positional_Parameters) positional parameter association
 sdc.adb:48:12: (Positional_Parameters) positional parameter association
 sdc.ads:24:1: (Library_Level_Subprograms) declaration of library level subprogram
-src2.adb:1:1: (Library_Level_Subprograms) declaration of library level subprogram
-src3.adb:1:1: (Library_Level_Subprograms) declaration of library level subprogram
-src4.adb:1:1: (Library_Level_Subprograms) declaration of library level subprogram
+src2.adb:3:1: (Library_Level_Subprograms) declaration of library level subprogram
+src3.adb:3:1: (Library_Level_Subprograms) declaration of library level subprogram
+src4.adb:3:1: (Library_Level_Subprograms) declaration of library level subprogram
 stack.adb:13:11: (Anonymous_Arrays) anonymous array type
 stack.adb:13:20: (Anonymous_Subtypes) anonymous subtype
 stack.adb:16:25: (Forbidden_Attributes) use of attribute First
 stack.adb:25:18: (Forbidden_Attributes) use of attribute First
 stack.adb:34:24: (Forbidden_Attributes) use of attribute First
-stack.adb:41:20: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 stack.adb:43:20: (Forbidden_Attributes) use of attribute Last
 stack.adb:92:19: (Forbidden_Attributes) use of attribute First
 stack.adb:92:26: (Anonymous_Subtypes) anonymous subtype
 stack.adb:93:35: (Positional_Parameters) positional parameter association
 stack.adb:96:26: (Positional_Parameters) positional parameter association
 stack.ads:4:14: (USE_PACKAGE_Clauses) use clause for package
-stack.ads:14:20: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
-tokens.adb:17:31: (Blocks) block statement
-tokens.adb:17:31: (Declarations_In_Blocks) block statement with local declarations
-tokens.adb:26:28: (Forbidden_Attributes) use of attribute First
-tokens.adb:28:25: (Anonymous_Subtypes) anonymous subtype
-tokens.adb:28:25: (Enumeration_Ranges_In_CASE_Statements) enumeration range as a choice in a case statement
-tokens.adb:32:19: (Improper_Returns) more than one return statement in a function body
-tokens.adb:36:26: (Forbidden_Attributes) use of attribute Length
-tokens.adb:37:22: (Improper_Returns) more than one return statement in a function body
+tokens.adb:19:31: (Blocks) block statement
+tokens.adb:19:31: (Declarations_In_Blocks) block statement with local declarations
+tokens.adb:28:28: (Forbidden_Attributes) use of attribute First
+tokens.adb:30:25: (Anonymous_Subtypes) anonymous subtype
+tokens.adb:30:25: (Enumeration_Ranges_In_CASE_Statements) enumeration range as a choice in a case statement
+tokens.adb:34:19: (Improper_Returns) more than one return statement in a function body
+tokens.adb:38:26: (Forbidden_Attributes) use of attribute Length
 tokens.adb:39:22: (Improper_Returns) more than one return statement in a function body
-tokens.adb:43:25: (Anonymous_Subtypes) anonymous subtype
-tokens.adb:43:25: (Enumeration_Ranges_In_CASE_Statements) enumeration range as a choice in a case statement
-tokens.adb:44:25: (Anonymous_Subtypes) anonymous subtype
-tokens.adb:44:25: (Enumeration_Ranges_In_CASE_Statements) enumeration range as a choice in a case statement
-tokens.adb:45:19: (Improper_Returns) more than one return statement in a function body
-tokens.adb:48:21: (OTHERS_In_CASE_Statements) OTHERS choice in case statement
-tokens.adb:54:44: (Positional_Parameters) positional parameter association
-tokens.adb:64:23: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
+tokens.adb:41:22: (Improper_Returns) more than one return statement in a function body
+tokens.adb:45:25: (Anonymous_Subtypes) anonymous subtype
+tokens.adb:45:25: (Enumeration_Ranges_In_CASE_Statements) enumeration range as a choice in a case statement
+tokens.adb:46:25: (Anonymous_Subtypes) anonymous subtype
+tokens.adb:46:25: (Enumeration_Ranges_In_CASE_Statements) enumeration range as a choice in a case statement
+tokens.adb:47:19: (Improper_Returns) more than one return statement in a function body
+tokens.adb:50:21: (OTHERS_In_CASE_Statements) OTHERS choice in case statement
+tokens.adb:56:44: (Positional_Parameters) positional parameter association
 tokens.ads:10:9: (Identifier_Suffixes:Type_Suffix) wrong suffix in type name
 tokens.ads:12:9: (Identifier_Suffixes:Type_Suffix) wrong suffix in type name
-tokens.ads:19:23: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 tokens.ads:24:4: (Discriminated_Records) declaration of discriminated record
-values-operations.adb:11:19: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 values-operations.adb:17:10: (Improper_Returns) more than one return statement in a function body
 values-operations.adb:20:10: (Improper_Returns) more than one return statement in a function body
 values-operations.adb:23:10: (Improper_Returns) more than one return statement in a function body
-values-operations.adb:34:23: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 values-operations.adb:65:35: (Positional_Parameters) positional parameter association
 values-operations.ads:7:9: (Identifier_Suffixes:Type_Suffix) wrong suffix in type name
-values-operations.ads:10:19: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
-values-operations.ads:14:23: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 values.adb:2:14: (USE_PACKAGE_Clauses) use clause for package
-values.adb:11:23: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
-values.adb:20:19: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 values.adb:26:26: (Positional_Parameters) positional parameter association
 values.adb:26:32: (Positional_Parameters) positional parameter association
 values.adb:26:41: (Positional_Parameters) positional parameter association
 values.adb:26:51: (Positional_Parameters) positional parameter association
-values.adb:42:24: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 values.adb:44:21: (Forbidden_Attributes) use of attribute Image
 values.ads:6:9: (Identifier_Suffixes:Type_Suffix) wrong suffix in type name
 values.ads:9:4: (Unconstrained_Array_Returns) function returns unconstrained array
-values.ads:9:24: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
-values.ads:12:19: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
-values.ads:16:23: (Implicit_IN_Mode_Parameters) implicit IN mode in parameter specification
 values.ads:23:9: (Identifier_Suffixes:Type_Suffix) wrong suffix in type name
 
 4. Rule exemption problems
@@ -197,6 +157,6 @@ values.ads:23:9: (Identifier_Suffixes:Type_Suffix) wrong suffix in type name
 
 5. Language violations
 
-src1.adb:129:14: not fully conformant with declaration at input.ads:12
-src1.adb:129:14: mode of "S" does not match
+src1.adb:132:14: not fully conformant with declaration at input.ads:12
+src1.adb:132:14: mode of "S" does not match
 
