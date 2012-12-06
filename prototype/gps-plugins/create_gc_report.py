@@ -140,13 +140,19 @@ class ReportExporter(object):
         comment = Comment('Gnatcheck rules violation report')
         results.append(comment)
         for v in gc_output.violations:
-            error = SubElement(results, 'error',
-                               {'file':src_map.get_src_path(v.src),
-                                'directory':src_map.get_src_directory(v.src),
-                                'project':src_map.get_src_project(v.src),
-                                'line':v.line,
-                                'id':v.rule_id,
-                                'msg':v.msg})
+            try:
+                src = src_map.get_src_path(v.src)
+                directory = src_map.get_src_directory(v.src)
+                project = src_map.get_src_project(v.src)
+                error = SubElement(results, 'error',
+                                   {'file':src,
+                                    'directory':directory,
+                                    'project':project,
+                                    'line':v.line,
+                                    'id':v.rule_id,
+                                    'msg':v.msg})
+            except KeyError as e:
+                print "Skipping error, unable to fin source in project tree: " + v.src
         pretty_xml = self.prettify(results)
         with open(self.report_path, 'w+') as gc_report:
             print 'Creating GNAT Check XML report...'

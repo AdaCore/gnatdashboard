@@ -9,7 +9,7 @@ from utils import (Violation,
                    Report,
                    ReportExporter)
 
-RULE_SEPARATOR = '@'
+RULE_SEPARATOR = '__'
 REPORT='codepeer-report.json'
 SEVERITIES = {'high' : 'CRITICAL',
               'medium' : 'MAJOR',
@@ -68,7 +68,7 @@ class CPOutputParser(object):
                                           rule_key, message)
                     report.add_violation(violation)
                 except KeyError as e:
-                    print "Skipping source, because not foun in project tree: " + line_splited[0]
+                    print "Skipping message, because source not found in project tree: " + line_splited[0]
 
 ## _parse_command_line  #############################################################
 ##
