@@ -35,8 +35,8 @@ public class AdaCodePeerSensor extends AdaSensor {
      */
     public static final String REPORT_PATH_KEY = "sonar.ada.codepeer.reportPath";
 
-    public AdaCodePeerSensor(RuleFinder ruleFinder, Configuration conf, RulesProfile profile) {
-        super(ruleFinder, conf, profile);
+    public AdaCodePeerSensor(RuleFinder ruleFinder, Configuration conf) {
+        super(ruleFinder, conf);
     }
 
     @Override

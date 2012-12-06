@@ -21,7 +21,6 @@ import org.sonar.plugins.ada.ui.gwt.client.GnatMetricViewer;
 @ResourceQualifier({Resource.QUALIFIER_CLASS,Resource.QUALIFIER_FILE})
 @NavigationSection(NavigationSection.RESOURCE_TAB)
 @ResourceLanguage(Ada.KEY)
-@DefaultTab
 @UserRole(UserRole.CODEVIEWER)
 public class GnatMetricViewerDefinition extends GwtPage {
 

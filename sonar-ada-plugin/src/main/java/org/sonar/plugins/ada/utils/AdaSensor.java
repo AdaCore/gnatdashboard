@@ -28,7 +28,6 @@ public abstract class AdaSensor implements Sensor {
 
     private RuleFinder ruleFinder;
     private Configuration config = null;
-    private RulesProfile profile;
 
     public AdaSensor() {
     }
@@ -40,12 +39,6 @@ public abstract class AdaSensor implements Sensor {
     public AdaSensor(RuleFinder ruleFinder, Configuration config) {
         this.ruleFinder = ruleFinder;
         this.config = config;
-    }
-
-    public AdaSensor(RuleFinder ruleFinder, Configuration config, RulesProfile profile) {
-        this.ruleFinder = ruleFinder;
-        this.config = config;
-        this.profile = profile;
     }
 
     /**

@@ -87,10 +87,8 @@ public class CodePeerViolationsDecorator implements Decorator {
 
     private void countViolations(DecoratorContext context) {
         List<Violation> violations = context.getViolations();
-
         for (Violation violation : violations) {
             Rule rule = violation.getRule();
-
             if (rule.getRepositoryKey().equals(AdaCodePeerRuleRepository.KEY)) {
                 String[] ruleKey = rule.getKey().split(AdaCodePeerRuleRepository.RULE_KEY_SEPARATOR);
                 //Skipping the violation if the rule key is unparsable,

@@ -5,7 +5,7 @@
   codepeer_categories=['CHECK', 'WARNING', 'RACE_CONDITION']
   # Needs the correspondance between Sonar and Codepeer severities,
   # because Codepeer's are displayed
-  sonar_severities={'HIGH' => 'CRITICAL', 
+  sonar_severities={'HIGH' => 'CRITICAL',
                     'MEDIUM' => 'MAJOR',
                     'LOW' => 'MINOR'}
 
@@ -15,11 +15,11 @@
   # Codepeer informational violations
   codepeer_informational_violations=@snapshot.measure('codepeer_informational_info_violations')
 
-  #### 
-  # Retrieves Codepeer violations per category and severity in a double 
+  ####
+  # Retrieves Codepeer violations per category and severity in a double
   # dimension array:
-  #  - index of categories: check:0, warning:1, race_condition:2 
-  #  - index of severities: critical:0, major:1, minor:2 
+  #  - index of categories: check:0, warning:1, race_condition:2
+  #  - index of severities: critical:0, major:1, minor:2
   ####
   measures=[]
   codepeer_categories.each do |category|
@@ -41,14 +41,14 @@
         <h3>CodePeer messages</h3>
         <div class="marginbottom10">
           <span class="big">
-            <%= format_measure(codepeer_violations,:url => url_for_drilldown('codepeer_violations', {:highlight => 'codepeer_violations'})) %>
+            <%= format_measure(codepeer_violations, :default => '-', :url => url_for_drilldown('codepeer_violations', {:highlight => 'codepeer_violations'})) %>
           </span>
             <%= dashboard_configuration.selected_period? ? format_variation(codepeer_violations) : trend_icon(codepeer_violations) -%>
         </div>
         <h3>Informational messages</h3>
         <div>
           <span class="big">
-            <%= format_measure(codepeer_informational_violations,:url => url_for_drilldown('codepeer_informational_info_violations', {:highlight => 'codepeer_informational_info_violations'})) %>
+            <%= format_measure(codepeer_informational_violations, :default => '-', :url => url_for_drilldown('codepeer_informational_info_violations', {:highlight => 'codepeer_informational_info_violations'})) %>
           </span>
           <%= dashboard_configuration.selected_period? ? format_variation(codepeer_informational_violations) : trend_icon(codepeer_informational_violations) -%>
         </div>
@@ -79,15 +79,15 @@
         <% even=-1 %>
         <% codepeer_categories.size.to_i.times do |category_index| %>
           <% even+=1%>
-          <tr class="<%= even.modulo(2)==0 ? "even" : "odd" %>"> 
+          <tr class="<%= even.modulo(2)==0 ? "even" : "odd" %>">
             <!-- Category title-->
             <td width="1%" nowrap="nowrap" class="left text"><%= codepeer_categories[category_index].capitalize.gsub("_", " ") %></td>
             <!-- Severities-->
-            <% codepeer_severities.size.to_i.times do |severity_index| %> 
+            <% codepeer_severities.size.to_i.times do |severity_index| %>
               <!-- Number of violations -->
               <% metric_key = 'codepeer_' + codepeer_categories[category_index].downcase + '_' + sonar_severities[codepeer_severities[severity_index]].downcase + '_violations' %>
               <td class="center">
-                <%= format_measure(measures[category_index][severity_index], :url => url_for_drilldown(metric_key, {:highlight => metric_key})) -%>
+                <%= format_measure(measures[category_index][severity_index], :default => '-', :url => url_for_drilldown(metric_key, {:viewer_plugin_key => 'org.sonar.plugins.core.violationsviewer.GwtViolationsViewer'})) -%>
                 <%= dashboard_configuration.selected_period? ? format_variation(metric_key) : trend_icon(metric_key, :empty => true) -%>
               </td>
             <% end %>

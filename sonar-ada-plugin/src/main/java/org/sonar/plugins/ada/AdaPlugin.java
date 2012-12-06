@@ -63,8 +63,16 @@ public final class AdaPlugin extends SonarPlugin {
         l.add(AdaSourceImporter.class);
         l.add(AdaDefaultProfile.class);
         l.add(AdaColorizer.class);
+
+        //CodeePeer
+        l.add(AdaCodePeerSensor.class);
+        l.add(AdaCodePeerRuleRepository.class);
+        l.add(CodePeerMetrics.class);
+        l.add(CodePeerViolationsRubyWidget.class);
+        l.add(CodePeerViolationsDecorator.class);
+
         //GNATcheck
-        boolean add = l.add(AdaGnatCheckRuleRepository.class);
+        l.add(AdaGnatCheckRuleRepository.class);
         l.add(AdaGnatCheckSensor.class);
         l.add(GnatCheckMetrics.class);
         l.add(GnatCheckViolationsRubyWidget.class);
@@ -77,12 +85,7 @@ public final class AdaPlugin extends SonarPlugin {
         l.add(GnatMetricViewerDefinition.class);
         l.add(GnatMetrics.class);
 
-        //CodeePeer
-        l.add(AdaCodePeerSensor.class);
-        l.add(AdaCodePeerRuleRepository.class);
-        l.add(CodePeerMetrics.class);
-        l.add(CodePeerViolationsRubyWidget.class);
-        l.add(CodePeerViolationsDecorator.class);
+
         return l;
     }
 

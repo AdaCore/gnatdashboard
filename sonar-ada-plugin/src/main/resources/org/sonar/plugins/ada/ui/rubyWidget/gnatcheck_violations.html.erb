@@ -1,6 +1,6 @@
 <%
   gc_severities=['BLOCKER', 'CRITICAL', 'MAJOR', 'MINOR', 'INFO']
-  
+
   # Total GNATcheck violations and violations density
   gnatcheck_violations=@snapshot.measure('gnatcheck_violations')
   gnatcheck_density=@snapshot.measure('gnatcheck_violations_density')
@@ -16,16 +16,16 @@
     <td valign="top">
 		  <div class="dashbox">
         <h3>GNATcheck Violations</h3>
-        <div class="marginbottom10"> 
+        <div class="marginbottom10">
           <span class="big">
-            <%= format_measure(gnatcheck_violations, :url => url_for(:controller => 'drilldown', :action => 'gnatcheck_violations', :id => @project.key)) -%>
+            <%= format_measure(gnatcheck_violations, :default => '-', :url => url_for(:controller => 'drilldown', :action => 'gnatcheck_violations', :id => @project.key)) -%>
           </span>
           <%= dashboard_configuration.selected_period? ? format_variation(gnatcheck_violations) : trend_icon(gnatcheck_violations) -%>
-        </div>  
+        </div>
         <h3>Coding standard compliance</h3>
         <div>
           <span class="big">
-            <%= format_measure(gnatcheck_density,:url => url_for_drilldown('gnatcheck_weighted_violations', {:highlight => 'gnatcheck_weighted_violations'}) ) -%>
+            <%= format_measure(gnatcheck_density, :default => '-', :url => url_for_drilldown('gnatcheck_weighted_violations', {:highlight => 'gnatcheck_weighted_violations'}) ) -%>
           </span>
           <%= dashboard_configuration.selected_period? ? format_variation(gnatcheck_density) : trend_icon(gnatcheck_density) -%>
        </div>
@@ -41,16 +41,16 @@
             <td> &nbsp;<%= link_to gc_severities[severity_index].capitalize, {:controller => 'drilldown', :action => 'violations', :id => @project.key, :priority => gc_severities[severity_index]} %></td>
             <td style="padding: 0 10px;" align="right">
               <% metric_key = 'gnatcheck_' + gc_severities[severity_index].downcase + '_violations'%>
-              <%= format_measure(metric_key) -%>
+              <%= format_measure(metric_key, :default => '-') -%>
             </td>
             <td>
               <%= dashboard_configuration.selected_period? ? format_variation(metric_key) : trend_icon(metric_key, :empty => true) -%>
             </td>
 
-        <% end %>  
+        <% end %>
 
       </table>
     </td>
   </tr>
-</table>	
+</table>
 

@@ -22,8 +22,7 @@ public abstract class AdaAbstractRuleRepository extends RuleRepository {
     @Override
     public List<Rule> createRules() {
         final XMLRuleParser xmlParser = new XMLRuleParser();
-        final InputStream xmlStream = getClass().getResourceAsStream(fileName());
-        return xmlParser.parse(xmlStream);
+        return xmlParser.parse(getClass().getResourceAsStream(fileName()));
 
     }
 }
