@@ -4,6 +4,7 @@
  */
 package org.sonar.plugins.ada;
 
+import org.apache.commons.configuration.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
 
 public class Ada extends AbstractLanguage {
@@ -19,12 +20,11 @@ public class Ada extends AbstractLanguage {
      */
     public static final String[] DEFAULT_SUFFIXES = {};
 
-
     /**
      * Default constructor
      */
     public Ada() {
-        super(KEY, "ada");
+        super(KEY, "Ada");
     }
 
     /**
