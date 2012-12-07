@@ -45,6 +45,9 @@ For provided example:
 For your own project:
 ---------------------
 
+    - Make sure that your environment varioable GPR_PROJECT_PATH is properly
+      set.
+
     - Following variables need to be overriden:
         + GPR_PATH: path to the project file.
         + REPORT_DIR_PATH: path to directory where reports will be dumped.
