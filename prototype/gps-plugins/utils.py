@@ -37,7 +37,12 @@ class Violation(object):
 ## Project #################################################################
 ##
 class Project(object):
-    """Represent a project"""
+    """Represent a project
+
+      /!\ This implementation of a source file must be changed for not
+          prototype version.
+    """
+
     def __init__(self, name):
         self.name = name
 
@@ -59,10 +64,15 @@ class Directory(object):
 ##
 class Source(object):
     """Represent a source file
+
+      /!\ This implementation of a source file must be changed for not
+          prototype version.
     """
-    def __init__(self, base_name, directory, project):
+
+    def __init__(self, base_name, directory, project, obj_dir):
         self.base_name = base_name
         self.full_name = directory + '/' + base_name
+        self.obj_dir = obj_dir
         self.parent_dir = Directory(directory, project)
 
     def get_project(self):
@@ -79,12 +89,10 @@ class Source(object):
 ## SourceMap #################################################################
 ##
 class SourceMap(object):
-    """Map a source file with its project and directory
-    """
+    """Map a source file with its project and directory """
 
     def __init__(self, project_tree_path):
-        """Initializes the class
-        """
+        """Initializes the class """
         self.src_map = self.__parse_project_tree(project_tree_path)
 
     def __parse_project_tree(self, project_tree_path):
@@ -93,14 +101,17 @@ class SourceMap(object):
            Save the informations in a dictionnary where the key is the
            source basename and the value is the corresponding Source object.
         """
+        OBJ_DIR_KEY = 'Object_Dir'
+        SRC_DIR_KEY = 'Source_Dirs'
         src_map = dict()
         with open(project_tree_path, 'r') as json_tree:
             output = json_tree.read()
             source_tree = json.loads(output)
             for prj in source_tree:
-                for src_dir in source_tree[prj]:
-                    for src in source_tree[prj][src_dir]:
-                        source = Source(src, src_dir, prj)
+                obj_dir = source_tree[prj][OBJ_DIR_KEY]
+                for src_dir in source_tree[prj][SRC_DIR_KEY]:
+                    for src in source_tree[prj][SRC_DIR_KEY][src_dir]:
+                        source = Source(src, src_dir, prj, obj_dir)
                         src_map[src] = source
         return src_map
 
@@ -118,6 +129,9 @@ class SourceMap(object):
 
     def get_source(self, src_name):
         return self.src_map[src_name]
+
+    def get_obj_dir(self, src):
+        return self.src_map[src].obj_dir
 
     def get_all_basename(self):
         return self.src_map.keys()
@@ -151,4 +165,3 @@ class ReportExporter(object):
     def export_report(self, report_path, report):
         with open(report_path, 'w+') as json_report:
             json_report.write(json.dumps(report.reprJSON(), cls=ComplexEncoder))
-

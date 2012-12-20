@@ -55,15 +55,14 @@ class GCovOutputParser (object):
       gcov generated file.
     """
 
-    def get_gcov_location(self, basename):
+    def get_gcov_location(self,src_map, basename):
         """Retrieves gcov file location from basename source.
 
           Return: None if gcov file not found
           /!\ Prototype version: to be re-arranged accordingly to real
               connstraints. For now, returns the same location, for test.
         """
-        return os.path.join('/Users/kiwi/code/gps/design/tests/code_coverage',
-                            basename + '.gcov')
+        return os.path.join(src_map.get_obj_dir(basename), basename + '.gcov')
 
     def parse_output(self, gcov_report, src_map):
         """Parse gcov output.
@@ -76,7 +75,7 @@ class GCovOutputParser (object):
         sources = [basename for basename in src_map.get_all_basename()
                    if '.adb' in basename]
         for basename in sources:
-            gcov_location = self.get_gcov_location(basename)
+            gcov_location = self.get_gcov_location(src_map, basename)
             # Create a report for the project
 
             # If gcov file has been found
