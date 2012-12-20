@@ -83,6 +83,23 @@ class Project(object):
     return self.__gps_project.file().name()
 
 
+  def object_dir(self):
+    """returns the object dir path for this project file."""
+
+    # GPS.Project.object_dirs function takes an optional parameter:
+    #
+    #     Return the list of object directories for this project. If Recursive
+    #     is True, the source directories of imported projects is also
+    #     returned. There might be duplicate directories in the returned list
+    #
+    #       :param recursive: A boolean
+    #       :return: A list of strings
+
+    # In the case of a non-recursive call, GPS.Project.object_dirs should
+    # always return a list containing a single string.
+    return self.__gps_project.object_dirs(False)[0]
+
+
   def sources(self):
     """Returns a list of GPS.File object for each source related to the
     project.
@@ -109,8 +126,11 @@ class Project(object):
     """Returns the project representation string following this format:
 
         {
-          "Source_Dir_1": ["source.ads", "source.adb"],
-          "Source_Dir_2": ["foobar.ads", "foobar.adb"]
+          "Object_Dir": "path/to/object/dir",
+          "Source_Dirs": {
+            "Source_Dir_1": ["source.ads", "source.adb"],
+            "Source_Dir_2": ["foobar.ads", "foobar.adb"]
+          }
         }
     """
 
@@ -124,7 +144,11 @@ class Project(object):
       assert source_dir in source_dirs.keys()
       source_dirs[source_dir].append(filename)
 
-    return repr(source_dirs)
+    project_repr = {}
+    project_repr['Object_Dir'] = self.object_dir()
+    project_repr['Source_Dirs'] = source_dirs
+
+    return repr(project_repr)
 
 
 ## RootProject ################################################################
@@ -145,8 +169,10 @@ class RootProject(Project):
 
         {
           "Project_1": {
-            "Source_Dir_1": ["source.ads", "source.adb"],
-            "Source_Dir_2": ["foobar.ads", "foobar.adb"],
+            "Object_Dir": "path/to/object/dir",
+            "Source_Dirs": {
+              "Source_Dir_1": ["source.ads", "source.adb"],
+              "Source_Dir_2": ["foobar.ads", "foobar.adb"]
           },
           "Project_2": {
             ...
