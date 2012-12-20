@@ -6,6 +6,7 @@ from xml.etree.ElementTree import Element
 from xml.etree.ElementTree import SubElement
 from xml.etree.ElementTree import Comment
 from xml.etree.ElementTree import tostring
+from xml.etree.ElementTree import ParseError
 import argparse
 import os
 
@@ -15,10 +16,10 @@ import os
 FILE_METRICS = ['all_lines', 'code_lines', 'comment_lines',
                 'eol_comments', 'comment_percentage', 'blank_lines']
 
-PACKAGE_METRICS = ['unit_nesting', 'construct_nesting', 'all_stmts', 'all_dcls',
-                   'lsloc', 'all_subprograms', 'all_types', 'unit_nesting',
-                   'private_types', 'tagged_types', 'abstract_types',
-                   'public_types', 'public_subprograms']
+PACKAGE_METRICS = ['unit_nesting', 'construct_nesting', 'all_stmts',
+                   'all_dcls', 'lsloc', 'all_subprograms', 'all_types',
+                   'unit_nesting', 'private_types', 'tagged_types',
+                   'abstract_types', 'public_types', 'public_subprograms']
 
 UNIT_AVG_METRICS = ['statement_complexity', 'short_circuit_complexity',
                     'cyclomatic_complexity', 'essential_complexity']
@@ -32,15 +33,15 @@ UNIT_ADD_METRICS = ['extra_exit_points',]
 
 class GmOutput(object):
     def __init__(self, gm_output):
-      self.gm_output = gm_output
-      self.metric_by_file = dict()
+        self.gm_output = gm_output
+        self.metric_by_file = dict()
 
     def _init_dict(self):
         metrics = dict()
 
-        all_metrics = PACKAGE_METRICS + UNIT_ADD_METRICS +UNIT_AVG_METRICS + UNIT_MAX_METRIC
+        all_metrics = PACKAGE_METRICS + UNIT_ADD_METRICS + UNIT_AVG_METRICS + UNIT_MAX_METRIC
         for metric in all_metrics:
-          metrics[metric] = 0
+            metrics[metric] = 0
 
         return metrics
 
@@ -67,10 +68,10 @@ class GmOutput(object):
             # Retrieves metrics at unit level
             for unit in file_node.findall('.//unit'):
 
-                # Count the number of unit: function or procedure in the file for
-                # average
+                # Count the number of unit: function or procedure in the file
+                # for average
                 if not unit.attrib.get('kind').startswith('package'):
-                    counter +=1
+                    counter += 1
 
                 for m in unit.findall('./metric'):
                     key = m.attrib.get('name')
@@ -83,7 +84,8 @@ class GmOutput(object):
 
                         #Retrieves max for max_loop_nesting
                         if key == UNIT_MAX_METRIC[0]:
-                            if metrics[key] < int(m.text): metrics[key] = int(m.text)
+                            if metrics[key] < int(m.text):
+                                metrics[key] = int(m.text)
                         else:
                             metrics[key] += int(m.text)
 
@@ -91,7 +93,6 @@ class GmOutput(object):
             # average computing.
             self._compute_avg(metrics, counter)
             self.metric_by_file[file_node.attrib.get('name')] = metrics
-
 
     def _compute_avg(self, metrics, counter):
         for m in UNIT_AVG_METRICS:
@@ -101,7 +102,6 @@ class GmOutput(object):
 
 ## ReportExporter #################################################################
 ##
-
 class ReportExporter(object):
 
     REPORT_NAME = 'gnatmetric-report.xml'
@@ -115,7 +115,6 @@ class ReportExporter(object):
         reparsed = minidom.parseString(rough_string)
         return reparsed.toprettyxml(indent="  ")
 
-
     def export(self, gm_output):
         global_xml = Element('global')
 
@@ -123,10 +122,10 @@ class ReportExporter(object):
         global_xml.append(comment)
 
         for fil in gm_output.metric_by_file:
-            file_xml = SubElement(global_xml, 'file', {'name':fil})
+            file_xml = SubElement(global_xml, 'file', {'name': fil})
 
             for metric in gm_output.metric_by_file[fil]:
-                metric_xml = SubElement(file_xml, 'metric', {'name':metric})
+                metric_xml = SubElement(file_xml, 'metric', {'name': metric})
                 metric_xml.text = str(gm_output.metric_by_file[fil][metric])
 
         pretty_xml = self.prettify(global_xml)
@@ -135,7 +134,7 @@ class ReportExporter(object):
             gm_report.writelines(pretty_xml)
 
 
-## _parse_command_line ###########################################################
+## _parse_command_line ########################################################
 ##
 
 def _parse_command_line():
@@ -143,13 +142,14 @@ def _parse_command_line():
     parser = argparse.ArgumentParser(description=
                                      'Gnat Check report generator')
     parser.add_argument('--target=', action="store", dest="target",
-                        type=str, help="Absolute path target for the generated GNAT Metric report",
-                        required=True)
+                        type=str, help='Absolute path target for the' +
+                        ' generated GNAT Metric report', required=True)
     parser.add_argument('--gm_output=', action="store", dest="gm_output",
-                        type=str, help="Absolute path to metrix.xml file", required=True)
-    parser.add_argument('--json-tree=', action='store', dest='json_tree', type=str,
-                        help='Absolute path to json file that contains project tree',
+                        type=str, help="Absolute path to metrix.xml file",
                         required=True)
+    parser.add_argument('--json-tree=', action='store', dest='json_tree',
+                        type=str, help='Absolute path to json file that' +
+                        'contains project tree', required=True)
     return parser.parse_args()
 
 
@@ -160,9 +160,12 @@ def _entry_point():
     """Script_entry point"""
     cmd_line = _parse_command_line()
     gm_output = GmOutput(cmd_line.gm_output)
-    gm_output.parse_output()
-    exporter = ReportExporter(cmd_line.target)
-    exporter.export(gm_output)
+    try:
+        gm_output.parse_output()
+        exporter = ReportExporter(cmd_line.target)
+        exporter.export(gm_output)
+    except ParseError as e:
+        print 'ERROR: Unable to parse file: ' + cmd_line.gm_output
 
 ## Script Entry Point ######################################################
 ##

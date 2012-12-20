@@ -48,7 +48,6 @@ class GcOutput(object):
         self.violations = []
         self.__process_output()
 
-
     def __add_violation(self, src, line, rule_id, msg):
         """Add a violation"""
 
@@ -86,7 +85,8 @@ class GcOutput(object):
             self.__add_violation(src, line, rule_id, msg)
 
         except IndexError as e:
-            print 'Unable to retrieve information from error:\n' + line + '\nSkipping this error...'
+            print 'Unable to retrieve information from error: '
+            print line + '\nSkipping this error...'
 
     def __process_output(self):
         """Process GnatCheck output
@@ -109,7 +109,7 @@ class GcOutput(object):
                     self.__parse_instance_line(line)
 
 
-## ReportExporter #################################################################
+## ReportExporter #############################################################
 ##
 
 class ReportExporter(object):
@@ -141,25 +141,26 @@ class ReportExporter(object):
         results.append(comment)
         for v in gc_output.violations:
             try:
-                src = src_map.get_src_path(v.src)
-                directory = src_map.get_src_directory(v.src)
-                project = src_map.get_src_project(v.src)
+                src = src_map.get_path(v.src)
+                directory = src_map.get_directory(v.src)
+                project = src_map.get_project(v.src)
                 error = SubElement(results, 'error',
-                                   {'file':src,
-                                    'directory':directory,
-                                    'project':project,
-                                    'line':v.line,
-                                    'id':v.rule_id,
-                                    'msg':v.msg})
+                                   {'file': src,
+                                    'directory': directory,
+                                    'project': project,
+                                    'line': v.line,
+                                    'id': v.rule_id,
+                                    'msg': v.msg})
             except KeyError as e:
-                print "Skipping error, unable to fin source in project tree: " + v.src
+                print 'Skipping error, unable to find source in project tree: ' + v.src
+
         pretty_xml = self.prettify(results)
         with open(self.report_path, 'w+') as gc_report:
             print 'Creating GNAT Check XML report...'
             gc_report.writelines(pretty_xml)
 
 
-## _parse_command_line ###########################################################
+## _parse_command_line ########################################################
 ##
 
 def _parse_command_line():
@@ -167,13 +168,14 @@ def _parse_command_line():
     parser = argparse.ArgumentParser(description=
                                      'Gnat Check report generator')
     parser.add_argument('--target=', action="store", dest="target",
-                        type=str, help="Absolute path target for the generated GnatCheck report",
-                        required=True)
+                        type=str, help='Absolute path target for the' +
+                        'generated GnatCheck report', required=True)
     parser.add_argument('--log=', action="store", dest="gc_log",
-                        type=str, help="Absolute path to gnatcheck.log file", required=True)
-    parser.add_argument('--json-tree=', action='store', dest='json_tree', type=str,
-                        help='Absolute path to json file that contains project tree',
+                        type=str, help="Absolute path to gnatcheck.log file",
                         required=True)
+    parser.add_argument('--json-tree=', action='store', dest='json_tree',
+                        type=str, help='Absolute path to json file that' +
+                        'contains project tree', required=True)
     return parser.parse_args()
 
 

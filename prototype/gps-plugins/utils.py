@@ -104,21 +104,23 @@ class SourceMap(object):
                         src_map[src] = source
         return src_map
 
-    def get_src_path(self, src):
+    def get_path(self, src):
         """Return the source full path"""
         return self.src_map[src].get_full_name()
 
-    def get_src_directory(self, src):
+    def get_directory(self, src):
         """"""
         return self.src_map[src].get_directory()
 
-    def get_src_project(self, src):
+    def get_project(self, src):
         """Return the project the source blongs"""
         return self.src_map[src].get_project()
 
     def get_source(self, src_name):
         return self.src_map[src_name]
 
+    def get_all_basename(self):
+        return self.src_map.keys()
 
 ## Report #########################################################################
 ##
