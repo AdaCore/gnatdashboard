@@ -49,6 +49,7 @@ public class AdaSourceImporter extends AbstractSourceImporter {
      *  value: AdaFile Sonar representation of the resource
      */
     private static Map<String, AdaFile> sourceMap;
+    private final String source_dir_keyword = "Source_Dirs";
 
     public static Map<String, AdaFile> getSourceMap() {
         return sourceMap;
@@ -133,9 +134,11 @@ public class AdaSourceImporter extends AbstractSourceImporter {
 
                 JSONObject jsonTree = (JSONObject) obj;
                 for (Object project : jsonTree.keySet()) {
-                    JSONObject jsonSrcDir = (JSONObject) (jsonTree.get(project));
-                    for (Object srcDir : jsonSrcDir.keySet()) {
-                        JSONArray jsonSrc = (JSONArray) jsonSrcDir.get(srcDir);
+                    // Retieve only source directories and not object directories
+                    JSONObject jsonDirs = (JSONObject) (jsonTree.get(project));
+                    JSONObject jsonSrcDirs = (JSONObject) (jsonDirs.get(source_dir_keyword));
+                    for (Object srcDir : jsonSrcDirs.keySet()) {
+                        JSONArray jsonSrc = (JSONArray) jsonSrcDirs.get(srcDir);
                         Iterator<String> iterator = jsonSrc.iterator();
                         while (iterator.hasNext()) {
                             //For now, import all resources as a source and not as unit test resource.
