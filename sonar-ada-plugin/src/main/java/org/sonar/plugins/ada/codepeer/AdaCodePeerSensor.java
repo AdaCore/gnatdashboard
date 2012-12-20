@@ -75,7 +75,7 @@ public class AdaCodePeerSensor extends AdaSensor {
                    saveViolation(project, context, AdaCodePeerRuleRepository.KEY,
                             file, Integer.parseInt(line), ruleKey, msg, prj, dir);
                 } else {
-                    AdaUtils.LOG.warn("AdaCheck warning: {}", msg);
+                    AdaUtils.LOG.warn("Skipping violation, information are not complete for message: {}", msg);
                 }
             }
         } catch (IOException ex) {

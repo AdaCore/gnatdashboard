@@ -14,6 +14,7 @@ import org.sonar.plugins.ada.codepeer.AdaCodePeerRuleRepository;
 import org.sonar.plugins.ada.codepeer.AdaCodePeerSensor;
 import org.sonar.plugins.ada.codepeer.CodePeerMetrics;
 import org.sonar.plugins.ada.codepeer.CodePeerViolationsDecorator;
+import org.sonar.plugins.ada.codepeer.gcov.GCovSensor;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckRuleRepository;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckSensor;
 import org.sonar.plugins.ada.gnatcheck.GnatCheckMetrics;
@@ -28,25 +29,30 @@ import org.sonar.plugins.ada.ui.rubyWidget.GnatCheckViolationsRubyWidget;
 
 @Properties({
     @Property(key = AdaSourceImporter.PROJECT_TREE_FILE_PATH_KEY,
-    name = "Project tree file",
-    description = "Path to file which contains project tree in JSON format. Relative to the project root",
-    global = false,
-    project = true),
+        name = "Project tree file",
+        description = "Path to file which contains project tree in JSON format. Relative to the project root",
+        global = false,
+        project = true),
     @Property(key = AdaGnatCheckSensor.REPORT_PATH_KEY,
-    name = "Path to GNATcheck report",
-    description = "Relative to the project root",
-    global = false,
-    project = true),
+        name = "Path to GNATcheck report",
+        description = "Relative to the project root",
+        global = false,
+        project = true),
     @Property(key = AdaGnatMetricSensor.REPORT_PATH_KEY,
-    name = "Path to GNATmetric report",
-    description = "Relative to the project root",
-    global = false,
-    project = true),
+        name = "Path to GNATmetric report",
+        description = "Relative to the project root",
+        global = false,
+        project = true),
     @Property(key = AdaCodePeerSensor.REPORT_PATH_KEY,
-    name = "Path to Codepeer report",
-    description = "Relative to the project root",
-    global = false,
-    project = true)})
+        name = "Path to Codepeer report",
+        description = "Relative to the project root",
+        global = false,
+        project = true),
+    @Property(key = GCovSensor.REPORT_PATH_KEY,
+        name = "Path to gcov report",
+        description = "Relative to the project root",
+        global = false,
+        project = true)})
 /**
  * Implements Ada Plugin for Sonar
  */
@@ -85,6 +91,8 @@ public final class AdaPlugin extends SonarPlugin {
         l.add(GnatMetricViewerDefinition.class);
         l.add(GnatMetrics.class);
 
+        //GCov
+        l.add(GCovSensor.class);
 
         return l;
     }

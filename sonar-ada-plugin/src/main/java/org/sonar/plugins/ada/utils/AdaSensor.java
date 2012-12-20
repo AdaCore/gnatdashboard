@@ -29,8 +29,6 @@ public abstract class AdaSensor implements Sensor {
     private RuleFinder ruleFinder;
     private Configuration config = null;
 
-    public AdaSensor() {
-    }
 
     public AdaSensor(Configuration config) {
         this.config = config;
