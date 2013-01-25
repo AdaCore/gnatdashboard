@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ * Copyright (C) 2013, AdaCore
  */
 package org.sonar.plugins.ada.ui.rubyWidget;
 
@@ -11,7 +11,7 @@ import org.sonar.api.web.RubyRailsWidget;
 import org.sonar.api.web.WidgetCategory;
 
 @UserRole(UserRole.USER)
-@Description("Shows Codepeer messages, per severity and category")
+@Description("Report GNATcheck violations on coding standards")
 @WidgetCategory("Rules")
 public class GnatCheckViolationsRubyWidget extends AbstractRubyTemplate implements RubyRailsWidget {
 
