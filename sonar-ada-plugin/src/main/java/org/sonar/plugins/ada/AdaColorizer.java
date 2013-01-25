@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada;
 
@@ -20,7 +20,7 @@ public class AdaColorizer extends CodeColorizerFormat {
     /**
      * Ada reserved key word, used for syntax highlighting
      */
-    private static final String[] KEYWORDS = {
+    private final String[] KEYWORDS = {
         "abort", "abs", "abstract", "accept", "access", "aliased", "all",
         "and", "array", "at", "begin", "body", "case", "constant", "declare",
         "delay", "delta", "digits", "do", "else", "elsif", "end", "entry", "exception",

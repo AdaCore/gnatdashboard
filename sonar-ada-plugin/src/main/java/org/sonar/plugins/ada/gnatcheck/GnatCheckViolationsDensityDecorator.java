@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.gnatcheck;
 
@@ -17,8 +17,6 @@ import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.plugins.ada.Ada;
-import org.sonar.plugins.ada.gnatmetric.GnatMetrics;
-import org.sonar.plugins.ada.utils.AdaUtils;
 
 public class GnatCheckViolationsDensityDecorator implements Decorator {
 
@@ -26,7 +24,7 @@ public class GnatCheckViolationsDensityDecorator implements Decorator {
     }
 
     public boolean shouldExecuteOnProject(Project project) {
-        return project.getLanguageKey().equals(Ada.KEY);
+        return project.getLanguage().getKey().equals(Ada.KEY);
     }
 
     @DependsUpon
@@ -45,9 +43,8 @@ public class GnatCheckViolationsDensityDecorator implements Decorator {
         }
     }
 
-
   protected boolean shouldDecorateResource(DecoratorContext context) {
-    return context.getProject().getLanguageKey().equals(Ada.KEY) &&
+    return context.getProject().getLanguage().getKey().equals(Ada.KEY) &&
             context.getMeasure(GnatCheckMetrics.GNATCHECK_VIOLATIONS_DENSITY) == null;
   }
 

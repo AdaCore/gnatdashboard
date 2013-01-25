@@ -1,15 +1,14 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.ui.gwt;
 
 import org.sonar.api.resources.Resource;
-import org.sonar.api.web.UserRole;
-import org.sonar.api.web.DefaultTab;
 import org.sonar.api.web.NavigationSection;
 import org.sonar.api.web.ResourceLanguage;
 import org.sonar.api.web.ResourceQualifier;
+import org.sonar.api.web.UserRole;
 import org.sonar.api.web.GwtPage;
 import org.sonar.plugins.ada.Ada;
 import org.sonar.plugins.ada.ui.gwt.client.GnatMetricViewer;

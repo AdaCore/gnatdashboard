@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada;
 
@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
@@ -24,7 +23,6 @@ import org.sonar.api.batch.Phase;
 import org.sonar.api.batch.ResourceCreationLock;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.ada.resources.AdaFile;
@@ -49,8 +47,9 @@ public class AdaSourceImporter extends AbstractSourceImporter {
      *  value: AdaFile Sonar representation of the resource
      */
     private static Map<String, AdaFile> sourceMap;
-    private final String source_dir_keyword = "Source_Dirs";
+    private final String sourceDirKeyword = "Source_Dirs";
 
+    //TO BE REMOVED !!
     public static Map<String, AdaFile> getSourceMap() {
         return sourceMap;
     }
@@ -70,8 +69,7 @@ public class AdaSourceImporter extends AbstractSourceImporter {
      */
     @Override
     public void analyse(Project project, SensorContext context) {
-        sourceMap = loadProjectTree(project.getFileSystem(), project.getFileSystem().getBasedir().getPath(), context);
-        //analyse(project.getFileSystem(), context);
+        sourceMap = loadProjectTree(project.getFileSystem().getBasedir().getPath());
         saveResource(context, project.getFileSystem().getSourceCharset());
         onFinished();
     }
@@ -94,8 +92,8 @@ public class AdaSourceImporter extends AbstractSourceImporter {
         }
     }
 
-    protected Resource createResource(File file, List<File> sourceDirs, boolean unitTest, String project, String directory) {
-        return file != null ? AdaFile.fromIOFile(file, sourceDirs, project, directory) : null;
+    protected Resource createResource(File file, boolean unitTest, String project, String directory) {
+        return file != null ? AdaFile.fromIOFile(file, project, directory) : null;
     }
 
     /**
@@ -117,9 +115,9 @@ public class AdaSourceImporter extends AbstractSourceImporter {
      * @param project's base directory path
      * @param sensor's context
      */
-    protected Map<String, AdaFile> loadProjectTree(ProjectFileSystem fileSystem, String baseDirPath, SensorContext context) {
+    protected Map<String, AdaFile> loadProjectTree(String baseDirPath) {
         Map<String, AdaFile> srcMap = new HashMap<String, AdaFile>();
-        String filePath = config.getString(PROJECT_TREE_FILE_PATH_KEY, null);
+        String filePath = config.getString(PROJECT_TREE_FILE_PATH_KEY);
         if (filePath == null) {
             AdaUtils.LOG.info("Path to file containing the project tree is missing or invalid, using a default project tree instead.");
 
@@ -136,13 +134,13 @@ public class AdaSourceImporter extends AbstractSourceImporter {
                 for (Object project : jsonTree.keySet()) {
                     // Retieve only source directories and not object directories
                     JSONObject jsonDirs = (JSONObject) (jsonTree.get(project));
-                    JSONObject jsonSrcDirs = (JSONObject) (jsonDirs.get(source_dir_keyword));
+                    JSONObject jsonSrcDirs = (JSONObject) (jsonDirs.get(sourceDirKeyword));
                     for (Object srcDir : jsonSrcDirs.keySet()) {
                         JSONArray jsonSrc = (JSONArray) jsonSrcDirs.get(srcDir);
                         Iterator<String> iterator = jsonSrc.iterator();
                         while (iterator.hasNext()) {
                             //For now, import all resources as a source and not as unit test resource.
-                            AdaFile resource = (AdaFile) createResource(new File(srcDir.toString(), iterator.next()), fileSystem.getSourceDirs(), false, project.toString(), srcDir.toString());
+                            AdaFile resource = (AdaFile) createResource(new File(srcDir.toString(), iterator.next()), false, project.toString(), srcDir.toString());
                             srcMap.put(resource.getName(), resource);
                         }
                     }

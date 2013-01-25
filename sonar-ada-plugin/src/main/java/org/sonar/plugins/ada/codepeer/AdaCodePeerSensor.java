@@ -1,14 +1,12 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.codepeer;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONArray;
@@ -16,11 +14,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.measures.Metric;
-import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rules.RuleFinder;
-import org.sonar.plugins.ada.resources.AdaFile;
 import org.sonar.plugins.ada.utils.AdaSensor;
 import org.sonar.plugins.ada.utils.AdaUtils;
 
@@ -44,6 +39,11 @@ public class AdaCodePeerSensor extends AdaSensor {
         return REPORT_PATH_KEY;
     }
 
+    @Override
+    protected String defaultReportPath() {
+        return "reports/codepeer-report.json";
+    }
+
     /**
      * Parse Codepeer JSON report to retrieve violations information.
      *
@@ -52,7 +52,7 @@ public class AdaCodePeerSensor extends AdaSensor {
      * @param report Codepeer JSON report
      */
     @Override
-    protected void processReport(final Project project, final SensorContext context, File report) {
+    protected void processReport(final SensorContext context, File report) {
         AdaUtils.LOG.info("--------- Codepeer sensor");
 
         try {
@@ -72,7 +72,7 @@ public class AdaCodePeerSensor extends AdaSensor {
 
                 if (isInputValid(file, ruleKey, dir, line, msg, prj)) {
 
-                   saveViolation(project, context, AdaCodePeerRuleRepository.KEY,
+                   saveViolation(context, AdaCodePeerRuleRepository.KEY,
                             file, Integer.parseInt(line), ruleKey, msg, prj, dir);
                 } else {
                     AdaUtils.LOG.warn("Skipping violation, information are not complete for message: {}", msg);
@@ -100,5 +100,6 @@ public class AdaCodePeerSensor extends AdaSensor {
                 && !StringUtils.isEmpty(dir) && !StringUtils.isEmpty(line)
                 && !StringUtils.isEmpty(msg) && !StringUtils.isEmpty(prj);
     }
+
 
 }

@@ -1,10 +1,9 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.utils;
 
-import java.io.InputStream;
 import java.util.List;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleRepository;
@@ -23,6 +22,5 @@ public abstract class AdaAbstractRuleRepository extends RuleRepository {
     public List<Rule> createRules() {
         final XMLRuleParser xmlParser = new XMLRuleParser();
         return xmlParser.parse(getClass().getResourceAsStream(fileName()));
-
     }
 }

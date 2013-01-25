@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.resources;
 
@@ -98,15 +98,11 @@ public class AdaFile extends Resource<AdaDirectory> {
         return false;
     }
 
-    public static AdaFile fromIOFile(java.io.File file, List<java.io.File> sourceDirs, String prj, String dir) {
-        if (file != null) {
+    public static AdaFile fromIOFile(java.io.File file, String prj, String dir) {
+         if (file != null) {
             return new AdaFile(file.getPath(), prj, dir);
         }
         return null;
-    }
-
-    public static AdaFile fromIOFile(java.io.File file, Project project, String prj, String dir) {
-        return fromIOFile(file, project.getFileSystem().getSourceDirs(), prj, dir);
     }
 
     @Override

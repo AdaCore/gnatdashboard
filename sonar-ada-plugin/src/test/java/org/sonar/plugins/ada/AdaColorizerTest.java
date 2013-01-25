@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada;
 
@@ -16,8 +16,17 @@ public class AdaColorizerTest {
      */
     @Test
     public void testGetTokenizers() {
-        List<Tokenizer> tokenizer = (new AdaColorizer()).getTokenizers();
-        assert(tokenizer != null);
-        assertEquals(3, tokenizer.size());
+        final AdaColorizer colorizer = new AdaColorizer();
+        assertList(colorizer.getTokenizers());
+        //Test the method a second time, first time the list is being initialized,
+        //for other call the object attribut is returned.
+        assertList(colorizer.getTokenizers());
+
     }
+
+    public void assertList(List<Tokenizer> tokenizers){
+        assert(tokenizers != null);
+        assertEquals(3, tokenizers.size());
+    }
+
 }

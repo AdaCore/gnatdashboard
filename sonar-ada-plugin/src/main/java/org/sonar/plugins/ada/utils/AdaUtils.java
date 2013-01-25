@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.utils;
 
@@ -11,11 +11,9 @@ import org.sonar.api.measures.Metric;
 import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.ada.codepeer.CodePeerMetrics;
 
+//Only static methods.
 public final class AdaUtils {
 
-    private AdaUtils() {
-        // only static methods
-    }
     /**
      * Default logger.
      */

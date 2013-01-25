@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.utils;
 
@@ -11,7 +11,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.tools.ant.DirectoryScanner;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
@@ -52,7 +51,7 @@ public abstract class AdaSensor implements Sensor {
                     reportPathKey(), defaultReportPath());
             for (File report : reports) {
                 AdaUtils.LOG.info("Processing report '{}'", report);
-                processReport(project, context, report);
+                processReport(context, report);
             }
 
             if (reports.isEmpty()) {
@@ -72,7 +71,8 @@ public abstract class AdaSensor implements Sensor {
             String baseDirPath,
             String reportPathPropertyKey,
             String defaultReportPath) {
-        String reportPath = conf.getString(reportPathPropertyKey, null);
+        String reportPath = conf.getString(reportPathPropertyKey);
+        System.out.println(reportPath);
         if (reportPath == null) {
             reportPath = defaultReportPath;
         }
@@ -104,12 +104,12 @@ public abstract class AdaSensor implements Sensor {
      *                  be necessary to manage this differently in the future
      *                  (through decorator)
      */
-    protected void saveViolation(Project project, SensorContext context, String ruleRepoKey,
+    protected void saveViolation(SensorContext context, String ruleRepoKey,
         String file, int line, String ruleId, String msg, String prj, String dir) {
         RuleQuery ruleQuery = RuleQuery.create().withRepositoryKey(ruleRepoKey).withKey(ruleId);
         Rule rule = ruleFinder.find(ruleQuery);
         if (rule != null) {
-            AdaFile res = context.getResource(AdaFile.fromIOFile(new File(file), project, prj, dir));
+            AdaFile res = context.getResource(AdaFile.fromIOFile(new File(file), prj, dir));
 
             if (res != null) {
                 Violation violation = Violation.create(rule, res).setLineId(line).setMessage(msg);
@@ -137,13 +137,9 @@ public abstract class AdaSensor implements Sensor {
     /**
      * Retrieve information from the report.
      */
-    protected void processReport(Project project, SensorContext context, File report)
-            throws Exception {
+    protected abstract void processReport(final SensorContext context, File report);
+    protected void handleNoReportsCase(SensorContext context){
     }
-
-    protected void handleNoReportsCase(SensorContext context) {
-    }
-
     /**
      * @return property's key of the report path in sonar.properties file
      */

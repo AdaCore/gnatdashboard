@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.gnatcheck;
 
@@ -43,7 +43,7 @@ public class GnatCheckViolationsDecorator implements Decorator {
     }
 
     public boolean shouldExecuteOnProject(Project project) {
-        return project.getLanguageKey().equals(Ada.KEY);
+        return project.getLanguage().getKey().equals(Ada.KEY);
     }
 
     private boolean shouldDecorateResource(Resource resource) {
@@ -63,7 +63,7 @@ public class GnatCheckViolationsDecorator implements Decorator {
             if (metric != null && context.getMeasure(metric) == null) {
                 Collection<Measure> children = context.getChildrenMeasures(MeasuresFilters.metric(metric));
                 Double sum = MeasureUtils.sum(true, children) + severities.count(severity);
-                context.saveMeasure(new Measure(metric, sum));
+                context.saveMeasure(metric, sum);
             }
         }
     }
@@ -93,7 +93,7 @@ public class GnatCheckViolationsDecorator implements Decorator {
             //For source files sum of children = 0, for directories total = 0
             Double sum = MeasureUtils.sum(true, childrenViolations) + total;
             //Add the measure for the current resource
-            context.saveMeasure(new Measure(GnatCheckMetrics.GNATCHECK_VIOLATIONS, sum));
+            context.saveMeasure(GnatCheckMetrics.GNATCHECK_VIOLATIONS, sum);
         }
     }
 

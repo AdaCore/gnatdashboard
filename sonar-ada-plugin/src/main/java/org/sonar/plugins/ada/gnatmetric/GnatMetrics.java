@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.gnatmetric;
 
@@ -12,7 +12,6 @@ import org.sonar.api.measures.Metric;
 import org.sonar.api.measures.Metrics;
 import org.sonar.api.measures.SumChildValuesFormula;
 import org.sonar.api.utils.SonarException;
-import org.sonar.plugins.ada.gnatcheck.GnatCheckMetrics;
 
 /**
  * Defines metrics specific to GnatMetric that cannot be bind to existent

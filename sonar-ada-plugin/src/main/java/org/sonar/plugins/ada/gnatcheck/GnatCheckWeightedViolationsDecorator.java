@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.gnatcheck;
 
@@ -11,18 +11,17 @@ import org.sonar.api.batch.Decorator;
 import org.sonar.api.batch.DecoratorContext;
 import org.sonar.api.batch.DependedUpon;
 import org.sonar.api.batch.DependsUpon;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.MeasureUtils;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.measures.MeasuresFilters;
 import org.sonar.api.measures.RuleMeasure;
+import org.sonar.api.measures.Measure;
+import org.sonar.api.measures.MeasuresFilters;
+import org.sonar.api.measures.MeasureUtils;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rules.RulePriority;
 import org.sonar.api.rules.RuleUtils;
 import org.sonar.api.utils.KeyValueFormat;
 import org.sonar.plugins.ada.Ada;
-import org.sonar.plugins.ada.utils.AdaUtils;
 
 public class GnatCheckWeightedViolationsDecorator implements Decorator {
 
@@ -42,11 +41,11 @@ public class GnatCheckWeightedViolationsDecorator implements Decorator {
     }
 
     public boolean shouldExecuteOnProject(Project project) {
-        return project.getLanguageKey().equals(Ada.KEY);
+        return project.getLanguage().getKey().equals(Ada.KEY);
     }
 
     private void loadWeights(DecoratorContext context) {
-        if (weights == null && context != null) {
+        if (weights == null) {
             weights = RuleUtils.getPriorityWeights(context.getProject().getConfiguration());
         }
     }

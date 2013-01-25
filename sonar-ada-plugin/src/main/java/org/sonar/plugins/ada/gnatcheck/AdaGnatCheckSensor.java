@@ -1,12 +1,10 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.gnatcheck;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
@@ -26,14 +24,9 @@ import org.sonar.plugins.ada.utils.AdaUtils;
 public class AdaGnatCheckSensor extends AdaSensor {
 
     public static final String REPORT_PATH_KEY = "sonar.ada.gnatcheck.reportPath";
-
+    public static final String DEFAULT_REPORT_PATH_KEY = "reports/gnatcheck-report.xml";
     public AdaGnatCheckSensor(RuleFinder ruleFinder, Configuration conf) {
         super(ruleFinder, conf);
-    }
-
-    @Override
-    protected String reportPathKey() {
-        return REPORT_PATH_KEY;
     }
 
     /**
@@ -44,7 +37,7 @@ public class AdaGnatCheckSensor extends AdaSensor {
      * @param report GANT Check XML report
      */
     @Override
-    protected void processReport(final Project project, final SensorContext context, File report) {
+    protected void processReport(final SensorContext context, File report) {
 
         StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
 
@@ -52,9 +45,11 @@ public class AdaGnatCheckSensor extends AdaSensor {
              * {@inheritDoc}
              */
             public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-                rootCursor.advance(); //results
+                //results
+                rootCursor.advance();
 
-                SMInputCursor errorCursor = rootCursor.childElementCursor("error"); //error
+                //error
+                SMInputCursor errorCursor = rootCursor.childElementCursor("error");
                 while (errorCursor.getNext() != null) {
                     String file = errorCursor.getAttrValue("file");
                     String line = errorCursor.getAttrValue("line");
@@ -63,7 +58,7 @@ public class AdaGnatCheckSensor extends AdaSensor {
                     String prj = errorCursor.getAttrValue("project");
                     String dir = errorCursor.getAttrValue("directory");
                     if (isInputValid(file, line, id, msg, prj, dir)) {
-                        saveViolation(project, context, AdaGnatCheckRuleRepository.KEY,
+                        saveViolation(context, AdaGnatCheckRuleRepository.KEY,
                                 file, Integer.parseInt(line), id, msg, prj, dir);
                     } else {
                         AdaUtils.LOG.warn("AdaCheck warning: {}", msg);
@@ -90,8 +85,18 @@ public class AdaGnatCheckSensor extends AdaSensor {
         try {
             parser.parse(report);
         } catch (XMLStreamException ex) {
-            AdaUtils.LOG.info("Unable to parse GNATcheck");
+            AdaUtils.LOG.info("Unable to parse GNATcheck report");
             AdaUtils.LOG.info(ex.getMessage());
         }
+    }
+
+    @Override
+     protected String reportPathKey() {
+        return REPORT_PATH_KEY;
+    }
+
+    @Override
+    protected String defaultReportPath() {
+        return DEFAULT_REPORT_PATH_KEY;
     }
 }

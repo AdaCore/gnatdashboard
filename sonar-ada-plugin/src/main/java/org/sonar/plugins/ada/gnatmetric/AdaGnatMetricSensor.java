@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada.gnatmetric;
 
@@ -41,6 +41,11 @@ public class AdaGnatMetricSensor extends AdaSensor {
         return REPORT_PATH_KEY;
     }
 
+
+    protected String defaultReportPath() {
+        return "reports/gnatmetric-report.xml";
+    }
+
     /**
      * Parse GNATmetric XML report to retrieve violations information.
      *
@@ -49,8 +54,7 @@ public class AdaGnatMetricSensor extends AdaSensor {
      * @param report GNATmetric XML report
      */
     @Override
-    protected void processReport(final Project project, final SensorContext context, File report)
-            throws javax.xml.stream.XMLStreamException {
+    protected void processReport(final SensorContext context, File report){
         AdaUtils.LOG.info("---- GnatMetric Analyser");
         StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
 
@@ -58,13 +62,16 @@ public class AdaGnatMetricSensor extends AdaSensor {
              * {@inheritDoc}
              */
             public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-                rootCursor.advance(); //global
+                //global
+                rootCursor.advance();
 
-                SMInputCursor fileCursor = rootCursor.childElementCursor("file"); //file
+                //file
+                SMInputCursor fileCursor = rootCursor.childElementCursor("file");
                 while (fileCursor.getNext() != null) {
                     String file = fileCursor.getAttrValue("name");
 
-                    SMInputCursor metricCursor = fileCursor.childElementCursor("metric"); //metric
+                    //metric
+                    SMInputCursor metricCursor = fileCursor.childElementCursor("metric");
                     while (metricCursor.getNext() != null) {
                         String metrickey = metricCursor.getAttrValue("name");
                         Double value = metricCursor.getElemDoubleValue();
@@ -91,8 +98,12 @@ public class AdaGnatMetricSensor extends AdaSensor {
                 return !StringUtils.isEmpty(file) && !StringUtils.isEmpty(name) && value != null;
             }
         });
-
-        parser.parse(report);
+        try {
+            parser.parse(report);
+        } catch (XMLStreamException ex) {
+            AdaUtils.LOG.error("Unable to parse report: {}", report.getName());
+            AdaUtils.LOG.error(ex.getMessage());
+        }
     }
 
     /**
@@ -108,6 +119,7 @@ public class AdaGnatMetricSensor extends AdaSensor {
      */
     public void saveMeasure(SensorContext context, String fileName, String metrickey, Double value) {
         String file = StringUtils.substringAfterLast(fileName, "/");
+        // To be replace by context.getResource and remove srcMap
         AdaFile resource = AdaSourceImporter.getSourceMap().get(file);
         if (resource != null) {
             Metric metric = AdaMetrics.INSTANCE.getMetricsMap().get(metrickey);

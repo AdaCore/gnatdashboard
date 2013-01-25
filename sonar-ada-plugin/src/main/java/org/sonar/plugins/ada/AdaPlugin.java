@@ -1,6 +1,6 @@
 /*
  * Sonar Ada Plugin
- * Copyright (C) 2012, AdaCore
+ *  Copyright (C) 2012-2013, AdaCore
  */
 package org.sonar.plugins.ada;
 
@@ -35,22 +35,22 @@ import org.sonar.plugins.ada.ui.rubyWidget.GnatCheckViolationsRubyWidget;
         project = true),
     @Property(key = AdaGnatCheckSensor.REPORT_PATH_KEY,
         name = "Path to GNATcheck report",
-        description = "Relative to the project root",
+        description = "GNATcheck report relative path to the project root",
         global = false,
         project = true),
     @Property(key = AdaGnatMetricSensor.REPORT_PATH_KEY,
         name = "Path to GNATmetric report",
-        description = "Relative to the project root",
+        description = "GNATmetric report relative path to the project root",
         global = false,
         project = true),
     @Property(key = AdaCodePeerSensor.REPORT_PATH_KEY,
         name = "Path to Codepeer report",
-        description = "Relative to the project root",
+        description = "Codepeer report relative path to the project root",
         global = false,
         project = true),
     @Property(key = GCovSensor.REPORT_PATH_KEY,
         name = "Path to gcov report",
-        description = "Relative to the project root",
+        description = "Gcov report relative path to the project root",
         global = false,
         project = true)})
 /**

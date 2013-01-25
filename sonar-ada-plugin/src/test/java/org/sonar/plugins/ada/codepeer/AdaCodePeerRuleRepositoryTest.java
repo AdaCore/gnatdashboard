@@ -1,0 +1,50 @@
+/*
+ * Sonar Ada Plugin
+ *  Copyright (C) 2012-2013, AdaCore
+ */
+package org.sonar.plugins.ada.codepeer;
+
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import org.sonar.plugins.ada.Ada;
+
+public class AdaCodePeerRuleRepositoryTest {
+
+    private AdaCodePeerRuleRepository repository;
+
+    @Before
+    public void setUp() {
+        repository = new AdaCodePeerRuleRepository();
+    }
+
+    @Test
+    public void testFileName() {
+        assertNotNull(repository.fileName());
+        assertFalse(repository.fileName().isEmpty());
+    }
+
+    @Test
+    public void testKey() {
+        assertNotNull(repository.getKey());
+        assertTrue("CodePeer Rule Repository key should be set",
+                !repository.getKey().isEmpty());
+    }
+
+    @Test
+    public void testLanguage() {
+        assertEquals(repository.getLanguage(), Ada.INSTANCE.getKey());
+    }
+
+    @Test
+    public void testCreatesRules() {
+        List<org.sonar.api.rules.Rule> rules = repository.createRules();
+        assertNotNull(rules);
+        assertFalse("CodePeer Rule Repository should not be empty",
+                rules.isEmpty());
+    }
+}
