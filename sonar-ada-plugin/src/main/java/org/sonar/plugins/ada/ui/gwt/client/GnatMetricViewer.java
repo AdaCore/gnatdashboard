@@ -35,29 +35,23 @@ public class GnatMetricViewer extends Page {
 
         public GnatMetricHeader(Resource resource) {
             super(resource, new String[]{
+                        // Size
                         Metrics.LINES,
                         Metrics.NCLOC,
+                        GwtGnatMetrics.LSLOC,
                         GwtGnatMetrics.BLANK_LINE,
+
+                        // Documentation
                         Metrics.COMMENT_LINES_DENSITY,
                         Metrics.COMMENT_LINES,
                         GwtGnatMetrics.EOL_COMMENTS,
-                        GwtGnatMetrics.ALL_DCLS,
-                        GwtGnatMetrics.ALL_SATEMENTS,
-                        GwtGnatMetrics.LSLOC,
-                        GwtGnatMetrics.CONSTRUCT_NESTING,
+
+                        // Complexity
                         GwtGnatMetrics.MAX_LOOP_NESTING,
-                        GwtGnatMetrics.EXTRA_EXIT_POINTS,
                         GwtGnatMetrics.STATEMENT_COMPLEXITY,
-                        GwtGnatMetrics.SHORT_CIRCUIT_COMPLEXITY,
+                        GwtGnatMetrics.EXPRESSION_COMPLEXITY,
                         GwtGnatMetrics.ESSENTIAL_COMPLEXITY,
-                        GwtGnatMetrics.UNIT_NESTING,
-                        GwtGnatMetrics.ALL_SUBPROGRAMS,
-                        GwtGnatMetrics.ALL_TYPES,
-                        GwtGnatMetrics.TAGGED_TYPES,
-                        GwtGnatMetrics.ABSTRACT_TYPES,
-                        GwtGnatMetrics.PRIVATE_TYPES,
-                        GwtGnatMetrics.PUBLIC_TYPES,
-                        GwtGnatMetrics.PUBLIC_SUBPROGRAMS});
+                        Metrics.COMPLEXITY});
         }
 
         @Override
@@ -67,7 +61,8 @@ public class GnatMetricViewer extends Page {
             addCell(panel,
                     resource.getMeasure(Metrics.LINES),
                     resource.getMeasure(Metrics.NCLOC),
-                    resource.getMeasure(GwtGnatMetrics.BLANK_LINE));
+                    resource.getMeasure(GwtGnatMetrics.BLANK_LINE),
+                    resource.getMeasure(GwtGnatMetrics.LSLOC));
 
             addCell(panel,
                     resource.getMeasure(Metrics.COMMENT_LINES_DENSITY),
@@ -75,33 +70,15 @@ public class GnatMetricViewer extends Page {
                     resource.getMeasure(GwtGnatMetrics.EOL_COMMENTS));
 
             addCell(panel,
-                    resource.getMeasure(GwtGnatMetrics.ALL_DCLS),
-                    resource.getMeasure(GwtGnatMetrics.ALL_SATEMENTS),
-                    resource.getMeasure(GwtGnatMetrics.LSLOC));
-
-            addCell(panel,
-                    resource.getMeasure(GwtGnatMetrics.CONSTRUCT_NESTING),
                     resource.getMeasure(GwtGnatMetrics.MAX_LOOP_NESTING),
-                    resource.getMeasure(GwtGnatMetrics.UNIT_NESTING),
-                    resource.getMeasure(GwtGnatMetrics.EXTRA_EXIT_POINTS));
+                    resource.getMeasure(Metrics.COMPLEXITY));
 
             addCell(panel,
                     resource.getMeasure(GwtGnatMetrics.STATEMENT_COMPLEXITY),
-                    resource.getMeasure(GwtGnatMetrics.SHORT_CIRCUIT_COMPLEXITY),
-                    resource.getMeasure(Metrics.COMPLEXITY),
                     resource.getMeasure(GwtGnatMetrics.ESSENTIAL_COMPLEXITY));
 
             addCell(panel,
-                    resource.getMeasure(GwtGnatMetrics.ALL_TYPES),
-                    resource.getMeasure(GwtGnatMetrics.TAGGED_TYPES),
-                    resource.getMeasure(GwtGnatMetrics.ABSTRACT_TYPES),
-                    resource.getMeasure(GwtGnatMetrics.PRIVATE_TYPES),
-                    resource.getMeasure(GwtGnatMetrics.PUBLIC_TYPES));
-
-
-            addCell(panel,
-                    resource.getMeasure(GwtGnatMetrics.ALL_SUBPROGRAMS),
-                    resource.getMeasure(GwtGnatMetrics.PUBLIC_SUBPROGRAMS));
+                    resource.getMeasure(GwtGnatMetrics.EXPRESSION_COMPLEXITY));
 
             if (panel.getWidgetCount() > 0) {
                 header.add(panel);

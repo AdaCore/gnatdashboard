@@ -2,7 +2,7 @@
  * Sonar Ada Plugin
  *  Copyright (C) 2012-2013, AdaCore
  */
-package org.sonar.plugins.ada.codepeer.gcov;
+package org.sonar.plugins.ada.gcov;
 
 import java.io.File;
 import java.io.FileReader;
@@ -20,7 +20,6 @@ import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.PropertiesBuilder;
-import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.utils.ParsingUtils;
@@ -43,7 +42,7 @@ public class GCovSensor extends AdaSensor {
 
     /**
      * Parse GCov JSON report to retrieve coverage information.
-     *
+
      * @param project current analyzed project
      * @param context Sensor's context
      * @param report GCov JSON report
@@ -91,7 +90,7 @@ public class GCovSensor extends AdaSensor {
     /**
      * Check that retrieved information from GCov report are valid: every
      * parameter must not be null or empty
-     *
+
      * @param file
      * @param directory
      * @param prj

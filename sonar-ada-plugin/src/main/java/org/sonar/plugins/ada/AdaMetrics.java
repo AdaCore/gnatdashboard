@@ -29,23 +29,17 @@ public final class AdaMetrics {
     public static final String ALL_LINES = "all_lines";
     public static final String CODE_LINES = "code_lines";
     public static final String BLANK_LINES = "blank_lines";
+    public static final String LSLOC = "lsloc";
 
     public static final String COMMENT_LINES = "comment_lines";
     public static final String EOL_COMMENTS = "eol_comments";
     public static final String COMMENT_PERCENTAGE = "comment_percentage";
 
-    public static final String ALL_SATEMENTS = "all_stmts";
-    public static final String ALL_DCLS = "all_dcls";
-    public static final String LSLOC = "lsloc";
-
-    public static final String CONSTRUCT_NESTING = "construct_nesting";
-    public static final String MAX_LOOP_NESTING = "max_loop_nesting";
-    public static final String EXTRA_EXIT_POINTS = "extra_exit_points";
-
     public static final String STATEMENT_COMPLEXITY = "statement_complexity";
-    public static final String SHORT_CIRCUIT_COMPLEXITY = "short_circuit_complexity";
+    public static final String EXPRESSION_COMPLEXITY = "expression_complexity";
     public static final String CYCLOMATIC_COMPLEXITY = "cyclomatic_complexity";
     public static final String ESSENTIAL_COMPLEXITY = "essential_complexity";
+    public static final String MAX_LOOP_NESTING = "max_loop_nesting";
 
     /**
      * Mapping between GnatMetric keys and Sonar metrics keys.
@@ -72,7 +66,7 @@ public final class AdaMetrics {
     /**
      * If the map is empty, fill it with the corresponding metric in Sonar and
      * the one defined in GnatMetric.
-     *
+
      * @return map<String key, Metric metric>
      */
     public Map<String, Metric> getMetricsMap() {
@@ -91,6 +85,42 @@ public final class AdaMetrics {
     }
 
     /**
+     * Retrieve a Sonar metric from its key
+
+     * @param key metric key
+     * @return metric or null if no metric found
+     */
+    public Metric getSonarMetricByKey(String key) {
+        for (Metric m : CoreMetrics.getMetrics()) {
+            if (m.getKey().equals(key)) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Create a the mapping property file
+     */
+    private void dumpMetrics(File file) {
+        try {
+            Properties prop = new Properties();
+
+            for (String key : getMetricsMap().keySet()) {
+
+                //Set propety's key to GnatMetric key and property's value
+                //to the corresponding sonar metric's key (or GnatMetrics#Metric)
+                prop.setProperty(key, metricByKey.get(key).getKey());
+            }
+            file.createNewFile();
+            prop.store(new FileOutputStream(file), "Mapping between GnatMetric's key and correpondant Sonar metric's key");
+        } catch (IOException ex) {
+            AdaUtils.LOG.info("Unable to dump metric's configuration to a property file");
+            AdaUtils.LOG.info(ex.getMessage());
+        }
+    }
+
+        /**
      * Retrieve metric's key mapping between GnatMetric and Sonar metrics from
      * a property file; creates the file if it does not exist.
      * Is not use for now, see METRICS_PROPERTIES_PATH attribute comment.
@@ -126,42 +156,6 @@ public final class AdaMetrics {
             } catch (IOException ex) {
                 AdaUtils.LOG.warn("Unable to load metrics form the property file");
             }
-        }
-    }
-
-    /**
-     * Retrieve a Sonar metric from its key
-     *
-     * @param key metric key
-     * @return metric or null if no metric found
-     */
-    public Metric getSonarMetricByKey(String key) {
-        for (Metric m : CoreMetrics.getMetrics()) {
-            if (m.getKey().equals(key)) {
-                return m;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Create a the mapping property file
-     */
-    private void dumpMetrics(File file) {
-        try {
-            Properties prop = new Properties();
-
-            for (String key : getMetricsMap().keySet()) {
-
-                //Set propety's key to GnatMetric key and property's value
-                //to the corresponding sonar metric's key (or GnatMetrics#Metric)
-                prop.setProperty(key, metricByKey.get(key).getKey());
-            }
-            file.createNewFile();
-            prop.store(new FileOutputStream(file), "Mapping between GnatMetric's key and correpondant Sonar metric's key");
-        } catch (IOException ex) {
-            AdaUtils.LOG.info("Unable to dump metric's configuration to a property file");
-            AdaUtils.LOG.info(ex.getMessage());
         }
     }
 }

@@ -72,7 +72,6 @@ public abstract class AdaSensor implements Sensor {
             String reportPathPropertyKey,
             String defaultReportPath) {
         String reportPath = conf.getString(reportPathPropertyKey);
-        System.out.println(reportPath);
         if (reportPath == null) {
             reportPath = defaultReportPath;
         }
@@ -97,7 +96,7 @@ public abstract class AdaSensor implements Sensor {
 
     /**
      * Save a violation if the rule and the file are found.
-     *
+
      * @return Boolean: used by Codepeer Sensor to save category/severity
      *                  violation metric measure as we don't want to save this
      *                  measure if the violation has not been save. It will may

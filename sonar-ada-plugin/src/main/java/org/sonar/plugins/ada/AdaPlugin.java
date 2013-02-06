@@ -14,13 +14,13 @@ import org.sonar.plugins.ada.codepeer.AdaCodePeerRuleRepository;
 import org.sonar.plugins.ada.codepeer.AdaCodePeerSensor;
 import org.sonar.plugins.ada.codepeer.CodePeerMetrics;
 import org.sonar.plugins.ada.codepeer.CodePeerViolationsDecorator;
-import org.sonar.plugins.ada.codepeer.gcov.GCovSensor;
+import org.sonar.plugins.ada.gcov.GCovSensor;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckRuleRepository;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckSensor;
 import org.sonar.plugins.ada.gnatcheck.GnatCheckMetrics;
 import org.sonar.plugins.ada.gnatcheck.GnatCheckViolationsDecorator;
-import org.sonar.plugins.ada.gnatcheck.GnatCheckWeightedViolationsDecorator;
 import org.sonar.plugins.ada.gnatcheck.GnatCheckViolationsDensityDecorator;
+import org.sonar.plugins.ada.gnatcheck.GnatCheckWeightedViolationsDecorator;
 import org.sonar.plugins.ada.gnatmetric.AdaGnatMetricSensor;
 import org.sonar.plugins.ada.gnatmetric.GnatMetrics;
 import org.sonar.plugins.ada.ui.gwt.GnatMetricViewerDefinition;
@@ -60,7 +60,7 @@ public final class AdaPlugin extends SonarPlugin {
 
     /**
      * Returns Sonar Extensions used into the plugin
-     *
+
      * @return the classes to use into the plugin
      */
     public List getExtensions() {

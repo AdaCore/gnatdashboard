@@ -12,7 +12,6 @@ import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Project;
 import org.sonar.api.utils.SonarException;
 import org.sonar.api.utils.StaxParser;
 import org.sonar.plugins.ada.AdaMetrics;
@@ -42,13 +41,14 @@ public class AdaGnatMetricSensor extends AdaSensor {
     }
 
 
+    @Override
     protected String defaultReportPath() {
         return "reports/gnatmetric-report.xml";
     }
 
     /**
      * Parse GNATmetric XML report to retrieve violations information.
-     *
+
      * @param project current analyzed project
      * @param context Sensor's context
      * @param report GNATmetric XML report
@@ -62,25 +62,48 @@ public class AdaGnatMetricSensor extends AdaSensor {
              * {@inheritDoc}
              */
             public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
+                /** In GNAT metric output, complexity is reported for
+                 * specification files only if it contains a function
+                 * expression, otherwise complexity is not reported at all
+                 * However, 0 is considered as the implicit value of
+                 * complexity; as the cyclomatic complexity is mapped on the
+                 * Sonar complexity specific process has to be done for this
+                 * metric in order to set the value to 0 when it is not mentioned
+                **/
+                boolean forceZeroForSonarComplexity = true;
+
                 //global
                 rootCursor.advance();
 
-                //file
+                // <file>
                 SMInputCursor fileCursor = rootCursor.childElementCursor("file");
                 while (fileCursor.getNext() != null) {
+                    // Re-initialized for each file
+                    forceZeroForSonarComplexity = true;
                     String file = fileCursor.getAttrValue("name");
 
-                    //metric
+                    // <metric>
                     SMInputCursor metricCursor = fileCursor.childElementCursor("metric");
                     while (metricCursor.getNext() != null) {
                         String metrickey = metricCursor.getAttrValue("name");
                         Double value = metricCursor.getElemDoubleValue();
+
                         //Save measure if retrieved values are valid
                         if (isInputValid(file, metrickey, value)) {
+
                             saveMeasure(context, file, metrickey, value);
+
+                            if (metrickey.equals(AdaMetrics.CYCLOMATIC_COMPLEXITY)){
+                                forceZeroForSonarComplexity = false;
+                            }
                         } else {
-                            AdaUtils.LOG.warn("AdaGnatMetric warning, skipping metric: {}", metrickey);
+                            AdaUtils.LOG.warn("AdaGnatMetric warning:" +
+                           "metric's inputs are invalid, skipping metric: {}",
+                           metrickey);
                         }
+                    }
+                    if (forceZeroForSonarComplexity){
+                        saveMeasure(context, file, AdaMetrics.CYCLOMATIC_COMPLEXITY, 0d);
                     }
                 }
             }
@@ -88,7 +111,7 @@ public class AdaGnatMetricSensor extends AdaSensor {
             /**
              * Check that retrieved information from GNATmetric report are
              * valid: every parameter must not be null or empty
-             *
+
              * @param file
              * @param ruleKey
              * @param directory
@@ -108,19 +131,21 @@ public class AdaGnatMetricSensor extends AdaSensor {
 
     /**
      * Save a measure if the corresponding file and metric are found.
-     *
+
      * File existence is check via AdaSourceImporter#sourceMap Metric existence
      * is check via AdaMetrics#metricByKey
-     *
+
      * @param context
      * @param file
      * @param metrickey
      * @param value
      */
-    public void saveMeasure(SensorContext context, String fileName, String metrickey, Double value) {
+    private void saveMeasure(SensorContext context, String fileName, String metrickey, Double value) {
         String file = StringUtils.substringAfterLast(fileName, "/");
-        // To be replace by context.getResource and remove srcMap
+        // /!\ To be replace by context.getResource(new File(..)) and remove srcMap.
+        // Add full path of source in GNAT metric report
         AdaFile resource = AdaSourceImporter.getSourceMap().get(file);
+        // Check that file exist in imported tree
         if (resource != null) {
             Metric metric = AdaMetrics.INSTANCE.getMetricsMap().get(metrickey);
             if (metric != null) {
