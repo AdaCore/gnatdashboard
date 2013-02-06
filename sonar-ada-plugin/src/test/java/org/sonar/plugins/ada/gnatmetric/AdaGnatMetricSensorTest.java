@@ -43,15 +43,13 @@ public class AdaGnatMetricSensorTest {
     @Test
     public void testSaveCorrectNumberMeasures(){
         sensor.analyse(project, context);
-        verify(context, times(24)).saveMeasure(any(AdaFile.class),
+        verify(context, times(12)).saveMeasure(any(AdaFile.class),
                                                any(Metric.class),
                                                any(Double.class));
     }
 
-
     @Test
     public void testDontSaveMeasureWhenWrongReport(){
-        //Set configure mock: return a wrong report.
         Configuration config = mock(Configuration.class);
         when(conf.getString(AdaGnatMetricSensor.REPORT_PATH_KEY))
                 .thenReturn("reports/wrong-gnatmetric-report.xml");
