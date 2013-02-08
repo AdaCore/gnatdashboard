@@ -7,6 +7,7 @@ package org.sonar.plugins.ada.codepeer;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.List;
 import org.sonar.api.batch.Decorator;
 import org.sonar.api.batch.DecoratorContext;
@@ -24,15 +25,22 @@ import org.sonar.plugins.ada.utils.AdaUtils;
 import org.sonar.plugins.ada.utils.Pair;
 
 /**
- * Decorator for Codepeer metrics.
+ * Decorator for Codepeer violations metrics.
  *
  * Uses same algo than in org.sonar.plugins.core.sensors.ViolationsDecorator
+ * This decorator is necessary since GNATcheck and CodePeer violations are
+ * separated, as there are processed as violations but the semantic of
+ * the information given by those tool are different; so it is needed
+ * to be able to distinguish them in order to represent it differently
+ * in the GUI.
+ *
  */
 public class CodePeerViolationsDecorator implements Decorator {
 
     private Integer total = 0;
     private Multiset<Rule> rules = HashMultiset.create();
     private Multiset<Pair> severitiesCategoies = HashMultiset.create();
+
 
     public void decorate(Resource resource, DecoratorContext context) {
         if (shouldDecorateResource(resource)) {
@@ -43,19 +51,35 @@ public class CodePeerViolationsDecorator implements Decorator {
         }
     }
 
+    /**
+     * Decorates only for Ada project
+     */
     public boolean shouldExecuteOnProject(Project project) {
         return project.getLanguageKey().equals(Ada.KEY);
     }
 
+    /**
+     * Decorates only on Ada resource
+     */
     private boolean shouldDecorateResource(Resource resource) {
         return resource.getLanguage().getKey().equals(Ada.KEY);
     }
 
+    /**
+     * Reset variable and container that store temporary values
+     */
     private void resetCounters() {
         severitiesCategoies.clear();
         total = 0;
     }
 
+    /**
+     * Save CodePeer violations measure for the current resource.
+     * Count the number of violations for each association of CodePeer
+     * categories - severities
+     *
+     * @param context to save the measure
+     */
     private void saveViolationsBySeverityAndCategory(DecoratorContext context) {
         for (CodePeerRuleCategory category : CodePeerRuleCategory.values()) {
             for (RulePriority severity : RulePriority.values()) {
@@ -72,6 +96,11 @@ public class CodePeerViolationsDecorator implements Decorator {
         }
     }
 
+    /**
+     * Save total of violations of all kind for the current resource.
+     *
+     * @param context to save the measure
+     */
     private void saveTotalViolations(DecoratorContext context) {
         // Finds violations measure for the resource
         if (context.getMeasure(CodePeerMetrics.CODEPEER_VIOLATIONS) == null) {
@@ -83,6 +112,12 @@ public class CodePeerViolationsDecorator implements Decorator {
         }
     }
 
+    /**
+     * Initializes counters.
+     *
+     * @param context to retrieve all the violations save for the current
+     *        resource
+     */
     private void countViolations(DecoratorContext context) {
         List<Violation> violations = context.getViolations();
         for (Violation violation : violations) {

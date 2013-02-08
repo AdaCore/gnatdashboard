@@ -70,6 +70,7 @@ public class AdaCodePeerSensor extends AdaSensor {
                 String msg = (String) error.get("msg");
                 String prj = (String) error.get("prj");
 
+                // Save violation only if all fields are non-null & non-empty
                 if (isInputValid(file, ruleKey, dir, line, msg, prj)) {
 
                    saveViolation(context, AdaCodePeerRuleRepository.KEY,
