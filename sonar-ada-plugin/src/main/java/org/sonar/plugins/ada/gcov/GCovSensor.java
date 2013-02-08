@@ -42,7 +42,7 @@ public class GCovSensor extends AdaSensor {
 
     /**
      * Parse GCov JSON report to retrieve coverage information.
-
+     *
      * @param project current analyzed project
      * @param context Sensor's context
      * @param report GCov JSON report
@@ -90,7 +90,7 @@ public class GCovSensor extends AdaSensor {
     /**
      * Check that retrieved information from GCov report are valid: every
      * parameter must not be null or empty
-
+     *
      * @param file
      * @param directory
      * @param prj
@@ -106,7 +106,13 @@ public class GCovSensor extends AdaSensor {
             String line = (String) obj;
             String hitsLine = (String) hits.get(obj);
             if (!StringUtils.isEmpty(line) && !StringUtils.isEmpty(hitsLine)) {
-                data.addLine(line, Integer.parseInt(hitsLine));
+                try {
+                    data.addLine(line, Long.parseLong(hitsLine));
+                } catch (NumberFormatException e) {
+                    AdaUtils.LOG.warn("Invalid value for number of hit: " + hitsLine
+                            + ", considering the line as uncovered at {}:{}", line, resource.getName());
+                    data.addLine(line, 0l);
+                }
             }
         }
         for (Measure measure : data.getMeasures()) {
@@ -121,10 +127,10 @@ public class GCovSensor extends AdaSensor {
         private int coveredLines = 0;
         private int coveredConditions = 0;
         private Resource<?> file;
-        private PropertiesBuilder<String, Integer> lineHitsBuilder = new PropertiesBuilder<String, Integer>(CoreMetrics.COVERAGE_LINE_HITS_DATA);
+        private PropertiesBuilder<String, Long> lineHitsBuilder = new PropertiesBuilder<String, Long>(CoreMetrics.COVERAGE_LINE_HITS_DATA);
         private PropertiesBuilder<String, String> branchHitsBuilder = new PropertiesBuilder<String, String>(CoreMetrics.BRANCH_COVERAGE_HITS_DATA);
 
-        public void addLine(String lineId, int lineHits) {
+        public void addLine(String lineId, Long lineHits) {
             lines++;
             if (lineHits > 0) {
                 coveredLines++;

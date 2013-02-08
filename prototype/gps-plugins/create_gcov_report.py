@@ -55,16 +55,22 @@ class GCovOutputParser (object):
       gcov generated file.
     """
 
-    def get_gcov_location(self,src_map, basename):
+    def get_gcov_location(self, src_map, basename, gcov_path):
         """Retrieves gcov file location from basename source.
 
           Return: None if gcov file not found
           /!\ Prototype version: to be re-arranged accordingly to real
               connstraints. For now, returns the same location, for test.
         """
-        return os.path.join(src_map.get_obj_dir(basename), basename + '.gcov')
+        if gcov_path != '':
+            return os.path.join(gcov_path, basename + '.gcov')
+        elif src_map.get_obj_dir(basename):
+            return os.path.join(src_map.get_obj_dir(basename),
+                                basename + '.gcov')
+        else:
+            return None
 
-    def parse_output(self, gcov_report, src_map):
+    def parse_output(self, gcov_report, src_map, gcov_path):
         """Parse gcov output.
 
           Parameters:
@@ -75,39 +81,43 @@ class GCovOutputParser (object):
         sources = [basename for basename in src_map.get_all_basename()
                    if '.adb' in basename]
         for basename in sources:
-            gcov_location = self.get_gcov_location(src_map, basename)
+            gcov_location = self.get_gcov_location(src_map, basename, gcov_path)
             # Create a report for the project
 
             # If gcov file has been found
             if gcov_location:
+                try:
+                    with open(gcov_location, 'r') as gcov_file:
 
-                with open(gcov_location, 'r') as gcov_file:
+                        # Create GCoveOutput for the source
+                        gcov_output = GCovOutput(src_map.get_path(basename),
+                                                 src_map.get_directory(basename),
+                                                 src_map.get_project(basename))
 
-                    # Create GCoveOutput for the source
-                    gcov_output = GCovOutput(src_map.get_path(basename),
-                                             src_map.get_directory(basename),
-                                             src_map.get_project(basename))
+                        # Retrieve information for every source line
+                        # skip first 2 lines
+                        for line in gcov_file.readlines()[2:]:
+                            # Skip useless line
+                            if line.strip()[0] != '-':
+                                line_infos = line.split(':', 2)
+                                hits = line_infos[0].strip()
+                                # Line is not covered
+                                if hits == '#####' or hits == '=====':
+                                    hits = '0'
+                                line_id = line_infos[1].strip()
+                                gcov_output.add_hit_for_line(line_id, hits)
 
-                    # Retrieve information for every source line
-                    # skip first 2 lines
-                    for line in gcov_file.readlines()[2:]:
-                        # Skip useless line
-                        if line.strip()[0] != '-':
-                            line_infos = line.split(':', 2)
-                            hits = line_infos[0].strip()
-                            # Line is not covered
-                            if hits == '#####':
-                                hits = '0'
-                            line_id = line_infos[1].strip()
-                            gcov_output.add_hit_for_line(line_id, hits)
-
-                #Save GCovOutput for the source in report
-                # 'add_violations': function's name doesn't fit here,
-                #  will be changed for non prototype version.
-                gcov_report.add_violation(gcov_output)
+                    #Save GCovOutput for the source in report
+                    # 'add_violations': function's name doesn't fit here,
+                    #  will be changed for non prototype version.
+                    gcov_report.add_violation(gcov_output)
+                except IOError as e:
+                    print 'Unable to process gcov file for source : ' + basename
+                    print e
 
             else:
                 print 'Unable to found gcov file for source: ' + basename
+                print 'Location for gcov output files can be set through switch : --gcov-path=/absolute/path/to/location'
 
 ## _parse_command_line  #######################################################
 ##
@@ -122,6 +132,9 @@ def _parse_command_line():
     parser.add_argument('--json-tree=', action='store', dest='json_tree',
                         type=str, help='Absolute path to json file that' +
                         'contains project tree', required=True)
+    parser.add_argument('--gcov-path=', action='store', dest='gcov_path',
+                        type=str, help='Absolute path to .gcov file',
+                        default=None, required=False)
     return parser.parse_args()
 
 ## _entry_point #############################################################
@@ -136,7 +149,7 @@ def _entry_point():
     report_exporter = ReportExporter()
 
     # Execution
-    gcov_parser.parse_output(gcov_report, src_map)
+    gcov_parser.parse_output(gcov_report, src_map, cmd_line.gcov_path)
     report_exporter.export_report(os.path.join(cmd_line.report_path, REPORT),
                                   gcov_report)
 

@@ -108,7 +108,10 @@ class SourceMap(object):
             output = json_tree.read()
             source_tree = json.loads(output)
             for prj in source_tree:
-                obj_dir = source_tree[prj][OBJ_DIR_KEY]
+                obj_dir = None
+                # If  the project has an object directory
+                if len(source_tree[prj]) > 1:
+                    obj_dir = source_tree[prj][OBJ_DIR_KEY]
                 for src_dir in source_tree[prj][SRC_DIR_KEY]:
                     for src in source_tree[prj][SRC_DIR_KEY][src_dir]:
                         source = Source(src, src_dir, prj, obj_dir)

@@ -84,7 +84,9 @@ class Project(object):
 
 
   def object_dir(self):
-    """returns the object dir path for this project file."""
+    """returns the object dir path for this project file.
+       returns None if the project file has no object directory.
+    """
 
     # GPS.Project.object_dirs function takes an optional parameter:
     #
@@ -95,9 +97,12 @@ class Project(object):
     #       :param recursive: A boolean
     #       :return: A list of strings
 
-    # In the case of a non-recursive call, GPS.Project.object_dirs should
-    # always return a list containing a single string.
-    return self.__gps_project.object_dirs(False)[0]
+    # In the case of a non-recursive call, GPS.Project.object_dirs returns
+    #  a empty list.
+    object_dirs = self.__gps_project.object_dirs(False)
+    if object_dirs:
+        return object_dirs[0]
+    return None
 
 
   def sources(self):
@@ -145,7 +150,9 @@ class Project(object):
       source_dirs[source_dir].append(filename)
 
     project_repr = {}
-    project_repr['Object_Dir'] = self.object_dir()
+    object_dir = self.object_dir()
+    if object_dir:
+        project_repr['Object_Dir'] = object_dir
     project_repr['Source_Dirs'] = source_dirs
 
     return repr(project_repr)

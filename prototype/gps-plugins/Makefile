@@ -5,17 +5,18 @@
 # 				report for the given project
 ###
 
-GPR_PATH=`pwd`/../../share/examples/sdc/sdc.gpr
 SCRIPT=run.sh
-#REPORT_DIR_PATH=`pwd`/../../share/examples/sdc/report/
-REPORT_DIR_PATH=/Users/kiwi/code/gps/gps/report/
 
-GM_OUTPUT_PATH=/Users/kiwi/code/gps/gps/metrix.xml
+#######
+# SDC #
+#######
+
+GPR_PATH=`pwd`/../../share/examples/sdc/sdc.gpr
+REPORT_DIR_PATH=`pwd`/../../share/examples/sdc/report/
 GC_OUTPUT_PATH=`pwd`/../../share/examples/sdc/gnatcheck.out
-#GM_OUTPUT_PATH=`pwd`/../../share/examples/sdc/metrix.xml
+GM_OUTPUT_PATH=`pwd`/../../share/examples/sdc/metrix.xml
 CP_OUTPUT_PATH=`pwd`/../../share/examples/sdc/codepeer.out
-TREE_FILE_PATH=/Users/kiwi/code/gps/gps/project_tree.json
-#TREE_FILE_PATH=`pwd`/../../share/examples/sdc/project_tree.json
+TREE_FILE_PATH=`pwd`/../../share/examples/sdc/project_tree.json
 
 all: tree report
 
@@ -32,6 +33,9 @@ cp:
 
 gm:
 	python create_gm_report.py --json-tree=$(TREE_FILE_PATH) --target=$(REPORT_DIR_PATH) --gm_output=$(GM_OUTPUT_PATH)
+
+gcov:
+	python create_gcov_report.py --json-tree=$(TREE_FILE_PATH) --report-dir=$(REPORT_DIR_PATH) --gcov-path=$(GCOV_PATH)
 
 clean:
 	rm *.pyc
