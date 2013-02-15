@@ -14,7 +14,7 @@
 #
 
 # Displays the usage string and exits with ecode 1.
-function usage() {
+usage() {
   echo 'usage: run.sh [-d|--debug] PROJECT_FILE' 1>&2
   exit 1
 }
@@ -47,7 +47,7 @@ if [ -z "$PROJECT_FILE" ]; then
 fi
 
 # Spawn gps with the correct command line arguments.
-gps $GPS_HIDE_SWITCH -P $PROJECT_FILE --load=python:qmt/qmt.py
+gps $GPS_HIDE_SWITCH -P $PROJECT_FILE --load=python:"$QMT_PATH"
 
 # Exits the script with GPS exit code.
 exit $?
