@@ -16,7 +16,7 @@ Sonar Ada Plugin:
 How to install the plugin:
 
   - make sure you have a sonar installed on your computer
-  - set the environment variable SONAR_HOME with path to Sonar home
+  - set the environment variable SONAR_HOME to the path to the Sonar home
   - run make 
   - restart Sonar
 
