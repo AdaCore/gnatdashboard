@@ -35,40 +35,43 @@ class CPOutputParser(object):
                       project. Allows to retrieve full path of a source file from its
                       basename.
         """
-        with open(output_path, 'r') as cp_output:
+        try:
+            with open(output_path, 'r') as cp_output:
 
-            for line in cp_output.readlines()[1:]:
-                #Set maxsplit at 4 because the rule message can contain commas
-                line_splited = line.split(',', 8)
-                source_path = line_splited[0].split('/')
-                # Retrieves base name only
+                for line in cp_output.readlines()[1:]:
+                    #Set maxsplit at 4 because the rule message can contain commas
+                    line_splited = line.split(',', 8)
+                    source_path = line_splited[0].split('/')
+                    # Retrieves base name only
 
-                try:
-                    source = src_map.get_source(source_path[len(source_path) - 1])
+                    try:
+                        source = src_map.get_source(source_path[len(source_path) - 1])
 
-                    # Parsing source file information
-                    prj = source.get_project()
-                    directory = source.get_directory()
-                    line = line_splited[1]
+                        # Parsing source file information
+                        prj = source.get_project()
+                        directory = source.get_directory()
+                        line = line_splited[1]
 
-                    # Parsing rule's information
-                    rule_key = line_splited[3]
-                    severity = SEVERITIES[line_splited[6]]
-                    category = line_splited[7]
-                    # Removes double quote
-                    message = line_splited[8][1:-1]
+                        # Parsing rule's information
+                        rule_key = line_splited[3]
+                        severity = SEVERITIES[line_splited[6]]
+                        category = line_splited[7]
+                        # Removes double quote
+                        message = line_splited[8][1:-1]
 
-                    # In Sonar Codepeer rule repository, a rule has been
-                    # duplicated for each priorities and each category.
-                    # See TN L919-022
-                    rule_key = severity.upper() + RULE_SEPARATOR  + category.upper() + RULE_SEPARATOR + rule_key
+                        # In Sonar Codepeer rule repository, a rule has been
+                        # duplicated for each priorities and each category.
+                        # See TN L919-022
+                        rule_key = severity.upper() + RULE_SEPARATOR  + category.upper() + RULE_SEPARATOR + rule_key
 
-                    # Creates and saves the violation in given report
-                    violation = Violation(prj, directory, source.full_name, line,
-                                          rule_key, message)
-                    report.add_violation(violation)
-                except KeyError as e:
-                    print "Skipping message, because source not found in project tree: " + line_splited[0]
+                        # Creates and saves the violation in given report
+                        violation = Violation(prj, directory, source.full_name, line,
+                                            rule_key, message)
+                        report.add_violation(violation)
+                    except KeyError as e:
+                        print "Skipping message, because source not found in project tree: " + line_splited[0]
+        except IOError as e:
+            print e
 
 ## _parse_command_line  #############################################################
 ##

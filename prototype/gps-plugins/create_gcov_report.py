@@ -62,7 +62,7 @@ class GCovOutputParser (object):
           /!\ Prototype version: to be re-arranged accordingly to real
               connstraints. For now, returns the same location, for test.
         """
-        if gcov_path != '':
+        if gcov_path != '' and gcov_path != None:
             return os.path.join(gcov_path, basename + '.gcov')
         elif src_map.get_obj_dir(basename):
             return os.path.join(src_map.get_obj_dir(basename),
@@ -112,12 +112,10 @@ class GCovOutputParser (object):
                     #  will be changed for non prototype version.
                     gcov_report.add_violation(gcov_output)
                 except IOError as e:
-                    print 'Unable to process gcov file for source : ' + basename
-                    print e
+                    print 'No gcov report found for source : ' + basename
 
             else:
-                print 'Unable to found gcov file for source: ' + basename
-                print 'Location for gcov output files can be set through switch : --gcov-path=/absolute/path/to/location'
+                print 'No gcov report found for source: ' + basename
 
 ## _parse_command_line  #######################################################
 ##
