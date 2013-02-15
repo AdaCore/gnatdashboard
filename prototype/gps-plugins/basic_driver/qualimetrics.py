@@ -150,7 +150,7 @@ def _entry_point():
                                                'lib', 'create_gcov_report.py')
         gcov_switches = '--json-tree=' + project_tree_path + ' --report-dir=' + reportDir
         if gcov_out:
-            switches = switches + ' --gcov-path=' + gcov_out
+            gcov_switches = switches + ' --gcov-path=' + gcov_out
         # Execute
         exec_tool(script, reportDir, gcov_switches)
         # Set sonar conf
