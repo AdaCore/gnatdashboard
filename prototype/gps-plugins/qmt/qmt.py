@@ -133,21 +133,58 @@ class Project(object):
         {
           "Object_Dir": "path/to/object/dir",
           "Source_Dirs": {
-            "Source_Dir_1": ["source.ads", "source.adb"],
-            "Source_Dir_2": ["foobar.ads", "foobar.adb"]
+            "Source_Dir_1": {
+                "ada": {
+                    "spec": ["bla.ads", "foo.ads"],
+                    "body": ["bla.adb", "foo.adb"]
+                }
+                "c": {
+                    "spec": ["foo.h"],
+                    "body": ["foo.c"]
+                }
+            },
+            "Source_Dir_2": { ... }
           }
         }
     """
 
+    p = self.__gps_project
+    suffixes = {}
+
+    for lang in p.languages():
+      spec = p.get_attribute_as_string ('spec_suffix', package='naming',
+                                        index=lang)
+      body = p.get_attribute_as_string ('body_suffix', package='naming',
+                                        index=lang)
+      suffixes[spec] = (lang, 'spec')
+      suffixes[body] = (lang, 'body')
+
     source_dirs = {}
 
-    for source_dir in self.__gps_project.source_dirs():
-      source_dirs[source_dir[:-1]] = []
+    for source_dir in p.source_dirs():
+      # Initialize each source directories to an empty dictionary.
+      # Also initialize SPEC and BODY arrays for each language detected.
 
-    for source in self.__gps_project.sources():
+      sdir = source_dir[:-1]
+      source_dirs[sdir] = {}
+
+      for lang in p.languages():
+        source_dirs[sdir][lang] = {}
+        source_dirs[sdir][lang]['spec'] = []
+        source_dirs[sdir][lang]['body'] = []
+
+    for source in p.sources():
+      # Organize filenames by source directory, language and kind
+      # (specification or implementation).
+
       (source_dir, filename) = os.path.split(source.name())
       assert source_dir in source_dirs.keys()
-      source_dirs[source_dir].append(filename)
+
+      ext = os.path.splitext(filename)[1]
+      assert ext in suffixes
+
+      (lang, kind) = suffixes[ext]
+      source_dirs[source_dir][lang][kind].append(filename)
 
     project_repr = {}
     object_dir = self.object_dir()
