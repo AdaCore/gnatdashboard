@@ -31,7 +31,7 @@ SONAR_CONF={'sonar.projectKey'                : None,
             'sonar.language'                  : 'ada',
             'sonar.sourceEncoding'            : 'UTF-8',
             'sources'                         : '.',
-            'sonar.ada.src.projectTree'           : None,
+            'sonar.ada.projectTree'           : None,
             'sonar.ada.gnatmetric.reportPath' : None,
             'sonar.ada.codepeer.reportPath'   : None,
             'sonar.ada.gcov.reportPath'       : None}
