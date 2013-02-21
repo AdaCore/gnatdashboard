@@ -14,7 +14,6 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.utils.SonarException;
 import org.sonar.api.utils.StaxParser;
-import org.sonar.plugins.ada.AdaMetrics;
 import org.sonar.plugins.ada.AdaSourceImporter;
 import org.sonar.plugins.ada.resources.AdaFile;
 import org.sonar.plugins.ada.utils.AdaSensor;
@@ -40,7 +39,6 @@ public class AdaGnatMetricSensor extends AdaSensor {
         return REPORT_PATH_KEY;
     }
 
-
     @Override
     protected String defaultReportPath() {
         return "reports/gnatmetric-report.xml";
@@ -48,29 +46,30 @@ public class AdaGnatMetricSensor extends AdaSensor {
 
     /**
      * Parse GNATmetric XML report to retrieve violations information.
-
+     *
      * @param project current analyzed project
      * @param context Sensor's context
      * @param report GNATmetric XML report
      */
     @Override
-    protected void processReport(final SensorContext context, File report){
+    protected void processReport(final SensorContext context, File report) {
         AdaUtils.LOG.info("---- GnatMetric Analyser");
         StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
-
             /**
              * {@inheritDoc}
              */
             public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-                /** In GNAT metric output, complexity is reported for
+                /**
+                 * In GNAT metric output, complexity is reported for
                  * specification files only if it contains a function
                  * expression, otherwise complexity is not reported at all
-                 * However, 0 is considered as the implicit value of
-                 * complexity; as the cyclomatic complexity is mapped on the
-                 * Sonar complexity specific process has to be done for this
-                 * metric in order to set the value to 0 when it is not mentioned
-                **/
-                boolean forceZeroForSonarComplexity = true;
+                 * However, 0 is considered as the implicit value of complexity;
+                 * as the cyclomatic complexity is mapped on the Sonar
+                 * complexity specific process has to be done for this metric in
+                 * order to set the value to 0 when it is not mentioned
+                *
+                 */
+                boolean forceZeroForSonarComplexity;
 
                 //global
                 rootCursor.advance();
@@ -93,17 +92,17 @@ public class AdaGnatMetricSensor extends AdaSensor {
 
                             saveMeasure(context, file, metrickey, value);
 
-                            if (metrickey.equals(AdaMetrics.CYCLOMATIC_COMPLEXITY)){
+                            if (metrickey.equals(GnatMetrics.Metrics.CYCLOMATIC_COMPLEXITY.key())) {
                                 forceZeroForSonarComplexity = false;
                             }
                         } else {
-                            AdaUtils.LOG.warn("AdaGnatMetric warning:" +
-                           "metric's inputs are invalid, skipping metric: {}",
-                           metrickey);
+                            AdaUtils.LOG.warn("AdaGnatMetric warning:"
+                                    + "metric's inputs are invalid, skipping metric: {}",
+                                    metrickey);
                         }
                     }
-                    if (forceZeroForSonarComplexity){
-                        saveMeasure(context, file, AdaMetrics.CYCLOMATIC_COMPLEXITY, 0d);
+                    if (forceZeroForSonarComplexity) {
+                        saveMeasure(context, file, GnatMetrics.Metrics.CYCLOMATIC_COMPLEXITY.key(), 0d);
                     }
                 }
             }
@@ -111,7 +110,7 @@ public class AdaGnatMetricSensor extends AdaSensor {
             /**
              * Check that retrieved information from GNATmetric report are
              * valid: every parameter must not be null or empty
-
+             *
              * @param file
              * @param ruleKey
              * @param directory
@@ -131,10 +130,10 @@ public class AdaGnatMetricSensor extends AdaSensor {
 
     /**
      * Save a measure if the corresponding file and metric are found.
-
-     * File existence is check via AdaSourceImporter#sourceMap Metric existence
-     * is check via AdaMetrics#metricByKey
-
+     *
+     * File existence is check via AdaSourceImporter#sourceMap
+     * Metric existence is check via GnatMetrics$Metrics enumeration
+     *
      * @param context
      * @param file
      * @param metrickey
@@ -147,14 +146,12 @@ public class AdaGnatMetricSensor extends AdaSensor {
         AdaFile resource = AdaSourceImporter.getSourceMap().get(file);
         // Check that file exist in imported tree
         if (resource != null) {
-            Metric metric = AdaMetrics.INSTANCE.getMetricsMap().get(metrickey);
-            if (metric != null) {
-                try {
-                    context.saveMeasure(resource, metric, value);
-                } catch (SonarException e) {
-                    AdaUtils.LOG.info(e.getMessage());
-                }
-            } else {
+            try {
+                Metric metric = GnatMetrics.Metrics.valueOf(metrickey.toUpperCase()).getMetric();
+                context.saveMeasure(resource, metric, value);
+            } catch (SonarException e) {
+                AdaUtils.LOG.info(e.getMessage());
+            } catch (IllegalArgumentException ex) {
                 AdaUtils.LOG.info("Skipping metric because unknown metric key: {}", metrickey);
             }
         } else {
