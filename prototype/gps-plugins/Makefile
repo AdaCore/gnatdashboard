@@ -1,4 +1,6 @@
 # Create package for basic qualimetrics driver, doesn't includ GNATcheck
+all: package
+
 package:
 	mkdir -p basic_qm_driver
 	cp -pf basic_driver/qualimetrics.py basic_qm_driver/

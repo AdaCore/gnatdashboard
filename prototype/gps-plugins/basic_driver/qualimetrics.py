@@ -2,201 +2,301 @@
 
 ## Imports #################################################################
 ##
+import logging
 import os
+import sys
+import os.path
 import ConfigParser
 import argparse
-import os.path
-from subprocess import call, Popen, PIPE
-import shlex
+import json
 import shutil
-import sys
+from subprocess import call, Popen, PIPE, STDOUT
+from ConfigParser import NoOptionError
 
 ##################
 #    CONSTANTS   #
 ##################
-BASE_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
-LOGS_DIR = 'logs'
-SONAR_FILE_NAME = 'sonar-project.properties'
+QMT_CONF_FILE = 'qualimetrics.cfg'
 # Default Qualimetrics configuration
-DEFAULT_CONFIG = {'project.version'            : '1.0',
-                  'project.key'                : 'default',
-                  'project.name'               : 'default',
-                  'gnatmetric.switches'        : '-x -U',
-                  'qualimetrics.reportDir.path': 'reports',
+BASE_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
+CURRENT_DIR = os.getcwd()
+DEFAULT_CONFIG = {'qualimetrics.reportDir.path': 'reports',
                   'gcov.outputDir.path'        : None}
-# Sonar configuration for an Ada project
-SONAR_CONF={'sonar.projectKey'                : None,
-            'sonar.projectName'               : None,
-            'sonar.projectVersion'            : None,
-            'sonar.language'                  : 'ada',
-            'sonar.sourceEncoding'            : 'UTF-8',
-            'sources'                         : '.',
-            'sonar.ada.projectTree'           : None,
-            'sonar.ada.gnatmetric.reportPath' : None,
-            'sonar.ada.codepeer.reportPath'   : None,
-            'sonar.ada.gcov.reportPath'       : None}
 
-
-## log #################################################################
+## Tool #########################################################
 ##
-def  log(tool, output):
-    """log output in logs/tool.log"""
+class Tool:
+    def __init__(self, name, script_name, report_name, qmt_key, sonar_key):
+        self.name = name
+        self.script_name = script_name
+        self.report_name = report_name
+        self.qmt_key = qmt_key
+        self.sonar_key = sonar_key
 
-    if not os.path.exists(LOGS_DIR):
-        os.makedirs(LOGS_DIR)
-    log_file = tool.replace(' ', '') + '.log'
-    with open(os.path.join(LOGS_DIR, log_file), 'w+') as log:
-        log.writelines(output)
-
-
-## exec_tool #################################################################
+## SonarConfiguration #########################################################
 ##
-def exec_tool(tool, reportDir, switches):
+class SonarConfiguration(object):
+    MAIN_SECTION = 'Sonar'
 
-    print '====== Running ' + tool
-    print '  switches: ' , switches
-    # Execute
-    cmd = tool
-    if switches:
-        cmd = cmd  + ' ' + switches
-    cmd = filter(None, cmd.split(' '))
-    try:
+    def __init__(self):
+        # Set output file path
+        self.output_file = os.path.join(CURRENT_DIR, 'sonar-project.properties')
+        # Create a configuration
+        self.configuration = ConfigParser.ConfigParser()
+        self.configuration.add_section(self.MAIN_SECTION)
+        # Enable case sensitive for key
+        self.configuration.optionxform = str
+        # Initialise configuration with default values
+        self.configuration. set(self.MAIN_SECTION, 'sonar.language', 'ada')
+        self.configuration. set(self.MAIN_SECTION, 'sonar.sourceEncoding','UTF-8')
+        self.configuration. set(self.MAIN_SECTION, 'sources', '.')
+
+    def add(self, key, value):
+        self.configuration.set(self.MAIN_SECTION, key, value)
+
+    def export(self):
+        # Dump the configuration file
+        with open(self.output_file, 'wb') as sonar_file:
+            self.configuration.write(sonar_file)
+
+## _get_logger_details #########################################################
+##
+def _get_logger_details(logger):
+    details = logger.findCaller()
+    return details[0] + ':' + str(details[1])
+
+## _create_logger  ############################################################
+##
+def _create_logger(logger_level):
+    """ Initialise a logger
+
+        Log will be printed in the standard output.
+    """
+    logging.basicConfig(format='[%(levelname)s] %(message)s', level=logger_level)
+    logger = logging.getLogger("qualimetrics")
+    return logger
+
+
+## ProjectTree  ###############################################################
+##
+class ProjectTree(object):
+    def __init__(self, gpr_path, output_dir):
+        self.gpr_path = gpr_path
+        self.output_file = os.path.join(output_dir, 'project_tree.json')
+
+    def create_tree(self, LOGGER):
+        LOGGER.info('=== Generating project json tree file')
+         # Set environement, required for script run.sh
+        qmt_script = os.path.join(BASE_DIR, 'lib', 'qmt.py')
+        os.environ['QMT_PATH'] = qmt_script
+        LOGGER.debug(' qmt.py script location: %s' % qmt_script)
+
+        # Execute
+        cmd = ['sh', os.path.join(BASE_DIR, 'lib', 'run.sh'),
+               '-d', self.gpr_path]
+        LOGGER.debug(' Command line used: %s' % ' '.join(cmd))
         p = Popen(cmd, stdout=PIPE, stderr=PIPE, close_fds=True)
-        output = p.stdout.read()
-        print output
+        (stdout, stderr) = p.communicate()
+        # Check if the output is well a json or an error
+        # stop everything if the output is not a well formed json
+        try:
+            LOGGER.debug(' Checking generated output...')
+            json.loads(stdout)
+            # Dump the file
+            with open(self.output_file, 'w+') as json_file:
+                json_file.writelines(stdout);
+            return True
+        except ValueError as e:
+            LOGGER.error(' Unable to generate project json tree, script' +
+                         'error output: %s' % stderr)
+            LOGGER.error('')
+            LOGGER.debug(' %s %s' % (_get_logger_details(LOGGER), e.message))
 
-        # Move report to qualimetrics report directory, specific to GNATmetric
-        # just for prototype version
-        if tool == 'gnat metric' and os.path.exists('metrix.xml'):
-            shutil.move('metrix.xml', os.path.join(reportDir,
-                                                'gnatmetric-report.xml'))
-    except OSError as e:
-        print 'Unable to execute tool: ' + tool
-        print e
-
-## _parse_command_line #################################################################
+## _parse_command_line ########################################################
 ##
 def _parse_command_line():
-    """ Retrieves command line arguments """
+    """ Retrieves command line arguments
+
+        This script has one required argument: the project file path (.gpr)
+    """
 
     parser = argparse.ArgumentParser(description='Qualimetrics basic driver')
-    parser.add_argument('configuration_file', help='Configuration file')
+    parser.add_argument('-P', dest='project_file', help='Project file path.',
+                        required=True)
+    parser.add_argument('-X', dest='logger_level', action='store_const',
+                       default=logging.INFO, const=logging.DEBUG,
+                       help='Activate debug logging level. Default is INFO.')
     return parser.parse_args()
 
+## exec_tool ######################################################
+##
+class ToolExecutor(object):
 
-## _entry_point #############################################################
+    def __init__(self, project_tree, report_dir):
+        self.project_tree = project_tree
+        self.report_dir = report_dir
+
+    def execute(self, tool, script, tool_output, logger):
+        logger.info('')
+        logger.info('=== Executing %s...' % tool)
+        cmd = None
+        if script:
+            cmd = ['python',
+                os.path.join(BASE_DIR, 'lib', script),
+                '--json-tree=' + self.project_tree,
+                '--report-dir=' + self.report_dir]
+            if tool_output:
+                cmd.append('--output=' + tool_output)
+        else:
+            cmd = tool.split(' ')
+
+        logger.debug(' With command line: %s' % ' '.join(cmd))
+        try:
+            exit_code = call(cmd)
+        except OSError as e:
+            logger.error('** Skipping tool, command not found: %s **', cmd)
+            logger.debug(e)
+        return exit_code
+## _log_failure ######################################################
+##
+def _log_failure(LOGGER):
+    LOGGER.info('')
+    LOGGER.info('-----------------------------------------------')
+    LOGGER.info('QUALIMETRICS FAILURE')
+    LOGGER.info('-----------------------------------------------')
+
+## Script Entry Point ######################################################
 ##
 def _entry_point():
     """Script entry point"""
 
-    # Initialisation
+    ####################
+    #  Initialisation  #
+    ####################
+    # Tools to execute /!\ to change
+    TOOLS = {'gnatmetric' : Tool('gnatmetric', 'gnat metric -x -U -P', 'gnatmetric-report.xml',
+                             None, 'sonar.ada.gnatmetric.reportPath'),
+             'codepeer'   : Tool('codepeer', 'create_cp_report.py', 'codepeer-report.json',
+                            'codepeer.csv.path', 'sonar.ada.codepeer.reportPath'),
+             'gcov'       : Tool('gcov', 'create_gcov_report.py', 'gcov-report.json',
+                             'gcov.outputDir.path', 'sonar.ada.gcov.reportPath')}
+
+    # Retrieve command line arguments
     cmd_line = _parse_command_line()
-    config = ConfigParser.ConfigParser(DEFAULT_CONFIG)
-
+    # Create a logger
+    LOGGER = _create_logger(cmd_line.logger_level)
+    # Initialize script configuration
+    script_config = ConfigParser.ConfigParser(DEFAULT_CONFIG)
     try:
-        #######################################
-        # Retrieve Qualimetrics configuration #
-        #######################################
-        config.readfp(open(cmd_line.configuration_file))
-
-        # Set sonar conf
-        SONAR_CONF['sonar.projectKey'] = config.get('Project', 'project.key')
-        SONAR_CONF['sonar.projectName'] = config.get('Project', 'project.name')
-        SONAR_CONF['sonar.projectVersion'] = config.get('Project', 'project.version')
-
-        # Create report directory if doesn't exist
-        reportDir = config.get('Qualimetrics',
-                               'qualimetrics.reportDir.path')
-        if not os.path.exists(reportDir):
-            os.makedirs(reportDir)
-
-        # Set project file related information
-        gpr_path = config.get('Project', 'project.gpr.path')
-        project_tree_path = os.path.join(os.getcwd(), 'project_tree.json')
-
-        #################################
-        # Generate Qualimetrics reports #
-        #################################
-
-        #---- Project json tree file path ----
-        print '==== Generating project json tree file'
-        print '  project: ' + gpr_path
-        # Set environement, required for script run.sh, /!\ to be changed
-        qmt = os.path.join(BASE_DIR, 'lib', 'qmt.py')
-        os.environ['QMT_PATH'] = qmt
-        # Execute
-        cmd = ['sh', os.path.join(BASE_DIR, 'lib', 'run.sh'), '-d', gpr_path]
-        p = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        output = p.stdout.read()
-        # Dump in a file in reportDir
-        with open(project_tree_path, 'w+') as json_file:
-            json_file.writelines(output);
-        # Set sonar conf
-        SONAR_CONF['sonar.ada.src.projectTree'] = 'project_tree.json'
-
-        #---- GNATmetric execution ----
-        # Retrieve user conf for GNATmetric execution
-        gc_switches = config.get('Gnatmetric', 'gnatmetric.switches')
-        # Execute
-        exec_tool('gnat metric', reportDir, gc_switches + ' -P' + gpr_path)
-        # Set sonar conf /!\to be changed
-        SONAR_CONF['sonar.ada.gnatmetric.reportPath'] = os.path.join(reportDir, 'gnatmetric-report.xml')
-
-        #---- Generates gcov report ----
-        # Retrieve user conf for gcov, i.e gcov output directory if not object
-        # directory and set sitches for scirpt that generates gcov report
-        gcov_out = config.get('GCov', 'gcov.outputDir.path')
-        script = 'python' + ' ' + os.path.join(BASE_DIR,
-                                               'lib', 'create_gcov_report.py')
-        gcov_switches = '--json-tree=' + project_tree_path + ' --report-dir=' + reportDir
-        if gcov_out:
-            gcov_switches = gcov_switches + ' --gcov-path=' + gcov_out
-        # Execute
-        exec_tool(script, reportDir, gcov_switches)
-        # Set sonar conf
-        SONAR_CONF['sonar.ada.gcov.reportPath'] = os.path.join(reportDir, 'gcov-report.json')
-
-        #---- Generates codepeer reports ----
-        # Retrieve user conf and set switches for script
-        cp_csv = config.get('Codepeer', 'codepeer.csv.path')
-        script = 'python' + ' ' + os.path.join(BASE_DIR,
-                                               'lib', 'create_cp_report.py')
-        cp_switches = '--json-tree=' + project_tree_path + ' --output=' + cp_csv + ' --report-dir=' + reportDir
-        # Execute
-        exec_tool(script, reportDir, cp_switches)
-        # Set sonar conf
-        SONAR_CONF['sonar.ada.codepeer.reportPath'] = os.path.join(reportDir, 'codepeer-report.json')
-
-        #---- Generates sonar properties file ----
-        print '====== Generating sonar properties file\n'
-        sonar_config =  ConfigParser.ConfigParser()
-        sonar_config.add_section('Sonar')
-        # Enable case sensitive for key name
-        sonar_config.optionxform = str
-        for key in SONAR_CONF:
-            if SONAR_CONF[key]:
-                sonar_config.set('Sonar', key, SONAR_CONF[key])
-        # Dump the file
-        with open('sonar-project.properties', 'wb') as sonar_file:
-            sonar_config.write(sonar_file)
-
-        ########################
-        # Execute sonar runner #
-        ########################
-        exec_tool('sonar-runner', None, None)
-
-        print '---------------------------------------------------------'
-        print '    Process terminated - You can now browse Sonar :)'
-        print '---------------------------------------------------------\n'
-
-    # Cannot open configuration file
+        script_config.readfp(open(QMT_CONF_FILE))
     except IOError as e:
-        print "Cannot open file: " + cmd_line.configuration_file
-        print e
-    except ConfigParser.NoOptionError as opt:
-        print '***  /!\ Stopping process  ***'
-        print '  ', opt
-        print '  Mandatory property in configuration file is missing'
+        LOGGER.error('** qualimetrics.cfg file is required. Cannot be found'
+                     ' in current directory **')
+        LOGGER.debug(e)
+        _log_failure(LOGGER)
+        exit(2);
+    # Initialize Sonar configuration
+    sonar_config = SonarConfiguration()
+    # Report output directory, create if doesn't exists
+    report_dir = 'reports'
+    if not os.path.exists(report_dir):
+        os.makedirs(report_dir)
+    # Project tree json file
+    project_tree = ProjectTree(cmd_line.project_file, report_dir)
+    # Object to execute a tool or a script to formatted generate tool report
+    tool_executor = ToolExecutor(project_tree.output_file, report_dir)
+
+
+    ####################
+    #    Execution     #
+    ####################
+    if (project_tree.create_tree(LOGGER)):
+        sonar_config.add('sonar.ada.src.projectTree', project_tree.output_file)
+        LOGGER.info('=== Project json tree file generation OK')
+        LOGGER.info('')
+        for tool in TOOLS:
+            LOGGER.debug('%s will process tool: %s' %
+                         (_get_logger_details(LOGGER), tool))
+            # /!\ Specific processing for GNAT metric - TO BE CHANGED
+            if tool == 'gnatmetric':
+                output_file = os.path.join(CURRENT_DIR, 'metrix.xml')
+                # Retrieve exit code for debug
+                exit_code = tool_executor.execute(TOOLS[tool].script_name +
+                                          project_tree.gpr_path, None,
+                                          None, LOGGER)
+                LOGGER.debug('%s Tool has been executed with exit code: %s' %
+                             (_get_logger_details(LOGGER), str(exit_code)))
+                # Check if the execution succeed
+                if exit_code <= 1:
+                    # Check metrix.xml has been generated in current directory
+                    if os.path.exists(output_file):
+                        # Remove old if exists
+                        if os.path.exists(os.path.join(report_dir,
+                                                       TOOLS[tool].report_name)):
+                            os.remove(os.path.join(report_dir, TOOLS[tool].report_name))
+                        shutil.move(output_file,
+                                    os.path.join(report_dir,
+                                                 TOOLS[tool].report_name))
+                        sonar_config.add(TOOLS[tool].sonar_key,
+                                         os.path.join(report_dir,
+                                                      TOOLS[tool].report_name))
+
+                        LOGGER.info('=== GNAT metric OK')
+                        LOGGER.info('')
+                    else:
+                        LOGGER.warning(' Cannot find rxml report from' +
+                                       'GNAT metric, in supposed location:' +
+                                       ' %s', output_file)
+                # If execution failed
+                else:
+                    LOGGER.warning('=== GNAT metric FAIL')
+                    LOGGER.warning('')
+            # For all other tools
+            else:
+                exit_code = tool_executor.execute(tool,
+                                          TOOLS[tool].script_name,
+                                          script_config.get(tool,
+                                                            TOOLS[tool].qmt_key),
+                                          LOGGER)
+                LOGGER.debug('%s Tool has been executed with exit code: %s' %
+                             (_get_logger_details(LOGGER), str(exit_code)))
+                if exit_code <= 1:
+                    sonar_config.add(TOOLS[tool].sonar_key,
+                                     os.path.join(report_dir,
+                                     TOOLS[tool].report_name))
+                    LOGGER.info('=== %s OK' % tool)
+                    LOGGER.info('')
+                else:
+                    LOGGER.warning('=== GNAT metric FAIL')
+
+        # Set Sonar configuration
+        sonar_config.add('sonar.projectKey', script_config.get('project','project.key'))
+        sonar_config.add('sonar.projectVersion',
+                         script_config.get('project', 'project.version'))
+        sonar_config.add('sonar.projectName', script_config.get('project', 'project.name'))
+        sonar_config.export()
+        try:
+            LOGGER.info('')
+            LOGGER.info('=== Running Sonar Runner')
+            exit_code = call('sonar-runner')
+            LOGGER.debug('sonar-runner executed with exit code: %i', exit_code)
+            if exit_code < 1:
+                LOGGER.info('=== Sonar Runner OK')
+                LOGGER.info('')
+                LOGGER.info('-----------------------------------------------')
+                LOGGER.info('QUALIMETRICS SUCCESS')
+                LOGGER.info('-----------------------------------------------')
+            else:
+                LOGGER.info('=== Sonar Runner FAIL')
+                _log_failure(LOGGER)
+        except OSError as e:
+            LOGGER.error('*** sonar-runner command not found, cannot feed' +
+                         ' sonar with datas')
+            LOGGER.debug(e)
+            _log_failure(LOGGER)
+    else:
+        _log_failure(LOGGER)
+        exit(3);
 
 ## Script Entry Point ######################################################
 ##

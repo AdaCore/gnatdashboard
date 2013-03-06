@@ -72,6 +72,7 @@ class CPOutputParser(object):
                         print "Skipping message, because source not found in project tree: " + line_splited[0]
         except IOError as e:
             print e
+            exit(2)
 
 ## _parse_command_line  #############################################################
 ##

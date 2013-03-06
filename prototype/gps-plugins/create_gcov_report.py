@@ -130,7 +130,7 @@ def _parse_command_line():
     parser.add_argument('--json-tree=', action='store', dest='json_tree',
                         type=str, help='Absolute path to json file that' +
                         'contains project tree', required=True)
-    parser.add_argument('--gcov-path=', action='store', dest='gcov_path',
+    parser.add_argument('--output=', action='store', dest='gcov_path',
                         type=str, help='Absolute path to .gcov file',
                         default=None, required=False)
     return parser.parse_args()

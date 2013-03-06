@@ -116,12 +116,21 @@ class SourceMap(object):
                 if len(source_tree[prj]) > 1:
                     obj_dir = source_tree[prj][OBJ_DIR_KEY]
                 for src_dir in source_tree[prj][SRC_DIR_KEY]:
-                    for spec in source_tree[prj][SRC_DIR_KEY][src_dir]['ada'][SPEC_KEY]:
-                        source = Source(spec, src_dir, prj, obj_dir, False)
-                        src_map[spec] = source
-                    for body in source_tree[prj][SRC_DIR_KEY][src_dir]['ada'][BODY_KEY]:
-                        source = Source(body, src_dir, prj, obj_dir, True)
-                        src_map[body] = source
+                    source_ada = None
+                    try:
+                        if source_tree[prj][SRC_DIR_KEY][src_dir]['ada']:
+                            source_ada =  source_tree[prj][SRC_DIR_KEY][src_dir]['ada']
+                        elif source_tree[prj][SRC_DIR_KEY][src_dir]['Ada']:
+                            source_ada = source_tree[prj][SRC_DIR_KEY][src_dir]['Ada']
+                        if source_ada:
+                            for spec in source_tree[prj][SRC_DIR_KEY][src_dir]['ada'][SPEC_KEY]:
+                                source = Source(spec, src_dir, prj, obj_dir, False)
+                                src_map[spec] = source
+                            for body in source_tree[prj][SRC_DIR_KEY][src_dir]['ada'][BODY_KEY]:
+                                source = Source(body, src_dir, prj, obj_dir, True)
+                                src_map[body] = source
+                    except KeyError as e:
+                        pass
         return src_map
 
     def get_path(self, src):
