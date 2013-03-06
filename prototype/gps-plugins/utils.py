@@ -69,11 +69,12 @@ class Source(object):
           prototype version.
     """
 
-    def __init__(self, base_name, directory, project, obj_dir):
+    def __init__(self, base_name, directory, project, obj_dir, is_body):
         self.base_name = base_name
         self.full_name = directory + '/' + base_name
         self.obj_dir = obj_dir
         self.parent_dir = Directory(directory, project)
+        self.is_body = is_body
 
     def get_project(self):
         return self.parent_dir.get_parent_name()
@@ -103,6 +104,8 @@ class SourceMap(object):
         """
         OBJ_DIR_KEY = 'Object_Dir'
         SRC_DIR_KEY = 'Source_Dirs'
+        BODY_KEY = 'body'
+        SPEC_KEY = 'spec'
         src_map = dict()
         with open(project_tree_path, 'r') as json_tree:
             output = json_tree.read()
@@ -113,9 +116,12 @@ class SourceMap(object):
                 if len(source_tree[prj]) > 1:
                     obj_dir = source_tree[prj][OBJ_DIR_KEY]
                 for src_dir in source_tree[prj][SRC_DIR_KEY]:
-                    for src in source_tree[prj][SRC_DIR_KEY][src_dir]:
-                        source = Source(src, src_dir, prj, obj_dir)
-                        src_map[src] = source
+                    for spec in source_tree[prj][SRC_DIR_KEY][src_dir]['ada'][SPEC_KEY]:
+                        source = Source(spec, src_dir, prj, obj_dir, False)
+                        src_map[spec] = source
+                    for body in source_tree[prj][SRC_DIR_KEY][src_dir]['ada'][BODY_KEY]:
+                        source = Source(body, src_dir, prj, obj_dir, True)
+                        src_map[body] = source
         return src_map
 
     def get_path(self, src):
