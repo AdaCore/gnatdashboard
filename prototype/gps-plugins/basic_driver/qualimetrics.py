@@ -107,9 +107,8 @@ class ProjectTree(object):
                 json_file.writelines(stdout);
             return True
         except ValueError as e:
-            LOGGER.error(' Unable to generate project json tree, script' +
-                         'error output: %s' % stderr)
-            LOGGER.error('')
+            LOGGER.error(' Unable to generate project json tree')
+            LOGGER.error(' %s' % stderr)
             LOGGER.debug(' %s %s' % (_get_logger_details(LOGGER), e.message))
 
 ## _parse_command_line ########################################################
@@ -179,7 +178,11 @@ def _entry_point():
              'codepeer'   : Tool('codepeer', 'create_cp_report.py', 'codepeer-report.json',
                             'codepeer.csv.path', 'sonar.ada.codepeer.reportPath'),
              'gcov'       : Tool('gcov', 'create_gcov_report.py', 'gcov-report.json',
-                             'gcov.outputDir.path', 'sonar.ada.gcov.reportPath')}
+                             'gcov.outputDir.path',
+                                 'sonar.ada.gcov.reportPath'),
+             'gnatcheck'  : Tool('gnatcheck', 'create_gc_report.py',
+                                 'gnatcheck-report.xml', 'gnatcheck.out.path',
+                                 'sonar.ada.gnatcheck.reportPath')}
 
     # Retrieve command line arguments
     cmd_line = _parse_command_line()
@@ -211,7 +214,7 @@ def _entry_point():
     #    Execution     #
     ####################
     if (project_tree.create_tree(LOGGER)):
-        sonar_config.add('sonar.ada.src.projectTree', project_tree.output_file)
+        sonar_config.add('sonar.ada.projectTree', project_tree.output_file)
         LOGGER.info('=== Project json tree file generation OK')
         LOGGER.info('')
         for tool in TOOLS:
@@ -249,25 +252,34 @@ def _entry_point():
                                        ' %s', output_file)
                 # If execution failed
                 else:
-                    LOGGER.warning('=== GNAT metric FAIL')
+                    LOGGER.warning('=== GNAT metric FAILED')
                     LOGGER.warning('')
             # For all other tools
             else:
-                exit_code = tool_executor.execute(tool,
-                                          TOOLS[tool].script_name,
-                                          script_config.get(tool,
-                                                            TOOLS[tool].qmt_key),
-                                          LOGGER)
-                LOGGER.debug('%s Tool has been executed with exit code: %s' %
-                             (_get_logger_details(LOGGER), str(exit_code)))
-                if exit_code <= 1:
-                    sonar_config.add(TOOLS[tool].sonar_key,
-                                     os.path.join(report_dir,
-                                     TOOLS[tool].report_name))
-                    LOGGER.info('=== %s OK' % tool)
-                    LOGGER.info('')
-                else:
-                    LOGGER.warning('=== GNAT metric FAIL')
+                try:
+                    exit_code = tool_executor.execute(tool,
+                                            TOOLS[tool].script_name,
+                                            script_config.get(tool,
+                                                                TOOLS[tool].qmt_key),
+                                            LOGGER)
+                    LOGGER.debug('%s Tool has been executed with exit code: %s' %
+                                (_get_logger_details(LOGGER), str(exit_code)))
+                    if exit_code <= 1:
+                        sonar_config.add(TOOLS[tool].sonar_key,
+                                        os.path.join(report_dir,
+                                        TOOLS[tool].report_name))
+                        LOGGER.info('=== %s OK' % tool)
+                        LOGGER.info('')
+                    else:
+                        LOGGER.warning('=== %s FAILED' % tool)
+                        LOGGER.warning('')
+                except ConfigParser.NoSectionError as e:
+                    LOGGER.warning('** Skipping process of %s\'s output' % tool)
+                    LOGGER.warning('** No section in qualimetrics.cfg for' +
+                                   ' this tool')
+                except ConfigParser.NoOptionError as e_opt:
+                    LOGGER.warning('** Skipping process of %s\'s output' % tool)
+                    LOGGER.warning('** ' + str(e_opt))
 
         # Set Sonar configuration
         sonar_config.add('sonar.projectKey', script_config.get('project','project.key'))
