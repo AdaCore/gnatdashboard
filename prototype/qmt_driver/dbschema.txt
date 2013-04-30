@@ -1,0 +1,59 @@
+| TABLE | tools         | tool             |    | Tools that will be managed by Qualimetrics |
+| id    | AUTOINCREMENT | PK               |    | Auto-generated id                          |
+| name  | TEXT          | NOT NULL, NOCASE |    | Tools' name                                |
+
+| TABLE | categories    | category         |   | Category for the rules |
+| id    | AUTOINCREMENT | PK               |   | Auto-generated id      |
+| label | TEXT          | NOT NULL, NOCASE |   | Categories' label      |
+
+| TABLE       | rules                         | rule             |   | The rules used for analysis                               |
+| id          | AUTOINCREMENT                 | PK               |   |                                                           |
+| name        | TEXT                          | NOT NULL, NOCASE |   | Rules' name                                               |
+| kind        | INTEGER                       | NOT NULL         | 0 | Wether it is a rule or a metric. 0 for rule, 1 for metric |
+| category_id | FK categories(category_rules) |                  |   | Category of the rule                                      |
+| tool_id     | FK tools(tool_rules)          | NOT NULL         |   | Rules' related tool                                       |
+
+| TABLE   | messages                | message  |   | Messages from tools' output |
+| id      | AUTOINCREMENT           | PK       |   | Auto-generated id           |
+| rule_id | FK rules(rule_messages) | NOT NULL |   | Messages' associated rule   |
+| data    | TEXT                    |          |   | Categories' label           |
+
+| TABLE     | resources     | resource |   | Resource in the project, can be either a project, a directory or a file |
+| id        | AUTOINCREMENT | PK       |   | Auto-generated id                                                       |
+| name      | TEXT          | NOT NULL |   | Reources' name                                                          |
+| kind      | INTEGER       | NOT NULL |   | Resources' kind: project, directory or file                             |
+| timestamp | TIMESTAMP     |          |   | Resources' timestamp                                                    |
+
+| TABLE     | resource_trees                  | resource_tree |   | Project resource tree |
+| id        | AUTOINCREMENT                   | PK            |   | Auto-generated id     |
+| child_id  | FK resources(resource_children) | NULL          |   | Resources as a child  |
+| parent_id | FK resources(resource_parent)   | NULL          |   | Resource as a parent  |
+
+| TABLE       | resources_messages              | resource_message |   | Association between messages and resources |
+| id          | AUTOINCREMENT                   | PK               |   | Auto-generated id                          |
+| message_id  | FK rules(message_lines)         | NOT NULL         |   | Resources' associated message              |
+| resource_id | FK resources(resource_messages) | NOT NULL         |   | Corresponding resource for message         |
+
+| TABLE       | lines                    | line     |   | Lines in source file |
+| id          | AUTOINCREMENT            | PK       |   | Auto-generated id    |
+| resource_id | FK rules(resource_lines) | NOT NULL |   | Lines' resource file |
+| line        | INTEGER                  | NOT NULL |   | Line number          |
+
+| TABLE      | lines_messages          | line_message |   | Association between messages and location in source (line, column)|
+| id         | AUTOINCREMENT           | PK           |   | Auto-generated id                                                 |
+| message_id | FK rules(message_lines) | NOT NULL     |   | Lines' associated message                                         |
+| line_id    | FK lines(line_messages) | NOT NULL     |   | Corresponding line for message                                    |
+| col_begin  | INTEGER                 | NOT NULL     |   | Lines' column begin                                               |
+| col_end    | INTEGER                 | NOT NULL     |   | Lines' column end                                                 |
+
+| TABLE         | entities                    | entity   |   | Entity                 |
+| id            | AUTOINCREMENT               | PK       |   | Auto-generated id      |
+| line_begin_id | FK lines(line_begin_entity) | NOT NULL |   | Entities' line begin   |
+| name          | TEXT                        | NOT NULL |   | Entities' name         |
+| col_begin     | INTEGER                     | NOT NULL |   | Entities' colunm begin |
+| col_end       | INTEGER                     | NOT NULL |   | Entities' column end   |
+
+| TABLE      | entities_messages             | entity_message |   | Association between messages and entities |
+| id         | AUTOINCREMENT                 | PK             |   | Auto-generated id                         |
+| entity_id  | FK entities(entity_messages)  | NOT NULL       |   | Corresponding entity for message          |
+| message_id | FK messages(message_entities) | NOT NULL       |   | Entities' associated message              |
