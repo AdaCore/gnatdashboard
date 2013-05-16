@@ -19,6 +19,7 @@ import sys
 import json
 import argparse
 
+
 ## Violation #################################################################
 ##
 class Violation(object):
@@ -61,27 +62,42 @@ class GcOutput(object):
            source, rule identification, violation message removing rubbish
            characters and save those informations as a violation
         """
-        #Set maxsplit at 3 because the rule id can contain ':'
+        # Example with line : "input.adb:3:19: use clause for package
+        # [USE_PACKAGE_Clauses]"
+
+        # Set maxsplit at 3 because the rule id can contain ':'
+        # Result : ['input.adb', '3', '19', ' use clause for package
+        # [USE_PACKAGE_Clauses]']
         split_1 = line.split(':', 3)
         src = split_1[0]
         src_line = split_1[1]
+
         # Remove rubbish characters
-        split_2 = split_1[-1].split(')', 1)
-        rule_id = split_2[0][2:]
-        msg = split_2[1].strip()
+        # Result : [' use clause for package ', 'USE_PACKAGE_Clauses]']
+        split_2 = split_1[-1].split('[', 1)
+        # Remove the closing brace.
+        rule_id = split_2[1].strip()[:-1]
+        msg = split_2[0].strip()
         self.__add_violation(src, src_line, rule_id, msg)
 
     def __parse_instance_line(self, line):
-        match = re.search('[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:', line)
-        msg_split = re.split('[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:', line)
+        MAIN_SRC_FILE = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:'
+        # Look for the source file that instanciates the generic (last un the
+        # list of "instance at...")
+        match = re.search(MAIN_SRC_FILE, line)
+        # Split to have a list with 'commands-generic_asynchronous.ads:57:15
+        # instance at...' and 'message + rule id'
+        msg_split = re.split(MAIN_SRC_FILE, line)
 
         try:
+            # Retreive info on the main file
+            # Result : ['vsearch.adb', '231', '4', '']
             start_error = match.group(0).split(':')
-            src = start_error[0]
+            src = start_error[0].strip()
             line = start_error[1]
-            ruleid_msg = msg_split[1].split(')', 1)
-            rule_id = ruleid_msg[0][2:]
-            msg = ruleid_msg[1].strip() + ' (' + msg_split[0] + ' ' + start_error[0] + ')'
+            ruleid_msg = msg_split[1].split('[', 1)
+            rule_id = ruleid_msg[1].strip()[:-1]
+            msg = ruleid_msg[0].strip() + ' (' + msg_split[0].strip() + ' ' + src + ')'
             self.__add_violation(src, line, rule_id, msg)
 
         except IndexError as e:
@@ -94,7 +110,7 @@ class GcOutput(object):
           Retrieve information from  gnatcheck.out file
         """
         print 'Processing GNAT Check output...'
-        ERROR_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:\s[(].*[)]\s.+'
+        ERROR_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:\s.+[[].*[]]\s*'
         INSTANCE_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+ instance at [a-zA-Z-_.0-9]+:[0-9]+:[0-9]+.+'
         prog_error = re.compile(ERROR_PATTERN)
         prog_instance = re.compile(INSTANCE_PATTERN)
