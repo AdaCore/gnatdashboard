@@ -1,6 +1,10 @@
---
---  QMT driver
---  Copyright (C) 2012-2013, AdaCore
+------------------------------------------------------------------------------
+--                 Q u a l i m e t r i c s     D r i v er                   --
+--                                                                          --
+--                    Copyright (C) 2012-2013, AdaCore                      --
+--                                                                          --
+------------------------------------------------------------------------------
+
 pragma Warnings (Off);
 with Ada.Containers; use Ada.Containers;
 with Ada.Unchecked_Deallocation;

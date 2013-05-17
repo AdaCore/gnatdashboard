@@ -1,20 +1,20 @@
---
---  QMT Driver$
---  Copyright (C) 2012-2013, AdaCore
+------------------------------------------------------------------------------
+--                 Q u a l i m e t r i c s     D r i v er                   --
+--                                                                          --
+--                    Copyright (C) 2012-2013, AdaCore                      --
+--                                                                          --
+------------------------------------------------------------------------------
 
-with GNATCOLL.Projects;     use GNATCOLL.Projects;
 with Ada.Text_IO;           use Ada.Text_IO;
-with GNATCOLL.VFS;          use GNATCOLL.VFS;
-with GNATCOLL.SQL.Sessions; use GNATCOLL.SQL.Sessions;
-with Ada.Command_Line;      use Ada.Command_Line;
 with Database_Interface;    use Database_Interface;
+with GNATCOLL.Projects;     use GNATCOLL.Projects;
+with GNATCOLL.VFS;          use GNATCOLL.VFS;
 with Project_Parser;        use Project_Parser;
-with Orm;                   use Orm;
 --  with GNATCOLL.Traces;
 
 procedure Qualimetrics is
    procedure Main;
-   --  ???
+   --  Program entry point
 
    ----------
    -- Main --

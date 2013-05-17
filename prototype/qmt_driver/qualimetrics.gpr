@@ -1,4 +1,5 @@
-with "gnatcoll_sqlite.gpr";
+--with "gnatcoll_sqlite.gpr";
+with "cli.gpr";
 
 project Qualimetrics is
 
