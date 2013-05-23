@@ -5,19 +5,17 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with GNAT.Strings;
-
-with Orm;                                use Orm;
-with Database_Interface;                 use Database_Interface;
-
-with Ada.Strings;
 with Ada.Containers.Hashed_Maps;
 with Ada.Containers;                     use Ada.Containers;
 with Ada.Exceptions;                     use Ada.Exceptions;
+with Ada.Strings;
 with Ada.Strings.Unbounded;              use Ada.Strings.Unbounded;
 with Ada.Strings.Unbounded.Hash;
-with Ada.Text_IO;                        use Ada.Text_IO;
 with Ada.Strings.Equal_Case_Insensitive;
+
+with Database_Interface;                 use Database_Interface;
+with Orm;                                use Orm;
+with Utils;
 
 package body Project_Parser is
 
@@ -33,23 +31,19 @@ package body Project_Parser is
                                    Project_Orm : Detached_Resource);
    --  ???
 
-   function Load_Project_Tree (Project_File : Virtual_File) return Project_Tree
+   function Load_Project_Tree
+     (Path   : GNAT.Strings.String_Access;
+      Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record) return Boolean
    is
-      Version : GNAT.Strings.String_Access;
-      Env     : Project_Environment_Access;
-      Tree    : Project_Tree;
+      Project_File : constant Virtual_File := GNATCOLL.VFS.Create (+Path.all);
    begin
-      Initialize (Env);
-      Env.Set_Path_From_Gnatls ("gnatls", Version);
-      Tree.Load (Project_File, Env);
-      return Tree;
-
+      Kernel.Registry.Tree.Load
+        (Root_Project_Path => Project_File,
+         Env => Kernel.Registry.Environment);
+      return True;
    exception
       when E : Invalid_Project =>
-         Ada.Text_IO.Put_Line
-           (Ada.Text_IO.Standard_Error, Exception_Information (E));
-         return Tree;
-
+         return Utils.Return_On_Failure (Exception_Information (E));
    end Load_Project_Tree;
 
    --------------------------

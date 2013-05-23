@@ -6,13 +6,21 @@
 ------------------------------------------------------------------------------
 
 with Ada.Text_IO;           use Ada.Text_IO;
-with Database_Interface;    use Database_Interface;
+
 with GNATCOLL.Projects;     use GNATCOLL.Projects;
 with GNATCOLL.VFS;          use GNATCOLL.VFS;
+
+with GPS.CLI_Utils;
+with GPS.CLI_Kernels;       use GPS.CLI_Kernels;
+
+with Utils;
+with Database_Interface;    use Database_Interface;
+with Qmt_Command_Line;      use Qmt_Command_Line;
 with Project_Parser;        use Project_Parser;
 --  with GNATCOLL.Traces;
 
 procedure Qualimetrics is
+
    procedure Main;
    --  Program entry point
 
@@ -22,25 +30,45 @@ procedure Qualimetrics is
 
    procedure Main
    is
-      Tree : Project_Tree;
-      DB_Succeed   : Boolean;
-      Project_File : constant Virtual_File := Create
-        (+"/Users/kiwi/code/gps/gps/gps.gpr");
+      Kernel       : constant GPS.CLI_Kernels.CLI_Kernel :=
+        new GPS.CLI_Kernels.CLI_Kernel_Record;
+      Deposit_Dir  : Virtual_File;
+      Command_Line : Qualimetrics_Command_Line;
    begin
---        GNATCOLL.Traces.Parse_Config_File (".gnatdebug");
-      Tree := Load_Project_Tree (Project_File);
+      --  GNATCOLL.Traces.Parse_Config_File (".gnatdebug");
 
-      DB_Succeed := Initialize_DB (if Tree.Root_Project.Object_Dir = No_File
-                                   then Tree.Root_Project.Project_Path.Dir
-                                   else Tree.Root_Project.Object_Dir);
-      if DB_Succeed then
-         Put_Line ("DB Created");
+      GPS.CLI_Utils.Create_Kernel_Context (Kernel);
+      Command_Line.Configure;
+
+      --  Error output messages are handled by Parse function, according
+      --  to the case of failure.
+      if not Command_Line.Parse (Kernel) then
+         return;
       end if;
 
-      Save_Project_Tree (Root_Project => Tree.Root_Project);
-      Tree.Unload;
+      --  Load project
+      if not Load_Project_Tree (Command_Line.Get_Project_Name,
+                                Kernel)
+      then
+         return;
+      end if;
 
---        GNATCOLL.Traces.Finalize;
+      --  Set Qualimetrics deposit directory
+      Deposit_Dir := Utils.Get_Deposit_Directory
+        (Kernel.Registry.Tree.Root_Project);
+
+      --  Create Database
+      if not Initialize_DB (Deposit_Dir) then
+         return;
+      end if;
+      Put_Line ("DB Created");
+
+      --  Save project tree to DB
+      Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
+
+      GPS.CLI_Utils.Destroy_Kernel_Context (Kernel);
+      Command_Line.Destroy;
+      --        GNATCOLL.Traces.Finalize;
    end Main;
 
 begin

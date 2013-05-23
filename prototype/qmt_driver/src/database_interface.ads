@@ -49,19 +49,21 @@ package Database_Interface is
    type Detached_File is new Abstract_Detached_Resource with null record;
    --  ???
 
-   -----------------
-   -- Data Access --
-   -----------------
+   ---------------------
+   --  DB Management  --
+   ---------------------
 
-   function Initialize_DB (Object_Dir : Virtual_File) return Boolean;
+   function Initialize_DB (Deposit_Dir : Virtual_File) return Boolean;
    --  Create Qualimetrics DB sqlite file. And initialize DB context that will
    --  be use in the whole program to interract with the DB. Session pool
    --  is setup by this function.
    --
-   --  Object_Dir: the directory where the DB will be created:
-   --      - project object directory if it is specified
-   --      - otherwise in the same directory than the project root file is.
+   --  Deposit_Dir: directory in which the DB will be created.
    --  Returns wether the DB has been succefully created or not.
+
+   -------------------------
+   -- Data Access Objects --
+   -------------------------
 
    function Create_And_Save_Resource
      (Name : String;

@@ -5,12 +5,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with GNATCOLL.SQL.Inspect;  use GNATCOLL.SQL.Inspect;
+with Ada.Text_IO;           use Ada.Text_IO;
+
 with GNATCOLL.SQL;          use GNATCOLL.SQL;
+with GNATCOLL.SQL.Exec;     use GNATCOLL.SQL.Exec;
+with GNATCOLL.SQL.Inspect;  use GNATCOLL.SQL.Inspect;
 with GNATCOLL.SQL.Sessions; use GNATCOLL.SQL.Sessions;
 with GNATCOLL.SQL.Sqlite;   use GNATCOLL.SQL.Sqlite;
-with GNATCOLL.SQL.Exec;     use GNATCOLL.SQL.Exec;
-with Ada.Text_IO;           use Ada.Text_IO;
+
+with Utils;
 
 package body Database_Interface is
 
@@ -61,7 +64,7 @@ package body Database_Interface is
    -- Initialize_DB --
    -------------------
 
-   function Initialize_DB (Object_Dir : Virtual_File) return Boolean
+   function Initialize_DB (Deposit_Dir : Virtual_File) return Boolean
    is
       Descr          : Database_Description;
       Schema_IO      : DB_Schema_IO;
@@ -69,14 +72,17 @@ package body Database_Interface is
       DB_File        : Virtual_File;
       Delete_Succeed : Boolean;
    begin
-      DB_File := Create_From_Dir (Object_Dir, DB_File_Name);
-      Put_Line ("Directory: " & Object_Dir.Display_Full_Name & " -- file: " &
+      DB_File := Create_From_Dir (Deposit_Dir, DB_File_Name);
+      Put_Line ("Directory: " & Deposit_Dir.Display_Full_Name & " -- file: " &
                   String (DB_File_Name));
+
       --  Check existance of a database, delete it before creating a new one
       if Is_Regular_File (DB_File) then
          Delete (DB_File, Delete_Succeed);
          if not Delete_Succeed then
-            return False;
+            return Utils.Return_On_Failure
+              ("Unable to delete old Sqlite file: " &
+                 DB_File.Display_Full_Name);
          end if;
       end if;
 
@@ -93,8 +99,11 @@ package body Database_Interface is
       GNATCOLL.SQL.Sessions.Setup (Descr, Max_Sessions);
       Set_Default_Factory (Kind_Factory'Access);
 
-      return Schema_IO.DB.Success;
+      if not Schema_IO.DB.Success then
+         return Utils.Return_On_Failure ("Unable to initialise the Database.");
+      end if;
 
+      return True;
    end Initialize_DB;
 
    ------------------------------
