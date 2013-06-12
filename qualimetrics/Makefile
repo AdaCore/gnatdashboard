@@ -1,5 +1,5 @@
 all:
-	gprbuild -j${PROCESSORS} -gnat2012 -Pqualimetrics.gpr
+	gprbuild -Pqualimetrics.gpr
 
 create:
 	# Create the database from the schema
