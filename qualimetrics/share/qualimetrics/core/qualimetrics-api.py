@@ -42,4 +42,3 @@ def create_parser(name, child=None):
         return OutputParserMetaClass.registered[name](child)
     else:
         return None
-
