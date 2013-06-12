@@ -15,6 +15,8 @@ with Utils;
 with Database_Interface;    use Database_Interface;
 with Qmt_Command_Line;      use Qmt_Command_Line;
 with Project_Parser;        use Project_Parser;
+with GNATCOLL.Scripts;      use GNATCOLL.Scripts;
+with GNAT.OS_Lib;
 
 with GNATCOLL.Traces;       use GNATCOLL.Traces;
 
@@ -39,6 +41,7 @@ procedure Qualimetrics is
         new GPS.CLI_Kernels.CLI_Kernel_Record;
       Deposit_Dir  : Virtual_File;
       Command_Line : Qualimetrics_Command_Line;
+      Errors : Boolean;
    begin
       GNATCOLL.Traces.Parse_Config_File;
 
@@ -75,10 +78,28 @@ procedure Qualimetrics is
       --  Save project tree to DB
       Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
 
+      --  /!\  Plugin management  /!\
+      Execute_File
+          (Script   => Kernel.Scripts.Lookup_Scripting_Language
+             ("python"),
+           Filename => GNAT.OS_Lib.Normalize_Pathname
+             ("plugins/gnatmetric.py", Get_Current_Dir.Display_Full_Name),
+           Hide_Output => False,
+           Show_Command => False,
+           Errors   => Errors);
+
+      if Errors then
+         Put_Line ("errors during python script execution");
+      end if;
+
+      --  Save project tree to DB
+      Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
+
       GPS.CLI_Utils.Destroy_Kernel_Context (Kernel);
       Command_Line.Destroy;
 
       GNATCOLL.Traces.Finalize;
+
    end Main;
 
 begin
