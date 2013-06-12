@@ -89,7 +89,7 @@ procedure Qualimetrics is
            Errors   => Errors);
 
       if Errors then
-         Put_Line ("errors during python script execution");
+         Trace (Main_Trace, "errors during python script execution");
       end if;
 
       --  Save project tree to DB
