@@ -78,6 +78,8 @@ procedure Qualimetrics is
       --  Save project tree to DB
       Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
 
+      Trace (Main_Trace, "Project information entered in the database");
+
       --  /!\  Plugin management  /!\
       Execute_File
           (Script   => Kernel.Scripts.Lookup_Scripting_Language
