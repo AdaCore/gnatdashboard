@@ -5,21 +5,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with GNATCOLL.Projects;     use GNATCOLL.Projects;
-with GNATCOLL.VFS;          use GNATCOLL.VFS;
-
-with GPS.CLI_Utils;
-with GPS.CLI_Kernels;       use GPS.CLI_Kernels;
-
-with Utils;
-with Database_Interface;    use Database_Interface;
-with Qmt_Command_Line;      use Qmt_Command_Line;
-with Project_Parser;        use Project_Parser;
-with GNATCOLL.Scripts;      use GNATCOLL.Scripts;
-with GNAT.OS_Lib;
-
-with GNATCOLL.Traces;       use GNATCOLL.Traces;
-
 --  Organization of the qualimetrics install directory:
 --
 --   <install_dir>
@@ -32,6 +17,20 @@ with GNATCOLL.Traces;       use GNATCOLL.Traces;
 --           qualimetrics_api.py  --  this is the main API entry point
 --                                --  that users can use
 --           plug-ins/            --  AdaCore-defined plugins go here
+
+with GPS.CLI_Utils;
+with GPS.CLI_Kernels;       use GPS.CLI_Kernels;
+
+with Utils;
+with Database_Interface;    use Database_Interface;
+with Qmt_Command_Line;      use Qmt_Command_Line;
+with Project_Parser;        use Project_Parser;
+
+with GNATCOLL.Projects;     use GNATCOLL.Projects;
+with GNATCOLL.Scripts;      use GNATCOLL.Scripts;
+with GNATCOLL.Traces;       use GNATCOLL.Traces;
+with GNATCOLL.Utils;        use GNATCOLL.Utils;
+with GNATCOLL.VFS;          use GNATCOLL.VFS;
 
 procedure Qualimetrics is
 
@@ -55,6 +54,9 @@ procedure Qualimetrics is
       Deposit_Dir  : Virtual_File;
       Command_Line : Qualimetrics_Command_Line;
       Errors : Boolean;
+
+      Prefix_Dir : constant String := Executable_Location;
+
    begin
       GNATCOLL.Traces.Parse_Config_File;
 
@@ -95,14 +97,15 @@ procedure Qualimetrics is
 
       --  /!\  Plugin management  /!\
       Execute_File
-          (Script   => Kernel.Scripts.Lookup_Scripting_Language
-             ("python"),
-           Filename => GNAT.OS_Lib.Normalize_Pathname
-             ("share/qualimetrics/core/plug-ins/gnatmetric.py",
-             Get_Current_Dir.Display_Full_Name),
-           Hide_Output => False,
-           Show_Command => False,
-           Errors   => Errors);
+        (Script   => Kernel.Scripts.Lookup_Scripting_Language
+           ("python"),
+         Filename =>
+           +Create_From_Dir
+             (Create (+Prefix_Dir),
+              +"share/qualimetrics/core/plug-ins/gnatmetric.py").Full_Name,
+         Hide_Output => False,
+         Show_Command => False,
+         Errors   => Errors);
 
       if Errors then
          Trace (Main_Trace, "errors during python script execution");
