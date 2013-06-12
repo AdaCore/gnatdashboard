@@ -9,14 +9,15 @@
 | TABLE       | rules                         | rule             |   | The rules used for analysis                               |
 | id          | AUTOINCREMENT                 | PK               |   |                                                           |
 | name        | TEXT                          | NOT NULL, NOCASE |   | Rules' name                                               |
+| identifier  | TEXT                          |                  |   | Rules' unique identifier                                  |
 | kind        | INTEGER                       | NOT NULL         | 0 | Wether it is a rule or a metric. 0 for rule, 1 for metric |
-| category_id | FK categories(category_rules) |                  |   | Category of the rule                                      |
 | tool_id     | FK tools(tool_rules)          | NOT NULL         |   | Rules' related tool                                       |
 
-| TABLE   | messages                | message  |   | Messages from tools' output |
-| id      | AUTOINCREMENT           | PK       |   | Auto-generated id           |
-| rule_id | FK rules(rule_messages) | NOT NULL |   | Messages' associated rule   |
-| data    | TEXT                    |          |   | Categories' label           |
+| TABLE       | messages                         | message  |   | Messages from tools' output |
+| id          | AUTOINCREMENT                    | PK       |   | Auto-generated id           |
+| rule_id     | FK rules(rule_messages)          | NOT NULL |   | Messages' associated rule   |
+| data        | TEXT                             |          |   | Categories' label           |
+| category_id | FK categories(category_messages) |          |   | Category of the rule        |
 
 | TABLE     | resources     | resource |   | Resource in the project, can be either a project, a directory or a file |
 | id        | AUTOINCREMENT | PK       |   | Auto-generated id                                                       |
