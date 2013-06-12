@@ -5,8 +5,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO;           use Ada.Text_IO;
-
 with GNATCOLL.SQL;          use GNATCOLL.SQL;
 with GNATCOLL.SQL.Exec;     use GNATCOLL.SQL.Exec;
 with GNATCOLL.SQL.Inspect;  use GNATCOLL.SQL.Inspect;
@@ -75,8 +73,6 @@ package body Database_Interface is
       Delete_Succeed : Boolean;
    begin
       DB_File := Create_From_Dir (Deposit_Dir, DB_File_Name);
-      Put_Line ("Directory: " & Deposit_Dir.Display_Full_Name & " -- file: " &
-                  String (DB_File_Name));
 
       --  Check existance of a database, delete it before creating a new one
       if Is_Regular_File (DB_File) then
