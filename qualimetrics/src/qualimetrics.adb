@@ -31,6 +31,7 @@ with GNATCOLL.Scripts;      use GNATCOLL.Scripts;
 with GNATCOLL.Traces;       use GNATCOLL.Traces;
 with GNATCOLL.Utils;        use GNATCOLL.Utils;
 with GNATCOLL.VFS;          use GNATCOLL.VFS;
+with GNATCOLL.Arg_Lists;
 
 procedure Qualimetrics is
 
@@ -43,20 +44,65 @@ procedure Qualimetrics is
    procedure Main;
    --  Program entry point
 
+   procedure Load_Main_Plugin;
+   --  Load the main plugin
+
+   Kernel     : constant GPS.CLI_Kernels.CLI_Kernel :=
+     new GPS.CLI_Kernels.CLI_Kernel_Record;
+   Prefix_Dir : constant Virtual_File := Create (+Executable_Location);
+
+   ----------------------
+   -- Load_Main_Plugin --
+   ----------------------
+
+   procedure Load_Main_Plugin is
+      Python : constant Scripting_Language :=
+        Kernel.Scripts.Lookup_Scripting_Language ("python");
+
+      Errors : Boolean;
+   begin
+      --  /!\  Plugin management  /!\
+
+      --  Add the default search path for qualimetrics plugins
+
+      Execute_Command
+        (Python,
+         GNATCOLL.Arg_Lists.Create ("sys.path=[r'" &
+           (+Create_From_Dir
+                (Prefix_Dir, "share/qualimetrics/core/").Full_Name.all)
+           & "']+sys.path"),
+         Show_Command => False,
+         Hide_Output  => True,
+         Errors       => Errors);
+
+      if Errors then
+         Trace (Main_Trace, "Could not set the search path for python");
+      end if;
+
+      --  Execute the main plugin
+
+      Execute_File
+        (Python,
+         Filename =>
+         +Create_From_Dir
+           (Prefix_Dir,
+            +"share/qualimetrics/core/plug-ins/gnatmetric.py").Full_Name,
+         Hide_Output => False,
+         Show_Command => False,
+         Errors   => Errors);
+
+      if Errors then
+         Trace (Main_Trace, "Errors during python script execution");
+      end if;
+   end Load_Main_Plugin;
+
    ----------
    -- Main --
    ----------
 
-   procedure Main
-   is
-      Kernel       : constant GPS.CLI_Kernels.CLI_Kernel :=
-        new GPS.CLI_Kernels.CLI_Kernel_Record;
+   procedure Main is
       Deposit_Dir  : Virtual_File;
       Command_Line : Qualimetrics_Command_Line;
-      Errors : Boolean;
-
-      Prefix_Dir : constant String := Executable_Location;
-
    begin
       GNATCOLL.Traces.Parse_Config_File;
 
@@ -95,21 +141,7 @@ procedure Qualimetrics is
 
       Trace (Main_Trace, "Project information entered in the database");
 
-      --  /!\  Plugin management  /!\
-      Execute_File
-        (Script   => Kernel.Scripts.Lookup_Scripting_Language
-           ("python"),
-         Filename =>
-           +Create_From_Dir
-             (Create (+Prefix_Dir),
-              +"share/qualimetrics/core/plug-ins/gnatmetric.py").Full_Name,
-         Hide_Output => False,
-         Show_Command => False,
-         Errors   => Errors);
-
-      if Errors then
-         Trace (Main_Trace, "errors during python script execution");
-      end if;
+      Load_Main_Plugin;
 
       --  Save project tree to DB
       Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
