@@ -9,10 +9,8 @@ project Qualimetrics is
    for Source_Dirs use ("obj/gnatcoll_sqlite/", --  automatically generated file
                         "src");
 
-   Processors := external ("PROCESSORS", "1");
-
    package Builder is
-      for Default_Switches ("Ada") use ("-m", "-j" & Processors);
+      for Default_Switches ("Ada") use ("-m", "-j0");
    end Builder;
 
    package Compiler is
