@@ -80,6 +80,10 @@ package body Qmt_Command_Line is
       return Self.Project_Name;
    end Get_Project_Name;
 
+   -------------
+   -- Destroy --
+   -------------
+
    procedure Destroy (Self : in out Qualimetrics_Command_Line) is
    begin
       GNAT.Command_Line.Free (Self.Command_Line);
