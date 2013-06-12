@@ -98,7 +98,8 @@ procedure Qualimetrics is
           (Script   => Kernel.Scripts.Lookup_Scripting_Language
              ("python"),
            Filename => GNAT.OS_Lib.Normalize_Pathname
-             ("plugins/gnatmetric.py", Get_Current_Dir.Display_Full_Name),
+             ("share/qualimetrics/core/plug-ins/gnatmetric.py",
+             Get_Current_Dir.Display_Full_Name),
            Hide_Output => False,
            Show_Command => False,
            Errors   => Errors);
