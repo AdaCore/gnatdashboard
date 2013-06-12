@@ -64,7 +64,9 @@ package body Database_Interface is
    -- Initialize_DB --
    -------------------
 
-   function Initialize_DB (Deposit_Dir : Virtual_File) return Boolean
+   function Initialize_DB
+     (Deposit_Dir : Virtual_File;
+      Schema_File : Virtual_File) return Boolean
    is
       Descr          : Database_Description;
       Schema_IO      : DB_Schema_IO;
@@ -87,7 +89,7 @@ package body Database_Interface is
       end if;
 
       --  Retieve schema from text file
-      Schema := New_Schema_IO (Create (DB_Schema_File_Name)).Read_Schema;
+      Schema := New_Schema_IO (Schema_File).Read_Schema;
 
       Descr := GNATCOLL.SQL.Sqlite.Setup
         (Database => DB_File.Display_Full_Name);

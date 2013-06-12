@@ -50,6 +50,8 @@ procedure Qualimetrics is
    Kernel     : constant GPS.CLI_Kernels.CLI_Kernel :=
      new GPS.CLI_Kernels.CLI_Kernel_Record;
    Prefix_Dir : constant Virtual_File := Create (+Executable_Location);
+   Core_Dir   : constant Virtual_File := Create_From_Dir
+     (Prefix_Dir, "share/qualimetrics/core");
 
    ----------------------
    -- Load_Main_Plugin --
@@ -68,8 +70,7 @@ procedure Qualimetrics is
       Execute_Command
         (Python,
          GNATCOLL.Arg_Lists.Create ("sys.path=[r'" &
-           (+Create_From_Dir
-                (Prefix_Dir, "share/qualimetrics/core/").Full_Name.all)
+           (+Core_Dir.Full_Name.all)
            & "']+sys.path"),
          Show_Command => False,
          Hide_Output  => True,
@@ -85,8 +86,8 @@ procedure Qualimetrics is
         (Python,
          Filename =>
          +Create_From_Dir
-           (Prefix_Dir,
-            +"share/qualimetrics/core/plug-ins/gnatmetric.py").Full_Name,
+           (Core_Dir,
+            +"plug-ins/gnatmetric.py").Full_Name,
          Hide_Output => False,
          Show_Command => False,
          Errors   => Errors);
@@ -129,7 +130,10 @@ procedure Qualimetrics is
         (Kernel.Registry.Tree.Root_Project);
 
       --  Create Database
-      if not Initialize_DB (Deposit_Dir) then
+      if not Initialize_DB
+        (Deposit_Dir,
+         Create_From_Dir (Core_Dir, "dbschema.txt"))
+      then
          Trace (Error_Trace, "Could not initialize the database", Red_Fg);
          return;
       end if;
