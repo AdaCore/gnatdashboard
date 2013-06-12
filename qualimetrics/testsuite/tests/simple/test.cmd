@@ -3,4 +3,4 @@ qualimetrics -Pdefault
 
 # verify that the object directory contains the expected files
 # at the expected locations
-find obj/ | sort
+find obj/ | grep -v ".svn" | sort
