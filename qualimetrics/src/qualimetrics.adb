@@ -20,6 +20,19 @@ with GNAT.OS_Lib;
 
 with GNATCOLL.Traces;       use GNATCOLL.Traces;
 
+--  Organization of the qualimetrics install directory:
+--
+--   <install_dir>
+--     /bin/
+--       qualimetrics             --  the main executable
+--     /share/
+--       qualimetrics/
+--         plug-ins/              --  user-defined plugins go here
+--         core/
+--           qualimetrics_api.py  --  this is the main API entry point
+--                                --  that users can use
+--           plug-ins/            --  AdaCore-defined plugins go here
+
 procedure Qualimetrics is
 
    Main_Trace : constant Trace_Handle :=
