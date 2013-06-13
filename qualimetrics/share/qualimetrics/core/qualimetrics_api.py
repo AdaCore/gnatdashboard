@@ -2,6 +2,8 @@
 #        Qualimetrics Plugin API        #
 #########################################
 
+import GPS
+import os
 
 ## OutputParserMetaClass ######################################################
 class OutputParserMetaClass(type):
@@ -18,7 +20,7 @@ class OutputParserMetaClass(type):
         """
         return getattr(self, 'name', self.__name__).lower()
 
-## OutputParser #####################################################xxxxxxxxx#
+## OutputParser ##############################################################
 class OutputParser(object):
     __metaclass__ = OutputParserMetaClass
 
@@ -43,23 +45,31 @@ def create_parser(name, child=None):
     else:
         return None
 
-def save_resource_message(file_path, rule_id, data, category=None):
+def get_log_dir():
+    """Return qualimetrics logs directory, create it if does not exist"""
+    logs_dir =  os.path.join(GPS.Project.root().object_dirs()[0], 'qualimetrics', 'logs')
+    if not os.path.exists(logs_dir):
+        os.makedirs(logs_dir)
+    return logs_dir
+
+def save_resource_message(tool_name, file_path, rule_id, data, category=None):
     """Save message related to a file
 
        Parameters:
+        - name of the tool associated to the rule
         - file_path: resource absolute path
         - rule_id: rule unique string identifier
         - data: description or value of the message
         - category: mesage category, None by default
     """
-    print 'Saving message for resource: %s' % file_path
-    print ' -- %s: %s' % (rule_id, data)
+    return
 
-def save_entity_message (file_path, line, name, col_begin,
+def save_entity_message (tool_name, file_path, line, name, col_begin,
                          rule_id, data, category=None):
     """Save message related to a file
 
        Parameters:
+        - name of the tool associated to the rule
         - file_path: resource absolute path where the entityt is located
         - line: line of the entity
         - name: entity name
@@ -68,6 +78,4 @@ def save_entity_message (file_path, line, name, col_begin,
         - data: description or value of the message
         - category: mesage category, None by default
     """
-    print 'Saving message for entity: %s' % name
-    print ' -- %s: %s' % (rule_id, data)
-
+    return

@@ -1,10 +1,16 @@
 import GPS
 import os
 from xml.etree import ElementTree
-from qualimetrics_api import OutputParser, create_parser, save_resource_message, save_entity_message
+import qualimetrics_api
+from qualimetrics_api import (OutputParser,
+                              create_parser,
+                              save_resource_message,
+                              save_entity_message,
+                              get_log_dir)
 
 OUTPUT_FILE_NAME='metrix.xml'
 LOG_FILE_NAME='gnatmetric.log'
+TOOL_NAME='GNAT Metric'
 
 # imitate tool_output module:
 class tool_output ():
@@ -15,8 +21,7 @@ class tool_output ():
 # Define custom output parser:
 class GNATMetricParser(OutputParser):
     def on_stdout(self,text):
-        object_dir = GPS.Project.root().object_dirs()[0]
-        with open (os.path.join(object_dir, LOG_FILE_NAME), 'w+a') as log:
+        with open (os.path.join(get_log_dir(), LOG_FILE_NAME), 'w+a') as log:
             log.write(text)
 
 # Parse metrix.xml file
@@ -26,13 +31,15 @@ def parse_metrix_xml_file ():
     for file_node in tree.findall('./file'):
         # Save file level metrics
         for metric in file_node.findall('./metric'):
-            save_resource_message(file_node.attrib.get('name'),
+            save_resource_message(TOOL_NAME,
+                                file_node.attrib.get('name'),
                                 metric.attrib.get('name'),
                                 metric.text)
         # Save unit level metric
         for unit in file_node.findall('.//unit'):
             for metric in unit.findall('./metric'):
-                save_entity_message(file_node.attrib.get('name'),
+                save_entity_message(TOOL_NAME,
+                                    file_node.attrib.get('name'),
                                     unit.attrib.get('line'),
                                     unit.attrib.get('name'),
                                     unit.attrib.get('col'),
