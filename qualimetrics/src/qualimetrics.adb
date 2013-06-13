@@ -21,7 +21,6 @@
 with GPS.CLI_Utils;
 with GPS.CLI_Kernels;       use GPS.CLI_Kernels;
 
-with Utils;
 with Database_Interface;    use Database_Interface;
 with Qmt_Command_Line;      use Qmt_Command_Line;
 with Project_Parser;        use Project_Parser;
@@ -32,6 +31,8 @@ with GNATCOLL.Traces;       use GNATCOLL.Traces;
 with GNATCOLL.Utils;        use GNATCOLL.Utils;
 with GNATCOLL.VFS;          use GNATCOLL.VFS;
 with GNATCOLL.Arg_Lists;
+with Ada.Exceptions;        use Ada.Exceptions;
+with GNAT.Directory_Operations; use GNAT.Directory_Operations;
 
 procedure Qualimetrics is
 
@@ -47,11 +48,52 @@ procedure Qualimetrics is
    procedure Load_Main_Plugin;
    --  Load the main plugin
 
+   function Create_Project_Directory_Env return Boolean;
+   --  Check the existance of Project object directory and create direcotries
+   --  needed for qualimetrics driver, such as:
+   --  <project_root_dir>
+   --             /object_dir/
+   --                  qualimetrics/    --  qualimetrics deposit dir
+   --                       logs/       --  directory for plugin log
+
    Kernel     : constant GPS.CLI_Kernels.CLI_Kernel :=
      new GPS.CLI_Kernels.CLI_Kernel_Record;
    Prefix_Dir : constant Virtual_File := Create (+Executable_Location);
    Core_Dir   : constant Virtual_File := Create_From_Dir
      (Prefix_Dir, "share/qualimetrics/core");
+
+   ----------------------------------
+   -- Create_Project_Directory_Env --
+   ----------------------------------
+
+   function Create_Project_Directory_Env return Boolean
+   is
+      Object_Directory : constant Virtual_File
+        := Kernel.Registry.Tree.Root_Project.Object_Dir;
+      Logs_Directory : Virtual_File;
+      Root_Directory : Virtual_File;
+
+   begin
+      --  Check exitance of project object directory
+      if Object_Directory = No_File then
+         return False;
+      end if;
+
+      Root_Directory := Create_From_Dir (Object_Directory, "qualimetrics");
+      Logs_Directory := Create_From_Dir (Root_Directory, "logs");
+
+      if not Is_Regular_File (Logs_Directory) then
+         Make_Dir (Dir       => Logs_Directory,
+                   Recursive => True);
+      end if;
+
+      return True;
+
+   exception
+      when E : Directory_Error =>
+         Trace (Error_Trace, Exception_Information (E), Red_Fg);
+         return False;
+   end Create_Project_Directory_Env;
 
    ----------------------
    -- Load_Main_Plugin --
@@ -102,7 +144,6 @@ procedure Qualimetrics is
    ----------
 
    procedure Main is
-      Deposit_Dir  : Virtual_File;
       Command_Line : Qualimetrics_Command_Line;
    begin
       GNATCOLL.Traces.Parse_Config_File;
@@ -124,13 +165,15 @@ procedure Qualimetrics is
          return;
       end if;
 
-      --  Set Qualimetrics deposit directory
-      Deposit_Dir := Utils.Get_Deposit_Directory
-        (Kernel.Registry.Tree.Root_Project);
+      --  Create qualimetrics directories in project object directory
+      if not Create_Project_Directory_Env then
+         Trace (Main_Trace, "Unable to initialise project qualimetrics"
+                & "object directory environment", Red_Fg);
+      end if;
 
       --  Create Database
       if not Initialize_DB
-        (Deposit_Dir,
+        (Kernel.Registry.Tree.Root_Project.Object_Dir,
          Create_From_Dir (Core_Dir, "dbschema.txt"))
       then
          Trace (Error_Trace, "Could not initialize the database", Red_Fg);

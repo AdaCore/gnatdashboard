@@ -47,9 +47,8 @@ def create_parser(name, child=None):
 
 def get_log_dir():
     """Return qualimetrics logs directory, create it if does not exist"""
-    logs_dir =  os.path.join(GPS.Project.root().object_dirs()[0], 'qualimetrics', 'logs')
-    if not os.path.exists(logs_dir):
-        os.makedirs(logs_dir)
+    logs_dir =  os.path.join(GPS.Project.root().object_dirs()[0],
+                             'qualimetrics', 'logs')
     return logs_dir
 
 def save_resource_message(tool_name, file_path, rule_id, data, category=None):

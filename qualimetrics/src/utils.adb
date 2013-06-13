@@ -21,20 +21,4 @@ package body Utils is
       return False;
    end Return_On_Failure;
 
-   ---------------------------
-   -- Get_Deposit_Directory --
-   ---------------------------
-
-   function Get_Deposit_Directory
-     (Root_Project : Project_Type) return Virtual_File is
-   begin
-
-      if Root_Project.Object_Dir = No_File then
-         return Root_Project.Project_Path.Dir;
-      else
-         return Root_Project.Object_Dir;
-      end if;
-
-   end Get_Deposit_Directory;
-
 end Utils;
