@@ -113,7 +113,6 @@ procedure Qualimetrics is
       --  Error output messages are handled by Parse function, according
       --  to the case of failure.
       if not Command_Line.Parse (Kernel) then
-         Trace (Error_Trace, "Could not parse the command line", Red_Fg);
          return;
       end if;
 
