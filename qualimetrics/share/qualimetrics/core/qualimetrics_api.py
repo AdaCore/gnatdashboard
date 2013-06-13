@@ -42,3 +42,32 @@ def create_parser(name, child=None):
         return OutputParserMetaClass.registered[name](child)
     else:
         return None
+
+def save_resource_message(file_path, rule_id, data, category=None):
+    """Save message related to a file
+
+       Parameters:
+        - file_path: resource absolute path
+        - rule_id: rule unique string identifier
+        - data: description or value of the message
+        - category: mesage category, None by default
+    """
+    print 'Saving message for resource: %s' % file_path
+    print ' -- %s: %s' % (rule_id, data)
+
+def save_entity_message (file_path, line, name, col_begin,
+                         rule_id, data, category=None):
+    """Save message related to a file
+
+       Parameters:
+        - file_path: resource absolute path where the entityt is located
+        - line: line of the entity
+        - name: entity name
+        - col_begin: column begin of the entity
+        - rule_id: rule unique string identifier
+        - data: description or value of the message
+        - category: mesage category, None by default
+    """
+    print 'Saving message for entity: %s' % name
+    print ' -- %s: %s' % (rule_id, data)
+
