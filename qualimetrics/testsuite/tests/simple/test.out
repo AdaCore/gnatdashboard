@@ -1,5 +1,7 @@
 obj/
-obj/gnatmetric.log
 obj/hello.adb.metrix
 obj/metrix.xml
+obj/qualimetrics
 obj/qualimetrics.db
+obj/qualimetrics/logs
+obj/qualimetrics/logs/gnatmetric.log

@@ -8,3 +8,6 @@ create:
 orm:
 	# Generate the Ada API
 	cd obj/gnatcoll_sqlite && gnatcoll_db2ada -api=Database -orm=ORM -dbmodel=../../dbschema.txt
+
+test:
+	cd testsuite/ && python testsuite.py

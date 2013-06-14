@@ -1,1 +1,1 @@
-qualimetrics --version | grep -v "^Qualimetrics version"
+qualimetrics --version | grep -v "^Qualimetrics driver"

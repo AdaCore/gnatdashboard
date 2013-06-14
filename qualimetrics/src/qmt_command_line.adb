@@ -5,9 +5,12 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Text_IO;       use Ada.Text_IO;
 with GNAT.Command_Line; use GNAT.Command_Line;
 with GPS.CLI_Utils;
+
 with Utils;
+with Version;
 
 package body Qmt_Command_Line is
 
@@ -33,6 +36,12 @@ package body Qmt_Command_Line is
         (Self.Command_Line,
          Switch       => "-X:",
          Help         => "Specify an external reference in the project");
+      Define_Switch
+        (Self.Command_Line,
+         Output      => Self.Version'Access,
+         Long_Switch => "--version",
+         Help        => "Version of Qualimetrics driver",
+         Value       => True);
    end Configure;
 
    ----------------------
@@ -43,8 +52,14 @@ package body Qmt_Command_Line is
      (Self   : in out Qualimetrics_Command_Line;
       Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record) return Boolean is
    begin
-      --  Parse command line
+      --  Manage -X (scenario vars) switch and call getopt
       GPS.CLI_Utils.Parse_Command_Line (Self.Command_Line, Kernel);
+
+      --  Version option
+      if Self.Version then
+         Put_Line ("Qualimetrics driver " & Version.VERSION);
+         return False;
+      end if;
 
       --  Check that project file path has been specified on command line
       if not GPS.CLI_Utils.Is_Project_Path_Specified (Self.Project_Name) then
@@ -57,7 +72,7 @@ package body Qmt_Command_Line is
                                            Self.Project_Name.all);
       end if;
 
-      return True;
+         return True;
    exception
       when GNAT.Command_Line.Exit_From_Command_Line =>
          --  Help is already displayed

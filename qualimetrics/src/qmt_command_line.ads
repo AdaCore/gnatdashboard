@@ -36,6 +36,7 @@ private
    type Qualimetrics_Command_Line is tagged record
       Command_Line : GNAT.Command_Line.Command_Line_Configuration;
       Project_Name : aliased GNAT.Strings.String_Access;
+      Version      : aliased Boolean;
    end record;
 
 end Qmt_Command_Line;
