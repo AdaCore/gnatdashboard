@@ -1,11 +1,12 @@
 #########################################
-#        Qualimetrics Plugin API        #
+#        Qualimetrics Basic  API        #
 #########################################
 
 import GPS
 import os
 
 ## OutputParserMetaClass ######################################################
+##
 class OutputParserMetaClass(type):
     registered = dict()   # list of registered parsers
 
@@ -21,6 +22,7 @@ class OutputParserMetaClass(type):
         return getattr(self, 'name', self.__name__).lower()
 
 ## OutputParser ##############################################################
+##
 class OutputParser(object):
     __metaclass__ = OutputParserMetaClass
 
@@ -39,42 +41,31 @@ class OutputParser(object):
         if self.child != None:
             self.child.on_exit (status)
 
+## create_parser ######################################################
+##
 def create_parser(name, child=None):
     if OutputParserMetaClass.registered.has_key (name):
         return OutputParserMetaClass.registered[name](child)
     else:
         return None
 
+## get_log_dir ######################################################
+##
 def get_log_dir():
-    """Return qualimetrics logs directory, create it if does not exist"""
+    """/!\ Return qualimetrics logs directory /!\
+
+       This value must be retrieved from the Ada program
+    """
     logs_dir =  os.path.join(GPS.Project.root().object_dirs()[0],
                              'qualimetrics', 'logs')
     return logs_dir
 
-def save_resource_message(tool_name, file_path, rule_id, data, category=None):
-    """Save message related to a file
+## get_log_dir ######################################################
+##
+def get_plugin_dir():
+    """"/!\ Return qualimetrics core plugins directory /!\
 
-       Parameters:
-        - name of the tool associated to the rule
-        - file_path: resource absolute path
-        - rule_id: rule unique string identifier
-        - data: description or value of the message
-        - category: mesage category, None by default
+        This value must be retrieved from the Ada program
     """
     return
 
-def save_entity_message (tool_name, file_path, line, name, col_begin,
-                         rule_id, data, category=None):
-    """Save message related to a file
-
-       Parameters:
-        - name of the tool associated to the rule
-        - file_path: resource absolute path where the entityt is located
-        - line: line of the entity
-        - name: entity name
-        - col_begin: column begin of the entity
-        - rule_id: rule unique string identifier
-        - data: description or value of the message
-        - category: mesage category, None by default
-    """
-    return

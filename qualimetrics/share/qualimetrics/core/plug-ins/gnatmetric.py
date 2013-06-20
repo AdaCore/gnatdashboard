@@ -1,50 +1,9 @@
 import GPS
 import os
 from xml.etree import ElementTree
-import qualimetrics_api
-from qualimetrics_api import (OutputParser,
-                              create_parser,
-                              save_resource_message,
-                              save_entity_message,
-                              get_log_dir)
-
-OUTPUT_FILE_NAME='metrix.xml'
-LOG_FILE_NAME='gnatmetric.log'
-TOOL_NAME='GNAT Metric'
-
-# imitate tool_output module:
-class tool_output ():
-    @staticmethod
-    def create_parser (name, child=None):
-        return create_parser (name, child)
-
-# Define custom output parser:
-class GNATMetricParser(OutputParser):
-    def on_stdout(self,text):
-        with open (os.path.join(get_log_dir(), LOG_FILE_NAME), 'w+a') as log:
-            log.write(text)
-
-# Parse metrix.xml file
-def parse_metrix_xml_file ():
-    object_dir = GPS.Project.root().object_dirs()[0]
-    tree = ElementTree.parse(os.path.join(object_dir, OUTPUT_FILE_NAME))
-    for file_node in tree.findall('./file'):
-        # Save file level metrics
-        for metric in file_node.findall('./metric'):
-            save_resource_message(TOOL_NAME,
-                                file_node.attrib.get('name'),
-                                metric.attrib.get('name'),
-                                metric.text)
-        # Save unit level metric
-        for unit in file_node.findall('.//unit'):
-            for metric in unit.findall('./metric'):
-                save_entity_message(TOOL_NAME,
-                                    file_node.attrib.get('name'),
-                                    unit.attrib.get('line'),
-                                    unit.attrib.get('name'),
-                                    unit.attrib.get('col'),
-                                    metric.attrib.get('name'),
-                                    metric.text)
+from qmt_api.utils import OutputParser, create_parser, get_log_dir
+from qmt_api.dao import save_resource_message, save_entity_message
+from qmt_api.plugin import Tool
 
 # Initialize the targets
 xml_base = """<?xml version="1.0"?>
@@ -117,10 +76,55 @@ xml_base = """<?xml version="1.0"?>
 </GPS>
 """
 
-GPS.parse_xml(xml_base)
-target = GPS.BuildTarget("GNAT Metrics for project and subprojects")
-target.execute()
+
+## GnatmetricOutputParser #####################################################
+##
+class GnatmetricOutputParser(OutputParser):
+    """Define custom output parser"""
+    def on_stdout(self,text):
+        with open (Gnatmetric.get_log_file_path('gnatmetric'), 'w+a') as log:
+            log.write(text)
+
+## Gnatmetric ################################################################
+##
+class Gnatmetric(Tool):
+
+    def __init__ (self):
+        super(Gnatmetric, self).__init__('GNAT Metric')
+        self.output_file_name='metrix.xml'
+
+    def setup(self):
+       GPS.parse_xml(xml_base)
+       target = GPS.BuildTarget("GNAT Metrics for project and subprojects")
+       target.execute()
+
+    def parse_metrix_xml_file (self):
+        object_dir = GPS.Project.root().object_dirs()[0]
+        tree = ElementTree.parse(os.path.join(object_dir,
+                                              self.output_file_name))
+        for file_node in tree.findall('./file'):
+            # Save file level metrics
+            for metric in file_node.findall('./metric'):
+                save_resource_message(self.name,
+                                    file_node.attrib.get('name'),
+                                    metric.attrib.get('name'),
+                                    metric.text)
+            # Save unit level metric
+            for unit in file_node.findall('.//unit'):
+                for metric in unit.findall('./metric'):
+                    save_entity_message(self.name,
+                                        file_node.attrib.get('name'),
+                                        unit.attrib.get('line'),
+                                        unit.attrib.get('name'),
+                                        unit.attrib.get('col'),
+                                        metric.attrib.get('name'),
+                                        metric.text)
+
+    def execute(self):
+        self.parse_metrix_xml_file()
+
+
+
 #output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)
 #print (output)
-parse_metrix_xml_file()
 
