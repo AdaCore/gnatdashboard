@@ -61,6 +61,15 @@ procedure Qualimetrics is
    Prefix_Dir : constant Virtual_File := Create (+Executable_Location);
    Core_Dir   : constant Virtual_File := Create_From_Dir
      (Prefix_Dir, "share/qualimetrics/core");
+   Core_Plugin_Dir : constant Virtual_File := Create_From_Dir
+   (Core_Dir, "plug-ins");
+   User_Plugin_Dir : constant Virtual_File := Create_From_Dir
+     (Prefix_Dir, "share/qualimetrics/plug-ins");
+   Python_Path : constant String := "sys.path=[r'" &
+           (+Core_Dir.Full_Name.all) & "', '" &
+           (+Core_Plugin_Dir.Full_Name.all) & "', '" &
+           (+User_Plugin_Dir.Full_Name.all)
+            & "']+sys.path";
 
    ----------------------------------
    -- Create_Project_Directory_Env --
@@ -108,12 +117,10 @@ procedure Qualimetrics is
       --  /!\  Plugin management  /!\
 
       --  Add the default search path for qualimetrics plugins
-
+      Trace (Main_Trace, Python_Path);
       Execute_Command
         (Python,
-         GNATCOLL.Arg_Lists.Create ("sys.path=[r'" &
-           (+Core_Dir.Full_Name.all)
-           & "']+sys.path"),
+         GNATCOLL.Arg_Lists.Create (Python_Path),
          Show_Command => False,
          Hide_Output  => True,
          Errors       => Errors);
@@ -129,7 +136,7 @@ procedure Qualimetrics is
          Filename =>
          +Create_From_Dir
            (Core_Dir,
-            +"plug-ins/gnatmetric.py").Full_Name,
+            +"plugins_executor.py").Full_Name,
          Hide_Output => False,
          Show_Command => False,
          Errors   => Errors);
