@@ -62,18 +62,15 @@ package body Database_Interface is
    -- Initialize_DB --
    -------------------
 
-   function Initialize_DB
-     (Deposit_Dir : Virtual_File;
+   function Initialise_DB
+     (DB_File : Virtual_File;
       Schema_File : Virtual_File) return Boolean
    is
       Descr          : Database_Description;
       Schema_IO      : DB_Schema_IO;
       Schema         : DB_Schema;
-      DB_File        : Virtual_File;
       Delete_Succeed : Boolean;
    begin
-      DB_File := Create_From_Dir (Deposit_Dir, DB_File_Name);
-
       --  Check existance of a database, delete it before creating a new one
       if Is_Regular_File (DB_File) then
          Delete (DB_File, Delete_Succeed);
@@ -102,7 +99,7 @@ package body Database_Interface is
       end if;
 
       return True;
-   end Initialize_DB;
+   end Initialise_DB;
 
    ------------------------------
    -- Create_And_Save_Resource --

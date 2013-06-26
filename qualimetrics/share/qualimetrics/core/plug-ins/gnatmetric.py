@@ -1,8 +1,8 @@
 import GPS
 import os
 from xml.etree import ElementTree
-from qmt_api.utils import OutputParser, create_parser, get_log_dir
-from qmt_api.dao import save_resource_message, save_entity_message
+from qmt_api.utils import OutputParser, create_parser
+from qmt_api.dao import DAO
 from qmt_api.plugin import Tool
 
 # Initialize the targets
@@ -70,7 +70,7 @@ xml_base = """<?xml version="1.0"?>
       <arg>%X</arg>
       <arg>-U</arg>
     </command-line>
-   <output-parsers>gnatmetricparser output_collector</output-parsers>
+   <output-parsers>gnatmetricoutputparser output_collector</output-parsers>
 </target>
 
 </GPS>
@@ -89,8 +89,8 @@ class GnatmetricOutputParser(OutputParser):
 ##
 class Gnatmetric(Tool):
 
-    def __init__ (self):
-        super(Gnatmetric, self).__init__('GNAT Metric')
+    def __init__ (self, dao):
+        super(Gnatmetric, self).__init__('GNAT Metric', dao)
         self.output_file_name='metrix.xml'
 
     def setup(self):
@@ -105,14 +105,14 @@ class Gnatmetric(Tool):
         for file_node in tree.findall('./file'):
             # Save file level metrics
             for metric in file_node.findall('./metric'):
-                save_resource_message(self.name,
+                self.dao.save_resource_message(self.name,
                                     file_node.attrib.get('name'),
                                     metric.attrib.get('name'),
                                     metric.text)
             # Save unit level metric
             for unit in file_node.findall('.//unit'):
                 for metric in unit.findall('./metric'):
-                    save_entity_message(self.name,
+                    self.dao.save_entity_message(self.name,
                                         file_node.attrib.get('name'),
                                         unit.attrib.get('line'),
                                         unit.attrib.get('name'),

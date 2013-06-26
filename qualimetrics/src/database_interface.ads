@@ -53,14 +53,14 @@ package Database_Interface is
    --  DB Management  --
    ---------------------
 
-   function Initialize_DB
-     (Deposit_Dir : Virtual_File;
+   function Initialise_DB
+     (DB_File : Virtual_File;
       Schema_File : Virtual_File) return Boolean;
    --  Create Qualimetrics DB sqlite file. And initialize DB context that will
    --  be use in the whole program to interract with the DB. Session pool
    --  is setup by this function.
    --
-   --  Deposit_Dir: directory in which the DB will be created.
+   --  Object_Dir: directory in which the DB will be created.
    --  Schema_File: the file containing the database schema
    --  Returns wether the DB has been succefully created or not.
 
@@ -88,5 +88,4 @@ package Database_Interface is
 
 private
    Max_Sessions        : Natural                    := 2;
-   DB_File_Name        : constant Filesystem_String := "qualimetrics.db";
 end Database_Interface;

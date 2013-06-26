@@ -28,11 +28,12 @@ with Project_Parser;        use Project_Parser;
 with GNATCOLL.Projects;     use GNATCOLL.Projects;
 with GNATCOLL.Scripts;      use GNATCOLL.Scripts;
 with GNATCOLL.Traces;       use GNATCOLL.Traces;
-with GNATCOLL.Utils;        use GNATCOLL.Utils;
 with GNATCOLL.VFS;          use GNATCOLL.VFS;
 with GNATCOLL.Arg_Lists;
 with Ada.Exceptions;        use Ada.Exceptions;
 with GNAT.Directory_Operations; use GNAT.Directory_Operations;
+with Core_Properties;
+with Qmt_Python_Api;
 
 procedure Qualimetrics is
 
@@ -45,8 +46,9 @@ procedure Qualimetrics is
    procedure Main;
    --  Program entry point
 
-   procedure Load_Main_Plugin;
-   --  Load the main plugin
+   procedure Load_Plugin_Runner;
+   --  Load the plugin runner that executes every qualimetrics plugin:
+   --  both core and user plugins.
 
    function Create_Project_Directory_Env return Boolean;
    --  Check the existance of Project object directory and create direcotries
@@ -56,20 +58,8 @@ procedure Qualimetrics is
    --                  qualimetrics/    --  qualimetrics deposit dir
    --                       logs/       --  directory for plugin log
 
-   Kernel     : constant GPS.CLI_Kernels.CLI_Kernel :=
+   Kernel : constant GPS.CLI_Kernels.CLI_Kernel :=
      new GPS.CLI_Kernels.CLI_Kernel_Record;
-   Prefix_Dir : constant Virtual_File := Create (+Executable_Location);
-   Core_Dir   : constant Virtual_File := Create_From_Dir
-     (Prefix_Dir, "share/qualimetrics/core");
-   Core_Plugin_Dir : constant Virtual_File := Create_From_Dir
-   (Core_Dir, "plug-ins");
-   User_Plugin_Dir : constant Virtual_File := Create_From_Dir
-     (Prefix_Dir, "share/qualimetrics/plug-ins");
-   Python_Path : constant String := "sys.path=[r'" &
-           (+Core_Dir.Full_Name.all) & "', '" &
-           (+Core_Plugin_Dir.Full_Name.all) & "', '" &
-           (+User_Plugin_Dir.Full_Name.all)
-            & "']+sys.path";
 
    ----------------------------------
    -- Create_Project_Directory_Env --
@@ -79,8 +69,10 @@ procedure Qualimetrics is
    is
       Object_Directory : constant Virtual_File
         := Kernel.Registry.Tree.Root_Project.Object_Dir;
-      Logs_Directory : Virtual_File;
-      Root_Directory : Virtual_File;
+      Root_Directory : constant Virtual_File := Create_From_Dir
+        (Object_Directory, Core_Properties.Project_Qmt_Dir_Name);
+      Logs_Directory : constant Virtual_File := Create_From_Dir
+        (Root_Directory, Core_Properties.Project_Log_Dir_Name);
 
    begin
       --  Check exitance of project object directory
@@ -88,9 +80,7 @@ procedure Qualimetrics is
          return False;
       end if;
 
-      Root_Directory := Create_From_Dir (Object_Directory, "qualimetrics");
-      Logs_Directory := Create_From_Dir (Root_Directory, "logs");
-
+      --  Create both root and log directories
       if not Is_Regular_File (Logs_Directory) then
          Make_Dir (Dir       => Logs_Directory,
                    Recursive => True);
@@ -104,19 +94,24 @@ procedure Qualimetrics is
          return False;
    end Create_Project_Directory_Env;
 
-   ----------------------
-   -- Load_Main_Plugin --
-   ----------------------
+   ------------------------
+   -- Load_Plugin_Runner --
+   ------------------------
 
-   procedure Load_Main_Plugin is
+   procedure Load_Plugin_Runner is
+      Errors : Boolean;
       Python : constant Scripting_Language :=
         Kernel.Scripts.Lookup_Scripting_Language ("python");
+      Python_Path : constant String :=
+        "sys.path=[r'" &
+        Core_Properties.Qmt_Core_Dir.Display_Full_Name & "', '" &
+        Core_Properties.Qmt_Core_Plugin_Dir.Display_Full_Name & "', '" &
+        Core_Properties.Qmt_User_Plugin_Dir.Display_Full_Name
+        & "']+sys.path";
 
-      Errors : Boolean;
    begin
-      --  /!\  Plugin management  /!\
-
       --  Add the default search path for qualimetrics plugins
+      --  and qualimetrics python API
       Trace (Main_Trace, Python_Path);
       Execute_Command
         (Python,
@@ -130,13 +125,12 @@ procedure Qualimetrics is
       end if;
 
       --  Execute the main plugin
-
       Execute_File
         (Python,
          Filename =>
          +Create_From_Dir
-           (Core_Dir,
-            +"plugins_executor.py").Full_Name,
+           (Core_Properties.Qmt_Core_Dir,
+            +"plugins_runner.py").Full_Name,
          Hide_Output => False,
          Show_Command => False,
          Errors   => Errors);
@@ -144,7 +138,7 @@ procedure Qualimetrics is
       if Errors then
          Trace (Main_Trace, "Errors during python script execution");
       end if;
-   end Load_Main_Plugin;
+   end Load_Plugin_Runner;
 
    ----------
    -- Main --
@@ -153,9 +147,10 @@ procedure Qualimetrics is
    procedure Main is
       Command_Line : Qualimetrics_Command_Line;
    begin
+      --  Initialisation
       GNATCOLL.Traces.Parse_Config_File;
-
       GPS.CLI_Utils.Create_Kernel_Context (Kernel);
+      Qmt_Python_Api.Initialise (Kernel);
       Command_Line.Configure;
 
       --  Error output messages are handled by Parse function, according
@@ -179,9 +174,10 @@ procedure Qualimetrics is
       end if;
 
       --  Create Database
-      if not Initialize_DB
-        (Kernel.Registry.Tree.Root_Project.Object_Dir,
-         Create_From_Dir (Core_Dir, "dbschema.txt"))
+      if not Initialise_DB
+        (Create_From_Dir (Kernel.Registry.Tree.Root_Project.Object_Dir,
+                          Core_Properties.DB_File_Name),
+         Create_From_Dir (Core_Properties.Qmt_Core_Dir, "dbschema.txt"))
       then
          Trace (Error_Trace, "Could not initialize the database", Red_Fg);
          return;
@@ -194,14 +190,12 @@ procedure Qualimetrics is
 
       Trace (Main_Trace, "Project information entered in the database");
 
-      Load_Main_Plugin;
+      --  Run qualimetrics plugins
+      Load_Plugin_Runner;
 
-      --  Save project tree to DB
-      Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
-
+      --  Finilise
       GPS.CLI_Utils.Destroy_Kernel_Context (Kernel);
       Command_Line.Destroy;
-
       GNATCOLL.Traces.Finalize;
 
    end Main;

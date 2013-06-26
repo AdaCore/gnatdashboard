@@ -3,6 +3,7 @@
 #########################################
 
 import GPS
+import Qmt
 import os
 
 ## OutputParserMetaClass ######################################################
@@ -49,23 +50,8 @@ def create_parser(name, child=None):
     else:
         return None
 
-## get_log_dir ######################################################
+## get_project_obj_dir ######################################################
 ##
-def get_log_dir():
-    """/!\ Return qualimetrics logs directory /!\
-
-       This value must be retrieved from the Ada program
-    """
-    logs_dir =  os.path.join(GPS.Project.root().object_dirs()[0],
-                             'qualimetrics', 'logs')
-    return logs_dir
-
-## get_log_dir ######################################################
-##
-def get_plugin_dir():
-    """"/!\ Return qualimetrics core plugins directory /!\
-
-        This value must be retrieved from the Ada program
-    """
-    return
+def get_project_obj_dir():
+    return GPS.Project.root().object_dirs()[0]
 

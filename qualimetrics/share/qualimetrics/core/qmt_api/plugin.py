@@ -3,8 +3,9 @@
 #########################################
 
 import os
-import dao
 import utils
+import Qmt
+from dao import DAO
 from abc import ABCMeta, abstractmethod
 
 ## Plugin ######################################################
@@ -31,12 +32,15 @@ class Plugin:
             - name: name of the file, without the extension
         """
         filename = name + '.log'
-        return os.path.join(utils.get_log_dir, filename)
+        path = os.path.join(utils.get_project_obj_dir(),
+                            Qmt.logs_dir(), filename)
+        return path
 
 ## Tool ######################################################
 ##
 class Tool(Plugin):
-    def __init__(self, name):
+    def __init__(self, name, dao):
         super(Tool, self).__init__(name)
-        dao.save_tool(name)
+        self.dao = dao
+        self.dao.save_tool(name)
 
