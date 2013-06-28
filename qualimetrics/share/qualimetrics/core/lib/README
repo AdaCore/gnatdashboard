@@ -1,0 +1,31 @@
+##############################################################################
+##                                                                          ##
+##             Q u a l i me t r i c s    L i b r a r y                      ##
+##                                                                          ##
+##############################################################################
+
+This directory contains python library used by qualimetrics.
+
+
+--  SQLAlchemy  --
+
+What for
+
+    Use for interracting with the database with orm system management.
+
+
+How to install
+    
+    $ pip install --no-install SQLAlchemy -d path/to/directory/for/lib/source
+    $ export PYHTONUSERBASE=/path/to/install/dir/
+    --> this step allow .pth file to work in the install directory. This kind
+    of file is used for the installation of python package
+    $ python setup.py --without-cextensions install --user
+    --> install the package in python use base directory, set previously
+
+    --> if you get this error:
+        [Errno 2] No such file or directory:
+        '/path/to/instal/dir/lib/python2.7/site-packages/test-easy-install-28362.write-test
+    --> create recursively directories: 'lib/python2.7/site-packagesand/' then
+        try again
+
