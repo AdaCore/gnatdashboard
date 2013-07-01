@@ -29,6 +29,8 @@ public class AdaGnatMetricSensor extends AdaSensor {
      * Sonar property key for GNATmetric report absolute path
      */
     public static final String REPORT_PATH_KEY = "sonar.ada.gnatmetric.reportPath";
+    private final String[] TESTFORISSUES = {"this", "is", "test", "for",
+    "sonar", "issues"};
 
     public AdaGnatMetricSensor(Configuration conf) {
         super(conf);
