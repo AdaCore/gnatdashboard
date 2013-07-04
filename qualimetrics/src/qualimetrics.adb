@@ -106,7 +106,8 @@ procedure Qualimetrics is
         "sys.path=[r'" &
         Core_Properties.Qmt_Core_Dir.Display_Full_Name & "', '" &
         Core_Properties.Qmt_Core_Plugin_Dir.Display_Full_Name & "', '" &
-        Core_Properties.Qmt_User_Plugin_Dir.Display_Full_Name
+        Core_Properties.Qmt_User_Plugin_Dir.Display_Full_Name & "', '" &
+        Core_Properties.Qmt_Core_Lib_Dir.Display_Full_Name
         & "']+sys.path";
 
    begin

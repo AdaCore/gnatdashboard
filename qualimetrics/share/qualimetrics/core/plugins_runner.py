@@ -2,14 +2,13 @@ import GPS
 import os
 import imp
 import Qmt
-import sqlite3
-from qmt_api.dao import DAO
+from qmt_api.db import SessionFactory
 from qmt_api.utils import OutputParser, create_parser, get_project_obj_dir
 
 ## tool_output ###############################################################
 ##
 class tool_output ():
-    """"Imitate tool_output module"""
+    """"Initate tool_output module"""
     @staticmethod
     def create_parser (name, child=None):
         return create_parser (name, child)
@@ -37,25 +36,21 @@ class PluginRunner(object):
             print 'Cannot execute plugin %s' % module_name
             print 'Should implement a class named %s' % (module_name.capitalized)
 
-    def run_plugins(self, db_connection):
+    def run_plugins(self, session_factory):
         for module in self.get_all_plugins():
-            dao = DAO(db_connection)
+            session = session_factory.get_session()
             plugin_class = self.get_plugin_class(module)
-            if not plugin_class:
-                continue
-            plugin = plugin_class(dao)
-            plugin.setup()
-            plugin.execute()
+            if plugin_class:
+                plugin = plugin_class(session)
+                plugin.setup()
+                plugin.execute()
 
 def _entry_point():
     # Initialise
-    db_path = os.path.join(get_project_obj_dir(), Qmt.db_file_name())
-    connection = sqlite3.connect(db_path)
     runner = PluginRunner()
     # Execute
-    runner.run_plugins(connection)
-    # Finish
-    connection.close()
+    sessionfactory = SessionFactory()
+    runner.run_plugins(sessionfactory)
 
 if __name__ == '__main__':
     _entry_point()

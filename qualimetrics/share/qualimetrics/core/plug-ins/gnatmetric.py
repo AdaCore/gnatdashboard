@@ -2,8 +2,9 @@ import GPS
 import os
 from xml.etree import ElementTree
 from qmt_api.utils import OutputParser, create_parser
-from qmt_api.dao import DAO
 from qmt_api.plugin import Tool
+from qmt_api.db import Rule
+from qmt_api import Session
 
 # Initialize the targets
 xml_base = """<?xml version="1.0"?>
@@ -89,14 +90,24 @@ class GnatmetricOutputParser(OutputParser):
 ##
 class Gnatmetric(Tool):
 
-    def __init__ (self, dao):
-        super(Gnatmetric, self).__init__('GNAT Metric', dao)
+    def __init__ (self, session):
+        super(Gnatmetric, self).__init__('GNAT Metric', session)
         self.output_file_name='metrix.xml'
+        self.rules = dict()
 
     def setup(self):
        GPS.parse_xml(xml_base)
        target = GPS.BuildTarget("GNAT Metrics for project and subprojects")
        target.execute()
+
+    def __get_rule(self, identifier):
+       if identifier not in self.rules:
+           rule = Rule(identifier, identifier, self.my_tool)
+           self.session.add(rule)
+           self.rules[identifier] = rule
+           return rule
+       else:
+           return self.rules[identifier]
 
     def parse_metrix_xml_file (self):
         object_dir = GPS.Project.root().object_dirs()[0]
@@ -105,20 +116,20 @@ class Gnatmetric(Tool):
         for file_node in tree.findall('./file'):
             # Save file level metrics
             for metric in file_node.findall('./metric'):
-                self.dao.save_resource_message(self.name,
-                                    file_node.attrib.get('name'),
-                                    metric.attrib.get('name'),
-                                    metric.text)
+                Rule = self.__get_rule(metric.attrib.get('name'))
+                # File --> file_node.attrib.get('name'),
+                # Metric value --> metric.text)
             # Save unit level metric
             for unit in file_node.findall('.//unit'):
                 for metric in unit.findall('./metric'):
-                    self.dao.save_entity_message(self.name,
-                                        file_node.attrib.get('name'),
-                                        unit.attrib.get('line'),
-                                        unit.attrib.get('name'),
-                                        unit.attrib.get('col'),
-                                        metric.attrib.get('name'),
-                                        metric.text)
+                    pass
+                    # File --> file_node.attrib.get('name'),
+                    # Entity Line --> unit.attrib.get('line'),
+                    # Entity name --> unit.attrib.get('name'),
+                    # Entity Col --> unit.attrib.get('col'),
+                    # Metric name --> metric.attrib.get('name'),
+                    # Metric value --> metric.text)
+        self.session.commit()
 
     def execute(self):
         self.parse_metrix_xml_file()

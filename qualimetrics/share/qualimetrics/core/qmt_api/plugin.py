@@ -5,8 +5,8 @@
 import os
 import utils
 import Qmt
-from dao import DAO
 from abc import ABCMeta, abstractmethod
+import db
 
 ## Plugin ######################################################
 ##
@@ -39,8 +39,10 @@ class Plugin:
 ## Tool ######################################################
 ##
 class Tool(Plugin):
-    def __init__(self, name, dao):
+    def __init__(self, name, session):
         super(Tool, self).__init__(name)
-        self.dao = dao
-        self.dao.save_tool(name)
+        self.session= session
+        self.my_tool = db.Tool(self.name)
+        self.session.add(self.my_tool)
+        self.session.commit()
 

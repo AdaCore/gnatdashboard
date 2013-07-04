@@ -14,6 +14,8 @@ package Core_Properties is
      Create (+Executable_Location);
    Qmt_Core_Dir        : constant Virtual_File :=
      Create_From_Dir (Qmt_Prefix_Dir, "share/qualimetrics/core");
+   Qmt_Core_Lib_Dir : constant Virtual_File :=
+     Create_From_Dir (Qmt_Prefix_Dir, "share/qualimetrics/core/lib");
    Qmt_Core_Plugin_Dir : constant Virtual_File :=
      Create_From_Dir (Qmt_Prefix_Dir, "share/qualimetrics/core/plug-ins");
    Qmt_User_Plugin_Dir : constant Virtual_File :=

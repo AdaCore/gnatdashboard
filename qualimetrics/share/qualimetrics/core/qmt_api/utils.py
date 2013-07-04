@@ -55,3 +55,8 @@ def create_parser(name, child=None):
 def get_project_obj_dir():
     return GPS.Project.root().object_dirs()[0]
 
+## get_project_obj_dir ######################################################
+##
+def get_db_path():
+    return os.path.join(get_project_obj_dir(), Qmt.db_file_name())
+
