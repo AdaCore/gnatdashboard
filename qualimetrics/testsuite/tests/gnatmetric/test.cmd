@@ -1,19 +1,15 @@
 # launch qualimetrics on a trivial project
 qualimetrics -Pdefault
 
+tool_name="GNAT Metric"
+
 # verify that gnatmetric has saved metric in db
-if [ `sqlite3 obj/qualimetrics.db "select count(id) from rules;"` -gt 0 ]
+gm_rules=`sqlite3 obj/qualimetrics.db "select count(r.id) from rules r, tools t where t.id = r.tool_id and t.name = \"GNAT Metric\";"`
+if [ "$gm_rules" -lt "1" ]
 then
-    echo "OK - rules saved"
-else
-    echo "NOK - no rules saved"
+    echo "No rule saved for GNAT Metric"
 fi
 
 # verify that gnatmetric tool has been saved in db
-if [ `sqlite3 obj/qualimetrics.db "select count(id) from tools;"` -gt 0 ]
-then
-    echo "OK - tool saved"
-else
-    echo "NOK - tool not saved"
-fi
+sqlite3 obj/qualimetrics.db "select name from tools;" | grep "$tool_name"
 
