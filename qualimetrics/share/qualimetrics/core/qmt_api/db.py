@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship, backref
 
 Base = declarative_base()
 
-## SessionFacto##ry ###########################################################
+## SessionFactory #############################################################
 ##
 class SessionFactory(object):
 
@@ -55,5 +55,5 @@ class Rule(Base):
 
     def __repr__(self):
         return "<Rule('%s', '%s', '%s')>" % (self.name, self.identifier,
-        self.tool)
+        self.tool.name)
 
