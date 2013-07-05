@@ -77,6 +77,13 @@ class Category(Base):
     def __repr__(self):
         return "<Category('%s')>" % (self.label)
 
+## resource_messages ########################################
+##
+resource_message_table = Table('resources_messages', Base.metadata,
+        Column('resource_id', Integer, ForeignKey('resources.id')),
+        Column('message_id', Integer, ForeignKey('messages.id'))
+        )
+
 ## Message ####################################################################
 ##
 class Message(Base):
@@ -108,6 +115,8 @@ class Resource(Base):
     kind = Column(Integer)
 
     lines = relationship("Line", back_populates='resource')
+    messages = relationship("Message", secondary=resource_message_table,
+    backref="resources")
 
     def __init__(self, name, kind):
         self.name = name
@@ -133,13 +142,6 @@ class Line(Base):
 
     def __repr__(self):
         return "<Line('%s', '%s')>" % (self.line, self.resource)
-
-## resource_messages ########################################
-##
-association_table = Table('resources_messages', Base.metadata,
-        Column('resource_id', Integer, ForeignKey('resources.id')),
-        Column('message_id', Integer, ForeignKey('messages.id'))
-        )
 
 ## LineMessage ################################################################
 ##

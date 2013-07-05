@@ -3,8 +3,9 @@ import os
 from xml.etree import ElementTree
 from qmt_api.utils import OutputParser, create_parser
 from qmt_api.plugin import Tool
-from qmt_api.db import Rule
+from qmt_api.db import Rule, Message
 from qmt_api import Session
+from qmt_api import dao
 
 # Initialize the targets
 xml_base = """<?xml version="1.0"?>
@@ -93,32 +94,27 @@ class Gnatmetric(Tool):
     def __init__ (self, session):
         super(Gnatmetric, self).__init__('GNAT Metric', session)
         self.output_file_name='metrix.xml'
-        self.rules = dict()
 
     def setup(self):
        GPS.parse_xml(xml_base)
        target = GPS.BuildTarget("GNAT Metrics for project and subprojects")
        target.execute()
 
-    def __get_rule(self, identifier):
-       if identifier not in self.rules:
-           rule = Rule(identifier, identifier, self.my_tool)
-           self.session.add(rule)
-           self.rules[identifier] = rule
-           return rule
-       else:
-           return self.rules[identifier]
-
     def parse_metrix_xml_file (self):
         object_dir = GPS.Project.root().object_dirs()[0]
         tree = ElementTree.parse(os.path.join(object_dir,
                                               self.output_file_name))
         for file_node in tree.findall('./file'):
+            file = dao.get_file(self.session, file_node.attrib.get('name'))
+            if not file:
+                print 'File not found, skipping all messages for file: %s' % file_node.attrib.get('name')
+                continue
             # Save file level metrics
             for metric in file_node.findall('./metric'):
-                Rule = self.__get_rule(metric.attrib.get('name'))
-                # File --> file_node.attrib.get('name'),
-                # Metric value --> metric.text)
+                rule = dao.get_or_create_rule(self.session,
+                                metric.attrib.get('name'),
+                                metric.attrib.get('name'), self.my_tool)
+                file.messages.append(Message (metric.text, rule))
             # Save unit level metric
             for unit in file_node.findall('.//unit'):
                 for metric in unit.findall('./metric'):
@@ -133,7 +129,6 @@ class Gnatmetric(Tool):
 
     def execute(self):
         self.parse_metrix_xml_file()
-
 
 
 #output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)
