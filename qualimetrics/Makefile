@@ -11,3 +11,7 @@ orm:
 
 test:
 	cd testsuite/ && python testsuite.py
+
+clean:
+	gprclean -Pqualimetrics.gpr && rm share/qualimetrics/core/qmt_api/*.pyc
+
