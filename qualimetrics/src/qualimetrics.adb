@@ -34,6 +34,7 @@ with Ada.Exceptions;        use Ada.Exceptions;
 with GNAT.Directory_Operations; use GNAT.Directory_Operations;
 with Core_Properties;
 with Qmt_Python_Api;
+with Utils;
 
 procedure Qualimetrics is
 
@@ -193,6 +194,13 @@ procedure Qualimetrics is
 
       --  Run qualimetrics plugins
       Load_Plugin_Runner;
+
+      --  Run script if present on command line
+      if Command_Line.Get_Script_Arg.all  /= "" then
+         if Utils.Execute_Script (Kernel, Command_Line.Get_Script_Arg) then
+            Trace (Main_Trace, "[Debug] - script load successfully");
+         end if;
+      end if;
 
       --  Finilise
       GPS.CLI_Utils.Destroy_Kernel_Context (Kernel);

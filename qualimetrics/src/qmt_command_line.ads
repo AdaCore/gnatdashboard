@@ -29,6 +29,10 @@ package Qmt_Command_Line is
      (Self : Qualimetrics_Command_Line) return GNAT.Strings.String_Access;
    --  ???
 
+   function Get_Script_Arg
+     (Self : Qualimetrics_Command_Line) return GNAT.Strings.String_Access;
+   --  ???
+
    procedure Destroy (Self : in out Qualimetrics_Command_Line);
    --  ???
 
@@ -36,6 +40,7 @@ private
    type Qualimetrics_Command_Line is tagged record
       Command_Line : GNAT.Command_Line.Command_Line_Configuration;
       Project_Name : aliased GNAT.Strings.String_Access;
+      Script_Arg   : aliased GNAT.Strings.String_Access;
       Version      : aliased Boolean;
    end record;
 

@@ -38,6 +38,13 @@ package body Qmt_Command_Line is
          Help         => "Specify an external reference in the project");
       Define_Switch
         (Self.Command_Line,
+         Output      => Self.Script_Arg'Access,
+         Switch      => "-l:",
+         Long_Switch => "--load=",
+         Help        => "Execute an external file written in the" &
+                         " language lang");
+      Define_Switch
+        (Self.Command_Line,
          Output      => Self.Version'Access,
          Long_Switch => "--version",
          Help        => "Version of Qualimetrics driver",
@@ -72,7 +79,7 @@ package body Qmt_Command_Line is
                                            Self.Project_Name.all);
       end if;
 
-         return True;
+      return True;
    exception
       when GNAT.Command_Line.Exit_From_Command_Line =>
          --  Help is already displayed
@@ -94,6 +101,16 @@ package body Qmt_Command_Line is
    begin
       return Self.Project_Name;
    end Get_Project_Name;
+
+   --------------------
+   -- Get_Script_Arg --
+   --------------------
+
+   function Get_Script_Arg
+     (Self : Qualimetrics_Command_Line) return GNAT.Strings.String_Access is
+   begin
+      return Self.Script_Arg;
+   end Get_Script_Arg;
 
    -------------
    -- Destroy --

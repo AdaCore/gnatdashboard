@@ -5,9 +5,17 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with GPS;             use GPS;
+with GPS.CLI_Kernels;
+
 package Utils is
 
    function Return_On_Failure (Message : String) return Boolean;
+   --  ???
+
+   function Execute_Script
+     (Kernel     : access GPS.CLI_Kernels.CLI_Kernel_Record;
+      Script_Arg : access String) return Boolean;
    --  ???
 
 end Utils;
