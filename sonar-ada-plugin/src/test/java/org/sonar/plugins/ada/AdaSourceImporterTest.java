@@ -17,10 +17,11 @@ import static org.mockito.Mockito.verify;
 import org.sonar.api.batch.ResourceCreationLock;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.resources.Project;
+import org.sonar.plugins.ada.persistence.JDBCUtils;
 import org.sonar.plugins.ada.resources.AdaFile;
 
-
 public class AdaSourceImporterTest {
+
     private AdaSourceImporter sourceImporter;
     private Project project;
     private SensorContext context;
@@ -29,8 +30,8 @@ public class AdaSourceImporterTest {
     public void setUp() {
         Configuration conf = mock(Configuration.class);
         ResourceCreationLock lock = mock(ResourceCreationLock.class);
-        when(conf.getString(AdaSourceImporter.PROJECT_TREE_FILE_PATH_KEY)).
-                thenReturn("project_tree.json");
+        when(conf.getString(JDBCUtils.QMT_DB_PATH)).
+                thenReturn("/Users/kiwi/projects/qualimetrics/share/examples/sdc/qualimetrics.db");
         sourceImporter = new AdaSourceImporter(lock, conf);
     }
 
@@ -38,14 +39,15 @@ public class AdaSourceImporterTest {
      * Test of analyse method, of class AdaSourceImporter.
      */
     @Test
-    public void testAnalyse() {
+    public void testAnalyse() throws ClassNotFoundException {
+
         TestUtils.createProjectTree();
         project = TestUtils.mockProject();
         context = mock(SensorContext.class);
 
         sourceImporter.analyse(project, context);
         verify(context, times(4)).saveSource(any(AdaFile.class),
-                                             any(String.class));
+                any(String.class));
     }
 
     /**
@@ -53,7 +55,7 @@ public class AdaSourceImporterTest {
      */
     @Test
     public void testToString() {
-       assertNotNull(sourceImporter.toString());
-       assertFalse(TestUtils.TO_STRING_ERR_MSG,sourceImporter.toString().isEmpty());
+        assertNotNull(sourceImporter.toString());
+        assertFalse(TestUtils.TO_STRING_ERR_MSG, sourceImporter.toString().isEmpty());
     }
 }

@@ -100,9 +100,10 @@ public final class GnatMetrics implements Metrics {
     private static List<Metric> metrics = new ArrayList<Metric>();
 
     /**
-     * Is defined in the Metrics interface and is used by Sonar to retrieve the
+     * Defined in the Metrics interface and is used by Sonar to retrieve the
      * list of new metrics.
      */
+    @Override
     public List<Metric> getMetrics() {
         if (metrics.isEmpty()) {
             for (Field field : GnatMetrics.class.getFields()) {

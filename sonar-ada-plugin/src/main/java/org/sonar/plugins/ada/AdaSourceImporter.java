@@ -6,18 +6,13 @@ package org.sonar.plugins.ada;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.apache.log4j.Logger;
 import org.sonar.api.batch.AbstractSourceImporter;
 import org.sonar.api.batch.Phase;
 import org.sonar.api.batch.ResourceCreationLock;
@@ -25,8 +20,9 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.utils.SonarException;
+import org.sonar.plugins.ada.persistence.AdaDao;
+import org.sonar.plugins.ada.persistence.JDBCUtils;
 import org.sonar.plugins.ada.resources.AdaFile;
-import org.sonar.plugins.ada.utils.AdaUtils;
 
 /**
  * Extension of AbstractSourceImporter for Ada project import all project
@@ -36,24 +32,18 @@ import org.sonar.plugins.ada.utils.AdaUtils;
 public class AdaSourceImporter extends AbstractSourceImporter {
 
     // <editor-fold desc="Class's attibutes" defaultstate="collapsed">
+
     /**
-     * Property key of the path to the file that contains the Ada project tree
-     * The tree information is retrieved from the Gnat project file
+     * Contains the mapping of all project's resources: key: resource basename
+     * value: AdaFile Sonar representation of the resource
      */
-    public static final String PROJECT_TREE_FILE_PATH_KEY = "sonar.ada.projectTree";
-    /**
-     * Contains the mapping of all project's resources:
-     *  key: resource basename
-     *  value: AdaFile Sonar representation of the resource
-     */
-    private static Map<String, AdaFile> sourceMap;
-    private final String sourceDirKeyword = "Source_Dirs";
+    private static Map<String, AdaFile> sourceMap = new HashMap<String, AdaFile> ();
 
     //TO BE REMOVED !!
     public static Map<String, AdaFile> getSourceMap() {
         return sourceMap;
     }
-
+    private Logger logger = Logger.getLogger(AdaSourceImporter.class);
     private ResourceCreationLock lock;
     private Configuration config;
     // </editor-fold>
@@ -69,24 +59,32 @@ public class AdaSourceImporter extends AbstractSourceImporter {
      */
     @Override
     public void analyse(Project project, SensorContext context) {
-        sourceMap = loadProjectTree(project.getFileSystem().getBasedir().getPath());
-        saveResource(context, project.getFileSystem().getSourceCharset());
+            saveResources(context, project.getFileSystem().getSourceCharset());
         onFinished();
     }
 
     /**
      * Import resource content and save it in the context.
+     *
      * @param context
      * @param source encoding
      */
-    protected void saveResource(SensorContext context, Charset sourcesEncoding) {
-        for (AdaFile resource : sourceMap.values()) {
+    protected void saveResources(SensorContext context, Charset sourcesEncoding) {
+        JDBCUtils.setDBurl(config.getString(JDBCUtils.QMT_DB_PATH));
+        AdaDao dao = new AdaDao();
+
+        for (AdaFile resource : dao.selectAllResources()) {
             File file = new File(resource.getLongName());
+            logger.info("+++ File : " + file.getName());
             try {
                 String source = FileUtils.readFileToString(file, sourcesEncoding.name());
                 context.saveSource(resource, source);
+                logger.info("File: " + resource.getName());
+            } catch (FileNotFoundException ex){
+               logger.info("File not found: " + file.getAbsolutePath());
             } catch (IOException e) {
-                throw new SonarException("Unable to read and import the source file : '" + file.getAbsolutePath() + "' with the charset : '"
+                throw new SonarException("Unable to read and import the source file : '"
+                        + file.getAbsolutePath() + "' with the charset : '"
                         + sourcesEncoding.name() + "'.", e);
             }
         }
@@ -104,58 +102,6 @@ public class AdaSourceImporter extends AbstractSourceImporter {
     @Override
     protected void onFinished() {
         lock.lock();
-    }
-
-    /**
-     * Retrieve Ada project logical tree. As Ada project tree is defined in the
-     * project file, it must be retrieved from this file only and not according
-     * to the physical directory tree.
-     *
-     * @param project's file system
-     * @param project's base directory path
-     * @param sensor's context
-     */
-    protected Map<String, AdaFile> loadProjectTree(String baseDirPath) {
-        Map<String, AdaFile> srcMap = new HashMap<String, AdaFile>();
-        String filePath = config.getString(PROJECT_TREE_FILE_PATH_KEY);
-        if (filePath == null) {
-            AdaUtils.LOG.info("Path to file containing the project tree is missing or invalid, using a default project tree instead.");
-
-        } else {
-            AdaUtils.LOG.info("Using pattern '{}' to find project tree file", filePath);
-
-            JSONParser parser = new JSONParser();
-
-            try {
-
-                Object obj = parser.parse(new FileReader(new File(baseDirPath, filePath)));
-
-                JSONObject jsonTree = (JSONObject) obj;
-                for (Object project : jsonTree.keySet()) {
-                    // Retieve only source directories and not object directories
-                    JSONObject jsonDirs = (JSONObject) (jsonTree.get(project));
-                    JSONObject jsonSrcDirs = (JSONObject) (jsonDirs.get(sourceDirKeyword));
-                    for (Object srcDir : jsonSrcDirs.keySet()) {
-                        JSONArray jsonSrc = (JSONArray) jsonSrcDirs.get(srcDir);
-                        Iterator<String> iterator = jsonSrc.iterator();
-                        while (iterator.hasNext()) {
-                            //For now, import all resources as a source and not as unit test resource.
-                            AdaFile resource = (AdaFile) createResource(new File(srcDir.toString(), iterator.next()), false, project.toString(), srcDir.toString());
-                            srcMap.put(resource.getName(), resource);
-                        }
-                    }
-
-                }
-
-            } catch (ParseException ex) {
-                AdaUtils.LOG.warn("Error while parsing the Project tree file, using default tree instead.\n {}\n Position {}", ex.getMessage(), ex.getPosition());
-            } catch (FileNotFoundException e) {
-                AdaUtils.LOG.warn("Connot find the file containing the Project tree, using default tree instead.\n {}", e.getMessage());
-            } catch (IOException e) {
-                AdaUtils.LOG.warn("Connot open the file containing the Project tree, using default tree instead.\n {}", e.getMessage());
-            }
-        }
-        return srcMap;
     }
 
     @Override

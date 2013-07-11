@@ -4,11 +4,9 @@
  */
 package org.sonar.plugins.ada.resources;
 
-import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.sonar.api.resources.Language;
-import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.plugins.ada.Ada;
 
@@ -25,14 +23,10 @@ public class AdaFile extends Resource<AdaDirectory> {
     public static final String SEPARATOR = "/";
     public static final String DEFAULT_PROJECT_NAME = "Default project";
 
-    /**
-     * Creates an Ada File based on the source name, project parent name and
-     * directory name
-     *
-     * @param source name, contains file's absolute path
-     * @param  project name
-     * @param directory name
-     */
+    // Used by MyBatis
+    public AdaFile (){
+    }
+
     public AdaFile(String sourceName, String prj, String dir) {
         if (prj == null) {
             throw new IllegalArgumentException("Ada source's project name can not be null");
@@ -47,6 +41,22 @@ public class AdaFile extends Resource<AdaDirectory> {
 
     }
 
+     public void setProject(String project) {
+        this.project = project;
+    }
+
+    public void setDirectory(String directory) {
+        this.directory = directory;
+    }
+
+    public void setFileName(String fileName) {
+        setKey(fileName);
+        this.fileName = StringUtils.substringAfterLast(fileName, SEPARATOR);
+    }
+
+    /**
+     * @return resource's base name
+     */
     @Override
     public String getName() {
         return fileName;

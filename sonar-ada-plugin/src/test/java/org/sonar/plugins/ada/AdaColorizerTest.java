@@ -5,7 +5,7 @@
 package org.sonar.plugins.ada;
 
 import java.util.List;
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 import org.junit.Test;
 import org.sonar.colorizer.Tokenizer;
 
@@ -26,7 +26,7 @@ public class AdaColorizerTest {
 
     public void assertList(List<Tokenizer> tokenizers){
         assert(tokenizers != null);
-        assertEquals(3, tokenizers.size());
+        Assert.assertEquals(3, tokenizers.size());
     }
 
 }

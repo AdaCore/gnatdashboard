@@ -16,9 +16,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.database.DatabaseSession;
 import org.sonar.api.measures.Metric;
+import org.sonar.api.measures.MetricFinder;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
+import org.sonar.api.rules.RuleFinder;
 import org.sonar.plugins.ada.TestUtils;
 import org.sonar.plugins.ada.resources.AdaFile;
 
@@ -51,7 +54,7 @@ public class AdaGnatMetricSensorTest {
     @Test
     public void testDontSaveMeasureWhenWrongReport(){
         Configuration config = mock(Configuration.class);
-        when(conf.getString(AdaGnatMetricSensor.REPORT_PATH_KEY))
+        when(conf.getString(""))
                 .thenReturn("reports/wrong-gnatmetric-report.xml");
 
         // Execution
@@ -59,14 +62,5 @@ public class AdaGnatMetricSensorTest {
         verify(context, times(0)).saveMeasure(any(AdaFile.class),
                                               any(Metric.class),
                                               any(Double.class));
-    }
-
-    /**
-     * Test of reportPathKey method, of class AdaGnatMetricSensor.
-     */
-    @Test
-    public void testReportPathKey() {
-        assertTrue(sensor.reportPathKey() != null);
-        assertFalse(sensor.reportPathKey().isEmpty());
     }
 }

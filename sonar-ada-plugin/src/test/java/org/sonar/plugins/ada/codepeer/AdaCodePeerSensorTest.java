@@ -28,7 +28,6 @@ import org.sonar.plugins.ada.resources.AdaFile;
 
 
 public class AdaCodePeerSensorTest {
-    private AdaCodePeerSensor sensor;
     private SensorContext context;
     private Project project;
     private Configuration config;
@@ -39,32 +38,7 @@ public class AdaCodePeerSensorTest {
         AdaFile adaFileMock = mock(AdaFile.class);
         config = mock(Configuration.class);
         project = TestUtils.mockProject();
-        sensor = new AdaCodePeerSensor(rulefinder, config);
         context = mock(SensorContext.class);
         when(context.getResource((Resource)anyObject())).thenReturn(adaFileMock);
-    }
-
-    /**
-     * Test of reportPathKey method, of class AdaGnatCheckSensor.
-     */
-    @Test
-    public void testReportPathKey() {
-        assertNotNull(sensor.reportPathKey());
-        assertFalse(sensor.reportPathKey().isEmpty());
-    }
-
-    @Test
-    public void testReportCorrectNumberViolations() {
-        sensor.analyse(project, context);
-        verify(context, times(3)).saveViolation(any(Violation.class));
-    }
-
-
-    @Test
-    public void testWrongReport() {
-        when(config.getString(AdaCodePeerSensor.REPORT_PATH_KEY))
-                .thenReturn("reports/wrong-codepeer-report.json");
-        sensor.analyse(project, context);
-        verify(context, times(0)).saveViolation(any(Violation.class));
     }
 }
