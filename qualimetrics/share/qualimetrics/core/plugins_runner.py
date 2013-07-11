@@ -34,7 +34,7 @@ class PluginRunner(object):
             print e
         except AttributeError:
             print 'Cannot execute plugin %s' % module_name
-            print 'Should implement a class named %s' % (module_name.capitalized)
+            print 'Should implement a class named %s' % (module_name.capitalize())
 
     def run_plugins(self, session_factory):
         for module in self.get_all_plugins():

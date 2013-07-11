@@ -10,6 +10,10 @@ with GNATCOLL.VFS; use GNATCOLL.VFS;
 
 package body Qmt_Python_Api is
 
+   procedure Qmt_Root_Dir
+     (Data : in out Callback_Data'Class;
+      Command : String);
+
    procedure Logs_Dir
      (Data : in out Callback_Data'Class;
       Command : String);
@@ -25,6 +29,16 @@ package body Qmt_Python_Api is
    procedure Core_Plugins_Dir
      (Data : in out Callback_Data'Class;
       Command : String);
+
+   procedure Qmt_Root_Dir
+     (Data : in out Callback_Data'Class;
+      Command : String)
+      is
+      pragma Unreferenced (Command);
+   begin
+      Set_Return_Value
+        (Data, Core_Properties.Project_Qmt_Dir_Name.Display_Full_Name);
+   end Qmt_Root_Dir;
 
    procedure Logs_Dir
      (Data : in out Callback_Data'Class;
@@ -86,6 +100,8 @@ package body Qmt_Python_Api is
       GNATCOLL.Scripts.Register_Command
         (Repo, "logs_dir", 0, 0, Logs_Dir'Access);
 
+      GNATCOLL.Scripts.Register_Command
+        (Repo, "qmt_root_dir", 0, 0, Qmt_Root_Dir'Access);
    end Initialise;
 
 end Qmt_Python_Api;

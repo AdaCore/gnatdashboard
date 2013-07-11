@@ -4,4 +4,7 @@ obj/metrix.xml
 obj/qualimetrics
 obj/qualimetrics/logs
 obj/qualimetrics/logs/gnatmetric.log
+obj/qualimetrics/logs/sonar-runner.log
 obj/qualimetrics/qualimetrics.db
+obj/qualimetrics/sonar
+obj/qualimetrics/sonar/sonar-project.properties

@@ -60,8 +60,7 @@ def get_project_obj_dir():
 def get_db_path():
     return os.path.join(get_project_obj_dir(), Qmt.db_relative_path())
 
-## get_sonar_work_dir ######################################################
+## get_project_obj_dir ######################################################
 ##
-def get_sonar_work_dir():
-    return os.path.join(get_project_obj_dir(), Qmt.sonar_work_dir())
-
+def get_qmt_root_dir():
+    return os.path.join(get_project_obj_dir(), Qmt.qmt_root_dir())
