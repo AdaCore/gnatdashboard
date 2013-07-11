@@ -64,3 +64,9 @@ def get_db_path():
 ##
 def get_qmt_root_dir():
     return os.path.join(get_project_obj_dir(), Qmt.qmt_root_dir())
+
+## get_project_name ######################################################
+##
+def get_project_name():
+    return GPS.Project.root().name()
+
