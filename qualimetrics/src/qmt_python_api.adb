@@ -26,10 +26,6 @@ package body Qmt_Python_Api is
      (Data : in out Callback_Data'Class;
       Command : String);
 
-   procedure Sonar_Work_Dir
-     (Data : in out Callback_Data'Class;
-      Command : String);
-
    procedure Logs_Dir
      (Data : in out Callback_Data'Class;
       Command : String)
@@ -68,16 +64,6 @@ package body Qmt_Python_Api is
         (Data, Core_Properties.Qmt_User_Plugin_Dir.Display_Full_Name);
    end User_Plugins_Dir;
 
-   procedure Sonar_Work_Dir
-     (Data : in out Callback_Data'Class;
-      Command : String)
-   is
-      pragma Unreferenced (Command);
-   begin
-      Set_Return_Value
-        (Data, Core_Properties.Project_Sonar_Dir.Display_Full_Name);
-   end Sonar_Work_Dir;
-
    procedure Initialise (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record) is
       pragma Unreferenced (Kernel);
    begin
@@ -100,8 +86,6 @@ package body Qmt_Python_Api is
       GNATCOLL.Scripts.Register_Command
         (Repo, "logs_dir", 0, 0, Logs_Dir'Access);
 
-      GNATCOLL.Scripts.Register_Command
-        (Repo, "sonar_work_dir", 0, 0, Sonar_Work_Dir'Access);
    end Initialise;
 
 end Qmt_Python_Api;

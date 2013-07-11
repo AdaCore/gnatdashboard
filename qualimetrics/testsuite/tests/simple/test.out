@@ -5,4 +5,3 @@ obj/qualimetrics
 obj/qualimetrics/logs
 obj/qualimetrics/logs/gnatmetric.log
 obj/qualimetrics/qualimetrics.db
-obj/qualimetrics/sonar

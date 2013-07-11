@@ -26,8 +26,6 @@ package Core_Properties is
    Project_Qmt_Dir_Name  : constant Virtual_File := Create ("qualimetrics");
    Project_Log_Dir_Name  : constant Virtual_File :=
      Create_From_Dir (Project_Qmt_Dir_Name, "logs");
-   Project_Sonar_Dir     : constant Virtual_File :=
-     Create_From_Dir (Project_Qmt_Dir_Name, "sonar");
    DB_File_Relative_Path : constant Virtual_File :=
      Create_From_Dir (Project_Qmt_Dir_Name, "qualimetrics.db");
 
