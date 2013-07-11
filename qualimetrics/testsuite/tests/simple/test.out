@@ -2,6 +2,7 @@ obj/
 obj/hello.adb.metrix
 obj/metrix.xml
 obj/qualimetrics
-obj/qualimetrics.db
 obj/qualimetrics/logs
 obj/qualimetrics/logs/gnatmetric.log
+obj/qualimetrics/qualimetrics.db
+obj/qualimetrics/sonar

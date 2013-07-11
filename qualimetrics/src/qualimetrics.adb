@@ -70,10 +70,10 @@ procedure Qualimetrics is
    is
       Object_Directory : constant Virtual_File
         := Kernel.Registry.Tree.Root_Project.Object_Dir;
-      Root_Directory : constant Virtual_File := Create_From_Dir
-        (Object_Directory, Core_Properties.Project_Qmt_Dir_Name);
-      Logs_Directory : constant Virtual_File := Create_From_Dir
-        (Root_Directory, Core_Properties.Project_Log_Dir_Name);
+      Logs_Directory   : constant Virtual_File := Create_From_Dir
+        (Object_Directory, Core_Properties.Project_Log_Dir_Name.Full_Name);
+      Sonar_Directory  : constant Virtual_File := Create_From_Dir
+        (Object_Directory, Core_Properties.Project_Sonar_Dir.Full_Name);
 
    begin
       --  Check exitance of project object directory
@@ -84,6 +84,11 @@ procedure Qualimetrics is
       --  Create both root and log directories
       if not Is_Regular_File (Logs_Directory) then
          Make_Dir (Dir       => Logs_Directory,
+                   Recursive => True);
+      end if;
+
+      if not Is_Regular_File (Sonar_Directory) then
+         Make_Dir (Dir       => Sonar_Directory,
                    Recursive => True);
       end if;
 
@@ -180,7 +185,7 @@ procedure Qualimetrics is
       --  Create Database
       if not Initialise_DB
         (Create_From_Dir (Kernel.Registry.Tree.Root_Project.Object_Dir,
-                          Core_Properties.DB_File_Name),
+                          Core_Properties.DB_File_Relative_Path.Full_Name),
          Create_From_Dir (Core_Properties.Qmt_Core_Dir, "dbschema.txt"))
       then
          Trace (Error_Trace, "Could not initialize the database", Red_Fg);

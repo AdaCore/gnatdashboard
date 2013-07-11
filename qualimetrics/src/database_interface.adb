@@ -63,7 +63,7 @@ package body Database_Interface is
    -------------------
 
    function Initialise_DB
-     (DB_File : Virtual_File;
+     (DB_File     : Virtual_File;
       Schema_File : Virtual_File) return Boolean
    is
       Descr          : Database_Description;

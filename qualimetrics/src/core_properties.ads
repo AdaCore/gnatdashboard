@@ -14,7 +14,7 @@ package Core_Properties is
      Create (+Executable_Location);
    Qmt_Core_Dir        : constant Virtual_File :=
      Create_From_Dir (Qmt_Prefix_Dir, "share/qualimetrics/core");
-   Qmt_Core_Lib_Dir : constant Virtual_File :=
+   Qmt_Core_Lib_Dir    : constant Virtual_File :=
      Create_From_Dir (Qmt_Prefix_Dir, "share/qualimetrics/core/lib");
    Qmt_Core_Plugin_Dir : constant Virtual_File :=
      Create_From_Dir (Qmt_Prefix_Dir, "share/qualimetrics/core/plug-ins");
@@ -23,9 +23,13 @@ package Core_Properties is
 
    --  Qualimetrics project side environment properties, located in project
    --  object directory
-   Project_Qmt_Dir_Name : constant Filesystem_String := "qualimetrics";
-   Project_Log_Dir_Name : constant Filesystem_String := "logs";
+   Project_Qmt_Dir_Name  : constant Virtual_File := Create ("qualimetrics");
+   Project_Log_Dir_Name  : constant Virtual_File :=
+     Create_From_Dir (Project_Qmt_Dir_Name, "logs");
+   Project_Sonar_Dir     : constant Virtual_File :=
+     Create_From_Dir (Project_Qmt_Dir_Name, "sonar");
+   DB_File_Relative_Path : constant Virtual_File :=
+     Create_From_Dir (Project_Qmt_Dir_Name, "qualimetrics.db");
 
-   DB_File_Name : constant Filesystem_String := "qualimetrics.db";
    Qmt_Python_Module_Name : constant String := "Qmt";
 end Core_Properties;

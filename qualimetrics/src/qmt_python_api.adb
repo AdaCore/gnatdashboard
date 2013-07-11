@@ -14,7 +14,7 @@ package body Qmt_Python_Api is
      (Data : in out Callback_Data'Class;
       Command : String);
 
-   procedure DB_File_Name
+   procedure DB_Relative_Path
      (Data : in out Callback_Data'Class;
       Command : String);
 
@@ -26,25 +26,29 @@ package body Qmt_Python_Api is
      (Data : in out Callback_Data'Class;
       Command : String);
 
+   procedure Sonar_Work_Dir
+     (Data : in out Callback_Data'Class;
+      Command : String);
+
    procedure Logs_Dir
      (Data : in out Callback_Data'Class;
       Command : String)
    is
-      Log_Dir : constant Virtual_File := Create_From_Dir
-        (Create (Core_Properties.Project_Qmt_Dir_Name),
-         Core_Properties.Project_Log_Dir_Name);
       pragma Unreferenced (Command);
    begin
-      Set_Return_Value (Data, Log_Dir.Display_Full_Name);
+      Set_Return_Value
+        (Data, Core_Properties.Project_Log_Dir_Name.Display_Full_Name);
    end Logs_Dir;
 
-   procedure DB_File_Name
+   procedure DB_Relative_Path
      (Data : in out Callback_Data'Class;
-      Command : String) is
+      Command : String)
+   is
       pragma Unreferenced (Command);
    begin
-      Set_Return_Value (Data, Core_Properties.DB_File_Name);
-   end DB_File_Name;
+      Set_Return_Value
+        (Data, Core_Properties.DB_File_Relative_Path.Display_Full_Name);
+   end DB_Relative_Path;
 
    procedure Core_Plugins_Dir
      (Data : in out Callback_Data'Class;
@@ -64,6 +68,16 @@ package body Qmt_Python_Api is
         (Data, Core_Properties.Qmt_User_Plugin_Dir.Display_Full_Name);
    end User_Plugins_Dir;
 
+   procedure Sonar_Work_Dir
+     (Data : in out Callback_Data'Class;
+      Command : String)
+   is
+      pragma Unreferenced (Command);
+   begin
+      Set_Return_Value
+        (Data, Core_Properties.Project_Sonar_Dir.Display_Full_Name);
+   end Sonar_Work_Dir;
+
    procedure Initialise (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record) is
       pragma Unreferenced (Kernel);
    begin
@@ -81,10 +95,13 @@ package body Qmt_Python_Api is
         (Repo, "core_plugin_dir", 0, 0, Core_Plugins_Dir'Access);
 
       GNATCOLL.Scripts.Register_Command
-        (Repo, "db_file_name", 0, 0, DB_File_Name'Access);
+        (Repo, "db_relative_path", 0, 0, DB_Relative_Path'Access);
 
       GNATCOLL.Scripts.Register_Command
         (Repo, "logs_dir", 0, 0, Logs_Dir'Access);
+
+      GNATCOLL.Scripts.Register_Command
+        (Repo, "sonar_work_dir", 0, 0, Sonar_Work_Dir'Access);
    end Initialise;
 
 end Qmt_Python_Api;
