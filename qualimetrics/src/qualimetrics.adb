@@ -151,7 +151,9 @@ procedure Qualimetrics is
    begin
       --  Initialisation
       GNATCOLL.Traces.Parse_Config_File;
-      GPS.CLI_Utils.Create_Kernel_Context (Kernel);
+      GPS.CLI_Utils.Create_Kernel_Context
+        (Kernel,
+         Install_Semantic_Parser => False);
       Qmt_Python_Api.Initialise (Kernel);
       Command_Line.Configure;
 
