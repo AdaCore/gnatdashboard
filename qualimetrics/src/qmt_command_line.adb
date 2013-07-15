@@ -49,6 +49,22 @@ package body Qmt_Command_Line is
          Long_Switch => "--version",
          Help        => "Version of Qualimetrics driver",
          Value       => True);
+      Define_Switch
+        (Self.Command_Line,
+         Output      => Self.Quiet'Access,
+         Switch      => "-q",
+         Long_Switch => "--quiet",
+         Help        => "Quiet mode, no log displayed on the" &
+                        " standard outpout",
+         Value       => True);
+      Define_Switch
+        (Self.Command_Line,
+         Output      => Self.Verbose'Access,
+         Switch      => "-v",
+         Long_Switch => "--verbose",
+         Help        => "Verbose mode, display additional information on" &
+                        " the standard outpout",
+         Value       => True);
    end Configure;
 
    ----------------------
@@ -61,6 +77,18 @@ package body Qmt_Command_Line is
    begin
       --  Manage -X (scenario vars) switch and call getopt
       GPS.CLI_Utils.Parse_Command_Line (Self.Command_Line, Kernel);
+
+      --  Set verbose mode if mentionned
+      if Self.Verbose then
+         Utils.Set_Verbose_Traces;
+      end if;
+
+      --  Set quiet mode if mentionned,
+      --   priority is given to the quiet mode if verbose + quiet is mentionned
+      --   on the command line
+      if Self.Quiet then
+         Utils.Set_Quiet_Traces;
+      end if;
 
       --  Version option
       if Self.Version then

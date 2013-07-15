@@ -28,6 +28,7 @@ with Project_Parser;        use Project_Parser;
 with GNATCOLL.Projects;     use GNATCOLL.Projects;
 with GNATCOLL.Scripts;      use GNATCOLL.Scripts;
 with GNATCOLL.Traces;       use GNATCOLL.Traces;
+
 with GNATCOLL.VFS;          use GNATCOLL.VFS;
 with GNATCOLL.Arg_Lists;
 with Ada.Exceptions;        use Ada.Exceptions;
@@ -35,19 +36,14 @@ with GNAT.Directory_Operations; use GNAT.Directory_Operations;
 with Core_Properties;
 with Qmt_Python_Api;
 with Utils;
+with Ada.Calendar;          use Ada.Calendar;
 
 procedure Qualimetrics is
-
-   Main_Trace : constant Trace_Handle :=
-     GNATCOLL.Traces.Create ("QUALIMETRICS.MAIN", Off);
-
-   Error_Trace : constant Trace_Handle :=
-     GNATCOLL.Traces.Create ("QUALIMETRICS.Errors", On);
 
    procedure Main;
    --  Program entry point
 
-   procedure Load_Plugin_Runner;
+   function Load_Plugin_Runner return Boolean;
    --  Load the plugin runner that executes every qualimetrics plugin:
    --  both core and user plugins.
 
@@ -89,15 +85,19 @@ procedure Qualimetrics is
 
    exception
       when E : Directory_Error =>
-         Trace (Error_Trace, Exception_Information (E), Red_Fg);
-         return False;
+         return Utils.Return_On_Failure
+           (Exception_Name (E) & ": Unable to initialise qualimetrics" &
+              " object directory environment in: " &
+              Object_Directory.Display_Full_Name);
    end Create_Project_Directory_Env;
 
    ------------------------
    -- Load_Plugin_Runner --
    ------------------------
 
-   procedure Load_Plugin_Runner is
+   function Load_Plugin_Runner return Boolean is
+      Plugin_Runner : constant Virtual_File := Create_From_Dir
+           (Core_Properties.Qmt_Core_Dir, +"plugins_runner.py");
       Errors : Boolean;
       Python : constant Scripting_Language :=
         Kernel.Scripts.Lookup_Scripting_Language ("python");
@@ -112,7 +112,8 @@ procedure Qualimetrics is
    begin
       --  Add the default search path for qualimetrics plugins
       --  and qualimetrics python API
-      Trace (Main_Trace, Python_Path);
+      Trace (Utils.Debug_Trace, "  Loading plugins with python path: " &
+                                Python_Path);
       Execute_Command
         (Python,
          GNATCOLL.Arg_Lists.Create (Python_Path),
@@ -121,23 +122,29 @@ procedure Qualimetrics is
          Errors       => Errors);
 
       if Errors then
-         Trace (Main_Trace, "Could not set the search path for python");
+         Trace (Utils.Warn_Trace, "Could not set the search path for python");
       end if;
 
-      --  Execute the main plugin
+      --  Execute the pythn script that runs all the plugins
+      Utils.Trace_Separator;
+      Trace (Utils.Info_Trace, "Runnig tools analysis");
+      Utils.Trace_Separator;
+      Trace (Utils.Debug_Trace, "Executing plugin runner script: "
+             & Plugin_Runner.Display_Full_Name);
       Execute_File
         (Python,
-         Filename =>
-         +Create_From_Dir
-           (Core_Properties.Qmt_Core_Dir,
-            +"plugins_runner.py").Full_Name,
+         Filename => Plugin_Runner.Display_Full_Name,
          Hide_Output => False,
          Show_Command => False,
          Errors   => Errors);
 
       if Errors then
-         Trace (Main_Trace, "Errors during python script execution");
+         return Utils.Return_On_Failure
+           ("/!\ Error during the execution of the tool runner /!\");
       end if;
+
+      return True;
+
    end Load_Plugin_Runner;
 
    ----------
@@ -147,8 +154,11 @@ procedure Qualimetrics is
    procedure Main is
       Command_Line : Qualimetrics_Command_Line;
    begin
+      Utils.Program_Starting_Time := Ada.Calendar.Clock;
+
       --  Initialisation
       GNATCOLL.Traces.Parse_Config_File;
+      Trace (Utils.Debug_Trace, "Initialising Qualimetrics kernel context");
       GPS.CLI_Utils.Create_Kernel_Context
         (Kernel,
          Install_Semantic_Parser => False);
@@ -162,45 +172,49 @@ procedure Qualimetrics is
       end if;
 
       --  Load project
-      if not Load_Project_Tree (Command_Line.Get_Project_Name,
-                                Kernel)
-      then
-         Trace (Error_Trace, "Could not load the project", Red_Fg);
+      Trace (Utils.Info_Trace, "Loading project tree from: " &
+                               Command_Line.Get_Project_Name.all);
+      if not Load_Project_Tree (Command_Line.Get_Project_Name, Kernel) then
          return;
       end if;
 
       --  Create qualimetrics directories in project object directory
       if not Create_Project_Directory_Env then
-         Trace (Main_Trace, "Unable to initialise project qualimetrics"
-                & "object directory environment", Red_Fg);
+         return;
       end if;
 
       --  Create Database
+      Trace (Utils.Info_Trace, "Initialising DB...");
       if not Initialise_DB
         (Create_From_Dir (Kernel.Registry.Tree.Root_Project.Object_Dir,
                           Core_Properties.DB_File_Relative_Path.Full_Name),
          Create_From_Dir (Core_Properties.Qmt_Core_Dir, "dbschema.txt"))
       then
-         Trace (Error_Trace, "Could not initialize the database", Red_Fg);
          return;
       end if;
 
-      Trace (Main_Trace, "DB Created");
+      Trace (Utils.Debug_Trace, "DB Created");
 
       --  Save project tree to DB
+      Trace (Utils.Debug_Trace, "Saving project tree in DB...");
       Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
 
-      Trace (Main_Trace, "Project information entered in the database");
-
       --  Run qualimetrics plugins
-      Load_Plugin_Runner;
+      if not Load_Plugin_Runner then
+         return;
+      end if;
 
       --  Run script if present on command line
       if Command_Line.Get_Script_Arg.all  /= "" then
-         if Utils.Execute_Script (Kernel, Command_Line.Get_Script_Arg) then
-            Trace (Main_Trace, "[Debug] - script load successfully");
+         Trace (Utils.Info_Trace, "=====  Running script from command line");
+         if not Utils.Execute_Script (Kernel, Command_Line.Get_Script_Arg) then
+            return;
          end if;
+         Trace (Utils.Debug_Trace, "Script successfully loaded");
       end if;
+
+      --  Log end statistics
+      Utils.Trace_End_Success;
 
       --  Finilise
       GPS.CLI_Utils.Destroy_Kernel_Context (Kernel);

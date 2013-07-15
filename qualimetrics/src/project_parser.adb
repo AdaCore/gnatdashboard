@@ -43,7 +43,9 @@ package body Project_Parser is
       return True;
    exception
       when E : Invalid_Project =>
-         return Utils.Return_On_Failure (Exception_Information (E));
+         return Utils.Return_On_Failure (Exception_Name (E) &
+                                 ": Unable to load project from project file: "
+                                 & Path.all);
    end Load_Project_Tree;
 
    --------------------------
