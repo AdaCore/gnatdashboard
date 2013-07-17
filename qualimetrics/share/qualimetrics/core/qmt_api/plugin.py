@@ -5,13 +5,19 @@
 import os
 import utils
 import Qmt
-from abc import ABCMeta, abstractmethod
+import random
 import db
+from abc import ABCMeta, abstractmethod
 
 ## Plugin ######################################################
 ##
 class Plugin:
     __metaclass__ = ABCMeta
+    # A clear mention need to be done in documentation about the log file
+    # name for tool and the declaration of a custom output parser
+    # in plugin script which is mandatory for the consistency of
+    # tool execution information.
+    LOG_FILE_NAME='qmt-tool-%d.log' % random.randint(1,100)
 
     def __init__(self, name):
         self.name = name
@@ -25,20 +31,18 @@ class Plugin:
         return
 
     @classmethod
-    def get_log_file_path(cls, name):
-        """Class method that returns full path for the plugin logging file
-
-           Parameters:
-            - name: name of the file, without the extension
-        """
-        filename = name + '.log'
+    def get_log_file_path(cls):
+        """Class method that returns full path for the plugin logging file"""
         path = os.path.join(utils.get_project_obj_dir(),
-                            Qmt.logs_dir(), filename)
+                            Qmt.logs_dir(), cls.LOG_FILE_NAME)
         return path
 
 ## Tool ######################################################
 ##
 class Tool(Plugin):
+    # Value updated by utils.OutputParser
+    EXECUTION_SUCCES=None
+
     def __init__(self, name, session):
         super(Tool, self).__init__(name)
         self.session= session

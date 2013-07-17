@@ -2,8 +2,12 @@ import GPS
 import os
 import imp
 import Qmt
+import logging
 from qmt_api.db import SessionFactory
 from qmt_api.utils import OutputParser, create_parser, get_project_obj_dir
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 ## tool_output ###############################################################
 ##
@@ -30,17 +34,21 @@ class PluginRunner(object):
             plugin_class = getattr(module, module_name.capitalize())
             return plugin_class
         except ImportError as e:
-            print 'Unable to load plugin: %s' % module_name
-            print e
+            logger.error('Unable to load plugin: %s' % module_name)
+            logger.error(str(e))
+            logger.error('===== FAIL')
         except AttributeError:
-            print 'Cannot execute plugin %s' % module_name
-            print 'Should implement a class named %s' % (module_name.capitalize())
+            logger.error('Cannot load plugin class %s' % module_name)
+            logger.error('Should implement a class named %s' % (module_name.capitalize()))
+            logger.error('===== FAIL')
 
     def run_plugins(self, session_factory):
         for module in self.get_all_plugins():
             session = session_factory.get_session()
+            logger.info('===== Running %s' % module.capitalize())
             plugin_class = self.get_plugin_class(module)
             if plugin_class:
+                # Instanciate the plugin
                 plugin = plugin_class(session)
                 plugin.setup()
                 plugin.execute()

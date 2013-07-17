@@ -43,12 +43,13 @@ xml_base = """<?xml version="1.0"?>
 class SonarrunnerOutputParser(OutputParser):
     """Define custom output parser"""
     def on_stdout(self,text):
-        with open (Sonarrunner.get_log_file_path('sonar-runner'), 'w+a') as log:
+        with open (Sonarrunner.get_log_file_path(), 'w+a') as log:
             log.write(text)
 
 ## SonarConfiguration #######################################################
 ##
 class SonarConfiguration(object):
+    """Represent Sonar configuration"""
     MAIN_SECTION = 'Sonar'
     FILE_NAME = 'sonar-project.properties'
     DEFAULT_CONFIG = {'sonar.language'       : 'ada',
@@ -57,6 +58,7 @@ class SonarConfiguration(object):
                       'sonar.projectVersion' : '1.0-SNAPSHOT'}
 
     def __init__(self, deposit_dir):
+        """Initialise """
         # Set configuration file path
         self.config_file = os.path.join(deposit_dir, self.FILE_NAME)
         # Create a configuration object
@@ -85,9 +87,10 @@ class SonarConfiguration(object):
         with open(self.config_file, 'wb') as sonar_file:
             self.config.write(sonar_file)
 
-## Gnatmetric ################################################################
+## Sonarrunner ################################################################
 ##
 class Sonarrunner(Plugin):
+    LOG_FILE_NAME='sonar-runner'
     DIR='sonar'
 
     def __init__ (self, session):

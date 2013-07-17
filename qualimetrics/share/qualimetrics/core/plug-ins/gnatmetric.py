@@ -84,12 +84,13 @@ xml_base = """<?xml version="1.0"?>
 class GnatmetricOutputParser(OutputParser):
     """Define custom output parser"""
     def on_stdout(self,text):
-        with open (Gnatmetric.get_log_file_path('gnatmetric'), 'w+a') as log:
+        with open (Gnatmetric.get_log_file_path(), 'w+a') as log:
             log.write(text)
 
 ## Gnatmetric ################################################################
 ##
 class Gnatmetric(Tool):
+    LOG_FILE_NAME='gnatmetric.log'
 
     def __init__ (self, session):
         super(Gnatmetric, self).__init__('GNAT Metric', session)
