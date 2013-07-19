@@ -1,42 +1,16 @@
 import GPS
 import os
 import qmt_api.utils
+import logging
 import ConfigParser
 from xml.etree import ElementTree
 from qmt_api.utils import OutputParser, create_parser
-from qmt_api.plugin import Plugin
+from qmt_api.plugin import Plugin, GPSTarget
 from qmt_api.db import Rule, Message
 from qmt_api import Session
 from qmt_api import dao
 
-# Initialize the targets
-xml_base = """<?xml version="1.0"?>
-<GPS>
- <builder-mode name="default">
-  <description></description>
- </builder-mode>
-
-<target-model name="sonar-runner" category="">
-   <description>Generic launch of the Sonar Runner</description>
-</target-model>
-
-<target model="sonar-runner" category="default" name="Sonar Runner">
-    <command-line>
-      <arg>sonar-runner</arg>
-    </command-line>
-    <output-parsers>sonarrunneroutputparser output_collector</output-parsers>
-</target>
-
-<target model="sonar-runner" category="debug" name="Sonar Runner in debug mode">
-    <command-line>
-      <arg>sonar-runner</arg>
-      <arg>-X</arg>
-    </command-line>
-    <output-parsers>sonarrunneroutputparser output_collector</output-parsers>
-</target>
-
-</GPS>
-"""
+logger = logging.getLogger(__name__)
 
 ## GnatmetricOutputParser #####################################################
 ##
@@ -90,25 +64,38 @@ class SonarConfiguration(object):
 ## Sonarrunner ################################################################
 ##
 class Sonarrunner(Plugin):
-    LOG_FILE_NAME='sonar-runner'
+    LOG_FILE_NAME='sonar-runner.log'
     DIR='sonar'
 
     def __init__ (self, session):
         super(Sonarrunner, self).__init__('Sonar Runner')
         self.working_dir = os.path.join(qmt_api.utils.get_qmt_root_dir(), self.DIR)
         self.sonar_conf = SonarConfiguration(self.working_dir)
+        self.process = GPSTarget(name=self.name,
+                                 output_parser='sonarrunneroutputparser',
+                                 cmd_args=self.__cmd_line())
+
+    def __cmd_line(self):
+        """Return command line for sonar runner execution """
+        # Set specific location for Sonar project properties file
+        sonar_conf = '-Dproject.settings=%s' % self.sonar_conf.config_file
+        return ['sonar-runner', sonar_conf]
 
     def setup(self):
-       # Create working directory
-       if not os.path.exists(self.working_dir):
-           os.makedirs(self.working_dir)
+        """Setup for sonar runner execution
 
-       # Create sonar configuration file
-       self.sonar_conf.export()
+            - Create sonar directory in project_object_dir/qualimetric
+            - Export sonar configuration file in this directory
+        """
+        if not os.path.exists(self.working_dir):
+            os.makedirs(self.working_dir)
+        self.sonar_conf.export()
 
     def execute(self):
-       # Build target
-       GPS.parse_xml(xml_base)
-       target = GPS.BuildTarget("Sonar Runner")
-       target.execute(extra_args='-Dproject.settings=%s' % self.sonar_conf.config_file)
+        if not self.process.execute():
+            logger.warn('Sonar runner execution returned on failure')
+            logger.warn('For more details, see log file: %s' % self.get_log_file_path())
+            return False
+        else:
+            return True
 

@@ -10,6 +10,7 @@ with GNAT.Command_Line; use GNAT.Command_Line;
 with GPS.CLI_Utils;
 
 with Utils;
+with Logger;
 with Version;
 
 package body Qmt_Command_Line is
@@ -78,16 +79,15 @@ package body Qmt_Command_Line is
       --  Manage -X (scenario vars) switch and call getopt
       GPS.CLI_Utils.Parse_Command_Line (Self.Command_Line, Kernel);
 
-      --  Set verbose mode if mentionned
-      if Self.Verbose then
-         Utils.Set_Verbose_Traces;
-      end if;
-
-      --  Set quiet mode if mentionned,
-      --   priority is given to the quiet mode if verbose + quiet is mentionned
-      --   on the command line
+      --  Trace level
       if Self.Quiet then
-         Utils.Set_Quiet_Traces;
+         --  Set quiet mode if mentionned,
+         --   priority is given to the quiet mode if verbose + quiet is
+         --  mentionned on the command line
+         Logger.Set_Quiet_Traces;
+      elsif Self.Verbose then
+         --  Set verbose mode if mentionned
+         Logger.Set_Verbose_Traces;
       end if;
 
       --  Version option

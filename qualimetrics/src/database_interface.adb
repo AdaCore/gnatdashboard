@@ -12,6 +12,7 @@ with GNATCOLL.SQL.Sessions; use GNATCOLL.SQL.Sessions;
 with GNATCOLL.SQL.Sqlite;   use GNATCOLL.SQL.Sqlite;
 
 with Utils;
+with Logger;
 with GNATCOLL.Traces; use GNATCOLL.Traces;
 
 package body Database_Interface is
@@ -73,7 +74,7 @@ package body Database_Interface is
       Delete_Succeed : Boolean;
    begin
       --  Check existance of a database, delete it before creating a new one
-      Trace (Utils.Debug_Trace, "  Removing old DB");
+      Trace (Logger.Debug_Trace, "  Removing old DB");
       if Is_Regular_File (DB_File) then
          Delete (DB_File, Delete_Succeed);
          if not Delete_Succeed then
@@ -84,7 +85,7 @@ package body Database_Interface is
       end if;
 
       --  Retieve schema from text file
-      Trace (Utils.Debug_Trace, "  Reading DB schema from file: "
+      Trace (Logger.Debug_Trace, "  Reading DB schema from file: "
              & Schema_File.Display_Full_Name);
       Schema := New_Schema_IO (Schema_File).Read_Schema;
 

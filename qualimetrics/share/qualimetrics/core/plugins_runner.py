@@ -6,7 +6,7 @@ import logging
 from qmt_api.db import SessionFactory
 from qmt_api.utils import OutputParser, create_parser, get_project_obj_dir
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(format='[%(levelname)s] %(message)s', level=Qmt.log_level())
 logger = logging.getLogger(__name__)
 
 ## tool_output ###############################################################
@@ -36,22 +36,27 @@ class PluginRunner(object):
         except ImportError as e:
             logger.error('Unable to load plugin: %s' % module_name)
             logger.error(str(e))
-            logger.error('===== FAIL')
+            logger.info('.....  [FAIL]')
         except AttributeError:
             logger.error('Cannot load plugin class %s' % module_name)
             logger.error('Should implement a class named %s' % (module_name.capitalize()))
-            logger.error('===== FAIL')
+            logger.info('.....  [FAIL]')
 
     def run_plugins(self, session_factory):
+        # Fetch all plugins
         for module in self.get_all_plugins():
-            session = session_factory.get_session()
-            logger.info('===== Running %s' % module.capitalize())
             plugin_class = self.get_plugin_class(module)
             if plugin_class:
+                session = session_factory.get_session()
                 # Instanciate the plugin
                 plugin = plugin_class(session)
+                logger.info('===== Running %s' % plugin.name)
                 plugin.setup()
-                plugin.execute()
+                success = plugin.execute()
+                plugin.teardown()
+                logger.debug('Plugin returns: %s' % str(success))
+                logger.info('..... %s  %s' % (plugin.name, ('[OK]' if success else '[FAIL]')))
+                session.close()
 
 def _entry_point():
     # Initialise
@@ -62,3 +67,4 @@ def _entry_point():
 
 if __name__ == '__main__':
     _entry_point()
+

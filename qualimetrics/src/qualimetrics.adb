@@ -36,6 +36,7 @@ with GNAT.Directory_Operations; use GNAT.Directory_Operations;
 with Core_Properties;
 with Qmt_Python_Api;
 with Utils;
+with Logger;
 with Ada.Calendar;          use Ada.Calendar;
 
 procedure Qualimetrics is
@@ -112,7 +113,7 @@ procedure Qualimetrics is
    begin
       --  Add the default search path for qualimetrics plugins
       --  and qualimetrics python API
-      Trace (Utils.Debug_Trace, "  Loading plugins with python path: " &
+      Trace (Logger.Debug_Trace, "  Loading plugins with python path: " &
                                 Python_Path);
       Execute_Command
         (Python,
@@ -122,14 +123,12 @@ procedure Qualimetrics is
          Errors       => Errors);
 
       if Errors then
-         Trace (Utils.Warn_Trace, "Could not set the search path for python");
+         Trace (Logger.Warn_Trace, "Could not set the search path for python");
       end if;
 
       --  Execute the pythn script that runs all the plugins
-      Utils.Trace_Separator;
-      Trace (Utils.Info_Trace, "Runnig tools analysis");
-      Utils.Trace_Separator;
-      Trace (Utils.Debug_Trace, "Executing plugin runner script: "
+      Logger.Trace_Title ("Runnig tools analysis");
+      Trace (Logger.Debug_Trace, "Executing plugin runner script: "
              & Plugin_Runner.Display_Full_Name);
       Execute_File
         (Python,
@@ -154,11 +153,11 @@ procedure Qualimetrics is
    procedure Main is
       Command_Line : Qualimetrics_Command_Line;
    begin
-      Utils.Program_Starting_Time := Ada.Calendar.Clock;
+      Logger.Program_Starting_Time := Ada.Calendar.Clock;
 
       --  Initialisation
       GNATCOLL.Traces.Parse_Config_File;
-      Trace (Utils.Debug_Trace, "Initialising Qualimetrics kernel context");
+      Trace (Logger.Debug_Trace, "Initialising Qualimetrics kernel context");
       GPS.CLI_Utils.Create_Kernel_Context
         (Kernel,
          Install_Semantic_Parser => False);
@@ -172,19 +171,20 @@ procedure Qualimetrics is
       end if;
 
       --  Load project
-      Trace (Utils.Info_Trace, "Loading project tree from: " &
+      Trace (Logger.Info_Trace, "Loading project tree from: " &
                                Command_Line.Get_Project_Name.all);
       if not Load_Project_Tree (Command_Line.Get_Project_Name, Kernel) then
          return;
       end if;
 
       --  Create qualimetrics directories in project object directory
+      Trace (Logger.Info_Trace, "Initialising environement...");
       if not Create_Project_Directory_Env then
          return;
       end if;
 
       --  Create Database
-      Trace (Utils.Info_Trace, "Initialising DB...");
+      Trace (Logger.Info_Trace, "Initialising DB...");
       if not Initialise_DB
         (Create_From_Dir (Kernel.Registry.Tree.Root_Project.Object_Dir,
                           Core_Properties.DB_File_Relative_Path.Full_Name),
@@ -193,10 +193,10 @@ procedure Qualimetrics is
          return;
       end if;
 
-      Trace (Utils.Debug_Trace, "DB Created");
+      Trace (Logger.Debug_Trace, "DB Created");
 
       --  Save project tree to DB
-      Trace (Utils.Debug_Trace, "Saving project tree in DB...");
+      Trace (Logger.Debug_Trace, "Saving project tree in DB...");
       Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
 
       --  Run qualimetrics plugins
@@ -206,15 +206,15 @@ procedure Qualimetrics is
 
       --  Run script if present on command line
       if Command_Line.Get_Script_Arg.all  /= "" then
-         Trace (Utils.Info_Trace, "=====  Running script from command line");
+         Trace (Logger.Info_Trace, "=====  Running script from command line");
          if not Utils.Execute_Script (Kernel, Command_Line.Get_Script_Arg) then
             return;
          end if;
-         Trace (Utils.Debug_Trace, "Script successfully loaded");
+         Trace (Logger.Debug_Trace, "Script successfully loaded");
       end if;
 
       --  Log end statistics
-      Utils.Trace_End_Success;
+      Logger.Trace_End_Success;
 
       --  Finilise
       GPS.CLI_Utils.Destroy_Kernel_Context (Kernel);

@@ -5,6 +5,11 @@
 import GPS
 import Qmt
 import os
+import utils
+import logging
+from plugin import GPSTarget
+
+logger = logging.getLogger(__name__)
 
 ## OutputParserMetaClass ######################################################
 ##
@@ -39,6 +44,13 @@ class OutputParser(object):
            self.child.on_stderr (text)
 
     def on_exit(self,status=0):
+        # Update Tool execution status
+        logging.debug('Process exit status: %s' % status)
+        if status != 0:
+            GPSTarget.EXECUTION_SUCCESS=False
+        else:
+            GPSTarget.EXECUTION_SUCCESS=True
+
         if self.child != None:
             self.child.on_exit (status)
 

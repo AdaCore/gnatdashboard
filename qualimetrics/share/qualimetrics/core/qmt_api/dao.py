@@ -1,4 +1,4 @@
-from db import Rule, Resource
+from db import Rule, Resource, Tool
 
 ## get_or_create_rule #########################################################
 ##
@@ -23,3 +23,9 @@ def get_file(session, file_path):
     """Return the File object for the given file path """
     file = session.query(Resource).filter_by(name=file_path).first()
     return file
+
+def save_tool(session, name):
+   tool = Tool(name)
+   session.add(tool)
+   return tool
+

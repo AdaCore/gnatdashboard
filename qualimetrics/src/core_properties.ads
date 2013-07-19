@@ -29,5 +29,7 @@ package Core_Properties is
    DB_File_Relative_Path : constant Virtual_File :=
      Create_From_Dir (Project_Qmt_Dir_Name, "qualimetrics.db");
 
+   --  Ada to Python API
    Qmt_Python_Module_Name : constant String := "Qmt";
+
 end Core_Properties;
