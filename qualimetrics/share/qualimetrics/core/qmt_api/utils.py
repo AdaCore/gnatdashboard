@@ -72,13 +72,23 @@ def get_project_obj_dir():
 def get_db_path():
     return os.path.join(get_project_obj_dir(), Qmt.db_relative_path())
 
-## get_project_obj_dir ######################################################
+## get_project_obj_dir #######################################################
 ##
 def get_qmt_root_dir():
     return os.path.join(get_project_obj_dir(), Qmt.qmt_root_dir())
 
-## get_project_name ######################################################
+## get_project_name ##########################################################
 ##
 def get_project_name():
     return GPS.Project.root().name()
+
+## get_qmt_property_str #######################################################
+##
+def get_qmt_property_str(key):
+    return GPS.Project.root().get_attribute_as_string(attribute=key, package='Qualimetrics')
+
+## get_qmt_property_list ######################################################
+##
+def get_qmt_property_list(key):
+    return GPS.Project.root().get_attribute_as_list(attribute=key, package='Qualimetrics')
 

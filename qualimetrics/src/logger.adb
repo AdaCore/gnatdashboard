@@ -66,7 +66,7 @@ package body Logger is
 
    procedure Trace_End_Failure is
    begin
-      Trace (Info_Trace, "QUALIMETRICS FAILURE");
+      Trace_Title ("QUALIMETRICS FAILURE");
       Trace_End_Stats;
    end Trace_End_Failure;
 
