@@ -9,8 +9,7 @@ with Ada.Calendar.Formatting;
 
 package body Logger is
 
-   Traces_Separator : constant String := "---------------------------------" &
-                                   "---------------------------------------";
+   Traces_Separator : constant String (1 .. 76) := (others => '-');
 
    procedure Trace_End_Stats;
    --  Trace total execution time and end date of the program.
