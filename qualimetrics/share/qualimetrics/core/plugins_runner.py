@@ -1,10 +1,14 @@
+import abc
+import imp
+import sys
 import GPS
 import os
-import imp
 import Qmt
 import logging
 import qmt_api.utils
+from qmt_api import plugin
 from qmt_api.db import SessionFactory
+from qmt_api.plugin import Plugin
 from qmt_api.utils import OutputParser, create_parser, get_project_obj_dir
 
 logging.basicConfig(format='[%(levelname)s] %(message)s', level=Qmt.log_level())
@@ -21,7 +25,7 @@ class tool_output ():
     def create_parser (name, child=None):
         return create_parser (name, child)
 
-## PluginRunner #############################################################
+## PluginRunner ###############################################################
 ##
 class PluginRunner(object):
     """Class that load python plugin
@@ -55,10 +59,31 @@ class PluginRunner(object):
             return
 
     def __get_plugins_from_dirs(self, plugins):
+        """Retrieve projet sepecific plugin, form project file file """
         files = os.listdir(Qmt.core_plugin_dir()) + os.listdir(Qmt.user_plugin_dir())
+
         for f in files:
             if f.endswith(self.SCRIPT_SUFFIX):
                 plugins.append(f.replace(self.SCRIPT_SUFFIX, ''))
+
+    def __get_plugin_project_specific(self):
+        specific_plugins = []
+        for plugin in qmt_api.utils.get_qmt_property_list('Specific_Plugins'):
+
+            if os.path.exists(plugin):
+                try:
+                    plugin_golbals = {}
+                    execfile(plugin, plugin_golbals)
+                    specific_plugins.append(plugin_golbals)
+                    logger.debug('Load specific plugin file: %s' % plugin)
+                except IOError:
+                    logger.warn('Ignoring plugin because unable to load file: %s' % plugin)
+                    logger.info('')
+            else:
+                logger.warn('Ignoring plugin because not found: %s' % plugin)
+                logger.info('')
+
+        return specific_plugins
 
     def get_all_plugins(self):
         """Retrieve all plugin for qualimetrics
@@ -67,44 +92,74 @@ class PluginRunner(object):
           is used to order plugin in list,
           otherwise default order is applied
         """
-        # Retrieve plugin list to execute
         plugins = qmt_api.utils.get_qmt_property_list('Plugin_Scheduling')
+
         if not plugins:
             self.__get_plugins_from_dirs(plugins)
         else:
             logger.debug('Plugin order execution from project file will be used')
 
+        plugins = plugins + self.__get_plugin_project_specific()
         # Remove from the list plugin to deactive
         self.__remove_plugin_to_deactivate(plugins)
         self.__move_sonar_to_end(plugins)
-        logger.debug('Plugin to execute: %s' % str(plugins))
+        logger.debug('Plugins to execute: %s' % str(plugins))
+
         return plugins
 
-    def get_plugin_class(self, module_name):
+    def get_plugin_class(self, plugin):
         try:
-            module = __import__(module_name, fromlist=['*'])
-            plugin_class = getattr(module, module_name.capitalize())
-            return plugin_class
+            if not isinstance(plugin, dict):
+                module = __import__(plugin, fromlist=['*'])
+                return getattr(module, plugin.capitalize())
+            else:
+                # For project spefcific plugins
+                for key in plugin:
+                    if type(plugin[key]) is abc.ABCMeta:
+                        if plugin[key].__base__ is Plugin:
+                            return plugin[key]
+                logger.warn('No class extending Plugin object was found for project specific plugin')
         except ImportError as e:
-            logger.error('Unable to load plugin: %s' % module_name)
-            logger.error(str(e))
-            logger.info('.....  [FAIL]')
+            logger.error('')
+            logger.error('/!\  Unable to load plugin: %s  /!\\' % plugin)
+            logger.error('Error: %s' % str(e))
+            logger.error('')
         except AttributeError:
-            logger.error('Cannot load plugin class %s' % module_name)
-            logger.error('Should implement a class named %s' % (module_name.capitalize()))
-            logger.info('.....  [FAIL]')
+            logger.error('')
+            logger.error('/!\  Cannot load plugin class %s  /!\\' % plugin)
+            logger.error('Should implement a class named %s' % (plugin.capitalize()))
+            logger.error('')
 
     def __execute_plugin(self, plugin_instance):
+        """Call method setup, execute and teardown for a plugin instance.
+           Manage final ouput for the the plugin, if succed or not.
+
+           Parameter:
+               - plugin_instance: instance of the plugin to execute
+        """
         plugin_instance.setup()
         success = plugin_instance.execute()
         plugin_instance.teardown()
-        logger.debug('Plugin returns: %s' % str(success))
-        logger.info('..... %s  %s' % (plugin_instance.name, ('[OK]' if success else '[FAIL]')))
+
+        logger.debug('Plugin execution returns: %s' % str(success))
+        success_msg = ('[OK]' if success == plugin.EXEC_SUCCESS
+                              else '[FAIL]')
+
+        logger.info('..... %s  %s' % (plugin_instance.name, success_msg))
+        logger.info('')
 
     def run_plugins(self, session_factory):
+        """Fetch all python plugins: core, user, project specific; retrieve the
+           plugin class and instanciate it.
+           Manage creation and destruction of database session for the plugins.
+
+           Parameter:
+               - session_factory: used to create database session
+        """
         # Fetch all plugins
-        for module in self.get_all_plugins():
-            plugin_class = self.get_plugin_class(module)
+        for p in self.get_all_plugins():
+            plugin_class = self.get_plugin_class(p)
+
             if plugin_class:
                 session = session_factory.get_session()
                 # Instanciate the plugin

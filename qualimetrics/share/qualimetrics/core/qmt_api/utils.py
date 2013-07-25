@@ -7,6 +7,7 @@ import Qmt
 import os
 import utils
 import logging
+import plugin
 from plugin import GPSTarget
 
 logger = logging.getLogger(__name__)
@@ -47,9 +48,9 @@ class OutputParser(object):
         # Update Tool execution status
         logging.debug('Process exit status: %s' % status)
         if status != 0:
-            GPSTarget.EXECUTION_SUCCESS=False
+            GPSTarget.EXECUTION_SUCCESS=plugin.EXEC_FAIL
         else:
-            GPSTarget.EXECUTION_SUCCESS=True
+            GPSTarget.EXECUTION_SUCCESS=plugin.EXEC_SUCCESS
 
         if self.child != None:
             self.child.on_exit (status)

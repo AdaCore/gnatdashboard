@@ -14,6 +14,7 @@ from xml.etree.ElementTree import Element, SubElement, ParseError
 from xml.dom import minidom
 
 logger = logging.getLogger(__name__)
+(EXEC_FAIL, EXEC_SUCCESS, PROCESS_NOT_LAUNCHED) = range(3)
 
 ## Plugin ######################################################
 ##
@@ -49,8 +50,7 @@ class Plugin:
 ##
 class GPSTarget(object):
     # Value updated by utils.OutputParser
-    # None: undefined / True: executed with success / False: exited with error
-    EXECUTION_SUCCES=None
+    EXECUTION_SUCCES=PROCESS_NOT_LAUNCHED
     GNAT="""%attr(ide'gnat,gnat)"""
     OBJ_DIR='%O'
     PRJ_FILE='%pp'
@@ -60,7 +60,7 @@ class GPSTarget(object):
         self.cmd_line = cmd_args
         self.output_parser = output_parser
         # Re-initialise execution status, as tool execution is sequantiel
-        GPSTarget.EXECUTION_SUCCESS=None
+        GPSTarget.EXECUTION_SUCCESS=PROCESS_NOT_LAUNCHED
         if not len(self.cmd_line):
             logging.warn('Command line have not been specified when creating the tool: %s' % self.name)
 
@@ -106,7 +106,7 @@ class GPSTarget(object):
         logger.debug('Building target: %s' % self.name)
         target = GPS.BuildTarget(self.name)
         target.execute()
-        logging.debug('Status of Tool.EXECUTION_SUCCESS: %s' % str(GPSTarget.EXECUTION_SUCCESS))
+        logging.debug('Status of GPSTarget.EXECUTION_SUCCESS: %s' % str(GPSTarget.EXECUTION_SUCCESS))
         return GPSTarget.EXECUTION_SUCCESS
 
 

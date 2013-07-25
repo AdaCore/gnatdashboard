@@ -7,6 +7,9 @@ from sqlalchemy.orm import relationship, backref
 
 Base = declarative_base()
 
+(RULE_KIND, METRIC_KIND) = range(2)
+(PROJECT_KIND, DIRECTORY_KIND, FILE_KIND) = range(3)
+
 ## SessionFactory #############################################################
 ##
 class SessionFactory(object):
@@ -49,7 +52,7 @@ class Rule(Base):
     tool = relationship("Tool", back_populates='rules')
     messages = relationship("Message")
 
-    def __init__(self, name, identifier, tool, kind=1):
+    def __init__(self, name, identifier, tool, kind):
         self.name = name
         self.identifier = identifier
         self.tool = tool
@@ -133,7 +136,7 @@ class Line(Base):
     id = Column(Integer, primary_key=True)
     line = Column(Integer)
     resource_id = Column(Integer, ForeignKey('resources.id'))
-
+    messages = relationship("LineMessage", backref="line")
     resource = relationship("Resource", back_populates='lines')
 
     def __init__(self, line, resource):
@@ -152,3 +155,5 @@ class LineMessage(Base):
     message_id = Column(Integer, ForeignKey('messages.id'))
     col_begin = Column(Integer)
     col_end = Column(Integer)
+    message = relationship("Message", backref="line_assocs")
+
