@@ -78,7 +78,7 @@ public final class AdaPlugin extends SonarPlugin {
         l.add(GCovSensor.class);
 
         // Test
-        l.add(GNATViolationsSensor.class);
+        l.add(GNATIssuesSensor.class);
 
         return l;
     }

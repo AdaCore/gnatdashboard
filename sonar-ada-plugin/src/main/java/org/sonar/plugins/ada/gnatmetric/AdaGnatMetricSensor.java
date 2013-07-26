@@ -25,15 +25,13 @@ public class AdaGnatMetricSensor implements Sensor {
 
     private AdaDao dao = new AdaDao();
     private final Logger log = LoggerFactory.getLogger(AdaGnatMetricSensor.class);
-    private final String[] TESTFORISSUES = {"this", "is", "test", "for",
-    "sonar", "issues"};
 
     public AdaGnatMetricSensor(Configuration conf) {
     }
 
     @Override
     public void analyse(Project project, SensorContext context) {
-        for (Pair<AdaFile, Measure> fileMeasure : dao.selectMeasureForTool("GNAT Metric")) {
+        for (Pair<AdaFile, Measure> fileMeasure : dao.selectMeasureForTool("GNATmetric")) {
             try {
                Metric metric = GnatMetrics.Metrics.valueOf(fileMeasure.getRight().getMetricKey().toUpperCase()).getMetric();
                Measure measure = new Measure(metric, fileMeasure.getRight().getValue());

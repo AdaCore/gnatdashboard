@@ -16,17 +16,17 @@ import org.sonar.plugins.ada.persistence.AdaDao;
 import org.sonar.plugins.ada.resources.AdaFile;
 import org.sonar.plugins.ada.utils.AdaUtils;
 
-public class GNATViolationsSensor implements Sensor {
+public class GNATIssuesSensor implements Sensor {
 
     private RuleFinder ruleFinder;
     private Configuration config = null;
     private AdaDao dao = new AdaDao();
 
-    public GNATViolationsSensor(Configuration config) {
+    public GNATIssuesSensor(Configuration config) {
         this.config = config;
     }
 
-    public GNATViolationsSensor(RuleFinder ruleFinder, Configuration config) {
+    public GNATIssuesSensor(RuleFinder ruleFinder, Configuration config) {
         this.ruleFinder = ruleFinder;
         this.config = config;
     }
@@ -38,12 +38,15 @@ public class GNATViolationsSensor implements Sensor {
 
     @Override
     public void analyse(Project project, SensorContext context) {
-        AdaUtils.LOG.info("----------  Violations Sensor");
+        AdaUtils.LOG.info("----------  Issues Sensor");
+        // Fetch all violation from the DB
         for (Violation v : dao.selectAllViolations()) {
-            AdaUtils.LOG.info("*** Violation: {} -- for resource: {}", v.getMessage(), v.getResource().getName());
+            AdaUtils.LOG.info("*** Issue: {} -- for resource: {}", v.getMessage(), v.getResource().getName());
+            // Try to find rule for the given rule repository
             RuleQuery ruleQuery = RuleQuery.create().withRepositoryKey(v.getRule().getRepositoryKey()).withKey(v.getRule().getKey());
             Rule rule = ruleFinder.find(ruleQuery);
             AdaUtils.LOG.info("Rule: {}", rule.getName());
+
             if (rule != null) {
 
                 AdaFile res = (AdaFile) context.getResource(v.getResource());
@@ -53,10 +56,10 @@ public class GNATViolationsSensor implements Sensor {
                     v.setResource(res);
                     context.saveViolation(v);
                 } else {
-                    AdaUtils.LOG.info("Cannot find the file '{}', skipping violation '{}'", v.getResource().getLongName(), v.getMessage());
+                    AdaUtils.LOG.info("Cannot find the file '{}', skipping issue'{}'", v.getResource().getLongName(), v.getMessage());
                 }
             } else {
-                AdaUtils.LOG.warn("Cannot find the rule {}, skipping violation", v.getRule().getKey());
+                AdaUtils.LOG.warn("Cannot find the rule {}, skipping issue", v.getRule().getKey());
             }
         }
     }

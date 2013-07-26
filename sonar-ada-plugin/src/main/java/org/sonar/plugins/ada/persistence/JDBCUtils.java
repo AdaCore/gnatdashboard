@@ -14,6 +14,8 @@ import java.util.List;
 import org.sonar.plugins.ada.utils.AdaUtils;
 import org.sqlite.JDBC;
 
+// /!\ Should be replaced by the use of MyBatis, after solving the classloader
+// problem when trying to connext to the DB with MyBatis /!\
 public class JDBCUtils {
 
     public static final String DEFAULT_DB_PATH = "obj" + System.getProperty("file.separator")

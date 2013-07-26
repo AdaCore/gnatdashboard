@@ -8,11 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Resource;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.Violation;
-import org.sonar.plugins.ada.gnatmetric.GnatMetrics;
 import org.sonar.plugins.ada.resources.AdaFile;
 import org.sonar.plugins.ada.utils.Pair;
 
@@ -66,7 +63,14 @@ public class AdaDao {
             @Override
             public Violation mapRow(ResultSet resultSet) throws SQLException {
                 AdaDao dao = new AdaDao();
-                Rule rule = Rule.create(resultSet.getString("rule_repository"), resultSet.getString("rule_key"));
+
+                // Mangage rule with category (ex: CodePeer messsages)
+                String ruleKey = resultSet.getString("rule_key");
+                if (resultSet.getString("category") != null) {
+                    ruleKey = resultSet.getString("category") + "__" + ruleKey;
+                }
+
+                Rule rule = Rule.create(resultSet.getString("rule_repository"), ruleKey);
                 AdaFile resource = dao.getResourceById(resultSet.getInt("resource_id"));
                 Violation violation = Violation.create(rule, resource)
                         .setLineId(resultSet.getInt("line"))
