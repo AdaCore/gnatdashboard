@@ -127,7 +127,8 @@ procedure Qualimetrics is
       end if;
 
       --  Execute the pythn script that runs all the plugins
-      Logger.Trace_Title ("Runnig tools analysis");
+      Logger.Trace_Title ("Running tools analysis");
+      Trace (Logger.Info_Trace, " ");
       Trace (Logger.Debug_Trace, "Executing plugin runner script: "
              & Plugin_Runner.Display_Full_Name);
       Execute_File
@@ -157,7 +158,7 @@ procedure Qualimetrics is
 
       --  Initialisation
       GNATCOLL.Traces.Parse_Config_File;
-      Trace (Logger.Debug_Trace, "Initialising Qualimetrics kernel context");
+      Trace (Logger.Debug_Trace, "Initializing Qualimetrics kernel context");
       GPS.CLI_Utils.Create_Kernel_Context
         (Kernel,
          Install_Semantic_Parser => False);
@@ -178,13 +179,13 @@ procedure Qualimetrics is
       end if;
 
       --  Create qualimetrics directories in project object directory
-      Trace (Logger.Info_Trace, "Initialising environement...");
+      Trace (Logger.Info_Trace, "Initializing environement...");
       if not Create_Project_Directory_Env then
          return;
       end if;
 
       --  Create Database
-      Trace (Logger.Info_Trace, "Initialising DB...");
+      Trace (Logger.Info_Trace, "Initializing DB...");
       if not Initialise_DB
         (Create_From_Dir (Kernel.Registry.Tree.Root_Project.Object_Dir,
                           Core_Properties.DB_File_Relative_Path.Full_Name),
