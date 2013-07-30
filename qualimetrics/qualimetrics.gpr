@@ -4,10 +4,17 @@ with "cli.gpr";
 project Qualimetrics is
 
    for Main use ("qualimetrics.adb");
+
+   for Languages use ("Ada", "Python");
+
    for Exec_Dir use "bin";
    for Object_Dir use "obj";
-   for Source_Dirs use ("obj/gnatcoll_sqlite/", --  automatically generated file
-                        "src");
+   for Source_Dirs use
+     ("obj/gnatcoll_sqlite/", --  automatically generated file
+      "src",
+      "share/qualimetrics/core",
+      "share/qualimetrics/core/plug-ins",
+      "share/qualimetrics/core/qmt_api");
 
    package Builder is
       for Default_Switches ("Ada") use ("-m", "-j0");
