@@ -33,16 +33,6 @@ public class AdaSourceImporter extends AbstractSourceImporter {
 
     // <editor-fold desc="Class's attibutes" defaultstate="collapsed">
 
-    /**
-     * Contains the mapping of all project's resources: key: resource basename
-     * value: AdaFile Sonar representation of the resource
-     */
-    private static Map<String, AdaFile> sourceMap = new HashMap<String, AdaFile> ();
-
-    //TO BE REMOVED !!
-    public static Map<String, AdaFile> getSourceMap() {
-        return sourceMap;
-    }
     private Logger logger = Logger.getLogger(AdaSourceImporter.class);
     private ResourceCreationLock lock;
     private Configuration config;
@@ -59,7 +49,7 @@ public class AdaSourceImporter extends AbstractSourceImporter {
      */
     @Override
     public void analyse(Project project, SensorContext context) {
-            saveResources(context, project.getFileSystem().getSourceCharset());
+        saveResources(context, project.getFileSystem().getSourceCharset());
         onFinished();
     }
 

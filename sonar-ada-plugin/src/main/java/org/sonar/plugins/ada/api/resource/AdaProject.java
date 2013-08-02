@@ -47,7 +47,7 @@ public class AdaProject extends Resource {
 
     @Override
     public String getScope() {
-        return Scopes.PROJECT;
+        return Scopes.DIRECTORY;
     }
 
     @Override
