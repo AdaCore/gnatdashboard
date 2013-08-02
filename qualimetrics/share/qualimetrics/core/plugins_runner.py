@@ -68,8 +68,8 @@ class PluginRunner(object):
 
     def __get_plugin_project_specific(self):
         specific_plugins = []
-        for plugin in qmt_api.utils.get_qmt_property_list('Specific_Plugins'):
 
+        for plugin in qmt_api.utils.get_qmt_property_list('Specific_Plugins'):
             if os.path.exists(plugin):
                 try:
                     plugin_golbals = {}
@@ -94,21 +94,25 @@ class PluginRunner(object):
         """
         plugins = qmt_api.utils.get_qmt_property_list('Plugin_Scheduling')
 
-        if not plugins:
+        # GPS CLI returns a list with an empty string if property is not
+        # mentionned
+        if plugins == ['']:
+            plugins.remove('')
             self.__get_plugins_from_dirs(plugins)
         else:
             logger.debug('Plugin order execution from project file will be used')
 
         plugins = plugins + self.__get_plugin_project_specific()
+
         # Remove from the list plugin to deactive
         self.__remove_plugin_to_deactivate(plugins)
         self.__move_sonar_to_end(plugins)
-        logger.debug('Plugins to execute: %s' % str(plugins))
 
         return plugins
 
     def get_plugin_class(self, plugin):
         try:
+            # If not a project specific plugin
             if not isinstance(plugin, dict):
                 module = __import__(plugin, fromlist=['*'])
                 return getattr(module, plugin.capitalize())

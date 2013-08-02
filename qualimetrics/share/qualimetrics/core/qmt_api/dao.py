@@ -35,7 +35,6 @@ def get_file(session, file_name):
 ##
 def get_resource(session, name):
     """Return the File object for the given file path """
-    print 'Looking for: %s' % name
     resource = session.query(Resource)\
         .filter(Resource.name.like('%' + name + '_'))\
         .first()

@@ -3,6 +3,7 @@ import os
 import qmt_api.utils
 import logging
 import ConfigParser
+from qmt_api import utils
 from xml.etree import ElementTree
 from qmt_api.utils import OutputParser, create_parser
 from qmt_api import plugin
@@ -32,42 +33,55 @@ class SonarConfiguration(object):
 
     MAIN_SECTION = 'Sonar'
     FILE_NAME = 'sonar-project.properties'
-    DEFAULT_CONFIG = {'sonar.language'       : 'ada',
-                      'sonar.sourceEncoding' : 'UTF-8',
-                      'sonar.sources'        : '.',
-                      'sonar.projectVersion' : '1.0-SNAPSHOT'}
+    CONFIG = {'sonar.language'       : 'ada',
+              'sonar.sourceEncoding' : 'UTF-8',
+              'sonar.sources'        : '.',
+              'sonar.projectVersion' : '1.0-SNAPSHOT'}
 
     def __init__(self, deposit_dir):
         """Initialise """
         # Set configuration file path
         self.config_file = os.path.join(deposit_dir, self.FILE_NAME)
-
         # Create a configuration object
         self.config = ConfigParser.ConfigParser()
         # Enable case sensitive for key
         self.config.optionxform = str
         self.config.add_section(self.MAIN_SECTION)
 
-        # Initialise configuration with project default values
-        self.config.set(self.MAIN_SECTION, 'sonar.ada.qmt.db.path',
-                        qmt_api.utils.get_db_path())
-        self.config.set(self.MAIN_SECTION, 'sonar.projectName',
-                        qmt_api.utils.get_project_name())
-        self.config.set(self.MAIN_SECTION, 'sonar.projectKey',
-                        '%s::project' % qmt_api.utils.get_project_name())
+        # Set property value
+        self.add('sonar.language', 'ada')
+        self.add('sonar.sources', '.')
 
-        for key in self.DEFAULT_CONFIG:
-            # Will be surrounded with if, when project file attributes
-            # will be retrievable
-            self.config.set(self.MAIN_SECTION, key, self.DEFAULT_CONFIG[key])
+        self.add('sonar.sourceEncoding', 'UTF-8',
+                 utils.get_qmt_property_str('Source_Encoding'))
 
-    def add(self, key, value):
-        """Add property in sonar configuration"""
+        self.add('sonar.projectVersion', '1.0-SNAPSHOT',
+                 utils.get_qmt_property_str('Project_Version'))
+
+        self.add('sonar.projectName',
+                  qmt_api.utils.get_project_name(),
+                  utils.get_qmt_property_str('Project_Name'))
+
+        self.add('sonar.projectKey', '%s::project' %
+                 qmt_api.utils.get_project_name(),
+                 utils.get_qmt_property_str('Project_Key'))
+
+        self.add('sonar.ada.qmt.db.path', qmt_api.utils.get_db_path())
+
+    def add(self, key, value, custom_value=None):
+        """Add property in sonar configuration
+
+           Parameters:
+            - key: property key
+            - value: property value
+            - custom_value: custom value retrieve from project file
+        """
+        if custom_value:
+            value = custom_value
         self.config.set(self.MAIN_SECTION, key, value)
 
     def export(self):
         """Dump sonar-project.properties file in sonar working directory"""
-        # Dump the configuration file
         with open(self.config_file, 'wb') as sonar_file:
             self.config.write(sonar_file)
 

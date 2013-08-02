@@ -52,8 +52,17 @@ class Gnatcheck(Plugin):
         return [GPSTarget.GNAT, 'check', '--show-rule','-s', out_file, prj_file]
 
     def __add_message(self, src, line, col_begin, rule_id, msg):
-        rule = dao.get_or_create_rule(self.session, self.tool, db.RULE_KIND,
-                                      rule_id)
+        """Add GNATcheck message to current session DB.
+
+           Parameters:
+            - src: message source file
+            - line: message line number
+            - col_begin: message column number
+            - rule_id: message's rule identifier
+            - msg: description of the message
+        """
+        rule = dao.get_or_create_rule (self.session, self.tool,
+                                       db.RULE_KIND, rule_id)
         line = dao.get_or_create_line(self.session, src, line)
 
         if line:
@@ -65,11 +74,17 @@ class Gnatcheck(Plugin):
             logger.warn('Skipping message: %, file not found: %s' % (msg, src))
 
     def __parse_line(self, line):
-        """Parse a GnatCheck  line
+        """Parse a GnatCheck message line and add the message to the current DB
+            session.
 
-           Retrieves following informations: source basename, line in
-           source, rule identification, violation message removing rubbish
-           characters and save those informations as a violation
+           Parameter:
+            - line: text line to parse
+
+           Retrieves following informations:
+            - source basename,
+            - line in source,
+            - rule identification,
+            - message description
         """
         # Example with line : "input.adb:3:19: use clause for package
         # [USE_PACKAGE_Clauses]"
@@ -95,6 +110,7 @@ class Gnatcheck(Plugin):
         # Look for the source file that instanciates the generic (last un the
         # list of "instance at...")
         match = re.search(MAIN_SRC_FILE, line)
+
         # Split to have a list with 'commands-generic_asynchronous.ads:57:15
         # instance at...' and 'message + rule id'
         msg_split = re.split(MAIN_SRC_FILE, line)
@@ -103,19 +119,35 @@ class Gnatcheck(Plugin):
             # Retreive info on the main file
             # start_error = ['vsearch.adb', '231', '4', '']
             start_error = match.group(0).split(':')
+
+            # Parsing message location information
             src = start_error[0].strip()
             line = start_error[1]
             col_begin = start_erro[2]
+
+            # Parsong message's rule information
             ruleid_msg = msg_split[1].split('[', 1)
             rule_id = ruleid_msg[1].strip()[:-1]
             msg = ruleid_msg[0].strip() + ' (' + msg_split[0].strip() + ' ' + src + ')'
 
+            # Create orm object for the mesage and add it to the session
             self.__add_message(src, line, col_begin, rule_id, msg)
 
         except IndexError:
             logger.warn('Unable to retrieve iformation from message at: %s:%s' % (src, line))
 
-    def parse_metrix_xml_file(self):
+    def parse_output_file(self):
+        """Parse GNATcheck output file report
+
+           Identify 2 type of mmessages with different format:
+            - basic meesage message
+            - message for packag instanciation
+
+          Return:
+            - EXEC_SUCCES: if changes has been committed to the DB
+            - EXEC_FAIL: if an error occured when reading the output file
+        """
+        # Initialise regex to identify line that contains message
         ERROR_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:\s.+[[].*[]]\s*'
         INSTANCE_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+ instance at [a-zA-Z-_.0-9]+:[0-9]+:[0-9]+.+'
         prog_error = re.compile(ERROR_PATTERN)
@@ -128,14 +160,19 @@ class Gnatcheck(Plugin):
 
                 for line in output.readlines():
 
+                    # Parse basic message line
                     if prog_error.match(line):
                         self.__parse_line(line)
 
+                    # Parse message line for package instanciation
                     if prog_instance.match(line):
                         self.__parse_instance_line(line)
 
+            # Commit object added and modified to the session then return
+            # SUCCESS
             self.session.commit()
             return plugin.EXEC_SUCCESS
+
         except IOError as e:
             logger.warn(str(e))
             return plugin.EXEC_FAIL
@@ -145,7 +182,7 @@ class Gnatcheck(Plugin):
         if status == plugin.EXEC_FAIL:
             logging.warn('GNAT Metric execution returned on failure')
             logging.warn('For more details, see log file: %s' % self.get_log_file_path())
-        return self.parse_metrix_xml_file()
+        return self.parse_output_file()
 
 #output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)
 #print (output)

@@ -38,6 +38,7 @@ with Qmt_Python_Api;
 with Utils;
 with Logger;
 with Ada.Calendar;          use Ada.Calendar;
+with GNAT.OS_Lib;
 
 procedure Qualimetrics is
 
@@ -56,8 +57,30 @@ procedure Qualimetrics is
    --                  qualimetrics/    --  qualimetrics deposit dir
    --                       logs/       --  directory for plugin log
 
+   function Create_Specific_Project_Attributes return Boolean;
+
    Kernel : constant GPS.CLI_Kernels.CLI_Kernel :=
      new GPS.CLI_Kernels.CLI_Kernel_Record;
+
+   function Create_Specific_Project_Attributes return Boolean
+   is
+      Errors : Boolean;
+   begin
+      Execute_File
+        (Script   => Kernel.Scripts.Lookup_Scripting_Language ("python"),
+         Filename => GNAT.OS_Lib.Normalize_Pathname
+           ("project_attributes.py",
+            Core_Properties.Qmt_Core_Dir.Display_Full_Name),
+         Show_Command => False,
+         Errors   => Errors);
+
+      if Errors then
+         return Utils.Return_On_Failure ("Error while creating Qualimetrics " &
+                                    "specific project attributes.");
+      end if;
+
+      return True;
+   end Create_Specific_Project_Attributes;
 
    ----------------------------------
    -- Create_Project_Directory_Env --
@@ -164,6 +187,9 @@ procedure Qualimetrics is
          Install_Semantic_Parser => False);
       Qmt_Python_Api.Initialise (Kernel);
       Command_Line.Configure;
+      if not Create_Specific_Project_Attributes then
+         return;
+      end if;
 
       --  Error output messages are handled by Parse function, according
       --  to the case of failure.
