@@ -10,6 +10,18 @@
     <description>Requirements Plugin for Sonar</description>
     <inceptionYear>2013</inceptionYear>
 
+    <licenses>
+        <license>
+            <name>GNU GPL 3</name>
+            <url>http://www.gnu.org/licenses/lgpl.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <organization>
+        <name>AdaCore</name>
+        <url>http://http://www.adacore.com/</url>
+    </organization>
+
     <properties>
         <sonar.version>3.6</sonar.version>
         <jdk.min.version>1.6</jdk.min.version>
