@@ -24,7 +24,7 @@ import org.sonar.api.resources.Resource;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.Violation;
 import org.sonar.plugins.ada.TestUtils;
-import org.sonar.plugins.ada.resources.AdaFile;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 
 
 public class AdaCodePeerSensorTest {

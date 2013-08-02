@@ -18,7 +18,7 @@ import org.sonar.api.batch.ResourceCreationLock;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.ada.persistence.JDBCUtils;
-import org.sonar.plugins.ada.resources.AdaFile;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 
 public class AdaSourceImporterTest {
 

@@ -25,7 +25,7 @@ import org.sonar.api.measures.RuleMeasure;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rules.RulePriority;
 import org.sonar.plugins.ada.TestUtils;
-import org.sonar.plugins.ada.resources.AdaFile;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 
 public class GnatCheckWeightedViolationsDecoratorTest {
 

@@ -23,7 +23,7 @@ import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.File;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.ada.TestUtils;
-import org.sonar.plugins.ada.resources.AdaFile;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 
 public class GnatCheckViolationsDensityDecoratorTest {
 

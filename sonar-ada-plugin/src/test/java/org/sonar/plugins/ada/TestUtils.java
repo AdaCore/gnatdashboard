@@ -24,8 +24,7 @@ import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RulePriority;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
-import org.sonar.plugins.ada.Ada;
-import org.sonar.plugins.ada.resources.AdaFile;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 
 public class TestUtils {
 

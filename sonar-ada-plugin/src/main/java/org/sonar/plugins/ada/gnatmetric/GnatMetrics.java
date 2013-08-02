@@ -62,10 +62,12 @@ public final class GnatMetrics implements Metrics {
             .setDescription("Logical source line of code").setDirection(Metric.DIRECTION_NONE)
             .setQualitative(Boolean.FALSE)
             .setDomain(CoreMetrics.DOMAIN_SIZE).create().setFormula(new SumChildValuesFormula(false));
+
     public static final Metric BLANK_LINE = new Metric.Builder("blank_lines", "Blank lines", Metric.ValueType.INT)
             .setDescription("Identified blank lines").setDirection(Metric.DIRECTION_WORST)
             .setQualitative(Boolean.FALSE)
             .setDomain(CoreMetrics.DOMAIN_SIZE).create().setFormula(new SumChildValuesFormula(false));
+
     //----------------
     //  DOCUMENTATION
     //----------------
@@ -74,6 +76,7 @@ public final class GnatMetrics implements Metrics {
             .setDirection(Metric.DIRECTION_NONE)
             .setQualitative(Boolean.FALSE)
             .setDomain(CoreMetrics.DOMAIN_DOCUMENTATION).create().setFormula(new SumChildValuesFormula(false));
+
     //----------------
     //   COMPLEXITY
     //----------------
@@ -82,21 +85,25 @@ public final class GnatMetrics implements Metrics {
             .setQualitative(Boolean.FALSE)
             .setDomain(CoreMetrics.DOMAIN_COMPLEXITY).create()
             .setFormula(new MeanAggregationFormula(true));
+
     public static final Metric EXPRESSION_COMPLEXITY = new Metric.Builder("expression_complexity", "Expression complexity", Metric.ValueType.FLOAT)
             .setDescription("Expression complexity").setDirection(Metric.DIRECTION_NONE)
             .setQualitative(Boolean.FALSE)
             .setDomain(CoreMetrics.DOMAIN_COMPLEXITY).create()
             .setFormula(new MeanAggregationFormula(true));
+
     public static final Metric ESSENTIAL_COMPLEXITY = new Metric.Builder("essential_complexity", "Essential complexity", Metric.ValueType.FLOAT)
             .setDescription("Essential complexity").setDirection(Metric.DIRECTION_NONE)
             .setQualitative(Boolean.FALSE)
             .setDomain(CoreMetrics.DOMAIN_COMPLEXITY).create()
             .setFormula(new MeanAggregationFormula(true));
+
     public static final Metric MAX_LOOP_NESTING = new Metric.Builder("max_loop_nesting", "Maximum loop nesting", Metric.ValueType.INT)
             .setDescription("Maximum loop nesting").setDirection(Metric.DIRECTION_NONE)
             .setQualitative(Boolean.FALSE)
             .setDomain(CoreMetrics.DOMAIN_COMPLEXITY).create()
             .setFormula(new MaxAggregationFormula());
+
     private static List<Metric> metrics = new ArrayList<Metric>();
 
     /**

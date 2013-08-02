@@ -2,7 +2,7 @@
  * Sonar Ada Plugin
  *  Copyright (C) 2012-2013, AdaCore
  */
-package org.sonar.plugins.ada.resources;
+package org.sonar.plugins.ada.api.resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;

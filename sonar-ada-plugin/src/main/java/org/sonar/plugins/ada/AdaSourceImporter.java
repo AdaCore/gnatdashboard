@@ -20,9 +20,9 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.utils.SonarException;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 import org.sonar.plugins.ada.persistence.AdaDao;
 import org.sonar.plugins.ada.persistence.JDBCUtils;
-import org.sonar.plugins.ada.resources.AdaFile;
 
 /**
  * Extension of AbstractSourceImporter for Ada project import all project
@@ -75,11 +75,9 @@ public class AdaSourceImporter extends AbstractSourceImporter {
 
         for (AdaFile resource : dao.selectAllResources()) {
             File file = new File(resource.getLongName());
-            logger.info("+++ File : " + file.getName());
             try {
                 String source = FileUtils.readFileToString(file, sourcesEncoding.name());
                 context.saveSource(resource, source);
-                logger.info("File: " + resource.getName());
             } catch (FileNotFoundException ex){
                logger.info("File not found: " + file.getAbsolutePath());
             } catch (IOException e) {

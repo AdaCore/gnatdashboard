@@ -13,8 +13,8 @@ import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.ada.Ada;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 import org.sonar.plugins.ada.persistence.AdaDao;
-import org.sonar.plugins.ada.resources.AdaFile;
 import org.sonar.plugins.ada.utils.Pair;
 
 /**

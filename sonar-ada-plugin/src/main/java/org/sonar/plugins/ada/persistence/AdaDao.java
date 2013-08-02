@@ -10,7 +10,7 @@ import java.util.List;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.Violation;
-import org.sonar.plugins.ada.resources.AdaFile;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 import org.sonar.plugins.ada.utils.Pair;
 
 public class AdaDao {

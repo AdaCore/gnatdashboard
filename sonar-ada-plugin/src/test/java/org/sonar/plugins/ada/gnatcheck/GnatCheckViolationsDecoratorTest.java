@@ -31,8 +31,8 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RulePriority;
 import org.sonar.api.rules.Violation;
-import org.sonar.plugins.ada.resources.AdaDirectory;
-import org.sonar.plugins.ada.resources.AdaFile;
+import org.sonar.plugins.ada.api.resource.AdaDirectory;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 import org.sonar.plugins.ada.TestUtils;
 
 public class GnatCheckViolationsDecoratorTest {

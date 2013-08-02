@@ -23,7 +23,7 @@ import org.sonar.api.measures.PropertiesBuilder;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.utils.ParsingUtils;
-import org.sonar.plugins.ada.resources.AdaFile;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 import org.sonar.plugins.ada.utils.AdaSensor;
 import org.sonar.plugins.ada.utils.AdaUtils;
 

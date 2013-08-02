@@ -26,6 +26,7 @@ public class AdaCodePeerRuleRepository extends AdaAbstractRuleRepository {
      * has been created for every CodePeer rule corresponding to each Sonar
      * severity.
      */
+    @Override
     protected String fileName() {
         return "/codepeer.xml";
     }

@@ -2,11 +2,13 @@
  * Sonar Ada Plugin
  *  Copyright (C) 2012-2013, AdaCore
  */
-package org.sonar.plugins.ada.resources;
+package org.sonar.plugins.ada.api.resource;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.sonar.api.resources.Language;
+import org.sonar.api.resources.Qualifiers;
 import org.sonar.api.resources.Resource;
+import org.sonar.api.resources.Scopes;
 import org.sonar.plugins.ada.Ada;
 
 /**
@@ -45,12 +47,12 @@ public class AdaProject extends Resource {
 
     @Override
     public String getScope() {
-        return Resource.SCOPE_SPACE;
+        return Scopes.PROJECT;
     }
 
     @Override
     public String getQualifier() {
-        return Resource.QUALIFIER_MODULE;
+        return Qualifiers.MODULE;
     }
 
     /**

@@ -4,7 +4,6 @@
  */
 package org.sonar.plugins.ada;
 
-import org.apache.commons.configuration.Configuration;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.resources.Project;
@@ -12,23 +11,17 @@ import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
+import org.sonar.plugins.ada.api.resource.AdaFile;
 import org.sonar.plugins.ada.persistence.AdaDao;
-import org.sonar.plugins.ada.resources.AdaFile;
 import org.sonar.plugins.ada.utils.AdaUtils;
 
 public class GNATIssuesSensor implements Sensor {
 
     private RuleFinder ruleFinder;
-    private Configuration config = null;
     private AdaDao dao = new AdaDao();
 
-    public GNATIssuesSensor(Configuration config) {
-        this.config = config;
-    }
-
-    public GNATIssuesSensor(RuleFinder ruleFinder, Configuration config) {
+    public GNATIssuesSensor(RuleFinder ruleFinder) {
         this.ruleFinder = ruleFinder;
-        this.config = config;
     }
 
     @Override
@@ -38,7 +31,8 @@ public class GNATIssuesSensor implements Sensor {
 
     @Override
     public void analyse(Project project, SensorContext context) {
-        AdaUtils.LOG.info("----------  Issues Sensor");
+        AdaUtils.LOG.info("---------- GNAT Issues Sensor");
+
         // Fetch all violation from the DB
         for (Violation v : dao.selectAllViolations()) {
             AdaUtils.LOG.info("*** Issue: {} -- for resource: {}", v.getMessage(), v.getResource().getName());
