@@ -1,3 +1,6 @@
+prefix = ${PREFIX}
+MKDIR  = mkdir -p
+
 all:
 	gprbuild -Pqualimetrics.gpr
 
@@ -15,3 +18,8 @@ test:
 clean:
 	gprclean -Pqualimetrics.gpr && rm share/qualimetrics/core/qmt_api/*.pyc
 
+install:
+	$(MKDIR) $(prefix)/bin/
+	$(MKDIR) $(prefix)/share/
+	(cd bin ; tar cf - qualimetrics) | (cd $(prefix)/bin ; tar xf -)
+	(cd share ; tar cf - qualimetrics) | (cd $(prefix)/share ; tar xf -)
