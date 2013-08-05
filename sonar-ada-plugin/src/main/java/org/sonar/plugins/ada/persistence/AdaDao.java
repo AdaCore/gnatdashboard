@@ -11,6 +11,8 @@ import org.sonar.api.measures.Measure;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.Violation;
 import org.sonar.plugins.ada.api.resource.AdaFile;
+import org.sonar.plugins.ada.codepeer.AdaCodePeerRuleRepository;
+import org.sonar.plugins.ada.codepeer.CodePeerSeverity;
 import org.sonar.plugins.ada.utils.Pair;
 
 public class AdaDao {
@@ -63,11 +65,20 @@ public class AdaDao {
             @Override
             public Violation mapRow(ResultSet resultSet) throws SQLException {
                 AdaDao dao = new AdaDao();
+                String ruleKey = resultSet.getString("rule_key");
 
                 // Mangage rule with category (ex: CodePeer messsages)
-                String ruleKey = resultSet.getString("rule_key");
                 if (resultSet.getString("category") != null) {
-                    ruleKey = resultSet.getString("category") + "__" + ruleKey;
+                    String[] severity_category = resultSet.getString("category")
+                            .split(AdaCodePeerRuleRepository.RULE_KEY_SEPARATOR);
+
+                    // Handle only categories with following fromat: category__severity
+                    if (severity_category.length > 1){
+                        String severity = CodePeerSeverity.valueOf(severity_category[0]).getSonarSeverity();
+                        ruleKey = severity + AdaCodePeerRuleRepository.RULE_KEY_SEPARATOR
+                                + severity_category[1] + AdaCodePeerRuleRepository.RULE_KEY_SEPARATOR
+                                + ruleKey;
+                    }
                 }
 
                 Rule rule = Rule.create(resultSet.getString("rule_repository"), ruleKey);

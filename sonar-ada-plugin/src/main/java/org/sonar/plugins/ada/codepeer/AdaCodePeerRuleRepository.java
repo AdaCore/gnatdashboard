@@ -11,8 +11,8 @@ import org.sonar.plugins.ada.utils.AdaAbstractRuleRepository;
  */
 public class AdaCodePeerRuleRepository extends AdaAbstractRuleRepository {
 
-    static final String KEY = "codepeer";
-    static final String RULE_KEY_SEPARATOR = "__";
+    public static final String KEY = "codepeer";
+    public static final String RULE_KEY_SEPARATOR = "__";
 
     public AdaCodePeerRuleRepository() {
         super(KEY);

@@ -38,8 +38,9 @@ public class GNATIssuesSensor implements Sensor {
             AdaUtils.LOG.info("*** Issue: {} -- for resource: {}", v.getMessage(), v.getResource().getName());
             // Try to find rule for the given rule repository
             RuleQuery ruleQuery = RuleQuery.create().withRepositoryKey(v.getRule().getRepositoryKey()).withKey(v.getRule().getKey());
+            AdaUtils.LOG.info("Rule repo: {} -- Rule key: {}", v.getRule().getRepositoryKey(), v.getRule().getKey());
             Rule rule = ruleFinder.find(ruleQuery);
-            AdaUtils.LOG.info("Rule: {}", rule.getName());
+            //AdaUtils.LOG.info("Rule: {}", rule.getName());
 
             if (rule != null) {
 
@@ -48,6 +49,7 @@ public class GNATIssuesSensor implements Sensor {
                 if (res != null) {
                     v.setRule(rule);
                     v.setResource(res);
+                    AdaUtils.LOG.info("Save for resource: " + res.getName());
                     context.saveViolation(v);
                 } else {
                     AdaUtils.LOG.info("Cannot find the file '{}', skipping issue'{}'", v.getResource().getLongName(), v.getMessage());
