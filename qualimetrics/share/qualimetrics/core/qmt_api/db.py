@@ -151,9 +151,10 @@ class Line(Base):
 class LineMessage(Base):
     __tablename__ = 'lines_messages'
     id = Column(Integer, primary_key=True)
+
     line_id = Column(Integer, ForeignKey('lines.id'))
     message_id = Column(Integer, ForeignKey('messages.id'))
     col_begin = Column(Integer)
     col_end = Column(Integer)
-    message = relationship("Message", backref="line_assocs")
+    message = relationship("Message")
 

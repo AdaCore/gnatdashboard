@@ -71,7 +71,7 @@ class Gnatcheck(Plugin):
 
             line.messages.append(line_message)
         else:
-            logger.warn('Skipping message: %, file not found: %s' % (msg, src))
+            logger.warn('Skipping message: %s, file not found: %s' % (msg, src))
 
     def __parse_line(self, line):
         """Parse a GnatCheck message line and add the message to the current DB
@@ -180,7 +180,7 @@ class Gnatcheck(Plugin):
     def execute(self):
         status = self.process.execute()
         if status == plugin.EXEC_FAIL:
-            logging.warn('GNAT Metric execution returned on failure')
+            logging.warn('GNATcheck execution returned on failure')
             logging.warn('For more details, see log file: %s' % self.get_log_file_path())
         return self.parse_output_file()
 

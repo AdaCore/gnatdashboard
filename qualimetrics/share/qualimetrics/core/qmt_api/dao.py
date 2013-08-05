@@ -1,4 +1,8 @@
-from db import Rule, Resource, Tool, Line
+from db import (Rule,
+                Resource,
+                Category,
+                Tool,
+                Line)
 
 ## get_or_create_rule #########################################################
 ##
@@ -20,6 +24,14 @@ def get_or_create_rule(session, tool, kind, identifier, name=None):
             name = identifier
         rule = Rule(identifier, name, tool, kind)
     return rule
+
+## get_or_create_category #####################################################
+##
+def get_or_create_category(session, label):
+    category = session.query(Category).filter_by(label=label).first()
+    if not category:
+        category = Category(label)
+    return category
 
 ## get_file ###################################################################
 ##

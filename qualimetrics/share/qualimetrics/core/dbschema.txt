@@ -2,9 +2,10 @@
 | id    | AUTOINCREMENT | PK               |    | Auto-generated id                          |
 | name  | TEXT          | NOT NULL, NOCASE |    | Tools' name                                |
 
-| TABLE | categories    | category         |   | Category for the rules |
-| id    | AUTOINCREMENT | PK               |   | Auto-generated id      |
-| label | TEXT          | NOT NULL, NOCASE |   | Categories' label      |
+| TABLE   | categories    | category         |   | Category for the rules |
+| id      | AUTOINCREMENT | PK               |   | Auto-generated id      |
+| label   | TEXT          | NOT NULL, NOCASE |   | Categories' label      |
+| on_side | BOOLEAN       | NULL             |   |                        |
 
 | TABLE       | rules                         | rule             |   | The rules used for analysis                               |
 | id          | AUTOINCREMENT                 | PK               |   |                                                           |

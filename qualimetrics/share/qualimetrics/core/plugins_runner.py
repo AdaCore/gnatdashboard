@@ -43,7 +43,7 @@ class PluginRunner(object):
         """Deactive plugin according to attribute Plugin_Off in the project
            file
         """
-        for p in  qmt_api.utils.get_qmt_property_str('Plugin_Off'):
+        for p in qmt_api.utils.get_qmt_property_list('Plugin_Off'):
             try:
                 plugins.remove(p)
                 logger.debug('Plugin %s is deactivated' % p)
@@ -94,10 +94,8 @@ class PluginRunner(object):
         """
         plugins = qmt_api.utils.get_qmt_property_list('Plugin_Scheduling')
 
-        # GPS CLI returns a list with an empty string if property is not
-        # mentionned
-        if plugins == ['']:
-            plugins.remove('')
+        # GPS CLI returns: a empty list if property is not mentionned
+        if len(plugins) == 0:
             self.__get_plugins_from_dirs(plugins)
         else:
             logger.debug('Plugin order execution from project file will be used')
@@ -128,10 +126,10 @@ class PluginRunner(object):
             logger.error('/!\  Unable to load plugin: %s  /!\\' % plugin)
             logger.error('Error: %s' % str(e))
             logger.error('')
-        except AttributeError:
+        except AttributeError as e:
             logger.error('')
-            logger.error('/!\  Cannot load plugin class %s  /!\\' % plugin)
-            logger.error('Should implement a class named %s' % (plugin.capitalize()))
+            logger.error('/!\  Cannot load plugin %s  /!\\' % plugin)
+            logger.error('Error: %s' % str(e))
             logger.error('')
 
     def __execute_plugin(self, plugin_instance):

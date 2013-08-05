@@ -20,6 +20,7 @@ xml = """<?xml version="1.0"?>
             editor_page="Qualimetrics"
             editor_section="Naming"
             hide_in="wizard library_wizard"
+            list="true"
             description="Qualimetrics plugins execution order">
             <string />
         </project_attribute>
@@ -31,6 +32,7 @@ xml = """<?xml version="1.0"?>
             editor_page="Qualimetrics"
             editor_section="Naming"
             hide_in="wizard library_wizard"
+            list="true"
             description="Qualimetrics plugin to deactivate">
             <string />
         </project_attribute>
@@ -71,12 +73,13 @@ xml = """<?xml version="1.0"?>
         </project_attribute>
 
         <project_attribute
-            name="Project_Specific_Plugin"
+            name="Specific_Plugins"
             label="Project Specific Plugin"
             package="Qualimetrics"
             editor_page="Qualimetrics"
             editor_section="Naming"
             hide_in="wizard library_wizard"
+            list="true"
             description="Path to project specific plugin for Qualimetrics">
             <string />
         </project_attribute>
