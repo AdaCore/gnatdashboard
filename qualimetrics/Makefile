@@ -21,5 +21,5 @@ clean:
 install:
 	$(MKDIR) $(prefix)/bin/
 	$(MKDIR) $(prefix)/share/
-	(cd bin ; tar cf - qualimetrics) | (cd $(prefix)/bin ; tar xf -)
+	(tar cf - bin) | (cd $(prefix) ; tar xf -)
 	(cd share ; tar cf - qualimetrics) | (cd $(prefix)/share ; tar xf -)
