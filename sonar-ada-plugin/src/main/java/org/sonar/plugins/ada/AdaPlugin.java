@@ -10,10 +10,11 @@ import org.sonar.api.Extension;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
+import org.sonar.api.resources.Project;
 import org.sonar.plugins.ada.codepeer.AdaCodePeerRuleRepository;
 import org.sonar.plugins.ada.codepeer.CodePeerMetrics;
 import org.sonar.plugins.ada.codepeer.CodePeerViolationsDecorator;
-import org.sonar.plugins.ada.gcov.GCovSensor;
+import org.sonar.plugins.ada.gcov.GcovSensor;
 import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckRuleRepository;
 import org.sonar.plugins.ada.gnatcheck.GnatCheckMetrics;
 import org.sonar.plugins.ada.gnatcheck.GnatCheckViolationsDecorator;
@@ -27,16 +28,11 @@ import org.sonar.plugins.ada.ui.rubyWidget.CodePeerViolationsRubyWidget;
 import org.sonar.plugins.ada.ui.rubyWidget.GnatCheckViolationsRubyWidget;
 
 @Properties({
-    @Property(key = GCovSensor.REPORT_PATH_KEY,
-        name = "Path to gcov report",
-        description = "Gcov report relative path to the project root",
-        global = false,
-        project = true),
     @Property(key = JDBCUtils.QMT_DB_PATH,
-        name = "Path to qualimetrics database",
-        description = "Qualimetrics DB relative path to the project root",
-        global = false,
-        project = true)})
+    name = "Path to qualimetrics database",
+    description = "Qualimetrics DB relative path to the project root",
+    global = false,
+    project = true)})
 /**
  * Implements Ada Plugin for Sonar
  */
@@ -44,16 +40,20 @@ public final class AdaPlugin extends SonarPlugin {
 
     /**
      * Returns Sonar Extensions used into the plugin
-
+     *
      * @return the classes to use into the plugin
      */
     @Override
     public List getExtensions() {
         List<Class<? extends Extension>> l = new ArrayList<Class<? extends Extension>>();
+
         l.add(Ada.class);
         l.add(AdaSourceImporter.class);
         l.add(AdaDefaultProfile.class);
         l.add(AdaColorizer.class);
+
+        // Issues
+        l.add(GNATIssuesSensor.class);
 
         // CodeePeer
         l.add(AdaCodePeerRuleRepository.class);
@@ -74,11 +74,8 @@ public final class AdaPlugin extends SonarPlugin {
         l.add(GnatMetricViewerDefinition.class);
         l.add(GnatMetrics.class);
 
-        // GCov
-        l.add(GCovSensor.class);
-
-        // Test
-        l.add(GNATIssuesSensor.class);
+        // Gcov
+        l.add(GcovSensor.class);
 
         return l;
     }

@@ -13,6 +13,7 @@ import org.sonar.api.rules.Violation;
 import org.sonar.plugins.ada.api.resource.AdaFile;
 import org.sonar.plugins.ada.codepeer.AdaCodePeerRuleRepository;
 import org.sonar.plugins.ada.codepeer.CodePeerSeverity;
+import org.sonar.plugins.ada.gcov.CoverageData;
 import org.sonar.plugins.ada.utils.Pair;
 
 public class AdaDao {
@@ -102,6 +103,7 @@ public class AdaDao {
                 + "AND m.rule_id = r.id "
                 + "AND r.kind = 1 "
                 + "AND UPPER(t.name) = UPPER('" + toolName + "');";
+
         RowMapper measureMapper = new RowMapper() {
             @Override
             public Pair<AdaFile, Measure> mapRow(ResultSet resultSet) throws SQLException {
@@ -111,6 +113,34 @@ public class AdaDao {
                 measure.setValue(resultSet.getDouble("value"));
                 Pair fileMeasure = new Pair(file, measure);
                 return fileMeasure;
+            }
+        };
+
+        return JDBCUtils.query(queryString, measureMapper);
+    }
+
+    public List<CoverageData> getCoverageData() {
+        String queryString = "SELECT rs.id as resource_id, l.line as line, "
+                           +         "m.data as hits "
+                           + "FROM resources rs, lines_messages lm, "
+                           +       "messages m, tools t, rules r, lines l "
+                           + "WHERE t.id = r.tool_id "
+                           + "AND r.id = m.rule_id "
+                           + "AND m.id = lm.message_id "
+                           + "AND lm.line_id = l.id "
+                           + "AND l.resource_id = rs.id "
+                           + "AND UPPER(t.name) = UPPER('Gcov') "
+                           + "ORDER BY (rs.id);";
+
+        RowMapper measureMapper = new RowMapper() {
+            @Override
+            public CoverageData mapRow(ResultSet resultSet) throws SQLException {
+                AdaDao dao = new AdaDao();
+                AdaFile file = dao.getResourceById(resultSet.getInt("resource_id"));
+                CoverageData data = new CoverageData(file, resultSet.getInt("line"),
+                                                           resultSet.getInt("hits"));
+
+                return data;
             }
         };
 

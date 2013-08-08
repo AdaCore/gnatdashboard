@@ -4,7 +4,8 @@
  */
 package org.sonar.plugins.ada;
 
-import org.sonar.api.batch.Sensor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rules.Rule;
@@ -12,13 +13,15 @@ import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
 import org.sonar.plugins.ada.api.resource.AdaFile;
+import org.sonar.plugins.ada.gnatmetric.AdaGnatMetricSensor;
 import org.sonar.plugins.ada.persistence.AdaDao;
+import org.sonar.plugins.ada.utils.AdaSensor;
 import org.sonar.plugins.ada.utils.AdaUtils;
 
-public class GNATIssuesSensor implements Sensor {
+public class GNATIssuesSensor extends AdaSensor {
 
     private RuleFinder ruleFinder;
-    private AdaDao dao = new AdaDao();
+    private final Logger log = LoggerFactory.getLogger(GNATIssuesSensor.class);
 
     public GNATIssuesSensor(RuleFinder ruleFinder) {
         this.ruleFinder = ruleFinder;
@@ -31,7 +34,9 @@ public class GNATIssuesSensor implements Sensor {
 
     @Override
     public void analyse(Project project, SensorContext context) {
-        AdaUtils.LOG.info("---------- GNAT Issues Sensor");
+        AdaUtils.LOG.info("--- GNAT Issues Sensor");
+
+        AdaDao dao = new AdaDao();
 
         // Fetch all violation from the DB
         for (Violation v : dao.selectAllViolations()) {

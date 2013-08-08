@@ -5,24 +5,16 @@
 package org.sonar.plugins.ada.gnatmetric;
 
 import org.apache.commons.configuration.Configuration;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.database.DatabaseSession;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.measures.MetricFinder;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
-import org.sonar.api.rules.RuleFinder;
-import org.sonar.plugins.ada.TestUtils;
 import org.sonar.plugins.ada.api.resource.AdaFile;
 
 
@@ -34,13 +26,6 @@ public class AdaGnatMetricSensorTest {
 
     @Before
     public void setUp() {
-        project = TestUtils.mockProject();
-        conf = mock(Configuration.class);
-        sensor = new AdaGnatMetricSensor(conf);
-        context = mock(SensorContext.class);
-        AdaFile adaFileMock = mock(AdaFile.class);
-        when(context.getResource((Resource)anyObject())).thenReturn(adaFileMock);
-
     }
 
     @Test

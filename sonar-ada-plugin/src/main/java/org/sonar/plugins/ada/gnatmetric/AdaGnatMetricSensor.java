@@ -15,22 +15,22 @@ import org.sonar.api.resources.Project;
 import org.sonar.plugins.ada.Ada;
 import org.sonar.plugins.ada.api.resource.AdaFile;
 import org.sonar.plugins.ada.persistence.AdaDao;
+import org.sonar.plugins.ada.utils.AdaSensor;
 import org.sonar.plugins.ada.utils.Pair;
 
 /**
  * Sensor for GNATmetric external tool, retrieve informations from a report and
  * save the measures.
  */
-public class AdaGnatMetricSensor implements Sensor {
+public class AdaGnatMetricSensor extends AdaSensor {
 
-    private AdaDao dao = new AdaDao();
     private final Logger log = LoggerFactory.getLogger(AdaGnatMetricSensor.class);
-
-    public AdaGnatMetricSensor(Configuration conf) {
-    }
 
     @Override
     public void analyse(Project project, SensorContext context) {
+        log.info("--- GNATmetric sensor");
+        AdaDao dao = new AdaDao();
+
         for (Pair<AdaFile, Measure> fileMeasure : dao.selectMeasureForTool("GNATmetric")) {
             try {
                Metric metric = GnatMetrics.Metrics.valueOf(fileMeasure.getRight().getMetricKey().toUpperCase()).getMetric();
@@ -48,10 +48,5 @@ public class AdaGnatMetricSensor implements Sensor {
             }
 
         }
-    }
-
-    @Override
-    public boolean shouldExecuteOnProject(Project project) {
-        return project.getLanguageKey().equals(Ada.KEY);
     }
 }
