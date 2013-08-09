@@ -7,8 +7,11 @@
 
 with GPS.CLI_Kernels;
 with GPS;             use GPS;
+with GNAT.Strings;
 
 package Utils is
+
+   Plugins_To_Execute : GNAT.Strings.String_Access;
 
    function Return_On_Failure (Error_Message : String) return Boolean;
    --  Trace the error message with the error traces handler.

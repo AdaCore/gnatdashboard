@@ -14,6 +14,7 @@ from qmt_api.utils import OutputParser, create_parser, get_project_obj_dir
 logging.basicConfig(format='[%(levelname)s] %(message)s', level=Qmt.log_level())
 logger = logging.getLogger(__name__)
 
+
 ## tool_output ###############################################################
 ##
 class tool_output ():
@@ -92,13 +93,17 @@ class PluginRunner(object):
           is used to order plugin in list,
           otherwise default order is applied
         """
-        plugins = qmt_api.utils.get_qmt_property_list('Plugin_Scheduling')
+        plugins = Qmt.plugins_to_execute()
 
-        # GPS CLI returns: a empty list if property is not mentionned
-        if len(plugins) == 0:
-            self.__get_plugins_from_dirs(plugins)
+        if len(plugins):
+            plugins = [plugin.strip() for plugin in plugins.split(',')]
         else:
-            logger.debug('Plugin order execution from project file will be used')
+            plugins = qmt_api.utils.get_qmt_property_list('Plugins')
+            # GPS CLI returns: a empty list if property is not mentionned
+            if not len(plugins):
+                self.__get_plugins_from_dirs(plugins)
+            else:
+                logger.debug('Plugin order execution from project file will be used')
 
         plugins = plugins + self.__get_plugin_project_specific()
 
@@ -106,7 +111,9 @@ class PluginRunner(object):
         self.__remove_plugin_to_deactivate(plugins)
         self.__move_sonar_to_end(plugins)
 
-        return plugins
+        def is_not_empty(x): return x is not None and x != ''
+
+        return filter(is_not_empty, plugins)
 
     def get_plugin_class(self, plugin):
         try:
@@ -115,20 +122,15 @@ class PluginRunner(object):
                 module = __import__(plugin, fromlist=['*'])
                 return getattr(module, plugin.capitalize())
             else:
-                # For project spefcific plugins
+                # For project specific plugins
                 for key in plugin:
                     if type(plugin[key]) is abc.ABCMeta:
                         if plugin[key].__base__ is Plugin:
                             return plugin[key]
                 logger.warn('No class extending Plugin object was found for project specific plugin')
-        except ImportError as e:
+        except (ImportError,  AttributeError, ValueError) as e:
             logger.error('')
             logger.error('/!\  Unable to load plugin: %s  /!\\' % plugin)
-            logger.error('Error: %s' % str(e))
-            logger.error('')
-        except AttributeError as e:
-            logger.error('')
-            logger.error('/!\  Cannot load plugin %s  /!\\' % plugin)
             logger.error('Error: %s' % str(e))
             logger.error('')
 

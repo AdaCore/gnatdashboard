@@ -42,6 +42,7 @@ private
       Command_Line : GNAT.Command_Line.Command_Line_Configuration;
       Project_Name : aliased GNAT.Strings.String_Access;
       Script_Arg   : aliased GNAT.Strings.String_Access;
+      Plugins      : aliased GNAT.Strings.String_Access;
       Version      : aliased Boolean;
       Quiet        : aliased Boolean;
       Verbose      : aliased Boolean;

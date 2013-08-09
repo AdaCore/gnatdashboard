@@ -8,8 +8,13 @@ with Core_Properties;
 with Logger;
 with GNATCOLL.VFS;            use GNATCOLL.VFS;
 with GNATCOLL.Scripts.Python; use GNATCOLL.Scripts.Python;
+with Utils;
 
 package body Qmt_Python_Api is
+
+   procedure Plugin_To_Execute
+     (Data : in out Callback_Data'Class;
+      Command : String);
 
    procedure Log_Level
      (Data : in out Callback_Data'Class;
@@ -44,6 +49,20 @@ package body Qmt_Python_Api is
       Set_Return_Value
         (Data, Logger.Log_Level);
    end Log_Level;
+
+   procedure Plugin_To_Execute
+     (Data : in out Callback_Data'Class;
+      Command : String)
+    is
+      pragma Unreferenced (Command);
+   begin
+      if Utils.Plugins_To_Execute.all = "" then
+         Set_Return_Value_As_List (Data);
+      else
+         Set_Return_Value (Data, Utils.Plugins_To_Execute.all);
+      end if;
+
+   end Plugin_To_Execute;
 
    procedure Qmt_Root_Dir
      (Data : in out Callback_Data'Class;
@@ -120,6 +139,9 @@ package body Qmt_Python_Api is
 
       GNATCOLL.Scripts.Register_Command
         (Repo, "log_level", 0, 0, Log_Level'Access);
+
+      GNATCOLL.Scripts.Register_Command
+        (Repo, "plugins_to_execute", 0, 0, Plugin_To_Execute'Access);
    end Initialise;
 
 end Qmt_Python_Api;

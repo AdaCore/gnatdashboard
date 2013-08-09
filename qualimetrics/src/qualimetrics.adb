@@ -219,7 +219,6 @@ procedure Qualimetrics is
       then
          return;
       end if;
-
       Trace (Logger.Debug_Trace, "DB Created");
 
       --  Save project tree to DB

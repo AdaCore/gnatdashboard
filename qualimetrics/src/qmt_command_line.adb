@@ -66,6 +66,11 @@ package body Qmt_Command_Line is
          Help        => "Verbose mode, display additional information on" &
                         " the standard outpout",
          Value       => True);
+      Define_Switch
+        (Self.Command_Line,
+         Output      => Self.Plugins'Access,
+         Long_Switch => "--plugins=",
+         Help        => "Comma separated list of plugins to execute");
    end Configure;
 
    ----------------------
@@ -106,6 +111,8 @@ package body Qmt_Command_Line is
          return Utils.Return_On_Failure ("No such file: " &
                                            Self.Project_Name.all);
       end if;
+
+      Utils.Plugins_To_Execute := Self.Plugins;
 
       return True;
    exception
