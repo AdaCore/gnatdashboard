@@ -126,6 +126,7 @@ class Codepeer(Plugin):
         if status == plugin.EXEC_FAIL:
             logging.warn('GNAT Metric execution returned on failure')
             logging.warn('For more details, see log file: %s' % self.get_log_file_path())
+            return plugin.EXEC_FAIL
         return self.parse_csv_output()
 
 #output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)

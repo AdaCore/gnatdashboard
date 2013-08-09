@@ -104,6 +104,10 @@ class Gnatmetric(Plugin):
                                              e.text, e.msg))
             return plugin.EXEC_FAIL
 
+        except IOError as e:
+            logger.error(e)
+            return plugin.EXEC_FAIL
+
     def execute(self):
         status = self.process.execute()
 

@@ -45,7 +45,7 @@
 | id         | AUTOINCREMENT           | PK           |   | Auto-generated id                                                 |
 | message_id | FK rules(message_lines) | NOT NULL     |   | Lines' associated message                                         |
 | line_id    | FK lines(line_messages) | NOT NULL     |   | Corresponding line for message                                    |
-| col_begin  | INTEGER                 | NOT NULL     |   | Lines' column begin                                               |
+| col_begin  | INTEGER                 | NULL         |   | Lines' column begin                                               |
 | col_end    | INTEGER                 | NULL         |   | Lines' column end                                                 |
 
 | TABLE         | entities                    | entity   |   | Entity                 |

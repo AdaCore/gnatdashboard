@@ -58,17 +58,19 @@ def get_or_create_line(session, file_name, line_num):
     """Return the line object for the given file and line number
        Return None if file not in the DB
     """
-    # Try to retrieve line from DB
-    line = session.query(Line)\
-        .filter_by(line=line_num)\
-        .join(Line.resource)\
-        .filter(Resource.name.like('%' + file_name))\
-        .first()
+    line = None
+    if file_name:
+        # Try to retrieve line from DB
+        line = session.query(Line)\
+            .filter_by(line=line_num)\
+            .join(Line.resource)\
+            .filter(Resource.name.like('%' + file_name))\
+            .first()
 
-    if not line:
-        file = get_file(session, file_name)
-        if file:
-            line = Line(line_num, file)
+        if not line:
+            file = get_file(session, file_name)
+            if file:
+                line = Line(line_num, file)
 
     return line
 
