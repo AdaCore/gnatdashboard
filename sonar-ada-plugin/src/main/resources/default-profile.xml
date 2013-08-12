@@ -11,7 +11,9 @@
         <rule>
             <repositoryKey>gnatprove</repositoryKey>
             <key>INFO__division_check</key>
-            <priority>INFO</priority>
+            <priority>
+                INFO
+            </priority>
         </rule>
         <rule>
             <repositoryKey>gnatprove</repositoryKey>
@@ -29,12 +31,14 @@
             <priority>MAJOR</priority>
         </rule>
         <rule>
-            <repositoryKey>gnatprovee</repositoryKey>
+            <repositoryKey>gnatprove</repositoryKey>
             <key>INFO__overflow_check</key>
-            <priority>INFO</priority>
+            <priority>
+                INFO
+            </priority>
         </rule>
         <rule>
-            <repositoryKey>gnatprovee</repositoryKey>
+            <repositoryKey>gnatprove</repositoryKey>
             <key>MAJOR__overflow_check</key>
             <priority>MAJOR</priority>
         </rule>

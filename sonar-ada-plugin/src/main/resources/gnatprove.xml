@@ -1,303 +1,352 @@
-<?xml version="1.0" ?>
 <rules>
     <rule>
         <key>INFO__division_check</key>
         <configkey>INFO__division_check</configkey>
         <name>gnatprove - division check</name>
         <description>Check that the second operand of the division, mod or rem operation is different from zero.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__division_check</key>
         <configkey>MAJOR__division_check</configkey>
         <name>gnatprove - division check</name>
         <description>Check that the second operand of the division, mod or rem operation is different from zero.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__index_check</key>
         <configkey>INFO__index_check</configkey>
         <name>gnatprove - index check</name>
         <description>Check that the given index is within the bounds of the array.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__index_check</key>
         <configkey>MAJOR__index_check</configkey>
         <name>gnatprove - index check</name>
         <description>Check that the given index is within the bounds of the array.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__overflow_check</key>
         <configkey>INFO__overflow_check</configkey>
         <name>gnatprove - overflow check</name>
         <description>Check that the result of the given arithmetic operation is within the bounds of the base type.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__overflow_check</key>
         <configkey>MAJOR__overflow_check</configkey>
         <name>gnatprove - overflow check</name>
         <description>Check that the result of the given arithmetic operation is within the bounds of the base type.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__range_check</key>
         <configkey>INFO__range_check</configkey>
         <name>gnatprove - range check</name>
         <description>Check that the given value is within the bounds of the expected scalar subtype.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__range_check</key>
         <configkey>MAJOR__range_check</configkey>
         <name>gnatprove - range check</name>
         <description>Check that the given value is within the bounds of the expected scalar subtype.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__length_check</key>
         <configkey>INFO__length_check</configkey>
         <name>gnatprove - length check</name>
         <description>Check that the given array is of the length of the expected array subtype.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__length_check</key>
         <configkey>MAJOR__length_check</configkey>
         <name>gnatprove - length check</name>
         <description>Check that the given array is of the length of the expected array subtype.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__discriminant_check</key>
         <configkey>INFO__discriminant_check</configkey>
         <name>gnatprove - discriminant check</name>
         <description>Check that the discriminant of the given discriminant record has the expected value. For variant records, this can happen for a simple access to a record field. But there are other cases where a fixed value of the discriminant is required.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__discriminant_check</key>
         <configkey>MAJOR__discriminant_check</configkey>
         <name>gnatprove - discriminant check</name>
         <description>Check that the discriminant of the given discriminant record has the expected value. For variant records, this can happen for a simple access to a record field. But there are other cases where a fixed value of the discriminant is required.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__precondition</key>
         <configkey>INFO__precondition</configkey>
         <name>gnatprove - precondition</name>
         <description>Check that the precondition aspect of the given call evaluates to True.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__precondition</key>
         <configkey>MAJOR__precondition</configkey>
         <name>gnatprove - precondition</name>
         <description>Check that the precondition aspect of the given call evaluates to True.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__postcondition</key>
         <configkey>INFO__postcondition</configkey>
         <name>gnatprove - postcondition</name>
         <description>Check that the postcondition aspect of the subprogram evaluates to True.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__postcondition</key>
         <configkey>MAJOR__postcondition</configkey>
         <name>gnatprove - postcondition</name>
         <description>Check that the postcondition aspect of the subprogram evaluates to True.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__contract_case</key>
         <configkey>INFO__contract_case</configkey>
         <name>gnatprove - contract case</name>
         <description>Check that all cases of the contract case evaluate to true at the end of the subprogram.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__contract_case</key>
         <configkey>MAJOR__contract_case</configkey>
         <name>gnatprove - contract case</name>
         <description>Check that all cases of the contract case evaluate to true at the end of the subprogram.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__disjoint_contract_cases</key>
         <configkey>INFO__disjoint_contract_cases</configkey>
         <name>gnatprove - disjoint contract cases</name>
         <description>Check that the cases of the contract cases aspect are all mutually disjoint.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__disjoint_contract_cases</key>
         <configkey>MAJOR__disjoint_contract_cases</configkey>
         <name>gnatprove - disjoint contract cases</name>
         <description>Check that the cases of the contract cases aspect are all mutually disjoint.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__complete_contract_cases</key>
         <configkey>INFO__complete_contract_cases</configkey>
         <name>gnatprove - complete contract cases</name>
         <description>Check that the cases of the contract cases aspect cover the state space that is allowed by the precondition aspect.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__complete_contract_cases</key>
         <configkey>MAJOR__complete_contract_cases</configkey>
         <name>gnatprove - complete contract cases</name>
         <description>Check that the cases of the contract cases aspect cover the state space that is allowed by the precondition aspect.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__loop_invariant_initialization</key>
         <configkey>INFO__loop_invariant_initialization</configkey>
         <name>gnatprove - loop invariant initialization</name>
         <description>Check that the loop invariant evaluates to True on the first iteration of the loop.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__loop_invariant_initialization</key>
         <configkey>MAJOR__loop_invariant_initialization</configkey>
         <name>gnatprove - loop invariant initialization</name>
         <description>Check that the loop invariant evaluates to True on the first iteration of the loop.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__loop_invariant_preservation</key>
         <configkey>INFO__loop_invariant_preservation</configkey>
         <name>gnatprove - loop invariant preservation</name>
         <description>Check that the loop invariant evaluates to True at each further iteration of the loop.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__loop_invariant_preservation</key>
         <configkey>MAJOR__loop_invariant_preservation</configkey>
         <name>gnatprove - loop invariant preservation</name>
         <description>Check that the loop invariant evaluates to True at each further iteration of the loop.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__loop_variant</key>
         <configkey>INFO__loop_variant</configkey>
         <name>gnatprove - loop variant</name>
         <description>Check that the given loop variant decreases/increases as specified during each iteration of the loop. This implies termination of the loop.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__loop_variant</key>
         <configkey>MAJOR__loop_variant</configkey>
         <name>gnatprove - loop variant</name>
         <description>Check that the given loop variant decreases/increases as specified during each iteration of the loop. This implies termination of the loop.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>INFO__assertion</key>
         <configkey>INFO__assertion</configkey>
         <name>gnatprove - assertion</name>
         <description>Check that the given assertion evaluates to True.</description>
+        <priority>INFO</priority>
     </rule>
     <rule>
         <key>MAJOR__assertion</key>
         <configkey>MAJOR__assertion</configkey>
         <name>gnatprove - assertion</name>
         <description>Check that the given assertion evaluates to True.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>MINOR__depends_missing</key>
         <configkey>MINOR__depends_missing</configkey>
         <name>gnatprove - depends missing</name>
         <description>A dependency is missing from the dependency relation.</description>
+        <priority>MINOR</priority>
     </rule>
     <rule>
         <key>MAJOR__depends_missing</key>
         <configkey>MAJOR__depends_missing</configkey>
         <name>gnatprove - depends missing</name>
         <description>A dependency is missing from the dependency relation.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>MINOR__depends_missing_clause</key>
         <configkey>MINOR__depends_missing_clause</configkey>
         <name>gnatprove - depends missing clause</name>
         <description>An out parameter or global is missing from the dependency relation.</description>
+        <priority>MINOR</priority>
     </rule>
     <rule>
         <key>MAJOR__depends_missing_clause</key>
         <configkey>MAJOR__depends_missing_clause</configkey>
         <name>gnatprove - depends missing clause</name>
         <description>An out parameter or global is missing from the dependency relation.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>MINOR__depends_null</key>
         <configkey>MINOR__depends_null</configkey>
         <name>gnatprove - depends null</name>
         <description>A variable is missing from the null dependency.</description>
+        <priority>MINOR</priority>
     </rule>
     <rule>
         <key>MAJOR__depends_null</key>
         <configkey>MAJOR__depends_null</configkey>
         <name>gnatprove - depends null</name>
         <description>A variable is missing from the null dependency.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>MINOR__depends_wrong</key>
         <configkey>MINOR__depends_wrong</configkey>
         <name>gnatprove - depends wrong</name>
         <description>A stated dependency is not fulfilled.</description>
+        <priority>MINOR</priority>
     </rule>
     <rule>
         <key>MAJOR__depends_wrong</key>
         <configkey>MAJOR__depends_wrong</configkey>
         <name>gnatprove - depends wrong</name>
         <description>A stated dependency is not fulfilled.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>MINOR__illegal_update</key>
         <configkey>MINOR__illegal_update</configkey>
         <name>gnatprove - illegal update</name>
         <description>Flow analysis has detected an update of an in mode global.</description>
+        <priority>MINOR</priority>
     </rule>
     <rule>
         <key>MAJOR__illegal_update</key>
         <configkey>MAJOR__illegal_update</configkey>
         <name>gnatprove - illegal update</name>
         <description>Flow analysis has detected an update of an in mode global.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>MINOR__ineffective</key>
         <configkey>MINOR__ineffective</configkey>
         <name>gnatprove - ineffective</name>
         <description>Flow analysis has detected an ineffective statement, such as an unused assignment.</description>
+        <priority>MINOR</priority>
     </rule>
     <rule>
         <key>MAJOR__ineffective</key>
         <configkey>MAJOR__ineffective</configkey>
         <name>gnatprove - ineffective</name>
         <description>Flow analysis has detected an ineffective statement, such as an unused assignment.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>MINOR__unused_initial_value</key>
         <configkey>MINOR__unused_initial_value</configkey>
         <name>gnatprove - unused initial value</name>
         <description>An in or in out parameter or global has been found which does not have any effect on any out or in out parameter or global.</description>
+        <priority>MINOR</priority>
     </rule>
     <rule>
         <key>MAJOR__unused_initial_value</key>
         <configkey>MAJOR__unused_initial_value</configkey>
         <name>gnatprove - unused initial value</name>
         <description>An in or in out parameter or global has been found which does not have any effect on any out or in out parameter or global.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>MINOR__stable</key>
         <configkey>MINOR__stable</configkey>
         <name>gnatprove - stable</name>
         <description>A questionable loop construct where a variable is assigned the same value on each loop iteration.</description>
+        <priority>MINOR</priority>
     </rule>
     <rule>
         <key>MAJOR__stable</key>
         <configkey>MAJOR__stable</configkey>
         <name>gnatprove - stable</name>
         <description>A questionable loop construct where a variable is assigned the same value on each loop iteration.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>MINOR__uninitialized</key>
         <configkey>MINOR__uninitialized</configkey>
         <name>gnatprove - uninitialized</name>
         <description>Flow analysis has detected the use of an uninitialized variable.</description>
+        <priority>MINOR</priority>
     </rule>
     <rule>
         <key>MAJOR__uninitialized</key>
         <configkey>MAJOR__uninitialized</configkey>
         <name>gnatprove - uninitialized</name>
         <description>Flow analysis has detected the use of an uninitialized variable.</description>
+        <priority>MAJOR</priority>
     </rule>
     <rule>
         <key>MINOR__unused</key>
         <configkey>MINOR__unused</configkey>
         <name>gnatprove - unused</name>
         <description>A global or locally declared variable is never used.</description>
+        <priority>MINOR</priority>
     </rule>
     <rule>
         <key>MAJOR__unused</key>
         <configkey>MAJOR__unused</configkey>
         <name>gnatprove - unused</name>
         <description>A global or locally declared variable is never used.</description>
+        <priority>MAJOR</priority>
     </rule>
 </rules>
