@@ -14,26 +14,14 @@ xml = """<?xml version="1.0"?>
         </project_attribute>
 
         <project_attribute
-            name="Plugin_Scheduling"
-            label="Plugin Scheduling"
+            name="Plugins"
+            label="Plugins"
             package="Qualimetrics"
             editor_page="Qualimetrics"
             editor_section="Naming"
             hide_in="wizard library_wizard"
             list="true"
-            description="Qualimetrics plugins execution order">
-            <string />
-        </project_attribute>
-
-        <project_attribute
-            name="Plugin_Off"
-            label="Deactivated Plugin"
-            package="Qualimetrics"
-            editor_page="Qualimetrics"
-            editor_section="Naming"
-            hide_in="wizard library_wizard"
-            list="true"
-            description="Qualimetrics plugin to deactivate">
+            description="Qualimetrics plugins to execute in order">
             <string />
         </project_attribute>
 

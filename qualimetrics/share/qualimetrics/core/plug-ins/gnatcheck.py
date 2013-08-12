@@ -180,8 +180,8 @@ class Gnatcheck(Plugin):
     def execute(self):
         status = self.process.execute()
         if status == plugin.EXEC_FAIL:
-            logging.warn('GNATcheck execution returned on failure')
-            logging.warn('For more details, see log file: %s' % self.get_log_file_path())
+            logging.warn('GNATcheck returned on failure')
+            logging.warn('see log file: %s' % self.get_log_file_path())
         return self.parse_output_file()
 
 #output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)

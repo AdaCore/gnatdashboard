@@ -39,6 +39,7 @@ with Utils;
 with Logger;
 with Ada.Calendar;          use Ada.Calendar;
 with GNAT.OS_Lib;
+with GNAT.IO; use GNAT.IO;
 
 procedure Qualimetrics is
 
@@ -151,7 +152,7 @@ procedure Qualimetrics is
 
       --  Execute the pythn script that runs all the plugins
       Logger.Trace_Title ("Running tools analysis");
-      Trace (Logger.Info_Trace, " ");
+      Put_Line (" ");
       Trace (Logger.Debug_Trace, "Executing plugin runner script: "
              & Plugin_Runner.Display_Full_Name);
       Execute_File

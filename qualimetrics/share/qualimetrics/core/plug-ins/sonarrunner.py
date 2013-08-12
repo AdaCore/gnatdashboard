@@ -44,7 +44,8 @@ class Sonarrunner(Plugin):
     def __cmd_line(self):
         """Return command line for sonar runner execution """
         # Set specific location for Sonar project properties file
-        sonar_conf = '-Dproject.settings=%s' % SonarConfiguration.FILE_NAME
+        sonar_conf = '-Dproject.settings=%s' % os.path.join(self.working_dir,
+                                                SonarConfiguration.FILE_NAME)
         return ['sonar-runner', sonar_conf]
 
     def execute(self):

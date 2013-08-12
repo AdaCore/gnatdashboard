@@ -11,9 +11,10 @@ from qmt_api.db import SessionFactory
 from qmt_api.plugin import Plugin
 from qmt_api.utils import OutputParser, create_parser, get_project_obj_dir
 
-logging.basicConfig(format='[%(levelname)s] %(message)s', level=Qmt.log_level())
+logging.basicConfig(format='       %(message)s', level=Qmt.log_level())
 logger = logging.getLogger(__name__)
 
+MAX=25
 
 ## tool_output ###############################################################
 ##
@@ -146,10 +147,12 @@ class PluginRunner(object):
         plugin_instance.teardown()
 
         logger.debug('Plugin execution returns: %s' % str(success))
-        success_msg = ('[OK]' if success == plugin.EXEC_SUCCESS
-                              else '[FAIL]')
 
-        logger.info('..... %s  %s' % (plugin_instance.name, success_msg))
+        success_msg = ('\033[32m'+'[OK]' + '\033[0m'
+                        if success == plugin.EXEC_SUCCESS
+                        else '\033[31m'+'[FAIL]' + '\033[0m')
+
+        logger.info('..... %s' % success_msg)
         logger.info('')
 
     def run_plugins(self, session_factory):
