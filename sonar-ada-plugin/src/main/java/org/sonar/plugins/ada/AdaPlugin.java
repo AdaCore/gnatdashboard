@@ -22,6 +22,7 @@ import org.sonar.plugins.ada.gnatcheck.GnatCheckViolationsDensityDecorator;
 import org.sonar.plugins.ada.gnatcheck.GnatCheckWeightedViolationsDecorator;
 import org.sonar.plugins.ada.gnatmetric.AdaGnatMetricSensor;
 import org.sonar.plugins.ada.gnatmetric.GnatMetrics;
+import org.sonar.plugins.ada.gnatprove.GNATproveRuleRepository;
 import org.sonar.plugins.ada.persistence.JDBCUtils;
 import org.sonar.plugins.ada.ui.gwt.GnatMetricViewerDefinition;
 import org.sonar.plugins.ada.ui.rubyWidget.CodePeerViolationsRubyWidget;
@@ -76,6 +77,9 @@ public final class AdaPlugin extends SonarPlugin {
 
         // Gcov
         l.add(GcovSensor.class);
+
+        // GNATprove
+        l.add(GNATproveRuleRepository.class);
 
         return l;
     }

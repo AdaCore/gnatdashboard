@@ -47,8 +47,10 @@ public class GcovSensor extends AdaSensor {
             // Add hits for line
             builder.setHits(data.getLine(), data.getHits());
         }
-        // For the last resource
-        saveCoverageMeasure(builder, context, currentFile);
+        if (currentFile != null) {
+            // For the last resource
+            saveCoverageMeasure(builder, context, currentFile);
+        }
     }
 
     private void saveCoverageMeasure(CoverageMeasuresBuilder builder, SensorContext context, AdaFile res) {

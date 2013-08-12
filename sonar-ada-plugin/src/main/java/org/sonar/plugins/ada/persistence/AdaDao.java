@@ -14,6 +14,7 @@ import org.sonar.plugins.ada.api.resource.AdaFile;
 import org.sonar.plugins.ada.codepeer.AdaCodePeerRuleRepository;
 import org.sonar.plugins.ada.codepeer.CodePeerSeverity;
 import org.sonar.plugins.ada.gcov.CoverageData;
+import org.sonar.plugins.ada.utils.AdaUtils;
 import org.sonar.plugins.ada.utils.Pair;
 
 public class AdaDao {
@@ -79,8 +80,14 @@ public class AdaDao {
                         ruleKey = severity + AdaCodePeerRuleRepository.RULE_KEY_SEPARATOR
                                 + severity_category[1] + AdaCodePeerRuleRepository.RULE_KEY_SEPARATOR
                                 + ruleKey;
+                    } else {
+                        ruleKey = resultSet.getString("category")
+                                + AdaCodePeerRuleRepository.RULE_KEY_SEPARATOR
+                                + ruleKey;
                     }
                 }
+
+                AdaUtils.LOG.info("Rule key: {}", ruleKey);
 
                 Rule rule = Rule.create(resultSet.getString("rule_repository"), ruleKey);
                 AdaFile resource = dao.getResourceById(resultSet.getInt("resource_id"));
