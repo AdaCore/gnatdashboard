@@ -30,8 +30,10 @@ class Gcov(Plugin):
         self.rule = Rule('coverage', 'coverage',
                          self.tool, db.METRIC_KIND)
 
-    def __add_hits_for_line(self, src_basename, line_num, hits):
-        line = dao.get_or_create_line(self.session, src_basename, line_num)
+    def __add_hits_for_line(self, resource, line_num, hits):
+        line = dao.get_or_create_line_from_resource_id (self.session,
+                                                        resource.id,
+                                                        line_num)
 
         if line:
             line_message = LineMessage()
@@ -55,6 +57,12 @@ class Gcov(Plugin):
 
         try:
             for f in files:
+                # Retrieve source basename:
+                # /path/to/source.adb.gcov --> source.adb
+                src = f.split(os.sep)[-1:][0] \
+                       .split(self.GCOV_SUFFIX)[0]
+                resource = dao.get_file(self.session, src)
+
                 with open(f, 'r') as gcov_file:
                     # Retrieve information for every source line
                     # skip first 2 lines
@@ -68,11 +76,7 @@ class Gcov(Plugin):
                             if hits == '#####' or hits == '=====':
                                 hits = '0'
                             line_id = line_infos[1].strip()
-                            # Retrieve source basename:
-                            # /path/to/source.adb.gcov --> source.adb
-                            src = f.split(os.sep)[-1:][0] \
-                                   .split(self.GCOV_SUFFIX)[0]
-                            self.__add_hits_for_line(src, line_id, hits)
+                            self.__add_hits_for_line(resource, line_id, hits)
 
             self.session.commit()
             return plugin.EXEC_SUCCESS

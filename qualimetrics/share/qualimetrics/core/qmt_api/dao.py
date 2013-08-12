@@ -43,7 +43,16 @@ def get_file(session, file_name):
         .first()
     return file
 
-## get_resource ###################################################################
+## get_file_by_id ##############################################################
+##
+def get_file_by_id(session, resource_id):
+    """Return the File object for the given file path """
+    file = session.query(Resource)\
+        .filter_by(id=resource_id)\
+        .first()
+    return file
+
+## get_resource ###############################################################
 ##
 def get_resource(session, name):
     """Return the File object for the given file path """
@@ -52,7 +61,7 @@ def get_resource(session, name):
         .first()
     return resource
 
-## get_or_create_line ##############################################################
+## get_or_create_line #########################################################
 ##
 def get_or_create_line(session, file_name, line_num):
     """Return the line object for the given file and line number
@@ -69,6 +78,29 @@ def get_or_create_line(session, file_name, line_num):
 
         if not line:
             file = get_file(session, file_name)
+            if file:
+                line = Line(line_num, file)
+
+    return line
+
+## get_or_create_line #########################################################
+##
+def get_or_create_line_from_resource_id(session, resource_id, line_num):
+    """Return the line object for the given file and line number
+       Return None if file not in the DB
+    """
+    line = None
+    if resource_id:
+        # Try to retrieve line from DB
+        line = session.query(Line)\
+            .filter_by(line=line_num)\
+            .join(Line.resource)\
+            .filter(Resource.id==resource_id)\
+            .first()
+
+        # Create line if does not exist yet in DB
+        if not line:
+            file = get_file_by_id(session, resource_id)
             if file:
                 line = Line(line_num, file)
 
