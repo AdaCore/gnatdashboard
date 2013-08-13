@@ -1,3 +1,4 @@
+import GPS
 from db import (Rule,
                 Resource,
                 Category,
@@ -37,9 +38,10 @@ def get_or_create_category(session, label):
 ##
 def get_file(session, file_name):
     """Return the File object for the given file path """
+
     file = session.query(Resource)\
         .filter_by(kind=2)\
-        .filter(Resource.name.like('%' + file_name))\
+        .filter_by(name=GPS.File(file_name).name())\
         .first()
     return file
 
