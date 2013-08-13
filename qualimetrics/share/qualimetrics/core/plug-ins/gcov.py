@@ -63,20 +63,21 @@ class Gcov(Plugin):
                        .split(self.GCOV_SUFFIX)[0]
                 resource = dao.get_file(self.session, src)
 
-                with open(f, 'r') as gcov_file:
-                    # Retrieve information for every source line
-                    # skip first 2 lines
-                    for line in gcov_file.readlines()[2:]:
+                if resource:
+                    with open(f, 'r') as gcov_file:
+                        # Retrieve information for every source line
+                        # skip first 2 lines
+                        for line in gcov_file.readlines()[2:]:
 
-                        # Skip useless line
-                        if line.strip()[0] != '-':
-                            line_infos = line.split(':', 2)
-                            hits = line_infos[0].strip()
-                            # Line is not covered
-                            if hits == '#####' or hits == '=====':
-                                hits = '0'
-                            line_id = line_infos[1].strip()
-                            self.__add_hits_for_line(resource, line_id, hits)
+                            # Skip useless line
+                            if line.strip()[0] != '-':
+                                line_infos = line.split(':', 2)
+                                hits = line_infos[0].strip()
+                                # Line is not covered
+                                if hits == '#####' or hits == '=====':
+                                    hits = '0'
+                                line_id = line_infos[1].strip()
+                                self.__add_hits_for_line(resource, line_id, hits)
 
             self.session.commit()
             return plugin.EXEC_SUCCESS
