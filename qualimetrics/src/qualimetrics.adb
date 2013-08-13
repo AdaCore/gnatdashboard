@@ -14,7 +14,7 @@
 --       qualimetrics/
 --         plug-ins/              --  user-defined plugins go here
 --         core/
---           qualimetrics_api.py  --  this is the main API entry point
+--           plugins_runner.py    --  this is the main python entry point
 --                                --  that users can use
 --           plug-ins/            --  AdaCore-defined plugins go here
 

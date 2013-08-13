@@ -1,7 +1,0 @@
-To build qualimetrics:
-
-     make
-
-To install qualimetrics:
-
-     make install PREFIX=your_prefix

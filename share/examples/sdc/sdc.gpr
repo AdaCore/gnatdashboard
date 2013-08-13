@@ -1,4 +1,4 @@
-with "projects/prj1";
+with "projects/prj2";
 
 project Sdc is
 
@@ -41,6 +41,14 @@ project Sdc is
    package Ide is
       for Vcs_Kind use "CVS";
    end Ide;
+
+   package Check is
+       for Default_Switches ("ada") use ("-rules", "-from=/chelles.a/users/martin/projects/qualimetrics/share/examples/sdc/rules.txt", "-U");
+   end Check;
+
+    package Qualimetrics is
+        for Project_Name use "Poney";
+    end Qualimetrics;
 
 end Sdc;
 
