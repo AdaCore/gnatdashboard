@@ -40,7 +40,6 @@ class Codepeer(Plugin):
        Launch CodePeer
     """
     LOG_FILE_NAME='codepeer.log'
-    CSV_REPORT_PATH=os.path.join(utils.get_project_obj_dir(), 'codepeer.csv')
 
     def __init__ (self, session):
         super(Codepeer, self).__init__('CodePeer')
@@ -55,6 +54,9 @@ class Codepeer(Plugin):
         self.codepeer_msg_reader = GPSTarget(name='Codepeer Message Reader',
                                  output_parser='msgreaderoutputparser',
                                  cmd_args=self.__msg_reader_cmd_line())
+
+        self.CSV_REPORT_PATH = os.path.join(
+           utils.get_project_obj_dir(), 'codepeer.csv')
 
     def __codepeer_cmd_line(self):
         """Create codepeer command line argument list for GPS target
