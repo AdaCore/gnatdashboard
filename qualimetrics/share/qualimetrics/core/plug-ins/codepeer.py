@@ -122,7 +122,7 @@ class Codepeer(Plugin):
             return plugin.EXEC_FAIL
 
     def execute(self):
-        if not os.path.exists(CSV_REPORT_PATH):
+        if not os.path.exists(self.CSV_REPORT_PATH):
             status = self.codepeer.execute()
             if status:
                 status = self.codepeer_msg_reader.execute()
