@@ -1,0 +1,92 @@
+-------------------------------------
+   SETUP DEVELOPPEMENT ENVIRONMENT
+-------------------------------------
+
+1. Build GPS
+
+    -  Follow the GPS environment setup procedure
+
+
+2. Build Qualimetrics
+
+
+    Qualimetrics Driver:
+    ~~~~~~~~~~~~~~~~~~~
+
+        -  Checkout qualimetrics:
+             $ svn co svn+ssh://svn.eu.adacore.com/Dev/trunk/qualimetrics
+
+        -  Add gps_cli in your ada project path:
+             $ export ADA_PROJECT_PATH=/path/to/GPS/src/gps/cli/:$ADA_PROJECT_PATH
+
+        -  Go to qualimetrics driver directory:
+             $ cd qualimetrics/qualimetrics/
+
+        -  Execute:
+             $ make
+
+
+    Qualimetrics Sonar plugin:
+    ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        -  Make sure Java is installed on you computer (1.6 minimum), otherwise see:
+           http://www.oracle.com/technetwork/java/javase/downloads/index.html
+
+        -  Make sure Maven is install on your computer.
+           Otherwise, here the procedure:
+
+                1. Download the lastest version of Maven here: 
+                    http://maven.apache.org/download.cgi
+
+                2. Extract the distribution archive.
+
+                3. In a command terminal add the M2_HOME environment variable, e.g
+                    $ export M2_HOME=/usr/local/apache-maven/apache-maven-3.0.4 
+
+                4. Add Maven to your PATH, e.g 
+                    $ PATH=$M2_HOME/bin:$PATH
+
+                5. Make sure JAVA_HOME is set to the location of your JDK and that
+                    $JAVA_HOME/bin is in your PATH environment variable.
+
+                6. Run  mvn --version  to verify that it is correctly installed.
+
+        -  Go to sonar-ada-plugin directory:
+            $ cd $QMT_HOME/qualimetrics/sonar-ada-plugin/
+
+        - Execute: $ mvn clean install
+
+        - All you need is generated in sonar-ada-plugin/target directory
+          (including the jar file).
+
+
+3. Install Qualimetrics
+
+
+    Qualimetrics Driver:
+    ~~~~~~~~~~~~~~~~~~~
+
+        -  Make sure gps_cli is in your ada project path, otherwise:
+             $ export ADA_PROJECT_PATH=/path/to/GPS/src/gps/cli/:$ADA_PROJECT_PATH
+
+        -  Execute the following commands:
+            $ make install PREFIX=/path/to/install/directory
+
+        - Add the path of PREFIX in your PATH.
+
+        - Run qualimetrics --version to verify it is correctly installed.
+
+
+    Qualimetrics Sonar plugin:
+    ~~~~~~~~~~~~~~~~~~~~~~~~~
+        - Make sure sonar is installed, other wise -->
+
+        - Make sure sonar-runner is installed and configured, other wise -->
+
+        - Execute:
+            $ cp $QMT_HOME/qualimetrics/sonar-ada-plugin/sonar-ada-plugin-*.jar
+            $SONAR_HOME/extensions/plugins/
+
+        - Restart sonar:
+            $ $SONAR_HOME/bin/<plateform>/start.sh restart
+
