@@ -40,6 +40,7 @@ class Codepeer(Plugin):
        Launch CodePeer
     """
     LOG_FILE_NAME='codepeer.log'
+    CSV_REPORT_PATH=os.path.join(utils.get_project_obj_dir(), 'codepeer.csv')
 
     def __init__ (self, session):
         super(Codepeer, self).__init__('CodePeer')
@@ -127,7 +128,7 @@ class Codepeer(Plugin):
             if status:
                 status = self.codepeer_msg_reader.execute()
             if status == plugin.EXEC_FAIL:
-                logging.warn('GNAT Metric execution returned on failure')
+                logging.warn('CodePeer execution returned on failure')
                 logging.warn('For more details, see log file: %s' % self.get_log_file_path())
                 return plugin.EXEC_FAIL
         return self.parse_csv_output()
