@@ -1,23 +1,32 @@
 ------------------------------------------------------------------------------
---                 Q u a l i m e t r i c s     D r i v er                   --
+--                               G N A T h u b                              --
 --                                                                          --
---                    Copyright (C) 2012-2013, AdaCore                      --
+--                        Copyright (C) 2013, AdaCore                       --
 --                                                                          --
+-- This is free software;  you can redistribute it  and/or modify it  under --
+-- terms of the  GNU General Public License as published  by the Free Soft- --
+-- ware  Foundation;  either version 3,  or (at your option) any later ver- --
+-- sion.  This software is distributed in the hope  that it will be useful, --
+-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --
+-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General  Public  License  distributed  with  this  software;   see  file --
+-- COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy --
+-- of the license.                                                          --
 ------------------------------------------------------------------------------
 
 with Ada.Containers.Hashed_Maps;
-with Ada.Containers;                     use Ada.Containers;
-with Ada.Exceptions;                     use Ada.Exceptions;
+with Ada.Containers;                      use Ada.Containers;
+with Ada.Exceptions;                      use Ada.Exceptions;
 with Ada.Strings;
-with Ada.Strings.Unbounded;              use Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded;               use Ada.Strings.Unbounded;
 with Ada.Strings.Unbounded.Hash;
 with Ada.Strings.Equal_Case_Insensitive;
 
-with Database_Interface;                 use Database_Interface;
-with Orm;                                use Orm;
-with Utils;
+with GNAThub.Database;                    use GNAThub.Database;
+with Orm;                                 use Orm;
 
-package body Project_Parser is
+package body GNAThub.Project is
 
    package Project_Map is new Ada.Containers.Hashed_Maps
      (Key_Type     => Unbounded_String,
@@ -27,37 +36,42 @@ package body Project_Parser is
    use Project_Map;
    --  ???
 
-   procedure Save_Project_Sources (Project     : Project_Type;
-                                   Project_Orm : Detached_Resource);
+   procedure Save_Project_Sources
+     (Project     : Project_Type;
+      Project_Orm : Detached_Resource);
    --  ???
 
-   function Load_Project_Tree
+   -----------------------
+   -- Load_Project_Tree --
+   -----------------------
+
+   procedure Load_Project_Tree
      (Path   : GNAT.Strings.String_Access;
-      Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record) return Boolean
+      Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record)
    is
       Project_File : constant Virtual_File := GNATCOLL.VFS.Create (+Path.all);
    begin
       Kernel.Registry.Tree.Load
         (Root_Project_Path => Project_File,
          Env => Kernel.Registry.Environment);
-      return True;
    exception
       when E : Invalid_Project =>
-         return Utils.Return_On_Failure (Exception_Name (E) &
-                                 ": Unable to load project from project file: "
-                                 & Path.all);
+         raise Error with "Unable to load project file: " & Path.all & ": " &
+                          Exception_Information (E);
    end Load_Project_Tree;
 
    --------------------------
    -- Save_Project_Sources --
    --------------------------
 
-   procedure Save_Project_Sources (Project     : Project_Type;
-                                   Project_Orm : Detached_Resource)
+   procedure Save_Project_Sources
+     (Project     : Project_Type;
+      Project_Orm : Detached_Resource)
    is
       Directory_Orm : Detached_Resource;
       File_Orm      : Detached_Resource;
       Files         : File_Array_Access;
+
    begin
       --  Initialisation
       Files := Project.Source_Files;
@@ -101,16 +115,16 @@ package body Project_Parser is
       Parent_Project      : Project_Type;
       Parent_Project_Orm  : Detached_Resource;
 
-      function Get_Project_Orm (Project : Project_Type)
-                                return Detached_Resource;
+      function Get_Project_Orm
+        (Project : Project_Type) return Detached_Resource;
       --  ???
 
       ---------------------
       -- Get_Project_Orm --
       ---------------------
 
-      function Get_Project_Orm (Project : Project_Type)
-                                return Detached_Resource
+      function Get_Project_Orm
+        (Project : Project_Type) return Detached_Resource
       is
          Orm                 : Detached_Resource;
          Project_Cursor      : Project_Map.Cursor;
@@ -173,4 +187,4 @@ package body Project_Parser is
 
    end Save_Project_Tree;
 
-end Project_Parser;
+end GNAThub.Project;

@@ -1,8 +1,18 @@
 ------------------------------------------------------------------------------
---                 Q u a l i m e t r i c s     D r i v er                   --
+--                               G N A T h u b                              --
 --                                                                          --
---                    Copyright (C) 2012-2013, AdaCore                      --
+--                        Copyright (C) 2013, AdaCore                       --
 --                                                                          --
+-- This is free software;  you can redistribute it  and/or modify it  under --
+-- terms of the  GNU General Public License as published  by the Free Soft- --
+-- ware  Foundation;  either version 3,  or (at your option) any later ver- --
+-- sion.  This software is distributed in the hope  that it will be useful, --
+-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --
+-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General  Public  License  distributed  with  this  software;   see  file --
+-- COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy --
+-- of the license.                                                          --
 ------------------------------------------------------------------------------
 
 with GNATCOLL.SQL;          use GNATCOLL.SQL;
@@ -11,11 +21,9 @@ with GNATCOLL.SQL.Inspect;  use GNATCOLL.SQL.Inspect;
 with GNATCOLL.SQL.Sessions; use GNATCOLL.SQL.Sessions;
 with GNATCOLL.SQL.Sqlite;   use GNATCOLL.SQL.Sqlite;
 
-with Utils;
-with Logger;
-with GNATCOLL.Traces; use GNATCOLL.Traces;
+package body GNAThub.Database is
 
-package body Database_Interface is
+   Max_Sessions : constant Natural := 2;
 
    function Kind_Factory
      (From    : Base_Element'Class;
@@ -60,13 +68,13 @@ package body Database_Interface is
       return Default;
    end Kind_Factory;
 
-   -------------------
-   -- Initialize_DB --
-   -------------------
+   ----------------
+   -- Initialize --
+   ----------------
 
-   function Initialise_DB
+   procedure Initialize
      (DB_File     : Virtual_File;
-      Schema_File : Virtual_File) return Boolean
+      Schema_File : Virtual_File)
    is
       Descr          : Database_Description;
       Schema_IO      : DB_Schema_IO;
@@ -74,19 +82,22 @@ package body Database_Interface is
       Delete_Succeed : Boolean;
    begin
       --  Check existance of a database, delete it before creating a new one
-      Trace (Logger.Debug_Trace, "  Removing old DB");
+
       if Is_Regular_File (DB_File) then
+         Log.Debug ("Removing previous copy of the database: " &
+                    DB_File.Display_Full_Name);
+
          Delete (DB_File, Delete_Succeed);
+
          if not Delete_Succeed then
-            return Utils.Return_On_Failure
-              ("Unable to delete old Sqlite file: " &
-                 DB_File.Display_Full_Name);
+            raise Error with "Unable to delete old Sqlite file: " &
+                             DB_File.Display_Full_Name;
          end if;
       end if;
 
       --  Retieve schema from text file
-      Trace (Logger.Debug_Trace, "  Reading DB schema from file: "
-             & Schema_File.Display_Full_Name);
+      Log.Debug ("Loading database schema: " & Schema_File.Display_Full_Name);
+
       Schema := New_Schema_IO (Schema_File).Read_Schema;
 
       Descr := GNATCOLL.SQL.Sqlite.Setup
@@ -100,11 +111,9 @@ package body Database_Interface is
       Set_Default_Factory (Kind_Factory'Access);
 
       if not Schema_IO.DB.Success then
-         return Utils.Return_On_Failure ("Unable to initialise the Database");
+         raise Error with "Unable to initialize the Database";
       end if;
-
-      return True;
-   end Initialise_DB;
+   end Initialize;
 
    ------------------------------
    -- Create_And_Save_Resource --
@@ -146,4 +155,4 @@ package body Database_Interface is
       Session.Commit;
    end Save_Resource_Tree;
 
-end Database_Interface;
+end GNAThub.Database;

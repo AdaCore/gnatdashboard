@@ -1,0 +1,54 @@
+with "cli.gpr";
+
+project GNAThub is
+
+   type Mode is ("Debug", "Production");
+   Build_Mode : Mode := External ("Build_Mode", "Debug");
+
+   Processors := External ("PROCESSORS", "0");
+
+   for Languages use ("Ada", "Python");
+
+   for Exec_Dir use "build/bin";
+   for Object_Dir use "build/obj";
+
+   for Source_Dirs use
+     ("src",
+      "src-gen",                       --  automatically generated files
+      "share/gnathub/core",
+      "share/gnathub/core/plug-ins",
+      "share/gnathub/core/qmt_api");
+
+   for Main use ("gnathub-main.adb");
+
+   package Naming is
+      for Body_Suffix ("Python") use ".py";
+   end Naming;
+
+   package Builder is
+      for Default_Switches ("Ada") use ("-m", "-j" & Processors);
+      for Executable ("gnathub-main.adb") use "gnathub";
+   end Builder;
+
+   package Compiler is
+      for Driver ("Python") use "";
+      for Default_Switches ("Ada") use ("-gnat2012");
+
+      case Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("Ada") use
+              Compiler'Default_Switches ("Ada") &
+              ("-gnatwa", "-gnatyyBdOSux", "-gnata", "-g", "-O0");
+
+         when "Production" =>
+            for Default_Switches ("Ada") use
+              ("-gnatwa", "-gnatn", "-O2");
+
+      end case;
+   end Compiler;
+
+   package Ide is
+      for Vcs_Kind use "Git";
+   end Ide;
+
+end GNAThub;

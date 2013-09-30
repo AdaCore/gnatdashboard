@@ -1,8 +1,18 @@
 ------------------------------------------------------------------------------
---                 Q u a l i m e t r i c s     D r i v er                   --
+--                               G N A T h u b                              --
 --                                                                          --
---                    Copyright (C) 2012-2013, AdaCore                      --
+--                        Copyright (C) 2013, AdaCore                       --
 --                                                                          --
+-- This is free software;  you can redistribute it  and/or modify it  under --
+-- terms of the  GNU General Public License as published  by the Free Soft- --
+-- ware  Foundation;  either version 3,  or (at your option) any later ver- --
+-- sion.  This software is distributed in the hope  that it will be useful, --
+-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --
+-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General  Public  License  distributed  with  this  software;   see  file --
+-- COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy --
+-- of the license.                                                          --
 ------------------------------------------------------------------------------
 
 with GNATCOLL.VFS; use GNATCOLL.VFS;
@@ -11,7 +21,7 @@ with Orm;          use Orm;
 --  This package gathered all functions and procedures that allow to
 --  interract with the DB.
 
-package Database_Interface is
+package GNAThub.Database is
 
    --------------------
    -- Object Factory --
@@ -53,9 +63,9 @@ package Database_Interface is
    --  DB Management  --
    ---------------------
 
-   function Initialise_DB
-     (DB_File : Virtual_File;
-      Schema_File : Virtual_File) return Boolean;
+   procedure Initialize
+     (DB_File     : Virtual_File;
+      Schema_File : Virtual_File);
    --  Create Qualimetrics DB sqlite file. And initialize DB context that will
    --  be use in the whole program to interract with the DB. Session pool
    --  is setup by this function.
@@ -86,6 +96,4 @@ package Database_Interface is
    --  Child: DB object representation of the child resource.
    --  Parent: DB object representation of the parent resource.
 
-private
-   Max_Sessions        : Natural                    := 2;
-end Database_Interface;
+end GNAThub.Database;
