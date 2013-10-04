@@ -12,7 +12,7 @@ import sys
 
 def main():
     """Run a single test"""
-    os.environ["PATH"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "bin") + os.pathsep + os.environ["PATH"]
+    os.environ["PATH"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "build", "bin") + os.pathsep + os.environ["PATH"]
     m = Main()
     add_run_test_options(m)
     m.parse_args()
