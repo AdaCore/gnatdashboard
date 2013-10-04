@@ -1,5 +1,5 @@
 # launch qualimetrics on a trivial project
-qualimetrics -Pdefault
+gnathub -P default
 
 tool_name="GNAT Metric"
 
@@ -11,5 +11,5 @@ then
 fi
 
 # verify that gnatmetric tool has been saved in db
-sqlite3 obj/qualimetrics/qualimetrics.db "select name from tools;" | grep "$tool_name"
+sqlite3 obj/gnathub/gnathub.db "select name from tools;" | grep "$tool_name"
 

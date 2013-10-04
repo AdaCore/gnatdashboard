@@ -1,2 +1,2 @@
 # Test sqlalchemy installation 
-qualimetrics -Pdefault --load=python:test.py
+gnathub -P default --load=python:test.py

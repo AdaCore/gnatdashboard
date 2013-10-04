@@ -1,2 +1,2 @@
-qualimetrics --help | grep "^Usage:"
-qualimetrics --help | grep "QUALIMETRICS.ERRORS"
+gnathub --help | grep "^Usage:"
+gnathub --help | grep "QUALIMETRICS.ERRORS"

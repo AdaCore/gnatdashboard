@@ -1,1 +1,1 @@
-Usage: qualimetrics [switches] [arguments]
+Usage: gnathub [-vq] -P PROJECT [-plugins PLUGINS] [-X ARG [-X ARG]]

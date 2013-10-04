@@ -96,7 +96,7 @@ package body GNAThub.Configuration is
       Set_Usage
         (Config => Config,
          Usage  => "[-vq] -P PROJECT [-plugins PLUGINS] [-X ARG [-X ARG]]",
-         Help   => "GNAThub, driver & formatter for GNAT tool suite");
+         Help   => "GNAThub, driver & formatter for GNAT tool suite.");
 
    end Initialize;
 
@@ -110,6 +110,10 @@ package body GNAThub.Configuration is
       --  Bring the '=' operator in the scope
 
    begin
+      --  Manage -X (scenario vars) switches and call getopt
+
+      GPS.CLI_Utils.Parse_Command_Line (Config, Kernel);
+
       --  Print the version and exit if --version is supplied
 
       if Version then
@@ -117,15 +121,11 @@ package body GNAThub.Configuration is
          raise GNAT.Command_Line.Exit_From_Command_Line;
       end if;
 
-      --  Manage -X (scenario vars) switches and call getopt
-
-      GPS.CLI_Utils.Parse_Command_Line (Config, Kernel);
-
       --  Ensure consistency of use for --quiet and --verbose and set the
       --  logging level accordingly
 
       if Quiet and then Verbose then
-         raise Error with "--verbose and --quiet are mutually exclusive";
+         raise Error with "--verbose and --quiet are mutually exclusive.";
       end if;
 
       if Quiet then

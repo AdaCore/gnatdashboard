@@ -1,1 +1,1 @@
-qualimetrics --version
+gnathub --version

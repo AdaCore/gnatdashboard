@@ -1,1 +1,1 @@
-qualimetrics --version | grep -v "^Qualimetrics driver"
+gnathub --version | grep -v "^GNAThub driver"
