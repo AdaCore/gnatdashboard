@@ -1,17 +1,34 @@
+##############################################################################
+##                                                                          ##
+##                               G N A T h u b                              ##
+##                                                                          ##
+##                        Copyright (C) 2013, AdaCore                       ##
+##                                                                          ##
+## The QM is free software; you can redistribute it  and/or modify it       ##
+## under terms of the GNU General Public License as published by the Free   ##
+## Software Foundation; either version 3, or (at your option) any later     ##
+## version.  The QM is distributed in the hope that it will be useful,      ##
+## but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-  ##
+## TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public ##
+## License  for more details. You  should  have  received a copy of the GNU ##
+## General Public License  distributed with the QM; see file COPYING3. If   ##
+## not, write  to  the Free  Software  Foundation,  59 Temple Place - Suite ##
+## 330, Boston, MA 02111-1307, USA.                                         ##
+##                                                                          ##
+##############################################################################
+
 import os
 import GPS
-import logging
-import qmt_api
-from qmt_api import plugin
-from qmt_api import utils
-from qmt_api import Session, dao, db
-from qmt_api.db import Rule, Message
-from qmt_api.utils import OutputParser, create_parser
-from qmt_api.plugin import GPSTarget, Plugin
+import GNAThub
+
+from GNAThub import GPSTarget, Log
+from GNAThub import utils
+from GNAThub import Session, dao, db
+from GNAThub.db import Rule, Message
+from GNAThub.utils import OutputParser, create_parser
+
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
-
-logger = logging.getLogger(__name__)
 
 ## GnatmetricOutputParser #####################################################
 ##
@@ -27,8 +44,8 @@ class GnatmetricOutputParser(OutputParser):
 
 ## Gnatmetric ################################################################
 ##
-class Gnatmetric(Plugin):
-    """GNATmetric plugin for qualimetrics
+class Gnatmetric(GNAThub.Plugin):
+    """GNATmetric plugin for GNAThub
 
        Launch GNATmetric
     """
@@ -55,8 +72,8 @@ class Gnatmetric(Plugin):
     def parse_metrix_xml_file (self):
         """Parse GNATmetric xml report and save data to the DB
            Return:
-               - plugin.EXEC_SUCCESS: if transaction have been comitted to DB
-               - plugin.EXEC_FAIL: if error happened while parsing the xml
+               - GNAThub.EXEC_SUCCESS: if transaction have been comitted to DB
+               - GNAThub.EXEC_FAIL: if error happened while parsing the xml
                                    report
         """
         tool = dao.save_tool(self.session, self.name)
@@ -72,15 +89,13 @@ class Gnatmetric(Plugin):
                 # Save file level metrics
                 if file:
                     for metric in file_node.findall('./metric'):
-                        rule = dao.get_or_create_rule(self.session,
-                                                     tool,
-                                                     db.METRIC_KIND,
-                                                     metric.attrib.get('name'))
+                        rule = dao.get_or_create_rule(self.session, tool,
+                                                      db.METRIC_KIND,
+                                                      metric.attrib.get('name'))
                         file.messages.append(Message(metric.text, rule))
                 else:
-                    logging.warn
-                    ('File not found, skipping all messages for file: %s' % \
-                      file_node.attrib.get('name'))
+                    Log.warn ('File not found, skipping all messages from: %s' %
+                              file_node.attrib.get('name'))
                     continue
 
                 # Save unit level metric
@@ -96,27 +111,26 @@ class Gnatmetric(Plugin):
                         # Metric value --> metric.text)
 
             self.session.commit()
-            return plugin.EXEC_SUCCESS
+            return GNAThub.EXEC_SUCCESS
 
         except ParseError:
-            logger.error('Unable to parse gnat metric xml report')
-            logger.error('%s:%s:%s - :%s' % (e.filename, e.lineno,
-                                             e.text, e.msg))
-            return plugin.EXEC_FAIL
+            Log.fatal('Unable to parse gnat metric xml report')
+            Log.fatal('%s:%s:%s - :%s' % (e.filename, e.lineno, e.text, e.msg))
+            return GNAThub.EXEC_FAIL
 
         except IOError as e:
-            logger.error(e)
-            return plugin.EXEC_FAIL
+            Log.fatal(e)
+            return GNAThub.EXEC_FAIL
 
     def execute(self):
         status = self.process.execute()
 
         # If GNATmetric execution has failed
-        if status == plugin.EXEC_FAIL:
-                logging.warn('GNAT Metric execution returned on failure')
-                logging.warn('For more details, see log file: %s' % self.get_log_file_path())
+        if status == GNAThub.EXEC_FAIL:
+                Log.warn('GNAT Metric execution returned on failure')
+                Log.warn('For more details, see log file: %s' % self.get_log_file_path())
         # Just return status if GNATmetrics have not been launched
-        elif status == plugin.PROCESS_NOT_LAUNCHED:
+        elif status == GNAThub.PROCESS_NOT_LAUNCHED:
             return status
         # If GNATmetric succeed: parse xml report and save data to DB
         return self.parse_metrix_xml_file()

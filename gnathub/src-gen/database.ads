@@ -1,10 +1,3 @@
-------------------------------------------------------------------------------
---                 Q u a l i m e t r i c s     D r i v er                   --
---                                                                          --
---                    Copyright (C) 2012-2013, AdaCore                      --
---                                                                          --
-------------------------------------------------------------------------------
-
 with GNATCOLL.SQL; use GNATCOLL.SQL;
 with Database_Names; use Database_Names;
 package Database is

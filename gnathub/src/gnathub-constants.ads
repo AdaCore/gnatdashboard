@@ -39,14 +39,15 @@ package GNAThub.Constants is
    --  GNAThub project side environment properties, located in project
    --  object directory
 
-   Exec_Dir : constant Virtual_File := Create ("gnathub");
-   Logs_Dir : constant Virtual_File := Create_From_Dir (Exec_Dir, "logs");
-   DB_File  : constant Virtual_File :=
-     Create_From_Dir (Exec_Dir, "gnathub.db");
+   Root_Dir : constant Virtual_File := Create ("gnathub");
+   Logs_Dir : constant Virtual_File := Create_From_Dir (Root_Dir, "logs");
+
+   Database_File  : constant Virtual_File :=
+     Create_From_Dir (Root_Dir, "gnathub.db");
 
    --  Ada to Python API
 
-   Python_Root_Module : constant String := "Qmt";
+   Python_Root_Module : constant String := "GNAThubCore";
 
    --  GNAThub helper scripts
 

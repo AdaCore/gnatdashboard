@@ -16,13 +16,10 @@
 ------------------------------------------------------------------------------
 
 with GPS.CLI_Kernels;
-with GNAT.Strings;
 
 package GNAThub.Scripts is
 
-   Plugins_To_Execute : GNAT.Strings.String_Access;
-
-   procedure Execute_Script
+   procedure Execute
      (Kernel     : access GPS.CLI_Kernels.CLI_Kernel_Record;
       Script_Arg : access String);
    --  ???

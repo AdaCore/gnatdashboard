@@ -1,68 +1,82 @@
+##############################################################################
+##                                                                          ##
+##                               G N A T h u b                              ##
+##                                                                          ##
+##                        Copyright (C) 2013, AdaCore                       ##
+##                                                                          ##
+## The QM is free software; you can redistribute it  and/or modify it       ##
+## under terms of the GNU General Public License as published by the Free   ##
+## Software Foundation; either version 3, or (at your option) any later     ##
+## version.  The QM is distributed in the hope that it will be useful,      ##
+## but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-  ##
+## TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public ##
+## License  for more details. You  should  have  received a copy of the GNU ##
+## General Public License  distributed with the QM; see file COPYING3. If   ##
+## not, write  to  the Free  Software  Foundation,  59 Temple Place - Suite ##
+## 330, Boston, MA 02111-1307, USA.                                         ##
+##                                                                          ##
+##############################################################################
+
+import GNAThub
+import GPS
+
 import abc
 import imp
-import sys
-import GPS
 import os
-import Qmt
-import logging
-import qmt_api.utils
-from qmt_api import plugin
-from qmt_api.db import SessionFactory
-from qmt_api.plugin import Plugin
-from qmt_api.utils import OutputParser, create_parser, get_project_obj_dir
+import sys
 
-logging.basicConfig(format='       %(message)s', level=Qmt.log_level())
-logger = logging.getLogger(__name__)
+from GNAThub import Log
+from GNAThub.db import SessionFactory
+from GNAThub.utils import OutputParser, create_parser, get_project_obj_dir
 
-MAX=25
 
-## tool_output ###############################################################
-##
 class tool_output ():
     """"Initate tool_output module
 
         This class is use by GPS in order to manage executed process output.
     """
-    @staticmethod
-    def create_parser (name, child=None):
-        return create_parser (name, child)
 
-## PluginRunner ###############################################################
-##
+    @staticmethod
+    def create_parser(name, child=None):
+        return create_parser(name, child)
+
+
 class PluginRunner(object):
     """Class that load python plugin
 
-       Retreive all plugins: core and user
+       Retrieve all plugins: core and user
        Plugin execution order:
             - core plugin
             - user plugin
             - sonar plugin if active
     """
 
-    SCRIPT_SUFFIX='.py'
+    SCRIPT_SUFFIX = '.py'
 
     def __remove_plugin_to_deactivate(self, plugins):
         """Deactive plugin according to attribute Plugin_Off in the project
            file
         """
-        for p in qmt_api.utils.get_qmt_property_list('Plugin_Off'):
+        for p in GNAThub.utils.get_qmt_property_list('Plugin_Off'):
             try:
                 plugins.remove(p)
-                logger.debug('Plugin %s is deactivated' % p)
+                Log.debug('Plugin %s is deactivated' % p)
+
             except ValueError:
-                logger.warn('Plugin %s will not be deactive' % p)
-                logger.warn('Not in the plugin list to execute or not installed at all')
+                Log.warn('Plugin %s will not be deactive' % p)
+                Log.warn('Not in the plugin list to execute or not installed at all')
 
     def __move_sonar_to_end(self, plugins):
         try:
             sonar_plugin = plugins.pop(plugins.index('sonarrunner'))
             plugins.append(sonar_plugin)
+
         except ValueError:
             return
 
     def __get_plugins_from_dirs(self, plugins):
         """Retrieve projet sepecific plugin, form project file file """
-        files = os.listdir(Qmt.core_plugin_dir()) + os.listdir(Qmt.user_plugin_dir())
+        files = os.listdir(GNAThub.core_plugins()) + os.listdir(GNAThub.user_plugins())
 
         for f in files:
             if f.endswith(self.SCRIPT_SUFFIX):
@@ -71,40 +85,44 @@ class PluginRunner(object):
     def __get_plugin_project_specific(self):
         specific_plugins = []
 
-        for plugin in qmt_api.utils.get_qmt_property_list('Specific_Plugins'):
+        for plugin in GNAThub.utils.get_qmt_property_list('Specific_Plugins'):
             if os.path.exists(plugin):
                 try:
                     plugin_golbals = {}
                     execfile(plugin, plugin_golbals)
                     specific_plugins.append(plugin_golbals)
-                    logger.debug('Load specific plugin file: %s' % plugin)
+                    Log.debug('Load specific plugin file: %s' % plugin)
+
                 except IOError:
-                    logger.warn('Ignoring plugin because unable to load file: %s' % plugin)
-                    logger.info('')
+                    Log.warn('Ignoring plugin because unable to load file: %s' % plugin)
+                    Log.info('')
+
             else:
-                logger.warn('Ignoring plugin because not found: %s' % plugin)
-                logger.info('')
+                Log.warn('Ignoring plugin because not found: %s' % plugin)
+                Log.info('')
 
         return specific_plugins
 
     def get_all_plugins(self):
-        """Retrieve all plugin for qualimetrics
+        """Retrieve all plugins for GNAThub
 
           If Plugin_Scheduling attribute is set in project file, the given list
           is used to order plugin in list,
           otherwise default order is applied
         """
-        plugins = Qmt.plugins_to_execute()
+
+        plugins = GNAThub.plugins()
 
         if len(plugins):
             plugins = [plugin.strip() for plugin in plugins.split(',')]
         else:
-            plugins = qmt_api.utils.get_qmt_property_list('Plugins')
+            plugins = GNAThub.utils.get_qmt_property_list('Plugins')
+
             # GPS CLI returns: a empty list if property is not mentionned
-            if not len(plugins):
+            if not plugins:
                 self.__get_plugins_from_dirs(plugins)
             else:
-                logger.debug('Plugin order execution from project file will be used')
+                Log.debug('Plugin order execution from project file will be used')
 
         plugins = plugins + self.__get_plugin_project_specific()
 
@@ -126,14 +144,14 @@ class PluginRunner(object):
                 # For project specific plugins
                 for key in plugin:
                     if type(plugin[key]) is abc.ABCMeta:
-                        if plugin[key].__base__ is Plugin:
+                        if plugin[key].__base__ is GNAThub.Plugin:
                             return plugin[key]
-                logger.warn('No class extending Plugin object was found for project specific plugin')
+                Log.warn('No class extending Plugin object was found for project specific plugin')
         except (ImportError,  AttributeError, ValueError) as e:
-            logger.error('')
-            logger.error('/!\  Unable to load plugin: %s  /!\\' % plugin)
-            logger.error('Error: %s' % str(e))
-            logger.error('')
+            Log.fatal('')
+            Log.fatal('Failed to load plugin: %s' % plugin)
+            Log.fatal('Caused by: %s' % e)
+            Log.fatal('')
 
     def __execute_plugin(self, plugin_instance):
         """Call method setup, execute and teardown for a plugin instance.
@@ -146,14 +164,12 @@ class PluginRunner(object):
         success = plugin_instance.execute()
         plugin_instance.teardown()
 
-        logger.debug('Plugin execution returns: %s' % str(success))
+        Log.debug('%s exit code: %s' % (plugin_instance.name, str(success)))
 
-        success_msg = ('\033[32m'+'[OK]' + '\033[0m'
-                        if success == plugin.EXEC_SUCCESS
-                        else '\033[31m'+'[FAIL]' + '\033[0m')
-
-        logger.info('..... %s' % success_msg)
-        logger.info('')
+        if success == GNAThub.EXEC_SUCCESS:
+            Log.debug('%s execution succeeded' % plugin_instance.name)
+        else:
+            Log.fatal('%s execution failed' % plugin_instance.name)
 
     def run_plugins(self, session_factory):
         """Fetch all python plugins: core, user, project specific; retrieve the
@@ -171,17 +187,11 @@ class PluginRunner(object):
                 session = session_factory.get_session()
                 # Instanciate the plugin
                 plugin = plugin_class(session)
-                logger.info('===== Running %s' % plugin.name)
+                Log.info('Running module: %s' % plugin.name)
                 self.__execute_plugin(plugin)
                 session.close()
 
-def _entry_point():
-    # Initialise
-    runner = PluginRunner()
-    # Execute
-    sessionfactory = SessionFactory()
-    runner.run_plugins(sessionfactory)
 
+# Script entry point
 if __name__ == '__main__':
-    _entry_point()
-
+    PluginRunner().run_plugins(SessionFactory())

@@ -17,13 +17,13 @@
 
 with Ada.Calendar;                  use Ada.Calendar;
 with Ada.Calendar.Formatting;
+with Ada.Text_IO;                   use Ada.Text_IO;
 
 with GNATCOLL.Traces;               use GNATCOLL.Traces;
 
 package body GNAThub is
 
    package body Log is
-
       Application_Start_Time : constant Time := Clock;
 
       Info_Handle    : constant Trace_Handle := Create ("INFO", On);
@@ -35,19 +35,17 @@ package body GNAThub is
       Ada_Verbosity    : Verbosity_Level := Default;
       --  Verbosity of the Ada Trace engine.
 
-      Python_Verbosity : Natural := 20;
-      --  Verbosity of the Python Trace engine.
-      --    Quiet   => 40
-      --    Default => 20
-      --    Verbose => 10
-
       ----------
       -- Info --
       ----------
 
       procedure Info (Message : String) is
       begin
-         Trace (Info_Handle, Message);
+         if Verbosity >= Default then
+            Put_Line ("--- " & Message);
+         else
+            Trace (Info_Handle, Message);
+         end if;
       end Info;
 
       ----------
@@ -93,36 +91,17 @@ package body GNAThub is
 
       procedure Set_Verbosity (Verbosity : Verbosity_Level) is
       begin
+         Set_Active (Fatal_Handle, True);
+
+         Set_Active (Info_Handle, Verbosity < Quiet);
+         Set_Active (Warning_Handle, Verbosity < Quiet);
+
+         Set_Active (Debug_Handle, Verbosity = Verbose);
+
+         Set_Active (Create ("DEBUG.ABSOLUTE_TIME"), Verbosity = Verbose);
+         Set_Active (Create ("DEBUG.COLORS"), Verbosity = Verbose);
+
          Ada_Verbosity := Verbosity;
-
-         case Verbosity is
-            when Quiet =>
-               Set_Active (Debug_Handle, False);
-               Set_Active (Info_Handle, False);
-               Set_Active (Warning_Handle, False);
-               Set_Active (Fatal_Handle, True);
-
-               Python_Verbosity := 40;
-
-            when Default =>
-               Set_Active (Debug_Handle, False);
-               Set_Active (Info_Handle, True);
-               Set_Active (Warning_Handle, True);
-               Set_Active (Fatal_Handle, True);
-
-               Python_Verbosity := 20;
-
-            when Verbose =>
-               Set_Active (Create ("DEBUG.ABSOLUTE_TIME"), True);
-
-               Set_Active (Debug_Handle, True);
-               Set_Active (Info_Handle, True);
-               Set_Active (Warning_Handle, True);
-               Set_Active (Fatal_Handle, True);
-
-               Python_Verbosity := 10;
-
-         end case;
       end Set_Verbosity;
 
       ---------------
@@ -132,15 +111,6 @@ package body GNAThub is
       function Verbosity return Verbosity_Level is
       begin
          return Ada_Verbosity;
-      end Verbosity;
-
-      ---------------
-      -- Verbosity --
-      ---------------
-
-      function Verbosity return Integer is
-      begin
-         return Python_Verbosity;
       end Verbosity;
 
    end Log;

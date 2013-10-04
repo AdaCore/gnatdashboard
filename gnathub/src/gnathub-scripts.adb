@@ -15,23 +15,21 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Strings;
-with Ada.Strings.Fixed;
+with Ada.Strings.Fixed;             use Ada.Strings.Fixed;
 
 with GPS.CLI_Utils;
 
 package body GNAThub.Scripts is
 
-   --------------------
-   -- Execute_Script --
-   --------------------
+   -------------
+   -- Execute --
+   -------------
 
-   procedure Execute_Script
+   procedure Execute
      (Kernel     : access GPS.CLI_Kernels.CLI_Kernel_Record;
       Script_Arg : access String)
    is
-      Colon : constant Natural :=
-                Ada.Strings.Fixed.Index (Script_Arg.all, ":");
+      Colon : constant Natural := Index (Script_Arg.all, ":");
    begin
       if Colon = 0 then
          raise Error with "No lang in --load=" & Script_Arg.all;
@@ -47,6 +45,6 @@ package body GNAThub.Scripts is
          raise Error with "Invalid script provided to --load: "
                           & Script_Arg (Script_Arg'First .. Colon - 1);
       end if;
-   end Execute_Script;
+   end Execute;
 
 end GNAThub.Scripts;

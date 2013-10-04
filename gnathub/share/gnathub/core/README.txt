@@ -1,23 +1,13 @@
-===============================================================================
-                Q u a l i m e t r i c s   D r i v e r 
-===============================================================================
+Overview
+========
 
-This directory contains Python core part of Qualimetrics Driver.
+This directory contains Python core part of GNAThub Driver.
 
-
-It contains the following elements:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    - dbschema.txt          -->  DB schema text description file. 
-
-    - lib/                  -->  Specific Python library used by Qualimetrics.
- 
-    - plug-ins/             -->  Qualimetrics core plugins.
- 
-    - plugins_runner.py     -->  Runner for Qualimetrics plugins.
-
-    - project_attributes.py -->  Qualimetrics specific project attributes
-                                 description.
-
-    - qmt_api/              -->  Python API for Qualimetrics plugins.
-
+    core
+    ├── GNAThub/
+    ├── README.txt
+    ├── custom-attributes-definition.py
+    ├── database-schema.txt
+    ├── generic-plugin-runner.py
+    ├── lib/
+    └── plug-ins/

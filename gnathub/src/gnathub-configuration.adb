@@ -15,67 +15,77 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO;       use Ada.Text_IO;
-with GNAT.Command_Line; use GNAT.Command_Line;
+with Ada.Text_IO;             use Ada.Text_IO;
+
+with GNAT.Command_Line;       use GNAT.Command_Line;
+
 with GPS.CLI_Utils;
 
-with GNAThub.Scripts;
 with GNAThub.Version;
 
 package body GNAThub.Configuration is
+
+   Config      : GNAT.Command_Line.Command_Line_Configuration;
+
+   Project_Arg : aliased GNAT.Strings.String_Access;
+   Script_Arg  : aliased GNAT.Strings.String_Access;
+   Plugins_Arg : aliased GNAT.Strings.String_Access;
+   Version     : aliased Boolean;
+   Quiet       : aliased Boolean;
+   Verbose     : aliased Boolean;
 
    ----------------
    -- Initialize --
    ----------------
 
-   procedure Initialize (Self : in out Command_Line) is
+   procedure Initialize is
    begin
       --  Declare the switches
 
       Define_Switch
-        (Config       => Self.Command_Line,
+        (Config       => Config,
          Switch       => "-X:",
          Help         => "Specify an external reference in the project");
 
       Define_Switch
-        (Config      => Self.Command_Line,
-         Output      => Self.Project_Name'Access,
+        (Config      => Config,
+         Output      => Project_Arg'Access,
          Switch      => "-P:",
          Long_Switch => "--project=",
          Help        => "Run on the given project (mandatory)");
 
       Define_Switch
-        (Config      => Self.Command_Line,
-         Output      => Self.Plugins'Access,
+        (Config      => Config,
+         Output      => Plugins_Arg'Access,
          Long_Switch => "--plugins=",
          Help        => "Comma separated list of plugins to execute");
 
       Define_Switch
-        (Config      => Self.Command_Line,
-         Output      => Self.Script_Arg'Access,
+        (Config      => Config,
+         Output      => Script_Arg'Access,
          Switch      => "-l:",
          Long_Switch => "--load=",
          Help        => "Execute external script written (lang:path)");
 
       Define_Switch
-        (Config      => Self.Command_Line,
-         Output      => Self.Verbose'Access,
+        (Config      => Config,
+         Output      => Verbose'Access,
          Switch      => "-v",
          Long_Switch => "--verbose",
          Help        => "Toggle verbose mode on",
          Value       => True);
 
       Define_Switch
-        (Config      => Self.Command_Line,
-         Output      => Self.Quiet'Access,
+        (Config      => Config,
+         Output      => Quiet'Access,
          Switch      => "-q",
          Long_Switch => "--quiet",
          Help        => "Toggle quiet mode on",
          Value       => True);
 
       Define_Switch
-        (Config      => Self.Command_Line,
-         Output      => Self.Version'Access,
+        (Config      => Config,
+         Output      => Version'Access,
          Switch      => "-V",
          Long_Switch => "--version",
          Help        => "Print the version and exit",
@@ -84,7 +94,7 @@ package body GNAThub.Configuration is
       --  Usage
 
       Set_Usage
-        (Config => Self.Command_Line,
+        (Config => Config,
          Usage  => "[-vq] -P PROJECT [-plugins PLUGINS] [-X ARG [-X ARG]]",
          Help   => "GNAThub, driver & formatter for GNAT tool suite");
 
@@ -94,44 +104,49 @@ package body GNAThub.Configuration is
    -- Parse --
    -----------
 
-   procedure Parse
-     (Self   : in out Command_Line;
-      Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record) is
+   procedure Parse (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record)
+   is
+      use GNAT.Strings;
+      --  Bring the '=' operator in the scope
+
    begin
-      --  Manage -X (scenario vars) switch and call getopt
-      GPS.CLI_Utils.Parse_Command_Line (Self.Command_Line, Kernel);
+      --  Print the version and exit if --version is supplied
 
-      --  Trace level
-      if Self.Quiet and then Self.Verbose then
-         raise Error
-           with "options --verbose and --quiet are mutually exclusive";
-      end if;
-
-      if Self.Quiet then
-         Log.Set_Verbosity (Log.Quiet);
-      end if;
-
-      if Self.Verbose then
-         Log.Set_Verbosity (Log.Verbose);
-      end if;
-
-      --  Version option
-      if Self.Version then
+      if Version then
          Put_Line ("GNAThub driver " & GNAThub.Version.Version);
          raise GNAT.Command_Line.Exit_From_Command_Line;
       end if;
 
+      --  Manage -X (scenario vars) switches and call getopt
+
+      GPS.CLI_Utils.Parse_Command_Line (Config, Kernel);
+
+      --  Ensure consistency of use for --quiet and --verbose and set the
+      --  logging level accordingly
+
+      if Quiet and then Verbose then
+         raise Error with "--verbose and --quiet are mutually exclusive";
+      end if;
+
+      if Quiet then
+         Log.Set_Verbosity (Log.Quiet);
+      end if;
+
+      if Verbose then
+         Log.Set_Verbosity (Log.Verbose);
+      end if;
+
       --  Check that project file path has been specified on command line
-      if not GPS.CLI_Utils.Is_Project_Path_Specified (Self.Project_Name) then
+
+      if not GPS.CLI_Utils.Is_Project_Path_Specified (Project_Arg) then
          raise Error with "No project file specified, see --help for usage.";
       end if;
 
       --  Check existance of the given path on disk
-      if not GPS.CLI_Utils.Project_File_Path_Exists (Self.Project_Name) then
-         raise Error with "No such file: " & Self.Project_Name.all;
-      end if;
 
-      GNAThub.Scripts.Plugins_To_Execute := Self.Plugins;
+      if not GPS.CLI_Utils.Project_File_Path_Exists (Project_Arg) then
+         raise Error with "No such file: " & Project;
+      end if;
 
    exception
       when GNAT.Command_Line.Exit_From_Command_Line =>
@@ -147,51 +162,67 @@ package body GNAThub.Configuration is
                           GNAT.Command_Line.Full_Switch;
    end Parse;
 
-   ------------------
-   -- Project_Name --
-   ------------------
+   -------------
+   -- Project --
+   -------------
 
-   function Project_Name (Self : Command_Line) return String is
+   function Project return String is
    begin
-      return Self.Project_Name.all;
-   end Project_Name;
+      return Project_Arg.all;
+   end Project;
 
-   ----------------
-   -- Script_Arg --
-   ----------------
+   ------------
+   -- Script --
+   ------------
 
-   function Script_Arg (Self : Command_Line) return String is
+   function Script return String is
    begin
-      return Self.Script_Arg.all;
-   end Script_Arg;
+      return Script_Arg.all;
+   end Script;
 
-   ------------------
-   -- Project_Name --
-   ------------------
+   -------------
+   -- Project --
+   -------------
 
-   function Project_Name
-     (Self : Command_Line) return GNAT.Strings.String_Access is
+   function Project return GNAT.Strings.String_Access is
    begin
-      return Self.Project_Name;
-   end Project_Name;
+      return Project_Arg;
+   end Project;
 
-   ----------------
-   -- Script_Arg --
-   ----------------
+   ------------
+   -- Script --
+   ------------
 
-   function Script_Arg
-     (Self : Command_Line) return GNAT.Strings.String_Access is
+   function Script return GNAT.Strings.String_Access is
    begin
-      return Self.Script_Arg;
-   end Script_Arg;
+      return Script_Arg;
+   end Script;
+
+   -------------
+   -- Plugins --
+   -------------
+
+   function Plugins return String is
+   begin
+      return Plugins_Arg.all;
+   end Plugins;
+
+   -------------
+   -- Plugins --
+   -------------
+
+   function Plugins return GNAT.Strings.String_Access is
+   begin
+      return Plugins_Arg;
+   end Plugins;
 
    --------------
    -- Finalize --
    --------------
 
-   procedure Finalize (Self : in out Command_Line) is
+   procedure Finalize is
    begin
-      GNAT.Command_Line.Free (Self.Command_Line);
+      GNAT.Command_Line.Free (Config);
    end Finalize;
 
 end GNAThub.Configuration;

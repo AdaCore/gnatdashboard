@@ -1,6 +1,6 @@
-| TABLE | tools         | tool             |    | Tools that will be managed by Qualimetrics |
-| id    | AUTOINCREMENT | PK               |    | Auto-generated id                          |
-| name  | TEXT          | NOT NULL, NOCASE |    | Tools' name                                |
+| TABLE | tools         | tool             |    | Tools that will be managed by GNAThub|
+| id    | AUTOINCREMENT | PK               |    | Auto-generated id                    |
+| name  | TEXT          | NOT NULL, NOCASE |    | Tools' name                          |
 
 | TABLE   | categories    | category         |   | Category for the rules |
 | id      | AUTOINCREMENT | PK               |   | Auto-generated id      |

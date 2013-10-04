@@ -1,16 +1,32 @@
+##############################################################################
+##                                                                          ##
+##                               G N A T h u b                              ##
+##                                                                          ##
+##                        Copyright (C) 2013, AdaCore                       ##
+##                                                                          ##
+## The QM is free software; you can redistribute it  and/or modify it       ##
+## under terms of the GNU General Public License as published by the Free   ##
+## Software Foundation; either version 3, or (at your option) any later     ##
+## version.  The QM is distributed in the hope that it will be useful,      ##
+## but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-  ##
+## TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public ##
+## License  for more details. You  should  have  received a copy of the GNU ##
+## General Public License  distributed with the QM; see file COPYING3. If   ##
+## not, write  to  the Free  Software  Foundation,  59 Temple Place - Suite ##
+## 330, Boston, MA 02111-1307, USA.                                         ##
+##                                                                          ##
+##############################################################################
+
 import os
 import re
 import GPS
-import logging
-import qmt_api
-from qmt_api import plugin
-from qmt_api import utils
-from qmt_api import Session, dao, db
-from qmt_api.db import Rule, Message, LineMessage
-from qmt_api.utils import OutputParser, create_parser
-from qmt_api.plugin import GPSTarget, Plugin
+import GNAThub
 
-logger = logging.getLogger(__name__)
+from GNAThub import GPSTarget, Log
+from GNAThub import utils
+from GNAThub import Session, dao, db
+from GNAThub.db import Rule, Message, LineMessage
+from GNAThub.utils import OutputParser, create_parser
 
 ## CodepeerOutputParser #######################################################
 ##
@@ -34,8 +50,8 @@ class CodepeerOutputParser(OutputParser):
 
 ## Codepeer ##################################################################
 ##
-class Codepeer(Plugin):
-    """CodePeer plugin for qualimetrics
+class Codepeer(GNAThub.Plugin):
+    """CodePeer plugin for GNAThub
 
        Launch CodePeer
     """
@@ -85,7 +101,7 @@ class Codepeer(Plugin):
 
             line.messages.append(line_message)
         else:
-            logger.warn('Skipping message: %s, file not found: %s' % (msg, src))
+            Log.warn('Skipping message: %s, file not found: %s' % (msg, src))
 
     def parse_csv_output(self):
         try:
@@ -117,20 +133,25 @@ class Codepeer(Plugin):
                     self.__add_message(source, line, col_begin,
                                        rule_key, message, category)
             self.session.commit()
-            return plugin.EXEC_SUCCESS
+            return GNAThub.EXEC_SUCCESS
+
         except IOError as e:
-            logger.warn(str(e))
-            return plugin.EXEC_FAIL
+            Log.warn(str(e))
+            return GNAThub.EXEC_FAIL
 
     def execute(self):
         if not os.path.exists(self.CSV_REPORT_PATH):
             status = self.codepeer.execute()
+
             if status:
                 status = self.codepeer_msg_reader.execute()
-            if status == plugin.EXEC_FAIL:
-                logging.warn('CodePeer execution returned on failure')
-                logging.warn('For more details, see log file: %s' % self.get_log_file_path())
-                return plugin.EXEC_FAIL
+
+            if status == GNAThub.EXEC_FAIL:
+                Log.warn('CodePeer execution returned on failure')
+                Log.warn('For more details, see log file: %s' % self.get_log_file_path())
+
+                return GNAThub.EXEC_FAIL
+
         return self.parse_csv_output()
 
 #output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)

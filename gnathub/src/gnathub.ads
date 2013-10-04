@@ -22,7 +22,7 @@ package GNAThub is
    Silent_Error : exception;
 
    package Log is
-      type Verbosity_Level is (Quiet, Default, Verbose);
+      type Verbosity_Level is (Verbose, Default, Quiet);
       --  The three possible threshold of verbosity for this application.
 
       procedure Info (Message : String);
@@ -46,10 +46,6 @@ package GNAThub is
 
       function Verbosity return Verbosity_Level;
       --  Returns the current verbosity level.
-
-      function Verbosity return Integer;
-      --  Returns the current verbosity level as an integer to that map Python
-      --  Trace Engine log scale.
    end Log;
 
 end GNAThub;

@@ -15,53 +15,38 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-with GNAT.Command_Line;
 with GNAT.Strings;
 
 with GPS.CLI_Kernels;
-with GPS;
 
 package GNAThub.Configuration is
 
-   type Command_Line is tagged private;
-   --  Command line for qualimetrics
+   procedure Initialize;
+   --  Defines switches handled by GNAThub.
 
-   procedure Initialize (Self : in out Command_Line);
-   --  Define switches handle by qualimetrics
-
-   procedure Parse
-     (Self : in out Command_Line;
-      Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record);
+   procedure Parse (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record);
    --  Parses the command line.
 
-   function Project_Name (Self : Command_Line) return String;
+   function Project return String;
    --  Returns Project name given on the command line.
 
-   function Script_Arg (Self : Command_Line) return String;
+   function Project return GNAT.Strings.String_Access;
+   --  Same as Project but returns an access type.
+
+   function Script return String;
    --  Returns value for --load switch
    --  Example: --load=python:example.py: return 'python:example.py'
 
-   function Project_Name
-     (Self : Command_Line) return GNAT.Strings.String_Access;
-   --  Same as Project_Name but returns an access type.
+   function Script return GNAT.Strings.String_Access;
+   --  Same as Script but returns an access type.
 
-   function Script_Arg
-     (Self : Command_Line) return GNAT.Strings.String_Access;
-   --  Same as Project_Name but returns an access type.
+   function Plugins return String;
+   --  Returns the list of plugins to execute, as a comma separated string.
 
-   procedure Finalize (Self : in out Command_Line);
+   function Plugins return GNAT.Strings.String_Access;
+   --  Same as Plugins but returns an access type.
+
+   procedure Finalize;
    --  Frees allocated memory.
-
-private
-
-   type Command_Line is tagged record
-      Command_Line : GNAT.Command_Line.Command_Line_Configuration;
-      Project_Name : aliased GNAT.Strings.String_Access;
-      Script_Arg   : aliased GNAT.Strings.String_Access;
-      Plugins      : aliased GNAT.Strings.String_Access;
-      Version      : aliased Boolean;
-      Quiet        : aliased Boolean;
-      Verbose      : aliased Boolean;
-   end record;
 
 end GNAThub.Configuration;

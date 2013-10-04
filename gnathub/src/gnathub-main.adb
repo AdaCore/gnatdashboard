@@ -34,7 +34,7 @@ with GNAThub.Constants;          use GNAThub.Constants;
 with GNAThub.Database;
 with GNAThub.Project;
 with GNAThub.Configuration;      use GNAThub.Configuration;
-with GNAThub.Python_Api;
+with GNAThub.Python;
 with GNAThub.Scripts;
 
    -------------
@@ -61,13 +61,11 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    --       └── sonar/
    --           └── sonar-project.properties
 
-   procedure Finalize;
+   procedure Finalize_Application;
    --  Dispose of every allocated object.
 
    Kernel : constant GPS.CLI_Kernels.CLI_Kernel :=
               new GPS.CLI_Kernels.CLI_Kernel_Record;
-
-   Config : GNAThub.Configuration.Command_Line;
 
    ------------------------------------
    -- Load_Custom_Project_Attributes --
@@ -172,10 +170,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
       --  Execute the pythn script that runs all the plugins
 
-      Log.Info ("Running tools analysis");
       Log.Debug ("Executing plugin: " & Plugin_Runner.Display_Base_Name);
-
-      return;
 
       Execute_File
         (Python,
@@ -189,22 +184,21 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       end if;
    end Load_Plugin_Runner;
 
-   --------------
-   -- Finalize --
-   --------------
+   --------------------------
+   -- Finalize_Application --
+   --------------------------
 
-   procedure Finalize is
+   procedure Finalize_Application is
    begin
       --  Finalize
       GPS.CLI_Utils.Destroy_Kernel_Context (Kernel);
 
-      Config.Finalize;
+      GNAThub.Python.Finalize;
+      GNAThub.Configuration.Finalize;
       GNATCOLL.Traces.Finalize;
-   end Finalize;
+   end Finalize_Application;
 
 begin
-   --  Initialization
-
    GNATCOLL.Traces.Parse_Config_File;
 
    GPS.CLI_Utils.Create_Kernel_Context
@@ -212,66 +206,54 @@ begin
 
    Load_Custom_Project_Attributes;
 
-   GNAThub.Python_Api.Initialize;
+   GNAThub.Python.Initialize;
 
-   --  Error output messages are handled by Parse function, according
-   --  to the case of failure.
+   GNAThub.Configuration.Initialize;
+   GNAThub.Configuration.Parse (Kernel);
 
-   Config.Initialize;
-   Config.Parse (Kernel);
+   Log.Info ("Loading project: " & GNAThub.Configuration.Project);
+   GNAThub.Project.Load_Project_Tree (GNAThub.Configuration.Project, Kernel);
 
-   --  Load project
-   Log.Info ("Loading project: " & Config.Project_Name);
-   GNAThub.Project.Load_Project_Tree (Config.Project_Name, Kernel);
-
-   --  Create GNAThub directories in project object directory
-   Log.Info ("Creating environment...");
+   Log.Info ("Creating execution environment...");
    Create_Project_Directory_Env;
 
-   --  Create Database
-   Log.Info ("Creating application database...");
-
+   Log.Info ("Creating local application database...");
    GNAThub.Database.Initialize
       (Create_From_Dir
-         (Kernel.Registry.Tree.Root_Project.Object_Dir, DB_File.Full_Name),
-       Database_Schema_File);
-
-   --  Save project tree to DB
+         (Kernel.Registry.Tree.Root_Project.Object_Dir,
+          Database_File.Full_Name));
 
    Log.Debug ("Writing project in dabatase");
    GNAThub.Project.Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
 
-   --  Run GNAThub plugins
-
    Load_Plugin_Runner;
 
-   --  Run script if present on command line
-
-   if Config.Script_Arg  /= "" then
-      Log.Info ("Executing: " & Config.Script_Arg);
-      GNAThub.Scripts.Execute_Script (Kernel, Config.Script_Arg);
+   if GNAThub.Configuration.Script  /= "" then
+      Log.Info ("Executing: " & GNAThub.Configuration.Script);
+      GNAThub.Scripts.Execute (Kernel, GNAThub.Configuration.Script);
    end if;
 
-   Finalize;
-
-   --  Log end statistics
    Log.Info ("Execution completed");
+   Finalize_Application;
 
    return Ada.Command_Line.Success;
 
 exception
    when Silent_Error =>
-      Finalize;
+      Finalize_Application;
+
       return Ada.Command_Line.Failure;
 
    when E : Error =>
-      Finalize;
       Log.Fatal (Exception_Message (E));
+      Finalize_Application;
+
       return Ada.Command_Line.Failure;
 
    when E : Fatal_Error =>
-      Finalize;
       Log.Fatal (Exception_Information (E));
+      Finalize_Application;
+
       return Ada.Command_Line.Failure;
 
 end GNAThub.Main;

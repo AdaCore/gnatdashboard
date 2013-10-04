@@ -1,10 +1,3 @@
-------------------------------------------------------------------------------
---                 Q u a l i m e t r i c s     D r i v er                   --
---                                                                          --
---                    Copyright (C) 2012-2013, AdaCore                      --
---                                                                          --
-------------------------------------------------------------------------------
-
 package body Database is
    pragma Style_Checks (Off);
    use type Cst_String_Access;

@@ -1,18 +1,35 @@
+##############################################################################
+##                                                                          ##
+##                               G N A T h u b                              ##
+##                                                                          ##
+##                        Copyright (C) 2013, AdaCore                       ##
+##                                                                          ##
+## The QM is free software; you can redistribute it  and/or modify it       ##
+## under terms of the GNU General Public License as published by the Free   ##
+## Software Foundation; either version 3, or (at your option) any later     ##
+## version.  The QM is distributed in the hope that it will be useful,      ##
+## but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-  ##
+## TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public ##
+## License  for more details. You  should  have  received a copy of the GNU ##
+## General Public License  distributed with the QM; see file COPYING3. If   ##
+## not, write  to  the Free  Software  Foundation,  59 Temple Place - Suite ##
+## 330, Boston, MA 02111-1307, USA.                                         ##
+##                                                                          ##
+##############################################################################
+
 import GPS
 import os
-import qmt_api.utils
-import logging
+import GNAThub.utils
 import ConfigParser
-from qmt_api import utils
-from xml.etree import ElementTree
-from qmt_api.utils import OutputParser, create_parser
-from qmt_api import plugin
-from qmt_api.plugin import Plugin, GPSTarget
-from qmt_api.db import Rule, Message
-from qmt_api import Session
-from qmt_api import dao
 
-logger = logging.getLogger(__name__)
+from GNAThub import GPSTarget, Log
+from GNAThub import utils
+from GNAThub.utils import OutputParser, create_parser
+from GNAThub.db import Rule, Message
+from GNAThub import Session
+from GNAThub import dao
+
+from xml.etree import ElementTree
 
 ## SonarConfiguration #######################################################
 ##
@@ -47,14 +64,14 @@ class SonarConfiguration(object):
                  utils.get_qmt_property_str('Project_Version'))
 
         self.add('sonar.projectName',
-                  qmt_api.utils.get_project_name(),
+                  GNAThub.utils.get_project_name(),
                   utils.get_qmt_property_str('Project_Name'))
 
         self.add('sonar.projectKey', '%s::project' %
-                 qmt_api.utils.get_project_name(),
+                 GNAThub.utils.get_project_name(),
                  utils.get_qmt_property_str('Project_Key'))
 
-        self.add('sonar.ada.qmt.db.path', qmt_api.utils.get_db_path())
+        self.add('sonar.ada.qmt.db.path', GNAThub.utils.get_db_path())
 
     def add(self, key, value, custom_value=None):
         """Add property in sonar configuration
@@ -75,27 +92,30 @@ class SonarConfiguration(object):
 
 ## Sonarconfig ################################################################
 ##
-class Sonarconfig(Plugin):
+class Sonarconfig(GNAThub.Plugin):
     DIR='sonar'
 
     def __init__ (self, session):
         super(Sonarconfig, self).__init__('Sonar Configuration')
 
     def setup(self):
-        self.working_dir = os.path.join(qmt_api.utils.get_qmt_root_dir(), self.DIR)
+        self.working_dir = os.path.join(GNAThub.utils.get_qmt_root_dir(), self.DIR)
         self.sonar_conf = SonarConfiguration(self.working_dir)
 
     def execute(self):
         """Setup for sonar runner execution
 
-            - Create sonar directory in project_object_dir/qualimetric
+            - Create sonar directory in project_object_dir/gnathub
             - Export sonar configuration file in this directory
         """
         try:
             if not os.path.exists(self.working_dir):
                 os.makedirs(self.working_dir)
+
             self.sonar_conf.export()
-            return plugin.EXEC_SUCCESS
+
+            return GNAThub.EXEC_SUCCESS
+
         except IOError as e:
-            logger.error(e)
-            return plugin.EXEC_FAIL
+            Log.fatal(str(e))
+            return GNAThub.EXEC_FAIL

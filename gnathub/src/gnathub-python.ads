@@ -15,9 +15,19 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-package GNAThub.Python_Api is
+package GNAThub.Python is
+
+   Python_Error : exception;
+   --  Exception raised upon Python-related error (e.g. call to unexisting
+   --  function/method).
+
+   function Initialized return Boolean;
+   --  Whether the Python engine has been initialized or not.
 
    procedure Initialize;
-   --  Initialize the GNAThub public Python API
+   --  Registers the GNAThub Python interface.
 
-end GNAThub.Python_Api;
+   procedure Finalize;
+   --  Disposes of iternal resources.
+
+end GNAThub.Python;

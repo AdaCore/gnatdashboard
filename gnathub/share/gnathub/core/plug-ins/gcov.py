@@ -1,21 +1,37 @@
+##############################################################################
+##                                                                          ##
+##                               G N A T h u b                              ##
+##                                                                          ##
+##                        Copyright (C) 2013, AdaCore                       ##
+##                                                                          ##
+## The QM is free software; you can redistribute it  and/or modify it       ##
+## under terms of the GNU General Public License as published by the Free   ##
+## Software Foundation; either version 3, or (at your option) any later     ##
+## version.  The QM is distributed in the hope that it will be useful,      ##
+## but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-  ##
+## TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public ##
+## License  for more details. You  should  have  received a copy of the GNU ##
+## General Public License  distributed with the QM; see file COPYING3. If   ##
+## not, write  to  the Free  Software  Foundation,  59 Temple Place - Suite ##
+## 330, Boston, MA 02111-1307, USA.                                         ##
+##                                                                          ##
+##############################################################################
+
 import os
 import re
 import GPS
-import logging
-import qmt_api
-from qmt_api import plugin
-from qmt_api import utils
-from qmt_api import Session, dao, db
-from qmt_api.db import Rule, Message, LineMessage
-from qmt_api.utils import OutputParser, create_parser
-from qmt_api.plugin import GPSTarget, Plugin
+import GNAThub
 
-logger = logging.getLogger(__name__)
+from GNAThub import GPSTarget, Log
+from GNAThub import utils
+from GNAThub import Session, dao, db
+from GNAThub.db import Rule, Message, LineMessage
+from GNAThub.utils import OutputParser, create_parser
 
 ## Gcov #######################################################################
 ##
-class Gcov(Plugin):
-    """Gcov plugin for qualimetrics
+class Gcov(GNAThub.Plugin):
+    """Gcov plugin for GNAThub
 
        Retreieve .gcov generated files from project root object directory
        and feeds the DB with retrieved data from those files.
@@ -40,7 +56,7 @@ class Gcov(Plugin):
             line_message.message = Message(hits, self.rule)
             line.messages.append(line_message)
         #else:
-        #    logger.warn('Skipping coverage information for source: %s, because file not found' \
+        #    Log.warn('Skipping coverage information for source: %s, because file not found' \
         #                % src_basename)
 
     def parse_gcov_output(self):
@@ -52,8 +68,8 @@ class Gcov(Plugin):
 
         # If no .gcov file found, plugin returns on failure
         if len(files) == 0:
-            logger.error('No gcov file found in project root object directory')
-            return plugin.EXEC_FAIL
+            Log.fatal('No gcov file found in project root object directory')
+            return GNAThub.EXEC_FAIL
 
         try:
             for f in files:
@@ -80,10 +96,11 @@ class Gcov(Plugin):
                                 self.__add_hits_for_line(resource, line_id, hits)
 
             self.session.commit()
-            return plugin.EXEC_SUCCESS
+            return GNAThub.EXEC_SUCCESS
+
         except IOError as e:
-            logger.warn(str(e))
-            return plugin.EXEC_FAIL
+            Log.warn(str(e))
+            return GNAThub.EXEC_FAIL
 
     def execute(self):
         return self.parse_gcov_output()

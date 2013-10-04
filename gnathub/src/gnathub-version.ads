@@ -15,7 +15,7 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
---  This package contains qualimetrics version information
+--  This package contains GNAThub version information.
 
 package GNAThub.Version is
 

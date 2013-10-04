@@ -15,8 +15,9 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-with GNATCOLL.VFS; use GNATCOLL.VFS;
-with Orm;          use Orm;
+with Orm;               use Orm;
+
+with GNATCOLL.VFS;
 
 --  This package gathered all functions and procedures that allow to
 --  interract with the DB.
@@ -63,10 +64,8 @@ package GNAThub.Database is
    --  DB Management  --
    ---------------------
 
-   procedure Initialize
-     (DB_File     : Virtual_File;
-      Schema_File : Virtual_File);
-   --  Create Qualimetrics DB sqlite file. And initialize DB context that will
+   procedure Initialize (Database_File : GNATCOLL.VFS.Virtual_File);
+   --  Create GNAThub DB sqlite file. And initialize DB context that will
    --  be use in the whole program to interract with the DB. Session pool
    --  is setup by this function.
    --

@@ -15,11 +15,15 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-with GNATCOLL.SQL;          use GNATCOLL.SQL;
-with GNATCOLL.SQL.Exec;     use GNATCOLL.SQL.Exec;
-with GNATCOLL.SQL.Inspect;  use GNATCOLL.SQL.Inspect;
-with GNATCOLL.SQL.Sessions; use GNATCOLL.SQL.Sessions;
-with GNATCOLL.SQL.Sqlite;   use GNATCOLL.SQL.Sqlite;
+with GNATCOLL.SQL;            use GNATCOLL.SQL;
+with GNATCOLL.SQL.Exec;       use GNATCOLL.SQL.Exec;
+with GNATCOLL.SQL.Inspect;    use GNATCOLL.SQL.Inspect;
+with GNATCOLL.SQL.Sessions;   use GNATCOLL.SQL.Sessions;
+with GNATCOLL.SQL.Sqlite;     use GNATCOLL.SQL.Sqlite;
+
+with GNATCOLL.VFS;            use GNATCOLL.VFS;
+
+with GNAThub.Constants;       use GNAThub.Constants;
 
 package body GNAThub.Database is
 
@@ -72,36 +76,36 @@ package body GNAThub.Database is
    -- Initialize --
    ----------------
 
-   procedure Initialize
-     (DB_File     : Virtual_File;
-      Schema_File : Virtual_File)
-   is
+   procedure Initialize (Database_File : GNATCOLL.VFS.Virtual_File) is
       Descr          : Database_Description;
       Schema_IO      : DB_Schema_IO;
       Schema         : DB_Schema;
       Delete_Succeed : Boolean;
+
    begin
       --  Check existance of a database, delete it before creating a new one
 
-      if Is_Regular_File (DB_File) then
+      if Is_Regular_File (Database_File) then
          Log.Debug ("Removing previous copy of the database: " &
-                    DB_File.Display_Full_Name);
+                    Database_File.Display_Full_Name);
 
-         Delete (DB_File, Delete_Succeed);
+         Delete (Database_File, Delete_Succeed);
 
          if not Delete_Succeed then
             raise Error with "Unable to delete old Sqlite file: " &
-                             DB_File.Display_Full_Name;
+                             Database_File.Display_Full_Name;
          end if;
       end if;
 
       --  Retieve schema from text file
-      Log.Debug ("Loading database schema: " & Schema_File.Display_Full_Name);
+      Log.Debug ("Loading database schema: " &
+                 GNAThub.Constants.Database_Schema_File.Display_Full_Name);
 
-      Schema := New_Schema_IO (Schema_File).Read_Schema;
+      Schema :=
+        New_Schema_IO (GNAThub.Constants.Database_Schema_File).Read_Schema;
 
       Descr := GNATCOLL.SQL.Sqlite.Setup
-        (Database => DB_File.Display_Full_Name);
+        (Database => Database_File.Display_Full_Name);
 
       Schema_IO.DB := Descr.Build_Connection;
       Write_Schema (Schema_IO, Schema);

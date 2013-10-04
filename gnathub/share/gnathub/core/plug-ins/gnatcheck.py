@@ -1,16 +1,32 @@
+##############################################################################
+##                                                                          ##
+##                               G N A T h u b                              ##
+##                                                                          ##
+##                        Copyright (C) 2013, AdaCore                       ##
+##                                                                          ##
+## The QM is free software; you can redistribute it  and/or modify it       ##
+## under terms of the GNU General Public License as published by the Free   ##
+## Software Foundation; either version 3, or (at your option) any later     ##
+## version.  The QM is distributed in the hope that it will be useful,      ##
+## but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-  ##
+## TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public ##
+## License  for more details. You  should  have  received a copy of the GNU ##
+## General Public License  distributed with the QM; see file COPYING3. If   ##
+## not, write  to  the Free  Software  Foundation,  59 Temple Place - Suite ##
+## 330, Boston, MA 02111-1307, USA.                                         ##
+##                                                                          ##
+##############################################################################
+
 import os
 import re
 import GPS
-import logging
-import qmt_api
-from qmt_api import plugin
-from qmt_api import utils
-from qmt_api import Session, dao, db
-from qmt_api.db import Rule, Message, LineMessage
-from qmt_api.utils import OutputParser, create_parser
-from qmt_api.plugin import GPSTarget, Plugin
+import GNAThub
 
-logger = logging.getLogger(__name__)
+from GNAThub import GPSTarget, Log
+from GNAThub import utils
+from GNAThub import Session, dao, db
+from GNAThub.db import Rule, Message, LineMessage
+from GNAThub.utils import OutputParser, create_parser
 
 ## GnatmetricOutputParser #####################################################
 ##
@@ -26,8 +42,8 @@ class GnatcheckOutputParser(OutputParser):
 
 ## Gnatcheck ##################################################################
 ##
-class Gnatcheck(Plugin):
-    """GNATcheck plugin for qualimetrics
+class Gnatcheck(GNAThub.Plugin):
+    """GNATcheck plugin for GNAThub.
 
        Launch GNATcheck
     """
@@ -71,7 +87,7 @@ class Gnatcheck(Plugin):
 
             line.messages.append(line_message)
         else:
-            logger.warn('Skipping message: %s, file not found: %s' % (msg, src))
+            Log.warn('Skipping message: %s, file not found: %s' % (msg, src))
 
     def __parse_line(self, line):
         """Parse a GnatCheck message line and add the message to the current DB
@@ -134,7 +150,7 @@ class Gnatcheck(Plugin):
             self.__add_message(src, line, col_begin, rule_id, msg)
 
         except IndexError:
-            logger.warn('Unable to retrieve iformation from message at: %s:%s' % (src, line))
+            Log.warn('Unable to retrieve iformation from message at: %s:%s' % (src, line))
 
     def parse_output_file(self):
         """Parse GNATcheck output file report
@@ -171,17 +187,19 @@ class Gnatcheck(Plugin):
             # Commit object added and modified to the session then return
             # SUCCESS
             self.session.commit()
-            return plugin.EXEC_SUCCESS
+            return GNAThub.EXEC_SUCCESS
 
         except IOError as e:
-            logger.warn(str(e))
-            return plugin.EXEC_FAIL
+            Log.warn(str(e))
+            return GNAThub.EXEC_FAIL
 
     def execute(self):
         status = self.process.execute()
-        if status == plugin.EXEC_FAIL:
-            logging.warn('GNATcheck returned on failure')
-            logging.warn('see log file: %s' % self.get_log_file_path())
+
+        if status == GNAThub.EXEC_FAIL:
+            Log.warn('GNATcheck returned on failure')
+            Log.warn('see log file: %s' % self.get_log_file_path())
+
         return self.parse_output_file()
 
 #output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)
