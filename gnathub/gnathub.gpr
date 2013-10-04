@@ -41,8 +41,7 @@ project GNAThub is
               ("-gnatwa", "-gnatyyBdOSux", "-gnata", "-g", "-O0");
 
          when "Production" =>
-            for Default_Switches ("Ada") use
-              ("-gnatwa", "-gnatn", "-O2");
+            for Default_Switches ("Ada") use ("-gnatwa", "-gnatn", "-O2");
 
       end case;
    end Compiler;
