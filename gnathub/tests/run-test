@@ -17,7 +17,7 @@ def main():
     add_run_test_options(m)
     m.parse_args()
     if not m.args:
-        sys.exit("Error: 1 argument expected. See -h")
+        sys.exit("Error: At least 1 argument expected. See -h")
 
     if m.options.restricted_discs is not None:
         m.options.restricted_discs = m.options.restricted_discs.split(',')
