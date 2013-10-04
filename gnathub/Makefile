@@ -24,7 +24,7 @@ test:
 	cd tests && python testsuite.py
 
 clean:
-	gprclean -P $(PROJECT).gpr
+	gprclean -q -P $(PROJECT).gpr
 	find . -name '*.pyc' -exec rm -f {} \;
 	rm -rf build/obj
 
