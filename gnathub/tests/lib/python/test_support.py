@@ -19,6 +19,5 @@ def echo(arg):
     PARAMETERS
       arg: string to echo on stdout
     """
-    cmd = ["echo", arg]
-    process = Run(cmd)
-    print process.out
+
+    print Run(['echo', arg]).out
