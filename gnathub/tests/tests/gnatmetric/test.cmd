@@ -1,10 +1,10 @@
-# launch qualimetrics on a trivial project
+# launch gnathub on a trivial project
 gnathub -P default
 
 tool_name="GNAT Metric"
 
 # verify that gnatmetric has saved metric in db
-gm_rules=`sqlite3 obj/qualimetrics/qualimetrics.db "select count(r.id) from rules r, tools t where t.id = r.tool_id and t.name = \"GNAT Metric\";"`
+gm_rules=`sqlite3 obj/gnathub/gnathub.db "select count(r.id) from rules r, tools t where t.id = r.tool_id and t.name = \"GNAT Metric\";"`
 if [ "$gm_rules" -lt "1" ]
 then
     echo "No rule saved for GNAT Metric"

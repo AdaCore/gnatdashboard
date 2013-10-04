@@ -5,6 +5,6 @@ obj/gnathub
 obj/gnathub/logs
 obj/gnathub/logs/gnatmetric.log
 obj/gnathub/logs/sonar-runner.log
-obj/gnathub/qualimetrics.db
+obj/gnathub/gnathub.db
 obj/gnathub/sonar
 obj/gnathub/sonar/sonar-project.properties
