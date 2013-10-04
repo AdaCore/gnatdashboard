@@ -6,6 +6,8 @@ This module assumes that lib/python has been added to PYTHONPATH.
 
 import os
 
+from glob import glob
+
 from gnatpython.env import Env
 from gnatpython.main import Main
 from gnatpython.mainloop import (MainLoop, add_mainloop_options,
@@ -14,7 +16,6 @@ from gnatpython.mainloop import (MainLoop, add_mainloop_options,
                                  setup_result_dir)
 from gnatpython.testdriver import add_run_test_options
 from gnatpython.reports import ReportDiff
-from glob import glob
 
 
 def main():
