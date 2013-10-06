@@ -1,51 +1,12 @@
 GNAThub, GNATdashboard command-line driver
 ==========================================
 
+To build GNAThub from sources, read the file INSTALL.
+
+GNAThub
+-------
+
 GNAThub is a command-line tool that connects the dots between the GNAT Pro Tool
 Suite and the GNATdashboard plugin for SonarQube. It collects and aggregates all
 results from the various tools into a single place and stores those data into a
 single SQLite file.
-
-
-How to build the GNAThub driver
-===============================
-
-GNAThub strongly depends on GPS, so you will need a GPS Developer Environment to
-be able to build the project. This step is fairly easy thanks to the GPS.env
-script available in the GPS directory. This help will guide you throught the
-necessary steps to get GNAThub working. For more information, please refer to
-GPS.env documentation:
-
- <https://intranet.adacore.com/pages/Products/GPS/Docs/ForDevelopers/HowtoBuild>
-
-Fetching and building GPS
--------------------------
-
-You will need an access to GPS main repository to execute the following
-commands:
-
-    $ mkdir GPS
-    $ svn export svn+ssh://svn.eu.adacore.com/Dev/trunk/gps/design/GPS.env
-    $ source GPS.env
-    $ gps_world
-
-Building GNAThub
-----------------
-
-    $ export GPR_PROJECT_PATH=$GPS_ENV_ROOT_DIR/src/gps/cli:$GPR_PROJECT_PATH
-    $ cd GNAThub
-    $ make
-
-There are 2 mandatory steps before building the GNAThub driver mentions above:
-
-    - Source the GPS.env script;
-    - Update the $GPR_PROJECT_PATH environment variable to add the directory
-      containing cli.gpr (for the GPS project) to the Ada project file search
-      path (the $GPS_ENV_ROOT_DIR is set and exported by GPS.env).
-
-Generating a GNAThub distribution
----------------------------------
-
-With the mandatory environment set:
-
-    $ make distrib
