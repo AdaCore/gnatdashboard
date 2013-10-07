@@ -48,11 +48,14 @@ clean:
 distclean: clean
 	rm -rf build
 
+install: $(PROJECT)
+	mkdir -p $(INSTALL_PREFIX)
+	cp COPYING3 $(INSTALL_PREFIX)
+	mkdir -p $(INSTALL_PREFIX)/bin
+	mkdir -p $(INSTALL_PREFIX)/share
+	(cd build && tar cf - bin) | (cd $(INSTALL_PREFIX) && tar xf -)
+	(cd share && tar cf - --exclude='*.pyc' $(PROJECT)) | (cd $(INSTALL_PREFIX)/share && tar xf -)
+
 distrib: $(PROJECT)
 	rm -rf $(DISTRIB_PREFIX)
-	mkdir -p $(DISTRIB_PREFIX)
-	cp COPYING3 $(DISTRIB_PREFIX)
-	mkdir -p $(DISTRIB_PREFIX)/bin
-	mkdir -p $(DISTRIB_PREFIX)/share
-	(cd build && tar cf - bin) | (cd $(DISTRIB_PREFIX) ; tar xf -)
-	(cd share && tar cf - --exclude='*.pyc' $(PROJECT)) | (cd $(DISTRIB_PREFIX)/share && tar xf -)
+	PREFIX=$(DISTRIB_PREFIX) $(MAKE) install
