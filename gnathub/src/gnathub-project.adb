@@ -36,10 +36,35 @@ package body GNAThub.Project is
    use Project_Map;
    --  ???
 
+   Is_Initialized : Boolean := False;
+   --  False until Load_Project_Tree is called.
+
+   Project_Object_Dir : Virtual_File := No_File;
+   --  The project Object directory set by Initialize and provided by GPS CLI
+   --  kernel context.
+
    procedure Save_Project_Sources
      (Project     : Project_Type;
       Project_Orm : Detached_Resource);
    --  ???
+
+   -----------------
+   -- Initialized --
+   -----------------
+
+   function Initialized return Boolean is
+   begin
+      return Is_Initialized;
+   end Initialized;
+
+   ----------------
+   -- Object_Dir --
+   ----------------
+
+   function Object_Dir return Virtual_File is
+   begin
+      return Project_Object_Dir;
+   end Object_Dir;
 
    -----------------------
    -- Load_Project_Tree --
@@ -53,7 +78,11 @@ package body GNAThub.Project is
    begin
       Kernel.Registry.Tree.Load
         (Root_Project_Path => Project_File,
-         Env => Kernel.Registry.Environment);
+         Env               => Kernel.Registry.Environment);
+
+      Project_Object_Dir := Kernel.Registry.Tree.Root_Project.Object_Dir;
+      Is_Initialized := True;
+
    exception
       when E : Invalid_Project =>
          raise Error with "Unable to load project file: " & Path.all & ": " &

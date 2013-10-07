@@ -17,33 +17,54 @@
 ##                                                                          ##
 ##############################################################################
 
-from GNAThub import Session, utils
+"""This module defines the various DAO manipulated by GNAThub.
+"""
+
+import GNAThub
+
+from GNAThub import SESSION
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (create_engine, Column, Integer, String,
                         ForeignKey, Boolean, Table)
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
 
-(RULE_KIND, METRIC_KIND) = range(2)
-(PROJECT_KIND, DIRECTORY_KIND, FILE_KIND) = range(3)
+BASE = declarative_base()
 
-## SessionFactory #############################################################
-##
+RULE_KIND, METRIC_KIND = range(2)
+PROJECT_KIND, DIRECTORY_KIND, FILE_KIND = range(3)
+
+RESOURCE_MESSAGE_TABLE = \
+    Table('resources_messages', BASE.metadata,
+          Column('resource_id', Integer, ForeignKey('resources.id')),
+          Column('message_id', Integer, ForeignKey('messages.id')))
+
+
 class SessionFactory(object):
+    """Creates database sessions upon request.
+    """
 
     def __init__(self):
-        self.__engine = create_engine('sqlite:///%s' % utils.get_db_path(),
-                        echo=False)
-        Session.configure(bind=self.__engine)
+        """Instance contructor."""
+
+        self.__engine = create_engine('sqlite:///%s' % GNAThub.database(),
+                                      echo=False)
+        SESSION.configure(bind=self.__engine)
 
     def get_session(self):
-        return Session ()
+        """Returns a new instance of a database session.
 
-## Tool ######################################################################
-##
-class Tool(Base):
+        RETURNS
+            :rtype: sqlalchemy.orm.Session
+        """
+
+        return SESSION()
+
+
+class Tool(BASE):
+    """A tool object, mapping a external tool, e.g. GNATcheck, GNATmetric..."""
+
     __tablename__ = 'tools'
 
     id = Column(Integer, primary_key=True)
@@ -57,9 +78,10 @@ class Tool(Base):
     def __repr__(self):
         return "<Tool('%s')>" % self.name
 
-## Rule #######################################################################
-##
-class Rule(Base):
+
+class Rule(BASE):
+    """A Rule object, mapping a tool rule."""
+
     __tablename__ = 'rules'
 
     id = Column(Integer, primary_key=True)
@@ -79,11 +101,12 @@ class Rule(Base):
 
     def __repr__(self):
         return "<Rule('%s', '%s', '%s')>" % (self.name, self.identifier,
-        self.tool.name)
+                                             self.tool.name)
 
-## Category ####################################################################
-##
-class Category(Base):
+
+class Category(BASE):
+    """A Category object, mapping a rule category."""
+
     __tablename__ = 'categories'
 
     id = Column(Integer, primary_key=True)
@@ -99,16 +122,10 @@ class Category(Base):
     def __repr__(self):
         return "<Category('%s')>" % (self.label)
 
-## resource_messages ########################################
-##
-resource_message_table = Table('resources_messages', Base.metadata,
-        Column('resource_id', Integer, ForeignKey('resources.id')),
-        Column('message_id', Integer, ForeignKey('messages.id'))
-        )
 
-## Message ####################################################################
-##
-class Message(Base):
+class Message(BASE):
+    """A Message object."""
+
     __tablename__ = 'messages'
 
     id = Column(Integer, primary_key=True)
@@ -127,9 +144,10 @@ class Message(Base):
     def __repr__(self):
         return "<Message('%s', '%s')>" % (self.rule.name, self.data)
 
-## Resource ###################################################################
-##
-class Resource(Base):
+
+class Resource(BASE):
+    """A Resource object, mapping a entity resource, i.e. a file."""
+
     __tablename__ = 'resources'
 
     id = Column(Integer, primary_key=True)
@@ -137,8 +155,8 @@ class Resource(Base):
     kind = Column(Integer)
 
     lines = relationship("Line", back_populates='resource')
-    messages = relationship("Message", secondary=resource_message_table,
-    backref="resources")
+    messages = relationship("Message", secondary=RESOURCE_MESSAGE_TABLE,
+                            backref="resources")
 
     def __init__(self, name, kind):
         self.name = name
@@ -147,9 +165,10 @@ class Resource(Base):
     def __repr__(self):
         return "<Resource('%s', '%s')>" % (self.name, self.kind)
 
-## Line #######################################################################
-##
-class Line(Base):
+
+class Line(BASE):
+    """A line object, mapping a line from a resource."""
+
     __tablename__ = 'lines'
 
     id = Column(Integer, primary_key=True)
@@ -165,10 +184,16 @@ class Line(Base):
     def __repr__(self):
         return "<Line('%s', '%s')>" % (self.line, self.resource)
 
-## LineMessage ################################################################
-##
-class LineMessage(Base):
+
+# pylint: disable=W0232
+# Disable class has no __init__ method
+class LineMessage(BASE):
+    """Join table between Line and Message, with the additional information of
+    range.
+    """
+
     __tablename__ = 'lines_messages'
+
     id = Column(Integer, primary_key=True)
 
     line_id = Column(Integer, ForeignKey('lines.id'))
@@ -176,4 +201,3 @@ class LineMessage(Base):
     col_begin = Column(Integer)
     col_end = Column(Integer)
     message = relationship("Message")
-

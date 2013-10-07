@@ -92,7 +92,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    procedure Create_Project_Directory_Env
    is
       Object_Directory : constant Virtual_File :=
-                           Kernel.Registry.Tree.Root_Project.Object_Dir;
+                           GNAThub.Project.Object_Dir;
 
       Logs_Directory   : constant Virtual_File :=
                            Create_From_Dir
@@ -207,9 +207,7 @@ begin
    Load_Custom_Project_Attributes;
 
    GNAThub.Python.Initialize;
-
-   GNAThub.Configuration.Initialize;
-   GNAThub.Configuration.Parse (Kernel);
+   GNAThub.Configuration.Initialize (Kernel);
 
    Log.Info ("Loading project: " & GNAThub.Configuration.Project);
    GNAThub.Project.Load_Project_Tree (GNAThub.Configuration.Project, Kernel);
@@ -220,7 +218,7 @@ begin
    Log.Info ("Creating local application database...");
    GNAThub.Database.Initialize
       (Create_From_Dir
-         (Kernel.Registry.Tree.Root_Project.Object_Dir,
+         (GNAThub.Project.Object_Dir,
           Database_File.Full_Name));
 
    Log.Debug ("Writing project in dabatase");

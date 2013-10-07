@@ -17,9 +17,11 @@
 
 with GNATCOLL.Scripts;              use GNATCOLL.Scripts;
 with GNATCOLL.Scripts.Python;       use GNATCOLL.Scripts.Python;
+with GNATCOLL.VFS;                  use GNATCOLL.VFS;
 
 with GNAThub.Constants;             use GNAThub.Constants;
 with GNAThub.Configuration;         use GNAThub.Configuration;
+with GNAThub.Project;
 
 package body GNAThub.Python is
 
@@ -178,15 +180,24 @@ package body GNAThub.Python is
 
       elsif Command = Root_Function then
          Set_Return_Value
-           (Data, GNAThub.Constants.Root_Dir.Display_Full_Name);
+           (Data,
+            Create_From_Dir
+              (GNAThub.Project.Object_Dir,
+               GNAThub.Constants.Root_Dir.Full_Name).Display_Full_Name);
 
       elsif Command = Database_Function then
          Set_Return_Value
-           (Data, GNAThub.Constants.Database_File.Display_Full_Name);
+           (Data,
+            Create_From_Dir
+              (GNAThub.Project.Object_Dir,
+               GNAThub.Constants.Database_File.Full_Name).Display_Full_Name);
 
       elsif Command = Logs_Function then
          Set_Return_Value
-           (Data, GNAThub.Constants.Logs_Dir.Display_Full_Name);
+           (Data,
+            Create_From_Dir
+              (GNAThub.Project.Object_Dir,
+               GNAThub.Constants.Logs_Dir.Full_Name).Display_Full_Name);
 
       elsif Command = Plugins_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Plugins);

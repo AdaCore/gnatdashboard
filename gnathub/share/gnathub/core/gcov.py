@@ -17,54 +17,50 @@
 ##                                                                          ##
 ##############################################################################
 
-import os
-import re
-import GPS
 import GNAThub
+import GNAThub.project
 
-from GNAThub import GPSTarget, Log
-from GNAThub import utils
-from GNAThub import Session, dao, db
+import os
+
+from GNAThub import Log
+from GNAThub import dao, db
 from GNAThub.db import Rule, Message, LineMessage
-from GNAThub.utils import OutputParser, create_parser
 
-## Gcov #######################################################################
-##
+
 class Gcov(GNAThub.Plugin):
     """Gcov plugin for GNAThub
 
-       Retreieve .gcov generated files from project root object directory
-       and feeds the DB with retrieved data from those files.
+    Retreieve .gcov generated files from project root object directory and
+    feeds the DB with retrieved data from those files.
     """
-    LOG_FILE_NAME='gcov.log'
-    GCOV_SUFFIX='.gcov'
 
-    def __init__ (self, session):
-        super(Gcov, self).__init__('Gcov')
+    TOOL_NAME = 'Gcov'
+    GCOV_SUFFIX = '.gcov'
+
+    def __init__(self, session):
+        super(Gcov, self).__init__()
+
         self.session = session
         self.tool = dao.save_tool(self.session, self.name)
         self.rule = Rule('coverage', 'coverage',
                          self.tool, db.METRIC_KIND)
 
     def __add_hits_for_line(self, resource, line_num, hits):
-        line = dao.get_or_create_line_from_resource_id (self.session,
-                                                        resource.id,
-                                                        line_num)
+        line = dao.get_or_create_line_from_resource_id(self.session,
+                                                       resource.id,
+                                                       line_num)
 
         if line:
             line_message = LineMessage()
             line_message.message = Message(hits, self.rule)
             line.messages.append(line_message)
-        #else:
-        #    Log.warn('Skipping coverage information for source: %s, because file not found' \
-        #                % src_basename)
 
     def parse_gcov_output(self):
         # Fetch all files in project object directory and retrieve only
         # .gcov files, absolute path
-        files = [os.path.join(utils.get_project_obj_dir(), f)
-                for f in os.listdir(utils.get_project_obj_dir())
-                if f.endswith(self.GCOV_SUFFIX)]
+        files = [os.path.join(GNAThub.project.object_dir(), f)
+                 for f in os.listdir(GNAThub.project.object_dir())
+                 if f.endswith(self.GCOV_SUFFIX)]
 
         # If no .gcov file found, plugin returns on failure
         if len(files) == 0:
@@ -93,7 +89,8 @@ class Gcov(GNAThub.Plugin):
                                 if hits == '#####' or hits == '=====':
                                     hits = '0'
                                 line_id = line_infos[1].strip()
-                                self.__add_hits_for_line(resource, line_id, hits)
+                                self.__add_hits_for_line(resource, line_id,
+                                                         hits)
 
             self.session.commit()
             return GNAThub.EXEC_SUCCESS
@@ -104,7 +101,3 @@ class Gcov(GNAThub.Plugin):
 
     def execute(self):
         return self.parse_gcov_output()
-
-#output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)
-#print (output)
-

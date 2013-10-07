@@ -17,60 +17,60 @@
 ##                                                                          ##
 ##############################################################################
 
-import os
-import re
-import GPS
 import GNAThub
 
+import re
+
 from GNAThub import GPSTarget, Log
-from GNAThub import utils
-from GNAThub import Session, dao, db
-from GNAThub.db import Rule, Message, LineMessage
-from GNAThub.utils import OutputParser, create_parser
+from GNAThub import dao, db
+from GNAThub.db import Message, LineMessage
+from GNAThub.utils import OutputParser
 
-## GnatproveOutputParser #####################################################
-##
-class GnatproveOutputParser(OutputParser):
+
+class GNATproveOutputParser(OutputParser):
     """Define custom output parser"""
-    def on_stdout(self,text):
-        with open (Gnatprove.get_log_file_path(), 'w+a') as log:
+
+    def on_stdout(self, text):
+        with open(GNATprove.logs(), 'w+a') as log:
             log.write(text)
 
-    def on_stderr(self,text):
-        with open (Gnatprove.get_log_file_path(), 'w+a') as log:
+    def on_stderr(self, text):
+        with open(GNATprove.logs(), 'w+a') as log:
             log.write(text)
 
-## Gnatprove ##################################################################
-##
-class Gnatprove(GNAThub.Plugin):
+
+class GNATprove(GNAThub.Plugin):
     """GNATprove plugin for GNAThub.
 
-       Launch GNATprove
+    Launch GNATprove
     """
-    LOG_FILE_NAME='gnatprove.log'
-    SEVERITIES={'info'    : 'INFO',
-                'warning' : 'MINOR',
-                'error'   : 'MAJOR'}
 
-    def __init__ (self, session):
-        super(Gnatprove, self).__init__('GNATprove')
+    TOOL_NAME = 'GNATprove'
+    SEVERITIES = {'info': 'INFO',
+                  'warning': 'MINOR',
+                  'error': 'MAJOR'}
+
+    def __init__(self, session):
+        super(GNATprove, self).__init__()
 
         self.session = session
         self.tool = dao.save_tool(self.session, self.name)
+
         # Create GPSTarget for GNATmetric execution
-        self.process = GPSTarget(name=self.name,
-                                 output_parser='gnatproveoutputparser',
+        parser = GNATproveOutputParser.__class__.__name__
+        self.process = GPSTarget(name=self.name, output_parser=parser,
                                  cmd_args=self.__cmd_line())
 
     def __cmd_line(self):
         """Create Gnatprove  command line argument list for GPS target"""
+
         prj_file = '-P%s' % GPSTarget.PRJ_FILE
 
         return ['gnatprove', prj_file, '--show-tag']
 
     def __add_message(self, src, line, col_begin, rule_id, msg):
-        rule = dao.get_or_create_rule (self.session, self.tool,
-                                       db.RULE_KIND, rule_id)
+        rule = dao.get_or_create_rule(self.session, self.tool,
+                                      db.RULE_KIND, rule_id)
         line = dao.get_or_create_line(self.session, src, line)
 
         if line:
@@ -105,8 +105,9 @@ class Gnatprove(GNAThub.Plugin):
             src = split_1[0]
             line = split_1[1]
             col_begin = split_1[2]
-            severity = (self.SEVERITIES['error'] if len(split_1) == 4
-                                      else self.SEVERITIES[split_1[3].strip()])
+            severity = (self.SEVERITIES['error']
+                        if len(split_1) == 4
+                        else self.SEVERITIES[split_1[3].strip()])
 
             #split_2 = [' overflow check proved ', 'overflow_check]\n']
             split_2 = split_1[-1].split('[', 1)
@@ -118,9 +119,10 @@ class Gnatprove(GNAThub.Plugin):
             self.__add_message(src, line, col_begin, rule_id, msg)
 
         except IndexError:
-            Log.warn('Unable to retrieve iformation from message at: %s:%s' % (src, line))
+            Log.warn('Unexpected message format: %s:%s' % (src, line))
+
         except KeyError:
-            Log.warn('Unknow category for: %s' % split_1[3].strip())
+            Log.warn('Unknown category for: %s' % split_1[3].strip())
 
     def parse_output_file(self):
         """Parse GNATprove output file report
@@ -134,17 +136,15 @@ class Gnatprove(GNAThub.Plugin):
             - EXEC_FAIL: if an error occured when reading the output file
         """
         # Initialise regex to identify line that contains message
-        MSG_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:(\s[a-z]:)?\s.+[[].*[]]\s*'
+        SLOC_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+'
+        MSG_PATTERN = '%s:(\s[a-z]:)?\s.+[[].*[]]\s*' % SLOC_PATTERN
         prog_msg = re.compile(MSG_PATTERN)
 
         try:
-            with open(Gnatprove.get_log_file_path(), 'r') as output:
-
+            with open(GNATprove.logs(), 'r') as output:
                 for line in output.readlines():
-
                     if prog_msg.match(line):
                         self.__parse_line(line)
-
 
             # Commit object added and modified to the session then return
             # SUCCESS
@@ -163,4 +163,3 @@ class Gnatprove(GNAThub.Plugin):
             Log.warn('see log file: %s' % self.get_log_file_path())
 
         return self.parse_output_file()
-

@@ -17,12 +17,13 @@
 ##                                                                          ##
 ##############################################################################
 
+"""???"""
+
 import GPS
 
-from db import Category, Line, Rule, Resource, Tool
+from GNAThub.db import Category, Line, Rule, Resource, Tool
 
-## get_or_create_rule #########################################################
-##
+
 def get_or_create_rule(session, tool, kind, identifier, name=None):
     """Get rule for the given identifier if exists in the database, if it does
        not, create a new Rule objet in the given session. The rule is not
@@ -35,104 +36,203 @@ def get_or_create_rule(session, tool, kind, identifier, name=None):
         - name: name of the rule
         - tool: tool which the rule is attached to
     """
-    rule = session.query(Rule).filter_by(identifier=identifier, kind=kind).first()
+
+    rule = session.query(Rule).filter_by(identifier=identifier,
+                                         kind=kind).first()
+
     if not rule:
         if not name:
             name = identifier
         rule = Rule(identifier, name, tool, kind)
+
     return rule
 
-## get_or_create_category #####################################################
-##
+
 def get_or_create_category(session, label):
+    """Returns the category pointed to by label.
+
+    Creates the category if it does not exists yet.
+
+    PARAMETERS
+        :param session: the database session
+        :type session: sqlalchemy.orm.Session
+        :param label: the category label
+        :type label: a string
+
+    RETURNS
+        the category
+        :rtype: a GNAThub.db.Category object
+    """
+
     category = session.query(Category).filter_by(label=label).first()
+
     if not category:
         category = Category(label)
+
     return category
 
-## get_file ###################################################################
-##
-def get_file(session, file_name):
-    """Return the File object for the given file path """
 
-    file = session.query(Resource)\
+def get_file(session, filename):
+    """Returns the Resource object for the given file path.
+
+    PARAMETERS
+        :param session: the database session
+        :type session: sqlalchemy.orm.Session
+        :param filename: the file name
+        :type filename: a string
+
+    RETURNS
+        :rtype: a GNAThub.db.Resource object
+    """
+
+    dao = session.query(Resource)\
         .filter_by(kind=2)\
-        .filter_by(name=GPS.File(file_name).name())\
+        .filter_by(name=GPS.File(filename).name())\
         .first()
-    return file
 
-## get_file_by_id ##############################################################
-##
+    return dao
+
+
 def get_file_by_id(session, resource_id):
-    """Return the File object for the given file path """
-    file = session.query(Resource)\
+    """Returns the Resource object for the given file path.
+
+    PARAMETERS
+        :param session: the database session
+        :type session: sqlalchemy.orm.Session
+        :param filename: the file name
+        :type filename: a string
+
+    RETURNS
+        :rtype: a GNAThub.db.Resource object
+    """
+
+    resource = session.query(Resource)\
         .filter_by(id=resource_id)\
         .first()
-    return file
 
-## get_resource ###############################################################
-##
+    return resource
+
+
 def get_resource(session, name):
-    """Return the File object for the given file path """
+    """Returns the Resource object for the given file path.
+
+    PARAMETERS
+        :param session: the database session
+        :type session: sqlalchemy.orm.Session
+        :param name: the resource name
+        :type name: a string
+
+    RETURNS
+        :rtype: a GNAThub.db.Resource object
+    """
+
     resource = session.query(Resource)\
         .filter(Resource.name.like('%' + name + '_'))\
         .first()
+
     return resource
 
-## get_or_create_line #########################################################
-##
-def get_or_create_line(session, file_name, line_num):
-    """Return the line object for the given file and line number
-       Return None if file not in the DB
+
+def get_or_create_line(session, filename, line_num):
+    """Returns the Line object for the given file and line number, or None if
+    the file is not referenced in the database.
+
+    PARAMETERS
+        :param session: the database session
+        :type session: sqlalchemy.orm.Session
+        :param filename: the resource name
+        :type filename: a string
+        :param line_num: the line number
+        :type line_num: number
+
+    RETURNS
+        :rtype: a GNAThub.db.Line object
     """
+
     line = None
-    if file_name:
-        # Try to retrieve line from DB
+
+    if filename:
         line = session.query(Line)\
             .filter_by(line=line_num)\
             .join(Line.resource)\
-            .filter(Resource.name.like('%' + file_name))\
+            .filter(Resource.name.like('%' + filename))\
             .first()
 
         if not line:
-            file = get_file(session, file_name)
-            if file:
-                line = Line(line_num, file)
+            resource = get_file(session, filename)
+
+            if resource:
+                line = Line(line_num, resource)
 
     return line
 
-## get_or_create_line #########################################################
-##
+
+# pylint: disable=C0103
+# Disable Invalid identifier (too long)
 def get_or_create_line_from_resource_id(session, resource_id, line_num):
-    """Return the line object for the given file and line number
-       Return None if file not in the DB
+    """Returns the line object for the given file and line number, or None if
+    the file is not referenced in the database.
+
+    PARAMETERS
+        :param session: the database session
+        :type session: sqlalchemy.orm.Session
+        :param resource_id: the resource identifier
+        :type resource_id: a string
+        :param line_num: the line number
+        :type line_num: number
+
+    RETURNS
+        :rtype: a GNAThub.db.Line object
     """
+
     line = None
+
     if resource_id:
-        # Try to retrieve line from DB
-        line = session.query(Line)\
-            .filter_by(line=line_num)\
-            .join(Line.resource)\
-            .filter(Resource.id==resource_id)\
+        line = session.query(Line) \
+            .filter_by(line=line_num) \
+            .join(Line.resource) \
+            .filter(Resource.id == resource_id) \
             .first()
 
-        # Create line if does not exist yet in DB
         if not line:
-            file = get_file_by_id(session, resource_id)
-            if file:
-                line = Line(line_num, file)
+            resource = get_file_by_id(session, resource_id)
+
+            if resource:
+                line = Line(line_num, resource)
 
     return line
 
-## get_sub_project ############################################################
-##
+
 def get_sub_project(session, name):
-    sub_project = session.query(Resource).filter_by(name=name, kind=0).first()
+    """Returns the subproject whose name is pointed to by name.
 
-## save_tool ###################################################################
-##
+    PARAMETERS
+        :param session: the database session
+        :type session: sqlalchemy.orm.Session
+        :param name: the sub-project name
+        :type name: a string
+
+    RETURNS
+        :rtype: a string
+    """
+
+    return session.query(Resource).filter_by(name=name, kind=0).first()
+
+
 def save_tool(session, name):
-   tool = Tool(name)
-   session.add(tool)
-   return tool
+    """Stores the tool in the database and returns it.
 
+    PARAMETERS
+        :param session: the database session
+        :type session: sqlalchemy.orm.Session
+        :param name: the tool name
+        :type name: a string
+
+    RETURNS
+        :rtype: a GNAThub.db.Tool object
+    """
+
+    tool = Tool(name)
+    session.add(tool)
+
+    return tool

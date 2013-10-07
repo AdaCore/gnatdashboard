@@ -17,54 +17,59 @@
 ##                                                                          ##
 ##############################################################################
 
-include Makefile.conf
+"""Helper functions for accessing project attributes and properties."""
 
-.PHONY: tests
+import GPS
 
-all: $(PROJECT)
 
-$(PROJECT):
-	-@mkdir -p $(TOP)/build
-	-@rm -f $(TOP)/build/share
-	-@ln -s $(TOP)/share $(TOP)/build/share
-	gprbuild -p -P $(PROJECT).gpr
+PACKAGE = 'GNAThub'
 
-create:
-	# Create the database from the schema
-	mkdir -p src-gen
-	cd src-gen && gnatcoll_db2ada -dbtype=sqlite -dbname=$(PROJECT).db -dbmodel=../../dbschema.txt -createdb
 
-orm:
-	# Generate the Ada API
-	mkdir -p src-gen
-	cd src-gen && gnatcoll_db2ada -api=Database -orm=ORM -dbmodel=../../dbschema.txt
+def root():
+    """Returns the root project.
 
-lint:
-	-@flake8 share/gnathub/{lib/GNAThub,core,scripts}
-	-@PYTHONPATH=$(TOP)/share/gnathub/lib pylint \
-			   --rcfile=$(TOP)/tests/etc/pylintrc \
-			   --output-format=parseable \
-			   --reports=n GNAThub
+    RETURNS
+        :rtype: a GPS.Project
+    """
 
-tests:
-	-@cd tests && python testsuite.py
+    return GPS.Project.root()
 
-clean:
-	gprclean -q -P $(PROJECT).gpr
-	find . -name '*.pyc' -exec rm -f {} \;
-	rm -rf build/obj
 
-distclean: clean
-	rm -rf build
+def object_dir():
+    """Returns the project object directory path.
 
-install: $(PROJECT)
-	mkdir -p $(INSTALL_PREFIX)
-	cp COPYING3 $(INSTALL_PREFIX)
-	mkdir -p $(INSTALL_PREFIX)/bin
-	mkdir -p $(INSTALL_PREFIX)/share
-	(cd build && tar cf - bin) | (cd $(INSTALL_PREFIX) && tar xf -)
-	(cd share && tar cf - --exclude='*.pyc' $(PROJECT)) | (cd $(INSTALL_PREFIX)/share && tar xf -)
+    RETURNS
+        :rtype: a string
+    """
 
-distrib: $(PROJECT)
-	rm -rf $(DISTRIB_PREFIX)
-	PREFIX=$(DISTRIB_PREFIX) $(MAKE) install
+    return root().object_dirs()[0]
+
+
+def name():
+    """Returns the project name.
+
+    RETURNS
+        :rtype: a string
+    """
+
+    return root().name()
+
+
+def property_as_string(key):
+    """Returns project property from package GNAThub as a string.
+
+    RETURNS
+        :rtype: a string
+    """
+
+    return root().get_attribute_as_string(attribute=key, package=PACKAGE)
+
+
+def property_as_list(key):
+    """Returns project property from package GNAThub as a list.
+
+    RETURNS
+        :rtype: a string
+    """
+
+    return root().get_attribute_as_list(attribute=key, package=PACKAGE)

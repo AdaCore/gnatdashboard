@@ -17,66 +17,58 @@
 ##                                                                          ##
 ##############################################################################
 
-import GPS
-import os
 import GNAThub.utils
-import ConfigParser
+import os
 
 from GNAThub import GPSTarget, Log
-from GNAThub import utils
-
-from GNAThub.utils import OutputParser, create_parser
-from GNAThub.db import Rule, Message
-from GNAThub import Session
-from GNAThub import dao
+from GNAThub.utils import OutputParser
 
 from sonarconfig import SonarConfiguration
 
-from xml.etree import ElementTree
 
-## GnatmetricOutputParser #####################################################
-##
-class SonarrunnerOutputParser(OutputParser):
+class SonarRunnerOutputParser(OutputParser):
     """Define custom output parser"""
-    def on_stdout(self,text):
-        with open (Sonarrunner.get_log_file_path(), 'w+a') as log:
+
+    def on_stdout(self, text):
+        with open(SonarRunner.logs(), 'w+a') as log:
             log.write(text)
 
-    def on_stderr(self,text):
-        with open (Sonarrunner.get_log_file_path(), 'w+a') as log:
+    def on_stderr(self, text):
+        with open(SonarRunner.logs(), 'w+a') as log:
             log.write(text)
 
 
-## Sonarrunner ################################################################
-##
-class Sonarrunner(GNAThub.Plugin):
-    LOG_FILE_NAME='sonar-runner.log'
-    DIR='sonar'
+class SonarRunner(GNAThub.Plugin):
+    DIR = 'sonar'
+    TOOL_NAME = 'Sonar Runner'
 
-    def __init__ (self, session):
-        super(Sonarrunner, self).__init__('Sonar Runner')
-        self.working_dir = os.path.join(GNAThub.utils.get_qmt_root_dir(), self.DIR)
-        self.process = GPSTarget(name=self.name,
-                                 output_parser='sonarrunneroutputparser',
+    def __init__(self, session):
+        super(SonarRunner, self).__init__()
+
+        self.working_dir = os.path.join(GNAThub.root(), self.DIR)
+
+        parser = SonarRunnerOutputParser.__class__.__name__
+        self.process = GPSTarget(name=self.name, output_parser=parser,
                                  cmd_args=self.__cmd_line())
 
     def __cmd_line(self):
-        """Return command line for sonar runner execution """
+        """Returns command line for sonar runner execution """
+
         # Set specific location for Sonar project properties file
-        sonar_conf = '-Dproject.settings=%s' % os.path.join(self.working_dir,
-                                                SonarConfiguration.FILE_NAME)
+        project_settings = os.path.join(self.working_dir,
+                                        SonarConfiguration.FILE_NAME)
+        sonar_conf = '-Dproject.settings=%s' % project_settings
         return ['sonar-runner', sonar_conf]
 
     def execute(self):
         status = self.process.execute()
 
         # if sonar-runner execution has failed
-        if status  == GNAThub.EXEC_FAIL:
-            Log.warn('Sonar runner execution returned on failure')
-            Log.warn('For more details, see log file: %s' % self.get_log_file_path())
+        if status == GNAThub.EXEC_FAIL:
+            Log.warn('%s execution returned on failure', self.name)
+            Log.warn('See log file: %s' % self.logs())
         else:
             # If sonar-runner execution succeed or did not happened,
             # in last case GPSTarget manage error output so just
             # return status
             return status
-

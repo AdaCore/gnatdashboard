@@ -17,47 +17,51 @@
 ##                                                                          ##
 ##############################################################################
 
-import os
-import GPS
 import GNAThub
+import GNAThub.project
+
+import os
 
 from GNAThub import GPSTarget, Log
-from GNAThub import utils
-from GNAThub import Session, dao, db
-from GNAThub.db import Rule, Message
-from GNAThub.utils import OutputParser, create_parser
+from GNAThub import dao, db
+from GNAThub.db import Message
+from GNAThub.utils import OutputParser
 
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
 
-## GnatmetricOutputParser #####################################################
-##
-class GnatmetricOutputParser(OutputParser):
+
+class GNATmetricOutputParser(OutputParser):
     """Define custom output parser"""
-    def on_stdout(self,text):
-        with open (Gnatmetric.get_log_file_path(), 'w+a') as log:
+
+    def on_stdout(self, text):
+        with open(GNATmetric.logs(), 'w+a') as log:
             log.write(text)
 
-    def on_stderr(self,text):
-        with open (Gnatmetric.get_log_file_path(), 'w+a') as log:
+    def on_stderr(self, text):
+        with open(GNATmetric.logs(), 'w+a') as log:
             log.write(text)
 
-## Gnatmetric ################################################################
-##
-class Gnatmetric(GNAThub.Plugin):
+
+class GNATmetric(GNAThub.Plugin):
     """GNATmetric plugin for GNAThub
 
        Launch GNATmetric
     """
-    LOG_FILE_NAME='gnatmetric.log'
-    OUTPUT_FILE_NAME='metrix.xml'
 
-    def __init__ (self, session):
-        super(Gnatmetric, self).__init__('GNATmetric')
+    TOOL_NAME = 'GNATmetric'
+    OUTPUT_FILE_NAME = 'metrix.xml'
+
+    def __init__(self, session):
+        """Instance contsructor."""
+
+        super(GNATmetric, self).__init__()
+
         self.session = session
+
         # Create Gnat Metric Tool
-        self.process = GPSTarget(name=self.name,
-                                 output_parser='gnatmetricoutputparser',
+        parser = GNATmetricOutputParser.__class__.__name__
+        self.process = GPSTarget(name=self.name, output_parser=parser,
                                  cmd_args=self.__cmd_line())
 
     def __cmd_line(self):
@@ -65,37 +69,41 @@ class Gnatmetric(GNAThub.Plugin):
            Return:
                - list of command line argument for GPSTarget
         """
-        out_file = '%s/%s' % (GPSTarget.OBJ_DIR, self.OUTPUT_FILE_NAME)
+
+        out_file = os.path.join(GPSTarget.OBJ_DIR, self.OUTPUT_FILE_NAME)
         prj_file = '-P%s' % GPSTarget.PRJ_FILE
+
         return [GPSTarget.GNAT, 'metric', '-ox', out_file, prj_file, '-U']
 
-    def parse_metrix_xml_file (self):
+    def parse_metrix_xml_file(self):
         """Parse GNATmetric xml report and save data to the DB
            Return:
                - GNAThub.EXEC_SUCCESS: if transaction have been comitted to DB
                - GNAThub.EXEC_FAIL: if error happened while parsing the xml
                                    report
         """
+
         tool = dao.save_tool(self.session, self.name)
 
-        xml_report = os.path.join(utils.get_project_obj_dir(),
-                                   self.OUTPUT_FILE_NAME)
+        xml_report = os.path.join(GNAThub.project.object_dir(),
+                                  self.OUTPUT_FILE_NAME)
         try:
             tree = ElementTree.parse(xml_report)
 
             # Fetch all files
             for file_node in tree.findall('./file'):
-                file = dao.get_file(self.session, file_node.attrib.get('name'))
+                resource = dao.get_file(self.session,
+                                        file_node.attrib.get('name'))
                 # Save file level metrics
-                if file:
+                if resource:
                     for metric in file_node.findall('./metric'):
+                        name = metric.attrib.get('name')
                         rule = dao.get_or_create_rule(self.session, tool,
-                                                      db.METRIC_KIND,
-                                                      metric.attrib.get('name'))
-                        file.messages.append(Message(metric.text, rule))
+                                                      db.METRIC_KIND, name)
+                        resource.messages.append(Message(metric.text, rule))
                 else:
-                    Log.warn ('File not found, skipping all messages from: %s' %
-                              file_node.attrib.get('name'))
+                    Log.warn('File not found, skipping all messages from: %s' %
+                             file_node.attrib.get('name'))
                     continue
 
                 # Save unit level metric
@@ -113,7 +121,7 @@ class Gnatmetric(GNAThub.Plugin):
             self.session.commit()
             return GNAThub.EXEC_SUCCESS
 
-        except ParseError:
+        except ParseError as e:
             Log.fatal('Unable to parse gnat metric xml report')
             Log.fatal('%s:%s:%s - :%s' % (e.filename, e.lineno, e.text, e.msg))
             return GNAThub.EXEC_FAIL
@@ -127,12 +135,10 @@ class Gnatmetric(GNAThub.Plugin):
 
         # If GNATmetric execution has failed
         if status == GNAThub.EXEC_FAIL:
-                Log.warn('GNAT Metric execution returned on failure')
-                Log.warn('For more details, see log file: %s' % self.get_log_file_path())
+            Log.warn('GNATmetric execution returned on failure')
+            Log.warn('See log file: %s' % self.logs())
         # Just return status if GNATmetrics have not been launched
         elif status == GNAThub.PROCESS_NOT_LAUNCHED:
             return status
         # If GNATmetric succeed: parse xml report and save data to DB
         return self.parse_metrix_xml_file()
-
-#output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)

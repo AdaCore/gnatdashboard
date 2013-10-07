@@ -24,6 +24,9 @@ with GPS.CLI_Kernels;
 
 package GNAThub.Project is
 
+   function Initialized return Boolean;
+   --  Whether a call to Load_Project_Tree has already been made
+
    procedure Load_Project_Tree
      (Path   : GNAT.Strings.String_Access;
       Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record);
@@ -31,5 +34,9 @@ package GNAThub.Project is
 
    procedure Save_Project_Tree (Root_Project : Project_Type);
    --  ???
+
+   function Object_Dir return Virtual_File
+     with Pre => Initialized;
+   --  Returns the object directory file
 
 end GNAThub.Project;

@@ -17,31 +17,25 @@
 ##                                                                          ##
 ##############################################################################
 
-import GPS
-import os
-import GNAThub.utils
 import ConfigParser
 
-from GNAThub import GPSTarget, Log
-from GNAThub import utils
-from GNAThub.utils import OutputParser, create_parser
-from GNAThub.db import Rule, Message
-from GNAThub import Session
-from GNAThub import dao
+import GNAThub.utils
+import GNAThub.project
 
-from xml.etree import ElementTree
+import os
 
-## SonarConfiguration #######################################################
-##
+from GNAThub import Log
+
+
 class SonarConfiguration(object):
     """Represent Sonar configuration"""
 
     MAIN_SECTION = 'Sonar'
     FILE_NAME = 'sonar-project.properties'
-    CONFIG = {'sonar.language'       : 'ada',
-              'sonar.sourceEncoding' : 'UTF-8',
-              'sonar.sources'        : '.',
-              'sonar.projectVersion' : '1.0-SNAPSHOT'}
+    CONFIG = {'sonar.language': 'ada',
+              'sonar.sourceEncoding': 'UTF-8',
+              'sonar.sources': '.',
+              'sonar.projectVersion': '1.0-SNAPSHOT'}
 
     def __init__(self, deposit_dir):
         """Initialise """
@@ -58,20 +52,19 @@ class SonarConfiguration(object):
         self.add('sonar.sources', '.')
 
         self.add('sonar.sourceEncoding', 'UTF-8',
-                 utils.get_qmt_property_str('Source_Encoding'))
+                 GNAThub.project.property_as_string('Source_Encoding'))
 
         self.add('sonar.projectVersion', '1.0-SNAPSHOT',
-                 utils.get_qmt_property_str('Project_Version'))
+                 GNAThub.project.property_as_string('Project_Version'))
 
-        self.add('sonar.projectName',
-                  GNAThub.utils.get_project_name(),
-                  utils.get_qmt_property_str('Project_Name'))
+        self.add('sonar.projectName', GNAThub.project.name(),
+                 GNAThub.project.property_as_string('Project_Name'))
 
-        self.add('sonar.projectKey', '%s::project' %
-                 GNAThub.utils.get_project_name(),
-                 utils.get_qmt_property_str('Project_Key'))
+        self.add('sonar.projectKey', '%s::Project' %
+                 GNAThub.project.name(),
+                 GNAThub.project.property_as_string('Project_Key'))
 
-        self.add('sonar.ada.qmt.db.path', GNAThub.utils.get_db_path())
+        self.add('sonar.ada.qmt.db.path', GNAThub.database())
 
     def add(self, key, value, custom_value=None):
         """Add property in sonar configuration
@@ -90,16 +83,16 @@ class SonarConfiguration(object):
         with open(self.config_file, 'wb') as sonar_file:
             self.config.write(sonar_file)
 
-## Sonarconfig ################################################################
-##
-class Sonarconfig(GNAThub.Plugin):
-    DIR='sonar'
 
-    def __init__ (self, session):
-        super(Sonarconfig, self).__init__('Sonar Configuration')
+class SonarConfig(GNAThub.Plugin):
+    DIR = 'sonar'
+    TOOL_NAME = 'Sonar Configuration'
+
+    def __init__(self, session):
+        super(SonarConfig, self).__init__()
 
     def setup(self):
-        self.working_dir = os.path.join(GNAThub.utils.get_qmt_root_dir(), self.DIR)
+        self.working_dir = os.path.join(GNAThub.root(), self.DIR)
         self.sonar_conf = SonarConfiguration(self.working_dir)
 
     def execute(self):
@@ -108,6 +101,7 @@ class Sonarconfig(GNAThub.Plugin):
             - Create sonar directory in project_object_dir/gnathub
             - Export sonar configuration file in this directory
         """
+
         try:
             if not os.path.exists(self.working_dir):
                 os.makedirs(self.working_dir)

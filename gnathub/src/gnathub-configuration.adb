@@ -19,6 +19,8 @@ with Ada.Text_IO;             use Ada.Text_IO;
 
 with GNAT.Command_Line;       use GNAT.Command_Line;
 
+with GNATCOLL.VFS;            use GNATCOLL.VFS;
+
 with GPS.CLI_Utils;
 
 with GNAThub.Version;
@@ -34,11 +36,14 @@ package body GNAThub.Configuration is
    Quiet       : aliased Boolean;
    Verbose     : aliased Boolean;
 
+   procedure Parse (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record);
+   --  Parses the command line.
+
    ----------------
    -- Initialize --
    ----------------
 
-   procedure Initialize is
+   procedure Initialize (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record) is
    begin
       --  Declare the switches
 
@@ -98,6 +103,8 @@ package body GNAThub.Configuration is
          Usage  => "[-vq] -P PROJECT [-plugins PLUGINS] [-X ARG [-X ARG]]",
          Help   => "GNAThub, driver & formatter for GNAT tool suite.");
 
+      --  Parse the command line
+      Parse (Kernel);
    end Initialize;
 
    -----------

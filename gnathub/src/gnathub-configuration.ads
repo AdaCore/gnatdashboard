@@ -16,16 +16,12 @@
 ------------------------------------------------------------------------------
 
 with GNAT.Strings;
-
 with GPS.CLI_Kernels;
 
 package GNAThub.Configuration is
 
-   procedure Initialize;
-   --  Defines switches handled by GNAThub.
-
-   procedure Parse (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record);
-   --  Parses the command line.
+   procedure Initialize (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record);
+   --  Initializes and parse the command-line.
 
    function Project return String;
    --  Returns Project name given on the command line.

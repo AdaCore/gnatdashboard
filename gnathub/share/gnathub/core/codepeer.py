@@ -17,63 +17,63 @@
 ##                                                                          ##
 ##############################################################################
 
-import os
-import re
-import GPS
 import GNAThub
+import GNAThub.project
+
+import os
 
 from GNAThub import GPSTarget, Log
-from GNAThub import utils
-from GNAThub import Session, dao, db
-from GNAThub.db import Rule, Message, LineMessage
-from GNAThub.utils import OutputParser, create_parser
+from GNAThub import dao, db
+from GNAThub.db import Message, LineMessage
+from GNAThub.utils import OutputParser
 
-## CodepeerOutputParser #######################################################
-##
+
 class MsgReaderOutputParser(OutputParser):
     """Define custom output parser for codepeer_msg_reader"""
-    def on_stdout(self,text):
-        with open (Codepeer.CSV_REPORT_PATH, 'w+a') as output:
+    def on_stdout(self, text):
+        with open(CodePeer.CSV_REPORT_PATH, 'w+a') as output:
             output.write(text)
 
-## CodepeerOutputParser #######################################################
-##
+
 class CodepeerOutputParser(OutputParser):
     """Define custom output parser"""
-    def on_stdout(self,text):
-        with open (Codepeer.get_log_file_path(), 'w+a') as log:
+    def on_stdout(self, text):
+        with open(CodePeer.logs(), 'w+a') as log:
             log.write(text)
 
-    def on_stderr(self,text):
-        with open (Codepeer.get_log_file_path(), 'w+a') as log:
+    def on_stderr(self, text):
+        with open(CodePeer.logs(), 'w+a') as log:
             log.write(text)
 
-## Codepeer ##################################################################
-##
-class Codepeer(GNAThub.Plugin):
+
+class CodePeer(GNAThub.Plugin):
     """CodePeer plugin for GNAThub
 
        Launch CodePeer
     """
-    LOG_FILE_NAME='codepeer.log'
-    CSV_REPORT_PATH=os.path.join(utils.get_project_obj_dir(), 'codepeer.csv')
 
-    def __init__ (self, session):
-        super(Codepeer, self).__init__('CodePeer')
+    TOOL_NAME = 'CodePeer'
+    CSV_REPORT_PATH = os.path.join(GNAThub.project.object_dir(),
+                                   'codepeer.csv')
+
+    def __init__(self, session):
+        super(CodePeer, self).__init__()
 
         self.session = session
         self.tool = dao.save_tool(self.session, self.name)
         # Create GPSTarget for GNATmetric execution
-        self.codepeer = GPSTarget(name=self.name,
-                                 output_parser='codepeeroutputparser',
-                                 cmd_args=self.__codepeer_cmd_line())
+        self.codepeer = \
+            GPSTarget(name=self.name,
+                      output_parser='codepeeroutputparser',
+                      cmd_args=self.__codepeer_cmd_line())
 
-        self.codepeer_msg_reader = GPSTarget(name='Codepeer Message Reader',
-                                 output_parser='msgreaderoutputparser',
-                                 cmd_args=self.__msg_reader_cmd_line())
+        self.codepeer_msg_reader = \
+            GPSTarget(name='Codepeer Message Reader',
+                      output_parser='msgreaderoutputparser',
+                      cmd_args=self.__msg_reader_cmd_line())
 
-        self.CSV_REPORT_PATH = os.path.join(
-           utils.get_project_obj_dir(), 'codepeer.csv')
+        self.CSV_REPORT_PATH = os.path.join(GNAThub.project.object_dir(),
+                                            'codepeer.csv')
 
     def __codepeer_cmd_line(self):
         """Create codepeer command line argument list for GPS target
@@ -84,8 +84,9 @@ class Codepeer(GNAThub.Plugin):
     def __msg_reader_cmd_line(self):
         """Create codepeer_msg_reader command line argument list for GPS target
         """
-        msg_dir = 'codepeer/%s.output' % utils.get_project_name().lower()
-        msg_dir_path =  '%s/%s' % (GPSTarget.OBJ_DIR, msg_dir)
+
+        output = '%s.output' % GNAThub.project.name().lower()
+        msg_dir_path = os.path.join(GPSTarget.OBJ_DIR, 'codepeer', output)
 
         return ['codepeer_msg_reader', '-csv', msg_dir_path]
 
@@ -109,7 +110,8 @@ class Codepeer(GNAThub.Plugin):
 
                 # First line does not contain message
                 for line in cp_output.readlines()[1:]:
-                    #Set maxsplit at 4 because the rule message can contain commas
+                    # Set maxsplit at 4 because the rule message can contain
+                    # commas.
                     line_splited = line.split(',', 8)
 
                     # Parsing source file information
@@ -136,7 +138,8 @@ class Codepeer(GNAThub.Plugin):
             return GNAThub.EXEC_SUCCESS
 
         except IOError as e:
-            Log.warn(str(e))
+            Log.error('%s report analysis failed.' % self.name)
+            Log.error('Caused by: %s' % str(e))
             return GNAThub.EXEC_FAIL
 
     def execute(self):
@@ -147,13 +150,9 @@ class Codepeer(GNAThub.Plugin):
                 status = self.codepeer_msg_reader.execute()
 
             if status == GNAThub.EXEC_FAIL:
-                Log.warn('CodePeer execution returned on failure')
-                Log.warn('For more details, see log file: %s' % self.get_log_file_path())
+                Log.warn('%s execution returned on failure' % self.name)
+                Log.warn('See log file: %s' % self.logs())
 
                 return GNAThub.EXEC_FAIL
 
         return self.parse_csv_output()
-
-#output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)
-#print (output)
-

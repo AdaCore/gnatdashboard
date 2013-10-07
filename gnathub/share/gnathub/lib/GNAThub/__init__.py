@@ -17,125 +17,217 @@
 ##                                                                          ##
 ##############################################################################
 
-__all__ = ['dao', 'utils']
+"""
+This module defines the core components of GNAThub plugin mechanism:
+
+    - The GNAThub.Plugin Abstract Base Class
+    - The GPSTarget Helper Class
+"""
 
 from sqlalchemy.orm import sessionmaker
-Session = sessionmaker()
-
-import GNAThub
-import GPS
-import os
-import random
+SESSION = sessionmaker()
 
 import GNAThubCore
-from GNAThubCore import *
+import GPS
+import os
+import tempfile
+
+# pylint: disable=W0401, W0622
+from GNAThubCore import *       # NOQA (disable warning from flake8)
 
 from abc import ABCMeta, abstractmethod
 
-from xml.dom import minidom
-from xml.etree import ElementTree
-from xml.etree.ElementTree import Element, SubElement, ParseError
+from xml.dom.minidom import getDOMImplementation as dom
 
-(EXEC_FAIL, EXEC_SUCCESS, PROCESS_NOT_LAUNCHED) = range(3)
+EXEC_FAIL, EXEC_SUCCESS, PROCESS_NOT_LAUNCHED = range(3)
 
 
-class Plugin(object):
+class Plugin:
+    """GNAThub plugin interface.
+
+    A plugin is a Python class that describe how to configure, run and collect
+    data output by an external tool.
+    Each plugin should be dedicated to only one tool.
+
+    To implement a now plugin, simply creates a new Python class inheriting
+    from this (GNAThub.Plugin) abstract base class.
+
+    All plugins are collected using the inheritance mechanism, i.e. the GNAThub
+    driver will automatically find all classes implementing the GNAThub.Plugin
+    interface. No manual registration needed.
+    """
+
     __metaclass__ = ABCMeta
 
-    LOG_FILE_NAME = 'gnathub-tool-%d.log' % random.randint(1, 100)
+    TOOL_NAME = None
+    LOG_FILE = None
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
+        """Instance constructor."""
+        pass
 
     def setup(self):
+        """This method is called prior to any call to Plugin.execute.
+
+        This is where environment setup should be done to ensure a correct
+        execution of the tool.
+        """
         pass
 
     @abstractmethod
     def execute(self):
+        """Abstract method. Need implementation.
+
+        Executes the external tool. This method is called after setup() and
+        before teardown().
+        """
         pass
 
     def teardown(self):
+        """This method is called after a call to Plugin.execute.
+
+        This is where environment cleanup should be done to ensure a consistant
+        state for a future execution.
+        """
         pass
 
+    @property
+    def name(self):
+        """Returns the name of the tool, as specified by the TOOL_NAME class
+        variable.
+
+        RETURNS
+            The name of the tool
+            :rtype: a string
+        """
+
+        return self.TOOL_NAME
+
     @classmethod
-    def get_log_file_path(cls):
-        """Class method that returns full path for the plugin logging file"""
-        path = os.path.join(GNAThub.utils.get_project_obj_dir(),
-                            GNAThub.logs(), cls.LOG_FILE_NAME)
-        return path
+    def logs(cls):
+        """Returns the path to the file that contains the logs for this tool's
+        execution.
+
+        RETURNS
+            The absolute path to the log file
+            :rtype: a string
+        """
+
+        if cls.LOG_FILE is None:
+            _, path = tempfile.mkstemp(prefix='%s-' %cls.TOOL_NAME.lower(),
+                                       text=True, suffix='.log',
+                                       dir=GNAThubCore.logs())
+            cls.LOG_FILE = path
+
+        return cls.LOG_FILE
 
 
 class GPSTarget(object):
+    """Defines a GPS target enironment.
+
+    ???
+    """
+
     # Value updated by GNAThub.utils.OutputParser
     EXECUTION_SUCCES = PROCESS_NOT_LAUNCHED
     GNAT = """%attr(ide'gnat,gnat)"""
     OBJ_DIR = '%O'
     PRJ_FILE = '%pp'
 
-    def __init__(self, name, output_parser, cmd_args=[]):
+    def __init__(self, name, output_parser, cmd_args=None):
         self.name = name
-        self.cmdline = cmd_args
-        self.output_parser = output_parser
+        self.cmdline = cmd_args if cmd_args is not None else []
+        self.parser = output_parser
+
         # Re-initialise execution status, as tool execution is sequantiel
         GPSTarget.EXECUTION_SUCCESS = PROCESS_NOT_LAUNCHED
 
         if not self.cmdline:
-            Log.warn('Missing command line for: %s' % self.name)
+            GNAThubCore.Log.warn('Missing command line for: %s' % self.name)
 
-    def __prettify(self, elem):
-        """Returns a pretty-printed XML string for the Element."""
+    def __build_gps_target(self):
+        """Creates the XML document describing the GPS Target.
 
-        raw = ElementTree.tostring(elem, 'utf-8')
-        reparsed = minidom.parseString(raw)
+        RETURNS
+            :rtype: the XML document as a string
+        """
 
-        return reparsed.toxml()
+        # XML document
+        document = dom().createDocument(None, "GPS", None)
 
-    def __build_GPS_target(self):
+        def _text(data):
+            """Returns an XML Text Node whose content is data.
+
+            RETURNS
+                :rtype: xml.dom.Text node
+            """
+
+            return document.createTextNode(data)
+
         # GPS Root
-        root_xml = Element('GPS')
+        root = document.documentElement
 
         # Builder mode
-        builder_mode_xml = SubElement(root_xml, 'builder-mode',
-                                      {'name' : 'default'})
-        builder_desc_xml = SubElement(builder_mode_xml, 'description')
-        builder_desc_xml.text = 'Build with default switches defined in the project'
+        builder_mode = document.createElement('builder-mode')
+        builder_mode.setAttribute('name', 'default')
+
+        builder_mode_desc = document.createElement('description')
+        builder_mode_desc.appendChild(_text('Inherit switches from project'))
+
+        builder_mode.appendChild(builder_mode_desc)
+        root.appendChild(builder_mode)
 
         # Target model
-        model_xml = SubElement(root_xml, 'target-model',
-                               {'name' : 'gnathub'})
+        target_model = document.createElement('target-model')
+        target_model.setAttribute('name', 'gnathub')
 
-        model_desc_xml = SubElement(model_xml, 'description')
-        model_desc_xml.text = 'Generic target model for GNAThub'
+        target_model_desc = document.createElement('description')
+        target_model_desc.appendChild(_text('Generic GNAThub target model'))
+
+        target_model.appendChild(target_model_desc)
+        root.appendChild(target_model)
 
         # Target
-        target_xml = SubElement(root_xml, 'target',
-                                {'model'    : model_xml.attrib['name'],
-                                 'category' : 'default',
-                                 'name'     : self.name})
-        # Command line
-        target_cmd_xml = SubElement(target_xml, 'command-line')
+        target = document.createElement('target')
+        target.setAttribute('model', target_model.getAttribute('name'))
+        target.setAttribute('category', 'default')
+        target.setAttribute('name', self.name)
 
-        for arg in self.cmdline:
-            SubElement(target_cmd_xml, 'arg').text = arg
+        # Command line
+        cmdline = document.createElement('command-line')
+
+        for element in self.cmdline:
+            arg = document.createElement('arg')
+            arg.appendChild(_text(element))
+            cmdline.appendChild(arg)
+
+        target.appendChild(cmdline)
 
         # Output parsers
-        output_parser_xml = SubElement(target_xml, 'output-parsers')
-        output_parser_xml.text = '%s output_collector' % self.output_parser
+        output_parsers = document.createElement('output-parsers')
+        output_parsers.appendChild(_text('%s output_collector' % self.parser))
 
-        return self.__prettify(root_xml)
+        target.appendChild(output_parsers)
+        root.appendChild(target)
+
+        return document.toprettyxml()
 
     def execute(self):
-        Log.debug('Executing %s with comand line: %s' % (self.name, ' '.join(self.cmdline)))
-        gps_target_xml = self.__build_GPS_target()
+        """Executes the target."""
 
-        Log.debug('XML base for GPS target:\n%s' % gps_target_xml)
-        GPS.parse_xml(gps_target_xml)
+        GNAThubCore.Log.debug('Executing %s: %s' % (self.name,
+                                                    ' '.join(self.cmdline)))
 
-        Log.debug('Building target: %s' % self.name)
+        xml = self.__build_gps_target()
+
+        GNAThubCore.Log.debug('GPSTarget XML:%s%s' % (os.linesep, xml))
+        GPS.parse_xml(xml)
+
+        GNAThubCore.Log.debug('Building target: %s' % self.name)
         target = GPS.BuildTarget(self.name)
         target.execute()
 
-        Log.debug('GPSTarget.EXECUTION_SUCCESS = %s' %
-                  str(GPSTarget.EXECUTION_SUCCESS))
+        GNAThubCore.Log.debug('GPSTarget.EXECUTION_SUCCESS = %s' %
+                              str(GPSTarget.EXECUTION_SUCCESS))
 
         return GPSTarget.EXECUTION_SUCCESS

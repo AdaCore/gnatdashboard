@@ -17,91 +17,106 @@
 ##                                                                          ##
 ##############################################################################
 
+import GNAThub
+import GNAThub.project
+
 import os
 import re
-import GPS
-import GNAThub
 
 from GNAThub import GPSTarget, Log
-from GNAThub import utils
-from GNAThub import Session, dao, db
-from GNAThub.db import Rule, Message, LineMessage
-from GNAThub.utils import OutputParser, create_parser
+from GNAThub import dao, db
+from GNAThub.db import Message, LineMessage
+from GNAThub.utils import OutputParser
 
-## GnatmetricOutputParser #####################################################
-##
-class GnatcheckOutputParser(OutputParser):
-    """Define custom output parser"""
-    def on_stdout(self,text):
-        with open (Gnatcheck.get_log_file_path(), 'w+a') as log:
+
+class GNATcheckOutputParser(OutputParser):
+    """Defines custom output parser for the GNATcheck tool."""
+
+    def on_stdout(self, text):
+        with open(GNATcheck.logs(), 'w+a') as log:
             log.write(text)
 
-    def on_stderr(self,text):
-        with open (Gnatcheck.get_log_file_path(), 'w+a') as log:
+    def on_stderr(self, text):
+        with open(GNATcheck.logs(), 'w+a') as log:
             log.write(text)
 
-## Gnatcheck ##################################################################
-##
-class Gnatcheck(GNAThub.Plugin):
+
+class GNATcheck(GNAThub.Plugin):
     """GNATcheck plugin for GNAThub.
 
-       Launch GNATcheck
+    Configures and executes GNATcheck, then analizes the output.
     """
-    LOG_FILE_NAME='gnatcheck.log'
-    REPORT_FILE_NAME='gnatcheck.out'
 
-    def __init__ (self, session):
-        super(Gnatcheck, self).__init__('GNATcheck')
+    TOOL_NAME = 'GNATcheck'
+    REPORT_FILE_NAME = 'gnatcheck.out'
+    SLOC_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+'
+
+    def __init__(self, session):
+        """Instance constructor."""
+
+        super(GNATcheck, self).__init__()
 
         self.session = session
         self.tool = dao.save_tool(self.session, self.name)
-        # Create GPSTarget for GNATmetric execution
-        self.process = GPSTarget(name=self.name,
-                                 output_parser='gnatcheckoutputparser',
+
+        # Create GPSTarget for GNATcheck execution
+        parser = GNATcheckOutputParser.__class__.__name__
+        self.process = GPSTarget(name=self.name, output_parser=parser,
                                  cmd_args=self.__cmd_line())
 
     def __cmd_line(self):
-        """Create Gnat Metric command line argument list for GPS target"""
-        prj_file = '-P%s' % GPSTarget.PRJ_FILE
-        out_file = '-o=%s/%s' % (GPSTarget.OBJ_DIR, self.REPORT_FILE_NAME)
+        """Creates GNAT Check command line argument list for GPS target."""
 
-        return [GPSTarget.GNAT, 'check', '--show-rule','-s', out_file, prj_file]
+        prj_file = '-P%s' % GPSTarget.PRJ_FILE
+        out_file = '-o=%s' % (os.path.join(GPSTarget.OBJ_DIR,
+                                           self.REPORT_FILE_NAME))
+
+        return [GPSTarget.GNAT, 'check', '--show-rule', '-s', out_file,
+                prj_file]
 
     def __add_message(self, src, line, col_begin, rule_id, msg):
         """Add GNATcheck message to current session DB.
 
-           Parameters:
-            - src: message source file
-            - line: message line number
-            - col_begin: message column number
-            - rule_id: message's rule identifier
-            - msg: description of the message
+        Parameters:
+            :param src: message source file
+            :type src: a string
+            :param line: message line number
+            :type line: a string
+            :param col_begin: message column number
+            :type col_begin: a string
+            :param rule_id: message's rule identifier
+            :type rule_id: a string
+            :param msg: description of the message
+            :type msg: a string
         """
-        rule = dao.get_or_create_rule (self.session, self.tool,
-                                       db.RULE_KIND, rule_id)
+
+        rule = dao.get_or_create_rule(self.session, self.tool,
+                                      db.RULE_KIND, rule_id)
         line = dao.get_or_create_line(self.session, src, line)
 
-        if line:
-            line_message = LineMessage(col_begin=col_begin)
-            line_message.message = Message(msg, rule)
-
-            line.messages.append(line_message)
-        else:
+        if not line:
             Log.warn('Skipping message: %s, file not found: %s' % (msg, src))
+            return
+
+        line_message = LineMessage(col_begin=col_begin)
+        line_message.message = Message(msg, rule)
+        line.messages.append(line_message)
 
     def __parse_line(self, line):
-        """Parse a GnatCheck message line and add the message to the current DB
-            session.
+        """Parses a GNATcheck message line and add the message to the current
+        database session.
 
-           Parameter:
-            - line: text line to parse
-
-           Retrieves following informations:
+        Retrieves following informations:
             - source basename,
             - line in source,
             - rule identification,
             - message description
+
+        PARAMETERS
+            :param line: The text line to parse
+            :type line: a string
         """
+
         # Example with line : "input.adb:3:19: use clause for package
         # [USE_PACKAGE_Clauses]"
 
@@ -122,14 +137,21 @@ class Gnatcheck(GNAThub.Plugin):
         self.__add_message(src, line, col_begin, rule_id, msg)
 
     def __parse_instance_line(self, line):
-        MAIN_SRC_FILE = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:'
-        # Look for the source file that instanciates the generic (last un the
+        """Parses only one line and extracts the rule ID and message, then adds
+        it to the database.
+
+        PARAMETERS
+            :param line: The text line to parse
+            :type line: a string
+        """
+
+        # Look for the source file that instanciates the generic (last in the
         # list of "instance at...")
-        match = re.search(MAIN_SRC_FILE, line)
+        match = re.search(self.SLOC_PATTERN, line)
 
         # Split to have a list with 'commands-generic_asynchronous.ads:57:15
         # instance at...' and 'message + rule id'
-        msg_split = re.split(MAIN_SRC_FILE, line)
+        msg_split = re.split(self.SLOC_PATTERN, line)
 
         try:
             # Retreive info on the main file
@@ -139,43 +161,49 @@ class Gnatcheck(GNAThub.Plugin):
             # Parsing message location information
             src = start_error[0].strip()
             line = start_error[1]
-            col_begin = start_erro[2]
+            col_begin = start_error[2]
 
-            # Parsong message's rule information
+            # Parsing message's rule information
             ruleid_msg = msg_split[1].split('[', 1)
             rule_id = ruleid_msg[1].strip()[:-1]
-            msg = ruleid_msg[0].strip() + ' (' + msg_split[0].strip() + ' ' + src + ')'
+
+            msg = '%s (%s %s)' % (ruleid_msg[0].strip(),
+                                  msg_split[0].strip(),
+                                  src)
 
             # Create orm object for the mesage and add it to the session
             self.__add_message(src, line, col_begin, rule_id, msg)
 
         except IndexError:
-            Log.warn('Unable to retrieve iformation from message at: %s:%s' % (src, line))
+            Log.warn('Unexpected error for message at: %s:%s' % (src, line))
 
     def parse_output_file(self):
-        """Parse GNATcheck output file report
+        """Parses GNATcheck output file report
 
-           Identify 2 type of mmessages with different format:
+        Identify 2 type of mmessages with different format:
             - basic meesage message
             - message for packag instanciation
 
-          Return:
-            - EXEC_SUCCES: if changes has been committed to the DB
-            - EXEC_FAIL: if an error occured when reading the output file
+        RETURNS
+            EXEC_SUCCES if changes has been committed to the DB, or EXEC_FAIL
+            if an error occured when reading the output file
+            :rtype: a number
         """
-        # Initialise regex to identify line that contains message
-        ERROR_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+:\s.+[[].*[]]\s*'
-        INSTANCE_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+ instance at [a-zA-Z-_.0-9]+:[0-9]+:[0-9]+.+'
+
+        # Regex to identify line that contains message
+        ERROR_PATTERN = '%s:\s.+[[].*[]]\s*' % self.SLOC_PATTERN
+        INSTANCE_PATTERN = '%s instance at %s.+' % (self.SLOC_PATTERN,
+                                                    self.SLOC_PATTERN)
+
         prog_error = re.compile(ERROR_PATTERN)
         prog_instance = re.compile(INSTANCE_PATTERN)
 
-        report = os.path.join(utils.get_project_obj_dir(),
+        report = os.path.join(GNAThub.project.object_dir(),
                               self.REPORT_FILE_NAME)
+
         try:
             with open(report, 'r') as output:
-
                 for line in output.readlines():
-
                     # Parse basic message line
                     if prog_error.match(line):
                         self.__parse_line(line)
@@ -184,8 +212,7 @@ class Gnatcheck(GNAThub.Plugin):
                     if prog_instance.match(line):
                         self.__parse_instance_line(line)
 
-            # Commit object added and modified to the session then return
-            # SUCCESS
+            # Commit object added and modified to the session
             self.session.commit()
             return GNAThub.EXEC_SUCCESS
 
@@ -194,14 +221,12 @@ class Gnatcheck(GNAThub.Plugin):
             return GNAThub.EXEC_FAIL
 
     def execute(self):
+        """Inherited."""
+
         status = self.process.execute()
 
         if status == GNAThub.EXEC_FAIL:
-            Log.warn('GNATcheck returned on failure')
-            Log.warn('see log file: %s' % self.get_log_file_path())
+            Log.warn('%s returned on failure' % self.name)
+            Log.warn('See log file: %s' % GNATcheck.log())
 
         return self.parse_output_file()
-
-#output = GPS.get_build_output ("GNAT Metrics for project and subprojects", as_string=True)
-#print (output)
-
