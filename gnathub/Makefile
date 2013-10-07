@@ -19,6 +19,8 @@
 
 include Makefile.conf
 
+.PHONY: tests
+
 all: $(PROJECT)
 
 $(PROJECT):
@@ -37,8 +39,8 @@ orm:
 	mkdir -p src-gen
 	cd src-gen && gnatcoll_db2ada -api=Database -orm=ORM -dbmodel=../../dbschema.txt
 
-test:
-	cd tests && python testsuite.py
+tests:
+	-@cd tests && python testsuite.py
 
 clean:
 	gprclean -q -P $(PROJECT).gpr

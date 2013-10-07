@@ -1,5 +1,6 @@
 *.pyc
 /build/
+/tests/out
 /gnathub-x86-windows/
 /gnathub-x86-linux/
 /gnathub-x86_64-linux/
