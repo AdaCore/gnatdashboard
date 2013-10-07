@@ -27,14 +27,35 @@ package GNAThub.Constants is
    Share_Dir : constant Virtual_File :=
      Create_From_Dir (Prefix_Dir, "share/gnathub");
 
-   Core_Dir     : constant Virtual_File := Create_From_Dir (Share_Dir, "core");
-   Core_Lib_Dir : constant Virtual_File := Create_From_Dir (Core_Dir, "lib");
+   Scripts_Dir : constant Virtual_File :=
+     Create_From_Dir (Share_Dir, "scripts");
 
-   Core_Plugin_Dir : constant Virtual_File :=
-     Create_From_Dir (Core_Dir, "plug-ins");
+   Lib_Dir  : constant Virtual_File := Create_From_Dir (Share_Dir, "lib");
 
-   User_Plugin_Dir : constant Virtual_File :=
-     Create_From_Dir (Share_Dir, "plug-ins");
+   Core_Plugins_Dir : constant Virtual_File :=
+     Create_From_Dir (Share_Dir, "core");
+
+   Extra_Plugins_Dir : constant Virtual_File :=
+     Create_From_Dir (Share_Dir, "extras");
+
+   --  Ada to Python module name. Every entity of this module will be imported
+   --  into the "GNAThub" module after initialization. This module should
+   --  remain private to users.
+
+   Python_Root_Module : constant String := "GNAThubCore";
+
+   --  GNAThub database schema
+
+   Database_Schema_File : constant Virtual_File :=
+     Create_From_Dir (Scripts_Dir, "database-schema.txt");
+
+   --  GNAThub helper scripts
+
+   Custom_Attributes_Definition_File : constant Virtual_File :=
+     Create_From_Dir (Scripts_Dir, "custom-attributes.py");
+
+   Plugin_Runner : constant Virtual_File :=
+     Create_From_Dir (Scripts_Dir, "plugin-runner.py");
 
    --  GNAThub project side environment properties, located in project
    --  object directory
@@ -44,20 +65,5 @@ package GNAThub.Constants is
 
    Database_File  : constant Virtual_File :=
      Create_From_Dir (Root_Dir, "gnathub.db");
-
-   --  Ada to Python API
-
-   Python_Root_Module : constant String := "GNAThubCore";
-
-   --  GNAThub helper scripts
-
-   Database_Schema_File : constant Virtual_File :=
-     Create_From_Dir (Core_Dir, "database-schema.txt");
-
-   Custom_Attributes_Definition_File : constant Virtual_File :=
-     Create_From_Dir (Core_Dir, "custom-attributes-definition.py");
-
-   Plugin_Runner : constant Virtual_File :=
-     Create_From_Dir (Core_Dir, "generic-plugin-runner.py");
 
 end GNAThub.Constants;

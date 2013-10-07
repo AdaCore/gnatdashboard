@@ -76,7 +76,7 @@ class PluginRunner(object):
 
     def __get_plugins_from_dirs(self, plugins):
         """Retrieve projet sepecific plugin, form project file file """
-        files = os.listdir(GNAThub.core_plugins()) + os.listdir(GNAThub.user_plugins())
+        files = os.listdir(GNAThub.core_plugins()) + os.listdir(GNAThub.extra_plugins())
 
         for f in files:
             if f.endswith(self.SCRIPT_SUFFIX):

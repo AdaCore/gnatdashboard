@@ -135,8 +135,8 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       Python : constant Scripting_Language :=
         Kernel.Scripts.Lookup_Scripting_Language ("python");
 
-      Python_Path_List : constant array (1 .. 4) of Virtual_File :=
-        (Core_Dir, Core_Plugin_Dir, User_Plugin_Dir, Core_Lib_Dir);
+      Python_Path_List : constant array (1 .. 3) of Virtual_File :=
+        (Lib_Dir, Core_Plugins_Dir, Extra_Plugins_Dir);
 
    begin
       --  Add the default search path for GNAThub plugins

@@ -16,8 +16,9 @@ project GNAThub is
      ("src",
       "src-gen",                       --  automatically generated files
       "share/gnathub/core",
-      "share/gnathub/core/plug-ins",
-      "share/gnathub/core/GNAThub");
+      "share/gnathub/extras",
+      "share/gnathub/lib",
+      "share/gnathub/scripts");
 
    for Main use ("gnathub-main.adb");
 

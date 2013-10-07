@@ -36,19 +36,19 @@ package body GNAThub.Python is
        Log_Fatal_Method'Access,
        Log_Debug_Method'Access);
 
-   Root_Function         : aliased String := "root";
-   Logs_Function         : aliased String := "logs";
-   Plugins_Function      : aliased String := "plugins";
-   User_Plugins_Function : aliased String := "user_plugins";
-   Core_Plugins_Function : aliased String := "core_plugins";
-   Database_Function     : aliased String := "database";
+   Root_Function          : aliased String := "root";
+   Logs_Function          : aliased String := "logs";
+   Plugins_Function       : aliased String := "plugins";
+   Core_Plugins_Function  : aliased String := "core_plugins";
+   Extra_Plugins_Function : aliased String := "extra_plugins";
+   Database_Function      : aliased String := "database";
 
    Root_Module_Functions : constant array (1 .. 6) of access String :=
       (Root_Function'Access,
        Logs_Function'Access,
        Plugins_Function'Access,
-       User_Plugins_Function'Access,
        Core_Plugins_Function'Access,
+       Extra_Plugins_Function'Access,
        Database_Function'Access);
 
    procedure Root_Module_Handler
@@ -168,13 +168,13 @@ package body GNAThub.Python is
      (Data    : in out Callback_Data'Class;
       Command : String) is
    begin
-      if Command = User_Plugins_Function then
+      if Command = Extra_Plugins_Function then
          Set_Return_Value
-           (Data, GNAThub.Constants.User_Plugin_Dir.Display_Full_Name);
+           (Data, GNAThub.Constants.Extra_Plugins_Dir.Display_Full_Name);
 
       elsif Command = Core_Plugins_Function then
          Set_Return_Value
-           (Data, GNAThub.Constants.Core_Plugin_Dir.Display_Full_Name);
+           (Data, GNAThub.Constants.Core_Plugins_Dir.Display_Full_Name);
 
       elsif Command = Root_Function then
          Set_Return_Value
