@@ -57,7 +57,7 @@ clean:
 distclean: clean
 	rm -rf build
 
-install: $(PROJECT)
+install:
 	mkdir -p $(INSTALL_PREFIX)
 	cp COPYING3 $(INSTALL_PREFIX)
 	mkdir -p $(INSTALL_PREFIX)/bin
