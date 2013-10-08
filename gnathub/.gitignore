@@ -1,4 +1,6 @@
+*~
 *.pyc
+*.sw?
 /build/
 /tests/out
 /gnathub-x86-windows/
