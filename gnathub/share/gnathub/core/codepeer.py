@@ -35,7 +35,7 @@ class MsgReaderOutputParser(OutputParser):
             output.write(text)
 
 
-class CodepeerOutputParser(OutputParser):
+class CodePeerOutputParser(OutputParser):
     """Define custom output parser"""
     def on_stdout(self, text):
         with open(CodePeer.logs(), 'w+a') as log:

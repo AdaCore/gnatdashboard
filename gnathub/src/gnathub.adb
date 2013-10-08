@@ -28,6 +28,7 @@ package body GNAThub is
 
       Info_Handle    : constant Trace_Handle := Create ("INFO", On);
       Warning_Handle : constant Trace_Handle := Create ("WARN", On);
+      Error_Handle   : constant Trace_Handle := Create ("ERROR", On);
       Fatal_Handle   : constant Trace_Handle := Create ("FATAL", On);
       Debug_Handle   : constant Trace_Handle := Create ("TRACE", Off);
       --  Trace handles
@@ -42,7 +43,7 @@ package body GNAThub is
       procedure Info (Message : String) is
       begin
          if Verbosity >= Default then
-            Put_Line ("--- " & Message);
+            Put_Line (Message);
          else
             Trace (Info_Handle, Message);
          end if;
@@ -56,6 +57,15 @@ package body GNAThub is
       begin
          Trace (Warning_Handle, Message);
       end Warn;
+
+      -----------
+      -- Error --
+      -----------
+
+      procedure Error (Message : String) is
+      begin
+         Trace (Error_Handle, Message);
+      end Error;
 
       -----------
       -- Fatal --
@@ -76,6 +86,42 @@ package body GNAThub is
       end Debug;
 
       --------------
+      -- Progress --
+      --------------
+
+      procedure Progress
+        (Current : Natural; Total : Positive; New_Line : Boolean := False)
+      is
+         function Image (Number : Integer) return String;
+         --  Prints the image of a number w/o the leading space.
+
+         -----------
+         -- Image --
+         -----------
+
+         function Image (Number : Integer) return String is
+            Img : constant String := Integer'Image (Number);
+         begin
+            return Img (Img'First + 1 .. Img'Last);
+         end Image;
+
+         Percent : constant Integer := Current * 100 / Total;
+         Message : constant String  := "... completed " & Image (Current) &
+           " out of " & Image (Total) & " (" & Image (Percent) & "%)";
+
+      begin
+         if Verbosity >= Default then
+            Put (Message & ASCII.CR);
+
+            if New_Line then
+               Ada.Text_IO.New_Line;
+            end if;
+         else
+            Trace (Info_Handle, Message);
+         end if;
+      end Progress;
+
+      --------------
       -- Ellapsed --
       --------------
 
@@ -92,6 +138,7 @@ package body GNAThub is
       procedure Set_Verbosity (Verbosity : Verbosity_Level) is
       begin
          Set_Active (Fatal_Handle, True);
+         Set_Active (Error_Handle, True);
 
          Set_Active (Info_Handle, Verbosity < Quiet);
          Set_Active (Warning_Handle, Verbosity < Quiet);

@@ -56,9 +56,9 @@ class GNATprove(GNAThub.Plugin):
         self.session = session
         self.tool = dao.save_tool(self.session, self.name)
 
-        # Create GPSTarget for GNATmetric execution
-        parser = GNATproveOutputParser.__class__.__name__
-        self.process = GPSTarget(name=self.name, output_parser=parser,
+        # Create GPSTarget for GNATprove execution
+        self.process = GPSTarget(name=self.name,
+                                 output_parser='gnatproveoutputparser',
                                  cmd_args=self.__cmd_line())
 
     def __cmd_line(self):

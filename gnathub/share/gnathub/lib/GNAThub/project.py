@@ -19,6 +19,8 @@
 
 """Helper functions for accessing project attributes and properties."""
 
+# pylint: disable=F0401
+# Disable "Unable to import" error
 import GPS
 
 
@@ -53,6 +55,16 @@ def name():
     """
 
     return root().name()
+
+
+def path():
+    """Returns the path to the project file.
+
+    RETURNS
+        :rtype: a string
+    """
+
+    return root().file().name()
 
 
 def property_as_string(key):

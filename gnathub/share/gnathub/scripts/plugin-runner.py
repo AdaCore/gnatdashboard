@@ -195,9 +195,9 @@ class PluginRunner(object):
 
             if plugin_class:
                 session = session_factory.get_session()
-                # Instanciate the plugin
                 plugin = plugin_class(session)
-                Log.info('Running plugin: %s' % plugin.name)
+                Log.debug('%s: running plugin' % plugin.name)
+                Log.info(' '.join(plugin.display_command_line()))
                 self.__execute_plugin(plugin)
                 session.close()
 

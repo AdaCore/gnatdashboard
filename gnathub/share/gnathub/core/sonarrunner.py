@@ -47,8 +47,8 @@ class SonarRunner(GNAThub.Plugin):
 
         self.working_dir = os.path.join(GNAThub.root(), self.DIR)
 
-        parser = SonarRunnerOutputParser.__class__.__name__
-        self.process = GPSTarget(name=self.name, output_parser=parser,
+        self.process = GPSTarget(name=self.name,
+                                 output_parser='sonarrunneroutputparser',
                                  cmd_args=self.__cmd_line())
 
     def __cmd_line(self):

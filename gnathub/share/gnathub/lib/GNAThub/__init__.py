@@ -27,19 +27,125 @@ This module defines the core components of GNAThub plugin mechanism:
 from sqlalchemy.orm import sessionmaker
 SESSION = sessionmaker()
 
-import GNAThubCore
+# pylint: disable=F0401
+# Disable "Unable to import" error
 import GPS
+
 import os
 import tempfile
 
-# pylint: disable=W0401, W0622
-from GNAThubCore import *       # NOQA (disable warning from flake8)
+from twisted.internet import protocol, reactor
 
 from abc import ABCMeta, abstractmethod
 
 from xml.dom.minidom import getDOMImplementation as dom
 
 EXEC_FAIL, EXEC_SUCCESS, PROCESS_NOT_LAUNCHED = range(3)
+
+
+def root():
+    """Returns the path to the GNAThub-specific root directory.
+    Usually:
+
+        <project_object_dir>/gnathub
+
+    RETURNS
+        :rtype: a path as a string
+    """
+
+    pass        # Implemented in Ada
+
+
+def logs():
+    """Returns the path to the GNAThub-specific directory for logs.
+    Usually:
+
+        <project_object_dir>/gnathub/logs
+
+    RETURNS
+        :rtype: a path as a string
+    """
+
+    pass        # Implemented in Ada
+
+
+def database():
+    """Returns the path to the GNAThub SQLite database.
+    Usually:
+
+        <project_object_dir>/gnathub/gnathub.db
+
+    RETURNS
+        :rtype: a path as a string
+    """
+
+    pass        # Implemented in Ada
+
+
+class Log(object):
+    """A logger object. Fully implemented in Ada."""
+
+    def __init__(self):
+        """Instance constructor."""
+
+        raise Error('GNAThub.Log must not be instanciated')
+
+    @staticmethod
+    def info(message):
+        """Prints an informative message. Activated at default verbosity
+        output.
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def warn(message):
+        """Prints a warning message. Activated at default verbosity output."""
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def error(message):
+        """Prints an error message. Always activated."""
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def fatal(message):
+        """Prints a fatal message. Always activated."""
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def debug(message):
+        """Prints a debug message. Activated at higher verbosity level."""
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def progress(current, natural, new_line=False):
+        """Prints a progess message. Activated at default verbosity level.  If
+        new_line is True, then terminate the line with a '\n' character.
+        Defaults to False.
+        """
+
+        pass    # Implemented in Ada
+
+
+# Install all Ada extensions, i.e. functions and classes implemented in Ada and
+# exported to Python. These extensions should be declared above this statement
+# with no implementation.
+
+# pylint: disable=W0401, W0622, F0401
+from GNAThubCore import *       # NOQA (disable warning from flake8)
+
+# Now that all Ada extensions have been planted into this module, we can
+# define pure-Python extensions.
+
+
+class Error(Exception):
+    """Base class for exceptions in this module."""
+    pass
 
 
 class Plugin:
@@ -65,6 +171,16 @@ class Plugin:
     def __init__(self):
         """Instance constructor."""
         pass
+
+    def display_command_line(self):
+        """This method returns a list similar to argv. However, this command
+        line does not need to be functional and its only purpose is to be
+        printed on the GNAThub tool output.
+
+        RETURNS
+            :rtype: a list of string
+        """
+        return [self.name.lower()]
 
     def setup(self):
         """This method is called prior to any call to Plugin.execute.
@@ -100,7 +216,6 @@ class Plugin:
             The name of the tool
             :rtype: a string
         """
-
         return self.TOOL_NAME
 
     @classmethod
@@ -114,12 +229,189 @@ class Plugin:
         """
 
         if cls.LOG_FILE is None:
-            _, path = tempfile.mkstemp(prefix='%s-' %cls.TOOL_NAME.lower(),
-                                       text=True, suffix='.log',
-                                       dir=GNAThubCore.logs())
+            _, path = tempfile.mkstemp(prefix='%s-' % cls.TOOL_NAME.lower(),
+                                       text=True, suffix='.log', dir=logs())
             cls.LOG_FILE = path
 
         return cls.LOG_FILE
+
+
+class ProcessProtocol(protocol.ProcessProtocol):
+    """The ProcessProtocol passed to twisted.internet.reactor.spawnProcess is
+    the interaction with the process. It has several methods to deal with
+    events specific to a process.
+    """
+
+    def __init__(self, name):
+        """Instance constructor."""
+
+        self.name = name
+        self.exit_code = None
+
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
+    def connectionMade(self):
+        """This is called when the program is started, and makes a good place
+        to write data into the stdin pipe (using self.transport.write).
+        """
+
+        Log.debug('%s: process started' % self.name)
+
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
+    def outReceived(self, data):
+        """This is called with data that was received from the process' stdout
+        pipe.
+
+        PARAMETERS
+            :param data: data that was received from the process' stdout pipe.
+            :type data: a string.
+        """
+
+        pass
+
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
+    def errReceived(self, data):
+        """This is called with data from the process' stderr pipe. It behaves
+        just like outReceived.
+
+        PARAMETERS
+            :param data: data that was received from the process' stderr pipe.
+            :type data: a string.
+        """
+
+        pass
+
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
+    def processExited(self, reason):
+        """This is called when the child process has been reaped, and receives
+        information about the process' exit status.
+
+        PARAMETERS
+            :param reason: The status is passed in the form of a Failure
+                instance, created with a .value that either holds a ProcessDone
+                object if the process terminated normally (it died of natural
+                causes instead of receiving a signal, and if the exit code was
+                0), or a ProcessTerminated object (with an .exitCode attribute)
+                if something went wrong.
+            :type reason: twisted.python.failure.Failure object.
+        """
+
+        Log.debug('%s: exited: %s' % (self.name, reason.value.__dict__))
+
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
+    def processEnded(self, reason):
+        """This is called when all the file descriptors associated with the
+        child process have been closed and the process has been reaped. This
+        means it is the last callback which will be made onto a
+        ProcessProtocol.
+
+        PARAMETERS
+            :param reason: The status parameter has the same meaning as it does
+                for processExited.
+            :type reason: twisted.python.failure.Failure object.
+        """
+
+        Log.debug('%s: terminated with status: %d' % (self.name,
+                                                      reason.value.exitCode))
+        self.exit_code = reason.value.exitCode
+
+        Log.debug('Terminating reactor')
+
+        # pylint: disable=E1101
+        # Disable "Module {} has no member {}" error
+        reactor.stop()
+
+
+class LoggerProcessProtocol(ProcessProtocol):
+    """A simple ProcessProtocol that logs both standard and error output to a
+    file.
+    """
+
+    def __init__(self, plugin):
+        """Instance constructor.
+
+        PARAMETERS
+            :param plugin: The plugin class object. This class must implement
+                the GNAThub.Plugin Abstract Base Class.
+            :type plugin: a GNAThub.Plugin object.
+        """
+
+        ProcessProtocol.__init__(self, plugin.name)
+        self.log_file = plugin.logs()
+
+        Log.debug('%s: will log to: %s' % (plugin.name, self.log_file))
+
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
+    def outReceived(self, data):
+        """Inherited."""
+
+        ProcessProtocol.outReceived(self, data)
+
+        with open(self.log_file, 'w+a') as log:
+            log.write(data)
+
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
+    def errReceived(self, data):
+        """Inherited."""
+
+        ProcessProtocol.errReceived(self, data)
+
+        with open(self.log_file, 'w+a') as log:
+            log.write(data)
+
+
+class Process(object):
+    """An asynchronous process abstraction class."""
+
+    def __init__(self, name, argv, process_protocol=None):
+        """Instance constructor."""
+
+        self.name = name
+        self.argv = argv
+        self.protocol = process_protocol
+        self.exit_code = None
+
+        if self.protocol is None:
+            self.protocol = ProcessProtocol(self.name)
+
+    def execute(self, env=None):
+        """Spawnes the process, run the Twisted's Reactor and returns the
+        process exit code.
+
+        PARAMETERS
+            :param env: dictionary containing the environment to pass through
+                to the process. If None, os.environ is used.
+            :type env: a dictionary
+
+        RETURNS
+            :rtype: a number
+        """
+
+        Log.debug('%s: spawning process' % self.name)
+        Log.debug(os.linesep.join(['Arg = %s' % arg for arg in self.argv]))
+
+        environ = env if env is not None else os.environ
+
+        # pylint: disable=E1101
+        # Disable "Module {} has no member {}" error
+        reactor.spawnProcess(self.protocol, self.argv[0], self.argv,
+                             env=environ)
+
+        Log.debug('Starting reactor...')
+
+        # pylint: disable=E1101
+        # Disable "Module {} has no member {}" error
+        reactor.run()
+
+        self.exit_code = self.protocol.exit_code
+
+        return self.exit_code
 
 
 class GPSTarget(object):
@@ -143,7 +435,7 @@ class GPSTarget(object):
         GPSTarget.EXECUTION_SUCCESS = PROCESS_NOT_LAUNCHED
 
         if not self.cmdline:
-            GNAThubCore.Log.warn('Missing command line for: %s' % self.name)
+            Log.warn('Missing command line for: %s' % self.name)
 
     def __build_gps_target(self):
         """Creates the XML document describing the GPS Target.
@@ -165,7 +457,7 @@ class GPSTarget(object):
             return document.createTextNode(data)
 
         # GPS Root
-        root = document.documentElement
+        doc = document.documentElement
 
         # Builder mode
         builder_mode = document.createElement('builder-mode')
@@ -175,7 +467,7 @@ class GPSTarget(object):
         builder_mode_desc.appendChild(_text('Inherit switches from project'))
 
         builder_mode.appendChild(builder_mode_desc)
-        root.appendChild(builder_mode)
+        doc.appendChild(builder_mode)
 
         # Target model
         target_model = document.createElement('target-model')
@@ -185,7 +477,7 @@ class GPSTarget(object):
         target_model_desc.appendChild(_text('Generic GNAThub target model'))
 
         target_model.appendChild(target_model_desc)
-        root.appendChild(target_model)
+        doc.appendChild(target_model)
 
         # Target
         target = document.createElement('target')
@@ -208,26 +500,27 @@ class GPSTarget(object):
         output_parsers.appendChild(_text('%s output_collector' % self.parser))
 
         target.appendChild(output_parsers)
-        root.appendChild(target)
+        doc.appendChild(target)
 
         return document.toprettyxml()
 
     def execute(self):
         """Executes the target."""
 
-        GNAThubCore.Log.debug('Executing %s: %s' % (self.name,
-                                                    ' '.join(self.cmdline)))
+        Log.debug('Executing %s: %s' % (self.name, ' '.join(self.cmdline)))
 
         xml = self.__build_gps_target()
 
-        GNAThubCore.Log.debug('GPSTarget XML:%s%s' % (os.linesep, xml))
+        Log.debug('GPSTarget XML:%s%s' % (os.linesep, xml))
         GPS.parse_xml(xml)
 
-        GNAThubCore.Log.debug('Building target: %s' % self.name)
+        Log.debug('Building target: %s' % self.name)
         target = GPS.BuildTarget(self.name)
+
+        Log.debug('Executing target: %s' % self.name)
         target.execute()
 
-        GNAThubCore.Log.debug('GPSTarget.EXECUTION_SUCCESS = %s' %
-                              str(GPSTarget.EXECUTION_SUCCESS))
+        Log.debug('GPSTarget.EXECUTION_SUCCESS = %s' %
+                  str(GPSTarget.EXECUTION_SUCCESS))
 
         return GPSTarget.EXECUTION_SUCCESS

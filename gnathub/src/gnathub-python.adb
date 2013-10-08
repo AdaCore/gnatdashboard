@@ -29,12 +29,16 @@ package body GNAThub.Python is
 
    Log_Info_Method  : aliased String := "info";
    Log_Warn_Method  : aliased String := "warn";
+   Log_Error_Method : aliased String := "error";
    Log_Fatal_Method : aliased String := "fatal";
    Log_Debug_Method : aliased String := "debug";
 
-   Log_Class_Static_Methods : constant array (1 .. 4) of access String :=
+   Log_Progress_Method : constant String := "progress";
+
+   Log_Class_Static_Methods : constant array (1 .. 5) of access String :=
       (Log_Info_Method'Access,
        Log_Warn_Method'Access,
+       Log_Error_Method'Access,
        Log_Fatal_Method'Access,
        Log_Debug_Method'Access);
 
@@ -62,6 +66,11 @@ package body GNAThub.Python is
      (Data    : in out Callback_Data'Class;
       Command : String);
    --  GNAThub.Log class methods handler.
+
+   procedure Log_Progress_Handler
+     (Data    : in out Callback_Data'Class;
+      Command : String);
+   --  GNAThub.Log.progress class method handler.
 
    -----------------
    -- Initialized --
@@ -107,6 +116,16 @@ package body GNAThub.Python is
                Class         => Log_Class,
                Static_Method => True);
          end loop;
+
+         Repository.Register_Command
+           (Command       => Log_Progress_Method,
+            Params        =>
+              (Param ("current"),
+               Param ("total"),
+               Param ("new_line", Optional => True)),
+            Handler       => Log_Progress_Handler'Access,
+            Class         => Log_Class,
+            Static_Method => True);
       end Register_Core_Modules;
 
    begin
@@ -151,6 +170,9 @@ package body GNAThub.Python is
       elsif Command = Log_Warn_Method then
          Log.Warn (Message);
 
+      elsif Command = Log_Error_Method then
+         Log.Error (Message);
+
       elsif Command = Log_Fatal_Method then
          Log.Fatal (Message);
 
@@ -161,6 +183,23 @@ package body GNAThub.Python is
          raise Python_Error with "Unknown method GNAThub.Log." & Command;
       end if;
    end Log_Class_Handler;
+
+   --------------------------
+   -- Log_Progress_Handler --
+   --------------------------
+
+   procedure Log_Progress_Handler
+     (Data    : in out Callback_Data'Class;
+      Command : String)
+   is
+      Current  : constant Natural  := Data.Nth_Arg (1);
+      Total    : constant Positive := Data.Nth_Arg (2);
+      New_Line : constant Boolean  := Data.Nth_Arg (3, Default => False);
+
+   begin
+      pragma Assert (Command = Log_Progress_Method);
+      Log.Progress (Current, Total, New_Line);
+   end Log_Progress_Handler;
 
    -------------------------
    -- Root_Module_Handler --

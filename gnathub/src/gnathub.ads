@@ -31,11 +31,20 @@ package GNAThub is
       procedure Warn (Message : String);
       --  Prints a warning message. Activated at default verbosity output.
 
+      procedure Error (Message : String);
+      --  Prints an error message. Always activated.
+
       procedure Fatal (Message : String);
       --  Prints a fatal message. Always activated.
 
       procedure Debug (Message : String);
       --  Prints a debug message. Activated at higher verbosity level.
+
+      procedure Progress
+        (Current : Natural; Total : Positive; New_Line : Boolean := False);
+      --  Prints a progess message. Activated at default verbosity level.
+      --  If New_Line is True, then terminate the line with a ASCII.LF
+      --  character. Defaults to False.
 
       procedure Ellapsed;
       --  Prints the ellapsed time since the beginning of the application

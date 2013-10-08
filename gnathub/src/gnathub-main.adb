@@ -209,19 +209,24 @@ begin
    GNAThub.Python.Initialize;
    GNAThub.Configuration.Initialize (Kernel);
 
-   Log.Info ("Loading project: " & GNAThub.Configuration.Project);
+   Log.Debug ("Loading project: " & GNAThub.Configuration.Project);
+
    GNAThub.Project.Load_Project_Tree (GNAThub.Configuration.Project, Kernel);
 
-   Log.Info ("Creating execution environment...");
+   Log.Debug ("Creating execution environment...");
+
    Create_Project_Directory_Env;
 
-   Log.Info ("Creating local application database...");
+   Log.Debug ("Creating local application database...");
+   Log.Info ("sql create " & Database_File.Display_Full_Name);
+
    GNAThub.Database.Initialize
       (Create_From_Dir
          (GNAThub.Project.Object_Dir,
           Database_File.Full_Name));
 
    Log.Debug ("Writing project in dabatase");
+
    GNAThub.Project.Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
 
    Load_Plugin_Runner;
@@ -231,7 +236,7 @@ begin
       GNAThub.Scripts.Execute (Kernel, GNAThub.Configuration.Script);
    end if;
 
-   Log.Info ("Execution completed");
+   Log.Debug ("Execution completed");
    Finalize_Application;
 
    return Ada.Command_Line.Success;

@@ -19,6 +19,8 @@
 
 """???"""
 
+# pylint: disable=F0401
+# Disable "Unable to import" error
 import GPS
 
 from GNAThub.db import Category, Line, Rule, Resource, Tool
@@ -85,9 +87,9 @@ def get_file(session, filename):
         :rtype: a GNAThub.db.Resource object
     """
 
-    dao = session.query(Resource)\
-        .filter_by(kind=2)\
-        .filter_by(name=GPS.File(filename).name())\
+    dao = session.query(Resource) \
+        .filter_by(kind=2) \
+        .filter_by(name=GPS.File(filename).name()) \
         .first()
 
     return dao
@@ -106,8 +108,8 @@ def get_file_by_id(session, resource_id):
         :rtype: a GNAThub.db.Resource object
     """
 
-    resource = session.query(Resource)\
-        .filter_by(id=resource_id)\
+    resource = session.query(Resource) \
+        .filter_by(id=resource_id) \
         .first()
 
     return resource
@@ -126,8 +128,8 @@ def get_resource(session, name):
         :rtype: a GNAThub.db.Resource object
     """
 
-    resource = session.query(Resource)\
-        .filter(Resource.name.like('%' + name + '_'))\
+    resource = session.query(Resource) \
+        .filter(Resource.name.like('%' + name + '_')) \
         .first()
 
     return resource
@@ -152,10 +154,10 @@ def get_or_create_line(session, filename, line_num):
     line = None
 
     if filename:
-        line = session.query(Line)\
-            .filter_by(line=line_num)\
-            .join(Line.resource)\
-            .filter(Resource.name.like('%' + filename))\
+        line = session.query(Line) \
+            .filter_by(line=line_num) \
+            .join(Line.resource) \
+            .filter(Resource.name.like('%' + filename)) \
             .first()
 
         if not line:

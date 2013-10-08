@@ -21,36 +21,51 @@ import GNAThub
 import GNAThub.project
 
 import os
+import re
 
-from GNAThub import GPSTarget, Log
+from GNAThub import Log
 from GNAThub import dao, db
 from GNAThub.db import Message
-from GNAThub.utils import OutputParser
 
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
 
 
-class GNATmetricOutputParser(OutputParser):
-    """Define custom output parser"""
+class GNATmetricProtocol(GNAThub.LoggerProcessProtocol):
+    REMAINING = re.compile('^Units remaining: (?P<count>[0-9]+)')
 
-    def on_stdout(self, text):
-        with open(GNATmetric.logs(), 'w+a') as log:
-            log.write(text)
+    def __init__(self):
+        GNAThub.LoggerProcessProtocol.__init__(self, GNATmetric)
+        self.total = None
 
-    def on_stderr(self, text):
-        with open(GNATmetric.logs(), 'w+a') as log:
-            log.write(text)
+    def errReceived(self, data):
+        GNAThub.LoggerProcessProtocol.errReceived(self, data)
+
+        match = self.REMAINING.match(data)
+
+        if match:
+            count = int(match.group('count'))
+
+            if self.total is None:
+                self.total = count
+                Log.progress(1, self.total)
+            else:
+                Log.progress(self.total - count, self.total)
+
+    def processExited(self, reason):
+        Log.progress(self.total, self.total, new_line=True)
+        GNAThub.LoggerProcessProtocol.processExited(self, reason)
 
 
 class GNATmetric(GNAThub.Plugin):
-    """GNATmetric plugin for GNAThub
-
-       Launch GNATmetric
+    """GNATmetric plugin for GNAThub.
     """
 
     TOOL_NAME = 'GNATmetric'
-    OUTPUT_FILE_NAME = 'metrix.xml'
+    REPORT = 'metrix.xml'
+
+    # GNATmetric exits with an error code of 1 even on a successful run
+    VALID_EXIT_CODES = (0, 1)
 
     def __init__(self, session):
         """Instance contsructor."""
@@ -58,40 +73,66 @@ class GNATmetric(GNAThub.Plugin):
         super(GNATmetric, self).__init__()
 
         self.session = session
-
-        # Create Gnat Metric Tool
-        parser = GNATmetricOutputParser.__class__.__name__
-        self.process = GPSTarget(name=self.name, output_parser=parser,
-                                 cmd_args=self.__cmd_line())
+        self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
+        self.process = GNAThub.Process(self.name, self.__cmd_line(),
+                                       process_protocol=GNATmetricProtocol())
 
     def __cmd_line(self):
-        """Create Gnat Metric command line argument list for GPS target
-           Return:
-               - list of command line argument for GPSTarget
+        """Creates GNATmetric command line arguments list.
+
+        RETURNS
+            :rtype: a list of string
         """
 
-        out_file = os.path.join(GPSTarget.OBJ_DIR, self.OUTPUT_FILE_NAME)
-        prj_file = '-P%s' % GPSTarget.PRJ_FILE
+        return ['gnat', 'metric', '-ox', self.report,
+                '-P', GNAThub.project.path(), '-U']
 
-        return [GPSTarget.GNAT, 'metric', '-ox', out_file, prj_file, '-U']
+    def execute(self):
+        """Executes the tool and parse the output XML report on success.
 
-    def parse_metrix_xml_file(self):
-        """Parse GNATmetric xml report and save data to the DB
-           Return:
-               - GNAThub.EXEC_SUCCESS: if transaction have been comitted to DB
-               - GNAThub.EXEC_FAIL: if error happened while parsing the xml
-                                   report
+        RETURNS
+            GNAThub.EXEC_SUCCESS: on successful execution and analysis
+            GNAThub.EXEC_FAIL: on any error
         """
 
+        status = self.process.execute()
+
+        if status not in GNATmetric.VALID_EXIT_CODES:
+            Log.error('%s: execution failed' % self.name)
+            Log.error('%s: see log file: %s' % (self.name, self.logs()))
+            return GNAThub.EXEC_FAIL
+
+        return self.__parse_xml_report()
+
+    def display_command_line(self):
+        cmdline = super(GNATmetric, self).display_command_line()
+        cmdline.extend(['-P', GNAThub.project.name()])
+        cmdline.extend(['-o', os.path.relpath(self.report)])
+        return cmdline
+
+    def __parse_xml_report(self):
+        """Parses GNATmetric XML report and save data to the database.
+
+        RETURNS
+            GNAThub.EXEC_SUCCESS: if transaction have been comitted to database
+            GNAThub.EXEC_FAIL: if error happened while parsing the xml report
+        """
+
+        Log.info('gnathub analyse %s' % os.path.relpath(self.report))
+
+        Log.debug('%s: storing tool in database' % self.name)
         tool = dao.save_tool(self.session, self.name)
 
-        xml_report = os.path.join(GNAThub.project.object_dir(),
-                                  self.OUTPUT_FILE_NAME)
+        Log.debug('%s: parsing XML report: %s' % (self.name, self.report))
+
         try:
-            tree = ElementTree.parse(xml_report)
+            tree = ElementTree.parse(self.report)
 
             # Fetch all files
-            for file_node in tree.findall('./file'):
+            files = tree.findall('./file')
+            total = len(files)
+
+            for index, file_node in enumerate(files, start=1):
                 resource = dao.get_file(self.session,
                                         file_node.attrib.get('name'))
                 # Save file level metrics
@@ -118,27 +159,18 @@ class GNATmetric(GNAThub.Plugin):
                         # Metric name --> metric.attrib.get('name'),
                         # Metric value --> metric.text)
 
+                Log.progress(index, total, new_line=(index == total))
+
             self.session.commit()
+
+            Log.debug('%s: all objects commited to database' % self.name)
             return GNAThub.EXEC_SUCCESS
 
         except ParseError as e:
-            Log.fatal('Unable to parse gnat metric xml report')
-            Log.fatal('%s:%s:%s - :%s' % (e.filename, e.lineno, e.text, e.msg))
+            Log.error('%s: unable to parse XML report' % self.name)
+            Log.error('%s:%s:%s - :%s' % (e.filename, e.lineno, e.text, e.msg))
             return GNAThub.EXEC_FAIL
 
         except IOError as e:
             Log.fatal(e)
             return GNAThub.EXEC_FAIL
-
-    def execute(self):
-        status = self.process.execute()
-
-        # If GNATmetric execution has failed
-        if status == GNAThub.EXEC_FAIL:
-            Log.warn('GNATmetric execution returned on failure')
-            Log.warn('See log file: %s' % self.logs())
-        # Just return status if GNATmetrics have not been launched
-        elif status == GNAThub.PROCESS_NOT_LAUNCHED:
-            return status
-        # If GNATmetric succeed: parse xml report and save data to DB
-        return self.parse_metrix_xml_file()

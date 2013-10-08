@@ -60,8 +60,8 @@ class GNATcheck(GNAThub.Plugin):
         self.tool = dao.save_tool(self.session, self.name)
 
         # Create GPSTarget for GNATcheck execution
-        parser = GNATcheckOutputParser.__class__.__name__
-        self.process = GPSTarget(name=self.name, output_parser=parser,
+        self.process = GPSTarget(name=self.name,
+                                 output_parser='gnatcheckoutputparser',
                                  cmd_args=self.__cmd_line())
 
     def __cmd_line(self):
@@ -227,6 +227,6 @@ class GNATcheck(GNAThub.Plugin):
 
         if status == GNAThub.EXEC_FAIL:
             Log.warn('%s returned on failure' % self.name)
-            Log.warn('See log file: %s' % GNATcheck.log())
+            Log.warn('See log file: %s' % GNATcheck.logs())
 
         return self.parse_output_file()
