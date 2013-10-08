@@ -1,0 +1,17 @@
+/share/gnathub/lib/sqlalchemy/*.py no-precommit-check
+/share/gnathub/lib/sqlalchemy/*/*.py no-precommit-check
+/share/gnathub/lib/sqlalchemy/*/*/*.py no-precommit-check
+/share/gnathub/lib/zope/*.py no-precommit-check
+/share/gnathub/lib/zope/*/*.py no-precommit-check
+/share/gnathub/lib/zope/*/*/*.py no-precommit-check
+/share/gnathub/lib/zope/*.[c,h] no-precommit-check
+/share/gnathub/lib/zope/*/*.[c,h] no-precommit-check
+/share/gnathub/lib/zope/*/*/*.[c,h] no-precommit-check
+/gnathub/share/gnathub/lib/twisted/*.py no-precommit-check
+/gnathub/share/gnathub/lib/twisted/*/*.py no-precommit-check
+/gnathub/share/gnathub/lib/twisted/*/*/*.py no-precommit-check
+/gnathub/share/gnathub/lib/twisted/*/*/*/*.py no-precommit-check
+/gnathub/share/gnathub/lib/twisted/*.[c,h] no-precommit-check
+/gnathub/share/gnathub/lib/twisted/*/*.[c,h] no-precommit-check
+/gnathub/share/gnathub/lib/twisted/*/*/*.[c,h] no-precommit-check
+/gnathub/share/gnathub/lib/twisted/*/*/*/*.[c,h] no-precommit-check
