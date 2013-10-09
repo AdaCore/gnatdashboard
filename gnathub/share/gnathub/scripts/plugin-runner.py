@@ -24,7 +24,6 @@ import abc
 import os
 
 from GNAThub import Log
-from GNAThub.db import SessionFactory
 from GNAThub.utils import create_parser
 
 
@@ -107,7 +106,7 @@ class PluginRunner(object):
 
         return specific_plugins
 
-    def get_all_plugins(self):
+    def __get_all_plugins(self):
         """Retrieves all plugins for GNAThub
 
           If Plugin_Scheduling attribute is set in project file, the given list
@@ -136,7 +135,7 @@ class PluginRunner(object):
 
         return filter(lambda x: x is not None and x != '', plugins)
 
-    def get_plugin_class(self, plugin):
+    def __get_plugin_class(self, plugin):
         try:
             # If not a project specific plugin
             if not isinstance(plugin, dict):
@@ -180,7 +179,7 @@ class PluginRunner(object):
         else:
             Log.info('%s execution failed' % plugin.name)
 
-    def run_plugins(self, session_factory):
+    def run_plugins(self):
         """Fetch all python plugins: core, user, project specific; retrieve the
            plugin class and instanciate it.
            Manage creation and destruction of database session for the plugins.
@@ -190,18 +189,15 @@ class PluginRunner(object):
         """
 
         # Fetch all plugins
-        for p in self.get_all_plugins():
-            plugin_class = self.get_plugin_class(p)
+        for plugin in self.__get_all_plugins():
+            plugin_class = self.__get_plugin_class(plugin)
 
             if plugin_class:
-                session = session_factory.get_session()
-                plugin = plugin_class(session)
-                Log.debug('%s: running plugin' % plugin.name)
-                Log.info(' '.join(plugin.display_command_line()))
-                self.__execute_plugin(plugin)
-                session.close()
+                GNAThub.register(plugin_class())
+
+        GNAThub.run()
 
 
 # Script entry point
 if __name__ == '__main__':
-    PluginRunner().run_plugins(SessionFactory())
+    PluginRunner().run_plugins()

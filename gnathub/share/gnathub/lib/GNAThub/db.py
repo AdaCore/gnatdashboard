@@ -20,13 +20,8 @@
 """This module defines the various DAO manipulated by GNAThub.
 """
 
-import GNAThub
-
-from GNAThub import SESSION
-
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import (create_engine, Column, Integer, String,
-                        ForeignKey, Boolean, Table)
+from sqlalchemy import (Column, Integer, String, ForeignKey, Boolean, Table)
 from sqlalchemy.orm import relationship
 
 
@@ -39,27 +34,6 @@ RESOURCE_MESSAGE_TABLE = \
     Table('resources_messages', BASE.metadata,
           Column('resource_id', Integer, ForeignKey('resources.id')),
           Column('message_id', Integer, ForeignKey('messages.id')))
-
-
-class SessionFactory(object):
-    """Creates database sessions upon request.
-    """
-
-    def __init__(self):
-        """Instance contructor."""
-
-        self.__engine = create_engine('sqlite:///%s' % GNAThub.database(),
-                                      echo=False)
-        SESSION.configure(bind=self.__engine)
-
-    def get_session(self):
-        """Returns a new instance of a database session.
-
-        RETURNS
-            :rtype: sqlalchemy.orm.Session
-        """
-
-        return SESSION()
 
 
 class Tool(BASE):

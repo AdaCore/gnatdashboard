@@ -28,11 +28,11 @@ from GNAThub import dao, db
 from GNAThub.db import Message, LineMessage
 
 
-class GNATcheckProtocol(GNAThub.LoggerProcessProtocol):
+class _GNATcheckProtocol(GNAThub.LoggerProcessProtocol):
     REMAINING = re.compile('^Units remaining: (?P<count>[0-9]+)')
 
-    def __init__(self):
-        GNAThub.LoggerProcessProtocol.__init__(self, GNATcheck)
+    def __init__(self, gnatcheck):
+        GNAThub.LoggerProcessProtocol.__init__(self, gnatcheck)
         self.total = None
 
     def errReceived(self, data):
@@ -49,9 +49,13 @@ class GNATcheckProtocol(GNAThub.LoggerProcessProtocol):
             else:
                 Log.progress(self.total - count, self.total)
 
-    def processExited(self, reason):
+    def processEnded(self, reason):
+        GNAThub.LoggerProcessProtocol.processEnded(self, reason)
+
         Log.progress(self.total, self.total, new_line=True)
-        GNAThub.LoggerProcessProtocol.processExited(self, reason)
+
+        self.plugin._postprocess(self.exit_code)
+        self.plugin.ensure_chain_reaction()
 
 
 class GNATcheck(GNAThub.Plugin):
@@ -68,16 +72,15 @@ class GNATcheck(GNAThub.Plugin):
     # GNATcheck exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
 
-    def __init__(self, session):
+    def __init__(self):
         """Instance constructor."""
 
         super(GNATcheck, self).__init__()
 
-        self.session = session
         self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
 
         self.process = GNAThub.Process(self.name, self.__cmd_line(),
-                                       process_protocol=GNATcheckProtocol())
+                                       _GNATcheckProtocol(self))
 
     def display_command_line(self):
         cmdline = super(GNATcheck, self).display_command_line()
@@ -96,16 +99,22 @@ class GNATcheck(GNAThub.Plugin):
                 '-P', GNAThub.project.path()]
 
     def execute(self):
-        """Executes the tool and parse the output report on success.
+        """Executes the GNATcheck.
+
+        GNATcheck._postprocess() will be called upon process completion.
+        """
+
+        self.process.execute()
+
+    def _postprocess(self, exit_code):
+        """Postprocesses the tool execution: parse the output report on success.
 
         RETURNS
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
             GNAThub.EXEC_FAIL: on any error
         """
 
-        status = self.process.execute()
-
-        if status not in GNATcheck.VALID_EXIT_CODES:
+        if exit_code not in GNATcheck.VALID_EXIT_CODES:
             Log.error('%s: execution failed' % self.name)
             Log.error('%s: see log file: %s' % (self.name, self.logs()))
             return GNAThub.EXEC_FAIL

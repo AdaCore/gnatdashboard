@@ -24,24 +24,6 @@ This module defines the core components of GNAThub plugin mechanism:
     - The GPSTarget Helper Class
 """
 
-from sqlalchemy.orm import sessionmaker
-SESSION = sessionmaker()
-
-# pylint: disable=F0401
-# Disable "Unable to import" error
-import GPS
-
-import os
-import tempfile
-
-from twisted.internet import protocol, reactor
-
-from abc import ABCMeta, abstractmethod
-
-from xml.dom.minidom import getDOMImplementation as dom
-
-EXEC_FAIL, EXEC_SUCCESS, PROCESS_NOT_LAUNCHED = range(3)
-
 
 def root():
     """Returns the path to the GNAThub-specific root directory.
@@ -142,6 +124,21 @@ from GNAThubCore import *       # NOQA (disable warning from flake8)
 # Now that all Ada extensions have been planted into this module, we can
 # define pure-Python extensions.
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+__DB_ENGINE = create_engine('sqlite:///%s' % database(), echo=False)
+_DB_SESSION_FACTORY = sessionmaker()
+_DB_SESSION_FACTORY.configure(bind=__DB_ENGINE)
+
+import os
+import tempfile
+
+from abc import ABCMeta, abstractmethod
+from twisted.internet import protocol, reactor
+
+EXEC_FAIL, EXEC_SUCCESS, PROCESS_NOT_LAUNCHED = range(3)
+
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -170,7 +167,8 @@ class Plugin:
 
     def __init__(self):
         """Instance constructor."""
-        pass
+
+        self.session = None
 
     def display_command_line(self):
         """This method returns a list similar to argv. However, this command
@@ -180,15 +178,17 @@ class Plugin:
         RETURNS
             :rtype: a list of string
         """
+
         return [self.name.lower()]
 
     def setup(self):
-        """This method is called prior to any call to Plugin.execute.
+        """This method is called prior to a call to Plugin.execute.
 
         This is where environment setup should be done to ensure a correct
         execution of the tool.
         """
-        pass
+
+        self.session = _DB_SESSION_FACTORY()
 
     @abstractmethod
     def execute(self):
@@ -197,6 +197,7 @@ class Plugin:
         Executes the external tool. This method is called after setup() and
         before teardown().
         """
+
         pass
 
     def teardown(self):
@@ -205,7 +206,17 @@ class Plugin:
         This is where environment cleanup should be done to ensure a consistant
         state for a future execution.
         """
-        pass
+
+        self.session.close()
+
+    def ensure_chain_reaction(self):
+        """This method is called after a call to Plugin.execute.
+
+        This is where environment cleanup should be done to ensure a consistant
+        state for a future execution.
+        """
+
+        _chain_reaction()
 
     @property
     def name(self):
@@ -213,18 +224,17 @@ class Plugin:
         variable.
 
         RETURNS
-            The name of the tool
             :rtype: a string
         """
+
         return self.TOOL_NAME
 
     @classmethod
     def logs(cls):
-        """Returns the path to the file that contains the logs for this tool's
-        execution.
+        """Returns absolute the path to the file that contains the logs for
+        this tool's execution.
 
         RETURNS
-            The absolute path to the log file
             :rtype: a string
         """
 
@@ -242,10 +252,14 @@ class ProcessProtocol(protocol.ProcessProtocol):
     events specific to a process.
     """
 
-    def __init__(self, name):
-        """Instance constructor."""
+    def __init__(self, plugin):
+        """Instance constructor.
 
-        self.name = name
+        :param plugin: A plugin object.
+        :type plugin: An object derived from GNAThub.Plugin.
+        """
+
+        self.plugin = plugin
         self.exit_code = None
 
     # pylint: disable=C0103
@@ -255,7 +269,7 @@ class ProcessProtocol(protocol.ProcessProtocol):
         to write data into the stdin pipe (using self.transport.write).
         """
 
-        Log.debug('%s: process started' % self.name)
+        Log.debug('%s: process started' % self.plugin.name)
 
     # pylint: disable=C0103
     # Disable "Invalid Name" error
@@ -299,7 +313,7 @@ class ProcessProtocol(protocol.ProcessProtocol):
             :type reason: twisted.python.failure.Failure object.
         """
 
-        Log.debug('%s: exited: %s' % (self.name, reason.value.__dict__))
+        Log.debug('%s: exited: %s' % (self.plugin.name, reason.value.__dict__))
 
     # pylint: disable=C0103
     # Disable "Invalid Name" error
@@ -315,15 +329,9 @@ class ProcessProtocol(protocol.ProcessProtocol):
             :type reason: twisted.python.failure.Failure object.
         """
 
-        Log.debug('%s: terminated with status: %d' % (self.name,
+        Log.debug('%s: terminated with status: %d' % (self.plugin.name,
                                                       reason.value.exitCode))
         self.exit_code = reason.value.exitCode
-
-        Log.debug('Terminating reactor')
-
-        # pylint: disable=E1101
-        # Disable "Module {} has no member {}" error
-        reactor.stop()
 
 
 class LoggerProcessProtocol(ProcessProtocol):
@@ -340,10 +348,9 @@ class LoggerProcessProtocol(ProcessProtocol):
             :type plugin: a GNAThub.Plugin object.
         """
 
-        ProcessProtocol.__init__(self, plugin.name)
-        self.log_file = plugin.logs()
+        ProcessProtocol.__init__(self, plugin)
 
-        Log.debug('%s: will log to: %s' % (plugin.name, self.log_file))
+        Log.debug('%s: will log to: %s' % (plugin.name, plugin.logs()))
 
     # pylint: disable=C0103
     # Disable "Invalid Name" error
@@ -352,7 +359,7 @@ class LoggerProcessProtocol(ProcessProtocol):
 
         ProcessProtocol.outReceived(self, data)
 
-        with open(self.log_file, 'w+a') as log:
+        with open(self.plugin.logs(), 'w+a') as log:
             log.write(data)
 
     # pylint: disable=C0103
@@ -362,7 +369,7 @@ class LoggerProcessProtocol(ProcessProtocol):
 
         ProcessProtocol.errReceived(self, data)
 
-        with open(self.log_file, 'w+a') as log:
+        with open(self.plugin.logs(), 'w+a') as log:
             log.write(data)
 
 
@@ -406,15 +413,85 @@ class Process(object):
         reactor.spawnProcess(self.protocol, self.argv[0], self.argv,
                              env=environ, path=workdir)
 
-        Log.debug('Starting reactor...')
 
+# A chain of plugin in the order in which they are registered through the
+# GNAThub.register() function.
+_PLUGINS = []
+
+
+def register(plugin):
+    """Registers a plugin.
+
+    A plugin must implement the GNAThub.Plugin Abstract Base Class. All
+    registered plugins are chained for sequencial execution.
+
+    PARAMETERS
+        :param plugin: The plugin to register.
+        :type plugin: An object derived from GNAThub.Plugin.
+    """
+
+    _PLUGINS.append(plugin)
+
+
+def _chain_reaction():
+    """???"""
+
+    assert _PLUGINS
+    current = _PLUGINS.pop(0)
+    current.teardown()
+
+    _try_chain_reaction()
+
+
+def _try_chain_reaction():
+    """???"""
+
+    if not _PLUGINS:
+        abort()
+        return False
+
+    plugin = _PLUGINS[0]
+
+    Log.debug('%s: running plugin' % plugin.name)
+    Log.info(' '.join(plugin.display_command_line()))
+
+    plugin.setup()
+    plugin.execute()
+
+    return True
+
+
+def run():
+    """???"""
+
+    if not _PLUGINS:
+        Log.info('gnathub: nothing to do.')
+        return
+
+    if _try_chain_reaction():
+        Log.debug('Starting reactor...')
         # pylint: disable=E1101
         # Disable "Module {} has no member {}" error
         reactor.run()
 
-        self.exit_code = self.protocol.exit_code
 
-        return self.exit_code
+def abort():
+    """???"""
+
+    # pylint: disable=E1101
+    # Disable "Module {} has no member {}" error
+    if reactor.running:
+        Log.debug('Terminating reactor')
+        # pylint: disable=E1101
+        # Disable "Module {} has no member {}" error
+        reactor.stop()
+
+
+# pylint: disable=F0401
+# Disable "Unable to import" error
+import GPS
+
+from xml.dom.minidom import getDOMImplementation as dom
 
 
 class GPSTarget(object):

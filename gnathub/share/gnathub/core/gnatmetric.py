@@ -31,11 +31,11 @@ from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
 
 
-class GNATmetricProtocol(GNAThub.LoggerProcessProtocol):
+class _GNATmetricProtocol(GNAThub.LoggerProcessProtocol):
     REMAINING = re.compile('^Units remaining: (?P<count>[0-9]+)')
 
-    def __init__(self):
-        GNAThub.LoggerProcessProtocol.__init__(self, GNATmetric)
+    def __init__(self, gnatmetric):
+        GNAThub.LoggerProcessProtocol.__init__(self, gnatmetric)
         self.total = None
 
     def errReceived(self, data):
@@ -52,9 +52,13 @@ class GNATmetricProtocol(GNAThub.LoggerProcessProtocol):
             else:
                 Log.progress(self.total - count, self.total)
 
-    def processExited(self, reason):
+    def processEnded(self, reason):
+        GNAThub.LoggerProcessProtocol.processEnded(self, reason)
+
         Log.progress(self.total, self.total, new_line=True)
-        GNAThub.LoggerProcessProtocol.processExited(self, reason)
+
+        self.plugin._postprocess(self.exit_code)
+        self.plugin.ensure_chain_reaction()
 
 
 class GNATmetric(GNAThub.Plugin):
@@ -67,15 +71,15 @@ class GNATmetric(GNAThub.Plugin):
     # GNATmetric exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
 
-    def __init__(self, session):
+    def __init__(self):
         """Instance contsructor."""
 
         super(GNATmetric, self).__init__()
 
-        self.session = session
         self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
+
         self.process = GNAThub.Process(self.name, self.__cmd_line(),
-                                       process_protocol=GNATmetricProtocol())
+                                       _GNATmetricProtocol(self))
 
     def __cmd_line(self):
         """Creates GNATmetric command line arguments list.
@@ -88,16 +92,23 @@ class GNATmetric(GNAThub.Plugin):
                 '-P', GNAThub.project.path(), '-U']
 
     def execute(self):
-        """Executes the tool and parse the output XML report on success.
+        """Executes the GNATmetric.
+
+        GNATcheck._postprocess() will be called upon process completion.
+        """
+
+        self.process.execute()
+
+    def _postprocess(self, exit_code):
+        """Postprocesses the tool execution: parse the output XML report on
+        success.
 
         RETURNS
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
             GNAThub.EXEC_FAIL: on any error
         """
 
-        status = self.process.execute()
-
-        if status not in GNATmetric.VALID_EXIT_CODES:
+        if exit_code not in GNATmetric.VALID_EXIT_CODES:
             Log.error('%s: execution failed' % self.name)
             Log.error('%s: see log file: %s' % (self.name, self.logs()))
             return GNAThub.EXEC_FAIL
