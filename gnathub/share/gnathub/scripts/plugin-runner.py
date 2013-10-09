@@ -82,7 +82,7 @@ class PluginRunner(object):
         files.extend(os.listdir(GNAThub.extra_plugins()))
 
         for f in files:
-            if f.endswith(self.PLUGIN_SUFFIX):
+            if f.endswith(self.PLUGIN_SUFFIX) and not f.startswith('_'):
                 plugins.append(f.replace(self.PLUGIN_SUFFIX, ''))
 
     def __get_plugin_project_specific(self):
