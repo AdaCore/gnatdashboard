@@ -255,8 +255,9 @@ class ProcessProtocol(protocol.ProcessProtocol):
     def __init__(self, plugin):
         """Instance constructor.
 
-        :param plugin: A plugin object.
-        :type plugin: An object derived from GNAThub.Plugin.
+        PARAMETERS
+            :param plugin: A plugin object.
+            :type plugin: An object derived from GNAThub.Plugin.
         """
 
         self.plugin = plugin
