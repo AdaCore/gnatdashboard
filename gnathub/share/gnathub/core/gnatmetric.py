@@ -172,5 +172,6 @@ class GNATmetric(GNAThub.Plugin):
             return GNAThub.EXEC_FAIL
 
         except IOError as e:
-            Log.fatal(e)
+            Log.error('%s: unable to parse XML report' % self.name)
+            Log.error(e)
             return GNAThub.EXEC_FAIL

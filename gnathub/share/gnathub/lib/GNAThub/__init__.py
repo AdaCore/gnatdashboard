@@ -380,14 +380,17 @@ class Process(object):
         if self.protocol is None:
             self.protocol = ProcessProtocol(self.name)
 
-    def execute(self, env=None):
+    def execute(self, env=None, workdir=None):
         """Spawnes the process, run the Twisted's Reactor and returns the
         process exit code.
 
         PARAMETERS
             :param env: dictionary containing the environment to pass through
                 to the process. If None, os.environ is used.
-            :type env: a dictionary
+            :type env: a dictionary.
+            :param workdir: the directory in which to execute the process. If
+                None, use the current directory.
+            :type workdir: a string.
 
         RETURNS
             :rtype: a number
@@ -401,7 +404,7 @@ class Process(object):
         # pylint: disable=E1101
         # Disable "Module {} has no member {}" error
         reactor.spawnProcess(self.protocol, self.argv[0], self.argv,
-                             env=environ)
+                             env=environ, path=workdir)
 
         Log.debug('Starting reactor...')
 

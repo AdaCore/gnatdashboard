@@ -23,22 +23,35 @@ import GNAThub.project
 import os
 import re
 
-from GNAThub import GPSTarget, Log
+from GNAThub import Log
 from GNAThub import dao, db
 from GNAThub.db import Message, LineMessage
-from GNAThub.utils import OutputParser
 
 
-class GNATcheckOutputParser(OutputParser):
-    """Defines custom output parser for the GNATcheck tool."""
+class GNATcheckProtocol(GNAThub.LoggerProcessProtocol):
+    REMAINING = re.compile('^Units remaining: (?P<count>[0-9]+)')
 
-    def on_stdout(self, text):
-        with open(GNATcheck.logs(), 'w+a') as log:
-            log.write(text)
+    def __init__(self):
+        GNAThub.LoggerProcessProtocol.__init__(self, GNATcheck)
+        self.total = None
 
-    def on_stderr(self, text):
-        with open(GNATcheck.logs(), 'w+a') as log:
-            log.write(text)
+    def errReceived(self, data):
+        GNAThub.LoggerProcessProtocol.errReceived(self, data)
+
+        match = self.REMAINING.match(data)
+
+        if match:
+            count = int(match.group('count'))
+
+            if self.total is None:
+                self.total = count
+                Log.progress(1, self.total)
+            else:
+                Log.progress(self.total - count, self.total)
+
+    def processExited(self, reason):
+        Log.progress(self.total, self.total, new_line=True)
+        GNAThub.LoggerProcessProtocol.processExited(self, reason)
 
 
 class GNATcheck(GNAThub.Plugin):
@@ -48,8 +61,12 @@ class GNATcheck(GNAThub.Plugin):
     """
 
     TOOL_NAME = 'GNATcheck'
-    REPORT_FILE_NAME = 'gnatcheck.out'
+    REPORT = 'gnatcheck.out'
+
     SLOC_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+'
+
+    # GNATcheck exits with an error code of 1 even on a successful run
+    VALID_EXIT_CODES = (0, 1)
 
     def __init__(self, session):
         """Instance constructor."""
@@ -57,22 +74,43 @@ class GNATcheck(GNAThub.Plugin):
         super(GNATcheck, self).__init__()
 
         self.session = session
-        self.tool = dao.save_tool(self.session, self.name)
+        self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
 
-        # Create GPSTarget for GNATcheck execution
-        self.process = GPSTarget(name=self.name,
-                                 output_parser='gnatcheckoutputparser',
-                                 cmd_args=self.__cmd_line())
+        self.process = GNAThub.Process(self.name, self.__cmd_line(),
+                                       process_protocol=GNATcheckProtocol())
+
+    def display_command_line(self):
+        cmdline = super(GNATcheck, self).display_command_line()
+        cmdline.extend(['-P', GNAThub.project.name()])
+        cmdline.extend(['-o', os.path.relpath(self.report)])
+        return cmdline
 
     def __cmd_line(self):
-        """Creates GNAT Check command line argument list for GPS target."""
+        """Creates GNATcheck command line arguments list.
 
-        prj_file = '-P%s' % GPSTarget.PRJ_FILE
-        out_file = '-o=%s' % (os.path.join(GPSTarget.OBJ_DIR,
-                                           self.REPORT_FILE_NAME))
+        RETURNS
+            :rtype: a list of string
+        """
 
-        return [GPSTarget.GNAT, 'check', '--show-rule', '-s', out_file,
-                prj_file]
+        return ['gnat', 'check', '--show-rule', '-o', self.report,
+                '-P', GNAThub.project.path()]
+
+    def execute(self):
+        """Executes the tool and parse the output report on success.
+
+        RETURNS
+            GNAThub.EXEC_SUCCESS: on successful execution and analysis
+            GNAThub.EXEC_FAIL: on any error
+        """
+
+        status = self.process.execute()
+
+        if status not in GNATcheck.VALID_EXIT_CODES:
+            Log.error('%s: execution failed' % self.name)
+            Log.error('%s: see log file: %s' % (self.name, self.logs()))
+            return GNAThub.EXEC_FAIL
+
+        return self.__parse_report()
 
     def __add_message(self, src, line, col_begin, rule_id, msg):
         """Add GNATcheck message to current session DB.
@@ -177,20 +215,26 @@ class GNATcheck(GNAThub.Plugin):
         except IndexError:
             Log.warn('Unexpected error for message at: %s:%s' % (src, line))
 
-    def parse_output_file(self):
-        """Parses GNATcheck output file report
+    def __parse_report(self):
+        """Parses GNATcheck output file report.
 
-        Identify 2 type of mmessages with different format:
-            - basic meesage message
-            - message for packag instanciation
+        Returns EXEC_SUCCES if changes has been committed to the database, or
+        EXEC_FAIL if an error occured when reading the output report.
+
+        Identify 2 type of messages with different format:
+            - basic message
+            - message for package instantiation
 
         RETURNS
-            EXEC_SUCCES if changes has been committed to the DB, or EXEC_FAIL
-            if an error occured when reading the output file
             :rtype: a number
         """
 
-        # Regex to identify line that contains message
+        Log.info('gnathub analyse %s' % os.path.relpath(self.report))
+
+        Log.debug('%s: storing tool in database' % self.name)
+        self.tool = dao.save_tool(self.session, self.name)
+
+        # Regex to identify lines that contain messages
         ERROR_PATTERN = '%s:\s.+[[].*[]]\s*' % self.SLOC_PATTERN
         INSTANCE_PATTERN = '%s instance at %s.+' % (self.SLOC_PATTERN,
                                                     self.SLOC_PATTERN)
@@ -198,12 +242,20 @@ class GNATcheck(GNAThub.Plugin):
         prog_error = re.compile(ERROR_PATTERN)
         prog_instance = re.compile(INSTANCE_PATTERN)
 
-        report = os.path.join(GNAThub.project.object_dir(),
-                              self.REPORT_FILE_NAME)
+        Log.debug('%s: parsing report: %s' % (self.name, self.report))
+
+        if not os.path.exists(self.report):
+            Log.error('%s: no report found' % self.name)
+            Log.error('%s: aborting analysis' % self.name)
+            Log.error('%s: see log file: %s' % (self.name, self.logs()))
+            return GNAThub.EXEC_FAIL
 
         try:
-            with open(report, 'r') as output:
-                for line in output.readlines():
+            with open(self.report, 'r') as output:
+                lines = output.readlines()
+                total = len(lines)
+
+                for index, line in enumerate(lines, start=1):
                     # Parse basic message line
                     if prog_error.match(line):
                         self.__parse_line(line)
@@ -212,21 +264,14 @@ class GNATcheck(GNAThub.Plugin):
                     if prog_instance.match(line):
                         self.__parse_instance_line(line)
 
-            # Commit object added and modified to the session
+                    Log.progress(index, total, new_line=(index == total))
+
             self.session.commit()
+
+            Log.debug('%s: all objects commited to database' % self.name)
             return GNAThub.EXEC_SUCCESS
 
         except IOError as e:
-            Log.warn(str(e))
+            Log.error('%s: unable to parse report' % self.name)
+            Log.error(str(e))
             return GNAThub.EXEC_FAIL
-
-    def execute(self):
-        """Inherited."""
-
-        status = self.process.execute()
-
-        if status == GNAThub.EXEC_FAIL:
-            Log.warn('%s returned on failure' % self.name)
-            Log.warn('See log file: %s' % GNATcheck.logs())
-
-        return self.parse_output_file()

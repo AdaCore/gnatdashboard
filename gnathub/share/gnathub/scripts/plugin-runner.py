@@ -178,7 +178,7 @@ class PluginRunner(object):
         if exit_code == GNAThub.EXEC_SUCCESS:
             Log.debug('%s execution succeeded' % plugin.name)
         else:
-            Log.fatal('%s execution failed' % plugin.name)
+            Log.info('%s execution failed' % plugin.name)
 
     def run_plugins(self, session_factory):
         """Fetch all python plugins: core, user, project specific; retrieve the
