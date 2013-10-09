@@ -51,4 +51,9 @@ project GNAThub is
       for Vcs_Kind use "Git";
    end Ide;
 
+   package Check is
+      for Default_Switches ("ada") use
+        ("-rules", "-from=tests/etc/gnatcheck.rules");
+   end Check;
+
 end GNAThub;
