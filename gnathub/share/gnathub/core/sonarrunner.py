@@ -102,7 +102,7 @@ class SonarRunner(GNAThub.Plugin):
         """Postprocesses the tool execution: parse the output XML report on
         success.
 
-        Sets the exec_status property according to the successfulness of the
+        Sets the exec_status property according to the successful of the
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis

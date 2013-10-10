@@ -96,7 +96,7 @@ class GNATcheck(GNAThub.Plugin):
         """Postprocesses the tool execution: parse the output report on
         success.
 
-        Sets the exec_status property according to the successfulness of the
+        Sets the exec_status property according to the success of the
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
@@ -220,7 +220,7 @@ class GNATcheck(GNAThub.Plugin):
     def __parse_report(self):
         """Parses GNATcheck output file report.
 
-        Sets the exec_status property according to the successfulness of the
+        Sets the exec_status property according to the success of the
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
