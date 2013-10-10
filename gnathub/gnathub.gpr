@@ -70,6 +70,7 @@ project GNAThub is
    end Check;
 
    package Dashboard is
+      for Project_Key use "GNATdashboard::GNAThub";
       for Project_Version use "0.9.0";
    end Dashboard;
 
