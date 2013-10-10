@@ -24,47 +24,51 @@ include Makefile.conf
 all: $(PROJECT)
 
 $(PROJECT):
-	-@mkdir -p $(TOP)/build
-	-@rm -f $(TOP)/build/share
-	-@ln -s $(TOP)/share $(TOP)/build/share
+	$(MKDIR) $(TOP)/build
+	$(RM) $(TOP)/build/share
+	$(LN) $(TOP)/share $(TOP)/build/share
 	gprbuild -p -P $(PROJECT).gpr
 
 create:
 	# Create the database from the schema
-	mkdir -p src-gen
-	cd src-gen && gnatcoll_db2ada -dbtype=sqlite -dbname=$(PROJECT).db -dbmodel=../../dbschema.txt -createdb
+	$(MKDIR) src-gen
+	cd src-gen && gnatcoll_db2ada -dbtype=sqlite -dbname=$(PROJECT).db \
+			-dbmodel=$(TOP)/share/gnathub/scripts/database-schema.txt -createdb
 
 orm:
 	# Generate the Ada API
-	mkdir -p src-gen
-	cd src-gen && gnatcoll_db2ada -api=Database -orm=ORM -dbmodel=../../dbschema.txt
+	$(MKDIR) src-gen
+	cd src-gen && gnatcoll_db2ada -api=Database -orm=ORM \
+			-dbmodel=$(TOP)/share/gnathub/scripts/database-schema.txt
 
 lint:
-	-@flake8 share/gnathub/{lib/GNAThub,core,scripts}
-	-@PYTHONPATH=$(TOP)/share/gnathub/lib pylint \
-			   --rcfile=$(TOP)/tests/etc/pylintrc \
-			   --output-format=parseable \
-			   --reports=n GNAThub
+	flake8 $(TOP)/share/gnathub/{lib/GNAThub,core,scripts}
+	PYTHONPATH=$(TOP)/share/gnathub/lib pylint \
+			--rcfile=$(TOP)/tests/etc/pylintrc \
+			--output-format=parseable \
+			--reports=n GNAThub \
+			$(TOP)/share/gnathub/core \
+			$(TOP)/share/gnathub/scripts
 
 tests:
-	-@cd tests && python testsuite.py
+	cd tests && python testsuite.py
 
 clean:
 	gprclean -q -P $(PROJECT).gpr
 	find . -name '*.pyc' -exec rm -f {} \;
-	rm -rf build/obj
+	$(RMDIR) build/obj
 
 distclean: clean
-	rm -rf build
+	$(RMDIR) build
 
 install:
-	mkdir -p $(INSTALL_PREFIX)
+	$(MKDIR) $(INSTALL_PREFIX)
 	cp COPYING3 $(INSTALL_PREFIX)
-	mkdir -p $(INSTALL_PREFIX)/bin
-	mkdir -p $(INSTALL_PREFIX)/share
+	$(MKDIR) $(INSTALL_PREFIX)/bin
+	$(MKDIR) $(INSTALL_PREFIX)/share
 	(cd build && tar cf - bin) | (cd $(INSTALL_PREFIX) && tar xf -)
 	(cd share && tar cf - --exclude='*.pyc' $(PROJECT)) | (cd $(INSTALL_PREFIX)/share && tar xf -)
 
 distrib: $(PROJECT)
-	rm -rf $(DISTRIB_PREFIX)
+	$(RMDIR) $(DISTRIB_PREFIX)
 	PREFIX=$(DISTRIB_PREFIX) $(MAKE) install
