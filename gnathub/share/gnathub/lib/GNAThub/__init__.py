@@ -135,9 +135,9 @@ import os
 import tempfile
 
 from abc import ABCMeta, abstractmethod
-from twisted.internet import protocol, reactor
+from twisted.internet import protocol, reactor, threads
 
-EXEC_FAIL, EXEC_SUCCESS, PROCESS_NOT_LAUNCHED = range(3)
+EXEC_FAIL, EXEC_SUCCESS, NOT_EXECUTED = range(3)
 
 
 class Error(Exception):
@@ -168,6 +168,7 @@ class Plugin:
     def __init__(self):
         """Instance constructor."""
 
+        self._exec_status = NOT_EXECUTED
         self.session = None
 
     def display_command_line(self):
@@ -207,16 +208,63 @@ class Plugin:
         state for a future execution.
         """
 
-        self.session.close()
+        if self.session:
+            self.session.close()
 
-    def ensure_chain_reaction(self):
+    def ensure_chain_reaction(self, async=False):
         """This method is called after a call to Plugin.execute.
 
         This is where environment cleanup should be done to ensure a consistant
         state for a future execution.
+
+        PARAMETERS
+            :param async: whether to have this call run synchronously or
+                asynchronously. This is particularly useful when a plug-in's
+                execution does not require asynchronous processing (e.g. does
+                not spawn a process) and thus needs to defer the execution of
+                this function.
+            :type async: a boolean.
         """
 
-        _chain_reaction()
+        if async:
+            threads.deferToThread(_chain_reaction)
+        else:
+            _chain_reaction()
+
+    @property
+    def exec_status(self):
+        """Returns the execution status for the tool.
+
+        Can be one of the following:
+            GNAThub.NOT_EXECUTED: plugin did not run yet
+            GNAThub.EXEC_FAIL: an error occured during the plugin execution
+            GNAThub.EXEC_SUCCESS: the plugin execution completed successfully
+
+        RETURNS
+            :rtype: a number.
+        """
+
+        return self._exec_status
+
+    # pylint: disable=E1101, E0102
+    @exec_status.setter
+    def exec_status(self, status):
+        """Sets the execution status for the tool.
+
+        Can be one of the following:
+            GNAThub.NOT_EXECUTED: plugin did not run yet
+            GNAThub.EXEC_FAIL: an error occured during the plugin execution
+            GNAThub.EXEC_SUCCESS: the plugin execution completed successfully
+
+        PARAMETERS
+            :param status: the new execution status.
+            :type status: a number.
+        """
+
+        if status not in (EXEC_FAIL, EXEC_SUCCESS, NOT_EXECUTED):
+            raise Error('invalid execution code')
+
+        self._exec_status = status
 
     @property
     def name(self):
@@ -224,7 +272,7 @@ class Plugin:
         variable.
 
         RETURNS
-            :rtype: a string
+            :rtype: a string.
         """
 
         return self.TOOL_NAME
@@ -502,7 +550,7 @@ class GPSTarget(object):
     """
 
     # Value updated by GNAThub.utils.OutputParser
-    EXECUTION_SUCCES = PROCESS_NOT_LAUNCHED
+    EXECUTION_SUCCES = NOT_EXECUTED
     GNAT = """%attr(ide'gnat,gnat)"""
     OBJ_DIR = '%O'
     PRJ_FILE = '%pp'
@@ -513,7 +561,7 @@ class GPSTarget(object):
         self.parser = output_parser
 
         # Re-initialise execution status, as tool execution is sequantiel
-        GPSTarget.EXECUTION_SUCCESS = PROCESS_NOT_LAUNCHED
+        GPSTarget.EXECUTION_SUCCESS = NOT_EXECUTED
 
         if not self.cmdline:
             Log.warn('Missing command line for: %s' % self.name)

@@ -58,6 +58,8 @@ class _GNATmetricProtocol(GNAThub.LoggerProcessProtocol):
         Log.progress(self.total, self.total, new_line=True)
 
         self.plugin._postprocess(self.exit_code)
+
+        # Ensure that we don't break the plugin chain.
         self.plugin.ensure_chain_reaction()
 
 
@@ -103,7 +105,9 @@ class GNATmetric(GNAThub.Plugin):
         """Postprocesses the tool execution: parse the output XML report on
         success.
 
-        RETURNS
+        Sets the exec_status property according to the successfulness of the
+        analysis:
+
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
             GNAThub.EXEC_FAIL: on any error
         """
@@ -111,20 +115,26 @@ class GNATmetric(GNAThub.Plugin):
         if exit_code not in GNATmetric.VALID_EXIT_CODES:
             Log.error('%s: execution failed' % self.name)
             Log.error('%s: see log file: %s' % (self.name, self.logs()))
-            return GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAIL
+            return
 
-        return self.__parse_xml_report()
+        self.__parse_xml_report()
 
     def display_command_line(self):
+        """Inherited."""
+
         cmdline = super(GNATmetric, self).display_command_line()
         cmdline.extend(['-P', GNAThub.project.name()])
         cmdline.extend(['-o', os.path.relpath(self.report)])
+
         return cmdline
 
     def __parse_xml_report(self):
         """Parses GNATmetric XML report and save data to the database.
 
-        RETURNS
+        Sets the exec_status property according to the successfulness of the
+        analysis:
+
             GNAThub.EXEC_SUCCESS: if transaction have been comitted to database
             GNAThub.EXEC_FAIL: if error happened while parsing the xml report
         """
@@ -173,16 +183,16 @@ class GNATmetric(GNAThub.Plugin):
                 Log.progress(index, total, new_line=(index == total))
 
             self.session.commit()
+            self.exec_status = GNAThub.EXEC_SUCCESS
 
             Log.debug('%s: all objects commited to database' % self.name)
-            return GNAThub.EXEC_SUCCESS
 
         except ParseError as e:
+            self.exec_status = GNAThub.EXEC_FAIL
             Log.error('%s: unable to parse XML report' % self.name)
             Log.error('%s:%s:%s - :%s' % (e.filename, e.lineno, e.text, e.msg))
-            return GNAThub.EXEC_FAIL
 
         except IOError as e:
+            self.exec_status = GNAThub.EXEC_FAIL
             Log.error('%s: unable to parse XML report' % self.name)
             Log.error(e)
-            return GNAThub.EXEC_FAIL

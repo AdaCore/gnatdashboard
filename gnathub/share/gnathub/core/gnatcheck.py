@@ -55,6 +55,8 @@ class _GNATcheckProtocol(GNAThub.LoggerProcessProtocol):
         Log.progress(self.total, self.total, new_line=True)
 
         self.plugin._postprocess(self.exit_code)
+
+        # Ensure that we don't break the plugin chain.
         self.plugin.ensure_chain_reaction()
 
 
@@ -83,9 +85,12 @@ class GNATcheck(GNAThub.Plugin):
                                        _GNATcheckProtocol(self))
 
     def display_command_line(self):
+        """Inherited."""
+
         cmdline = super(GNATcheck, self).display_command_line()
         cmdline.extend(['-P', GNAThub.project.name()])
         cmdline.extend(['-o', os.path.relpath(self.report)])
+
         return cmdline
 
     def __cmd_line(self):
@@ -110,7 +115,9 @@ class GNATcheck(GNAThub.Plugin):
         """Postprocesses the tool execution: parse the output report on
         success.
 
-        RETURNS
+        Sets the exec_status property according to the successfulness of the
+        analysis:
+
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
             GNAThub.EXEC_FAIL: on any error
         """
@@ -118,9 +125,10 @@ class GNATcheck(GNAThub.Plugin):
         if exit_code not in GNATcheck.VALID_EXIT_CODES:
             Log.error('%s: execution failed' % self.name)
             Log.error('%s: see log file: %s' % (self.name, self.logs()))
-            return GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAIL
+            return
 
-        return self.__parse_report()
+        self.__parse_report()
 
     def __add_message(self, src, line, col_begin, rule_id, msg):
         """Add GNATcheck message to current session DB.
@@ -228,15 +236,15 @@ class GNATcheck(GNAThub.Plugin):
     def __parse_report(self):
         """Parses GNATcheck output file report.
 
-        Returns EXEC_SUCCES if changes has been committed to the database, or
-        EXEC_FAIL if an error occured when reading the output report.
+        Sets the exec_status property according to the successfulness of the
+        analysis:
+
+            GNAThub.EXEC_SUCCESS: on successful execution and analysis
+            GNAThub.EXEC_FAIL: on any error
 
         Identify 2 type of messages with different format:
             - basic message
             - message for package instantiation
-
-        RETURNS
-            :rtype: a number
         """
 
         Log.info('gnathub analyse %s' % os.path.relpath(self.report))
@@ -255,10 +263,11 @@ class GNATcheck(GNAThub.Plugin):
         Log.debug('%s: parsing report: %s' % (self.name, self.report))
 
         if not os.path.exists(self.report):
+            self.exec_status = GNAThub.EXEC_FAIL
             Log.error('%s: no report found' % self.name)
             Log.error('%s: aborting analysis' % self.name)
             Log.error('%s: see log file: %s' % (self.name, self.logs()))
-            return GNAThub.EXEC_FAIL
+            return
 
         try:
             with open(self.report, 'r') as output:
@@ -278,10 +287,10 @@ class GNATcheck(GNAThub.Plugin):
 
             self.session.commit()
 
+            self.exec_status = GNAThub.EXEC_SUCCESS
             Log.debug('%s: all objects commited to database' % self.name)
-            return GNAThub.EXEC_SUCCESS
 
         except IOError as e:
+            self.exec_status = GNAThub.EXEC_FAIL
             Log.error('%s: unable to parse report' % self.name)
             Log.error(str(e))
-            return GNAThub.EXEC_FAIL
