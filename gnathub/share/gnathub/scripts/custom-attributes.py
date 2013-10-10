@@ -17,7 +17,15 @@
 ##                                                                          ##
 ##############################################################################
 
+# pylint: disable=C0103
+# Disable "Invalid name {}"
+
+"""Defines GNAThub-specific project attributes and load them with GPS."""
+
+# pylint: disable=F0401
+# Disable "Unable to import" error
 import GPS
+
 
 PROJECT_SUPPORT_DEFINITION = """<?xml version="1.0"?>
     <Project_Support>

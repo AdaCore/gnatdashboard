@@ -17,52 +17,56 @@
 ##                                                                          ##
 ##############################################################################
 
-"""Helper module to factorize shared components between SonarConfig and
-SonarRunner.
+"""Provides common components to GNAT Pro Tool Suite.
 """
 
 import GNAThub
+import re
 
-import os
+from GNAThub import Log
 
 
-class SonarQube(object):
-    """Provides a set of helper static methods used by both the SonarQube
-    Runner plug-in and the SonarConfig plug-in.
+class GNATToolProgressProtocol(GNAThub.LoggerProcessProtocol):
+    """A custom LoggerProcessProtocol to additionally provide the user with
+    command-line output feedback about the execution progress.
     """
 
-    EXEC_DIRECTORY = 'sonar'
-    CONFIGURATION = 'sonar-project.properties'
+    REMAINING = re.compile('^Units remaining: (?P<count>[0-9]+)')
 
-    @staticmethod
-    def workdir():
-        """Returns the sonar execution directory located within GNAThub's root
-        directory:
+    def __init__(self, tool):
+        """Instance constructor."""
 
-            <project_object_dir>/gnathub/sonar.
+        GNAThub.LoggerProcessProtocol.__init__(self, tool)
+        self.total = None
 
-        RETURNS
-            :rtype: a string.
-        """
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
+    def errReceived(self, data):
+        """Inherited."""
 
-        return os.path.join(GNAThub.root(), SonarQube.EXEC_DIRECTORY)
+        GNAThub.LoggerProcessProtocol.errReceived(self, data)
 
-    @staticmethod
-    def configuration():
-        """Returns the path to the SonarQube Runner configuration file located
-        in the Sonar-specific directory:
+        match = self.REMAINING.match(data)
 
-            <project_object_dir>/gnathub/sonar/sonar-project.properties
+        if match:
+            count = int(match.group('count'))
 
-        RETURNS
-            :rtype: a string.
-        """
+            if self.total is None:
+                self.total = count
+                Log.progress(1, self.total)
+            else:
+                Log.progress(self.total - count, self.total)
 
-        return os.path.join(SonarQube.workdir(), SonarQube.CONFIGURATION)
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
+    def processEnded(self, reason):
+        """Inherited."""
 
-    @staticmethod
-    def make_workdir():
-        """Creates the Sonar execution directory if it does not exist."""
+        GNAThub.LoggerProcessProtocol.processEnded(self, reason)
 
-        if not os.path.exists(SonarQube.workdir()):
-            os.makedirs(SonarQube.workdir())
+        Log.progress(self.total, self.total, new_line=True)
+
+        self.plugin.postprocess(self.exit_code)
+
+        # Ensure that we don't break the plugin chain.
+        self.plugin.ensure_chain_reaction()

@@ -17,47 +17,24 @@
 ##                                                                          ##
 ##############################################################################
 
+"""GNAThub plug-in for the GNATcheck command-line tool.
+
+It exports the GNATcheck Python class which implements the GNAThub.Plugin
+interface. This allows GNAThub's plug-in scanner to automatically find this
+module and load it as part of the GNAThub default excecution.
+"""
+
 import GNAThub
 import GNAThub.project
 
 import os
 import re
 
+from _gnat import GNATToolProgressProtocol
+
 from GNAThub import Log
 from GNAThub import dao, db
 from GNAThub.db import Message, LineMessage
-
-
-class _GNATcheckProtocol(GNAThub.LoggerProcessProtocol):
-    REMAINING = re.compile('^Units remaining: (?P<count>[0-9]+)')
-
-    def __init__(self, gnatcheck):
-        GNAThub.LoggerProcessProtocol.__init__(self, gnatcheck)
-        self.total = None
-
-    def errReceived(self, data):
-        GNAThub.LoggerProcessProtocol.errReceived(self, data)
-
-        match = self.REMAINING.match(data)
-
-        if match:
-            count = int(match.group('count'))
-
-            if self.total is None:
-                self.total = count
-                Log.progress(1, self.total)
-            else:
-                Log.progress(self.total - count, self.total)
-
-    def processEnded(self, reason):
-        GNAThub.LoggerProcessProtocol.processEnded(self, reason)
-
-        Log.progress(self.total, self.total, new_line=True)
-
-        self.plugin._postprocess(self.exit_code)
-
-        # Ensure that we don't break the plugin chain.
-        self.plugin.ensure_chain_reaction()
 
 
 class GNATcheck(GNAThub.Plugin):
@@ -71,6 +48,10 @@ class GNATcheck(GNAThub.Plugin):
 
     SLOC_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+'
 
+    # Regex to identify lines that contain messages
+    ERROR_PATTERN = '%s:\s.+[[].*[]]\s*' % SLOC_PATTERN
+    INSTANCE_PATTERN = '%s instance at %s.+' % (SLOC_PATTERN, SLOC_PATTERN)
+
     # GNATcheck exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
 
@@ -82,7 +63,7 @@ class GNATcheck(GNAThub.Plugin):
         self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
 
         self.process = GNAThub.Process(self.name, self.__cmd_line(),
-                                       _GNATcheckProtocol(self))
+                                       GNATToolProgressProtocol(self))
 
     def display_command_line(self):
         """Inherited."""
@@ -106,12 +87,12 @@ class GNATcheck(GNAThub.Plugin):
     def execute(self):
         """Executes the GNATcheck.
 
-        GNATcheck._postprocess() will be called upon process completion.
+        GNATcheck.postprocess() will be called upon process completion.
         """
 
         self.process.execute()
 
-    def _postprocess(self, exit_code):
+    def postprocess(self, exit_code):
         """Postprocesses the tool execution: parse the output report on
         success.
 
@@ -156,6 +137,9 @@ class GNATcheck(GNAThub.Plugin):
 
         line_message = LineMessage(col_begin=col_begin)
         line_message.message = Message(msg, rule)
+
+        # pylint: disable=E1103
+        # Disable "Module {} has no member {}" error
         line.messages.append(line_message)
 
     def __parse_line(self, line):
@@ -252,13 +236,8 @@ class GNATcheck(GNAThub.Plugin):
         Log.debug('%s: storing tool in database' % self.name)
         self.tool = dao.save_tool(self.session, self.name)
 
-        # Regex to identify lines that contain messages
-        ERROR_PATTERN = '%s:\s.+[[].*[]]\s*' % self.SLOC_PATTERN
-        INSTANCE_PATTERN = '%s instance at %s.+' % (self.SLOC_PATTERN,
-                                                    self.SLOC_PATTERN)
-
-        prog_error = re.compile(ERROR_PATTERN)
-        prog_instance = re.compile(INSTANCE_PATTERN)
+        prog_error = re.compile(self.ERROR_PATTERN)
+        prog_instance = re.compile(self.INSTANCE_PATTERN)
 
         Log.debug('%s: parsing report: %s' % (self.name, self.report))
 
@@ -290,7 +269,7 @@ class GNATcheck(GNAThub.Plugin):
             self.exec_status = GNAThub.EXEC_SUCCESS
             Log.debug('%s: all objects commited to database' % self.name)
 
-        except IOError as e:
+        except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAIL
             Log.error('%s: unable to parse report' % self.name)
-            Log.error(str(e))
+            Log.error(str(ex))

@@ -17,6 +17,13 @@
 ##                                                                          ##
 ##############################################################################
 
+"""GNAThub plug-in for the SonarQube Runner command-line tool.
+
+It exports the SonarRunner Python class which implements the GNAThub.Plugin
+interface. This allows GNAThub's plug-in scanner to automatically find this
+module and load it as part of the GNAThub default excecution.
+"""
+
 import GNAThub
 import os
 
@@ -26,13 +33,21 @@ from _sonarqube import SonarQube
 
 
 class _SonarRunnerProtocol(GNAThub.LoggerProcessProtocol):
+    """A custom LoggerProcessProtocol ensure plug-ins chaining."""
+
     def __init__(self, sonarrunner):
+        """Instance constructor."""
+
         GNAThub.LoggerProcessProtocol.__init__(self, sonarrunner)
 
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
     def processEnded(self, reason):
+        """Inherited."""
+
         GNAThub.LoggerProcessProtocol.processEnded(self, reason)
 
-        self.plugin._postprocess(self.exit_code)
+        self.plugin.postprocess(self.exit_code)
 
         # Ensure that we don't break the plugin chain.
         self.plugin.ensure_chain_reaction()
@@ -45,6 +60,8 @@ class SonarRunner(GNAThub.Plugin):
     TOOL_NAME = 'Sonar Runner'
 
     def __init__(self):
+        """Instance constructor."""
+
         super(SonarRunner, self).__init__()
 
         self.process = GNAThub.Process(self.name, self.__cmd_line(),
@@ -76,12 +93,12 @@ class SonarRunner(GNAThub.Plugin):
     def execute(self):
         """Executes the Sonar Runner.
 
-        SonarRunner._postprocess() will be called upon process completion.
+        SonarRunner.postprocess() will be called upon process completion.
         """
 
         self.process.execute()
 
-    def _postprocess(self, exit_code):
+    def postprocess(self, exit_code):
         """Postprocesses the tool execution: parse the output XML report on
         success.
 

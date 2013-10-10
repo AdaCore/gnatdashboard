@@ -17,6 +17,13 @@
 ##                                                                          ##
 ##############################################################################
 
+# pylint: disable=C0103
+# Disable "Invalid name {}"
+
+"""Scans for GNAThub-specific plug-ins and registers their execution before
+spawning the main event loop.
+"""
+
 import GNAThub
 import GNAThub.project
 
@@ -24,18 +31,6 @@ import abc
 import os
 
 from GNAThub import Log
-from GNAThub.utils import create_parser
-
-
-class tool_output ():
-    """"Initate tool_output module
-
-        This class is use by GPS in order to manage executed process output.
-    """
-
-    @staticmethod
-    def create_parser(name, child=None):
-        return create_parser(name, child)
 
 
 class PluginRunner(object):
@@ -50,30 +45,29 @@ class PluginRunner(object):
     """
 
     PLUGIN_SUFFIX = '.py'
+    SONARRUNNER_PLUGIN = 'Sonar Runner'
 
     def __remove_plugin_to_deactivate(self, plugins):
         """Deactivate plugins according to attribute Plugin_Off in the project
         file.
         """
 
-        for p in GNAThub.project.property_as_list('Plugin_Off'):
-            if p in plugins:
-                plugins.remove(p)
-                Log.debug('Plugin %s is deactivated' % p)
+        for plugin in GNAThub.project.property_as_list('Plugin_Off'):
+            if plugin in plugins:
+                plugins.remove(plugin)
+                Log.debug('Plugin %s is deactivated' % plugin)
 
             else:
-                Log.warn('Plugin %s not deactivated' % p)
+                Log.warn('Plugin %s not deactivated' % plugin)
                 Log.warn('Not in plugin list to execute or not installed')
 
     def __move_sonar_to_end(self, plugins):
         """Locates the sonarrunner plugin and delays its execution to the end.
         """
 
-        SONARRUNNER = 'sonarrunner'
-
-        if SONARRUNNER in plugins:
-            plugins.remove(SONARRUNNER)
-            plugins.append(SONARRUNNER)
+        if self.SONARRUNNER_PLUGIN in plugins:
+            plugins.remove(self.SONARRUNNER_PLUGIN)
+            plugins.append(self.SONARRUNNER_PLUGIN)
 
     def __get_plugins_from_dirs(self, plugins):
         """Retrieves projet sepecific plugins specified in the project file."""
@@ -81,11 +75,19 @@ class PluginRunner(object):
         files = os.listdir(GNAThub.core_plugins())
         files.extend(os.listdir(GNAThub.extra_plugins()))
 
-        for f in files:
-            if f.endswith(self.PLUGIN_SUFFIX) and not f.startswith('_'):
-                plugins.append(f.replace(self.PLUGIN_SUFFIX, ''))
+        for filename in files:
+            if filename.endswith(self.PLUGIN_SUFFIX) \
+                    and not filename.startswith('_'):
+                plugins.append(filename.replace(self.PLUGIN_SUFFIX, ''))
 
     def __get_plugin_project_specific(self):
+        """Returns the project-specific plug-ins list if defined in the project
+        file.
+
+        RETURNS
+            :rtype: a list of strings.
+        """
+
         specific_plugins = []
 
         for plugin in GNAThub.project.property_as_list('Specific_Plugins'):
@@ -98,7 +100,6 @@ class PluginRunner(object):
 
                 except IOError:
                     Log.warn('Unable to load plugin: %s, ignoring...' % plugin)
-                    Log.info('')
 
             else:
                 Log.warn('Ignoring plugin because not found: %s' % plugin)
@@ -114,6 +115,8 @@ class PluginRunner(object):
           otherwise default order is applied
         """
 
+        # pylint: disable=E1111
+        # Disable "Assigning to function call which doesn't return"
         plugins = GNAThub.plugins()
 
         if len(plugins):
@@ -133,9 +136,20 @@ class PluginRunner(object):
         self.__remove_plugin_to_deactivate(plugins)
         self.__move_sonar_to_end(plugins)
 
-        return filter(lambda x: x is not None and x != '', plugins)
+        return [x for x in plugins if x is not None and x != '']
 
     def __get_plugin_class(self, plugin):
+        """Returns a plugin class object if such a class with the given name
+        exists.
+
+        PARAMETERS
+            :param plugin: the name of the plugin to find.
+            :type plugin: a string.
+
+        RETURNS
+            :rtype: a Python class object.
+        """
+
         try:
             # If not a project specific plugin
             if not isinstance(plugin, dict):
@@ -154,10 +168,10 @@ class PluginRunner(object):
 
                 Log.warn('No class extending GNAThub.Plugin found')
 
-        except (ImportError,  AttributeError, ValueError) as e:
+        except (ImportError,  AttributeError, ValueError) as ex:
             Log.fatal('')
             Log.fatal('Failed to load plugin: %s' % plugin)
-            Log.fatal('Caused by: %s' % e)
+            Log.fatal('Caused by: %s' % ex)
             Log.fatal('')
 
     def __execute_plugin(self, plugin):

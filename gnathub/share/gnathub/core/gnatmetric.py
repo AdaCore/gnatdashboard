@@ -17,11 +17,19 @@
 ##                                                                          ##
 ##############################################################################
 
+"""GNAThub plug-in for the GNATmetric command-line tool.
+
+It exports the GNATmetric Python class which implements the GNAThub.Plugin
+interface. This allows GNAThub's plug-in scanner to automatically find this
+module and load it as part of the GNAThub default excecution.
+"""
+
 import GNAThub
 import GNAThub.project
 
 import os
-import re
+
+from _gnat import GNATToolProgressProtocol
 
 from GNAThub import Log
 from GNAThub import dao, db
@@ -29,38 +37,6 @@ from GNAThub.db import Message
 
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
-
-
-class _GNATmetricProtocol(GNAThub.LoggerProcessProtocol):
-    REMAINING = re.compile('^Units remaining: (?P<count>[0-9]+)')
-
-    def __init__(self, gnatmetric):
-        GNAThub.LoggerProcessProtocol.__init__(self, gnatmetric)
-        self.total = None
-
-    def errReceived(self, data):
-        GNAThub.LoggerProcessProtocol.errReceived(self, data)
-
-        match = self.REMAINING.match(data)
-
-        if match:
-            count = int(match.group('count'))
-
-            if self.total is None:
-                self.total = count
-                Log.progress(1, self.total)
-            else:
-                Log.progress(self.total - count, self.total)
-
-    def processEnded(self, reason):
-        GNAThub.LoggerProcessProtocol.processEnded(self, reason)
-
-        Log.progress(self.total, self.total, new_line=True)
-
-        self.plugin._postprocess(self.exit_code)
-
-        # Ensure that we don't break the plugin chain.
-        self.plugin.ensure_chain_reaction()
 
 
 class GNATmetric(GNAThub.Plugin):
@@ -81,7 +57,7 @@ class GNATmetric(GNAThub.Plugin):
         self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
 
         self.process = GNAThub.Process(self.name, self.__cmd_line(),
-                                       _GNATmetricProtocol(self))
+                                       GNATToolProgressProtocol(self))
 
     def __cmd_line(self):
         """Creates GNATmetric command line arguments list.
@@ -96,12 +72,12 @@ class GNATmetric(GNAThub.Plugin):
     def execute(self):
         """Executes the GNATmetric.
 
-        GNATmetric._postprocess() will be called upon process completion.
+        GNATmetric.postprocess() will be called upon process completion.
         """
 
         self.process.execute()
 
-    def _postprocess(self, exit_code):
+    def postprocess(self, exit_code):
         """Postprocesses the tool execution: parse the output XML report on
         success.
 
@@ -162,7 +138,11 @@ class GNATmetric(GNAThub.Plugin):
                         name = metric.attrib.get('name')
                         rule = dao.get_or_create_rule(self.session, tool,
                                                       db.METRIC_KIND, name)
+
+                        # pylint: disable=E1103
+                        # Disable "Module {} has no member {}" error
                         resource.messages.append(Message(metric.text, rule))
+
                 else:
                     Log.warn('File not found, skipping all messages from: %s' %
                              file_node.attrib.get('name'))
@@ -187,12 +167,13 @@ class GNATmetric(GNAThub.Plugin):
 
             Log.debug('%s: all objects commited to database' % self.name)
 
-        except ParseError as e:
+        except ParseError as ex:
             self.exec_status = GNAThub.EXEC_FAIL
             Log.error('%s: unable to parse XML report' % self.name)
-            Log.error('%s:%s:%s - :%s' % (e.filename, e.lineno, e.text, e.msg))
+            Log.error('%s:%s:%s - :%s' % (ex.filename, ex.lineno, ex.text,
+                                          ex.msg))
 
-        except IOError as e:
+        except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAIL
             Log.error('%s: unable to parse XML report' % self.name)
-            Log.error(e)
+            Log.error(str(ex))

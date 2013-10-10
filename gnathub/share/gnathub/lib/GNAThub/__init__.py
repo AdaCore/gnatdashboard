@@ -32,7 +32,7 @@ def root():
         <project_object_dir>/gnathub
 
     RETURNS
-        :rtype: a path as a string
+        :rtype: a path as a string.
     """
 
     pass        # Implemented in Ada
@@ -45,7 +45,44 @@ def logs():
         <project_object_dir>/gnathub/logs
 
     RETURNS
-        :rtype: a path as a string
+        :rtype: a path as a string.
+    """
+
+    pass        # Implemented in Ada
+
+
+def plugins():
+    """Returns the list of comma-separated plug-ins name specified on the
+    command-line.
+
+    RETURNS
+        :rtype: a string.
+    """
+
+    pass        # Implemented in Ada
+
+
+def core_plugins():
+    """Returns the path to the GNAThub-specific core plugins.
+    Usually:
+
+        <gnathub_root>/share/gnathub/core
+
+    RETURNS
+        :rtype: a path as a string.
+    """
+
+    pass        # Implemented in Ada
+
+
+def extra_plugins():
+    """Returns the path to the GNAThub-specific extra (user-defined) plugins.
+    Usually:
+
+        <gnathub_root>/share/gnathub/extras
+
+    RETURNS
+        :rtype: a path as a string.
     """
 
     pass        # Implemented in Ada
@@ -58,7 +95,7 @@ def database():
         <project_object_dir>/gnathub/gnathub.db
 
     RETURNS
-        :rtype: a path as a string
+        :rtype: a path as a string.
     """
 
     pass        # Implemented in Ada
@@ -536,122 +573,3 @@ def abort():
         # pylint: disable=E1101
         # Disable "Module {} has no member {}" error
         reactor.stop()
-
-
-# pylint: disable=F0401
-# Disable "Unable to import" error
-import GPS
-
-from xml.dom.minidom import getDOMImplementation as dom
-
-
-class GPSTarget(object):
-    """Defines a GPS target enironment.
-
-    ???
-    """
-
-    # Value updated by GNAThub.utils.OutputParser
-    EXECUTION_SUCCES = NOT_EXECUTED
-    GNAT = """%attr(ide'gnat,gnat)"""
-    OBJ_DIR = '%O'
-    PRJ_FILE = '%pp'
-
-    def __init__(self, name, output_parser, cmd_args=None):
-        self.name = name
-        self.cmdline = cmd_args if cmd_args is not None else []
-        self.parser = output_parser
-
-        # Re-initialise execution status, as tool execution is sequantiel
-        GPSTarget.EXECUTION_SUCCESS = NOT_EXECUTED
-
-        if not self.cmdline:
-            Log.warn('Missing command line for: %s' % self.name)
-
-    def __build_gps_target(self):
-        """Creates the XML document describing the GPS Target.
-
-        RETURNS
-            :rtype: the XML document as a string
-        """
-
-        # XML document
-        document = dom().createDocument(None, "GPS", None)
-
-        def _text(data):
-            """Returns an XML Text Node whose content is data.
-
-            RETURNS
-                :rtype: xml.dom.Text node
-            """
-
-            return document.createTextNode(data)
-
-        # GPS Root
-        doc = document.documentElement
-
-        # Builder mode
-        builder_mode = document.createElement('builder-mode')
-        builder_mode.setAttribute('name', 'default')
-
-        builder_mode_desc = document.createElement('description')
-        builder_mode_desc.appendChild(_text('Inherit switches from project'))
-
-        builder_mode.appendChild(builder_mode_desc)
-        doc.appendChild(builder_mode)
-
-        # Target model
-        target_model = document.createElement('target-model')
-        target_model.setAttribute('name', 'gnathub')
-
-        target_model_desc = document.createElement('description')
-        target_model_desc.appendChild(_text('Generic GNAThub target model'))
-
-        target_model.appendChild(target_model_desc)
-        doc.appendChild(target_model)
-
-        # Target
-        target = document.createElement('target')
-        target.setAttribute('model', target_model.getAttribute('name'))
-        target.setAttribute('category', 'default')
-        target.setAttribute('name', self.name)
-
-        # Command line
-        cmdline = document.createElement('command-line')
-
-        for element in self.cmdline:
-            arg = document.createElement('arg')
-            arg.appendChild(_text(element))
-            cmdline.appendChild(arg)
-
-        target.appendChild(cmdline)
-
-        # Output parsers
-        output_parsers = document.createElement('output-parsers')
-        output_parsers.appendChild(_text('%s output_collector' % self.parser))
-
-        target.appendChild(output_parsers)
-        doc.appendChild(target)
-
-        return document.toprettyxml()
-
-    def execute(self):
-        """Executes the target."""
-
-        Log.debug('Executing %s: %s' % (self.name, ' '.join(self.cmdline)))
-
-        xml = self.__build_gps_target()
-
-        Log.debug('GPSTarget XML:%s%s' % (os.linesep, xml))
-        GPS.parse_xml(xml)
-
-        Log.debug('Building target: %s' % self.name)
-        target = GPS.BuildTarget(self.name)
-
-        Log.debug('Executing target: %s' % self.name)
-        target.execute()
-
-        Log.debug('GPSTarget.EXECUTION_SUCCESS = %s' %
-                  str(GPSTarget.EXECUTION_SUCCESS))
-
-        return GPSTarget.EXECUTION_SUCCESS

@@ -47,8 +47,8 @@ lint:
 			--rcfile=$(TOP)/tests/etc/pylintrc \
 			--output-format=parseable \
 			--reports=n GNAThub \
-			$(TOP)/share/gnathub/core \
-			$(TOP)/share/gnathub/scripts
+			$(TOP)/share/gnathub/core/*.py \
+			$(TOP)/share/gnathub/scripts/*.py
 
 tests:
 	cd tests && python testsuite.py

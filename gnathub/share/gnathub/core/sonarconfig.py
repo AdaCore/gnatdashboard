@@ -17,9 +17,15 @@
 ##                                                                          ##
 ##############################################################################
 
+"""GNAThub plug-in for the generation of SonarQube Runner configuration file.
+
+It exports the SonarConfig Python class which implements the GNAThub.Plugin
+interface. This allows GNAThub's plug-in scanner to automatically find this
+module and load it as part of the GNAThub default excecution.
+"""
+
 import ConfigParser
 
-import GNAThub.utils
 import GNAThub.project
 
 import os
@@ -67,7 +73,7 @@ class _SonarConfiguration(object):
                 value = attr_value
 
         Log.debug('%s.%s = %s' % (section, key, value))
-        self.config.set(section, key, value)
+        config.set(section, key, value)
 
     def write(self, filename):
         """Dumps sonar-project.properties file in sonar working directory.
@@ -80,10 +86,10 @@ class _SonarConfiguration(object):
         config = ConfigParser.ConfigParser()
 
         # Enable case-sensitive keys feature
-        self.config.optionxform = str
+        config.optionxform = str
 
         # Create the [Sonar] section in the configuration file
-        self.config.add_section(_SonarConfiguration.SONAR_SECTION)
+        config.add_section(_SonarConfiguration.SONAR_SECTION)
 
         # Set properties
         for key, value in _SonarConfiguration.CONFIG.iteritems():
@@ -92,7 +98,7 @@ class _SonarConfiguration(object):
             default, attribute = value
 
             # Insert the key in the configuration file
-            self._add(key, default, attribute)
+            self._add(config, key, default, attribute)
 
         with open(filename, 'w') as configuration:
             config.write(configuration)
@@ -130,9 +136,9 @@ class SonarConfig(GNAThub.Plugin):
 
             self.exec_status = GNAThub.EXEC_SUCCESS
 
-        except IOError as e:
+        except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAIL
-            Log.fatal(str(e))
+            Log.fatal(str(ex))
 
         # Ensure that we don't break the plugin chain.
         self.ensure_chain_reaction(async=True)
