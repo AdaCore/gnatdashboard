@@ -2,8 +2,8 @@ with "cli.gpr";
 
 project GNAThub is
 
-   type Mode is ("Debug", "Production");
-   Build_Mode : Mode := External ("Build_Mode", "Debug");
+   type Mode is ("Debug", "Production", "Coverage");
+   Build_Mode : Mode := External ("BUILD_MODE", "Debug");
 
    Processors := External ("PROCESSORS", "0");
 
@@ -44,8 +44,21 @@ project GNAThub is
          when "Production" =>
             for Default_Switches ("Ada") use ("-gnatwa", "-gnatn", "-O2");
 
+         when "Coverage" =>
+            for Default_Switches ("ada") use
+               Compiler'Default_Switches ("ada") &
+               ("-g", "-O0", "-fprofile-arcs", "-ftest-coverage",
+                "-ffunction-sections", "-fdata-sections", "-gnateE");
       end case;
    end Compiler;
+
+   package Linker is
+      case Build_Mode is
+         when "Coverage" =>
+            for Default_Switches ("ada") use
+               Linker'Default_Switches ("ada") & ("--coverage");
+      end case;
+   end Linker;
 
    package Ide is
       for Vcs_Kind use "Git";
