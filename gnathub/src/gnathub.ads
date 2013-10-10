@@ -22,7 +22,7 @@ package GNAThub is
    Silent_Error : exception;
 
    package Log is
-      type Verbosity_Level is (Verbose, Default, Quiet);
+      type Verbosity_Level is (Quiet, Default, Verbose);
       --  The three possible threshold of verbosity for this application.
 
       procedure Info (Message : String);
@@ -52,9 +52,6 @@ package GNAThub is
 
       procedure Set_Verbosity (Verbosity : Verbosity_Level);
       --  Sets the output verbosity of the GNAThub application.
-
-      function Verbosity return Verbosity_Level;
-      --  Returns the current verbosity level.
    end Log;
 
 end GNAThub;

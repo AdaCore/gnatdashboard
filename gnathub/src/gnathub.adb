@@ -42,9 +42,9 @@ package body GNAThub is
 
       procedure Info (Message : String) is
       begin
-         if Verbosity >= Default then
+         if Ada_Verbosity = Default then
             Put_Line (Message);
-         else
+         elsif Ada_Verbosity = Verbose then
             Trace (Info_Handle, Message);
          end if;
       end Info;
@@ -110,13 +110,14 @@ package body GNAThub is
            " out of " & Image (Total) & " (" & Image (Percent) & "%)";
 
       begin
-         if Verbosity >= Default then
+         if Ada_Verbosity = Default then
             Put (Message & ASCII.CR);
 
             if New_Line then
                Ada.Text_IO.New_Line;
             end if;
-         else
+
+         elsif Ada_Verbosity = Verbose then
             Trace (Info_Handle, Message);
          end if;
       end Progress;
@@ -137,28 +138,19 @@ package body GNAThub is
 
       procedure Set_Verbosity (Verbosity : Verbosity_Level) is
       begin
+         Ada_Verbosity := Verbosity;
+
          Set_Active (Fatal_Handle, True);
          Set_Active (Error_Handle, True);
 
-         Set_Active (Info_Handle, Verbosity < Quiet);
-         Set_Active (Warning_Handle, Verbosity < Quiet);
+         Set_Active (Info_Handle, Ada_Verbosity > Quiet);
+         Set_Active (Warning_Handle, Ada_Verbosity > Quiet);
 
-         Set_Active (Debug_Handle, Verbosity = Verbose);
+         Set_Active (Debug_Handle, Ada_Verbosity = Verbose);
 
-         Set_Active (Create ("DEBUG.ABSOLUTE_TIME"), Verbosity = Verbose);
-         Set_Active (Create ("DEBUG.COLORS"), Verbosity = Verbose);
-
-         Ada_Verbosity := Verbosity;
+         Set_Active (Create ("DEBUG.ABSOLUTE_TIME"), Ada_Verbosity = Verbose);
+         Set_Active (Create ("DEBUG.COLORS"), Ada_Verbosity = Verbose);
       end Set_Verbosity;
-
-      ---------------
-      -- Verbosity --
-      ---------------
-
-      function Verbosity return Verbosity_Level is
-      begin
-         return Ada_Verbosity;
-      end Verbosity;
 
    end Log;
 

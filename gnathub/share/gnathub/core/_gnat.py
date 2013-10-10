@@ -64,7 +64,8 @@ class GNATToolProgressProtocol(GNAThub.LoggerProcessProtocol):
 
         GNAThub.LoggerProcessProtocol.processEnded(self, reason)
 
-        Log.progress(self.total, self.total, new_line=True)
+        if self.total:
+            Log.progress(self.total, self.total, new_line=True)
 
         self.plugin.postprocess(self.exit_code)
 

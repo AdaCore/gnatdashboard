@@ -1,2 +1,2 @@
-# Test sqlalchemy installation 
-gnathub -P default --load=python:test.py
+# Test sqlalchemy installation
+gnathub -q -P default --plugins sonarconfig --load=python:test.py

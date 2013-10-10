@@ -1,10 +1,10 @@
-obj/
-obj/hello.adb.metrix
-obj/metrix.xml
+obj
+obj/empty
+obj/gnatcheck.out
 obj/gnathub
-obj/gnathub/logs
-obj/gnathub/logs/gnatmetric.log
-obj/gnathub/logs/sonar-runner.log
 obj/gnathub/gnathub.db
+obj/gnathub/logs
 obj/gnathub/sonar
 obj/gnathub/sonar/sonar-project.properties
+obj/hello.adb.metrix
+obj/metrix.xml
