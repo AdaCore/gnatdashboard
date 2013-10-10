@@ -96,7 +96,7 @@ class GNATmetric(GNAThub.Plugin):
     def execute(self):
         """Executes the GNATmetric.
 
-        GNATcheck._postprocess() will be called upon process completion.
+        GNATmetric._postprocess() will be called upon process completion.
         """
 
         self.process.execute()
