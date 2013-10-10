@@ -107,7 +107,8 @@ class GNATcheck(GNAThub.Plugin):
         self.process.execute()
 
     def _postprocess(self, exit_code):
-        """Postprocesses the tool execution: parse the output report on success.
+        """Postprocesses the tool execution: parse the output report on
+        success.
 
         RETURNS
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
