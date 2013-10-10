@@ -286,9 +286,11 @@ class Plugin:
             :rtype: a string
         """
 
+        tool = '-'.join(cls.TOOL_NAME.lower().split())
+
         if cls.LOG_FILE is None:
-            _, path = tempfile.mkstemp(prefix='%s-' % cls.TOOL_NAME.lower(),
-                                       text=True, suffix='.log', dir=logs())
+            _, path = tempfile.mkstemp(prefix='%s-' % tool, text=True,
+                                       suffix='.log', dir=logs())
             cls.LOG_FILE = path
 
         return cls.LOG_FILE

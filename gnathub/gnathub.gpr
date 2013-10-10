@@ -56,4 +56,8 @@ project GNAThub is
         ("-rules", "-from=tests/etc/gnatcheck.rules");
    end Check;
 
+   package Dashboard is
+      for Project_Version use "0.9.0";
+   end Dashboard;
+
 end GNAThub;

@@ -17,71 +17,25 @@
 ##                                                                          ##
 ##############################################################################
 
-"""Helper functions for accessing project attributes and properties."""
+import GNAThub
 
-# pylint: disable=F0401
-# Disable "Unable to import" error
-import GPS
+import os
 
 
-PACKAGE = 'Dashboard'
+class SonarQube(object):
 
+    EXEC_DIRECTORY = 'sonar'
+    CONFIGURATION = 'sonar-project.properties'
 
-def root():
-    """Returns the root project.
+    @staticmethod
+    def workdir():
+        return os.path.join(GNAThub.root(), SonarQube.EXEC_DIRECTORY)
 
-    RETURNS
-        :rtype: a GPS.Project
-    """
+    @staticmethod
+    def configuration():
+        return os.path.join(SonarQube.workdir(), SonarQube.CONFIGURATION)
 
-    return GPS.Project.root()
-
-
-def object_dir():
-    """Returns the project object directory path.
-
-    RETURNS
-        :rtype: a string
-    """
-
-    return root().object_dirs()[0]
-
-
-def name():
-    """Returns the project name.
-
-    RETURNS
-        :rtype: a string
-    """
-
-    return root().name()
-
-
-def path():
-    """Returns the path to the project file.
-
-    RETURNS
-        :rtype: a string
-    """
-
-    return root().file().name()
-
-
-def property_as_string(key):
-    """Returns project property from package GNAThub as a string.
-
-    RETURNS
-        :rtype: a string
-    """
-
-    return root().get_attribute_as_string(attribute=key, package=PACKAGE)
-
-
-def property_as_list(key):
-    """Returns project property from package GNAThub as a list.
-
-    RETURNS
-        :rtype: a string
-    """
-
-    return root().get_attribute_as_list(attribute=key, package=PACKAGE)
+    @staticmethod
+    def make_workdir():
+        if not os.path.exists(SonarQube.workdir()):
+            os.makedirs(SonarQube.workdir())

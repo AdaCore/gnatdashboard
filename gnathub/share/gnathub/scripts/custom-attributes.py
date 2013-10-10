@@ -25,7 +25,7 @@ PROJECT_SUPPORT_DEFINITION = """<?xml version="1.0"?>
         <project_attribute
             name="Project_Name"
             label="Project name"
-            package="GNATdashboard"
+            package="Dashboard"
             editor_page="GNATdashboard"
             editor_section="Naming"
             hide_in="wizard library_wizard"
@@ -37,7 +37,7 @@ PROJECT_SUPPORT_DEFINITION = """<?xml version="1.0"?>
         <project_attribute
             name="Plugins"
             label="Plugins"
-            package="GNATdashboard"
+            package="Dashboard"
             editor_page="GNATdashboard"
             editor_section="Naming"
             hide_in="wizard library_wizard"
@@ -49,7 +49,7 @@ PROJECT_SUPPORT_DEFINITION = """<?xml version="1.0"?>
         <project_attribute
             name="Project_Version"
             label="Project Version"
-            package="GNATdashboard"
+            package="Dashboard"
             editor_page="GNATdashboard"
             editor_section="Naming"
             hide_in="wizard library_wizard"
@@ -61,7 +61,7 @@ PROJECT_SUPPORT_DEFINITION = """<?xml version="1.0"?>
         <project_attribute
             name="Project_Key"
             label="Project Version"
-            package="GNATdashboard"
+            package="Dashboard"
             editor_page="GNATdashboard"
             editor_section="Naming"
             hide_in="wizard library_wizard"
@@ -73,7 +73,7 @@ PROJECT_SUPPORT_DEFINITION = """<?xml version="1.0"?>
         <project_attribute
             name="Source_Encoding"
             label="Source Encoding"
-            package="GNATdashboard"
+            package="Dashboard"
             editor_page="GNATdashboard"
             editor_section="Naming"
             hide_in="wizard library_wizard"
@@ -84,7 +84,7 @@ PROJECT_SUPPORT_DEFINITION = """<?xml version="1.0"?>
         <project_attribute
             name="Specific_Plugins"
             label="Project Specific Plugin"
-            package="GNATdashboard"
+            package="Dashboard"
             editor_page="GNATdashboard"
             editor_section="Naming"
             hide_in="wizard library_wizard"
