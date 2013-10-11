@@ -38,7 +38,7 @@ from GNAThub.db import Message, LineMessage
 class GNATprove(GNAThub.Plugin):
     """GNATprove plugin for GNAThub.
 
-    Configures and executes GNATprove, then analizes the output.
+    Configures and executes GNATprove, then analizes its output.
     """
 
     TOOL_NAME = 'GNATprove'
