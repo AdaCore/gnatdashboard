@@ -30,7 +30,7 @@ import GNAThub.project
 import os
 import re
 
-from _gnat import GNATToolProgressProtocol
+from _gnat import GNATToolProgressProtocol, SLOC_PATTERN
 
 from GNAThub import Log
 from GNAThub import dao, db
@@ -45,8 +45,6 @@ class GNATcheck(GNAThub.Plugin):
 
     TOOL_NAME = 'GNATcheck'
     REPORT = 'gnatcheck.out'
-
-    SLOC_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+'
 
     # Regex to identify lines that contain messages
     ERROR_PATTERN = '%s:\s.+[[].*[]]\s*' % SLOC_PATTERN
@@ -187,11 +185,11 @@ class GNATcheck(GNAThub.Plugin):
 
         # Look for the source file that instanciates the generic (last in the
         # list of "instance at...")
-        match = re.search(self.SLOC_PATTERN, line)
+        match = re.search(SLOC_PATTERN, line)
 
         # Split to have a list with 'commands-generic_asynchronous.ads:57:15
         # instance at...' and 'message + rule id'
-        msg_split = re.split(self.SLOC_PATTERN, line)
+        msg_split = re.split(SLOC_PATTERN, line)
 
         try:
             # Retreive info on the main file

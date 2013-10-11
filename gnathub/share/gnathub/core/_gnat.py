@@ -26,8 +26,35 @@ import re
 from GNAThub import Log
 
 
-class GNATToolProgressProtocol(GNAThub.LoggerProcessProtocol):
-    """A custom LoggerProcessProtocol to additionally provide the user with
+# A source location regex pattern
+SLOC_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+'
+
+
+class PostProcessProtocol(GNAThub.LoggerProcessProtocol):
+    """A custom LoggerProcessProtocol that calls the plug-in's postprocess
+    method then ensures plug-ins chaining.
+    """
+
+    def __init__(self, tool):
+        """Instance constructor."""
+
+        GNAThub.LoggerProcessProtocol.__init__(self, tool)
+
+    # pylint: disable=C0103
+    # Disable "Invalid Name" error
+    def processEnded(self, reason):
+        """Inherited."""
+
+        GNAThub.LoggerProcessProtocol.processEnded(self, reason)
+
+        self.plugin.postprocess(self.exit_code)
+
+        # Ensure that we don't break the plugin chain.
+        self.plugin.ensure_chain_reaction()
+
+
+class GNATToolProgressProtocol(PostProcessProtocol):
+    """A custom PostProcessProtocol to additionally provide the user with
     command-line output feedback about the execution progress.
     """
 
@@ -36,7 +63,7 @@ class GNATToolProgressProtocol(GNAThub.LoggerProcessProtocol):
     def __init__(self, tool):
         """Instance constructor."""
 
-        GNAThub.LoggerProcessProtocol.__init__(self, tool)
+        PostProcessProtocol.__init__(self, tool)
         self.total = None
 
     # pylint: disable=C0103
@@ -44,7 +71,7 @@ class GNATToolProgressProtocol(GNAThub.LoggerProcessProtocol):
     def errReceived(self, data):
         """Inherited."""
 
-        GNAThub.LoggerProcessProtocol.errReceived(self, data)
+        PostProcessProtocol.errReceived(self, data)
 
         match = self.REMAINING.match(data)
 
@@ -62,12 +89,7 @@ class GNATToolProgressProtocol(GNAThub.LoggerProcessProtocol):
     def processEnded(self, reason):
         """Inherited."""
 
-        GNAThub.LoggerProcessProtocol.processEnded(self, reason)
-
         if self.total:
             Log.progress(self.total, self.total, new_line=True)
 
-        self.plugin.postprocess(self.exit_code)
-
-        # Ensure that we don't break the plugin chain.
-        self.plugin.ensure_chain_reaction()
+        PostProcessProtocol.processEnded(self, reason)

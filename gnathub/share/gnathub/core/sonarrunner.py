@@ -29,28 +29,8 @@ import os
 
 from GNAThub import Log
 
+from _gnat import PostProcessProtocol
 from _sonarqube import SonarQube
-
-
-class _SonarRunnerProtocol(GNAThub.LoggerProcessProtocol):
-    """A custom LoggerProcessProtocol ensure plug-ins chaining."""
-
-    def __init__(self, sonarrunner):
-        """Instance constructor."""
-
-        GNAThub.LoggerProcessProtocol.__init__(self, sonarrunner)
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def processEnded(self, reason):
-        """Inherited."""
-
-        GNAThub.LoggerProcessProtocol.processEnded(self, reason)
-
-        self.plugin.postprocess(self.exit_code)
-
-        # Ensure that we don't break the plugin chain.
-        self.plugin.ensure_chain_reaction()
 
 
 class SonarRunner(GNAThub.Plugin):
@@ -65,7 +45,7 @@ class SonarRunner(GNAThub.Plugin):
         super(SonarRunner, self).__init__()
 
         self.process = GNAThub.Process(self.name, self.__cmd_line(),
-                                       _SonarRunnerProtocol(self))
+                                       PostProcessProtocol(self))
 
     def setup(self):
         """Inherited."""
