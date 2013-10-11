@@ -142,7 +142,7 @@ class Gcov(GNAThub.Plugin):
             self.exec_status = GNAThub.EXEC_SUCCESS
 
         except IOError as ex:
-            Log.warn('%s: %s' % (self.name, str(ex)))
+            Log.error('%s: %s' % (self.name, str(ex)))
             self.exec_status = GNAThub.EXEC_FAIL
 
     def execute(self):
