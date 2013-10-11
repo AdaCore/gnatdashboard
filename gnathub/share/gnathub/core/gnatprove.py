@@ -47,7 +47,7 @@ class GNATprove(GNAThub.Plugin):
 
     # Regex to identify line that contains message
     MSG_PATTERN = \
-        '%s:(:\s(?P<severity>[a-z]+))?: (?P<message>.+)' % SLOC_PATTERN
+        '%s:(:\s(?P<severity>[a-z]+))?:\s(?P<message>.+)' % SLOC_PATTERN
     RULE_PATTERN = ' \[(?P<rule>[a-z_]+)\]$'
 
     MSG_RE = re.compile(MSG_PATTERN)
@@ -155,7 +155,7 @@ class GNATprove(GNAThub.Plugin):
 
         try:
             # Extract each component from the message:
-            #       ('nose_gear.adb', '140', '44', ' info',
+            #       ('nose_gear.adb', '140', '44', 'info',
             #        'overflow check proved [overflow_check]')
             src = regex.group('file')
             line = regex.group('line')
@@ -173,10 +173,6 @@ class GNATprove(GNAThub.Plugin):
             rule_id = '%s__%s' % (severity, rule)
 
             self.__add_message(src, line, column, rule_id, message)
-
-        except IndexError:
-            Log.warn('Unexpected message format: %s:%s' % (src, line))
-            Log.warn(line)
 
         except KeyError:
             Log.warn('Unknown severity: %s' % severity)
