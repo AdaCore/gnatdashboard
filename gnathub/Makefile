@@ -21,9 +21,9 @@ include Makefile.conf
 
 .PHONY: tests
 
-all: $(PROJECT)
+all: build/bin/$(PROJECT)
 
-$(PROJECT):
+build/bin/$(PROJECT):
 	$(MKDIR) $(TOP)/build
 	$(RM) $(TOP)/build/share
 	$(LN) $(TOP)/share $(TOP)/build/share
@@ -52,6 +52,15 @@ lint:
 
 tests:
 	cd tests && python testsuite.py
+
+tests-coverage:
+	BUILD_MODE=Coverage $(MAKE) all
+	cd tests && python testsuite.py
+	$(MAKE) analyse-gcov
+
+analyse-gcov:
+	find $(TOP) -name '*.gcda' > $(TOP)/build/obj/gcov_input.txt
+	cd $(TOP)/build/obj && gcov @gcov_input.txt > gcov_run.log
 
 clean:
 	gprclean -q -P $(PROJECT).gpr
