@@ -47,9 +47,14 @@ class GNATcheck(GNAThub.Plugin):
     REPORT = 'gnatcheck.out'
 
     # Regex to identify lines that contain messages
-    ERROR_PATTERN = '%s:\s.+[[].*[]]\s*' % SLOC_PATTERN
+    MSG_PATTERN = '%s:\s(?P<message>.+)' % SLOC_PATTERN
     INSTANCE_PATTERN = '%s instance at %s.+' % (SLOC_PATTERN,
                                                 SLOC_NO_TAG_PATTERN)
+    RULE_PATTERN = ' \[(?P<rule>[a-z_]+)\]$'
+
+    MSG_RE = re.compile(MSG_PATTERN)
+    RULE_RE = re.compile(RULE_PATTERN)
+    INSTANCE_RE = re.compile(INSTANCE_PATTERN)
 
     # GNATcheck exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
@@ -110,8 +115,92 @@ class GNATcheck(GNAThub.Plugin):
 
         self.__parse_report()
 
+    def __parse_report(self):
+        """Parses GNATcheck output file report.
+
+        Sets the exec_status property according to the success of the
+        analysis:
+
+            GNAThub.EXEC_SUCCESS: on successful execution and analysis
+            GNAThub.EXEC_FAIL: on any error
+
+        Identify 2 type of messages with different format:
+            - basic message
+            - message for package instantiation
+        """
+
+        Log.info('gnathub analyse %s' % os.path.relpath(self.report))
+
+        Log.debug('%s: storing tool in database' % self.name)
+        self.tool = dao.save_tool(self.session, self.name)
+
+        Log.debug('%s: parsing report: %s' % (self.name, self.report))
+
+        if not os.path.exists(self.report):
+            self.exec_status = GNAThub.EXEC_FAIL
+            Log.error('%s: no report found' % self.name)
+            Log.error('%s: aborting analysis' % self.name)
+            Log.error('%s: see log file: %s' % (self.name, self.logs()))
+            return
+
+        try:
+            with open(self.report, 'r') as output:
+                lines = output.readlines()
+                total = len(lines)
+
+                for index, line in enumerate(lines, start=1):
+                    # Parse basic message line
+                    match = self.MSG_RE.match(line)
+
+                    if match:
+                        self.__parse_line(match)
+
+                    Log.progress(index, total, new_line=(index == total))
+
+            self.session.commit()
+
+            self.exec_status = GNAThub.EXEC_SUCCESS
+            Log.debug('%s: all objects commited to database' % self.name)
+
+        except IOError as ex:
+            self.exec_status = GNAThub.EXEC_FAIL
+            Log.error('%s: unable to parse report' % self.name)
+            Log.error(str(ex))
+
+    def __parse_line(self, regex):
+        """Parses a GNATcheck message line and add the message to the current
+        database session.
+
+        Retrieves following informations:
+            - source basename,
+            - line in source,
+            - rule identification,
+            - message description
+
+        PARAMETERS
+            :param regex: the result of the MSG_RE regex.
+            :type regex: a regex result.
+        """
+
+        # The following Regex results are explained using this example.
+        # 'input.adb:3:19: use clause for package [USE_PACKAGE_Clauses]'
+
+        # Extract each component from the message:
+        #       ('input.adb', '3', '19', 'use clause for package
+        #        [USE_PACKAGE_Clauses]')
+        src = regex.group('file')
+        line = regex.group('line')
+        column = regex.group('column')
+        message = regex.group('message')
+
+        # Extract the rule from the message: ('overflow_check')
+        match = self.RULE_RE.match(message)
+        rule = match.group('rule')
+
+        self.__add_message(src, line, column, rule, message)
+
     def __add_message(self, src, line, col_begin, rule_id, msg):
-        """Add GNATcheck message to current session DB.
+        """Adds GNATcheck message to current session database.
 
         Parameters:
             :param src: message source file
@@ -140,135 +229,3 @@ class GNATcheck(GNAThub.Plugin):
         # pylint: disable=E1103
         # Disable "Module {} has no member {}" error
         line.messages.append(line_message)
-
-    def __parse_line(self, line):
-        """Parses a GNATcheck message line and add the message to the current
-        database session.
-
-        Retrieves following informations:
-            - source basename,
-            - line in source,
-            - rule identification,
-            - message description
-
-        PARAMETERS
-            :param line: The text line to parse
-            :type line: a string
-        """
-
-        # Example with line : "input.adb:3:19: use clause for package
-        # [USE_PACKAGE_Clauses]"
-
-        # Set maxsplit at 3 because the rule id can contain ':'
-        # split_1 = ['input.adb', '3', '19', ' use clause for package
-        # [USE_PACKAGE_Clauses]']
-        split_1 = line.split(':', 3)
-        src = split_1[0]
-        line = split_1[1]
-        col_begin = split_1[2]
-
-        # Remove rubbish characters
-        # split_2 = [' use clause for package ', 'USE_PACKAGE_Clauses]']
-        split_2 = split_1[-1].split('[', 1)
-        # Remove the closing brace.
-        rule_id = split_2[1].strip()[:-1]
-        msg = split_2[0].strip()
-        self.__add_message(src, line, col_begin, rule_id, msg)
-
-    def __parse_instance_line(self, line):
-        """Parses only one line and extracts the rule ID and message, then adds
-        it to the database.
-
-        PARAMETERS
-            :param line: The text line to parse
-            :type line: a string
-        """
-
-        # Look for the source file that instanciates the generic (last in the
-        # list of "instance at...")
-        match = re.search(SLOC_PATTERN, line)
-
-        # Split to have a list with 'commands-generic_asynchronous.ads:57:15
-        # instance at...' and 'message + rule id'
-        msg_split = re.split(SLOC_PATTERN, line)
-
-        try:
-            # Retreive info on the main file
-            # start_error = ['vsearch.adb', '231', '4', '']
-            start_error = match.group(0).split(':')
-
-            # Parsing message location information
-            src = start_error[0].strip()
-            line = start_error[1]
-            col_begin = start_error[2]
-
-            # Parsing message's rule information
-            ruleid_msg = msg_split[1].split('[', 1)
-            rule_id = ruleid_msg[1].strip()[:-1]
-
-            msg = '%s (%s %s)' % (ruleid_msg[0].strip(),
-                                  msg_split[0].strip(),
-                                  src)
-
-            # Create orm object for the mesage and add it to the session
-            self.__add_message(src, line, col_begin, rule_id, msg)
-
-        except IndexError:
-            Log.warn('Unexpected error for message at: %s:%s' % (src, line))
-
-    def __parse_report(self):
-        """Parses GNATcheck output file report.
-
-        Sets the exec_status property according to the success of the
-        analysis:
-
-            GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAIL: on any error
-
-        Identify 2 type of messages with different format:
-            - basic message
-            - message for package instantiation
-        """
-
-        Log.info('gnathub analyse %s' % os.path.relpath(self.report))
-
-        Log.debug('%s: storing tool in database' % self.name)
-        self.tool = dao.save_tool(self.session, self.name)
-
-        prog_error = re.compile(self.ERROR_PATTERN)
-        prog_instance = re.compile(self.INSTANCE_PATTERN)
-
-        Log.debug('%s: parsing report: %s' % (self.name, self.report))
-
-        if not os.path.exists(self.report):
-            self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: no report found' % self.name)
-            Log.error('%s: aborting analysis' % self.name)
-            Log.error('%s: see log file: %s' % (self.name, self.logs()))
-            return
-
-        try:
-            with open(self.report, 'r') as output:
-                lines = output.readlines()
-                total = len(lines)
-
-                for index, line in enumerate(lines, start=1):
-                    # Parse basic message line
-                    if prog_error.match(line):
-                        self.__parse_line(line)
-
-                    # Parse message line for package instanciation
-                    if prog_instance.match(line):
-                        self.__parse_instance_line(line)
-
-                    Log.progress(index, total, new_line=(index == total))
-
-            self.session.commit()
-
-            self.exec_status = GNAThub.EXEC_SUCCESS
-            Log.debug('%s: all objects commited to database' % self.name)
-
-        except IOError as ex:
-            self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: unable to parse report' % self.name)
-            Log.error(str(ex))
