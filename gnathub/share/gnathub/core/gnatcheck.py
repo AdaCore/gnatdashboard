@@ -30,7 +30,7 @@ import GNAThub.project
 import os
 import re
 
-from _gnat import GNATToolProgressProtocol, SLOC_PATTERN
+from _gnat import GNATToolProgressProtocol, SLOC_PATTERN, SLOC_NO_TAG_PATTERN
 
 from GNAThub import Log
 from GNAThub import dao, db
@@ -48,7 +48,8 @@ class GNATcheck(GNAThub.Plugin):
 
     # Regex to identify lines that contain messages
     ERROR_PATTERN = '%s:\s.+[[].*[]]\s*' % SLOC_PATTERN
-    INSTANCE_PATTERN = '%s instance at %s.+' % (SLOC_PATTERN, SLOC_PATTERN)
+    INSTANCE_PATTERN = '%s instance at %s.+' % (SLOC_PATTERN,
+                                                SLOC_NO_TAG_PATTERN)
 
     # GNATcheck exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)

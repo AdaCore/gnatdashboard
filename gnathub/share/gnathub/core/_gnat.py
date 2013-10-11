@@ -27,7 +27,9 @@ from GNAThub import Log
 
 
 # A source location regex pattern
-SLOC_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+:[0-9]+'
+SLOC_PATTERN = \
+    '(?P<file>[a-zA-Z-_.0-9]+):(?P<line>[0-9]+)(:(?P<column>[0-9]+))?'
+SLOC_NO_TAG_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+(:[0-9]+)?'
 
 
 class PostProcessProtocol(GNAThub.LoggerProcessProtocol):

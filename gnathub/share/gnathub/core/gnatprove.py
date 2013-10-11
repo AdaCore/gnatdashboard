@@ -46,7 +46,12 @@ class GNATprove(GNAThub.Plugin):
     SEVERITIES = {'info': 'INFO', 'warning': 'MINOR', 'error': 'MAJOR'}
 
     # Regex to identify line that contains message
-    MSG_PATTERN = '%s:(\s[a-z]:)?\s.+[[].*[]]\s*' % SLOC_PATTERN
+    MSG_PATTERN = \
+        '%s:(:\s(?P<severity>[a-z]+))?: (?P<message>.+)' % SLOC_PATTERN
+    RULE_PATTERN = ' \[(?P<rule>[a-z_]+)\]$'
+
+    MSG_RE = re.compile(MSG_PATTERN)
+    RULE_RE = re.compile(RULE_PATTERN)
 
     def __init__(self):
         super(GNATprove, self).__init__()
@@ -113,15 +118,14 @@ class GNATprove(GNAThub.Plugin):
             GNAThub.EXEC_FAIL: on any error
         """
 
-        prog_msg = re.compile(self.MSG_PATTERN)
-
         self.tool = dao.save_tool(self.session, self.name)
 
         try:
             with open(self.logs(), 'r') as output:
                 for line in output.readlines():
-                    if prog_msg.match(line):
-                        self.__parse_line(line)
+                    match = self.MSG_RE.match(line)
+                    if match:
+                        self.__parse_line(match)
 
             self.session.commit()
             self.exec_status = GNAThub.EXEC_SUCCESS
@@ -132,7 +136,7 @@ class GNATprove(GNAThub.Plugin):
                                                           self.logs()))
             Log.error(str(ex))
 
-    def __parse_line(self, line):
+    def __parse_line(self, regex):
         """Parses a GNATprove message line and adds it to the database.
 
         Extracts the following informations:
@@ -142,34 +146,33 @@ class GNATprove(GNAThub.Plugin):
             - message description
 
         PARAMETERS
-            :param line: the text line to parse.
-            :type line: a string.
+            :param regex: the result of the MSG_RE regex.
+            :type regex: a regex result.
         """
 
+        # The following Regex results are explained using this example.
+        # 'nose_gear.adb:144:50: info: overflow check proved [overflow_check]'
+
         try:
-            # Example with line: "nose_gear.adb:144:50: info: overflow check
-            # proved [overflow_check]"
+            # Extract each component from the message:
+            #       ('nose_gear.adb', '140', '44', ' info',
+            #        'overflow check proved [overflow_check]')
+            src = regex.group('file')
+            line = regex.group('line')
+            column = regex.group('column')
+            severity = regex.group('severity')
+            message = regex.group('message')
 
-            # split_1 = ['nose_gear.adb', '140', '44', ' info', ' overflow
-            # check proved [overflow_check]\n']
-            split_1 = line.split(':')
+            severity = self.SEVERITIES[severity if severity else 'error']
 
-            src = split_1[0]
-            line = split_1[1]
-            col_begin = split_1[2]
+            # Extract the rule from the message: ('overflow_check')
+            match = self.RULE_RE.match(message)
+            rule = match.group('rule')
 
-            severity = split_1[3].strip()
-            sonar_severity = (self.SEVERITIES['error'] if len(split_1) == 4
-                              else self.SEVERITIES[severity])
+            # Generates the rule ID
+            rule_id = '%s__%s' % (severity, rule)
 
-            # split_2 = [' overflow check proved ', 'overflow_check]\n']
-            split_2 = split_1[-1].split('[', 1)
-
-            # Remove the closing brace.
-            rule_id = '%s__%s' % (sonar_severity, split_2[1].strip()[:-1])
-            msg = split_2[0].strip()
-
-            self.__add_message(src, line, col_begin, rule_id, msg)
+            self.__add_message(src, line, column, rule_id, message)
 
         except IndexError:
             Log.warn('Unexpected message format: %s:%s' % (src, line))
@@ -187,9 +190,9 @@ class GNATprove(GNAThub.Plugin):
             :param line: A line from that source file.
             :type line: A string.
             :param col_begin: The starting column in the line.
-            :type col_begin: A number.
+            :type col_begin: A string.
             :param rule_id: The GNAThub rule ID.
-            :type rule_id: A number.
+            :type rule_id: A string.
             :param msg: The message to record.
             :type msg: A string.
         """
