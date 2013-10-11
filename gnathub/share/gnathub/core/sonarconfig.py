@@ -108,7 +108,7 @@ class SonarConfig(GNAThub.Plugin):
     """SonarConfig plugin for GNAThub.
     """
 
-    TOOL_NAME = 'Sonar Configuration'
+    TOOL_NAME = 'Sonar Config'
 
     def setup(self):
         """Inherited."""
