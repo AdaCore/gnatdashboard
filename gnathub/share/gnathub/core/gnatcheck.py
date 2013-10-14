@@ -82,7 +82,7 @@ class GNATcheck(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        return ['gnat', 'check', '--show-rule', '-o', self.report,
+        return ['gnatcheck', '--show-rule', '-o', self.report,
                 '-P', GNAThub.project.path()]
 
     def execute(self):

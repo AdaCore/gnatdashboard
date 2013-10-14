@@ -66,7 +66,7 @@ class GNATmetric(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        return ['gnat', 'metric', '-ox', self.report,
+        return ['gnatmetric', '-ox', self.report,
                 '-P', GNAThub.project.path(), '-U']
 
     def execute(self):
