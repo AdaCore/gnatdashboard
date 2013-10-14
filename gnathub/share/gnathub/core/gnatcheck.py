@@ -30,7 +30,7 @@ import GNAThub.project
 import os
 import re
 
-from _gnat import GNATToolProgressProtocol, SLOC_PATTERN, SLOC_NO_TAG_PATTERN
+from _gnat import GNATToolProgressProtocol, SLOC_PATTERN
 
 from GNAThub import Log
 from GNAThub import dao, db
@@ -47,14 +47,11 @@ class GNATcheck(GNAThub.Plugin):
     REPORT = 'gnatcheck.out'
 
     # Regex to identify lines that contain messages
-    MSG_PATTERN = '%s:\s(?P<message>.+)' % SLOC_PATTERN
-    INSTANCE_PATTERN = '%s instance at %s.+' % (SLOC_PATTERN,
-                                                SLOC_NO_TAG_PATTERN)
-    RULE_PATTERN = ' \[(?P<rule>[a-z_]+)\]$'
+    _RULE_PATTERN = '(?P<message>.+)\s\[(?P<rule>[A-Za-z_]+)\]$'
 
-    MSG_RE = re.compile(MSG_PATTERN)
-    RULE_RE = re.compile(RULE_PATTERN)
-    INSTANCE_RE = re.compile(INSTANCE_PATTERN)
+    # Regular expression to match GNATcheck output and extract all relevant
+    # information stored in it.
+    _MESSAGE = re.compile('%s:\s%s' % (SLOC_PATTERN, _RULE_PATTERN))
 
     # GNATcheck exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
@@ -149,10 +146,12 @@ class GNATcheck(GNAThub.Plugin):
                 total = len(lines)
 
                 for index, line in enumerate(lines, start=1):
-                    # Parse basic message line
-                    match = self.MSG_RE.match(line)
+                    Log.debug('Parsing line: %s' % line)
+
+                    match = self._MESSAGE.match(line)
 
                     if match:
+                        Log.debug('Matched groups: %s' % str(match.groups()))
                         self.__parse_line(match)
 
                     Log.progress(index, total, new_line=(index == total))
@@ -186,16 +185,13 @@ class GNATcheck(GNAThub.Plugin):
         # 'input.adb:3:19: use clause for package [USE_PACKAGE_Clauses]'
 
         # Extract each component from the message:
-        #       ('input.adb', '3', '19', 'use clause for package
-        #        [USE_PACKAGE_Clauses]')
+        #       ('input.adb', '3', '19', 'use clause for package',
+        #        'USE_PACKAGE_Clauses')
         src = regex.group('file')
         line = regex.group('line')
         column = regex.group('column')
         message = regex.group('message')
-
-        # Extract the rule from the message: ('overflow_check')
-        match = self.RULE_RE.match(message)
-        rule = match.group('rule')
+        rule = regex.group('rule')
 
         self.__add_message(src, line, column, rule, message)
 
