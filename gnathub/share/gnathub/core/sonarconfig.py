@@ -31,6 +31,9 @@ import GNAThub.project
 import os
 
 from GNAThub import Log
+
+# pylint: disable=F0401
+# Disable: Unable to import '{}'
 from _sonarqube import SonarQube
 
 

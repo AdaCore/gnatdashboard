@@ -29,6 +29,8 @@ import GNAThub.project
 
 import os
 
+# pylint: disable=F0401
+# Disable: Unable to import '{}'
 from _gnat import GNATToolProgressProtocol
 
 from GNAThub import Log
@@ -56,8 +58,8 @@ class GNATmetric(GNAThub.Plugin):
 
         self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
 
-        self.process = GNAThub.Process(self.name, self.__cmd_line(),
-                                       GNATToolProgressProtocol(self))
+        self.gnatmetric = GNAThub.Process(self.name, self.__cmd_line(),
+                                          GNATToolProgressProtocol(self))
 
     def __cmd_line(self):
         """Creates GNATmetric command line arguments list.
@@ -75,7 +77,7 @@ class GNATmetric(GNAThub.Plugin):
         GNATmetric.postprocess() will be called upon process completion.
         """
 
-        self.process.execute()
+        self.gnatmetric.execute()
 
     def postprocess(self, exit_code):
         """Postprocesses the tool execution: parse the output XML report on

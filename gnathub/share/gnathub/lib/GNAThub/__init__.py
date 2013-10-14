@@ -447,7 +447,7 @@ class LoggerProcessProtocol(ProcessProtocol):
 
         ProcessProtocol.outReceived(self, data)
 
-        with open(self.plugin.logs(), 'w+a') as log:
+        with open(self.plugin.logs(), 'a+') as log:
             log.write(data)
 
     # pylint: disable=C0103
@@ -457,7 +457,7 @@ class LoggerProcessProtocol(ProcessProtocol):
 
         ProcessProtocol.errReceived(self, data)
 
-        with open(self.plugin.logs(), 'w+a') as log:
+        with open(self.plugin.logs(), 'a+') as log:
             log.write(data)
 
 

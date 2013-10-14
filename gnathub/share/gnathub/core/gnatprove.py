@@ -28,6 +28,8 @@ import GNAThub
 
 import re
 
+# pylint: disable=F0401
+# Disable: Unable to import '{}'
 from _gnat import PostProcessProtocol, SLOC_PATTERN
 
 from GNAThub import Log
@@ -56,8 +58,8 @@ class GNATprove(GNAThub.Plugin):
     def __init__(self):
         super(GNATprove, self).__init__()
 
-        self.process = GNAThub.Process(self.name, self.__cmd_line(),
-                                       PostProcessProtocol(self))
+        self.gnatprove = GNAThub.Process(self.name, self.__cmd_line(),
+                                         PostProcessProtocol(self))
 
     def display_command_line(self):
         """Inherited."""
@@ -83,7 +85,7 @@ class GNATprove(GNAThub.Plugin):
         GNATprove.postprocess() will be called upon process completion.
         """
 
-        self.process.execute()
+        self.gnatprove.execute()
 
     def postprocess(self, exit_code):
         """Postprocesses the tool execution: parse the output report on
@@ -97,9 +99,9 @@ class GNATprove(GNAThub.Plugin):
         """
 
         if exit_code != 0:
+            self.exec_status = GNAThub.EXEC_FAIL
             Log.error('%s: execution failed' % self.name)
             Log.error('%s: see log file: %s' % (self.name, self.logs()))
-            self.exec_status = GNAThub.EXEC_FAIL
             return
 
         self.__parse_output()

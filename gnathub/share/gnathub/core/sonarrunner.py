@@ -44,8 +44,8 @@ class SonarRunner(GNAThub.Plugin):
 
         super(SonarRunner, self).__init__()
 
-        self.process = GNAThub.Process(self.name, self.__cmd_line(),
-                                       PostProcessProtocol(self))
+        self.sonarrunner = GNAThub.Process(self.name, self.__cmd_line(),
+                                           PostProcessProtocol(self))
 
     def setup(self):
         """Inherited."""
@@ -76,7 +76,7 @@ class SonarRunner(GNAThub.Plugin):
         SonarRunner.postprocess() will be called upon process completion.
         """
 
-        self.process.execute()
+        self.sonarrunner.execute()
 
     def postprocess(self, exit_code):
         """Postprocesses the tool execution: parse the output XML report on
@@ -90,9 +90,9 @@ class SonarRunner(GNAThub.Plugin):
         """
 
         if exit_code != 0:
+            self.exec_status = GNAThub.EXEC_FAIL
             Log.error('%s: execution failed' % self.name)
             Log.error('%s: see log file: %s' % (self.name, self.logs()))
-            self.exec_status = GNAThub.EXEC_FAIL
             return
 
         self.exec_status = GNAThub.EXEC_SUCCESS
