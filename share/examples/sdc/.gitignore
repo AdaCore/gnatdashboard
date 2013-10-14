@@ -1,0 +1,9 @@
+/obj/gnatcheck.out
+/obj/gnatcheck-source-list.out
+/obj/*.metrix
+/obj/metrix.xml
+/obj/codepeer/
+/obj/codepeer.csv
+/obj/gnatprove/
+/obj/gnathub/
+/projects/*.metrix
