@@ -2,53 +2,31 @@ with "projects/prj2";
 
 project Sdc is
 
-   for Languages use ("ada");
+   for Languages use ("Ada");
    for Source_Dirs use ("common", "struct");
    for Main use ("sdc.adb");
-   type Build_Type is ("PRODUCTION", "DEBUG");
-   Build : Build_Type := external ("Build", "DEBUG");
 
    for Object_Dir use "obj";
 
    package Compiler is
-      case Build is
-         when "DEBUG" =>
-            -- for Default_Switches ("ada") use
-            --  ("-gnatwe", "-gnaty", "-gnato", "-g");
-            --for Switches ("screen_output.adb") use
-            --  ("-gnatwe", "-gnaty", "-g");
-
-         when "PRODUCTION" =>
-            for Default_Switches ("ada") use
-              ("-O2", "-gnatn", "-gnatwe", "-gnaty", "-gnatp");
-      end case;
+      for Default_Switches ("Ada") use
+        ("-O2", "-gnatn", "-gnatwe", "-gnaty", "-gnatp");
    end Compiler;
 
-   package Builder is
-      case Build is
-         when "DEBUG" =>
-            for Default_Switches ("ada") use ("-g");
-
-         when "PRODUCTION" =>
-            for Default_Switches ("ada") use ();
-      end case;
-   end Builder;
-
    package Binder is
-      for Default_Switches ("ada") use ("-static");
+      for Default_Switches ("Ada") use ("-static");
    end Binder;
 
    package Ide is
-      for Vcs_Kind use "CVS";
+      for Vcs_Kind use "Git";
    end Ide;
 
    package Check is
-       for Default_Switches ("ada") use ("-rules", "-from=/chelles.a/users/martin/projects/qualimetrics/share/examples/sdc/rules.txt", "-U");
+       for Default_Switches ("Ada") use ("-rules", "-from=gnatcheck.rules");
    end Check;
 
-    package Qualimetrics is
+    package GNAThub is
         for Project_Name use "Poney";
-    end Qualimetrics;
+    end GNAThub;
 
 end Sdc;
-
