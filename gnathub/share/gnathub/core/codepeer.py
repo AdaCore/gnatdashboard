@@ -45,7 +45,7 @@ class _CodePeerProtocol(GNAThub.LoggerProcessProtocol):
                                re.MULTILINE)
     PROCESSING = re.compile('^partition (?P<current>[0-9]+) of [0-9]+.$',
                             re.MULTILINE)
-    COMPLETED = re.compile('^(?P<count>[0-9]+) .scil file(s)? processed.$',
+    COMPLETED = re.compile('^(?P<count>[0-9]+) .scil files processed',
                            re.MULTILINE)
     WAITING_LOCK = re.compile('^Waiting for lock (?P<lock>.*)$', re.MULTILINE)
 
@@ -64,7 +64,7 @@ class _CodePeerProtocol(GNAThub.LoggerProcessProtocol):
 
         GNAThub.LoggerProcessProtocol.errReceived(self, data)
 
-        match = self.WAITING_LOCK.match(data)
+        match = self.WAITING_LOCK.search(data)
 
         if match:
             Log.error('%s: Waiting for lock file: %s' %
@@ -82,7 +82,7 @@ class _CodePeerProtocol(GNAThub.LoggerProcessProtocol):
                          new_line=(self.count == self.total))
             Log.debug('Processed %s .scil' % match.group('count'))
 
-        match = self.PROCESSING.match(data)
+        match = self.PROCESSING.search(data)
 
         if match:
             current = int(match.group('current'))
@@ -99,7 +99,7 @@ class _CodePeerProtocol(GNAThub.LoggerProcessProtocol):
 
         GNAThub.LoggerProcessProtocol.outReceived(self, data)
 
-        match = self.SPLIT_MENTION.match(data)
+        match = self.SPLIT_MENTION.search(data)
 
         if match:
             self.total = int(match.group('total'))

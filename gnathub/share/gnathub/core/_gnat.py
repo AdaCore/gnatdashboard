@@ -60,7 +60,7 @@ class GNATToolProgressProtocol(PostProcessProtocol):
     command-line output feedback about the execution progress.
     """
 
-    REMAINING = re.compile('^Units remaining: (?P<count>[0-9]+)')
+    REMAINING = re.compile('^Units remaining: (?P<count>[0-9]+)', re.MULTILINE)
 
     def __init__(self, tool):
         """Instance constructor."""
@@ -75,7 +75,7 @@ class GNATToolProgressProtocol(PostProcessProtocol):
 
         PostProcessProtocol.errReceived(self, data)
 
-        match = self.REMAINING.match(data)
+        match = self.REMAINING.search(data)
 
         if match:
             count = int(match.group('count'))
