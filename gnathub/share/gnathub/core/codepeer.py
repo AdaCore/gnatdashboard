@@ -209,7 +209,7 @@ class CodePeer(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        return ['codepeer', '-update-scil', '-level', '1',
+        return ['codepeer', '-update-scil', '-level', '1', '-jobs', '0',
                 '-P', GNAThub.project.path()]
 
     def __msg_reader_cmd_line(self):
