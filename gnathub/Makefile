@@ -25,7 +25,7 @@ all: build/bin/$(PROJECT)
 
 build/bin/$(PROJECT):
 	$(MKDIR) $(TOP)/build
-	$(RM) $(TOP)/build/share
+	$(RMDIR) $(TOP)/build/share
 	$(LN) $(TOP)/share $(TOP)/build/share
 	gprbuild -p -P $(PROJECT).gpr
 
