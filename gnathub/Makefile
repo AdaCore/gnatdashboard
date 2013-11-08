@@ -21,13 +21,12 @@ include Makefile.conf
 
 .PHONY: tests
 
-all: build/bin/$(PROJECT)
+all: $(BUILD_DIR)/bin/$(PROJECT)
 
-build/bin/$(PROJECT):
-	$(MKDIR) $(TOP)/build
-	$(RMDIR) $(TOP)/build/share
-	$(LN) $(TOP)/share $(TOP)/build/share
+$(BUILD_DIR)/bin/$(PROJECT):
 	gprbuild -p -P $(PROJECT).gpr
+	$(RMDIR) $(BUILD_DIR)/share
+	$(LN) $(TOP)/share $(TOP)/build/share
 
 create:
 	# Create the database from the schema
@@ -75,8 +74,8 @@ install:
 	cp COPYING3 $(INSTALL_PREFIX)
 	$(MKDIR) $(INSTALL_PREFIX)/bin
 	$(MKDIR) $(INSTALL_PREFIX)/share
-	(cd build && tar cf - bin) | (cd $(INSTALL_PREFIX) && tar xf -)
-	(cd share && tar cf - --exclude='*.pyc' $(PROJECT)) | (cd $(INSTALL_PREFIX)/share && tar xf -)
+	(cd $(BUILD_DIR) && tar cf - bin) | (cd $(INSTALL_PREFIX) && tar xf -)
+	(cd $(TOP)/share && tar cf - --exclude='*.pyc' $(PROJECT)) | (cd $(INSTALL_PREFIX)/share && tar xf -)
 
 distrib: $(PROJECT)
 	$(RMDIR) $(DISTRIB_PREFIX)
