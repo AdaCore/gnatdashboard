@@ -124,11 +124,10 @@ class SonarConfig(GNAThub.Plugin):
     def display_command_line(self):
         """Inherited."""
 
-        cmdline = super(SonarConfig, self).display_command_line()
-        cmdline.extend(['-P', GNAThub.project.name()])
+        cmdline = ['-P', GNAThub.project.name()]
         cmdline.extend(['-o', os.path.relpath(SonarQube.configuration())])
 
-        return cmdline
+        return ' '.join(cmdline)
 
     def execute(self):
         """Generates SonarQube Runner configuration file and dumps it."""
@@ -142,6 +141,3 @@ class SonarConfig(GNAThub.Plugin):
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAIL
             Log.fatal(str(ex))
-
-        # Ensure that we don't break the plugin chain.
-        self.ensure_chain_reaction(async=True)

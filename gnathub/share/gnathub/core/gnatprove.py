@@ -30,7 +30,7 @@ import re
 
 # pylint: disable=F0401
 # Disable: Unable to import '{}'
-from _gnat import PostProcessProtocol, SLOC_PATTERN
+from _gnat import SLOC_PATTERN
 
 from GNAThub import Log
 from GNAThub import dao, db
@@ -58,17 +58,10 @@ class GNATprove(GNAThub.Plugin):
     def __init__(self):
         super(GNATprove, self).__init__()
 
-        self.gnatprove = GNAThub.Process(self.name, self.__cmd_line(),
-                                         PostProcessProtocol(self))
-
     def display_command_line(self):
         """Inherited."""
 
-        cmdline = super(GNATprove, self).display_command_line()
-        cmdline.extend(['-P', GNAThub.project.name()])
-        cmdline.append('--show-tag')
-
-        return cmdline
+        return ' '.join(['-P', GNAThub.project.name(), '--show-tag'])
 
     def __cmd_line(self):
         """Creates GNATcheck command line arguments list.
@@ -85,9 +78,11 @@ class GNATprove(GNAThub.Plugin):
         GNATprove.postprocess() will be called upon process completion.
         """
 
-        self.gnatprove.execute()
+        Log.info('%s.run %s' % (self.fqn, self.display_command_line()))
+        proc = GNAThub.Run(self.name, self.__cmd_line())
+        self.postprocess(proc.status, proc.output())
 
-    def postprocess(self, exit_code):
+    def postprocess(self, exit_code, logfile):
         """Postprocesses the tool execution: parse the output report on
         success.
 
@@ -100,13 +95,12 @@ class GNATprove(GNAThub.Plugin):
 
         if exit_code != 0:
             self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: execution failed' % self.name)
-            Log.error('%s: see log file: %s' % (self.name, self.logs()))
+            Log.error('%s: execution failed' % self.fqn)
             return
 
-        self.__parse_output()
+        self.__parse_output(logfile)
 
-    def __parse_output(self):
+    def __parse_output(self, logfile):
         """Parses GNATprove output file (logs recorded during execution).
 
         Identifies two types of mmessages with different format:
@@ -123,7 +117,7 @@ class GNATprove(GNAThub.Plugin):
         self.tool = dao.save_tool(self.session, self.name)
 
         try:
-            with open(self.logs(), 'r') as output:
+            with open(logfile, 'r') as output:
                 for line in output.readlines():
                     match = self.MSG_RE.match(line)
                     if match:
@@ -134,8 +128,7 @@ class GNATprove(GNAThub.Plugin):
 
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: failed to parse output: %s' % (self.name,
-                                                          self.logs()))
+            Log.error('%s: failed to parse output: %s' % (self.fqn, logfile))
             Log.error(str(ex))
 
     def __parse_line(self, regex):
@@ -208,5 +201,5 @@ class GNATprove(GNAThub.Plugin):
             line.messages.append(line_message)
 
         else:
-            Log.warn('%s: file not found: %s' % (self.name, src))
-            Log.warn('%s: skipping message: %s' % (self.name, msg))
+            Log.warn('%s: file not found: %s' % (self.fqn, src))
+            Log.warn('%s: skipping message: %s' % (self.fqn, msg))

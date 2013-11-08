@@ -52,10 +52,7 @@ class Gcov(GNAThub.Plugin):
     def display_command_line(self):
         """Inherited."""
 
-        cmdline = super(Gcov, self).display_command_line()
-        cmdline.extend(['-P', GNAThub.project.name()])
-
-        return cmdline
+        return ' '.join(['-P', GNAThub.project.name()])
 
     def __add_line_hits(self, resource, line_num, hits):
         """Registers hits count for a specific line in the given file.
@@ -142,13 +139,11 @@ class Gcov(GNAThub.Plugin):
             self.exec_status = GNAThub.EXEC_SUCCESS
 
         except IOError as ex:
-            Log.error('%s: %s' % (self.name, str(ex)))
+            Log.error('%s: %s' % (self.fqn, str(ex)))
             self.exec_status = GNAThub.EXEC_FAIL
 
     def execute(self):
         """Finds the Gcov output files and parses them."""
 
+        Log.info('%s.parse: *%s' % (self.fqn, self.GCOV_SUFFIX))
         self.__parse_gcov_report()
-
-        # Ensure that we don't break the plugin chain.
-        self.ensure_chain_reaction(async=True)

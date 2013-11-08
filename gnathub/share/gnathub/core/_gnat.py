@@ -20,78 +20,8 @@
 """Provides common components to GNAT Pro Tool Suite.
 """
 
-import GNAThub
-import re
-
-from GNAThub import Log
-
-
 # A source location regex pattern
 SLOC_PATTERN = \
     '(?P<file>[a-zA-Z-_.0-9]+):(?P<line>[0-9]+)(:(?P<column>[0-9]+))?'
+
 SLOC_NO_TAG_PATTERN = '[a-zA-Z-_.0-9]+:[0-9]+(:[0-9]+)?'
-
-
-class PostProcessProtocol(GNAThub.LoggerProcessProtocol):
-    """A custom LoggerProcessProtocol that calls the plug-in's postprocess
-    method then ensures plug-ins chaining.
-    """
-
-    def __init__(self, tool):
-        """Instance constructor."""
-
-        GNAThub.LoggerProcessProtocol.__init__(self, tool)
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def processEnded(self, reason):
-        """Inherited."""
-
-        GNAThub.LoggerProcessProtocol.processEnded(self, reason)
-
-        self.plugin.postprocess(self.exit_code)
-
-        # Ensure that we don't break the plugin chain.
-        self.plugin.ensure_chain_reaction()
-
-
-class GNATToolProgressProtocol(PostProcessProtocol):
-    """A custom PostProcessProtocol to additionally provide the user with
-    command-line output feedback about the execution progress.
-    """
-
-    REMAINING = re.compile('^Units remaining: (?P<count>[0-9]+)', re.MULTILINE)
-
-    def __init__(self, tool):
-        """Instance constructor."""
-
-        PostProcessProtocol.__init__(self, tool)
-        self.total = None
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def errReceived(self, data):
-        """Inherited."""
-
-        PostProcessProtocol.errReceived(self, data)
-
-        match = self.REMAINING.search(data)
-
-        if match:
-            count = int(match.group('count'))
-
-            if self.total is None:
-                self.total = count
-                Log.progress(1, self.total)
-            else:
-                Log.progress(self.total - count, self.total)
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def processEnded(self, reason):
-        """Inherited."""
-
-        if self.total:
-            Log.progress(self.total, self.total, new_line=True)
-
-        PostProcessProtocol.processEnded(self, reason)

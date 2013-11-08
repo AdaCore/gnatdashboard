@@ -29,10 +29,6 @@ import GNAThub.project
 
 import os
 
-# pylint: disable=F0401
-# Disable: Unable to import '{}'
-from _gnat import GNATToolProgressProtocol
-
 from GNAThub import Log
 from GNAThub import dao, db
 from GNAThub.db import Message
@@ -58,9 +54,6 @@ class GNATmetric(GNAThub.Plugin):
 
         self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
 
-        self.gnatmetric = GNAThub.Process(self.name, self.__cmd_line(),
-                                          GNATToolProgressProtocol(self))
-
     def __cmd_line(self):
         """Creates GNATmetric command line arguments list.
 
@@ -68,8 +61,8 @@ class GNATmetric(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        return ['gnatmetric', '-ox', self.report,
-                '-P', GNAThub.project.path(), '-U']
+        return ['gnatmetric', '-ox', self.report, '-P', GNAThub.project.path(),
+                '-U']
 
     def execute(self):
         """Executes the GNATmetric.
@@ -77,7 +70,9 @@ class GNATmetric(GNAThub.Plugin):
         GNATmetric.postprocess() will be called upon process completion.
         """
 
-        self.gnatmetric.execute()
+        Log.info('%s.run %s' % (self.fqn, self.display_command_line()))
+        proc = GNAThub.Run(self.name, self.__cmd_line())
+        self.postprocess(proc.status)
 
     def postprocess(self, exit_code):
         """Postprocesses the tool execution: parse the output XML report on
@@ -91,8 +86,7 @@ class GNATmetric(GNAThub.Plugin):
         """
 
         if exit_code not in GNATmetric.VALID_EXIT_CODES:
-            Log.error('%s: execution failed' % self.name)
-            Log.error('%s: see log file: %s' % (self.name, self.logs()))
+            Log.error('%s: execution failed' % self.fqn)
             self.exec_status = GNAThub.EXEC_FAIL
             return
 
@@ -101,11 +95,10 @@ class GNATmetric(GNAThub.Plugin):
     def display_command_line(self):
         """Inherited."""
 
-        cmdline = super(GNATmetric, self).display_command_line()
-        cmdline.extend(['-P', GNAThub.project.name()])
+        cmdline = ['-P', GNAThub.project.name()]
         cmdline.extend(['-o', os.path.relpath(self.report)])
 
-        return cmdline
+        return ' '.join(cmdline)
 
     def __parse_xml_report(self):
         """Parses GNATmetric XML report and save data to the database.
@@ -117,12 +110,12 @@ class GNATmetric(GNAThub.Plugin):
             GNAThub.EXEC_FAIL: if error happened while parsing the xml report
         """
 
-        Log.info('gnathub analyse %s' % os.path.relpath(self.report))
+        Log.info('%s.analyse %s' % (self.fqn, os.path.relpath(self.report)))
 
-        Log.debug('%s: storing tool in database' % self.name)
+        Log.debug('%s: storing tool in database' % self.fqn)
         tool = dao.save_tool(self.session, self.name)
 
-        Log.debug('%s: parsing XML report: %s' % (self.name, self.report))
+        Log.debug('%s: parsing XML report: %s' % (self.fqn, self.report))
 
         try:
             tree = ElementTree.parse(self.report)
@@ -167,15 +160,15 @@ class GNATmetric(GNAThub.Plugin):
             self.session.commit()
             self.exec_status = GNAThub.EXEC_SUCCESS
 
-            Log.debug('%s: all objects commited to database' % self.name)
+            Log.debug('%s: all objects commited to database' % self.fqn)
 
         except ParseError as ex:
             self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: unable to parse XML report' % self.name)
+            Log.error('%s: unable to parse XML report' % self.fqn)
             Log.error('%s:%s:%s - :%s' % (ex.filename, ex.lineno, ex.text,
                                           ex.msg))
 
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: unable to parse XML report' % self.name)
+            Log.error('%s: unable to parse XML report' % self.fqn)
             Log.error(str(ex))

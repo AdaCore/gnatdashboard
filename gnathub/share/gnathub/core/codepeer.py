@@ -29,145 +29,10 @@ import GNAThub.project
 
 import csv
 import os
-import re
 
 from GNAThub import Log
 from GNAThub import dao, db
 from GNAThub.db import Message, LineMessage
-
-
-class _CodePeerProtocol(GNAThub.LoggerProcessProtocol):
-    """A custom LoggerProcessProtocol that calls the plug-in's postprocess
-    method then ensures plug-ins chaining.
-    """
-
-    SPLIT_MENTION = re.compile('^.* split into (?P<total>[0-9]+) parts.$',
-                               re.MULTILINE)
-    PROCESSING = re.compile('^partition (?P<current>[0-9]+) of [0-9]+.$',
-                            re.MULTILINE)
-    COMPLETED = re.compile('^(?P<count>[0-9]+) .scil files processed',
-                           re.MULTILINE)
-    WAITING_LOCK = re.compile('^Waiting for lock (?P<lock>.*)$', re.MULTILINE)
-
-    def __init__(self, codepeer):
-        """Instance constructor."""
-
-        GNAThub.LoggerProcessProtocol.__init__(self, codepeer)
-
-        self.total = None
-        self.count = 0
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def errReceived(self, data):
-        """Inherited."""
-
-        GNAThub.LoggerProcessProtocol.errReceived(self, data)
-
-        match = self.WAITING_LOCK.search(data)
-
-        if match:
-            Log.error('%s: Waiting for lock file: %s' %
-                      (self.plugin.name, match.group('lock')))
-
-        if self.total is None:
-            # We cannot infer the number of partitions yet
-            return
-
-        match = self.COMPLETED.search(data)
-
-        if match:
-            self.count = self.count + 1
-            Log.progress(self.count, self.total,
-                         new_line=(self.count == self.total))
-            Log.debug('Processed %s .scil' % match.group('count'))
-
-        match = self.PROCESSING.search(data)
-
-        if match:
-            current = int(match.group('current'))
-
-            Log.debug('Processing partition %d of %d' % (current, self.total))
-
-            if current == 1:
-                Log.progress(0, self.total)
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def outReceived(self, data):
-        """Inherited."""
-
-        GNAThub.LoggerProcessProtocol.outReceived(self, data)
-
-        match = self.SPLIT_MENTION.search(data)
-
-        if match:
-            self.total = int(match.group('total'))
-            Log.debug('Found total partitions: %d' % self.total)
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def processEnded(self, reason):
-        """Inherited."""
-
-        GNAThub.LoggerProcessProtocol.processEnded(self, reason)
-
-        if self.total is None:
-            Log.progress(1, 1, new_line=True)
-
-        if self.exit_code != 0:
-            Log.error('%s: execution failed' % self.plugin.name)
-            Log.error('%s: see log file: %s' % (self.plugin.name,
-                                                self.plugin.logs()))
-            self.plugin.exec_status = GNAThub.EXEC_FAIL
-
-            # Ensure that we don't break the plugin chain.
-            self.plugin.ensure_chain_reaction()
-            return
-
-        self.plugin.execute_msg_reader()
-
-
-class _CodePeerMsgReaderProtocol(GNAThub.ProcessProtocol):
-    """A custom ProcessProtocol that redirects all output to the report file.
-    """
-
-    def __init__(self, codepeer):
-        """Instance constructor."""
-
-        GNAThub.ProcessProtocol.__init__(self, codepeer)
-        self._fd = open(codepeer.report, 'w+')
-
-        Log.debug('%s: will log to: %s' % (codepeer.name, codepeer.report))
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def outReceived(self, data):
-        """Inherited."""
-
-        GNAThub.ProcessProtocol.outReceived(self, data)
-        self._fd.write(data)
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def errReceived(self, data):
-        """Inherited."""
-
-        GNAThub.ProcessProtocol.errReceived(self, data)
-        self._fd.write(data)
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def processEnded(self, reason):
-        """Inherited."""
-
-        GNAThub.ProcessProtocol.processEnded(self, reason)
-
-        self._fd.close()
-        self.plugin.postprocess(self.exit_code)
-
-        # Ensure that we don't break the plugin chain.
-        self.plugin.ensure_chain_reaction()
 
 
 class CodePeer(GNAThub.Plugin):
@@ -186,21 +51,13 @@ class CodePeer(GNAThub.Plugin):
 
         self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
 
-        self.codepeer = GNAThub.Process(self.name, self.__cmd_line(),
-                                        _CodePeerProtocol(self))
-
-        self.msg_reader = GNAThub.Process('msg_reader',
-                                          self.__msg_reader_cmd_line(),
-                                          _CodePeerMsgReaderProtocol(self))
-
     def display_command_line(self):
         """Inherited."""
 
-        cmdline = super(CodePeer, self).display_command_line()
-        cmdline.extend(['-P', GNAThub.project.name()])
+        cmdline = ['-P', GNAThub.project.name()]
         cmdline.extend(['-o', os.path.relpath(self.report)])
 
-        return cmdline
+        return ' '.join(cmdline)
 
     def __cmd_line(self):
         """Creates CodePeer command line arguments list.
@@ -231,7 +88,13 @@ class CodePeer(GNAThub.Plugin):
         CodePeer.execute_msg_reader() will be called upon process completion.
         """
 
-        self.codepeer.execute()
+        Log.info('%s.run %s' % (self.fqn, self.display_command_line()))
+        proc = GNAThub.Run(self.name, self.__cmd_line())
+
+        if proc.status:
+            return
+
+        self.execute_msg_reader()
 
     def execute_msg_reader(self):
         """Executes the CodePeer Message Reader.
@@ -239,7 +102,10 @@ class CodePeer(GNAThub.Plugin):
         CodePeer.postprocess() will be called upon process completion.
         """
 
-        self.msg_reader.execute()
+        Log.info('%s.msg_reader' % self.fqn)
+        proc = GNAThub.Run('msg_reader', self.__msg_reader_cmd_line())
+
+        self.postprocess(proc.status)
 
     def postprocess(self, exit_code):
         """Postprocesses the tool execution: parse the output report on
@@ -254,8 +120,7 @@ class CodePeer(GNAThub.Plugin):
 
         if exit_code != 0:
             self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: execution failed' % self.name)
-            Log.error('%s: see log file: %s' % (self.name, self.logs()))
+            Log.error('%s: execution failed' % self.fqn)
             return
 
         self.__parse_csv_report()
@@ -270,18 +135,16 @@ class CodePeer(GNAThub.Plugin):
             GNAThub.EXEC_FAIL: on any error
         """
 
-        Log.info('gnathub analyse %s' % os.path.relpath(self.report))
+        Log.info('%s.analyse %s' % (self.fqn, os.path.relpath(self.report)))
 
-        Log.debug('%s: storing tool in database' % self.name)
+        Log.debug('%s: storing tool in database' % self.fqn)
         self.tool = dao.save_tool(self.session, self.name)
 
-        Log.debug('%s: parsing CSV report: %s' % (self.name, self.report))
+        Log.debug('%s: parsing CSV report: %s' % (self.fqn, self.report))
 
         if not os.path.exists(self.report):
             self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: no report found' % self.name)
-            Log.error('%s: aborting analysis' % self.name)
-            Log.error('%s: see log file: %s' % (self.name, self.logs()))
+            Log.error('%s: no report found, aborting.' % self.fqn)
             return
 
         with open(self.report, 'rb') as report:
@@ -328,8 +191,9 @@ class CodePeer(GNAThub.Plugin):
                     Log.progress(index, total, new_line=(index == total))
 
             except csv.Error as ex:
-                Log.error('%s report analysis failed.' % self.name)
-                Log.error('file %s, line %d: %s' % (report, total, ex))
+                Log.error('%s: report analysis failed.' % self.fqn)
+                Log.error('%s: file %s, line %d: %s' % (self.fqn, report,
+                                                        total, ex))
                 self.exec_status = GNAThub.EXEC_FAIL
                 return
 

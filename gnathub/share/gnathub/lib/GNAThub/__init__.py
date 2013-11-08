@@ -169,10 +169,9 @@ _DB_SESSION_FACTORY = sessionmaker()
 _DB_SESSION_FACTORY.configure(bind=__DB_ENGINE)
 
 import os
-import tempfile
 
 from abc import ABCMeta, abstractmethod
-from twisted.internet import protocol, reactor, threads
+from subprocess import Popen, STDOUT
 
 EXEC_FAIL, EXEC_SUCCESS, NOT_EXECUTED = range(3)
 
@@ -214,10 +213,10 @@ class Plugin:
         printed on the GNAThub tool output.
 
         RETURNS
-            :rtype: a list of string
+            :rtype: a string
         """
 
-        return [self.name.lower()]
+        return self.name.lower()
 
     def setup(self):
         """This method is called prior to a call to Plugin.execute.
@@ -247,26 +246,6 @@ class Plugin:
 
         if self.session:
             self.session.close()
-
-    def ensure_chain_reaction(self, async=False):
-        """This method is called after a call to Plugin.execute.
-
-        This is where environment cleanup should be done to ensure a consistant
-        state for a future execution.
-
-        PARAMETERS
-            :param async: whether to have this call run synchronously or
-                asynchronously. This is particularly useful when a plug-in's
-                execution does not require asynchronous processing (e.g. does
-                not spawn a process) and thus needs to defer the execution of
-                this function.
-            :type async: a boolean.
-        """
-
-        if async:
-            threads.deferToThread(_chain_reaction)
-        else:
-            _chain_reaction()
 
     @property
     def exec_status(self):
@@ -314,172 +293,33 @@ class Plugin:
 
         return self.TOOL_NAME
 
-    @classmethod
-    def logs(cls):
-        """Returns absolute the path to the file that contains the logs for
-        this tool's execution.
+    @property
+    def fqn(self):
+        """Returns the fully qualified name of the tool, as specified by the
+        TOOL_NAME class variable.
 
         RETURNS
-            :rtype: a string
+            :rtype: a string.
         """
 
-        tool = '-'.join(cls.TOOL_NAME.lower().split())
-
-        if cls.LOG_FILE is None:
-            _, path = tempfile.mkstemp(prefix='%s-' % tool, text=True,
-                                       suffix='.log', dir=logs())
-            cls.LOG_FILE = path
-
-        return cls.LOG_FILE
+        return 'gnathub.%s' % self.name.lower()
 
 
-class ProcessProtocol(protocol.ProcessProtocol):
-    """The ProcessProtocol passed to twisted.internet.reactor.spawnProcess is
-    the interaction with the process. It has several methods to deal with
-    events specific to a process.
+class Run(object):
+    """Class to handle processes.
     """
 
-    def __init__(self, plugin):
+    def __init__(self, name, argv, env=None, workdir=None):
         """Instance constructor.
 
-        PARAMETERS
-            :param plugin: A plugin object.
-            :type plugin: An object derived from GNAThub.Plugin.
-        """
-
-        self.plugin = plugin
-        self.exit_code = None
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def connectionMade(self):
-        """This is called when the program is started, and makes a good place
-        to write data into the stdin pipe (using self.transport.write).
-        """
-
-        Log.debug('%s: process started' % self.plugin.name)
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def outReceived(self, data):
-        """This is called with data that was received from the process' stdout
-        pipe.
+        Spawnes the process via subprocess.Popen and returns the process exit
+        code.
 
         PARAMETERS
-            :param data: data that was received from the process' stdout pipe.
-            :type data: a string.
-        """
-
-        pass
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def errReceived(self, data):
-        """This is called with data from the process' stderr pipe. It behaves
-        just like outReceived.
-
-        PARAMETERS
-            :param data: data that was received from the process' stderr pipe.
-            :type data: a string.
-        """
-
-        pass
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def processExited(self, reason):
-        """This is called when the child process has been reaped, and receives
-        information about the process' exit status.
-
-        PARAMETERS
-            :param reason: The status is passed in the form of a Failure
-                instance, created with a .value that either holds a ProcessDone
-                object if the process terminated normally (it died of natural
-                causes instead of receiving a signal, and if the exit code was
-                0), or a ProcessTerminated object (with an .exitCode attribute)
-                if something went wrong.
-            :type reason: twisted.python.failure.Failure object.
-        """
-
-        Log.debug('%s: exited: %s' % (self.plugin.name, reason.value.__dict__))
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def processEnded(self, reason):
-        """This is called when all the file descriptors associated with the
-        child process have been closed and the process has been reaped. This
-        means it is the last callback which will be made onto a
-        ProcessProtocol.
-
-        PARAMETERS
-            :param reason: The status parameter has the same meaning as it does
-                for processExited.
-            :type reason: twisted.python.failure.Failure object.
-        """
-
-        Log.debug('%s: terminated with status: %d' % (self.plugin.name,
-                                                      reason.value.exitCode))
-        self.exit_code = reason.value.exitCode
-
-
-class LoggerProcessProtocol(ProcessProtocol):
-    """A simple ProcessProtocol that logs both standard and error output to a
-    file.
-    """
-
-    def __init__(self, plugin):
-        """Instance constructor.
-
-        PARAMETERS
-            :param plugin: The plugin class object. This class must implement
-                the GNAThub.Plugin Abstract Base Class.
-            :type plugin: a GNAThub.Plugin object.
-        """
-
-        ProcessProtocol.__init__(self, plugin)
-
-        Log.debug('%s: will log to: %s' % (plugin.name, plugin.logs()))
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def outReceived(self, data):
-        """Inherited."""
-
-        ProcessProtocol.outReceived(self, data)
-
-        with open(self.plugin.logs(), 'a+') as log:
-            log.write(data)
-
-    # pylint: disable=C0103
-    # Disable "Invalid Name" error
-    def errReceived(self, data):
-        """Inherited."""
-
-        ProcessProtocol.errReceived(self, data)
-
-        with open(self.plugin.logs(), 'a+') as log:
-            log.write(data)
-
-
-class Process(object):
-    """An asynchronous process abstraction class."""
-
-    def __init__(self, name, argv, process_protocol=None):
-        """Instance constructor."""
-
-        self.name = name
-        self.argv = argv
-        self.protocol = process_protocol
-        self.exit_code = None
-
-        if self.protocol is None:
-            self.protocol = ProcessProtocol(self.name)
-
-    def execute(self, env=None, workdir=None):
-        """Spawnes the process, run the Twisted's Reactor and returns the
-        process exit code.
-
-        PARAMETERS
+            :param name: the name of the executable.
+            :type name: a string.
+            :param argv: the argument array.
+            :type argv: an array of strings.
             :param env: dictionary containing the environment to pass through
                 to the process. If None, os.environ is used.
             :type env: a dictionary.
@@ -491,15 +331,82 @@ class Process(object):
             :rtype: a number
         """
 
-        Log.debug('%s: spawning process' % self.name)
-        Log.debug(os.linesep.join(['Arg = %s' % arg for arg in self.argv]))
+        self.name = name
+        self.argv = argv
+        self.status = None
 
-        environ = env if env is not None else os.environ
+        Log.debug('Run: cd %s; %s' % (
+            workdir if workdir is not None else os.getcwd(),
+            self.cmdline_image()))
 
-        # pylint: disable=E1101
-        # Disable "Module {} has no member {}" error
-        reactor.spawnProcess(self.protocol, self.argv[0], self.argv,
-                             env=environ, path=workdir)
+        try:
+            with open(self.output(), 'w') as output:
+                Log.info('... output redirected to %s' % output.name)
+                self.internal = Popen(argv, env=env, stdin=None, stdout=output,
+                                      stderr=STDOUT, cwd=workdir)
+                self.pid = self.internal.pid
+                self.wait()
+
+        except Exception as ex:
+            self.__error(ex)
+            raise
+
+    def wait(self):
+        """Waits until process ends and return its status."""
+
+        if self.status == 127:
+            return self.status
+
+        self.status = self.internal.wait()
+        return self.status
+
+    @staticmethod
+    def quote(arg):
+        """Returns the quoted version of the given argument.
+
+        PARAMETERS
+            :param arg: the argument to quote.
+            :type arg: a string.
+
+        RETURNS
+            :rtype: a string.
+        """
+
+        specials = ('|', '&', ';', '<', '>', '(', ')', '$', '`', '\\', '"',
+                    "'", ' ', '\t', '\n', '*', '?', '[', '#', '~')
+
+        for char in specials:
+            if char in arg:
+                arg = arg.replace("'", r"'\''")
+                arg = arg.replace('\n', r"'\n'")
+                return "'%s'" % arg
+
+        return arg
+
+    def cmdline_image(self):
+        """Returns a string image of the given command.
+
+        RETURNS
+            :rtype: a string.
+        """
+
+        return ' '.join((Run.quote(arg) for arg in self.argv))
+
+    def __error(self, error):
+        """Set pid to -1 and status to 127."""
+
+        self.pid = -1
+        self.status = 127
+        Log.error(str(ex))
+
+    def output(self):
+        """Returns the path to the output file.
+
+        RETURNS
+            :rtype: a string
+        """
+
+        return os.path.join(project.object_dir(), self.name + '.log')
 
 
 # A chain of plugin in the order in which they are registered through the
@@ -521,34 +428,6 @@ def register(plugin):
     _PLUGINS.append(plugin)
 
 
-def _chain_reaction():
-    """???"""
-
-    assert _PLUGINS
-    current = _PLUGINS.pop(0)
-    current.teardown()
-
-    _try_chain_reaction()
-
-
-def _try_chain_reaction():
-    """???"""
-
-    if not _PLUGINS:
-        abort()
-        return False
-
-    plugin = _PLUGINS[0]
-
-    Log.debug('%s: running plugin' % plugin.name)
-    Log.info(' '.join(plugin.display_command_line()))
-
-    plugin.setup()
-    plugin.execute()
-
-    return True
-
-
 def run():
     """???"""
 
@@ -556,20 +435,7 @@ def run():
         Log.info('gnathub: nothing to do.')
         return
 
-    if _try_chain_reaction():
-        Log.debug('Starting reactor...')
-        # pylint: disable=E1101
-        # Disable "Module {} has no member {}" error
-        reactor.run()
-
-
-def abort():
-    """???"""
-
-    # pylint: disable=E1101
-    # Disable "Module {} has no member {}" error
-    if reactor.running:
-        Log.debug('Terminating reactor')
-        # pylint: disable=E1101
-        # Disable "Module {} has no member {}" error
-        reactor.stop()
+    for plugin in _PLUGINS:
+        plugin.setup()
+        plugin.execute()
+        plugin.teardown()

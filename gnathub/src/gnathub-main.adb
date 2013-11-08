@@ -218,7 +218,7 @@ begin
    Create_Project_Directory_Env;
 
    Log.Debug ("Creating local application database...");
-   Log.Info ("sql create " & Database_File.Display_Full_Name);
+   Log.Info ("gnathub.sql.create " & Database_File.Display_Full_Name);
 
    GNAThub.Database.Initialize
       (Create_From_Dir

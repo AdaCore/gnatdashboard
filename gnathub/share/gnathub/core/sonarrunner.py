@@ -29,7 +29,6 @@ import os
 
 from GNAThub import Log
 
-from _gnat import PostProcessProtocol
 from _sonarqube import SonarQube
 
 
@@ -43,9 +42,6 @@ class SonarRunner(GNAThub.Plugin):
         """Instance constructor."""
 
         super(SonarRunner, self).__init__()
-
-        self.sonarrunner = GNAThub.Process(self.name, self.__cmd_line(),
-                                           PostProcessProtocol(self))
 
     def setup(self):
         """Inherited."""
@@ -64,11 +60,10 @@ class SonarRunner(GNAThub.Plugin):
     def display_command_line(self):
         """Inherited."""
 
-        cmdline = super(SonarRunner, self).display_command_line()
-        cmdline.append('-Dproject.settings=%s' %
-                       os.path.relpath(SonarQube.configuration()))
+        cmdline = ['-Dproject.settings=%s' %
+                   os.path.relpath(SonarQube.configuration())]
 
-        return cmdline
+        return ' '.join(cmdline)
 
     def execute(self):
         """Executes the Sonar Runner.
@@ -76,7 +71,9 @@ class SonarRunner(GNAThub.Plugin):
         SonarRunner.postprocess() will be called upon process completion.
         """
 
-        self.sonarrunner.execute()
+        Log.info('%s.run %s' % (self.fqn, self.display_command_line()))
+        proc = GNAThub.Run(self.name, self.__cmd_line())
+        self.postprocess(proc.status)
 
     def postprocess(self, exit_code):
         """Postprocesses the tool execution: parse the output XML report on
@@ -91,8 +88,7 @@ class SonarRunner(GNAThub.Plugin):
 
         if exit_code != 0:
             self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: execution failed' % self.name)
-            Log.error('%s: see log file: %s' % (self.name, self.logs()))
+            Log.error('%s: execution failed' % self.fqn)
             return
 
         self.exec_status = GNAThub.EXEC_SUCCESS
