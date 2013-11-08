@@ -21,9 +21,9 @@ include Makefile.conf
 
 .PHONY: tests
 
-all: $(BUILD_DIR)/bin/$(PROJECT)
+all: build
 
-$(BUILD_DIR)/bin/$(PROJECT):
+build:
 	gprbuild -p -P $(PROJECT).gpr
 	$(RMDIR) $(BUILD_DIR)/share
 	$(LN) $(TOP)/share $(TOP)/build/share
