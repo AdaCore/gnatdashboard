@@ -1,0 +1,55 @@
+Building from sources
+=====================
+
+To build GNAThub from sources, you need to have GNU make available as a
+prerequisite.
+
+You need to use a recent version of the GNAT compiler (e.g. GNAT 7.0.2 or GNAT
+GPL 2012).
+
+You need to install a GPS Developer Environment to. This requires the GPS.env
+script available in the GPS directory. This help will guide you throught the
+necessary steps to get GNAThub working. For more information, please refer to
+GPS.env documentation:
+
+   https://intranet.adacore.com/pages/Products/GPS/Docs/ForDevelopers/HowtoBuild
+
+Fetching and building GPS
+-------------------------
+
+Fetch the GPS.env shell script from GPS Subversion repository:
+
+   $ mkdir GPS
+   $ svn export svn+ssh://svn.eu.adacore.com/Dev/trunk/gps/design/GPS.env
+
+Then execute the following commands:
+
+   $ source GPS.env
+   $ gps_world
+
+Building GNAThub
+----------------
+
+Once GPS has been built and installed (in $GPS_ENV_ROOT_DIR/install), add the
+GPS Command-Line tool project to your project file search path:
+
+   $ export GPR_PROJECT_PATH=$GPS_ENV_ROOT_DIR/src/gps/cli:$GPR_PROJECT_PATH
+
+Then execute the following command:
+
+   $ cd GNAThub
+   $ make
+
+Note: there are two prerequisites for building GNAThub:
+
+   - Import GPS build environment by via GPS.env (sourcing the shell script);
+   - Update the $GPR_PROJECT_PATH environment variable to add the directory
+     containing cli.gpr (from the GPS project) to the Ada project file search
+     path (the $GPS_ENV_ROOT_DIR is set and exported by GPS.env).
+
+Generating a GNAThub distribution
+---------------------------------
+
+You will need to follow the instructions listed above, with an additional step:
+
+   $ make distrib
