@@ -3,4 +3,4 @@ gnathub -q -P default --plugins gnatmetric,gnatcheck,sonarconfig
 
 # verify that the object directory contains the expected files
 # at the expected locations
-find obj |grep -v 'obj/gnathub/logs/' |sort
+find obj/ | grep -v auto.cgpr |  sort

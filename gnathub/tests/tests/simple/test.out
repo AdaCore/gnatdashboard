@@ -1,9 +1,12 @@
-obj
+obj/
 obj/empty
 obj/gnatcheck.out
+obj/gnatcheck-source-list.out
 obj/gnathub
 obj/gnathub/gnathub.db
 obj/gnathub/logs
+obj/gnathub/logs/GNATcheck.log
+obj/gnathub/logs/GNATmetric.log
 obj/gnathub/sonar
 obj/gnathub/sonar/sonar-project.properties
 obj/hello.adb.metrix

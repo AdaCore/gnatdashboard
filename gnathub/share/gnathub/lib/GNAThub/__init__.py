@@ -24,6 +24,7 @@ This module defines the core components of GNAThub plugin mechanism:
     - The GPSTarget Helper Class
 """
 
+import GNAThub
 
 def root():
     """Returns the path to the GNAThub-specific root directory.
@@ -406,7 +407,7 @@ class Run(object):
             :rtype: a string
         """
 
-        return os.path.join(project.object_dir(), self.name + '.log')
+        return os.path.join(GNAThub.logs(), self.name + '.log')
 
 
 # A chain of plugin in the order in which they are registered through the
