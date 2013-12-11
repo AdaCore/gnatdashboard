@@ -49,6 +49,10 @@ class CodePeer(GNAThub.Plugin):
 
         super(CodePeer, self).__init__()
 
+        output = '%s.csv' % GNAThub.project.name().lower()
+        self.csv_report = os.path.join(GNAThub.project.object_dir(),
+                                       'codepeer', output)
+
         self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
 
     def display_command_line(self):
@@ -76,11 +80,7 @@ class CodePeer(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        output = '%s.output' % GNAThub.project.name().lower()
-        results = os.path.join(GNAThub.project.object_dir(), 'codepeer',
-                               output)
-
-        return ['codepeer_msg_reader', '-csv', results]
+        return ['codepeer_msg_reader', '-csv', self.csv_report]
 
     def execute(self):
         """Executes the CodePeer.
@@ -134,14 +134,15 @@ class CodePeer(GNAThub.Plugin):
             GNAThub.EXEC_FAIL: on any error
         """
 
-        Log.info('%s.analyse %s' % (self.fqn, os.path.relpath(self.report)))
+        Log.info('%s.analyse %s' % (self.fqn,
+                                    os.path.relpath(self.csv_report)))
 
         Log.debug('%s: storing tool in database' % self.fqn)
         self.tool = dao.save_tool(self.session, self.name)
 
-        Log.debug('%s: parsing CSV report: %s' % (self.fqn, self.report))
+        Log.debug('%s: parsing CSV report: %s' % (self.fqn, self.csv_report))
 
-        if not os.path.exists(self.report):
+        if not os.path.exists(self.csv_report):
             self.exec_status = GNAThub.EXEC_FAIL
             Log.error('%s: no report found, aborting.' % self.fqn)
             return
@@ -154,11 +155,11 @@ class CodePeer(GNAThub.Plugin):
             # Reset the read cursor to the first byte
             report.seek(0)
 
-            # Parse the file and drop the first line (containing the columns
-            # name).
-            reader = csv.reader(report, quotechar='\"')
-
             try:
+                # Parse the file and drop the first line (containing the
+                # columns name).
+                reader = csv.reader(report, quotechar='\"')
+
                 # Drop the first line (containing the columns name)
                 header = reader.next()
                 Log.debug('Dropping header line: %s' % header)
