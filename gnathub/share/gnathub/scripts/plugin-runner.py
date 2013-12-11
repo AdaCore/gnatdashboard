@@ -45,7 +45,7 @@ class PluginRunner(object):
     """
 
     PLUGIN_SUFFIX = '.py'
-    SONARRUNNER_PLUGIN = 'Sonar Runner'
+    SONARRUNNER_PLUGIN = 'sonarrunner'
 
     def __remove_plugin_to_deactivate(self, plugins):
         """Deactivate plugins according to attribute Plugin_Off in the project
