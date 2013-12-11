@@ -106,7 +106,6 @@ class GNATcheck(GNAThub.Plugin):
 
         if exit_code not in GNATcheck.VALID_EXIT_CODES:
             self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: execution failed' % self.fqn)
             return
 
         self.__parse_report()

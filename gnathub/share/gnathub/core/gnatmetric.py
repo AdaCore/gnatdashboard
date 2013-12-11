@@ -86,7 +86,6 @@ class GNATmetric(GNAThub.Plugin):
         """
 
         if exit_code not in GNATmetric.VALID_EXIT_CODES:
-            Log.error('%s: execution failed' % self.fqn)
             self.exec_status = GNAThub.EXEC_FAIL
             return
 

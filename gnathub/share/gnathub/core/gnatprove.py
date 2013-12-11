@@ -95,7 +95,6 @@ class GNATprove(GNAThub.Plugin):
 
         if exit_code != 0:
             self.exec_status = GNAThub.EXEC_FAIL
-            Log.error('%s: execution failed' % self.fqn)
             return
 
         self.__parse_output(logfile)
