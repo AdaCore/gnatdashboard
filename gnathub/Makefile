@@ -21,9 +21,9 @@ include Makefile.conf
 
 .PHONY: tests
 
-all: build
+all: gnathub
 
-build:
+gnathub:
 	gprbuild -p -P $(PROJECT).gpr
 	$(RMDIR) $(BUILD_DIR)/share
 	$(LN) $(TOP)/share $(TOP)/build/share
