@@ -303,7 +303,7 @@ class Plugin:
             :rtype: a string.
         """
 
-        return 'gnathub.%s' % self.name.lower()
+        return 'gnathub.%s' % self.name.lower().replace(' ', '-')
 
 
 class Run(object):
@@ -348,8 +348,14 @@ class Run(object):
                 self.pid = self.internal.pid
                 self.wait()
 
+        except OSError as ex:
+            self.__error(ex)
+            Log.error('%s: %s' % (self.argv[0], ex.strerror))
+            return
+
         except Exception as ex:
             self.__error(ex)
+            Log.error(str(ex))
             raise
 
     def wait(self):
@@ -398,7 +404,6 @@ class Run(object):
 
         self.pid = -1
         self.status = 127
-        Log.error(str(ex))
 
     def output(self):
         """Returns the path to the output file.
