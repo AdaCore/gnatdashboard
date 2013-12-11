@@ -34,7 +34,7 @@ package body GNAThub is
       --  Trace handles
 
       Ada_Verbosity    : Verbosity_Level := Default;
-      --  Verbosity of the Ada Trace engine.
+      --  Verbosity of the Ada Trace engine
 
       ----------
       -- Info --
@@ -55,7 +55,11 @@ package body GNAThub is
 
       procedure Warn (Message : String) is
       begin
-         Trace (Warning_Handle, Message);
+         if Ada_Verbosity = Default then
+            Put_Line ("warning: " & Message);
+         elsif Ada_Verbosity = Verbose then
+            Trace (Warning_Handle, Message);
+         end if;
       end Warn;
 
       -----------
@@ -64,7 +68,11 @@ package body GNAThub is
 
       procedure Error (Message : String) is
       begin
-         Trace (Error_Handle, Message);
+         if Ada_Verbosity = Default then
+            Put_Line ("error: " & Message);
+         elsif Ada_Verbosity = Verbose then
+            Trace (Error_Handle, Message);
+         end if;
       end Error;
 
       -----------
@@ -93,7 +101,7 @@ package body GNAThub is
         (Current : Natural; Total : Positive; New_Line : Boolean := False)
       is
          function Image (Number : Integer) return String;
-         --  Prints the image of a number w/o the leading space.
+         --  Prints the image of a number w/o the leading space
 
          -----------
          -- Image --
