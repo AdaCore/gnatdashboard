@@ -26,6 +26,7 @@ This module defines the core components of GNAThub plugin mechanism:
 
 import GNAThub
 
+
 def root():
     """Returns the path to the GNAThub-specific root directory.
     Usually:
@@ -310,7 +311,7 @@ class Run(object):
     """Class to handle processes.
     """
 
-    def __init__(self, name, argv, env=None, workdir=None):
+    def __init__(self, name, argv, env=None, workdir=None, out=None):
         """Instance constructor.
 
         Spawnes the process via subprocess.Popen and returns the process exit
@@ -335,6 +336,7 @@ class Run(object):
         self.name = name
         self.argv = argv
         self.status = None
+        self.out = out
 
         Log.debug('Run: cd %s; %s' % (
             workdir if workdir is not None else os.getcwd(),
@@ -411,6 +413,9 @@ class Run(object):
         RETURNS
             :rtype: a string
         """
+
+        if self.out:
+            return self.out
 
         return os.path.join(GNAThub.logs(), self.name + '.log')
 

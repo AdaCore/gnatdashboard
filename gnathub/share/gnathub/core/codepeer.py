@@ -42,7 +42,6 @@ class CodePeer(GNAThub.Plugin):
     """
 
     TOOL_NAME = 'CodePeer'
-    REPORT = 'codepeer.csv'
 
     def __init__(self):
         """Instance constructor."""
@@ -53,13 +52,10 @@ class CodePeer(GNAThub.Plugin):
         self.csv_report = os.path.join(GNAThub.project.object_dir(),
                                        'codepeer', output)
 
-        self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
-
     def display_command_line(self):
         """Inherited."""
 
         cmdline = ['-P', GNAThub.project.name()]
-        cmdline.extend(['-o', os.path.relpath(self.report)])
 
         return ' '.join(cmdline)
 
@@ -80,7 +76,10 @@ class CodePeer(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        return ['codepeer_msg_reader', '-csv', self.csv_report]
+        msg_dir = os.path.join(GNAThub.project.object_dir(), 'codepeer',
+                               '%s.output' % GNAThub.project.name().lower())
+
+        return ['codepeer_msg_reader', '-csv', msg_dir]
 
     def execute(self):
         """Executes the CodePeer.
@@ -103,7 +102,8 @@ class CodePeer(GNAThub.Plugin):
         """
 
         Log.info('%s.msg_reader' % self.fqn)
-        proc = GNAThub.Run('msg_reader', self.__msg_reader_cmd_line())
+        proc = GNAThub.Run('msg_reader', self.__msg_reader_cmd_line(),
+                           out=self.csv_report)
 
         self.postprocess(proc.status)
 
@@ -147,7 +147,7 @@ class CodePeer(GNAThub.Plugin):
             Log.error('%s: no report found, aborting.' % self.fqn)
             return
 
-        with open(self.report, 'rb') as report:
+        with open(self.csv_report, 'rb') as report:
             # Compute the total number of lines for progress report (-1 because
             # the first line in irrelevant to the analysis).
             total = len(report.readlines()) - 1
