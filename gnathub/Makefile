@@ -23,10 +23,19 @@ include Makefile.conf
 
 all: gnathub
 
-gnathub:
+gnathub: $(TOP)/src/gnathub-version.ads
 	gprbuild -p -P $(PROJECT).gpr
 	$(RMDIR) $(BUILD_DIR)/share
 	$(LN) $(TOP)/share $(TOP)/build/share
+
+.PHONY: $(TOP)/src/gnathub-version.ads
+
+$(TOP)/src/gnathub-version.ads: $(TOP)/src/gnathub-version.ads.in
+	cat $< |sed \
+		-e 's/@DATE@/$(DATE)/g' \
+		-e 's/@YEAR@/$(YEAR)/g' \
+		-e 's/@VERSION@/$(VERSION)/g' \
+		> $@
 
 create:
 	# Create the database from the schema
@@ -58,16 +67,16 @@ tests-coverage:
 	$(MAKE) analyse-gcov
 
 analyse-gcov:
-	find $(TOP) -name '*.gcda' > $(TOP)/build/obj/gcov_input.txt
-	cd $(TOP)/build/obj && gcov @gcov_input.txt > gcov_run.log
+	find $(TOP) -name '*.gcda' > $(BUILD_DIR)/obj/gcov_input.txt
+	cd $(BUILD_DIR)/obj && gcov @gcov_input.txt > gcov_run.log
 
 clean:
 	gprclean -q -P $(PROJECT).gpr
 	find . -name '*.pyc' -exec rm -f {} \;
-	$(RMDIR) build/obj
+	$(RMDIR) $(BUILD_DIR)/obj
 
 distclean: clean
-	$(RMDIR) build
+	$(RMDIR) $(BUILD_DIR)
 
 install:
 	$(MKDIR) $(INSTALL_PREFIX)

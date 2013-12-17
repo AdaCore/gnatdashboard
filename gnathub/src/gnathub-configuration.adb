@@ -168,7 +168,12 @@ package body GNAThub.Configuration is
       --  Print the version and exit if --version is supplied
 
       if Version then
-         Log.Info ("GNAThub driver " & GNAThub.Version.Version);
+         Log.Info
+           ("GNAThub v" & GNAThub.Version.Version & " (" &
+            GNAThub.Version.Date & ")");
+
+         Log.Info ("Copyright (C) " & GNAThub.Version.Year & ", AdaCore");
+
          raise GNAT.Command_Line.Exit_From_Command_Line;
       end if;
 

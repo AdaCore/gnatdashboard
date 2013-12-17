@@ -19,6 +19,8 @@
 
 package GNAThub.Version is
 
-   Version : constant String := "0.9.0w";
+   Date    : constant String := "@DATE@";
+   Year    : constant String := "@YEAR@";
+   Version : constant String := "@VERSION@";
 
 end GNAThub.Version;
