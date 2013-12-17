@@ -25,7 +25,6 @@ module and load it as part of the GNAThub default excecution.
 """
 
 import GNAThub
-import GNAThub.project
 
 import csv
 import os
@@ -48,14 +47,17 @@ class CodePeer(GNAThub.Plugin):
 
         super(CodePeer, self).__init__()
 
-        output = '%s.csv' % GNAThub.project.name().lower()
-        self.csv_report = os.path.join(GNAThub.project.object_dir(),
+        output = '%s.csv' % GNAThub.Project.name().lower()
+        self.csv_report = os.path.join(GNAThub.Project.object_dir(),
                                        'codepeer', output)
+
+        self.report = os.path.join(GNAThub.Project.object_dir(), self.REPORT)
 
     def display_command_line(self):
         """Inherited."""
 
-        cmdline = ['-P', GNAThub.project.name()]
+        cmdline = ['-P', GNAThub.Project.name()]
+        cmdline.extend(['-o', os.path.relpath(self.report)])
 
         return ' '.join(cmdline)
 
@@ -67,7 +69,7 @@ class CodePeer(GNAThub.Plugin):
         """
 
         return ['codepeer', '-update-scil', '-level', '1', '-jobs', '0',
-                '-P', GNAThub.project.path()]
+                '-P', GNAThub.Project.path()]
 
     def __msg_reader_cmd_line(self):
         """Creates CodePeer Message Reader command line arguments list.

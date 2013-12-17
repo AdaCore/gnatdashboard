@@ -1,4 +1,6 @@
-with "cli.gpr";
+with "gnatcoll";
+with "gnatcoll_python";
+with "gnatcoll_sqlite";
 
 project GNAThub is
 

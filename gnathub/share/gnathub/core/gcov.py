@@ -25,7 +25,6 @@ load it as part of the GNAThub default excecution.
 """
 
 import GNAThub
-import GNAThub.project
 
 import os
 
@@ -52,7 +51,7 @@ class Gcov(GNAThub.Plugin):
     def display_command_line(self):
         """Inherited."""
 
-        return ' '.join(['-P', GNAThub.project.name()])
+        return ' '.join(['-P', GNAThub.Project.name()])
 
     def __add_line_hits(self, resource, line_num, hits):
         """Registers hits count for a specific line in the given file.
@@ -92,8 +91,8 @@ class Gcov(GNAThub.Plugin):
 
         # Fetch all files in project object directory and retrieve only
         # .gcov files, absolute path
-        files = [os.path.join(GNAThub.project.object_dir(), filename)
-                 for filename in os.listdir(GNAThub.project.object_dir())
+        files = [os.path.join(GNAThub.Project.object_dir(), filename)
+                 for filename in os.listdir(GNAThub.Project.object_dir())
                  if filename.endswith(self.GCOV_SUFFIX)]
 
         # If no .gcov file found, plugin returns on failure

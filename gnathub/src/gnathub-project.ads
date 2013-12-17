@@ -15,28 +15,69 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
+with GNAT.OS_Lib;       use GNAT.OS_Lib;
 with GNAT.Strings;
 
 with GNATCOLL.VFS;      use GNATCOLL.VFS;
 with GNATCOLL.Projects; use GNATCOLL.Projects;
 
-with GPS.CLI_Kernels;
-
 package GNAThub.Project is
 
+   Project_Error : exception;
+   --  Custom error for this module
+
+   function Loaded return Boolean;
+   --  Whether a call to Load has already been made
+
    function Initialized return Boolean;
-   --  Whether a call to Load_Project_Tree has already been made
+   --  Whether this module is initialized or not
 
-   procedure Load_Project_Tree
-     (Path   : GNAT.Strings.String_Access;
-      Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record);
-   --  ???
+   procedure Initialize;
+   --  Initialize this module
 
-   procedure Save_Project_Tree (Root_Project : Project_Type);
-   --  ???
+   procedure Load (Path : GNAT.Strings.String_Access)
+      with Pre => Initialized;
+   --  Load the project file in memory
+
+   function File (Name : String) return Virtual_File;
+   --  Create a new file. This will automatically try to solve Name to an
+   --  absolute path if it currently is a base name.
+   --  If Name is an absolute path, it is returned as is. Otherwise, only the
+   --  base name is used (ie we remove any directory information from Name).
+
+   procedure Update_Env (Key, Value : String)
+      with Pre => Initialized;
+   --  Update the environment. Should be called before any project is loaded.
+   --  It will not impact already loaded projects.
+
+   procedure Save_Project_Tree
+     with Pre => Initialized and then Loaded;
+   --  Store the project details in database
+   --  ???: Re-think this part
+
+   function Name return String
+     with Pre => Initialized and then Loaded;
+   --  Return the name of the root project
+
+   function Path return Virtual_File
+     with Pre => Initialized and then Loaded;
+   --  Return the path of the root project
 
    function Object_Dir return Virtual_File
-     with Pre => Initialized;
-   --  Returns the object directory file
+     with Pre => Initialized and then Loaded;
+   --  Return the object directory file
+
+   function Property_As_String (Property : String) return String
+     with Pre => Initialized and then Loaded;
+   --  Return the given property as a string. Return the empty string if the
+   --  property does not exist
+
+   function Property_As_List (Property : String) return String_List_Access
+     with Pre => Initialized and then Loaded;
+   --  Return the given property as a list. Return an empty list if the
+   --  property does not exist
+
+   procedure Finalize;
+   --  Free memory used by this package
 
 end GNAThub.Project;

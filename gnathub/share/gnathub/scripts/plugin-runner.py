@@ -25,7 +25,6 @@ spawning the main event loop.
 """
 
 import GNAThub
-import GNAThub.project
 
 import abc
 import os
@@ -52,7 +51,7 @@ class PluginRunner(object):
         file.
         """
 
-        for plugin in GNAThub.project.property_as_list('Plugin_Off'):
+        for plugin in GNAThub.Project.property_as_list('Plugin_Off'):
             if plugin in plugins:
                 plugins.remove(plugin)
                 Log.debug('Plugin %s is deactivated' % plugin)
@@ -90,7 +89,7 @@ class PluginRunner(object):
 
         specific_plugins = []
 
-        for plugin in GNAThub.project.property_as_list('Specific_Plugins'):
+        for plugin in GNAThub.Project.property_as_list('Specific_Plugins'):
             if os.path.exists(plugin):
                 try:
                     plugin_golbals = {}
@@ -122,7 +121,7 @@ class PluginRunner(object):
         if len(plugins):
             plugins = [plugin.strip() for plugin in plugins.split(',')]
         else:
-            plugins = GNAThub.project.property_as_list('Plugins')
+            plugins = GNAThub.Project.property_as_list('Plugins')
 
             # GPS CLI returns: a empty list if property is not mentionned
             if not plugins:

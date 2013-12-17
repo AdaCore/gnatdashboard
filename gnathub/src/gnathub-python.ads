@@ -27,7 +27,16 @@ package GNAThub.Python is
    procedure Initialize;
    --  Registers the GNAThub Python interface.
 
-   procedure Finalize;
+   procedure Finalize
+      with Pre => Initialized;
    --  Disposes of iternal resources.
+
+   procedure Execute_File (Script_Filename : String; Errors : out Boolean)
+      with Pre => Initialized;
+   --  Executes the given Python script.
+
+   procedure Execute (Cmd : String; Errors : out Boolean)
+      with Pre => Initialized;
+   --  Executes the given command.
 
 end GNAThub.Python;

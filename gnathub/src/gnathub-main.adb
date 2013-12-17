@@ -21,12 +21,7 @@ with Ada.Strings.Unbounded;      use Ada.Strings.Unbounded;
 
 with GNAT.Directory_Operations;  use GNAT.Directory_Operations;
 
-with GPS.CLI_Kernels;            use GPS.CLI_Kernels;
-with GPS.CLI_Utils;
-
-with GNATCOLL.Arg_Lists;
 with GNATCOLL.Projects;          use GNATCOLL.Projects;
-with GNATCOLL.Scripts;           use GNATCOLL.Scripts;
 with GNATCOLL.Traces;            use GNATCOLL.Traces;
 with GNATCOLL.VFS;               use GNATCOLL.VFS;
 
@@ -35,7 +30,6 @@ with GNAThub.Database;
 with GNAThub.Project;
 with GNAThub.Configuration;      use GNAThub.Configuration;
 with GNAThub.Python;
-with GNAThub.Scripts;
 
    -------------
    -- GNAThub --
@@ -46,11 +40,6 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    procedure Load_Plugin_Runner;
    --  Loads the plugin runner that executes every GNAThub plugin (both core
    --  and user plugins).
-
-   procedure Load_Custom_Project_Attributes;
-   --  Teaches the project file engine the GNATdashboard-specific attributes it
-   --  needs to handle. These attributes are declared in an XML format and
-   --  loaded with the GPS.parse_xml Python binding.
 
    procedure Create_Project_Directory_Env;
    --  Creates the following directories hierarchy, when needed:
@@ -63,27 +52,6 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
    procedure Finalize_Application;
    --  Dispose of every allocated object.
-
-   Kernel : constant GPS.CLI_Kernels.CLI_Kernel :=
-              new GPS.CLI_Kernels.CLI_Kernel_Record;
-
-   ------------------------------------
-   -- Load_Custom_Project_Attributes --
-   ------------------------------------
-
-   procedure Load_Custom_Project_Attributes is
-      Had_Errors : Boolean;
-   begin
-      Execute_File
-        (Script       => Kernel.Scripts.Lookup_Scripting_Language ("python"),
-         Filename     => Custom_Attributes_Definition_File.Display_Full_Name,
-         Show_Command => False,
-         Errors       => Had_Errors);
-
-      if Had_Errors then
-         raise Error with "Error creating GNAThub-specific project attributes";
-      end if;
-   end Load_Custom_Project_Attributes;
 
    ----------------------------------
    -- Create_Project_Directory_Env --
@@ -132,9 +100,6 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    procedure Load_Plugin_Runner is
       Had_Errors : Boolean;
 
-      Python : constant Scripting_Language :=
-        Kernel.Scripts.Lookup_Scripting_Language ("python");
-
       Python_Path_List : constant array (1 .. 3) of Virtual_File :=
         (Lib_Dir, Core_Plugins_Dir, Extra_Plugins_Dir);
 
@@ -156,28 +121,19 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
          Python_Path := Python_Path & To_Unbounded_String ("] + sys.path");
 
-         Execute_Command
-           (Python,
-            GNATCOLL.Arg_Lists.Create (To_String (Python_Path)),
-            Show_Command => False,
-            Hide_Output  => True,
-            Errors       => Had_Errors);
+         GNAThub.Python.Execute (To_String (Python_Path), Had_Errors);
       end;
 
       if Had_Errors then
          Log.Warn ("Could not set the search path for python");
       end if;
 
-      --  Execute the pythn script that runs all the plugins
+      --  Execute the python script that runs all the plugins
 
       Log.Debug ("Executing plugin: " & Plugin_Runner.Display_Base_Name);
 
-      Execute_File
-        (Python,
-         Filename     => Plugin_Runner.Display_Full_Name,
-         Hide_Output  => False,
-         Show_Command => False,
-         Errors       => Had_Errors);
+      GNAThub.Python.Execute_File
+        (Plugin_Runner.Display_Full_Name, Had_Errors);
 
       if Had_Errors then
          raise Error with "Unexpected plug-in error";
@@ -190,28 +146,23 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
    procedure Finalize_Application is
    begin
-      --  Finalize
-      GPS.CLI_Utils.Destroy_Kernel_Context (Kernel);
-
+      GNAThub.Project.Finalize;
       GNAThub.Python.Finalize;
       GNAThub.Configuration.Finalize;
+
       GNATCOLL.Traces.Finalize;
    end Finalize_Application;
 
 begin
    GNATCOLL.Traces.Parse_Config_File;
 
-   GPS.CLI_Utils.Create_Kernel_Context
-      (Kernel, Install_Semantic_Parser => False);
-
-   Load_Custom_Project_Attributes;
-
    GNAThub.Python.Initialize;
-   GNAThub.Configuration.Initialize (Kernel);
+   GNAThub.Project.Initialize;
+   GNAThub.Configuration.Initialize;
 
    Log.Debug ("Loading project: " & GNAThub.Configuration.Project);
 
-   GNAThub.Project.Load_Project_Tree (GNAThub.Configuration.Project, Kernel);
+   GNAThub.Project.Load (GNAThub.Configuration.Project);
 
    Log.Debug ("Creating execution environment...");
 
@@ -227,14 +178,26 @@ begin
 
    Log.Debug ("Writing project in dabatase");
 
-   GNAThub.Project.Save_Project_Tree (Kernel.Registry.Tree.Root_Project);
+   GNAThub.Project.Save_Project_Tree;
 
    Load_Plugin_Runner;
 
-   if GNAThub.Configuration.Script  /= "" then
-      Log.Info ("Executing: " & GNAThub.Configuration.Script);
-      GNAThub.Scripts.Execute (Kernel, GNAThub.Configuration.Script);
-   end if;
+   Log.Debug ("Plugins execution completed");
+
+   declare
+      Script : constant String := GNAThub.Configuration.Script;
+      Errors : Boolean := False;
+   begin
+      if Script /= "" then
+         Log.Info ("gnathub.python.execute " & Script);
+         Log.Debug ("Executing command-line script " & Script);
+         GNAThub.Python.Execute_File (Script, Errors);
+
+         if Errors then
+            raise Error with "execution failed: " & Script;
+         end if;
+      end if;
+   end;
 
    Log.Debug ("Execution completed");
    Finalize_Application;

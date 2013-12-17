@@ -61,7 +61,7 @@ class GNATprove(GNAThub.Plugin):
     def display_command_line(self):
         """Inherited."""
 
-        return ' '.join(['-P', GNAThub.project.name(), '--show-tag'])
+        return ' '.join(['-P', GNAThub.Project.name(), '--show-tag'])
 
     def __cmd_line(self):
         """Creates GNATcheck command line arguments list.
@@ -70,7 +70,7 @@ class GNATprove(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        return ['gnatprove', '-P', GNAThub.project.path(), '--show-tag']
+        return ['gnatprove', '-P', GNAThub.Project.path(), '--show-tag']
 
     def execute(self):
         """Executes the GNATprove.

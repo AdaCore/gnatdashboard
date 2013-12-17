@@ -15,14 +15,17 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO;             use Ada.Text_IO;
+with Ada.Strings;
+with Ada.Strings.Fixed;
 
 with GNAT.Command_Line;       use GNAT.Command_Line;
 
+with GNATCOLL.Projects;       use GNATCOLL.Projects;
+with GNATCOLL.Utils;          use GNATCOLL.Utils;
 with GNATCOLL.VFS;            use GNATCOLL.VFS;
+with GNATCOLL.VFS_Utils;      use GNATCOLL.VFS_Utils;
 
-with GPS.CLI_Utils;
-
+with GNAThub.Project;
 with GNAThub.Version;
 
 package body GNAThub.Configuration is
@@ -30,20 +33,23 @@ package body GNAThub.Configuration is
    Config      : GNAT.Command_Line.Command_Line_Configuration;
 
    Project_Arg : aliased GNAT.Strings.String_Access;
-   Script_Arg  : aliased GNAT.Strings.String_Access;
    Plugins_Arg : aliased GNAT.Strings.String_Access;
+   Script_Arg  : aliased GNAT.Strings.String_Access;
    Version     : aliased Boolean;
    Quiet       : aliased Boolean;
    Verbose     : aliased Boolean;
 
-   procedure Parse (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record);
-   --  Parses the command line.
+   procedure Parse_Command_Line;
+   --  Parse the command line and handle -X switches
+
+   procedure Evaluate_Command_Line;
+   --  Invoke Parse_Command_Line and ensure consistency
 
    ----------------
    -- Initialize --
    ----------------
 
-   procedure Initialize (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record) is
+   procedure Initialize is
    begin
       --  Declare the switches
 
@@ -68,9 +74,8 @@ package body GNAThub.Configuration is
       Define_Switch
         (Config      => Config,
          Output      => Script_Arg'Access,
-         Switch      => "-l:",
          Long_Switch => "--load=",
-         Help        => "Execute external script written (lang:path)");
+         Help        => "Execute an external Python script before exiting");
 
       Define_Switch
         (Config      => Config,
@@ -104,14 +109,53 @@ package body GNAThub.Configuration is
          Help   => "GNAThub, driver & formatter for GNAT tool suite.");
 
       --  Parse the command line
-      Parse (Kernel);
+
+      Evaluate_Command_Line;
    end Initialize;
 
-   -----------
-   -- Parse --
-   -----------
+   ------------------------
+   -- Parse_Command_Line --
+   ------------------------
 
-   procedure Parse (Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record)
+   procedure Parse_Command_Line is
+      procedure Local_Parse_Command_Line (Switch, Parameter, Section : String);
+      --  Allow to manage every occurance of -X switch for scenario variable
+
+      ------------------------------
+      -- Local_Parse_Command_Line --
+      ------------------------------
+
+      procedure Local_Parse_Command_Line (Switch, Parameter, Section : String)
+      is
+         pragma Unreferenced (Section);
+         Equal : Natural;
+      begin
+         if Switch = "-X" then
+            Equal := Ada.Strings.Fixed.Index (Parameter, "=");
+
+            if Equal /= 0 then
+               GNAThub.Project.Update_Env
+                 (Key   => Parameter (Parameter'First .. Equal - 1),
+                  Value => Parameter (Equal + 1 .. Parameter'Last));
+
+            else
+               Log.Warn
+                 ("Ignoring switch -X, missing name or/and value for: " &
+                  Switch & Parameter);
+            end if;
+         end if;
+
+      end Local_Parse_Command_Line;
+
+   begin
+      Getopt (Config, Local_Parse_Command_Line'Unrestricted_Access);
+   end Parse_Command_Line;
+
+   ---------------------------
+   -- Evaluate_Command_Line --
+   ---------------------------
+
+   procedure Evaluate_Command_Line
    is
       use GNAT.Strings;
       --  Bring the '=' operator in the scope
@@ -119,12 +163,12 @@ package body GNAThub.Configuration is
    begin
       --  Manage -X (scenario vars) switches and call getopt
 
-      GPS.CLI_Utils.Parse_Command_Line (Config, Kernel);
+      Parse_Command_Line;
 
       --  Print the version and exit if --version is supplied
 
       if Version then
-         Put_Line ("GNAThub driver " & GNAThub.Version.Version);
+         Log.Info ("GNAThub driver " & GNAThub.Version.Version);
          raise GNAT.Command_Line.Exit_From_Command_Line;
       end if;
 
@@ -145,15 +189,26 @@ package body GNAThub.Configuration is
 
       --  Check that project file path has been specified on command line
 
-      if not GPS.CLI_Utils.Is_Project_Path_Specified (Project_Arg) then
+      if Project_Arg = null or else Project_Arg.all = "" then
          raise Error with "No project file specified, see --help for usage.";
       end if;
 
       --  Check existance of the given path on disk
 
-      if not GPS.CLI_Utils.Project_File_Path_Exists (Project_Arg) then
-         raise Error with "No such file: " & Project;
-      end if;
+      declare
+         Project : constant String := Project_Arg.all;
+         Ext     : constant String := +Project_File_Extension;
+
+      begin
+         if not Ends_With (Project, Ext) then
+            Free (Project_Arg);
+            Project_Arg := new String'(Project & Ext);
+         end if;
+
+         if not Is_Regular_File (Filesystem_String (Project_Arg.all)) then
+            raise Error with "No such file: " & Project;
+         end if;
+      end;
 
    exception
       when GNAT.Command_Line.Exit_From_Command_Line =>
@@ -167,7 +222,8 @@ package body GNAThub.Configuration is
       when GNAT.Command_Line.Invalid_Parameter =>
          raise Error with "Invalid parameter for switch: " &
                           GNAT.Command_Line.Full_Switch;
-   end Parse;
+
+   end Evaluate_Command_Line;
 
    -------------
    -- Project --
@@ -178,32 +234,10 @@ package body GNAThub.Configuration is
       return Project_Arg.all;
    end Project;
 
-   ------------
-   -- Script --
-   ------------
-
-   function Script return String is
-   begin
-      return Script_Arg.all;
-   end Script;
-
-   -------------
-   -- Project --
-   -------------
-
    function Project return GNAT.Strings.String_Access is
    begin
       return Project_Arg;
    end Project;
-
-   ------------
-   -- Script --
-   ------------
-
-   function Script return GNAT.Strings.String_Access is
-   begin
-      return Script_Arg;
-   end Script;
 
    -------------
    -- Plugins --
@@ -214,14 +248,24 @@ package body GNAThub.Configuration is
       return Plugins_Arg.all;
    end Plugins;
 
-   -------------
-   -- Plugins --
-   -------------
-
    function Plugins return GNAT.Strings.String_Access is
    begin
       return Plugins_Arg;
    end Plugins;
+
+   ------------
+   -- Script --
+   ------------
+
+   function Script return String is
+   begin
+      return Script_Arg.all;
+   end Script;
+
+   function Script return GNAT.Strings.String_Access is
+   begin
+      return Script_Arg;
+   end Script;
 
    --------------
    -- Finalize --

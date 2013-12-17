@@ -25,7 +25,6 @@ module and load it as part of the GNAThub default excecution.
 """
 
 import GNAThub
-import GNAThub.project
 
 import os
 import re
@@ -63,12 +62,12 @@ class GNATcheck(GNAThub.Plugin):
 
         super(GNATcheck, self).__init__()
 
-        self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
+        self.report = os.path.join(GNAThub.Project.object_dir(), self.REPORT)
 
     def display_command_line(self):
         """Inherited."""
 
-        cmdline = ['-P', GNAThub.project.name()]
+        cmdline = ['-P', GNAThub.Project.name()]
         cmdline.extend(['-o', os.path.relpath(self.report)])
 
         return ' '.join(cmdline)
@@ -81,7 +80,7 @@ class GNATcheck(GNAThub.Plugin):
         """
 
         return ['gnatcheck', '--show-rule', '-o', self.report,
-                '-P', GNAThub.project.path()]
+                '-P', GNAThub.Project.path()]
 
     def execute(self):
         """Executes the GNATcheck.

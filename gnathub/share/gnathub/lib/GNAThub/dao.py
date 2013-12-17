@@ -21,7 +21,7 @@
 
 # pylint: disable=F0401
 # Disable "Unable to import" error
-import GPS
+import GNAThub
 
 from GNAThub.db import Category, Line, Rule, Resource, Tool
 
@@ -62,8 +62,7 @@ def get_or_create_category(session, label):
         :type label: a string
 
     RETURNS
-        the category
-        :rtype: a GNAThub.db.Category object
+        :rtype: a :class:`GNAThub.db.Category` object
     """
 
     category = session.query(Category).filter_by(label=label).first()
@@ -84,12 +83,12 @@ def get_file(session, filename):
         :type filename: a string
 
     RETURNS
-        :rtype: a GNAThub.db.Resource object
+        :rtype: a :class:`GNAThub.db.Resource` object
     """
 
     dao = session.query(Resource) \
         .filter_by(kind=2) \
-        .filter_by(name=GPS.File(filename).name()) \
+        .filter_by(name=GNAThub.Project.source_file(filename)) \
         .first()
 
     return dao
@@ -105,7 +104,7 @@ def get_file_by_id(session, resource_id):
         :type filename: a string
 
     RETURNS
-        :rtype: a GNAThub.db.Resource object
+        :rtype: a :class:`GNAThub.db.Resource` object
     """
 
     resource = session.query(Resource) \
@@ -125,7 +124,7 @@ def get_resource(session, name):
         :type name: a string
 
     RETURNS
-        :rtype: a GNAThub.db.Resource object
+        :rtype: a :class:`GNAThub.db.Resource` object
     """
 
     resource = session.query(Resource) \
@@ -148,7 +147,7 @@ def get_or_create_line(session, filename, line_num):
         :type line_num: number
 
     RETURNS
-        :rtype: a GNAThub.db.Line object
+        :rtype: a :class:`GNAThub.db.Line` object
     """
 
     line = None
@@ -184,7 +183,7 @@ def get_or_create_line_from_resource_id(session, resource_id, line_num):
         :type line_num: number
 
     RETURNS
-        :rtype: a GNAThub.db.Line object
+        :rtype: a :class:`GNAThub.db.Line` object
     """
 
     line = None
@@ -231,7 +230,7 @@ def save_tool(session, name):
         :type name: a string
 
     RETURNS
-        :rtype: a GNAThub.db.Tool object
+        :rtype: a :class:`GNAThub.db.Tool` object
     """
 
     tool = Tool(name)

@@ -23,10 +23,20 @@ with Ada.Strings.Unbounded;               use Ada.Strings.Unbounded;
 with Ada.Strings.Unbounded.Hash;
 with Ada.Strings.Equal_Case_Insensitive;
 
+with GNATCOLL.VFS_Utils;                  use GNATCOLL.VFS_Utils;
+
 with GNAThub.Database;                    use GNAThub.Database;
 with Orm;                                 use Orm;
 
 package body GNAThub.Project is
+
+   Package_Name : constant String := "dashboard";
+   --  Package_Name MUST be in lower case to avoid Prj error "cannot
+   --  register a package with a non unique name"
+
+   Project_Tree : GNATCOLL.Projects.Project_Tree;
+   Project_Env  : Project_Environment_Access;
+   --  GNATCOLL.Projects specificities
 
    package Project_Map is new Ada.Containers.Hashed_Maps
      (Key_Type     => Unbounded_String,
@@ -34,19 +44,29 @@ package body GNAThub.Project is
       Hash         => Ada.Strings.Unbounded.Hash,
       Equivalent_Keys => "=");
    use Project_Map;
-   --  ???
 
-   Is_Initialized : Boolean := False;
-   --  False until Load_Project_Tree is called.
+   Is_Initialized    : Boolean := False;
+   --  False until Initialize is called
 
-   Project_Object_Dir : Virtual_File := No_File;
-   --  The project Object directory set by Initialize and provided by GPS CLI
-   --  kernel context.
+   Is_Project_Loaded : Boolean := False;
+   --  False until Load_Project_Tree is called
+
+   procedure Register_Custom_Attributes;
+   --  Register GNATdashboard-specific attributes
 
    procedure Save_Project_Sources
      (Project     : Project_Type;
       Project_Orm : Detached_Resource);
    --  ???
+
+   ------------
+   -- Loaded --
+   ------------
+
+   function Loaded return Boolean is
+   begin
+      return Is_Project_Loaded;
+   end Loaded;
 
    -----------------
    -- Initialized --
@@ -57,37 +77,142 @@ package body GNAThub.Project is
       return Is_Initialized;
    end Initialized;
 
+   ----------
+   -- Name --
+   ----------
+
+   function Name return String is
+   begin
+      return Project_Tree.Root_Project.Name;
+   end Name;
+
    ----------------
    -- Object_Dir --
    ----------------
 
    function Object_Dir return Virtual_File is
    begin
-      return Project_Object_Dir;
+      return Project_Tree.Root_Project.Object_Dir;
    end Object_Dir;
 
-   -----------------------
-   -- Load_Project_Tree --
-   -----------------------
+   ----------
+   -- Path --
+   ----------
 
-   procedure Load_Project_Tree
-     (Path   : GNAT.Strings.String_Access;
-      Kernel : access GPS.CLI_Kernels.CLI_Kernel_Record)
+   function Path return Virtual_File is
+   begin
+      return Project_Tree.Root_Project.Project_Path;
+   end Path;
+
+   ------------------------
+   -- Property_As_String --
+   ------------------------
+
+   function Property_As_String (Property : String) return String is
+   begin
+      return Project_Tree.Root_Project.Attribute_Value
+               (Attribute_Pkg_String'(Build (Package_Name, Property)),
+                Default => "");
+   end Property_As_String;
+
+   ----------------------
+   -- Property_As_List --
+   ----------------------
+
+   function Property_As_List (Property : String) return String_List_Access is
+   begin
+      return Project_Tree.Root_Project.Attribute_Value
+               (Attribute_Pkg_List'(Build (Package_Name, Property)));
+   end Property_As_List;
+
+   -------------------------------
+   -- Register_Extra_Attributes --
+   -------------------------------
+
+   procedure Register_Custom_Attributes is
+      procedure Internal_Register (Key : String; Is_List : Boolean := False);
+      --  Register an attribute in the Dashboard package
+
+      procedure Internal_Register (Key : String; Is_List : Boolean := False) is
+         Ret : constant String :=
+                 Register_New_Attribute
+                   (Name    => Key,
+                    Pkg     => Package_Name,
+                    Is_List => Is_List);
+      begin
+         if Ret /= "" then
+            raise Project_Error with
+              "Failed to register custom attribute " & Key;
+         end if;
+      end Internal_Register;
+
+   begin
+      Internal_Register ("Project_Name");
+      Internal_Register ("Project_Version");
+      Internal_Register ("Project_Key");
+
+      Internal_Register ("Source_Encoding");
+
+      Internal_Register ("Plugins", Is_List => True);
+      Internal_Register ("Specific_Plugins", Is_List => True);
+   end Register_Custom_Attributes;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
+      GNATCOLL.Projects.Initialize (Project_Env);
+      Register_Custom_Attributes;
+
+      Is_Initialized := True;
+   end Initialize;
+
+   ---------
+   -- Load--
+   ---------
+
+   procedure Load (Path : GNAT.Strings.String_Access)
    is
       Project_File : constant Virtual_File := GNATCOLL.VFS.Create (+Path.all);
    begin
-      Kernel.Registry.Tree.Load
+      Project_Tree.Load
         (Root_Project_Path => Project_File,
-         Env               => Kernel.Registry.Environment);
+         Env               => Project_Env);
 
-      Project_Object_Dir := Kernel.Registry.Tree.Root_Project.Object_Dir;
-      Is_Initialized := True;
+      Is_Project_Loaded := True;
 
    exception
       when E : Invalid_Project =>
          raise Error with "Unable to load project file: " & Path.all & ": " &
                           Exception_Information (E);
-   end Load_Project_Tree;
+
+   end Load;
+
+   ----------------
+   -- Update_Env --
+   ----------------
+
+   procedure Update_Env (Key, Value : String) is
+   begin
+      Project_Env.Change_Environment (Key, Value);
+   end Update_Env;
+
+   ----------
+   -- File --
+   ----------
+
+   function File (Name : String) return Virtual_File
+   is
+      File : constant Virtual_File := Project_Tree.Create (Base_Name (+Name));
+   begin
+      if File = No_File then
+         return Create (Full_Filename => +Name);
+      end if;
+
+      return File;
+   end File;
 
    --------------------------
    -- Save_Project_Sources --
@@ -135,7 +260,7 @@ package body GNAThub.Project is
    -- Load_Project --
    ------------------
 
-   procedure Save_Project_Tree (Root_Project : Project_Type) is
+   procedure Save_Project_Tree is
       Project_Orm_By_Name : Project_Map.Map;
       Iterator            : Project_Iterator;
       Project             : Project_Type;
@@ -178,7 +303,8 @@ package body GNAThub.Project is
 
    begin
       --  All projects
-      Iterator := Root_Project.Start;
+      Iterator := Project_Tree.Root_Project.Start;
+
       loop
          Project := Current (Iterator);
          exit when Project = No_Project;
@@ -215,5 +341,19 @@ package body GNAThub.Project is
       end loop;
 
    end Save_Project_Tree;
+
+   --------------
+   -- Finalize --
+   --------------
+
+   procedure Finalize is
+   begin
+      if Loaded then
+         Project_Tree.Unload;
+         Is_Project_Loaded := False;
+
+         GNATCOLL.Projects.Finalize;
+      end if;
+   end Finalize;
 
 end GNAThub.Project;

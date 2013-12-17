@@ -26,7 +26,7 @@ module and load it as part of the GNAThub default excecution.
 
 import ConfigParser
 
-import GNAThub.project
+import GNAThub
 
 import os
 
@@ -46,8 +46,8 @@ class _SonarConfiguration(object):
               'sonar.sourceEncoding': ('UTF-8', 'Source_Encoding'),
               'sonar.sources': ('.', None),
               'sonar.projectVersion': ('1.0-SNAPSHOT', 'Project_Version'),
-              'sonar.projectName': (GNAThub.project.name(), 'Project_Name'),
-              'sonar.projectKey': ('%s::Project' % GNAThub.project.name(),
+              'sonar.projectName': (GNAThub.Project.name(), 'Project_Name'),
+              'sonar.projectKey': ('%s::Project' % GNAThub.Project.name(),
                                    'Project_Key'),
               'sonar.ada.qmt.db.path': (GNAThub.database(), None)}
 
@@ -69,7 +69,7 @@ class _SonarConfiguration(object):
         section = _SonarConfiguration.SONAR_SECTION
 
         if attribute:
-            attr_value = GNAThub.project.property_as_string(attribute)
+            attr_value = GNAThub.Project.property_as_string(attribute)
             if attr_value:
                 Log.debug('%s.%s: overriding default with %s' %
                           (section, key, attr_value))
@@ -124,7 +124,7 @@ class SonarConfig(GNAThub.Plugin):
     def display_command_line(self):
         """Inherited."""
 
-        cmdline = ['-P', GNAThub.project.name()]
+        cmdline = ['-P', GNAThub.Project.name()]
         cmdline.extend(['-o', os.path.relpath(SonarQube.configuration())])
 
         return ' '.join(cmdline)

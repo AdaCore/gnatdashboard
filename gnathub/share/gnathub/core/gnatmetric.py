@@ -25,7 +25,6 @@ module and load it as part of the GNAThub default excecution.
 """
 
 import GNAThub
-import GNAThub.project
 
 import os
 
@@ -52,7 +51,7 @@ class GNATmetric(GNAThub.Plugin):
 
         super(GNATmetric, self).__init__()
 
-        self.report = os.path.join(GNAThub.project.object_dir(), self.REPORT)
+        self.report = os.path.join(GNAThub.Project.object_dir(), self.REPORT)
 
     def __cmd_line(self):
         """Creates GNATmetric command line arguments list.
@@ -61,7 +60,7 @@ class GNATmetric(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        return ['gnatmetric', '-ox', self.report, '-P', GNAThub.project.path(),
+        return ['gnatmetric', '-ox', self.report, '-P', GNAThub.Project.path(),
                 '-U']
 
     def execute(self):
@@ -94,7 +93,7 @@ class GNATmetric(GNAThub.Plugin):
     def display_command_line(self):
         """Inherited."""
 
-        cmdline = ['-P', GNAThub.project.name()]
+        cmdline = ['-P', GNAThub.Project.name()]
         cmdline.extend(['-o', os.path.relpath(self.report)])
 
         return ' '.join(cmdline)

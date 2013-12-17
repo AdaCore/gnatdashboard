@@ -24,7 +24,6 @@ This module defines the core components of GNAThub plugin mechanism:
     - The GPSTarget Helper Class
 """
 
-import GNAThub
 
 
 def root():
@@ -153,6 +152,80 @@ class Log(object):
         pass    # Implemented in Ada
 
 
+class Project(object):
+    """A project namespace. Fully implemented in Ada."""
+
+    def __init__(self):
+        """Instance constructor."""
+
+        raise Error('GNAThub.Project must not be instanciated')
+
+    @staticmethod
+    def name():
+        """Returns the name of the root project.
+
+        RETURNS
+            :rtype: string
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def path():
+        """Returns the full path to the root project.
+
+        RETURNS
+            :rtype: string
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def object_dir():
+        """Returns the full path to the root project object directory.
+
+        RETURNS
+            :rtype: string
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def source_file(name):
+        """Create a new file. This will automatically try to solve Name to an
+        absolute path if it currently is a base name.  If Name is an absolute
+        path, it is returned as is. Otherwise, only the base name is used (ie
+        we remove any directory information from Name).
+
+        RETURNS
+            :rtype: a string
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def property_as_string(key):
+        """Returns the string representation of the project property from the
+        package GNATdashboard.
+
+        RETURNS
+            :rtype: string
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def property_as_list(key):
+        """Returns the list of string representation of the project property
+        from the package GNATdashboard.
+
+        RETURNS
+            :rtype: list
+        """
+
+        pass    # Implemented in Ada
+
+
 # Install all Ada extensions, i.e. functions and classes implemented in Ada and
 # exported to Python. These extensions should be declared above this statement
 # with no implementation.
@@ -183,6 +256,9 @@ class Error(Exception):
     pass
 
 
+# pylint: disable=C1001,R0921
+# Disable "Old-style class defined."
+# Disable "Abstract class not referenced"
 class Plugin:
     """GNAThub plugin interface.
 
@@ -351,12 +427,12 @@ class Run(object):
                 self.wait()
 
         except OSError as ex:
-            self.__error(ex)
+            self.__error()
             Log.error('%s: %s' % (self.argv[0], ex.strerror))
             return
 
         except Exception as ex:
-            self.__error(ex)
+            self.__error()
             Log.error(str(ex))
             raise
 
@@ -401,7 +477,7 @@ class Run(object):
 
         return ' '.join((Run.quote(arg) for arg in self.argv))
 
-    def __error(self, error):
+    def __error(self):
         """Set pid to -1 and status to 127."""
 
         self.pid = -1
@@ -417,7 +493,7 @@ class Run(object):
         if self.out:
             return self.out
 
-        return os.path.join(GNAThub.logs(), self.name + '.log')
+        return os.path.join(logs(), self.name + '.log')
 
 
 # A chain of plugin in the order in which they are registered through the
@@ -440,7 +516,7 @@ def register(plugin):
 
 
 def run():
-    """???"""
+    """Plugins main loop."""
 
     if not _PLUGINS:
         Log.info('gnathub: nothing to do.')
