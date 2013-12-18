@@ -1,14 +1,8 @@
 *~
 *.pyc
 *.sw?
-/src/gnathub-version.ads
+/gnathub.gpr
+/src/gnathub/gnathub-version.ads
 /build/
 /tests/out
-/gnathub-x86-windows/
-/gnathub-x86-linux/
-/gnathub-x86_64-linux/
-/gnathub-x86_64-darwin/
-/gnathub-x86-windows.zip
-/gnathub-x86-linux.tar.gz
-/gnathub-x86_64-linux.tar.gz
-/gnathub-x86_64-darwin.tar.gz
+/gnathub-*/

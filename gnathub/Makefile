@@ -19,73 +19,80 @@
 
 include Makefile.conf
 
-.PHONY: tests
+all: gnathub-bin gnathub-pylib gnathub-plugins
 
-all: gnathub
+gnathub-bin: gnathub.gpr src/gnathub/gnathub-version.ads
+	BUILD_DIR="$(BUILD_DIR)" gprbuild -p -P $<
 
-gnathub: $(TOP)/src/gnathub-version.ads
-	gprbuild -p -P $(PROJECT).gpr
-	$(RMDIR) $(BUILD_DIR)/share
-	$(LN) $(TOP)/share $(TOP)/build/share
+gnathub.gpr: gnathub.gpr.in
+	cat $< |sed -e 's/@VERSION@/$(VERSION)/g' > $@
 
-.PHONY: $(TOP)/src/gnathub-version.ads
-
-$(TOP)/src/gnathub-version.ads: $(TOP)/src/gnathub-version.ads.in
+src/gnathub/gnathub-version.ads: src/gnathub/gnathub-version.ads.in
 	cat $< |sed \
 		-e 's/@DATE@/$(DATE)/g' \
 		-e 's/@YEAR@/$(YEAR)/g' \
 		-e 's/@VERSION@/$(VERSION)/g' \
 		> $@
 
-create:
+gnathub-pylib: python-env
+	$(PYTHON) src/lib/setup.py build -b "$(BUILD_DIR)" install
+
+gnathub-plugins:
+	(cd share/gnathub && tar cf - core extras sql) | \
+		(cd $(BUILD_DIR)/share/gnathub && tar xf -)
+
+createdb:
 	# Create the database from the schema
-	$(MKDIR) src-gen
-	cd src-gen && gnatcoll_db2ada -dbtype=sqlite -dbname=$(PROJECT).db \
-			-dbmodel=$(TOP)/share/gnathub/scripts/database-schema.txt -createdb
+	$(MKDIR) src/orm-gen
+	cd src/orm-gen && gnatcoll_db2ada -dbtype=sqlite -dbname=gnathub.db \
+		-dbmodel=$(TOP)/share/gnathub/sql/db.model -createdb
 
-orm:
+generate-orm:
 	# Generate the Ada API
-	$(MKDIR) src-gen
-	cd src-gen && gnatcoll_db2ada -api=Database -orm=ORM \
-			-dbmodel=$(TOP)/share/gnathub/scripts/database-schema.txt
+	$(MKDIR) src/orm-gen
+	cd src/orm-gen && gnatcoll_db2ada -api=Database -orm=ORM \
+		-dbmodel=$(TOP)/share/gnathub/sql/db.model
 
-lint:
-	flake8 $(TOP)/share/gnathub/{lib/GNAThub,core,scripts}
-	PYTHONPATH=$(TOP)/share/gnathub/lib pylint \
-			--rcfile=$(TOP)/tests/etc/pylintrc \
-			--output-format=parseable \
-			--reports=n GNAThub \
-			$(TOP)/share/gnathub/core/*.py \
-			$(TOP)/share/gnathub/scripts/*.py
+python-env: $(PYTHON_HOME)
+
+$(PYTHON_HOME):
+	virtualenv $@
+	$(PY_ACTIVATE) && pip install $(PY_MODULES)
+
+check-style:
+	$(PY_ACTIVATE) && flake8 src/lib/GNAThub
+	$(PY_ACTIVATE) && flake8 share/gnathub/{core,extras,sql}
+	$(PY_ACTIVATE) && pylint \
+		--rcfile=t/etc/pylintrc \
+		--output-format=parseable \
+		--reports=n GNAThub share/gnathub/{core,extras,sql}/*.py
 
 tests:
-	cd tests && python testsuite.py
+	cd t && python testsuite.py
 
 tests-coverage:
-	BUILD_MODE=Coverage $(MAKE) all
-	cd tests && python testsuite.py
-	$(MAKE) analyse-gcov
+	BUILD_MODE=Coverage $(MAKE) all tests analyse-gcov
 
 analyse-gcov:
-	find $(TOP) -name '*.gcda' > $(BUILD_DIR)/obj/gcov_input.txt
+	find . -name '*.gcda' > $(BUILD_DIR)/obj/gcov_input.txt
 	cd $(BUILD_DIR)/obj && gcov @gcov_input.txt > gcov_run.log
 
-clean:
-	gprclean -q -P $(PROJECT).gpr
+clean: gnathub.gpr
+	gprclean -q -P $<
 	find . -name '*.pyc' -exec rm -f {} \;
+	$(RM) gnathub.gpr
+	$(RM) src/gnathub/gnathub-version.ads
 	$(RMDIR) $(BUILD_DIR)/obj
+	$(RMDIR) $(BUILD_DIR)/lib.*
 
 distclean: clean
 	$(RMDIR) $(BUILD_DIR)
 
-install:
-	$(MKDIR) $(INSTALL_PREFIX)
-	cp COPYING3 $(INSTALL_PREFIX)
-	$(MKDIR) $(INSTALL_PREFIX)/bin
-	$(MKDIR) $(INSTALL_PREFIX)/share
-	(cd $(BUILD_DIR) && tar cf - bin) | (cd $(INSTALL_PREFIX) && tar xf -)
-	(cd $(TOP)/share && tar cf - --exclude='*.pyc' $(PROJECT)) | (cd $(INSTALL_PREFIX)/share && tar xf -)
+package: all
+	$(RMDIR) $(PKG_DIR)
+	$(MKDIR) $(PKG_DIR)/{bin,share}
+	(tar cf - COPYING3) | (cd $(PKG_DIR) && tar xf -)
+	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
 
-distrib: $(PROJECT)
-	$(RMDIR) $(DISTRIB_PREFIX)
-	PREFIX=$(DISTRIB_PREFIX) $(MAKE) install
+install: package
+	(cd $(PKG_DIR) && tar cf - *) | (cd $(INSTALL_DIR) && tar xf -)
