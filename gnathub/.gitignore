@@ -4,5 +4,5 @@
 /gnathub.gpr
 /src/gnathub/gnathub-version.ads
 /build/
-/tests/out
+/t/out
 /gnathub-*/
