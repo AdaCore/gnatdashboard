@@ -1,1 +1,1 @@
-gnathub --version | grep -v "^GNAThub driver"
+gnathub --version | grep -v "^GNAThub " | grep -v "^Copyright"
