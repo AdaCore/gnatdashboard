@@ -257,7 +257,7 @@ class Error(Exception):
 
 
 # pylint: disable=C1001,R0921
-# Disable "Old-style class defined."
+# Disable "Old-style class defined"
 # Disable "Abstract class not referenced"
 class Plugin:
     """GNAThub plugin interface.
