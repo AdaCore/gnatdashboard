@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                        Copyright (C) 2013, AdaCore                       --
+--                     Copyright (C) 2013-2014, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -15,53 +15,41 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-with GNATCOLL.Utils; use GNATCOLL.Utils;
 with GNATCOLL.VFS;   use GNATCOLL.VFS;
 
 package GNAThub.Constants is
 
-   --  GNAThub executable side environment properties
+   function Python_Home return Virtual_File;
+   --  The GNAThub Python installation HOME
 
-   Prefix_Dir  : constant Virtual_File := Create (+Executable_Location);
+   function Core_Plugins_Dir return Virtual_File;
+   --  Core plugins packaged with GNAThub
 
-   Python_Home : constant Virtual_File :=
-                   Create_From_Dir (Prefix_Dir, "share/gnathub/python");
+   function Extra_Plugins_Dir return Virtual_File;
+   --  Directory expected to contains zero or more user-defined plugins
 
-   Share_Dir   : constant Virtual_File :=
-                   Create_From_Dir (Prefix_Dir, "share/gnathub");
-
-   Sql_Dir     : constant Virtual_File :=
-                   Create_From_Dir (Share_Dir, "sql");
-
-   Core_Plugins_Dir : constant Virtual_File :=
-                        Create_From_Dir (Share_Dir, "core");
-
-   Extra_Plugins_Dir : constant Virtual_File :=
-                         Create_From_Dir (Share_Dir, "extras");
-
+   function Python_Root_Module return String;
    --  Ada to Python module name. Every entity of this module will be imported
    --  into the "GNAThub" module after initialization. This module should
    --  remain private to users.
 
-   Python_Root_Module : constant String := "GNAThubCore";
+   function Database_Model_File return Virtual_File;
+   --  GNAThub database model file for database initialization
 
-   --  GNAThub database model
-
-   Database_Model_File : constant Virtual_File :=
-                           Create_From_Dir (Sql_Dir, "db.model");
-
-   --  GNAThub helper scripts
-
-   Plugin_Runner : constant Virtual_File :=
-                     Create_From_Dir (Python_Home, "bin/plugin-runner.py");
+   function Plugin_Runner return Virtual_File;
+   --  The path to the script in charge of chaining the execution of all
+   --  plugins (core + user-defined).
 
    --  GNAThub project side environment properties, located in project
    --  object directory
 
-   Root_Dir : constant Virtual_File := Create ("gnathub");
-   Logs_Dir : constant Virtual_File := Create_From_Dir (Root_Dir, "logs");
+   function Root_Dir return Virtual_File;
+   --  GNAThub root directory to be created in the project's object dir
 
-   Database_File  : constant Virtual_File :=
-                      Create_From_Dir (Root_Dir, "gnathub.db");
+   function Logs_Dir return Virtual_File;
+   --  Directory containing the logs of a GNAThub execution
+
+   function Database_File return Virtual_File;
+   --  The GNAThub database file where all plugins store or read their data
 
 end GNAThub.Constants;
