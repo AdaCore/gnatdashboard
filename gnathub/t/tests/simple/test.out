@@ -1,7 +1,7 @@
 obj/
 obj/empty
-obj/gnatcheck.out
 obj/gnatcheck-source-list.out
+obj/gnatcheck.out
 obj/gnathub
 obj/gnathub/gnathub.db
 obj/gnathub/logs
