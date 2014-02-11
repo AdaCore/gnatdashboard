@@ -90,6 +90,7 @@ distclean: clean
 
 package: all
 	$(RMDIR) $(PKG_DIR)
+	$(MKDIR) $(PKG_DIR)
 	(tar cf - COPYING3) | (cd $(PKG_DIR) && tar xf -)
 	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
 
