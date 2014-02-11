@@ -40,6 +40,7 @@ class CodePeer(GNAThub.Plugin):
     Configures and executes CodePeer, then analizes the output.
     """
 
+    REPORT = 'codepeer.out'
     TOOL_NAME = 'CodePeer'
 
     def __init__(self):
