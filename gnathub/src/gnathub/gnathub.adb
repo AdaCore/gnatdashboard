@@ -36,6 +36,18 @@ package body GNAThub is
       Ada_Verbosity    : Verbosity_Level := Default;
       --  Verbosity of the Ada Trace engine
 
+      procedure Print_With_Prefix (Message : String);
+      --  Print the message prefixed by "gnathub:"
+
+      -----------------------
+      -- Print_With_Prefix --
+      -----------------------
+
+      procedure Print_With_Prefix (Message : String) is
+      begin
+         Put_Line ("gnathub: " & Message);
+      end Print_With_Prefix;
+
       ----------
       -- Info --
       ----------
@@ -56,7 +68,7 @@ package body GNAThub is
       procedure Warn (Message : String) is
       begin
          if Ada_Verbosity = Default then
-            Put_Line ("warning: " & Message);
+            Print_With_Prefix (Message);
          elsif Ada_Verbosity = Verbose then
             Trace (Warning_Handle, Message);
          end if;
@@ -69,7 +81,7 @@ package body GNAThub is
       procedure Error (Message : String) is
       begin
          if Ada_Verbosity = Default then
-            Put_Line ("error: " & Message);
+            Print_With_Prefix (Message);
          elsif Ada_Verbosity = Verbose then
             Trace (Error_Handle, Message);
          end if;
@@ -81,7 +93,11 @@ package body GNAThub is
 
       procedure Fatal (Message : String) is
       begin
-         Trace (Fatal_Handle, Message);
+         if Ada_Verbosity = Default then
+            Print_With_Prefix (Message);
+         elsif Ada_Verbosity = Verbose then
+            Trace (Fatal_Handle, Message);
+         end if;
       end Fatal;
 
       -----------

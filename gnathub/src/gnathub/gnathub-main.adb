@@ -19,6 +19,7 @@ with Ada.Command_Line;
 with Ada.Exceptions;             use Ada.Exceptions;
 with Ada.Strings.Unbounded;      use Ada.Strings.Unbounded;
 
+with GNAT.Command_Line;
 with GNAT.Directory_Operations;  use GNAT.Directory_Operations;
 
 with GNATCOLL.Projects;          use GNATCOLL.Projects;
@@ -206,6 +207,13 @@ begin
 
 exception
    when Silent_Error =>
+      Finalize_Application;
+
+      return Ada.Command_Line.Failure;
+
+   when E : Command_Line_Error =>
+      Log.Fatal (Exception_Message (E));
+      GNAT.Command_Line.Try_Help;
       Finalize_Application;
 
       return Ada.Command_Line.Failure;

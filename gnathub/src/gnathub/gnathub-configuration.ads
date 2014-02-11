@@ -19,6 +19,9 @@ with GNAT.Strings;
 
 package GNAThub.Configuration is
 
+   Command_Line_Error : exception;
+   --  Raised on invalid input on the command-line
+
    procedure Initialize;
    --  Initializes and parse the command-line
 

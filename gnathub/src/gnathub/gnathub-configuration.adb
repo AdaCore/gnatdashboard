@@ -181,7 +181,8 @@ package body GNAThub.Configuration is
       --  logging level accordingly
 
       if Quiet and then Verbose then
-         raise Error with "--verbose and --quiet are mutually exclusive.";
+         raise Command_Line_Error
+           with "--verbose and --quiet are mutually exclusive.";
       end if;
 
       if Quiet then
@@ -195,7 +196,7 @@ package body GNAThub.Configuration is
       --  Check that project file path has been specified on command line
 
       if Project_Arg = null or else Project_Arg.all = "" then
-         raise Error with "No project file specified, see --help for usage.";
+         raise Command_Line_Error with "no project file specified";
       end if;
 
       --  Check existance of the given path on disk
@@ -211,7 +212,7 @@ package body GNAThub.Configuration is
          end if;
 
          if not Is_Regular_File (Filesystem_String (Project_Arg.all)) then
-            raise Error with "No such file: " & Project;
+            raise Error with Project & ": no such file or directory";
          end if;
       end;
 
@@ -225,8 +226,8 @@ package body GNAThub.Configuration is
          raise Silent_Error;
 
       when GNAT.Command_Line.Invalid_Parameter =>
-         raise Error with "Invalid parameter for switch: " &
-                          GNAT.Command_Line.Full_Switch;
+         raise Command_Line_Error
+           with "-" & GNAT.Command_Line.Full_Switch & ": invalid parameter";
 
    end Evaluate_Command_Line;
 
