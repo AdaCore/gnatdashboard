@@ -79,8 +79,8 @@ class CodePeer(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        msg_dir = os.path.join(GNAThub.project.object_dir(), 'codepeer',
-                               '%s.output' % GNAThub.project.name().lower())
+        msg_dir = os.path.join(GNAThub.Project.object_dir(), 'codepeer',
+                               '%s.output' % GNAThub.Project.name().lower())
 
         return ['codepeer_msg_reader', '-csv', msg_dir]
 
