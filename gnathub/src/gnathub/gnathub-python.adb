@@ -56,14 +56,16 @@ package body GNAThub.Python is
 
    Root_Function          : aliased String := "root";
    Logs_Function          : aliased String := "logs";
+   Jobs_Function          : aliased String := "jobs";
    Plugins_Function       : aliased String := "plugins";
    Core_Plugins_Function  : aliased String := "core_plugins";
    Extra_Plugins_Function : aliased String := "extra_plugins";
    Database_Function      : aliased String := "database";
 
-   Root_Module_Functions : constant array (1 .. 6) of access String :=
+   Root_Module_Functions : constant array (1 .. 7) of access String :=
       (Root_Function'Access,
        Logs_Function'Access,
+       Jobs_Function'Access,
        Plugins_Function'Access,
        Core_Plugins_Function'Access,
        Extra_Plugins_Function'Access,
@@ -405,6 +407,9 @@ package body GNAThub.Python is
             Create_From_Dir
               (GNAThub.Project.Object_Dir,
                GNAThub.Constants.Logs_Dir.Full_Name).Display_Full_Name);
+
+      elsif Command = Jobs_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Jobs);
 
       elsif Command = Plugins_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Plugins);

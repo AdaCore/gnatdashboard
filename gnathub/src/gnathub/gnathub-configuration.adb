@@ -35,6 +35,7 @@ package body GNAThub.Configuration is
    Project_Arg : aliased GNAT.Strings.String_Access;
    Plugins_Arg : aliased GNAT.Strings.String_Access;
    Script_Arg  : aliased GNAT.Strings.String_Access;
+   Jobs_Arg    : aliased Integer;
    Version     : aliased Boolean;
    Quiet       : aliased Boolean;
    Verbose     : aliased Boolean;
@@ -76,6 +77,14 @@ package body GNAThub.Configuration is
          Output      => Script_Arg'Access,
          Long_Switch => "--load=",
          Help        => "Execute an external Python script before exiting");
+
+      Define_Switch
+        (Config      => Config,
+         Output      => Jobs_Arg'Access,
+         Switch      => "-j:",
+         Long_Switch => "--jobs=",
+         Help        => "Number of jobs to run in parallel",
+         Default     => 1);
 
       Define_Switch
         (Config      => Config,
@@ -193,6 +202,13 @@ package body GNAThub.Configuration is
          Log.Set_Verbosity (Log.Verbose);
       end if;
 
+      --  Check that job number is in the correct range
+
+      if Jobs_Arg not in Natural'Range then
+         raise Command_Line_Error
+           with "invalid jobs value: " & Integer'Image (Jobs_Arg);
+      end if;
+
       --  Check that project file path has been specified on command line
 
       if Project_Arg = null or else Project_Arg.all = "" then
@@ -272,6 +288,15 @@ package body GNAThub.Configuration is
    begin
       return Script_Arg;
    end Script;
+
+   ----------
+   -- Jobs --
+   ----------
+
+   function Jobs return Natural is
+   begin
+      return Jobs_Arg;
+   end Jobs;
 
    --------------
    -- Finalize --

@@ -45,6 +45,9 @@ package GNAThub.Configuration is
    --  Same as Script but returns an access type, and null if not provided on
    --  the command line
 
+   function Jobs return Natural;
+   --  The number of jobs to execute in parallel
+
    procedure Finalize;
    --  Frees allocated memory
 

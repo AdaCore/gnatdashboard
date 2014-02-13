@@ -52,6 +52,16 @@ def logs():
     pass        # Implemented in Ada
 
 
+def jobs():
+    """Returns the number of parallel jobs to execute (equivalent to -j).
+
+    RETURNS
+        :rtype: a number >= 0
+    """
+
+    pass        # Implemented in Ada
+
+
 def plugins():
     """Returns the list of comma-separated plug-ins name specified on the
     command-line.
