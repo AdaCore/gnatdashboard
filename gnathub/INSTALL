@@ -4,48 +4,35 @@ Building from sources
 To build GNAThub from sources, you need to have GNU make available as a
 prerequisite.
 
-You need to use a recent version of the GNAT compiler (e.g. GNAT 7.0.2 or GNAT
-GPL 2012).
+You need to use a recent version of the GNAT compiler (e.g. GNAT 7.1.2).
 
-You need to install a GPS Developer Environment to. This requires the GPS.env
-script available in the GPS directory. This help will guide you throught the
-necessary steps to get GNAThub working. For more information, please refer to
-GPS.env documentation:
+You need an install of GNATcoll to build the project.
 
-   https://intranet.adacore.com/pages/Products/GPS/Docs/ForDevelopers/HowtoBuild
+Fetching and building GNATcoll
+------------------------------
 
-Fetching and building GPS
--------------------------
+Fetch GNATcoll sources:
 
-Fetch the GPS.env shell script from GPS Subversion repository:
-
-   $ mkdir GPS
-   $ svn export svn+ssh://svn.eu.adacore.com/Dev/trunk/gps/design/GPS.env
+   $ svn checkout svn+ssh://svn.eu.adacore.com/Dev/trunk/gps/gnatlib gnatcoll
 
 Then execute the following commands:
 
-   $ source GPS.env
-   $ gps_world
+   $ cd gnatcoll
+   $ ./configure --prefix=$PREFIX --disable-shared --with-python \
+        --enable-projects --with-sqlite --disable-syslog --without-gmp
+   $ make all install
 
 Building GNAThub
 ----------------
 
-Once GPS has been built and installed (in $GPS_ENV_ROOT_DIR/install), add the
-GPS Command-Line tool project to your project file search path:
+Once GNATcoll has been built and installed, update the GPR_PROJECT_PATH:
 
-   $ export GPR_PROJECT_PATH=$GPS_ENV_ROOT_DIR/src/gps/cli:$GPR_PROJECT_PATH
+   $ export GPR_PROJECT_PATH=$PREFIX/lib/gnat:$GPR_PROJECT_PATH
 
 Then execute the following command:
 
-   $ cd GNAThub
+   $ cd gnatdashboard/gnathub
    $ make
-
-Note: there are two prerequisites for building GNAThub:
-
-   - Import GPS build environment by via GPS.env (sourcing the shell script);
-   - Update the $GPR_PROJECT_PATH environment variable to add the directory
-     containing cli.gpr (from the GPS project) to the Ada project file search
-     path (the $GPS_ENV_ROOT_DIR is set and exported by GPS.env).
 
 Generating a GNAThub distribution
 ---------------------------------
