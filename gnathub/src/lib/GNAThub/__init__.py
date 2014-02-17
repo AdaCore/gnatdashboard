@@ -533,6 +533,15 @@ def run():
         return
 
     for plugin in _PLUGINS:
-        plugin.setup()
-        plugin.execute()
-        plugin.teardown()
+        try:
+            plugin.setup()
+            plugin.execute()
+            plugin.teardown()
+
+        except KeyboardInterrupt:
+            Log.info('%sInterrupt caught...' % os.linesep)
+            return
+
+        except Exception as why:
+            Log.error('Unexpected error: %s' % why.message)
+            Log.debug(str(why))
