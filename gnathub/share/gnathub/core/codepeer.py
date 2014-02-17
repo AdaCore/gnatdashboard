@@ -69,8 +69,8 @@ class CodePeer(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        return ['codepeer', '-update-scil', '-level', '1', '-jobs', '0',
-                '-P', GNAThub.Project.path()]
+        return ['codepeer', '-update-scil', '-level', '1',
+                '-P', GNAThub.Project.path(), '-jobs', str(GNAThub.jobs())]
 
     def __msg_reader_cmd_line(self):
         """Creates CodePeer Message Reader command line arguments list.

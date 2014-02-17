@@ -70,7 +70,8 @@ class GNATprove(GNAThub.Plugin):
             :rtype: a list of string
         """
 
-        return ['gnatprove', '-P', GNAThub.Project.path(), '--show-tag']
+        return ['gnatprove', '-P', GNAThub.Project.path(), '--show-tag',
+                '-j%d' % GNAThub.jobs()]
 
     def execute(self):
         """Executes the GNATprove.
