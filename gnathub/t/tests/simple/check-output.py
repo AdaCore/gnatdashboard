@@ -4,6 +4,7 @@
 # Disable "Invalid module name" (not a module, but a script)
 
 import os
+import sys
 
 
 EXPECTED_DIRS = [
@@ -33,15 +34,17 @@ def check_files():
         AssertionError on failure
     """
 
-    root = os.path.dirname(__file__)
+    root = os.path.dirname(os.path.realpath(__file__))
 
     for fragments in EXPECTED_DIRS:
         path = reduce(os.path.join, fragments, root)
-        assert os.path.isdir(path), '%s: no such directory' % path
+        if not os.path.isdir(path):
+            print >> sys.stderr, '%s: no such directory' % path
 
     for fragments in EXPECTED_FILES:
         path = reduce(os.path.join, fragments, root)
-        assert os.path.isfile(path), '%s: no such file' % path
+        if not os.path.isfile(path):
+            print >> sys.stderr, '%s: no such file' % path
 
 if __name__ == '__main__':
     check_files()

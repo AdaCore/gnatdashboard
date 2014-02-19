@@ -80,7 +80,7 @@ class GNATcheck(GNAThub.Plugin):
         """
 
         return ['gnatcheck', '--show-rule', '-o', self.report,
-                '-P', GNAThub.Project.path(), '-j', str(GNAThub.jobs())]
+                '-P', GNAThub.Project.path(), '-j%d' % GNAThub.jobs()]
 
     def execute(self):
         """Executes the GNATcheck.
