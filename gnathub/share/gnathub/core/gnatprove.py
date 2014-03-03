@@ -103,7 +103,7 @@ class GNATprove(GNAThub.Plugin):
     def __parse_output(self, logfile):
         """Parses GNATprove output file (logs recorded during execution).
 
-        Identifies two types of mmessages with different format:
+        Identifies two types of messages with different format:
             - standard messages.
             - messages for package instanciations.
 
