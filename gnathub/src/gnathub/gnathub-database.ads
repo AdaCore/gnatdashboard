@@ -20,7 +20,7 @@ with Orm;               use Orm;
 with GNATCOLL.VFS;
 
 --  This package gathered all functions and procedures that allow to
---  interract with the DB.
+--  interact with the DB.
 
 package GNAThub.Database is
 
