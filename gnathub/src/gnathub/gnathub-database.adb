@@ -29,6 +29,8 @@ package body GNAThub.Database is
 
    Max_Sessions : constant Natural := 2;
 
+   Schema_IO    : DB_Schema_IO;
+
    function Kind_Factory
      (From    : Base_Element'Class;
       Default : Detached_Element'Class) return Detached_Element'Class;
@@ -78,7 +80,6 @@ package body GNAThub.Database is
 
    procedure Initialize (Database_File : GNATCOLL.VFS.Virtual_File) is
       Descr          : Database_Description;
-      Schema_IO      : DB_Schema_IO;
       Schema         : DB_Schema;
       Delete_Succeed : Boolean;
 
@@ -159,5 +160,26 @@ package body GNAThub.Database is
       Session.Persist (Tree);
       Session.Commit;
    end Save_Resource_Tree;
+
+   --------------
+   -- Finalize --
+   --------------
+
+   procedure Finalize is
+   begin
+      if Schema_IO.DB /= null then
+         Schema_IO.DB.Close;
+         Schema_IO.DB := null;
+      end if;
+   end Finalize;
+
+   --------
+   -- DB --
+   --------
+
+   function DB return GNATCOLL.SQL.Exec.Database_Connection is
+   begin
+      return Schema_IO.DB;
+   end DB;
 
 end GNAThub.Database;

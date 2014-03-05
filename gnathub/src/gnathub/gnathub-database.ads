@@ -18,6 +18,7 @@
 with Orm;               use Orm;
 
 with GNATCOLL.VFS;
+with GNATCOLL.SQL.Exec;
 
 --  This package gathered all functions and procedures that allow to
 --  interact with the DB.
@@ -73,6 +74,9 @@ package GNAThub.Database is
    --  Schema_File: the file containing the database schema
    --  Returns wether the DB has been succefully created or not.
 
+   procedure Finalize;
+   --  Terminate the database connection.
+
    -------------------------
    -- Data Access Objects --
    -------------------------
@@ -94,5 +98,8 @@ package GNAThub.Database is
    --
    --  Child: DB object representation of the child resource.
    --  Parent: DB object representation of the parent resource.
+
+   function DB return GNATCOLL.SQL.Exec.Database_Connection;
+   --  Return the currently connected database
 
 end GNAThub.Database;

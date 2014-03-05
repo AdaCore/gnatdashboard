@@ -148,6 +148,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    procedure Finalize_Application is
    begin
       GNAThub.Project.Finalize;
+      GNAThub.Database.Finalize;
       GNAThub.Python.Finalize;
       GNAThub.Configuration.Finalize;
 

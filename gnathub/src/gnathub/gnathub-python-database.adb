@@ -123,10 +123,9 @@ package body GNAThub.Python.Database is
       if Command = Constructor_Method then
          declare
             Name : constant String := Nth_Arg (Data, 2);
-
-            Q : SQL_Query;
-            R : Forward_Cursor;
-            Id : Integer;
+            Q    : SQL_Query;
+            R    : Forward_Cursor;
+            Id   : Integer;
          begin
             Q := SQL_Select
               (To_List ((0 => +D.Tools.Id)),
@@ -190,12 +189,11 @@ package body GNAThub.Python.Database is
    begin
       if Command = Constructor_Method then
          declare
-            Label : constant String := Nth_Arg (Data, 2);
+            Label   : constant String := Nth_Arg (Data, 2);
             On_Side : constant Boolean := Nth_Arg (Data, 3, False);
-
-            Q : SQL_Query;
-            R : Forward_Cursor;
-            Id : Integer;
+            Q       : SQL_Query;
+            R       : Forward_Cursor;
+            Id      : Integer;
          begin
             Q := SQL_Select
               (To_List ((0 => +D.Categories.Id)),
@@ -205,6 +203,7 @@ package body GNAThub.Python.Database is
             Category_Inst := Nth_Arg (Data, 1, Category_Class);
 
             R.Fetch (DB, Q);
+
             if R.Has_Row then
                --  A Category has been found with this name: return it
                Id := R.Integer_Value (0);
@@ -227,6 +226,7 @@ package body GNAThub.Python.Database is
 
       elsif Command = "list" then
          Set_Return_Value_As_List (Data);
+
          declare
             Q : SQL_Query;
             R : Forward_Cursor;
@@ -267,16 +267,16 @@ package body GNAThub.Python.Database is
    begin
       if Command = Constructor_Method then
          declare
-            Name : constant String := Nth_Arg (Data, 2);
+            Name       : constant String := Nth_Arg (Data, 2);
             Identifier : constant String := Nth_Arg (Data, 3);
-            Kind : constant Integer := Nth_Arg (Data, 4);
-            Tool : constant Class_Instance := Nth_Arg (Data, 5);
-            Tool_Id : constant Integer := Tool_Property
+            Kind       : constant Integer := Nth_Arg (Data, 4);
+            Tool       : constant Class_Instance := Nth_Arg (Data, 5);
+            Tool_Id    : constant Integer := Tool_Property
               (Get_Data (Tool, Tool_Class_Name)).Id;
 
-            Q : SQL_Query;
-            R : Forward_Cursor;
-            Id : Integer;
+            Q          : SQL_Query;
+            R          : Forward_Cursor;
+            Id         : Integer;
          begin
             Q := SQL_Select
               (To_List ((0 => +D.Rules.Id)),
@@ -288,6 +288,7 @@ package body GNAThub.Python.Database is
             Rule_Inst := Nth_Arg (Data, 1, Rule_Class);
 
             R.Fetch (DB, Q);
+
             if R.Has_Row then
                --  A Rule has been found with this name: return it
                Id := R.Integer_Value (0);
@@ -314,6 +315,7 @@ package body GNAThub.Python.Database is
 
       elsif Command = "list" then
          Set_Return_Value_As_List (Data);
+
          declare
             Q : SQL_Query;
             R : Forward_Cursor;
@@ -357,18 +359,18 @@ package body GNAThub.Python.Database is
    begin
       if Command = Constructor_Method then
          declare
-            Rule : constant Class_Instance := Nth_Arg (Data, 2);
-            Rule_Id : constant Integer := Rule_Property
+            Rule         : constant Class_Instance := Nth_Arg (Data, 2);
+            Rule_Id      : constant Integer := Rule_Property
               (Get_Data (Rule, Rule_Class_Name)).Id;
             Message_Data : constant String := Nth_Arg (Data, 3);
-            Category : constant Class_Instance :=
+            Category     : constant Class_Instance :=
               Nth_Arg (Data, 4, Default => No_Class_Instance);
-            Category_Id : Integer := -1;  --  -1 iff Category is not specified
-
-            Q : SQL_Query;
-            R : Forward_Cursor;
-            Id : Integer;
+            Category_Id  : Integer := -1;  --  -1 iff Category is not specified
+            Q            : SQL_Query;
+            R            : Forward_Cursor;
+            Id           : Integer;
          begin
+
             if Category = No_Class_Instance then
                Q := SQL_Select
                  (To_List ((0 => +D.Messages.Id)),
@@ -390,10 +392,10 @@ package body GNAThub.Python.Database is
             Message_Inst := Nth_Arg (Data, 1, Message_Class);
 
             R.Fetch (DB, Q);
+
             if R.Has_Row then
                --  A Message has been found with this name: return it
                Id := R.Integer_Value (0);
-
             else
                --  No Message with that name has been found: create one
 
@@ -424,7 +426,6 @@ package body GNAThub.Python.Database is
                Set_Property (Message_Inst, "category_id", Category_Id);
             else
                Set_Property (Message_Inst, "category_id", "");
-               --  ??? is empty string correct?
             end if;
          end;
 
@@ -481,9 +482,9 @@ package body GNAThub.Python.Database is
             Name : constant String := Nth_Arg (Data, 2);
             Kind : constant Integer := Nth_Arg (Data, 3);
 
-            Q : SQL_Query;
-            R : Forward_Cursor;
-            Id : Integer;
+            Q    : SQL_Query;
+            R    : Forward_Cursor;
+            Id   : Integer;
          begin
             Q := SQL_Select
               (To_List ((0 => +D.Resources.Id)),
@@ -544,7 +545,6 @@ package body GNAThub.Python.Database is
          end;
 
       elsif Command = "add_message" then
-
          Name_Parameters
            (Data,
             (1 => Message_Cst'Access,
@@ -554,27 +554,26 @@ package body GNAThub.Python.Database is
 
          declare
             --  Required parameters
-            Resource   : constant Class_Instance := Nth_Arg (Data, 1);
+            Resource    : constant Class_Instance := Nth_Arg (Data, 1);
             Resource_Id : constant Integer := Resource_Property
               (Get_Data (Resource, Resource_Class_Name)).Id;
-            Message    : constant Class_Instance := Nth_Arg (Data, 2);
-            Message_Id : constant Integer := Message_Property
+            Message     : constant Class_Instance := Nth_Arg (Data, 2);
+            Message_Id  : constant Integer := Message_Property
               (Get_Data (Message, Message_Class_Name)).Id;
 
             --  Optional parameters
-            Line      : constant Integer := Nth_Arg (Data, 3, -1);
-            Col_Begin : constant Integer := Nth_Arg (Data, 4, 1);
-            Col_End   : constant Integer := Nth_Arg (Data, 5, 1);
+            Line        : constant Integer := Nth_Arg (Data, 3, -1);
+            Col_Begin   : constant Integer := Nth_Arg (Data, 4, 1);
+            Col_End     : constant Integer := Nth_Arg (Data, 5, 1);
 
-            Q : SQL_Query;
-            R : Forward_Cursor;
-            Line_Id : Integer;
+            Q           : SQL_Query;
+            R           : Forward_Cursor;
+            Line_Id     : Integer;
 
-            Id : Integer;
+            Id          : Integer;
             pragma Unreferenced (Id);
          begin
             if Line = -1 then
-
                --  No line: insert in table resources_messages
 
                Id := DB.Insert_And_Get_PK
@@ -583,7 +582,6 @@ package body GNAThub.Python.Database is
                   & (D.Resources_Messages.Resource_Id = Resource_Id))),
                   PK => D.Resources_Messages.Id);
             else
-
                --  Line specified: first find/create an entry in lines that
                --  matches...
 
@@ -598,7 +596,6 @@ package body GNAThub.Python.Database is
                if R.Has_Row then
                   Line_Id := R.Integer_Value (0);
                else
-
                   Line_Id := DB.Insert_And_Get_PK
                     (SQL_Insert (
                      ((D.Lines.Resource_Id = Resource_Id)
@@ -631,7 +628,6 @@ package body GNAThub.Python.Database is
    procedure Register_Database_Interaction_API
      (Repository : Scripts_Repository) is
    begin
-
       --  Tools
 
       Tool_Class := Repository.New_Class (Tool_Class_Name);
@@ -695,7 +691,6 @@ package body GNAThub.Python.Database is
       Repository.Register_Command
         ("add_message", 1, 5,
          Resource_Command_Handler'Access, Resource_Class, False);
-
    end Register_Database_Interaction_API;
 
 end GNAThub.Python.Database;

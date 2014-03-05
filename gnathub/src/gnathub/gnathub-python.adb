@@ -19,6 +19,7 @@ with Ada.Strings.Unbounded;         use Ada.Strings.Unbounded;
 
 with GNAT.OS_Lib;                   use GNAT.OS_Lib;
 
+with GNATCOLL.SQL;                  use GNATCOLL.SQL;
 with GNATCOLL.Scripts;              use GNATCOLL.Scripts;
 with GNATCOLL.Scripts.Python;       use GNATCOLL.Scripts.Python;
 with GNATCOLL.VFS;                  use GNATCOLL.VFS;
@@ -26,6 +27,7 @@ with GNATCOLL.VFS;                  use GNATCOLL.VFS;
 with GNAThub.Constants;             use GNAThub.Constants;
 with GNAThub.Configuration;         use GNAThub.Configuration;
 with GNAThub.Project;
+with GNAThub.Python.Database;       use GNAThub.Python.Database;
 
 package body GNAThub.Python is
 
@@ -96,6 +98,95 @@ package body GNAThub.Python is
       Command : String);
    --  GNAThub.Project.property_as_* class method handler
 
+   procedure Register_Core_Modules;
+   --  Registers the core modules and functions of GNAThub Python module.
+
+   ---------------------------
+   -- Register_Core_Modules --
+   ---------------------------
+
+   procedure Register_Core_Modules
+   is
+      Log_Class     : constant Class_Type := Repository.New_Class ("Log");
+      Project_Class : constant Class_Type :=
+        Repository.New_Class ("Project");
+
+   begin
+      --  GNAThub module
+
+      for Command of Root_Module_Functions loop
+         Repository.Register_Command
+           (Command       => Command.all,
+            Params        => No_Params,
+            Handler       => Root_Module_Handler'Access);
+      end loop;
+
+      --  GNAThub.Log class
+
+      for Command of Log_Class_Static_Methods loop
+         Repository.Register_Command
+           (Command       => Command.all,
+            Params        => (1 .. 1 => Param ("message")),
+            Handler       => Log_Class_Handler'Access,
+            Class         => Log_Class,
+            Static_Method => True);
+      end loop;
+
+      Repository.Register_Command
+        (Command       => Log_Progress_Method,
+         Params        =>
+           (Param ("current"),
+            Param ("total"),
+            Param ("new_line", Optional => True)),
+         Handler       => Log_Progress_Handler'Access,
+         Class         => Log_Class,
+         Static_Method => True);
+
+      --  GNAThub.Project class
+
+      Repository.Register_Command
+        (Command       => Project_Name_Method,
+         Params        => No_Params,
+         Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Path_Method,
+         Params        => No_Params,
+         Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Object_Dir_Method,
+         Params        => No_Params,
+         Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Source_File_Method,
+         Params        => (1 .. 1 => Param ("name")),
+         Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Property_As_String_Method,
+         Params        => (1 .. 1 => Param ("property")),
+         Handler       => Project_Class_Properties_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Property_As_List_Method,
+         Params        => (1 .. 1 => Param ("property")),
+         Handler       => Project_Class_Properties_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+   end Register_Core_Modules;
+
    -----------------
    -- Initialized --
    -----------------
@@ -110,95 +201,6 @@ package body GNAThub.Python is
    ----------------
 
    procedure Initialize is
-      procedure Register_Core_Modules;
-      --  Registers the core modules and functions of GNAThub Python module.
-
-      ---------------------------
-      -- Register_Core_Modules --
-      ---------------------------
-
-      procedure Register_Core_Modules
-      is
-         Log_Class     : constant Class_Type := Repository.New_Class ("Log");
-         Project_Class : constant Class_Type :=
-                           Repository.New_Class ("Project");
-
-      begin
-         --  GNAThub module
-
-         for Command of Root_Module_Functions loop
-            Repository.Register_Command
-              (Command       => Command.all,
-               Params        => No_Params,
-               Handler       => Root_Module_Handler'Access);
-         end loop;
-
-         --  GNAThub.Log class
-
-         for Command of Log_Class_Static_Methods loop
-            Repository.Register_Command
-              (Command       => Command.all,
-               Params        => (1 .. 1 => Param ("message")),
-               Handler       => Log_Class_Handler'Access,
-               Class         => Log_Class,
-               Static_Method => True);
-         end loop;
-
-         Repository.Register_Command
-           (Command       => Log_Progress_Method,
-            Params        =>
-              (Param ("current"),
-               Param ("total"),
-               Param ("new_line", Optional => True)),
-            Handler       => Log_Progress_Handler'Access,
-            Class         => Log_Class,
-            Static_Method => True);
-
-         --  GNAThub.Project class
-
-         Repository.Register_Command
-           (Command       => Project_Name_Method,
-            Params        => No_Params,
-            Handler       => Project_Class_Accessors_Handler'Access,
-            Class         => Project_Class,
-            Static_Method => True);
-
-         Repository.Register_Command
-           (Command       => Project_Path_Method,
-            Params        => No_Params,
-            Handler       => Project_Class_Accessors_Handler'Access,
-            Class         => Project_Class,
-            Static_Method => True);
-
-         Repository.Register_Command
-           (Command       => Project_Object_Dir_Method,
-            Params        => No_Params,
-            Handler       => Project_Class_Accessors_Handler'Access,
-            Class         => Project_Class,
-            Static_Method => True);
-
-         Repository.Register_Command
-           (Command       => Project_Source_File_Method,
-            Params        => (1 .. 1 => Param ("name")),
-            Handler       => Project_Class_Accessors_Handler'Access,
-            Class         => Project_Class,
-            Static_Method => True);
-
-         Repository.Register_Command
-           (Command       => Project_Property_As_String_Method,
-            Params        => (1 .. 1 => Param ("property")),
-            Handler       => Project_Class_Properties_Handler'Access,
-            Class         => Project_Class,
-            Static_Method => True);
-
-         Repository.Register_Command
-           (Command       => Project_Property_As_List_Method,
-            Params        => (1 .. 1 => Param ("property")),
-            Handler       => Project_Class_Properties_Handler'Access,
-            Class         => Project_Class,
-            Static_Method => True);
-      end Register_Core_Modules;
-
    begin
       if Repository = null then
          Repository := new Scripts_Repository_Record;
@@ -225,6 +227,8 @@ package body GNAThub.Python is
          Log.Debug ("Registering GNAThub core modules");
 
          Register_Core_Modules;
+
+         Register_Database_Interaction_API (Repository);
       end if;
    end Initialize;
 
