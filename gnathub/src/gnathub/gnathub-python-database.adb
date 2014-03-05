@@ -564,7 +564,7 @@ package body GNAThub.Python.Database is
             --  Optional parameters
             Line        : constant Integer := Nth_Arg (Data, 3, -1);
             Col_Begin   : constant Integer := Nth_Arg (Data, 4, 1);
-            Col_End     : constant Integer := Nth_Arg (Data, 5, 1);
+            Col_End     : constant Integer := Nth_Arg (Data, 5, Col_Begin);
 
             Q           : SQL_Query;
             R           : Forward_Cursor;
