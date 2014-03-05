@@ -309,7 +309,7 @@ package body GNAThub.Project is
          Project := Current (Iterator);
          exit when Project = No_Project;
 
-         --  Retreive Project DB object representation
+         --  Retrieve Project DB object representation
          Project_Orm := Get_Project_Orm (Project);
 
          --  All parents' current project
