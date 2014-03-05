@@ -5,7 +5,7 @@
 | TABLE   | categories    | category         |   | Category for the rules |
 | id      | AUTOINCREMENT | PK               |   | Auto-generated id      |
 | label   | TEXT          | NOT NULL, NOCASE |   | Categories' label      |
-| on_side | BOOLEAN       | NULL             |   |                        |
+| on_side | BOOLEAN       | NULL             |   | Whether messages belonging to this category should be displayed on the side |
 
 | TABLE       | rules                         | rule             |   | The rules used for analysis                               |
 | id          | AUTOINCREMENT                 | PK               |   |                                                           |
@@ -33,20 +33,20 @@
 
 | TABLE       | resources_messages              | resource_message |   | Association between messages and resources |
 | id          | AUTOINCREMENT                   | PK               |   | Auto-generated id                          |
-| message_id  | FK rules(message_lines)         | NOT NULL         |   | Resources' associated message              |
+| message_id  | FK messages(message_lines)      | NOT NULL         |   | Resources' associated message              |
 | resource_id | FK resources(resource_messages) | NOT NULL         |   | Corresponding resource for message         |
 
-| TABLE       | lines                    | line     |   | Lines in source file |
-| id          | AUTOINCREMENT            | PK       |   | Auto-generated id    |
-| resource_id | FK rules(resource_lines) | NOT NULL |   | Lines' resource file |
-| line        | INTEGER                  | NOT NULL |   | Line number          |
+| TABLE       | lines                        | line     |   | Lines in source file |
+| id          | AUTOINCREMENT                | PK       |   | Auto-generated id    |
+| resource_id | FK resources(resource_lines) | NOT NULL |   | Lines' resource file |
+| line        | INTEGER                      | NOT NULL |   | Line number          |
 
-| TABLE      | lines_messages          | line_message |   | Association between messages and location in source (line, column)|
-| id         | AUTOINCREMENT           | PK           |   | Auto-generated id                                                 |
-| message_id | FK rules(message_lines) | NOT NULL     |   | Lines' associated message                                         |
-| line_id    | FK lines(line_messages) | NOT NULL     |   | Corresponding line for message                                    |
-| col_begin  | INTEGER                 | NULL         |   | Lines' column begin                                               |
-| col_end    | INTEGER                 | NULL         |   | Lines' column end                                                 |
+| TABLE      | lines_messages             | line_message |   | Association between messages and location in source (line, column)|
+| id         | AUTOINCREMENT              | PK           |   | Auto-generated id                                                 |
+| message_id | FK messages(message_lines) | NOT NULL     |   | Lines' associated message                                         |
+| line_id    | FK lines(line_messages)    | NOT NULL     |   | Corresponding line for message                                    |
+| col_begin  | INTEGER                    | NULL         |   | Lines' column begin                                               |
+| col_end    | INTEGER                    | NULL         |   | Lines' column end                                                 |
 
 | TABLE         | entities                    | entity   |   | Entity                 |
 | id            | AUTOINCREMENT               | PK       |   | Auto-generated id      |

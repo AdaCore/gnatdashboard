@@ -1,3 +1,4 @@
+
 pragma Warnings (Off);
 with Ada.Containers; use Ada.Containers;
 with Ada.Unchecked_Deallocation;
@@ -45,44 +46,47 @@ package body Orm is
    procedure Unchecked_Free is new Ada.Unchecked_Deallocation
      (Detached_Tool'Class, Detached_Tool_Access);
 
-   F_Categories_Id    : constant := 0;
-   F_Categories_Label : constant := 1;
-   Counts_Categories : constant Counts := ((2,2),(2,2),(2,2),(2,2));
+   F_Categories_Id      : constant := 0;
+   F_Categories_Label   : constant := 1;
+   F_Categories_On_Side : constant := 2;
+   Counts_Categories : constant Counts := ((3,3),(3,3),(3,3),(3,3));
    Alias_Categories : constant Alias_Array := (0 => -1);
    F_Entities_Id            : constant := 0;
    F_Entities_Line_Begin_Id : constant := 1;
    F_Entities_Name          : constant := 2;
    F_Entities_Col_Begin     : constant := 3;
    F_Entities_Col_End       : constant := 4;
-   Counts_Entities : constant Counts := ((5,5),(8,8),(13,13),(15,17));
+   Counts_Entities : constant Counts := ((5,5),(8,8),(12,12),(12,12));
    Upto_Entities_0 : constant Counts := ((5,5),(5,5),(5,5),(5,5));
-   Alias_Entities : constant Alias_Array := (-1,2,-1,4,-1,7,8,-1,-1);
+   Alias_Entities : constant Alias_Array := (-1,2,-1,4,-1);
    F_Entities_Messages_Id         : constant := 0;
    F_Entities_Messages_Entity_Id  : constant := 1;
    F_Entities_Messages_Message_Id : constant := 2;
    Upto_Entities_Messages_0 : constant Counts := ((3,3),(3,3),(3,3),(3,3));
-   Upto_Entities_Messages_1 : constant Counts := ((3,3),(8,8),(11,11),(16,16));
-   Alias_Entities_Messages : constant Alias_Array := (-1,3,8,-1,5,-1,7,-1,-1,10,0,13,14,-1,-1);
+   Upto_Entities_Messages_1 : constant Counts := ((3,3),(8,8),(11,11),(15,15));
+   Alias_Entities_Messages : constant Alias_Array := (-1,3,8,-1,5,-1,7,-1,-1,11,14,-1,13,-1,-1);
    F_Lines_Id          : constant := 0;
    F_Lines_Resource_Id : constant := 1;
    F_Lines_Line        : constant := 2;
-   Counts_Lines : constant Counts := ((3,3),(8,8),(10,12),(10,12));
+   Counts_Lines : constant Counts := ((3,3),(7,7),(7,7),(7,7));
    Upto_Lines_0 : constant Counts := ((3,3),(3,3),(3,3),(3,3));
-   Alias_Lines : constant Alias_Array := (-1,2,-1,5,6,-1,-1);
+   Alias_Lines : constant Alias_Array := (-1,2,-1);
    F_Lines_Messages_Id         : constant := 0;
    F_Lines_Messages_Message_Id : constant := 1;
    F_Lines_Messages_Line_Id    : constant := 2;
    F_Lines_Messages_Col_Begin  : constant := 3;
    F_Lines_Messages_Col_End    : constant := 4;
    Upto_Lines_Messages_0 : constant Counts := ((5,5),(5,5),(5,5),(5,5));
-   Upto_Lines_Messages_1 : constant Counts := ((5,5),(10,10),(12,14),(12,14));
-   Alias_Lines_Messages : constant Alias_Array := (-1,3,8,-1,6,7,-1,-1,-1,10,0,13,14,1,2);
-   F_Messages_Id      : constant := 0;
-   F_Messages_Rule_Id : constant := 1;
-   F_Messages_Data    : constant := 2;
-   Counts_Messages : constant Counts := ((3,3),(8,8),(10,12),(10,12));
-   Upto_Messages_0 : constant Counts := ((3,3),(3,3),(3,3),(3,3));
-   Alias_Messages : constant Alias_Array := (-1,2,-1,5,6,-1,-1);
+   Upto_Lines_Messages_1 : constant Counts := ((5,5),(9,9),(14,17),(16,19));
+   Alias_Lines_Messages : constant Alias_Array := (-1,3,10,-1,6,9,-1,8,-1,-1,-1,12,-1);
+   F_Messages_Id          : constant := 0;
+   F_Messages_Rule_Id     : constant := 1;
+   F_Messages_Data        : constant := 2;
+   F_Messages_Category_Id : constant := 3;
+   Counts_Messages : constant Counts := ((4,4),(9,12),(11,14),(11,14));
+   Upto_Messages_0 : constant Counts := ((4,4),(4,4),(4,4),(4,4));
+   Upto_Messages_1 : constant Counts := ((4,4),(9,9),(11,11),(11,11));
+   Alias_Messages : constant Alias_Array := (-1,3,6,-1,5,-1,-1);
    F_Resource_Trees_Id        : constant := 0;
    F_Resource_Trees_Child_Id  : constant := 1;
    F_Resource_Trees_Parent_Id : constant := 2;
@@ -99,17 +103,16 @@ package body Orm is
    F_Resources_Messages_Message_Id  : constant := 1;
    F_Resources_Messages_Resource_Id : constant := 2;
    Upto_Resources_Messages_0 : constant Counts := ((3,3),(3,3),(3,3),(3,3));
-   Upto_Resources_Messages_1 : constant Counts := ((3,3),(8,8),(10,12),(10,12));
-   Alias_Resources_Messages : constant Alias_Array := (-1,3,8,-1,6,7,-1,-1,-1);
-   F_Rules_Id          : constant := 0;
-   F_Rules_Name        : constant := 1;
-   F_Rules_Kind        : constant := 2;
-   F_Rules_Category_Id : constant := 3;
-   F_Rules_Tool_Id     : constant := 4;
-   Counts_Rules : constant Counts := ((5,5),(7,9),(7,9),(7,9));
+   Upto_Resources_Messages_1 : constant Counts := ((3,3),(7,7),(12,15),(14,17));
+   Alias_Resources_Messages : constant Alias_Array := (-1,3,10,-1,6,9,-1,8,-1,-1,-1);
+   F_Rules_Id         : constant := 0;
+   F_Rules_Name       : constant := 1;
+   F_Rules_Identifier : constant := 2;
+   F_Rules_Kind       : constant := 3;
+   F_Rules_Tool_Id    : constant := 4;
+   Counts_Rules : constant Counts := ((5,5),(7,7),(7,7),(7,7));
    Upto_Rules_0 : constant Counts := ((5,5),(5,5),(5,5),(5,5));
-   Upto_Rules_1 : constant Counts := ((5,5),(5,7),(5,7),(5,7));
-   Alias_Rules : constant Alias_Array := (-1,3,4,-1,-1);
+   Alias_Rules : constant Alias_Array := (-1,2,-1);
    F_Tools_Id   : constant := 0;
    F_Tools_Name : constant := 1;
    Counts_Tools : constant Counts := ((2,2),(2,2),(2,2),(2,2));
@@ -571,25 +574,25 @@ package body Orm is
    -- Category_Id --
    -----------------
 
-   function Category_Id (Self : Rule) return Integer is
+   function Category_Id (Self : Message) return Integer is
    begin
-      return Integer_Value (Self, F_Rules_Category_Id);
+      return Integer_Value (Self, F_Messages_Category_Id);
    end Category_Id;
 
    -----------------
    -- Category_Id --
    -----------------
 
-   function Category_Id (Self : Detached_Rule) return Integer is
+   function Category_Id (Self : Detached_Message) return Integer is
    begin
-      return Rule_Data (Self.Get).ORM_Category_Id;
+      return Message_Data (Self.Get).ORM_Category_Id;
    end Category_Id;
 
    -----------------
    -- Category_Id --
    -----------------
 
-   function Category_Id (Self : Rule) return Category'Class is
+   function Category_Id (Self : Message) return Category'Class is
    begin
       if Current (Self.Current) /= Self.Index then
          raise Cursor_Has_Moved;
@@ -598,7 +601,7 @@ package body Orm is
       if Self.Depth > 0 and then Self.Data.Follow_LJ then
          return I_Categories.Internal_Element
            (Self,
-            Upto_Rules_0 (Self.Depth, Self.Data.Follow_LJ));
+            Upto_Messages_1 (Self.Depth, Self.Data.Follow_LJ));
       else
          if not Dynamic_Fetching then
             raise Field_Not_Available with
@@ -614,9 +617,9 @@ package body Orm is
    -- Category_Id --
    -----------------
 
-   function Category_Id (Self : Detached_Rule) return Detached_Category'Class
+   function Category_Id (Self : Detached_Message) return Detached_Category'Class
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Category_Id = null then
@@ -1081,6 +1084,24 @@ package body Orm is
       return Resource_Data (Self.Get).ORM_Id;
    end Id;
 
+   ----------------
+   -- Identifier --
+   ----------------
+
+   function Identifier (Self : Rule) return String is
+   begin
+      return String_Value (Self, F_Rules_Identifier);
+   end Identifier;
+
+   ----------------
+   -- Identifier --
+   ----------------
+
+   function Identifier (Self : Detached_Rule) return String is
+   begin
+      return Str_Or_Empty (Rule_Data (Self.Get).ORM_Identifier);
+   end Identifier;
+
    ----------
    -- Kind --
    ----------
@@ -1293,14 +1314,14 @@ package body Orm is
    -- Message_Id --
    ----------------
 
-   function Message_Id (Self : Resource_Message) return Rule'Class is
+   function Message_Id (Self : Resource_Message) return Message'Class is
    begin
       if Current (Self.Current) /= Self.Index then
          raise Cursor_Has_Moved;
       end if;
 
       if Self.Depth > 0 then
-         return I_Rules.Internal_Element
+         return I_Messages.Internal_Element
            (Self,
             Upto_Resources_Messages_0 (Self.Depth, Self.Data.Follow_LJ));
       else
@@ -1309,7 +1330,7 @@ package body Orm is
             "Dynamic fetching disabled for Message_Id";
          end if;
 
-         return All_Rules.Filter (Id => Self.Message_Id)
+         return All_Messages.Filter (Id => Self.Message_Id)
          .Limit (1).Get (Self.Data.Session).Element;
       end if;
    end Message_Id;
@@ -1320,7 +1341,7 @@ package body Orm is
 
    function Message_Id
      (Self : Detached_Resource_Message)
-     return Detached_Rule'Class
+     return Detached_Message'Class
    is
       D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
       S : Session_Type;
@@ -1335,8 +1356,8 @@ package body Orm is
             raise Field_Not_Available with
             "Element is detached from any session";
          end if;
-         D.ORM_FK_Message_Id := new Detached_Rule'Class'
-           (Get_Rule (S, Id => D.ORM_Message_Id));
+         D.ORM_FK_Message_Id := new Detached_Message'Class'
+           (Get_Message (S, Id => D.ORM_Message_Id));
       end if;
       return D.ORM_FK_Message_Id.all;
    end Message_Id;
@@ -1363,14 +1384,14 @@ package body Orm is
    -- Message_Id --
    ----------------
 
-   function Message_Id (Self : Line_Message) return Rule'Class is
+   function Message_Id (Self : Line_Message) return Message'Class is
    begin
       if Current (Self.Current) /= Self.Index then
          raise Cursor_Has_Moved;
       end if;
 
       if Self.Depth > 0 then
-         return I_Rules.Internal_Element
+         return I_Messages.Internal_Element
            (Self,
             Upto_Lines_Messages_0 (Self.Depth, Self.Data.Follow_LJ));
       else
@@ -1379,7 +1400,7 @@ package body Orm is
             "Dynamic fetching disabled for Message_Id";
          end if;
 
-         return All_Rules.Filter (Id => Self.Message_Id)
+         return All_Messages.Filter (Id => Self.Message_Id)
          .Limit (1).Get (Self.Data.Session).Element;
       end if;
    end Message_Id;
@@ -1388,7 +1409,9 @@ package body Orm is
    -- Message_Id --
    ----------------
 
-   function Message_Id (Self : Detached_Line_Message) return Detached_Rule'Class
+   function Message_Id
+     (Self : Detached_Line_Message)
+     return Detached_Message'Class
    is
       D : constant Line_Message_Data := Line_Message_Data (Self.Get);
       S : Session_Type;
@@ -1403,8 +1426,8 @@ package body Orm is
             raise Field_Not_Available with
             "Element is detached from any session";
          end if;
-         D.ORM_FK_Message_Id := new Detached_Rule'Class'
-           (Get_Rule (S, Id => D.ORM_Message_Id));
+         D.ORM_FK_Message_Id := new Detached_Message'Class'
+           (Get_Message (S, Id => D.ORM_Message_Id));
       end if;
       return D.ORM_FK_Message_Id.all;
    end Message_Id;
@@ -1550,6 +1573,24 @@ package body Orm is
    begin
       return Str_Or_Empty (Resource_Data (Self.Get).ORM_Name);
    end Name;
+
+   -------------
+   -- On_Side --
+   -------------
+
+   function On_Side (Self : Category) return Boolean is
+   begin
+      return Boolean_Value (Self, F_Categories_On_Side);
+   end On_Side;
+
+   -------------
+   -- On_Side --
+   -------------
+
+   function On_Side (Self : Detached_Category) return Boolean is
+   begin
+      return Category_Data (Self.Get).ORM_On_Side;
+   end On_Side;
 
    ---------------
    -- Parent_Id --
@@ -1713,14 +1754,14 @@ package body Orm is
    -- Resource_Id --
    -----------------
 
-   function Resource_Id (Self : Line) return Rule'Class is
+   function Resource_Id (Self : Line) return Resource'Class is
    begin
       if Current (Self.Current) /= Self.Index then
          raise Cursor_Has_Moved;
       end if;
 
       if Self.Depth > 0 then
-         return I_Rules.Internal_Element
+         return I_Resources.Internal_Element
            (Self,
             Upto_Lines_0 (Self.Depth, Self.Data.Follow_LJ));
       else
@@ -1729,7 +1770,7 @@ package body Orm is
             "Dynamic fetching disabled for Resource_Id";
          end if;
 
-         return All_Rules.Filter (Id => Self.Resource_Id)
+         return All_Resources.Filter (Id => Self.Resource_Id)
          .Limit (1).Get (Self.Data.Session).Element;
       end if;
    end Resource_Id;
@@ -1738,7 +1779,7 @@ package body Orm is
    -- Resource_Id --
    -----------------
 
-   function Resource_Id (Self : Detached_Line) return Detached_Rule'Class
+   function Resource_Id (Self : Detached_Line) return Detached_Resource'Class
    is
       D : constant Line_Data := Line_Data (Self.Get);
       S : Session_Type;
@@ -1753,8 +1794,8 @@ package body Orm is
             raise Field_Not_Available with
             "Element is detached from any session";
          end if;
-         D.ORM_FK_Resource_Id := new Detached_Rule'Class'
-           (Get_Rule (S, Id => D.ORM_Resource_Id));
+         D.ORM_FK_Resource_Id := new Detached_Resource'Class'
+           (Get_Resource (S, Id => D.ORM_Resource_Id));
       end if;
       return D.ORM_FK_Resource_Id.all;
    end Resource_Id;
@@ -1889,7 +1930,7 @@ package body Orm is
       if Self.Depth > 0 then
          return I_Tools.Internal_Element
            (Self,
-            Upto_Rules_1 (Self.Depth, Self.Data.Follow_LJ));
+            Upto_Rules_0 (Self.Depth, Self.Data.Follow_LJ));
       else
          if not Dynamic_Fetching then
             raise Field_Not_Available with
@@ -1926,39 +1967,40 @@ package body Orm is
       return D.ORM_FK_Tool_Id.all;
    end Tool_Id;
 
-   --------------------
-   -- Category_Rules --
-   --------------------
+   -----------------------
+   -- Category_Messages --
+   -----------------------
 
-   function Category_Rules (Self : Category'Class) return Rules_Managers is
+   function Category_Messages (Self : Category'Class) return Messages_Managers
+   is
    begin
-      return All_Rules.Filter(Category_Id => Self.Id);
-   end Category_Rules;
+      return All_Messages.Filter(Category_Id => Self.Id);
+   end Category_Messages;
 
-   --------------------
-   -- Category_Rules --
-   --------------------
+   -----------------------
+   -- Category_Messages --
+   -----------------------
 
-   function Category_Rules
+   function Category_Messages
      (Self : Detached_Category'Class)
-     return Rules_Managers is
+     return Messages_Managers is
    begin
-      return All_Rules.Filter (Category_Id => Self.Id);
-   end Category_Rules;
+      return All_Messages.Filter (Category_Id => Self.Id);
+   end Category_Messages;
 
-   --------------------
-   -- Category_Rules --
-   --------------------
+   -----------------------
+   -- Category_Messages --
+   -----------------------
 
-   function Category_Rules
+   function Category_Messages
      (Self : I_Categories_Managers'Class)
-     return Rules_Managers
+     return Messages_Managers
    is
       Q : constant SQL_Query := I_Categories.Build_Query(Self, +DBA.Categories.Id);
    begin
-      return All_Rules.Filter
-        (SQL_In(DBA.Rules.Category_Id, Q));
-   end Category_Rules;
+      return All_Messages.Filter
+        (SQL_In(DBA.Messages.Category_Id, Q));
+   end Category_Messages;
 
    ------------
    -- Detach --
@@ -2153,8 +2195,9 @@ package body Orm is
       end if;
 
       Free (Tmp.ORM_Label);
-      Tmp.ORM_Id       := Integer_Value (Self, F_Categories_Id);
-      Tmp.ORM_Label    := new String'(String_Value (Self, F_Categories_Label));
+      Tmp.ORM_Id         := Integer_Value (Self, F_Categories_Id);
+      Tmp.ORM_Label      := new String'(String_Value (Self, F_Categories_Label));
+      Tmp.ORM_On_Side    := Boolean_Value (Self, F_Categories_On_Side);
       Session.Persist (Result);
       return Result;
    end Detach_No_Lookup;
@@ -2248,7 +2291,7 @@ package body Orm is
    is
       Default        : Detached_Line;
       Result         : Detached_Line'Class := Detached_Line'Class (Session.Factory (Self, Default));
-      Fk_Resource_Id : Detached_Rule_Access;
+      Fk_Resource_Id : Detached_Resource_Access;
       Lj             : constant Boolean := Self.Data.Follow_LJ;
       Tmp            : Line_Data;
    begin
@@ -2259,8 +2302,8 @@ package body Orm is
       end if;
 
       if Self.Depth > 0 then
-         FK_Resource_Id := new Detached_Rule'Class'(
-            I_Rules.Internal_Element
+         FK_Resource_Id := new Detached_Resource'Class'(
+            I_Resources.Internal_Element
               (Self, Upto_Lines_0 (Self.Depth, LJ)).Detach);
       end if;
 
@@ -2283,7 +2326,7 @@ package body Orm is
    is
       Default       : Detached_Line_Message;
       Result        : Detached_Line_Message'Class := Detached_Line_Message'Class (Session.Factory (Self, Default));
-      Fk_Message_Id : Detached_Rule_Access;
+      Fk_Message_Id : Detached_Message_Access;
       Fk_Line_Id    : Detached_Line_Access;
       Lj            : constant Boolean := Self.Data.Follow_LJ;
       Tmp           : Line_Message_Data;
@@ -2295,8 +2338,8 @@ package body Orm is
       end if;
 
       if Self.Depth > 0 then
-         FK_Message_Id := new Detached_Rule'Class'(
-            I_Rules.Internal_Element
+         FK_Message_Id := new Detached_Message'Class'(
+            I_Messages.Internal_Element
               (Self, Upto_Lines_Messages_0 (Self.Depth, LJ)).Detach);
          FK_Line_Id := new Detached_Line'Class'(
             I_Lines.Internal_Element
@@ -2323,11 +2366,12 @@ package body Orm is
       Session : Session_Type)
      return Detached_Message'Class
    is
-      Default    : Detached_Message;
-      Result     : Detached_Message'Class := Detached_Message'Class (Session.Factory (Self, Default));
-      Fk_Rule_Id : Detached_Rule_Access;
-      Lj         : constant Boolean := Self.Data.Follow_LJ;
-      Tmp        : Message_Data;
+      Default        : Detached_Message;
+      Result         : Detached_Message'Class := Detached_Message'Class (Session.Factory (Self, Default));
+      Fk_Rule_Id     : Detached_Rule_Access;
+      Fk_Category_Id : Detached_Category_Access;
+      Lj             : constant Boolean := Self.Data.Follow_LJ;
+      Tmp            : Message_Data;
    begin
       Tmp := Message_Data (Result.Get);
       if Tmp = null then
@@ -2339,13 +2383,21 @@ package body Orm is
          FK_Rule_Id := new Detached_Rule'Class'(
             I_Rules.Internal_Element
               (Self, Upto_Messages_0 (Self.Depth, LJ)).Detach);
+         if LJ then
+            FK_Category_Id := new Detached_Category'Class'(
+               I_Categories.Internal_Element
+                 (Self, Upto_Messages_1 (Self.Depth, LJ)).Detach);
+         end if;
+
       end if;
 
       Free (Tmp.ORM_Data);
-      Tmp.ORM_Data       := new String'(String_Value (Self, F_Messages_Data));
-      Tmp.ORM_FK_Rule_Id := FK_Rule_Id;
-      Tmp.ORM_Id         := Integer_Value (Self, F_Messages_Id);
-      Tmp.ORM_Rule_Id    := Integer_Value (Self, F_Messages_Rule_Id);
+      Tmp.ORM_Category_Id    := Integer_Value (Self, F_Messages_Category_Id);
+      Tmp.ORM_Data           := new String'(String_Value (Self, F_Messages_Data));
+      Tmp.ORM_FK_Category_Id := FK_Category_Id;
+      Tmp.ORM_FK_Rule_Id     := FK_Rule_Id;
+      Tmp.ORM_Id             := Integer_Value (Self, F_Messages_Id);
+      Tmp.ORM_Rule_Id        := Integer_Value (Self, F_Messages_Rule_Id);
       Session.Persist (Result);
       return Result;
    end Detach_No_Lookup;
@@ -2435,7 +2487,7 @@ package body Orm is
    is
       Default        : Detached_Resource_Message;
       Result         : Detached_Resource_Message'Class := Detached_Resource_Message'Class (Session.Factory (Self, Default));
-      Fk_Message_Id  : Detached_Rule_Access;
+      Fk_Message_Id  : Detached_Message_Access;
       Fk_Resource_Id : Detached_Resource_Access;
       Lj             : constant Boolean := Self.Data.Follow_LJ;
       Tmp            : Resource_Message_Data;
@@ -2447,8 +2499,8 @@ package body Orm is
       end if;
 
       if Self.Depth > 0 then
-         FK_Message_Id := new Detached_Rule'Class'(
-            I_Rules.Internal_Element
+         FK_Message_Id := new Detached_Message'Class'(
+            I_Messages.Internal_Element
               (Self, Upto_Resources_Messages_0 (Self.Depth, LJ)).Detach);
          FK_Resource_Id := new Detached_Resource'Class'(
             I_Resources.Internal_Element
@@ -2473,12 +2525,11 @@ package body Orm is
       Session : Session_Type)
      return Detached_Rule'Class
    is
-      Default        : Detached_Rule;
-      Result         : Detached_Rule'Class := Detached_Rule'Class (Session.Factory (Self, Default));
-      Fk_Category_Id : Detached_Category_Access;
-      Fk_Tool_Id     : Detached_Tool_Access;
-      Lj             : constant Boolean := Self.Data.Follow_LJ;
-      Tmp            : Rule_Data;
+      Default    : Detached_Rule;
+      Result     : Detached_Rule'Class := Detached_Rule'Class (Session.Factory (Self, Default));
+      Fk_Tool_Id : Detached_Tool_Access;
+      Lj         : constant Boolean := Self.Data.Follow_LJ;
+      Tmp        : Rule_Data;
    begin
       Tmp := Rule_Data (Result.Get);
       if Tmp = null then
@@ -2487,25 +2538,19 @@ package body Orm is
       end if;
 
       if Self.Depth > 0 then
-         if LJ then
-            FK_Category_Id := new Detached_Category'Class'(
-               I_Categories.Internal_Element
-                 (Self, Upto_Rules_0 (Self.Depth, LJ)).Detach);
-         end if;
-
          FK_Tool_Id := new Detached_Tool'Class'(
             I_Tools.Internal_Element
-              (Self, Upto_Rules_1 (Self.Depth, LJ)).Detach);
+              (Self, Upto_Rules_0 (Self.Depth, LJ)).Detach);
       end if;
 
+      Free (Tmp.ORM_Identifier);
       Free (Tmp.ORM_Name);
-      Tmp.ORM_Category_Id    := Integer_Value (Self, F_Rules_Category_Id);
-      Tmp.ORM_FK_Category_Id := FK_Category_Id;
-      Tmp.ORM_FK_Tool_Id     := FK_Tool_Id;
-      Tmp.ORM_Id             := Integer_Value (Self, F_Rules_Id);
-      Tmp.ORM_Kind           := Integer_Value (Self, F_Rules_Kind);
-      Tmp.ORM_Name           := new String'(String_Value (Self, F_Rules_Name));
-      Tmp.ORM_Tool_Id        := Integer_Value (Self, F_Rules_Tool_Id);
+      Tmp.ORM_FK_Tool_Id    := FK_Tool_Id;
+      Tmp.ORM_Id            := Integer_Value (Self, F_Rules_Id);
+      Tmp.ORM_Identifier    := new String'(String_Value (Self, F_Rules_Identifier));
+      Tmp.ORM_Kind          := Integer_Value (Self, F_Rules_Kind);
+      Tmp.ORM_Name          := new String'(String_Value (Self, F_Rules_Name));
+      Tmp.ORM_Tool_Id       := Integer_Value (Self, F_Rules_Tool_Id);
       Session.Persist (Result);
       return Result;
    end Detach_No_Lookup;
@@ -2557,7 +2602,8 @@ package body Orm is
          Fields := Fields & Table.Id;
       else
          Fields := Fields & Table.Id
-         & Table.Label;
+         & Table.Label
+         & Table.On_Side;
       end if;
       From := Empty_Table_List;
    end Do_Query_Categories;
@@ -2691,12 +2737,12 @@ package body Orm is
       if Depth > 0 then
 
          declare
-            FK1 : T_Numbered_Rules(Aliases(Aliases(Base + 1)));
+            FK1 : T_Numbered_Resources(Aliases(Aliases(Base + 1)));
          begin Criteria := Criteria
          and Table.Resource_Id = FK1.Id;
          From := +Table;
          C2 := No_Criteria;
-         Do_Query_Rules(Fields, T, C2,Aliases(Base + 1),
+         Do_Query_Resources(Fields, T, C2,Aliases(Base + 1),
             Aliases, Depth - 1, Follow_LJ);
          if Depth > 1 then
             Criteria := Criteria and C2;
@@ -2737,14 +2783,14 @@ package body Orm is
       if Depth > 0 then
 
          declare
-            FK1 : T_Numbered_Rules(Aliases(Aliases(Base + 1)));
+            FK1 : T_Numbered_Messages(Aliases(Aliases(Base + 1)));
             FK2 : T_Numbered_Lines(Aliases(Aliases(Base + 2)));
          begin Criteria := Criteria
          and Table.Message_Id = FK1.Id
          and Table.Line_Id = FK2.Id;
          From := +Table;
          C2 := No_Criteria;
-         Do_Query_Rules(Fields, T, C2,Aliases(Base + 1),
+         Do_Query_Messages(Fields, T, C2,Aliases(Base + 1),
             Aliases, Depth - 1, Follow_LJ);
          if Depth > 1 then
             Criteria := Criteria and C2;
@@ -2785,16 +2831,22 @@ package body Orm is
       else
          Fields := Fields & Table.Id
          & Table.Rule_Id
-         & Table.Data;
+         & Table.Data
+         & Table.Category_Id;
       end if;
       From := Empty_Table_List;
       if Depth > 0 then
 
          declare
             FK1 : T_Numbered_Rules(Aliases(Aliases(Base + 1)));
+            FK2 : T_Numbered_Categories(Aliases(Aliases(Base + 2)));
          begin Criteria := Criteria
          and Table.Rule_Id = FK1.Id;
-         From := +Table;
+         if Follow_LJ then
+            From := +Left_Join(Table, FK2, Table.Category_Id=FK2.Id);
+         else
+            From := +Table;
+         end if;
          C2 := No_Criteria;
          Do_Query_Rules(Fields, T, C2,Aliases(Base + 1),
             Aliases, Depth - 1, Follow_LJ);
@@ -2802,6 +2854,15 @@ package body Orm is
             Criteria := Criteria and C2;
          end if;
          From := From & T;
+
+         if Follow_LJ then
+            C2 := No_Criteria;
+            Do_Query_Categories(Fields, T, C2,Aliases(Base + 2),
+               Aliases, Depth - 1, Follow_LJ);
+            if Depth > 1 then
+               Criteria := Criteria and C2;
+            end if;
+         end if;
       end;
    end if;
    end Do_Query_Messages;
@@ -2920,14 +2981,14 @@ package body Orm is
       if Depth > 0 then
 
          declare
-            FK1 : T_Numbered_Rules(Aliases(Aliases(Base + 1)));
+            FK1 : T_Numbered_Messages(Aliases(Aliases(Base + 1)));
             FK2 : T_Numbered_Resources(Aliases(Aliases(Base + 2)));
          begin Criteria := Criteria
          and Table.Message_Id = FK1.Id
          and Table.Resource_Id = FK2.Id;
          From := +Table;
          C2 := No_Criteria;
-         Do_Query_Rules(Fields, T, C2,Aliases(Base + 1),
+         Do_Query_Messages(Fields, T, C2,Aliases(Base + 1),
             Aliases, Depth - 1, Follow_LJ);
          if Depth > 1 then
             Criteria := Criteria and C2;
@@ -2968,34 +3029,20 @@ package body Orm is
       else
          Fields := Fields & Table.Id
          & Table.Name
+         & Table.Identifier
          & Table.Kind
-         & Table.Category_Id
          & Table.Tool_Id;
       end if;
       From := Empty_Table_List;
       if Depth > 0 then
 
          declare
-            FK1 : T_Numbered_Categories(Aliases(Aliases(Base + 1)));
-            FK2 : T_Numbered_Tools(Aliases(Aliases(Base + 2)));
+            FK1 : T_Numbered_Tools(Aliases(Aliases(Base + 1)));
          begin Criteria := Criteria
-         and Table.Tool_Id = FK2.Id;
-         if Follow_LJ then
-            From := +Left_Join(Table, FK1, Table.Category_Id=FK1.Id);
-         else
-            From := +Table;
-         end if;
-         if Follow_LJ then
-            C2 := No_Criteria;
-            Do_Query_Categories(Fields, T, C2,Aliases(Base + 1),
-               Aliases, Depth - 1, Follow_LJ);
-            if Depth > 1 then
-               Criteria := Criteria and C2;
-            end if;
-         end if;
-
+         and Table.Tool_Id = FK1.Id;
+         From := +Table;
          C2 := No_Criteria;
-         Do_Query_Tools(Fields, T, C2,Aliases(Base + 2),
+         Do_Query_Tools(Fields, T, C2,Aliases(Base + 1),
             Aliases, Depth - 1, Follow_LJ);
          if Depth > 1 then
             Criteria := Criteria and C2;
@@ -3099,12 +3146,12 @@ package body Orm is
    ------------
 
    function Filter
-     (Self        : Rules_Managers'Class;
-      Id          : Integer := -1;
-      Name        : String := No_Update;
-      Kind        : Integer := -1;
-      Category_Id : Integer := -1;
-      Tool_Id     : Integer := -1)
+     (Self       : Rules_Managers'Class;
+      Id         : Integer := -1;
+      Name       : String := No_Update;
+      Identifier : String := No_Update;
+      Kind       : Integer := -1;
+      Tool_Id    : Integer := -1)
      return Rules_Managers
    is
       C      : Sql_Criteria := No_Criteria;
@@ -3116,11 +3163,11 @@ package body Orm is
       if Name /= No_Update then
          C := C and DBA.Rules.Name = Name;
       end if;
+      if Identifier /= No_Update then
+         C := C and DBA.Rules.Identifier = Identifier;
+      end if;
       if Kind /= -1 then
          C := C and DBA.Rules.Kind = Kind;
-      end if;
-      if Category_Id /= -1 then
-         C := C and DBA.Rules.Category_Id = Category_Id;
       end if;
       if Tool_Id /= -1 then
          C := C and DBA.Rules.Tool_Id = Tool_Id;
@@ -3161,10 +3208,11 @@ package body Orm is
    ------------
 
    function Filter
-     (Self    : Messages_Managers'Class;
-      Id      : Integer := -1;
-      Rule_Id : Integer := -1;
-      Data    : String := No_Update)
+     (Self        : Messages_Managers'Class;
+      Id          : Integer := -1;
+      Rule_Id     : Integer := -1;
+      Data        : String := No_Update;
+      Category_Id : Integer := -1)
      return Messages_Managers
    is
       C      : Sql_Criteria := No_Criteria;
@@ -3178,6 +3226,9 @@ package body Orm is
       end if;
       if Data /= No_Update then
          C := C and DBA.Messages.Data = Data;
+      end if;
+      if Category_Id /= -1 then
+         C := C and DBA.Messages.Category_Id = Category_Id;
       end if;
       Copy(Self.Filter(C), Into => Result);
       return Result;
@@ -3223,9 +3274,10 @@ package body Orm is
    ------------
 
    function Filter
-     (Self  : Categories_Managers'Class;
-      Id    : Integer := -1;
-      Label : String := No_Update)
+     (Self    : Categories_Managers'Class;
+      Id      : Integer := -1;
+      Label   : String := No_Update;
+      On_Side : Triboolean := Indeterminate)
      return Categories_Managers
    is
       C      : Sql_Criteria := No_Criteria;
@@ -3236,6 +3288,9 @@ package body Orm is
       end if;
       if Label /= No_Update then
          C := C and DBA.Categories.Label = Label;
+      end if;
+      if On_Side /= Indeterminate then
+         C := C and DBA.Categories.On_Side = To_Boolean(On_Side);
       end if;
       Copy(Self.Filter(C), Into => Result);
       return Result;
@@ -3449,6 +3504,7 @@ package body Orm is
    overriding procedure Free (Self : in out Message_Ddr) is
    begin
       Unchecked_Free (Self.ORM_FK_Rule_Id);
+      Unchecked_Free (Self.ORM_FK_Category_Id);
 
       Free (Self.ORM_Data);
       Free (Detached_Data (Self));
@@ -3495,10 +3551,10 @@ package body Orm is
 
    overriding procedure Free (Self : in out Rule_Ddr) is
    begin
-      Unchecked_Free (Self.ORM_FK_Category_Id);
       Unchecked_Free (Self.ORM_FK_Tool_Id);
 
       Free (Self.ORM_Name);
+      Free (Self.ORM_Identifier);
 
       Free (Detached_Data (Self));
    end Free;
@@ -4136,6 +4192,9 @@ package body Orm is
       if Mask (2) then
          A := A & (DBA.Categories.Label = Str_Or_Empty (D.ORM_Label));
       end if;
+      if Mask (3) then
+         A := A & (DBA.Categories.On_Side = D.ORM_On_Side);
+      end if;
       if Missing_PK then
          Q := SQL_Insert (A);
       else
@@ -4289,8 +4348,8 @@ package body Orm is
          else
 
             declare
-               D2 : constant Rule_Data :=
-               Rule_data (D.ORM_FK_Resource_Id.Get);
+               D2 : constant Resource_Data :=
+               Resource_data (D.ORM_FK_Resource_Id.Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -4338,8 +4397,8 @@ package body Orm is
          else
 
             declare
-               D2 : constant Rule_Data :=
-               Rule_data (D.ORM_FK_Message_Id.Get);
+               D2 : constant Message_Data :=
+               Message_data (D.ORM_FK_Message_Id.Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -4422,6 +4481,24 @@ package body Orm is
       end if;
       if Mask (3) then
          A := A & (DBA.Messages.Data = Str_Or_Empty (D.ORM_Data));
+      end if;
+      if Mask (4) then
+         if D.ORM_Category_Id /= -1 then
+            A := A & (DBA.Messages.Category_Id = D.ORM_Category_Id);
+         else
+
+            declare
+               D2 : constant Category_Data :=
+               Category_data (D.ORM_FK_Category_Id.Get);
+            begin
+               if D2.ORM_Id = -1 then
+                  Self.Session.Insert_Or_Update
+                    (D.ORM_FK_Category_Id.all);
+               end if;
+
+               A := A & (DBA.Messages.Category_Id = D2.ORM_Id);
+            end;
+         end if;
       end if;
       if Missing_PK then
          Q := SQL_Insert (A);
@@ -4558,8 +4635,8 @@ package body Orm is
          else
 
             declare
-               D2 : constant Rule_Data :=
-               Rule_data (D.ORM_FK_Message_Id.Get);
+               D2 : constant Message_Data :=
+               Message_data (D.ORM_FK_Message_Id.Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -4620,25 +4697,10 @@ package body Orm is
          A := A & (DBA.Rules.Name = Str_Or_Empty (D.ORM_Name));
       end if;
       if Mask (3) then
-         A := A & (DBA.Rules.Kind = D.ORM_Kind);
+         A := A & (DBA.Rules.Identifier = Str_Or_Empty (D.ORM_Identifier));
       end if;
       if Mask (4) then
-         if D.ORM_Category_Id /= -1 then
-            A := A & (DBA.Rules.Category_Id = D.ORM_Category_Id);
-         else
-
-            declare
-               D2 : constant Category_Data :=
-               Category_data (D.ORM_FK_Category_Id.Get);
-            begin
-               if D2.ORM_Id = -1 then
-                  Self.Session.Insert_Or_Update
-                    (D.ORM_FK_Category_Id.all);
-               end if;
-
-               A := A & (DBA.Rules.Category_Id = D2.ORM_Id);
-            end;
-         end if;
+         A := A & (DBA.Rules.Kind = D.ORM_Kind);
       end if;
       if Mask (5) then
          if D.ORM_Tool_Id /= -1 then
@@ -5251,8 +5313,9 @@ package body Orm is
    -- Message_Lines --
    -------------------
 
-   function Message_Lines (Self : Rule'Class) return Resources_Messages_Managers
-   is
+   function Message_Lines
+     (Self : Message'Class)
+     return Resources_Messages_Managers is
    begin
       return All_Resources_Messages.Filter(Message_Id => Self.Id);
    end Message_Lines;
@@ -5262,7 +5325,7 @@ package body Orm is
    -------------------
 
    function Message_Lines
-     (Self : Detached_Rule'Class)
+     (Self : Detached_Message'Class)
      return Resources_Messages_Managers is
    begin
       return All_Resources_Messages.Filter (Message_Id => Self.Id);
@@ -5273,10 +5336,10 @@ package body Orm is
    -------------------
 
    function Message_Lines
-     (Self : I_Rules_Managers'Class)
+     (Self : I_Messages_Managers'Class)
      return Resources_Messages_Managers
    is
-      Q : constant SQL_Query := I_Rules.Build_Query(Self, +DBA.Rules.Id);
+      Q : constant SQL_Query := I_Messages.Build_Query(Self, +DBA.Messages.Id);
    begin
       return All_Resources_Messages.Filter
         (SQL_In(DBA.Resources_Messages.Message_Id, Q));
@@ -5286,7 +5349,7 @@ package body Orm is
    -- Message_Lines --
    -------------------
 
-   function Message_Lines (Self : Rule'Class) return Lines_Messages_Managers
+   function Message_Lines (Self : Message'Class) return Lines_Messages_Managers
    is
    begin
       return All_Lines_Messages.Filter(Message_Id => Self.Id);
@@ -5297,7 +5360,7 @@ package body Orm is
    -------------------
 
    function Message_Lines
-     (Self : Detached_Rule'Class)
+     (Self : Detached_Message'Class)
      return Lines_Messages_Managers is
    begin
       return All_Lines_Messages.Filter (Message_Id => Self.Id);
@@ -5308,10 +5371,10 @@ package body Orm is
    -------------------
 
    function Message_Lines
-     (Self : I_Rules_Managers'Class)
+     (Self : I_Messages_Managers'Class)
      return Lines_Messages_Managers
    is
-      Q : constant SQL_Query := I_Rules.Build_Query(Self, +DBA.Rules.Id);
+      Q : constant SQL_Query := I_Messages.Build_Query(Self, +DBA.Messages.Id);
    begin
       return All_Lines_Messages.Filter
         (SQL_In(DBA.Lines_Messages.Message_Id, Q));
@@ -5538,6 +5601,9 @@ package body Orm is
          if D.ORM_FK_Rule_Id /= null then
             Self.Session.Persist (D.ORM_FK_Rule_Id.all);
          end if;
+         if D.ORM_FK_Category_Id /= null then
+            Self.Session.Persist (D.ORM_FK_Category_Id.all);
+         end if;
       end if;
    end On_Persist;
 
@@ -5586,9 +5652,6 @@ package body Orm is
       D : constant Rule_Data := Rule_Data (Self.Get);
    begin
       if Persist_Cascade (Self.Session) then
-         if D.ORM_FK_Category_Id /= null then
-            Self.Session.Persist (D.ORM_FK_Category_Id.all);
-         end if;
          if D.ORM_FK_Tool_Id /= null then
             Self.Session.Persist (D.ORM_FK_Tool_Id.all);
          end if;
@@ -5635,7 +5698,7 @@ package body Orm is
    -- Resource_Lines --
    --------------------
 
-   function Resource_Lines (Self : Rule'Class) return Lines_Managers is
+   function Resource_Lines (Self : Resource'Class) return Lines_Managers is
    begin
       return All_Lines.Filter(Resource_Id => Self.Id);
    end Resource_Lines;
@@ -5644,8 +5707,9 @@ package body Orm is
    -- Resource_Lines --
    --------------------
 
-   function Resource_Lines (Self : Detached_Rule'Class) return Lines_Managers
-   is
+   function Resource_Lines
+     (Self : Detached_Resource'Class)
+     return Lines_Managers is
    begin
       return All_Lines.Filter (Resource_Id => Self.Id);
    end Resource_Lines;
@@ -5654,9 +5718,11 @@ package body Orm is
    -- Resource_Lines --
    --------------------
 
-   function Resource_Lines (Self : I_Rules_Managers'Class) return Lines_Managers
+   function Resource_Lines
+     (Self : I_Resources_Managers'Class)
+     return Lines_Managers
    is
-      Q : constant SQL_Query := I_Rules.Build_Query(Self, +DBA.Rules.Id);
+      Q : constant SQL_Query := I_Resources.Build_Query(Self, +DBA.Resources.Id);
    begin
       return All_Lines.Filter
         (SQL_In(DBA.Lines.Resource_Id, Q));
@@ -5771,9 +5837,9 @@ package body Orm is
    -- Set_Category_Id --
    ---------------------
 
-   procedure Set_Category_Id (Self : Detached_Rule; Value : Integer)
+   procedure Set_Category_Id (Self : Detached_Message; Value : Integer)
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Get);
    begin
       Unchecked_Free (D.ORM_FK_Category_Id);
       D.ORM_Category_Id := Value;
@@ -5785,10 +5851,10 @@ package body Orm is
    ---------------------
 
    procedure Set_Category_Id
-     (Self  : Detached_Rule;
+     (Self  : Detached_Message;
       Value : Detached_Category'Class)
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Get);
    begin
       Unchecked_Free (D.ORM_FK_Category_Id);
       D.ORM_Category_Id := Value.Id;
@@ -5927,6 +5993,19 @@ package body Orm is
       end if;
    end Set_Entity_Id;
 
+   --------------------
+   -- Set_Identifier --
+   --------------------
+
+   procedure Set_Identifier (Self : Detached_Rule; Value : String)
+   is
+      D : constant Rule_Data := Rule_Data (Self.Get);
+   begin
+      Free (D.ORM_Identifier);
+      D.ORM_Identifier := new String'(Value);
+      Self.Set_Modified (3);
+   end Set_Identifier;
+
    --------------
    -- Set_Kind --
    --------------
@@ -5936,7 +6015,7 @@ package body Orm is
       D : constant Rule_Data := Rule_Data (Self.Get);
    begin
       D.ORM_Kind := Value;
-      Self.Set_Modified (3);
+      Self.Set_Modified (4);
    end Set_Kind;
 
    --------------
@@ -6061,13 +6140,13 @@ package body Orm is
 
    procedure Set_Message_Id
      (Self  : Detached_Resource_Message;
-      Value : Detached_Rule'Class)
+      Value : Detached_Message'Class)
    is
       D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
    begin
       Unchecked_Free (D.ORM_FK_Message_Id);
       D.ORM_Message_Id := Value.Id;
-      D.ORM_FK_Message_Id := new Detached_Rule'Class'(Value);
+      D.ORM_FK_Message_Id := new Detached_Message'Class'(Value);
 
       Self.Set_Modified (2);
       if Persist_Cascade (Self.Session) then
@@ -6094,13 +6173,13 @@ package body Orm is
 
    procedure Set_Message_Id
      (Self  : Detached_Line_Message;
-      Value : Detached_Rule'Class)
+      Value : Detached_Message'Class)
    is
       D : constant Line_Message_Data := Line_Message_Data (Self.Get);
    begin
       Unchecked_Free (D.ORM_FK_Message_Id);
       D.ORM_Message_Id := Value.Id;
-      D.ORM_FK_Message_Id := new Detached_Rule'Class'(Value);
+      D.ORM_FK_Message_Id := new Detached_Message'Class'(Value);
 
       Self.Set_Modified (2);
       if Persist_Cascade (Self.Session) then
@@ -6193,6 +6272,18 @@ package body Orm is
       Self.Set_Modified (2);
    end Set_Name;
 
+   -----------------
+   -- Set_On_Side --
+   -----------------
+
+   procedure Set_On_Side (Self : Detached_Category; Value : Boolean)
+   is
+      D : constant Category_Data := Category_Data (Self.Get);
+   begin
+      D.ORM_On_Side := Value;
+      Self.Set_Modified (3);
+   end Set_On_Side;
+
    -------------------
    -- Set_Parent_Id --
    -------------------
@@ -6276,13 +6367,15 @@ package body Orm is
    -- Set_Resource_Id --
    ---------------------
 
-   procedure Set_Resource_Id (Self : Detached_Line; Value : Detached_Rule'Class)
+   procedure Set_Resource_Id
+     (Self  : Detached_Line;
+      Value : Detached_Resource'Class)
    is
       D : constant Line_Data := Line_Data (Self.Get);
    begin
       Unchecked_Free (D.ORM_FK_Resource_Id);
       D.ORM_Resource_Id := Value.Id;
-      D.ORM_FK_Resource_Id := new Detached_Rule'Class'(Value);
+      D.ORM_FK_Resource_Id := new Detached_Resource'Class'(Value);
 
       Self.Set_Modified (2);
       if Persist_Cascade (Self.Session) then

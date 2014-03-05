@@ -38,6 +38,8 @@ package Database_Names is
    N_Entity_Id : constant Cst_String_Access := NC_entity_id'Access;
    NC_Id : aliased constant String := "id";
    N_Id : constant Cst_String_Access := NC_id'Access;
+   NC_Identifier : aliased constant String := "identifier";
+   N_Identifier : constant Cst_String_Access := NC_identifier'Access;
    NC_Kind : aliased constant String := "kind";
    N_Kind : constant Cst_String_Access := NC_kind'Access;
    NC_Label : aliased constant String := "label";
@@ -52,6 +54,8 @@ package Database_Names is
    N_Message_Id : constant Cst_String_Access := NC_message_id'Access;
    NC_Name : aliased constant String := """name""";
    N_Name : constant Cst_String_Access := NC_name'Access;
+   NC_On_Side : aliased constant String := "on_side";
+   N_On_Side : constant Cst_String_Access := NC_on_side'Access;
    NC_Parent_Id : aliased constant String := "parent_id";
    N_Parent_Id : constant Cst_String_Access := NC_parent_id'Access;
    NC_Resource_Id : aliased constant String := "resource_id";

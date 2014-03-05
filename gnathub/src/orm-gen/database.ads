@@ -13,6 +13,10 @@ package Database is
       Label : SQL_Field_Text (Ta_Categories, Instance, N_Label, Index);
       --  Categories' label
 
+      On_Side : SQL_Field_Boolean (Ta_Categories, Instance, N_On_Side, Index);
+      --  Whether messages belonging to this category should be displayed on
+      --  the side
+
    end record;
 
    type T_Categories (Instance : Cst_String_Access)
@@ -120,6 +124,9 @@ package Database is
       Data : SQL_Field_Text (Ta_Messages, Instance, N_Data, Index);
       --  Categories' label
 
+      Category_Id : SQL_Field_Integer (Ta_Messages, Instance, N_Category_Id, Index);
+      --  Category of the rule
+
    end record;
 
    type T_Messages (Instance : Cst_String_Access)
@@ -194,11 +201,11 @@ package Database is
       Name : SQL_Field_Text (Ta_Rules, Instance, N_Name, Index);
       --  Rules' name
 
+      Identifier : SQL_Field_Text (Ta_Rules, Instance, N_Identifier, Index);
+      --  Rules' unique identifier
+
       Kind : SQL_Field_Integer (Ta_Rules, Instance, N_Kind, Index);
       --  Wether it is a rule or a metric. 0 for rule, 1 for metric
-
-      Category_Id : SQL_Field_Integer (Ta_Rules, Instance, N_Category_Id, Index);
-      --  Category of the rule
 
       Tool_Id : SQL_Field_Integer (Ta_Rules, Instance, N_Tool_Id, Index);
       --  Rules' related tool
@@ -229,13 +236,13 @@ package Database is
    function FK (Self : T_Entities'Class; Foreign : T_Lines'Class) return SQL_Criteria;
    function FK (Self : T_Entities_Messages'Class; Foreign : T_Entities'Class) return SQL_Criteria;
    function FK (Self : T_Entities_Messages'Class; Foreign : T_Messages'Class) return SQL_Criteria;
-   function FK (Self : T_Lines'Class; Foreign : T_Rules'Class) return SQL_Criteria;
-   function FK (Self : T_Lines_Messages'Class; Foreign : T_Rules'Class) return SQL_Criteria;
+   function FK (Self : T_Lines'Class; Foreign : T_Resources'Class) return SQL_Criteria;
+   function FK (Self : T_Lines_Messages'Class; Foreign : T_Messages'Class) return SQL_Criteria;
    function FK (Self : T_Lines_Messages'Class; Foreign : T_Lines'Class) return SQL_Criteria;
    function FK (Self : T_Messages'Class; Foreign : T_Rules'Class) return SQL_Criteria;
-   function FK (Self : T_Resources_Messages'Class; Foreign : T_Rules'Class) return SQL_Criteria;
+   function FK (Self : T_Messages'Class; Foreign : T_Categories'Class) return SQL_Criteria;
+   function FK (Self : T_Resources_Messages'Class; Foreign : T_Messages'Class) return SQL_Criteria;
    function FK (Self : T_Resources_Messages'Class; Foreign : T_Resources'Class) return SQL_Criteria;
-   function FK (Self : T_Rules'Class; Foreign : T_Categories'Class) return SQL_Criteria;
    function FK (Self : T_Rules'Class; Foreign : T_Tools'Class) return SQL_Criteria;
 
    Categories : T_Categories (null);
