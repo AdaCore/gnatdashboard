@@ -33,8 +33,7 @@ import re
 from _gnat import SLOC_PATTERN
 
 from GNAThub import Log
-from GNAThub import dao, db
-from GNAThub.db import Message, LineMessage
+from GNAThub import db
 
 
 class GNATprove(GNAThub.Plugin):
@@ -114,7 +113,7 @@ class GNATprove(GNAThub.Plugin):
             GNAThub.EXEC_FAIL: on any error
         """
 
-        self.tool = dao.save_tool(self.session, self.name)
+        self.tool = GNAThub.Tool(self.name)
 
         try:
             with open(logfile, 'r') as output:
@@ -177,7 +176,7 @@ class GNATprove(GNAThub.Plugin):
 
         PARAMETERS
             :param src: The source file containing the message.
-            :type src: A string.
+            :type src: A string, representing the full path to a file.
             :param line: A line from that source file.
             :type line: A string.
             :param col_begin: The starting column in the line.
@@ -188,18 +187,8 @@ class GNATprove(GNAThub.Plugin):
             :type msg: A string.
         """
 
-        rule = dao.get_or_create_rule(self.session, self.tool,
-                                      db.RULE_KIND, rule_id)
-        line = dao.get_or_create_line(self.session, src, line)
+        rule = GNAThub.Rule(rule_id, rule_id, db.RULE_KIND, self.tool)
+        message = GNAThub.Message(rule, msg)
 
-        if line:
-            line_message = LineMessage(col_begin=col_begin)
-            line_message.message = Message(msg, rule)
-
-            # pylint: disable=E1103
-            # Disable "Module {} has no member {}" error
-            line.messages.append(line_message)
-
-        else:
-            Log.warn('%s: file not found: %s' % (self.fqn, src))
-            Log.warn('%s: skipping message: %s' % (self.fqn, msg))
+        resource = GNAThub.Resource(src, db.FILE_KIND)
+        resource.add_message(message, int(line), col_begin=int(col_begin))

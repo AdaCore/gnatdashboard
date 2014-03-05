@@ -34,8 +34,7 @@ import re
 from _gnat import SLOC_PATTERN
 
 from GNAThub import Log
-from GNAThub import dao, db
-from GNAThub.db import Message, LineMessage
+from GNAThub import db
 
 
 class GNATcheck(GNAThub.Plugin):
@@ -126,7 +125,7 @@ class GNATcheck(GNAThub.Plugin):
         Log.info('%s.analyse %s' % (self.fqn, os.path.relpath(self.report)))
 
         Log.debug('%s: storing tool in database' % self.fqn)
-        self.tool = dao.save_tool(self.session, self.name)
+        self.tool = GNAThub.Tool(self.name)
 
         Log.debug('%s: parsing report: %s' % (self.fqn, self.report))
 
@@ -150,8 +149,6 @@ class GNATcheck(GNAThub.Plugin):
                         self.__parse_line(match)
 
                     Log.progress(index, total, new_line=(index == total))
-
-            self.session.commit()
 
             self.exec_status = GNAThub.EXEC_SUCCESS
             Log.debug('%s: all objects commited to database' % self.fqn)
@@ -205,18 +202,7 @@ class GNATcheck(GNAThub.Plugin):
             :param msg: description of the message
             :type msg: a string
         """
-
-        rule = dao.get_or_create_rule(self.session, self.tool,
-                                      db.RULE_KIND, rule_id)
-        line = dao.get_or_create_line(self.session, src, line)
-
-        if not line:
-            Log.warn('Skipping message: %s, file not found: %s' % (msg, src))
-            return
-
-        line_message = LineMessage(col_begin=col_begin)
-        line_message.message = Message(msg, rule)
-
-        # pylint: disable=E1103
-        # Disable "Module {} has no member {}" error
-        line.messages.append(line_message)
+        rule = GNAThub.Rule(rule_id, rule_id, db.RULE_KIND, self.tool)
+        message = GNAThub.Message(rule, msg)
+        resource = GNAThub.Resource(src, db.FILE_KIND)
+        resource.add_message(message, int(line), int(col_begin))

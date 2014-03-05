@@ -246,13 +246,6 @@ from GNAThubCore import *       # NOQA (disable warning from flake8)
 # Now that all Ada extensions have been planted into this module, we can
 # define pure-Python extensions.
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-__DB_ENGINE = create_engine('sqlite:///%s' % database(), echo=False)
-_DB_SESSION_FACTORY = sessionmaker()
-_DB_SESSION_FACTORY.configure(bind=__DB_ENGINE)
-
 import os
 
 from abc import ABCMeta, abstractmethod
@@ -293,7 +286,6 @@ class Plugin:
         """Instance constructor."""
 
         self._exec_status = NOT_EXECUTED
-        self.session = None
 
     def display_command_line(self):
         """This method returns a list similar to argv. However, this command
@@ -313,7 +305,7 @@ class Plugin:
         execution of the tool.
         """
 
-        self.session = _DB_SESSION_FACTORY()
+        pass
 
     @abstractmethod
     def execute(self):
@@ -332,8 +324,7 @@ class Plugin:
         state for a future execution.
         """
 
-        if self.session:
-            self.session.close()
+        pass
 
     @property
     def exec_status(self):

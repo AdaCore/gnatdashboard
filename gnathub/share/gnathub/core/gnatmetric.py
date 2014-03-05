@@ -29,8 +29,7 @@ import GNAThub
 import os
 
 from GNAThub import Log
-from GNAThub import dao, db
-from GNAThub.db import Message
+from GNAThub import db
 
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
@@ -111,7 +110,7 @@ class GNATmetric(GNAThub.Plugin):
         Log.info('%s.analyse %s' % (self.fqn, os.path.relpath(self.report)))
 
         Log.debug('%s: storing tool in database' % self.fqn)
-        tool = dao.save_tool(self.session, self.name)
+        tool = GNAThub.Tool(self.name)
 
         Log.debug('%s: parsing XML report: %s' % (self.fqn, self.report))
 
@@ -123,18 +122,17 @@ class GNATmetric(GNAThub.Plugin):
             total = len(files)
 
             for index, file_node in enumerate(files, start=1):
-                resource = dao.get_file(self.session,
-                                        file_node.attrib.get('name'))
+                resource = GNAThub.Resource(file_node.attrib.get('name'), db.FILE_KIND)
                 # Save file level metrics
                 if resource:
                     for metric in file_node.findall('./metric'):
                         name = metric.attrib.get('name')
-                        rule = dao.get_or_create_rule(self.session, tool,
-                                                      db.METRIC_KIND, name)
+                        rule = GNAThub.Rule(name, name, db.METRIC_KIND, tool)
 
                         # pylint: disable=E1103
                         # Disable "Module {} has no member {}" error
-                        resource.messages.append(Message(metric.text, rule))
+                        message = GNAThub.Message(rule, metric.text)
+                        resource.add_message(message)
 
                 else:
                     Log.warn('File not found, skipping all messages from: %s' %
@@ -155,7 +153,6 @@ class GNATmetric(GNAThub.Plugin):
 
                 Log.progress(index, total, new_line=(index == total))
 
-            self.session.commit()
             self.exec_status = GNAThub.EXEC_SUCCESS
 
             Log.debug('%s: all objects commited to database' % self.fqn)

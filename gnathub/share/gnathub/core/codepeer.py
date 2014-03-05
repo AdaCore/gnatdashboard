@@ -30,8 +30,7 @@ import csv
 import os
 
 from GNAThub import Log
-from GNAThub import dao, db
-from GNAThub.db import Message, LineMessage
+from GNAThub import db
 
 
 class CodePeer(GNAThub.Plugin):
@@ -141,7 +140,7 @@ class CodePeer(GNAThub.Plugin):
                                     os.path.relpath(self.csv_report)))
 
         Log.debug('%s: storing tool in database' % self.fqn)
-        self.tool = dao.save_tool(self.session, self.name)
+        self.tool = GNAThub.Tool(self.name)
 
         Log.debug('%s: parsing CSV report: %s' % (self.fqn, self.csv_report))
 
@@ -217,20 +216,13 @@ class CodePeer(GNAThub.Plugin):
             :type rule_id: a string
             :param msg: description of the message
             :type msg: a string
+            :param category: the category of the message
+            :type category: a string
         """
 
-        rule = dao.get_or_create_rule(self.session, self.tool,
-                                      db.RULE_KIND, rule_id)
-        line = dao.get_or_create_line(self.session, src, line)
-        category = dao.get_or_create_category(self.session, category)
+        rule = GNAThub.Rule(rule_id, rule_id, db.RULE_KIND, self.tool)
+        cat = GNAThub.Category(category)
+        message = GNAThub.Message(rule, msg, cat)
+        resource = GNAThub.Resource(src, db.FILE_KIND)
+        resource.add_message(message, line=int(line), int(col_begin))
 
-        if not line:
-            Log.warn('Skipping message: %s, file not found: %s' % (msg, src))
-            return
-
-        line_message = LineMessage(col_begin=column)
-        line_message.message = Message(msg, rule, category)
-
-        # pylint: disable=E1103
-        # Disable "Module {} has no member {}" error
-        line.messages.append(line_message)
