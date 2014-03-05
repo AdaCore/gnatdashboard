@@ -1,9 +1,14 @@
-#!/usr/bin/env gnatpython
-"""Usage: run-test [options] test_dir
+#! /usr/bin/env python
 
-Run a test located in test_dir
+"""Run a testcase from the GNATdashboard testsuite
+
+Usage: run-test [options] testcase-directory
 """
 
+# pylint: disable=C0103
+# Disable "Invalid module name" (this is a script, not a module)
+
+from gnatpython.env import Env
 from gnatpython.main import Main
 from gnatpython.testdriver import TestRunner, add_run_test_options
 
@@ -11,33 +16,63 @@ import os
 import sys
 
 
-def main():
-    """Run a single test."""
+# Base directory for the testsuite
+BASEDIR = os.path.dirname(os.path.realpath(__file__))
 
-    os.environ['PATH'] = os.pathsep.join([
-        os.path.join(os.path.dirname(os.path.realpath(__file__)), '..',
-                     'build', 'bin'),
-        os.environ['PATH']])
 
-    m = Main()
-    add_run_test_options(m)
-    m.parse_args()
+class GNAThubTestRunner(TestRunner):
+    """Test runner for a GNAThub test."""
 
-    if not m.args:
-        sys.exit("Error: At least 1 argument expected. See -h")
+    # pylint: disable=too-many-arguments
+    def __init__(self, test, discs, result_dir, temp_dir=Env().tmp_dir,
+                 enable_cleanup=True, restricted_discs=None, test_args=None,
+                 failed_only=False, default_timeout=780, use_basename=True):
 
-    if m.options.restricted_discs is not None:
-        m.options.restricted_discs = m.options.restricted_discs.split(',')
+        TestRunner.__init__(self, test, discs, result_dir, temp_dir,
+                            enable_cleanup, restricted_discs, test_args,
+                            failed_only, default_timeout, use_basename)
 
-    t = TestRunner(m.args[0],
-                   m.options.discs,
-                   m.options.output_dir,
-                   m.options.tmp,
-                   m.options.enable_cleanup,
-                   m.options.restricted_discs,
-                   len(m.args) > 1 and m.args[1:] or None,
-                   m.options.failed_only)
-    t.execute()
+        # Activate tests duration monitoring
+        self.opt_results['TIMING'] = True
+
+
+def run_single_testcase():
+    """Run a single testcase."""
+
+    Env().add_path(os.path.normpath(
+        os.path.join(BASEDIR, '..', 'build', 'bin')))
+
+    driver = Main()
+    add_run_test_options(driver)
+
+    driver.parse_args()
+
+    if not driver.args:
+        sys.exit('error: at least 1 argument expected.\n'
+                 'Try `%s --help`' % os.path.basename(__file__))
+
+    if driver.options.restricted_discs is not None:
+        driver.options.restricted_discs = \
+            driver.options.restricted_discs.split(',')
+
+    runner = GNAThubTestRunner(
+        driver.args[0],
+        driver.options.discs,
+        driver.options.output_dir,
+        driver.options.tmp,
+        driver.options.enable_cleanup,
+        driver.options.restricted_discs,
+        len(driver.args) > 1 and driver.args[1:] or None,
+        driver.options.failed_only,
+        use_basename=False)
+
+    runner.execute()
+
 
 if __name__ == '__main__':
-    main()
+    try:
+        run_single_testcase()
+    except KeyboardInterrupt:
+        sys.exit('Interrupted.')
+    except Exception as why:
+        sys.exit('Unexpected exception: %s' % why)

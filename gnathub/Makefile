@@ -68,7 +68,7 @@ check-style:
 		--reports=n GNAThub share/gnathub/{core,extras,sql}/*.py
 
 tests:
-	cd t && python testsuite.py
+	@python t/testsuite.py --colorize --with-diff
 
 tests-coverage:
 	BUILD_MODE=Coverage $(MAKE) all tests analyse-gcov
