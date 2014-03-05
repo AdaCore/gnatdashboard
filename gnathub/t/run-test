@@ -33,7 +33,8 @@ class GNAThubTestRunner(TestRunner):
                             failed_only, default_timeout, use_basename)
 
         # Activate tests duration monitoring
-        self.opt_results['TIMING'] = True
+        self.opt_results['TIMING'] = 0
+        self.opt_results['CMD'] = 'test.sh'
 
 
 def run_single_testcase():

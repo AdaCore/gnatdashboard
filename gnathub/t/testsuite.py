@@ -102,6 +102,13 @@ class Testsuite(object):
                              default=False, help=argparse.SUPPRESS)
 
     @staticmethod
+    def find_testcases(directory):
+        """Find all testcases in the given directory."""
+
+        return set(sorted(find(directory, pattern='test.py') +
+                          find(directory, pattern='test.sh')))
+
+    @staticmethod
     def compute_testcases_list(args):
         """Return the list of testcases to execute.
 
@@ -117,8 +124,8 @@ class Testsuite(object):
                     for test in args]
 
         return [os.path.relpath(os.path.dirname(p), BASEDIR)
-                for p in sorted(find(os.path.join(BASEDIR, 'tests'),
-                                     pattern='test.cmd'))]
+                for p in Testsuite.find_testcases(
+                    os.path.join(BASEDIR, 'tests'))]
 
     def parse_command_line(self):
         """Handle command-line parsing and internal configuration."""
@@ -315,7 +322,7 @@ class Testsuite(object):
             tokens.extend([
                 (Token.Whitespace, ' '),
                 (Token.Punctuation, '('),
-                (Token.Comment, 'ellapsed: %.2fs' % testcase['duration']),
+                (Token.Comment, '%.2fs' % testcase['duration']),
                 (Token.Punctuation, ')')
             ])
 
@@ -329,6 +336,8 @@ class Testsuite(object):
         """
 
         return [
+            (Token.Whitespace, '\n'),
+
             (Token.Number, str(sum(n for n in self.summary.values()))),
             (Token.Whitespace, ' '),
             (Token.Text, 'testcases executed'),
