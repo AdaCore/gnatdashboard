@@ -6,8 +6,11 @@
 import GNAThub
 
 
-# pylint: disable=no-init
-# pylint: disable=too-few-public-methods
+# Global variable supposedly updated by MyCustomPlugin
+MY_VARIABLE = False
+
+
+# pylint: disable=no-init, too-few-public-methods
 class MyIncompletePlugin(GNAThub.Plugin):
     """Declare a custom plugin that extends the GNAThub Plugin interface.
 
@@ -18,17 +21,18 @@ class MyIncompletePlugin(GNAThub.Plugin):
     LOG_FILE = 'incomplete.log'
 
 
-# pylint: disable=no-init
-# pylint: disable=too-few-public-methods
+# pylint: disable=no-init, too-few-public-methods
 class MyCustomPlugin(GNAThub.Plugin):
     """Declare a custom plugin that extends the GNAThub Plugin interface."""
 
     TOOL_NAME = 'My Custom Plugin'
     LOG_FILE = 'custom.log'
 
+    # pylint: disable=no-self-use, global-statement
     def execute(self):
         """Overridden."""
-        pass
+        global MY_VARIABLE
+        MY_VARIABLE = True
 
 
 # GNAThub.Plugin interface not implemented
@@ -67,3 +71,11 @@ except GNAThub.Error:
     pass
 
 PLUGIN.exec_status = GNAThub.EXEC_SUCCESS
+
+# Register the plugin and run the GNAThub execution
+GNAThub.register(PLUGIN)
+
+# Ensure that the plugin did run
+assert not MY_VARIABLE, 'control assay'
+GNAThub.run()
+assert MY_VARIABLE, 'MyCustomPlugin.execute not executed'
