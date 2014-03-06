@@ -78,39 +78,47 @@ package body GNAThub.Database is
    -- Initialize --
    ----------------
 
-   procedure Initialize (Database_File : GNATCOLL.VFS.Virtual_File) is
+   procedure Initialize
+     (Database_File            : GNATCOLL.VFS.Virtual_File;
+      Remove_Previous_Database : Boolean)
+   is
       Descr          : Database_Description;
       Schema         : DB_Schema;
       Delete_Succeed : Boolean;
 
    begin
-      --  Check existance of a database, delete it before creating a new one
+      if Remove_Previous_Database then
+         --  Check existence of a database, delete it before creating a new one
 
-      if Is_Regular_File (Database_File) then
-         Log.Debug ("Removing previous copy of the database: " &
-                    Database_File.Display_Full_Name);
+         if Is_Regular_File (Database_File) then
+            Log.Debug ("Removing previous copy of the database: " &
+                         Database_File.Display_Full_Name);
 
-         Delete (Database_File, Delete_Succeed);
+            Delete (Database_File, Delete_Succeed);
 
-         if not Delete_Succeed then
-            raise Error with "Unable to delete old Sqlite file: " &
-                             Database_File.Display_Full_Name;
+            if not Delete_Succeed then
+               raise Error with "Unable to delete old Sqlite file: " &
+                 Database_File.Display_Full_Name;
+            end if;
          end if;
+
+         --  Retieve schema from text file
+         Log.Debug
+           ("Loading database schema: " &
+              GNAThub.Constants.Database_Model_File.Display_Full_Name);
+
+         Schema := New_Schema_IO
+           (GNAThub.Constants.Database_Model_File).Read_Schema;
       end if;
-
-      --  Retieve schema from text file
-      Log.Debug
-        ("Loading database schema: " &
-         GNAThub.Constants.Database_Model_File.Display_Full_Name);
-
-      Schema := New_Schema_IO
-        (GNAThub.Constants.Database_Model_File).Read_Schema;
 
       Descr := GNATCOLL.SQL.Sqlite.Setup
         (Database => Database_File.Display_Full_Name);
 
       Schema_IO.DB := Descr.Build_Connection;
-      Write_Schema (Schema_IO, Schema);
+
+      if Remove_Previous_Database then
+         Write_Schema (Schema_IO, Schema);
+      end if;
 
       --  Initialize session pool
       GNATCOLL.SQL.Sessions.Setup (Descr, Max_Sessions);

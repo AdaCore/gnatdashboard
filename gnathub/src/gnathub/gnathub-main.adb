@@ -189,7 +189,8 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       Log.Info ("gnathub.sql.create " & Database_File.Display_Full_Name);
       GNAThub.Database.Initialize
          (Create_From_Dir
-            (GNAThub.Project.Object_Dir, Database_File.Full_Name));
+            (GNAThub.Project.Object_Dir, Database_File.Full_Name),
+         Remove_Previous_Database => True);
 
       Log.Info ("gnathub.sql.save(" & GNAThub.Configuration.Project & ")");
       GNAThub.Project.Save_Project_Tree;
@@ -223,6 +224,12 @@ begin
    Create_Project_Directory_Env;
 
    if Interpreter_Mode then
+      Log.Debug ("Connecting to existing database...");
+      GNAThub.Database.Initialize
+        (Create_From_Dir
+           (GNAThub.Project.Object_Dir, Database_File.Full_Name),
+        Remove_Previous_Database => False);
+
       Log.Debug ("Executing user script: " & Script);
       Execute_User_Script;
 

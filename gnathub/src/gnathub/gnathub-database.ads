@@ -65,14 +65,15 @@ package GNAThub.Database is
    --  DB Management  --
    ---------------------
 
-   procedure Initialize (Database_File : GNATCOLL.VFS.Virtual_File);
-   --  Create GNAThub DB sqlite file. And initialize DB context that will
-   --  be use in the whole program to interract with the DB. Session pool
-   --  is setup by this function.
+   procedure Initialize
+     (Database_File            : GNATCOLL.VFS.Virtual_File;
+      Remove_Previous_Database : Boolean);
+   --  Connect to the gnathub database.
    --
-   --  Object_Dir: directory in which the DB will be created.
-   --  Schema_File: the file containing the database schema
-   --  Returns wether the DB has been succefully created or not.
+   --  If Remove_Previous_Database, remove any existing gnathub database,
+   --  and initialize a new one with the gnathub schema.
+   --
+   --  Session pool is setup by this function.
 
    procedure Finalize;
    --  Terminate the database connection.
