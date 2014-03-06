@@ -131,7 +131,10 @@ package body GNAThub.Python.Database is
       Id           : Integer;
       Rule_Id      : Integer;
       Message_Data : String;
-      Category_Id  : Integer);
+      Category_Id  : Integer;
+      Line         : Integer := -1;
+      Col_Begin    : Integer := -1;
+      Col_End      : Integer := -1);
    --  Set the fields describing a Message in Message_Inst
 
    ---------------
@@ -443,7 +446,10 @@ package body GNAThub.Python.Database is
       Id           : Integer;
       Rule_Id      : Integer;
       Message_Data : String;
-      Category_Id  : Integer) is
+      Category_Id  : Integer;
+      Line         : Integer := -1;
+      Col_Begin    : Integer := -1;
+      Col_End      : Integer := -1) is
    begin
       Set_Data (Message_Inst, Message_Class_Name,
                 Message_Property_Record'(Id => Id));
@@ -455,6 +461,18 @@ package body GNAThub.Python.Database is
          Set_Property (Message_Inst, "category_id", Category_Id);
       else
          Set_Property (Message_Inst, "category_id", "");
+      end if;
+
+      if Line /= -1 then
+         Set_Property (Message_Inst, "line", Line);
+      end if;
+
+      if Col_Begin /= -1 then
+         Set_Property (Message_Inst, "col_begin", Col_Begin);
+      end if;
+
+      if Col_End /= -1 then
+         Set_Property (Message_Inst, "col_end", Col_End);
       end if;
    end Set_Message_Fields;
 
@@ -723,6 +741,89 @@ package body GNAThub.Python.Database is
 
             DB.Commit;
          end;
+
+      elsif Command = "list_messages" then
+         Set_Return_Value_As_List (Data);
+         declare
+            Resource    : constant Class_Instance := Nth_Arg (Data, 1);
+            Resource_Id : constant Integer := Resource_Property
+              (Get_Data (Resource, Resource_Class_Name)).Id;
+
+            Message_Inst : Class_Instance;
+
+            Q : SQL_Query;
+            R : Forward_Cursor;
+         begin
+            --  First list all messages in resource_messages
+
+            Q := SQL_Select
+              (To_List
+                 ((0 => +D.Messages.Id,
+                   1 => +D.Messages.Rule_Id,
+                   2 => +D.Messages.Data,
+                   3 => +D.Messages.Category_Id
+                  )),
+               From  => D.Messages & D.Resources_Messages,
+               Where => D.Resources_Messages.Resource_Id = Resource_Id
+               and D.Messages.Id = D.Resources_Messages.Message_Id);
+
+            R.Fetch (DB, Q);
+
+            while R.Has_Row loop
+               Message_Inst := New_Instance (Get_Script (Data), Message_Class);
+
+               Set_Message_Fields
+                 (Message_Inst => Message_Inst,
+                  Id           => R.Integer_Value (0),
+                  Rule_Id      => R.Integer_Value (1),
+                  Message_Data => R.Value (2),
+                  Category_Id  => R.Integer_Value (3, -1),
+                  Line         => 0,
+                  Col_Begin    => 0,
+                  Col_End      => 0);
+
+               Set_Return_Value (Data, Message_Inst);
+
+               R.Next;
+            end loop;
+
+            --  Now list all message in lines_messages
+
+            Q := SQL_Select
+              (To_List
+                 ((0 => +D.Messages.Id,
+                   1 => +D.Messages.Rule_Id,
+                   2 => +D.Messages.Data,
+                   3 => +D.Messages.Category_Id,
+                   4 => +D.Lines.Line,
+                   5 => +D.Lines_Messages.Col_Begin,
+                   6 => +D.Lines_Messages.Col_End
+                  )),
+               From  => D.Messages & D.Lines & D.Lines_Messages,
+               Where => D.Lines.Resource_Id = Resource_Id
+               and D.Lines_Messages.Line_ID = D.Lines.Id
+               and D.Messages.Id = D.Lines_Messages.Message_Id);
+
+            R.Fetch (DB, Q);
+
+            while R.Has_Row loop
+               Message_Inst := New_Instance (Get_Script (Data), Message_Class);
+               Set_Message_Fields
+                 (Message_Inst => Message_Inst,
+                  Id           => R.Integer_Value (0),
+                  Rule_Id      => R.Integer_Value (1),
+                  Message_Data => R.Value (2),
+                  Category_Id  => R.Integer_Value (3, -1),
+                  Line         => R.Integer_Value (4, 0),
+                  Col_Begin    => R.Integer_Value (5, 0),
+                  Col_End      => R.Integer_Value (6, 0));
+
+               Set_Return_Value (Data, Message_Inst);
+
+               R.Next;
+            end loop;
+
+         end;
       else
          raise Python_Error with "Unknown method GNAThub.Resource." & Command;
       end if;
@@ -798,6 +899,11 @@ package body GNAThub.Python.Database is
       Repository.Register_Command
         ("add_message", 1, 5,
          Resource_Command_Handler'Access, Resource_Class, False);
+
+      Repository.Register_Command
+        ("list_messages", 0, 0,
+         Resource_Command_Handler'Access, Resource_Class, False);
+
    end Register_Database_Interaction_API;
 
 end GNAThub.Python.Database;
