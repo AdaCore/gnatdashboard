@@ -97,9 +97,9 @@ class Gcov(GNAThub.Plugin):
 
         try:
             for index, filename in enumerate(files, start=1):
-                # Retrieve source basename:
-                # /path/to/source.adb.gcov --> source.adb
-                src, _ = os.path.splitext(os.path.basename(filename))
+                # Retrieve source fullname
+                base, _ = os.path.splitext(os.path.basename(filename))
+                src = GNAThub.Project.source_file(base)
 
                 resource = GNAThub.Resource(src, db.FILE_KIND)
 
