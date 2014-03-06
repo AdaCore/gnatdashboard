@@ -366,7 +366,7 @@ class Plugin:
         """
 
         if status not in (EXEC_FAIL, EXEC_SUCCESS, NOT_EXECUTED):
-            raise Error('invalid execution code')
+            raise Error('invalid execution status code')
 
         self._exec_status = status
 

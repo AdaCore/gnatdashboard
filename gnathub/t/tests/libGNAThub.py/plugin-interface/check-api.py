@@ -1,0 +1,69 @@
+"""Check the integrity of the GNAThub Python module."""
+
+# pylint: disable=C0103
+# Disable "Invalid module name" (this is a script, not a module)
+
+import GNAThub
+
+
+# pylint: disable=no-init
+# pylint: disable=too-few-public-methods
+class MyIncompletePlugin(GNAThub.Plugin):
+    """Declare a custom plugin that extends the GNAThub Plugin interface.
+
+    However, do not implement the EXECUTE method to test error case.
+    """
+
+    TOOL_NAME = 'My Incomplete Plugin'
+    LOG_FILE = 'incomplete.log'
+
+
+# pylint: disable=no-init
+# pylint: disable=too-few-public-methods
+class MyCustomPlugin(GNAThub.Plugin):
+    """Declare a custom plugin that extends the GNAThub Plugin interface."""
+
+    TOOL_NAME = 'My Custom Plugin'
+    LOG_FILE = 'custom.log'
+
+    def execute(self):
+        """Overridden."""
+        pass
+
+
+# GNAThub.Plugin interface not implemented
+try:
+    MyIncompletePlugin()
+    assert False, 'MyIncompletePlugin is not expected to be instantiable'
+except TypeError:
+    # A type error occurs when the EXECUTE method is not overridden
+    pass
+
+
+PLUGIN = MyCustomPlugin()
+
+# GNAThub.Plugin.name
+assert PLUGIN.name == 'My Custom Plugin', \
+    'unexpected plugin name "%s"' % PLUGIN.name
+
+# GNAThub.Plugin.display_command_line()
+assert PLUGIN.display_command_line() == 'my custom plugin', \
+    ('unexpected plugin display command line "%s"' %
+     PLUGIN.display_command_line())
+
+# GNAThub.Plugin.fqn
+assert PLUGIN.fqn == 'gnathub.my-custom-plugin', \
+    'unexpected plugin fully qualified name "%s"' % PLUGIN.fqn
+
+# GNAThub.Plugin.exec_status (getter)
+assert PLUGIN.exec_status == GNAThub.NOT_EXECUTED, \
+    'unexpected plugin execution status "%s"' % repr(PLUGIN.exec_status)
+
+# GNAThub.Plugin.exec_status (setter)
+try:
+    PLUGIN.exec_status = 'invalid value'
+    assert False, 'exec_status affectation should have raised an exception'
+except GNAThub.Error:
+    pass
+
+PLUGIN.exec_status = GNAThub.EXEC_SUCCESS
