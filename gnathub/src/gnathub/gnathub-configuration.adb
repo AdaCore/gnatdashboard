@@ -75,8 +75,8 @@ package body GNAThub.Configuration is
       Define_Switch
         (Config      => Config,
          Output      => Script_Arg'Access,
-         Long_Switch => "--load=",
-         Help        => "Execute an external Python script before exiting");
+         Long_Switch => "--exec=",
+         Help        => "Python script to execute");
 
       Define_Switch
         (Config      => Config,
@@ -114,7 +114,7 @@ package body GNAThub.Configuration is
 
       Set_Usage
         (Config => Config,
-         Usage  => "[-vq] -P PROJECT [-plugins PLUGINS] [-X ARG [-X ARG]]",
+         Usage  => "[-vq] -P PROJECT [--plugins PLUGINS | --exec SCRIPT]",
          Help   => "GNAThub, driver & formatter for GNAT tool suite.");
 
       --  Parse the command line
@@ -171,11 +171,14 @@ package body GNAThub.Configuration is
 
    begin
       --  Manage -X (scenario vars) switches and call getopt
-
       Parse_Command_Line;
 
-      --  Print the version and exit if --version is supplied
+      --  Sanity checks
+      pragma Assert (Project_Arg /= null, "unexpected null project");
+      pragma Assert (Plugins_Arg /= null, "unexpected null plugins list");
+      pragma Assert (Script_Arg /= null, "unexpected null script argument");
 
+      --  Print the version and exit if --version is supplied
       if Version then
          Log.Info
            ("GNAThub " & GNAThub.Version.Version & " " &
@@ -188,7 +191,6 @@ package body GNAThub.Configuration is
 
       --  Ensure consistency of use for --quiet and --verbose and set the
       --  logging level accordingly
-
       if Quiet and then Verbose then
          raise Command_Line_Error
            with "--verbose and --quiet are mutually exclusive.";
@@ -202,25 +204,27 @@ package body GNAThub.Configuration is
          Log.Set_Verbosity (Log.Verbose);
       end if;
 
-      --  Check that job number is in the correct range
+      --  Ensure consistency of use for --plugins and --exec
+      if Plugins_Arg.all /= "" and then Script_Arg.all /= "" then
+         raise Command_Line_Error
+           with "--plugins and --exec are mutually exclusive.";
+      end if;
 
+      --  Check that job number is in the correct range
       if Jobs_Arg not in Natural'Range then
          raise Command_Line_Error
            with "invalid jobs value: " & Integer'Image (Jobs_Arg);
       end if;
 
       --  Check that project file path has been specified on command line
-
-      if Project_Arg = null or else Project_Arg.all = "" then
+      if Project_Arg.all = "" then
          raise Command_Line_Error with "no project file specified";
       end if;
 
-      --  Check existance of the given path on disk
-
+      --  Check existence of the given path on disk
       declare
          Project : constant String := Project_Arg.all;
          Ext     : constant String := +Project_File_Extension;
-
       begin
          if not Ends_With (Project, Ext) then
             Free (Project_Arg);

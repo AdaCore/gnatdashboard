@@ -1,2 +1,2 @@
 # Test sqlalchemy installation
-gnathub -q -P default --plugins sonarconfig --load=check-import.py
+gnathub -q -P default --exec check-import.py

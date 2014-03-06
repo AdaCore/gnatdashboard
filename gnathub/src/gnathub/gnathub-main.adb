@@ -38,9 +38,20 @@ with GNAThub.Python;
 
 function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
-   procedure Load_Plugin_Runner;
+   function Interpreter_Mode return Boolean;
+   --  Whether to run GNAThub in interpreter mode (--exec) or normal mode.
+
+   procedure Create_Or_Override_Database;
+   --  Creates the GNAThub database and initializes it with the project
+   --  information. Override any existing database.
+
+   procedure Execute_Plugin_Runner;
    --  Loads the plugin runner that executes every GNAThub plugin (both core
    --  and user plugins).
+
+   procedure Execute_User_Script;
+   --  Loads and executes the script provided by the user throught the --exec
+   --  switch from the command-line.
 
    procedure Create_Project_Directory_Env;
    --  Creates the following directories hierarchy, when needed:
@@ -94,11 +105,20 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
    end Create_Project_Directory_Env;
 
-   ------------------------
-   -- Load_Plugin_Runner --
-   ------------------------
+   ----------------------
+   -- Interpreter_Mode --
+   ----------------------
 
-   procedure Load_Plugin_Runner is
+   function Interpreter_Mode return Boolean is
+   begin
+      return GNAThub.Configuration.Script /= "";
+   end Interpreter_Mode;
+
+   ---------------------------
+   -- Execute_Plugin_Runner --
+   ---------------------------
+
+   procedure Execute_Plugin_Runner is
       Had_Errors : Boolean;
 
       Python_Path_List : constant array (1 .. 2) of Virtual_File :=
@@ -139,7 +159,41 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       if Had_Errors then
          raise Error with "Unexpected plug-in error";
       end if;
-   end Load_Plugin_Runner;
+   end Execute_Plugin_Runner;
+
+   -------------------------
+   -- Execute_User_Script --
+   -------------------------
+
+   procedure Execute_User_Script is
+      Script : constant String := GNAThub.Configuration.Script;
+      Errors : Boolean := False;
+   begin
+      if Script /= "" then
+         Log.Info ("gnathub.python.execute " & Script);
+
+         GNAThub.Python.Execute_File (Script, Errors);
+
+         if Errors then
+            raise Error with "execution failed: " & Script;
+         end if;
+      end if;
+   end Execute_User_Script;
+
+   ---------------------------------
+   -- Create_Or_Override_Database --
+   ---------------------------------
+
+   procedure Create_Or_Override_Database is
+   begin
+      Log.Info ("gnathub.sql.create " & Database_File.Display_Full_Name);
+      GNAThub.Database.Initialize
+         (Create_From_Dir
+            (GNAThub.Project.Object_Dir, Database_File.Full_Name));
+
+      Log.Info ("gnathub.sql.save(" & GNAThub.Configuration.Project & ")");
+      GNAThub.Project.Save_Project_Tree;
+   end Create_Or_Override_Database;
 
    --------------------------
    -- Finalize_Application --
@@ -163,43 +217,22 @@ begin
    GNAThub.Configuration.Initialize;
 
    Log.Debug ("Loading project: " & GNAThub.Configuration.Project);
-
    GNAThub.Project.Load (GNAThub.Configuration.Project);
 
    Log.Debug ("Creating execution environment...");
-
    Create_Project_Directory_Env;
 
-   Log.Debug ("Creating local application database...");
-   Log.Info ("gnathub.sql.create " & Database_File.Display_Full_Name);
+   if Interpreter_Mode then
+      Log.Debug ("Executing user script: " & Script);
+      Execute_User_Script;
 
-   GNAThub.Database.Initialize
-      (Create_From_Dir
-         (GNAThub.Project.Object_Dir,
-          Database_File.Full_Name));
+   else
+      Log.Debug ("Creating local application database...");
+      Create_Or_Override_Database;
 
-   Log.Debug ("Writing project in dabatase");
-
-   GNAThub.Project.Save_Project_Tree;
-
-   Load_Plugin_Runner;
-
-   Log.Debug ("Plugins execution completed");
-
-   declare
-      Script : constant String := GNAThub.Configuration.Script;
-      Errors : Boolean := False;
-   begin
-      if Script /= "" then
-         Log.Info ("gnathub.python.execute " & Script);
-         Log.Debug ("Executing command-line script " & Script);
-         GNAThub.Python.Execute_File (Script, Errors);
-
-         if Errors then
-            raise Error with "execution failed: " & Script;
-         end if;
-      end if;
-   end;
+      Log.Debug ("Executing Plugin Runner");
+      Execute_Plugin_Runner;
+   end if;
 
    Log.Debug ("Execution completed");
    Finalize_Application;
