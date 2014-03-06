@@ -40,10 +40,10 @@ package GNAThub.Project is
    --  Load the project file in memory
 
    function File (Name : String) return Virtual_File;
-   --  Create a new file. This will automatically try to solve Name to an
+   --  Create a new file. This will automatically try to resolve Name to an
    --  absolute path if it currently is a base name.
    --  If Name is an absolute path, it is returned as is. Otherwise, only the
-   --  base name is used (ie we remove any directory information from Name).
+   --  base name is used (ie, we remove any directory information from Name).
 
    procedure Update_Env (Key, Value : String)
       with Pre => Initialized;

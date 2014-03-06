@@ -22,21 +22,21 @@ package GNAThub.Python is
    --  function/method).
 
    function Initialized return Boolean;
-   --  Whether the Python engine has been initialized or not.
+   --  Return whether the Python engine has been initialized or not
 
    procedure Initialize;
-   --  Registers the GNAThub Python interface.
+   --  Register the GNAThub Python interface
 
    procedure Finalize
       with Pre => Initialized;
-   --  Disposes of iternal resources.
+   --  Dispose of internal resources
 
    procedure Execute_File (Script_Filename : String; Errors : out Boolean)
       with Pre => Initialized;
-   --  Executes the given Python script.
+   --  Execute the given Python script
 
    procedure Execute (Cmd : String; Errors : out Boolean)
       with Pre => Initialized;
-   --  Executes the given command.
+   --  Execute the given command
 
 end GNAThub.Python;

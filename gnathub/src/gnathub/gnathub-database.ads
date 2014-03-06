@@ -20,8 +20,7 @@ with Orm;               use Orm;
 with GNATCOLL.VFS;
 with GNATCOLL.SQL.Exec;
 
---  This package gathered all functions and procedures that allow to
---  interact with the DB.
+--  This package defines the database interaction
 
 package GNAThub.Database is
 
@@ -47,7 +46,7 @@ package GNAThub.Database is
    --  Resource Kind  --
 
    type Resource_Kind is (Kind_Project, Kind_Directory, Kind_File);
-   --  Correspond to the value of "kind" field in "Resource" table DB.
+   --  Corresponds to the value of "kind" field in "Resource" table DB.
    --  Defined as follow: 0 -> Project, 1 -> Directory, 2 -> File
 
    type Abstract_Detached_Resource is abstract new Orm.Detached_Resource

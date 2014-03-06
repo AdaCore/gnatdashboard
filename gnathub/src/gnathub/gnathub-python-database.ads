@@ -23,6 +23,6 @@ package GNAThub.Python.Database is
 
    procedure Register_Database_Interaction_API
      (Repository : GNATCOLL.Scripts.Scripts_Repository);
-   --  Registers the API for interacting with the database
+   --  Register the API for interacting with the database
 
 end GNAThub.Python.Database;

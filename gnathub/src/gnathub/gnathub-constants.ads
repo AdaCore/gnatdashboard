@@ -41,7 +41,7 @@ package GNAThub.Constants is
    --  plugins (core + user-defined).
 
    --  GNAThub project side environment properties, located in project
-   --  object directory
+   --  object directory.
 
    function Root_Dir return Virtual_File;
    --  GNAThub root directory to be created in the project's object dir

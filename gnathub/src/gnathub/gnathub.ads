@@ -23,35 +23,35 @@ package GNAThub is
 
    package Log is
       type Verbosity_Level is (Quiet, Default, Verbose);
-      --  The three possible threshold of verbosity for this application.
+      --  The three possible thresholds of verbosity for this application.
 
       procedure Info (Message : String);
-      --  Prints an informative message. Activated at default verbosity output.
+      --  Print an informative message. Activated at default verbosity output.
 
       procedure Warn (Message : String);
-      --  Prints a warning message. Activated at default verbosity output.
+      --  Print a warning message. Activated at default verbosity output.
 
       procedure Error (Message : String);
-      --  Prints an error message. Always activated.
+      --  Print an error message. Always activated.
 
       procedure Fatal (Message : String);
-      --  Prints a fatal message. Always activated.
+      --  Print a fatal message. Always activated.
 
       procedure Debug (Message : String);
-      --  Prints a debug message. Activated at higher verbosity level.
+      --  Print a debug message. Activated at higher verbosity level.
 
       procedure Progress
         (Current : Natural; Total : Positive; New_Line : Boolean := False);
-      --  Prints a progess message. Activated at default verbosity level.
+      --  Print a progess message. Activated at default verbosity level.
       --  If New_Line is True, then terminate the line with a ASCII.LF
       --  character. Defaults to False.
 
       procedure Ellapsed;
-      --  Prints the ellapsed time since the beginning of the application
+      --  Print the ellapsed time since the beginning of the application
       --  execution.
 
       procedure Set_Verbosity (Verbosity : Verbosity_Level);
-      --  Sets the output verbosity of the GNAThub application.
+      --  Set the output verbosity of the GNAThub application.
    end Log;
 
 end GNAThub;
