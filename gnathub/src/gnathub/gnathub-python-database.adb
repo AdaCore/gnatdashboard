@@ -40,7 +40,9 @@ package body GNAThub.Python.Database is
    -- Mappings --
    --------------
 
-   --  Tools
+   -----------
+   -- Tools --
+   -----------
 
    Tool_Class_Name : constant String := "Tool";
    Tool_Class      : Class_Type;
@@ -54,7 +56,15 @@ package body GNAThub.Python.Database is
      (Data    : in out Callback_Data'Class;
       Command : String);
 
-   --  Categories
+   procedure Set_Tool_Fields
+     (Tool_Inst : Class_Instance;
+      Id        : Integer;
+      Name      : String);
+   --  Set the fields describing a Tool in Tool_Inst
+
+   ----------------
+   -- Categories --
+   ----------------
 
    Category_Class_Name : constant String := "Category";
    Category_Class      : Class_Type;
@@ -68,7 +78,16 @@ package body GNAThub.Python.Database is
      (Data    : in out Callback_Data'Class;
       Command : String);
 
-   --  Rules
+   procedure Set_Category_Fields
+     (Category_Inst : Class_Instance;
+      Id            : Integer;
+      Label         : String;
+      On_Side       : Boolean);
+   --  Set the fields describing a Category in Category_Inst
+
+   -----------
+   -- Rules --
+   -----------
 
    Rule_Class_Name : constant String := "Rule";
    Rule_Class      : Class_Type;
@@ -82,7 +101,18 @@ package body GNAThub.Python.Database is
      (Data    : in out Callback_Data'Class;
       Command : String);
 
-   --  Messages
+   procedure Set_Rule_Fields
+     (Rule_Inst  : Class_Instance;
+      Id         : Integer;
+      Name       : String;
+      Identifier : String;
+      Kind       : Integer;
+      Tool_Id    : Integer);
+   --  Set the fields describing a Rule in Rule_Inst
+
+   --------------
+   -- Messages --
+   --------------
 
    Message_Class_Name : constant String := "Message";
    Message_Class      : Class_Type;
@@ -96,7 +126,17 @@ package body GNAThub.Python.Database is
      (Data    : in out Callback_Data'Class;
       Command : String);
 
-   --  Resources
+   procedure Set_Message_Fields
+     (Message_Inst : Class_Instance;
+      Id           : Integer;
+      Rule_Id      : Integer;
+      Message_Data : String;
+      Category_Id  : Integer);
+   --  Set the fields describing a Message in Message_Inst
+
+   ---------------
+   -- Resources --
+   ---------------
 
    Resource_Class_Name : constant String := "Resource";
    Resource_Class      : Class_Type;
@@ -109,6 +149,28 @@ package body GNAThub.Python.Database is
    procedure Resource_Command_Handler
      (Data    : in out Callback_Data'Class;
       Command : String);
+
+   procedure Set_Resource_Fields
+     (Resource_Inst : Class_Instance;
+      Id            : Integer;
+      Name          : String;
+      Kind          : Integer);
+   --  Set the fields describing a Resource in Resource_Inst
+
+   ---------------------
+   -- Set_Tool_Fields --
+   ---------------------
+
+   procedure Set_Tool_Fields
+     (Tool_Inst : Class_Instance;
+      Id        : Integer;
+      Name      : String) is
+   begin
+      Set_Data (Tool_Inst, Tool_Class_Name,
+                Tool_Property_Record'(Id => Id));
+      Set_Property (Tool_Inst, "id", Id);
+      Set_Property (Tool_Inst, "name", Name);
+   end Set_Tool_Fields;
 
    --------------------------
    -- Tool_Command_Handler --
@@ -146,9 +208,7 @@ package body GNAThub.Python.Database is
                DB.Commit;
             end if;
 
-            Set_Data (Tool_Inst, Tool_Class_Name,
-                      Tool_Property_Record'(Id => Id));
-            Set_Property (Tool_Inst, "name", Name);
+            Set_Tool_Fields (Tool_Inst, Id, Name);
          end;
 
       elsif Command = "list" then
@@ -164,9 +224,7 @@ package body GNAThub.Python.Database is
 
             while R.Has_Row loop
                Tool_Inst := New_Instance (Get_Script (Data), Tool_Class);
-               Set_Data (Tool_Inst, Tool_Class_Name,
-                         Tool_Property_Record'(Id => R.Integer_Value (0)));
-               Set_Property (Tool_Inst, "name", R.Value (1));
+               Set_Tool_Fields (Tool_Inst, R.Integer_Value (0), R.Value (1));
                Set_Return_Value (Data, Tool_Inst);
 
                R.Next;
@@ -176,6 +234,23 @@ package body GNAThub.Python.Database is
          raise Python_Error with "Unknown method GNAThub.Tool." & Command;
       end if;
    end Tool_Command_Handler;
+
+   -------------------------
+   -- Set_Category_Fields --
+   -------------------------
+
+   procedure Set_Category_Fields
+     (Category_Inst : Class_Instance;
+      Id            : Integer;
+      Label         : String;
+      On_Side       : Boolean) is
+   begin
+      Set_Data (Category_Inst, Category_Class_Name,
+                Category_Property_Record'(Id => Id));
+      Set_Property (Category_Inst, "id", Id);
+      Set_Property (Category_Inst, "label", Label);
+      Set_Property (Category_Inst, "on_side", On_Side);
+   end Set_Category_Fields;
 
    ------------------------------
    -- Category_Command_Handler --
@@ -217,11 +292,7 @@ package body GNAThub.Python.Database is
                   PK => D.Categories.Id);
                DB.Commit;
             end if;
-
-            Set_Data (Category_Inst, Category_Class_Name,
-                      Category_Property_Record'(Id => Id));
-            Set_Property (Category_Inst, "label", Label);
-            Set_Property (Category_Inst, "on_side", On_Side);
+            Set_Category_Fields (Category_Inst, Id, Label, On_Side);
          end;
 
       elsif Command = "list" then
@@ -241,10 +312,9 @@ package body GNAThub.Python.Database is
             while R.Has_Row loop
                Category_Inst := New_Instance
                  (Get_Script (Data), Category_Class);
-               Set_Data (Category_Inst, Category_Class_Name,
-                         Category_Property_Record'(Id => R.Integer_Value (0)));
-               Set_Property (Category_Inst, "label", R.Value (1));
-               Set_Property (Category_Inst, "on_side", R.Boolean_Value (2));
+               Set_Category_Fields
+                 (Category_Inst,
+                  R.Integer_Value (0), R.Value (1), R.Boolean_Value (2));
                Set_Return_Value (Data, Category_Inst);
 
                R.Next;
@@ -254,6 +324,27 @@ package body GNAThub.Python.Database is
          raise Python_Error with "Unknown method GNAThub.Category." & Command;
       end if;
    end Category_Command_Handler;
+
+   ---------------------
+   -- Set_Rule_Fields --
+   ---------------------
+
+   procedure Set_Rule_Fields
+     (Rule_Inst  : Class_Instance;
+      Id         : Integer;
+      Name       : String;
+      Identifier : String;
+      Kind       : Integer;
+      Tool_Id    : Integer) is
+   begin
+      Set_Data (Rule_Inst, Rule_Class_Name,
+                Rule_Property_Record'(Id => Id));
+      Set_Property (Rule_Inst, "id", Id);
+      Set_Property (Rule_Inst, "name", Name);
+      Set_Property (Rule_Inst, "identifier", Identifier);
+      Set_Property (Rule_Inst, "kind", Kind);
+      Set_Property (Rule_Inst, "tool_id", Tool_Id);
+   end Set_Rule_Fields;
 
    --------------------------
    -- Rule_Command_Handler --
@@ -305,12 +396,7 @@ package body GNAThub.Python.Database is
                DB.Commit;
             end if;
 
-            Set_Data (Rule_Inst, Rule_Class_Name,
-                      Rule_Property_Record'(Id => Id));
-            Set_Property (Rule_Inst, "name", Name);
-            Set_Property (Rule_Inst, "identifier", Identifier);
-            Set_Property (Rule_Inst, "kind", Kind);
-            Set_Property (Rule_Inst, "tool_id", Tool_Id);
+            Set_Rule_Fields (Rule_Inst, Id, Name, Identifier, Kind, Tool_Id);
          end;
 
       elsif Command = "list" then
@@ -331,12 +417,13 @@ package body GNAThub.Python.Database is
 
             while R.Has_Row loop
                Rule_Inst := New_Instance (Get_Script (Data), Rule_Class);
-               Set_Data (Rule_Inst, Rule_Class_Name,
-                         Rule_Property_Record'(Id => R.Integer_Value (0)));
-               Set_Property (Rule_Inst, "name", R.Value (1));
-               Set_Property (Rule_Inst, "identifier", R.Value (2));
-               Set_Property (Rule_Inst, "kind", R.Value (3));
-               Set_Property (Rule_Inst, "tool_id", R.Value (4));
+               Set_Rule_Fields
+                 (Rule_Inst,
+                  R.Integer_Value (0),
+                  R.Value (1),
+                  R.Value (2),
+                  R.Integer_Value (3),
+                  R.Integer_Value (4));
                Set_Return_Value (Data, Rule_Inst);
 
                R.Next;
@@ -346,6 +433,30 @@ package body GNAThub.Python.Database is
          raise Python_Error with "Unknown method GNAThub.Rule." & Command;
       end if;
    end Rule_Command_Handler;
+
+   ------------------------
+   -- Set_Message_Fields --
+   ------------------------
+
+   procedure Set_Message_Fields
+     (Message_Inst : Class_Instance;
+      Id           : Integer;
+      Rule_Id      : Integer;
+      Message_Data : String;
+      Category_Id  : Integer) is
+   begin
+      Set_Data (Message_Inst, Message_Class_Name,
+                Message_Property_Record'(Id => Id));
+      Set_Property (Message_Inst, "id", Id);
+      Set_Property (Message_Inst, "rule_id", Rule_Id);
+      Set_Property (Message_Inst, "data", Message_Data);
+
+      if Category_Id /= -1 then
+         Set_Property (Message_Inst, "category_id", Category_Id);
+      else
+         Set_Property (Message_Inst, "category_id", "");
+      end if;
+   end Set_Message_Fields;
 
    -----------------------------
    -- Message_Command_Handler --
@@ -417,16 +528,8 @@ package body GNAThub.Python.Database is
                DB.Commit;
             end if;
 
-            Set_Data (Message_Inst, Message_Class_Name,
-                      Message_Property_Record'(Id => Id));
-            Set_Property (Message_Inst, "rule_id", Rule_Id);
-            Set_Property (Message_Inst, "data", Message_Data);
-
-            if Category_Id /= -1 then
-               Set_Property (Message_Inst, "category_id", Category_Id);
-            else
-               Set_Property (Message_Inst, "category_id", "");
-            end if;
+            Set_Message_Fields
+              (Message_Inst, Id, Rule_Id, Message_Data, Category_Id);
          end;
 
       elsif Command = "list" then
@@ -445,18 +548,10 @@ package body GNAThub.Python.Database is
 
             while R.Has_Row loop
                Message_Inst := New_Instance (Get_Script (Data), Message_Class);
-               Set_Data (Message_Inst, Message_Class_Name,
-                         Message_Property_Record'(Id => R.Integer_Value (0)));
-               Set_Property (Message_Inst, "rule_id", R.Integer_Value (1));
-               Set_Property (Message_Inst, "data", R.Value (2));
-
-               if R.Is_Null (3) then
-                  Set_Property (Message_Inst, "category_id", "");
-               else
-                  Set_Property
-                    (Message_Inst, "category_id", R.Integer_Value (3));
-               end if;
-
+               Set_Message_Fields
+                 (Message_Inst,
+                  R.Integer_Value (0), R.Integer_Value (1),
+                  R.Value (2), R.Integer_Value (3, -1));
                Set_Return_Value (Data, Message_Inst);
 
                R.Next;
@@ -466,6 +561,23 @@ package body GNAThub.Python.Database is
          raise Python_Error with "Unknown method GNAThub.Message." & Command;
       end if;
    end Message_Command_Handler;
+
+   -------------------------
+   -- Set_Resource_Fields --
+   -------------------------
+
+   procedure Set_Resource_Fields
+     (Resource_Inst : Class_Instance;
+      Id            : Integer;
+      Name          : String;
+      Kind          : Integer) is
+   begin
+      Set_Data (Resource_Inst, Resource_Class_Name,
+                Resource_Property_Record'(Id => Id));
+      Set_Property (Resource_Inst, "id", Id);
+      Set_Property (Resource_Inst, "name", Name);
+      Set_Property (Resource_Inst, "kind", Kind);
+   end Set_Resource_Fields;
 
    -----------------------------
    -- Resource_Command_Handler --
@@ -511,10 +623,7 @@ package body GNAThub.Python.Database is
                DB.Commit;
             end if;
 
-            Set_Data (Resource_Inst, Resource_Class_Name,
-                      Resource_Property_Record'(Id => Id));
-            Set_Property (Resource_Inst, "name", Name);
-            Set_Property (Resource_Inst, "kind", Kind);
+            Set_Resource_Fields (Resource_Inst, Id, Name, Kind);
          end;
 
       elsif Command = "list" then
@@ -533,11 +642,9 @@ package body GNAThub.Python.Database is
             while R.Has_Row loop
                Resource_Inst := New_Instance
                  (Get_Script (Data), Resource_Class);
-               Set_Data (Resource_Inst, Resource_Class_Name,
-                         Resource_Property_Record'(Id => R.Integer_Value (0)));
-               Set_Property (Resource_Inst, "name", R.Value (1));
-               Set_Property (Resource_Inst, "kind", R.Integer_Value (2));
-
+               Set_Resource_Fields
+                 (Resource_Inst,
+                  R.Integer_Value (0), R.Value (1), R.Integer_Value (2));
                Set_Return_Value (Data, Resource_Inst);
 
                R.Next;
