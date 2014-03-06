@@ -1,0 +1,50 @@
+Second path taken
+[hello.adb]
+    all_lines = 22 
+    code_lines = 19 
+    comment_lines = 0 
+    eol_comments = 0 
+    comment_percentage = 0.00 
+    blank_lines = 3 
+    statement_complexity = 2.50 
+    expression_complexity = 0.00 
+    essential_complexity = 2.50 
+    cyclomatic_complexity = 2.50 
+    max_loop_nesting = 2.00 
+    line 4:	coverage = 1
+    line 7:	coverage = 1
+    line 9:	coverage = 5
+    line 10:	coverage = 213
+    line 11:	coverage = 209
+    line 12:	coverage = 1
+    line 14:	coverage = 208
+    line 15:	coverage = 4
+    line 16:	coverage = 0
+    line 19:	coverage = 1
+    line 20:	coverage = 1
+    line 21:	coverage = 1
+    line 22:	coverage = 1
+[f.ads]
+    all_lines = 5 
+    code_lines = 3 
+    comment_lines = 0 
+    eol_comments = 0 
+    comment_percentage = 0.00 
+    blank_lines = 2 
+[f.adb]
+    all_lines = 18 
+    code_lines = 11 
+    comment_lines = 3 
+    eol_comments = 0 
+    comment_percentage = 21.42 
+    blank_lines = 4 
+    statement_complexity = 2.00 
+    expression_complexity = 0.00 
+    essential_complexity = 1.00 
+    cyclomatic_complexity = 2.00 
+    max_loop_nesting = 0.00 
+    line 9:	coverage = 1
+    line 11:	coverage = 1
+    line 12:	coverage = 0
+    line 14:	coverage = 1
+    line 16:	coverage = 1
