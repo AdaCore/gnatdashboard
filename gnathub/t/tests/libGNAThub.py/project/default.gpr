@@ -1,0 +1,15 @@
+project default is
+
+   for Object_Dir use "obj";
+
+   package Check is
+      for Default_Switches ("Ada") use ("-rules", "-from=gnatcheck.rules");
+   end Check;
+
+   package Dashboard is
+      for Project_Key use "Default::Main";
+      for Project_Version use "1.0.0b";
+      for Plugin_Off use ("gnatprove", "codepeer");
+   end Dashboard;
+
+end default;
