@@ -397,7 +397,7 @@ class Run(object):
     """Class to handle processes.
     """
 
-    def __init__(self, name, argv, env=None, workdir=None, out=None):
+    def __init__(self, name, argv, env=None, workdir=None):
         """Instance constructor.
 
         Spawnes the process via subprocess.Popen and returns the process exit
@@ -422,7 +422,6 @@ class Run(object):
         self.name = name
         self.argv = argv
         self.status = None
-        self.out = out
 
         Log.debug('Run: cd %s; %s' % (
             workdir if workdir is not None else os.getcwd(),
@@ -499,9 +498,6 @@ class Run(object):
         RETURNS
             :rtype: a string
         """
-
-        if self.out:
-            return self.out
 
         return os.path.join(logs(), self.name + '.log')
 

@@ -40,3 +40,23 @@ assert os.path.isdir(GNAThub.core_plugins()), \
 
 assert os.path.isdir(GNAThub.extra_plugins()), \
     '%s: no such directory' % GNAThub.extra_plugins()
+
+# GNAThub.run
+TO_BE_ECHOED = 'this is the message to display on the standard output'
+
+process = GNAThub.Run('echo', ['echo', TO_BE_ECHOED])
+
+assert process.wait() == 0, 'process terminated unexpectedly'
+assert process.status == 0, 'unexpected process exit code: %d' % process.status
+assert process.name == 'echo', 'unexpected process name "%s"' % process.name
+assert process.cmdline_image() == "echo '%s'" % TO_BE_ECHOED, \
+    'unexpected process command-line image: ' + process.cmdline_image()
+assert process.output() == os.path.join(GNAThub.logs(), 'echo.log'), \
+    '%s: unexpected process log file' % process.output()
+
+assert os.path.isfile(process.output()), '%s: no such file' % process.output()
+
+with open(process.output(), 'r') as logs:
+    content = logs.read().strip()
+    assert content == TO_BE_ECHOED, \
+        'unexpected process output: ' + content
