@@ -182,8 +182,8 @@ class Testsuite(object):
     def collect_result(self, name, process, job_info):
         """Custom collect_result function."""
 
-        display_name = os.path.relpath(
-            os.path.join(BASEDIR, name), os.path.join(BASEDIR, 'tests'))
+        display_name = os.path.relpath(os.path.join(BASEDIR, name), BASEDIR)
+        display_name = display_name.replace(os.path.sep, '.')
 
         def resource(ext):
             """Returns the path to the testcase resource with the given ext."""
