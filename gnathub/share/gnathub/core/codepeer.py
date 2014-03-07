@@ -199,7 +199,6 @@ class CodePeer(GNAThub.Plugin):
                 self.exec_status = GNAThub.EXEC_FAIL
                 return
 
-            self.session.commit()
             self.exec_status = GNAThub.EXEC_SUCCESS
 
     def __add_message(self, src, line, column, rule_id, msg, category):
@@ -224,5 +223,4 @@ class CodePeer(GNAThub.Plugin):
         cat = GNAThub.Category(category)
         message = GNAThub.Message(rule, msg, cat)
         resource = GNAThub.Resource(src, db.FILE_KIND)
-        resource.add_message(message, line=int(line), col_begin=int(col_begin))
-
+        resource.add_message(message, line=int(line), col_begin=int(column))
