@@ -22,7 +22,7 @@ include Makefile.conf
 all: gnathub-bin gnathub-pylib gnathub-plugins
 
 gnathub-bin: gnathub.gpr src/gnathub/gnathub-version.ads
-	BUILD_DIR="$(BUILD_DIR)" gprbuild -p -P $<
+	BUILD_DIR="$(BUILD_DIR)" gprbuild -q -p -P $<
 
 gnathub.gpr: gnathub.gpr.in
 	cat $< |sed -e 's/@VERSION@/$(VERSION)/g' > $@
@@ -35,7 +35,7 @@ src/gnathub/gnathub-version.ads: src/gnathub/gnathub-version.ads.in
 		> $@
 
 gnathub-pylib: python-env
-	$(PYTHON) src/lib/setup.py build -b "$(BUILD_DIR)" install
+	$(PYTHON) src/lib/setup.py -q build -b "$(BUILD_DIR)" install
 
 gnathub-plugins:
 	(cd share/gnathub && tar cf - core extras sql) | \
