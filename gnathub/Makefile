@@ -67,7 +67,7 @@ check-style:
 		--output-format=parseable \
 		--reports=n GNAThub share/gnathub/{core,extras,sql}/*.py
 
-tests:
+tests: all
 	@python t/testsuite.py --colorize --with-diff
 
 tests-coverage:
