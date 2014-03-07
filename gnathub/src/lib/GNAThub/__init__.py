@@ -388,7 +388,7 @@ class Run(object):
     """Class to handle processes.
     """
 
-    def __init__(self, name, argv, env=None, workdir=None):
+    def __init__(self, name, argv, env=None, workdir=None, out=None):
         """Instance constructor.
 
         Spawnes the process via subprocess.Popen and returns the process exit
@@ -405,6 +405,8 @@ class Run(object):
             :param workdir: the directory in which to execute the process. If
                 None, use the current directory.
             :type workdir: a string.
+            :param out: the log file to use.
+            :type out: a path to a file.
 
         RETURNS
             :rtype: a number
@@ -413,6 +415,7 @@ class Run(object):
         self.name = name
         self.argv = argv
         self.status = None
+        self.out = out
 
         Log.debug('Run: cd %s; %s' % (
             workdir if workdir is not None else os.getcwd(),
@@ -490,7 +493,7 @@ class Run(object):
             :rtype: a string
         """
 
-        return os.path.join(logs(), self.name + '.log')
+        return self.out or os.path.join(logs(), self.name + '.log')
 
 
 # A chain of plugin in the order in which they are registered through the
