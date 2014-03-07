@@ -1,19 +1,8 @@
-# for idempotence
-
-gprclean -q -Pdefault
-
 # build
-gprbuild -q -Pdefault
+gprbuild -q -p -Pdefault
 
-cd obj
-
-# run the executable
-./hello
-
-# compute converage information
-gcov hello f 2>&1 > /dev/null
-
-cd ..
+# run the executable & compute coverage information
+(cd obj && ./hello && gcov hello f > /dev/null 2>&1)
 
 # launch gnathub
 gnathub -q -Pdefault
