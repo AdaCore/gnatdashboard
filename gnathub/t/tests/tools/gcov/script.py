@@ -12,15 +12,22 @@ for r in GNAThub.Rule.list():
 
 # Traverse all resources looking for files
 
+files = []
+
 for r in GNAThub.Resource.list():
     if r.kind == db.FILE_KIND:
-        print "[%s]" % os.path.basename(r.name)
+        files.append(r)
 
-        # list all the messages in this file
+files.sort(key=lambda x: x.name)
 
-        for m in r.list_messages():
-            if not m.line:
-                print "    %s = %s " % (rules[m.rule_id], m.data)
-            else:
-                print "    line %s:\t%s = %s" % (
-                    m.line, rules[m.rule_id], m.data)
+for r in files:
+    print "[%s]" % os.path.basename(r.name)
+
+    # list all the messages in this file
+
+    for m in r.list_messages():
+        if not m.line:
+            print "    %s = %s " % (rules[m.rule_id], m.data)
+        else:
+            print "    line %s:\t%s = %s" % (
+                m.line, rules[m.rule_id], m.data)
