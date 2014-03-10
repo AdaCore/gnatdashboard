@@ -55,14 +55,18 @@ generate-orm:
 
 python-env: $(PYTHON_HOME)
 
-$(PYTHON_HOME):
-	virtualenv $@
-	$(PY_ACTIVATE) && pip install $(PY_MODULES)
+$(PYTHON_HOME): $(BUILD_DIR)/python-2.7.3.tar.gz
+	$(MKDIR) $(PYTHON_HOME)
+	(cd $(PYTHON_HOME) && tar -xzf $< --strip-components=1)
+	$(PY_ENV) easy_install $(PY_MODULES)
+
+$(BUILD_DIR)/python-2.7.3.tar.gz:
+	scp $(PYTHON_DISTRIB_URL) $@
 
 check-style:
-	$(PY_ACTIVATE) && flake8 src/lib/GNAThub
-	$(PY_ACTIVATE) && flake8 share/gnathub/{core,extras,sql}
-	$(PY_ACTIVATE) && pylint \
+	$(PY_ENV) flake8 src/lib/GNAThub
+	$(PY_ENV) flake8 share/gnathub/{core,extras,sql}
+	$(PY_ENV) pylint \
 		--rcfile=testsuite/etc/pylintrc \
 		--output-format=parseable \
 		--reports=n GNAThub share/gnathub/{core,extras,sql}/*.py
@@ -87,6 +91,7 @@ clean: gnathub.gpr
 
 distclean: clean
 	$(RMDIR) $(BUILD_DIR)
+	$(RMDIR) testsuite/out
 
 package: all
 	$(RMDIR) $(PKG_DIR)
