@@ -65,10 +65,6 @@ else
   PYTHON_BIN_DIR := $(PYTHON_HOME)/bin
 endif
 
-PYTHON_DISTRIB_BASE_URL := ~gnatmail/svn-binaries/python/2.7.3/distrib/$(target)
-PYTHON_DISTRIB_URL      := ssh.eu.adacore.com:$(PYTHON_DISTRIB_BASE_URL)/python-2.7.3-minimal.tar.gz
-
-PY_MODULES := flake8 pylint
 PY_ENV     := PATH="$(PYTHON_BIN_DIR):$(PATH)"; export PATH;
 
 # Useful aliases

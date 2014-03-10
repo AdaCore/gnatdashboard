@@ -17,7 +17,7 @@
 ##                                                                          ##
 ##############################################################################
 
-include Makefile.conf
+include shared.mk
 
 all: gnathub-bin gnathub-pylib gnathub-plugins
 
@@ -55,13 +55,8 @@ generate-orm:
 
 python-env: $(PYTHON_HOME)
 
-$(PYTHON_HOME): $(BUILD_DIR)/python-2.7.3.tar.gz
-	$(MKDIR) $(PYTHON_HOME)
-	(cd $(PYTHON_HOME) && tar -xzf $< --strip-components=1)
-	$(PY_ENV) easy_install $(PY_MODULES)
-
-$(BUILD_DIR)/python-2.7.3.tar.gz:
-	scp $(PYTHON_DISTRIB_URL) $@
+$(PYTHON_HOME):
+	$(MAKE) -f python.mk
 
 check-style:
 	$(PY_ENV) flake8 src/lib/GNAThub
