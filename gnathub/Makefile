@@ -66,10 +66,6 @@ $(BUILD_DIR)/python-2.7.3.tar.gz:
 check-style:
 	$(PY_ENV) flake8 src/lib/GNAThub
 	$(PY_ENV) flake8 share/gnathub/{core,extras,sql}
-	$(PY_ENV) pylint \
-		--rcfile=testsuite/etc/pylintrc \
-		--output-format=parseable \
-		--reports=n GNAThub share/gnathub/{core,extras,sql}/*.py
 
 tests: all
 	@python testsuite/testsuite.py --colorize --with-diff

@@ -25,7 +25,6 @@ This module defines the core components of GNAThub plugin mechanism:
 """
 
 
-
 def root():
     """Returns the path to the GNAThub-specific root directory.
     Usually:

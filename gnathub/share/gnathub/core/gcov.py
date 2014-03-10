@@ -31,6 +31,7 @@ import os
 from GNAThub import Log
 from GNAThub import db
 
+
 class Gcov(GNAThub.Plugin):
     """Gcov plugin for GNAThub.
 
@@ -91,7 +92,8 @@ class Gcov(GNAThub.Plugin):
             return
 
         self.tool = GNAThub.Tool(self.name)
-        self.rule = GNAThub.Rule('coverage', 'coverage', db.METRIC_KIND, self.tool)
+        self.rule = GNAThub.Rule('coverage', 'coverage', db.METRIC_KIND,
+                                 self.tool)
 
         total = len(files)
 
@@ -119,7 +121,8 @@ class Gcov(GNAThub.Plugin):
                                     hits = '0'
 
                                 line_id = line_infos[1].strip()
-                                self.__add_line_hits(resource, int(line_id), hits)
+                                self.__add_line_hits(resource, int(line_id),
+                                                     hits)
 
                 Log.progress(index, total, new_line=(index == total))
 
