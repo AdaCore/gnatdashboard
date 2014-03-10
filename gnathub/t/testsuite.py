@@ -217,7 +217,8 @@ class Testsuite(object):
 
         # Store the testcase result in the results file
         echo_to_file(self.main.options.results_file,
-                     '%(name)s:%(status)s: %(message)s\n' % result)
+                     '%(name)s:%(status)s: %(message)s\n' % result,
+                     append=True)
 
         # Display the testcase result
         self.log(
