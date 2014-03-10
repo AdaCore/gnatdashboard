@@ -134,7 +134,7 @@ class Testsuite(object):
 
         self.formatter = get_formatter_by_name(
             'terminal256' if self.main.options.colorize else 'null',
-            style=GNAThubOutputStyle)
+            style=GNAThubOutputStyle, encoding='utf-8')
 
         self.testcases = Testsuite.compute_testcases_list(self.main.args)
         self.testcases = sorted(self.testcases, key=lambda s: s.lower())
