@@ -18,15 +18,16 @@ def relpath(path):
 
 
 assert os.path.isdir(GNAThub.root()), '%s: no such directory' % GNAThub.root()
-assert relpath(GNAThub.root()) == 'obj/gnathub', 'unexpected value'
+assert relpath(GNAThub.root()) == os.path.join('obj', 'gnathub'), 'unexpected value'
 
 assert os.path.isdir(GNAThub.logs()), '%s: no such directory' % GNAThub.logs()
-assert relpath(GNAThub.logs()) == 'obj/gnathub/logs', 'unexpected value'
+assert relpath(GNAThub.logs()) == os.path.join('obj', 'gnathub', 'logs'), \
+    'unexpected value'
 
 assert os.path.isfile(GNAThub.database()), \
     '%s: no such file' % GNAThub.database()
-assert relpath(GNAThub.database()) == 'obj/gnathub/gnathub.db', \
-    'unexpected value'
+assert relpath(GNAThub.database()) == \
+    os.path.join('obj', 'gnathub', 'gnathub.db'), 'unexpected value'
 
 # Default for jobs number is 0
 assert GNAThub.jobs() == 0
