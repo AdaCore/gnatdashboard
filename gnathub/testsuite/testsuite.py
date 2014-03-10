@@ -1,8 +1,8 @@
-#!/usr/bin/env python
-"""Run the testsuite
+#! /usr/bin/env python
 
-This module assumes that lib/python has been added to PYTHONPATH.
-"""
+"""Run the testsuite.
+
+This module implements the GNATpython testsuite driver."""
 
 import argparse
 import os
@@ -27,6 +27,8 @@ from pygments.style import Style
 from pygments.styles import get_style_by_name
 
 from pygments.token import Token as Token
+
+from support import TestEncoder
 
 
 # Directory from where this script is invoked
@@ -119,13 +121,17 @@ class Testsuite(object):
             the list of testcases
         """
 
-        if args:
-            return [os.path.relpath(os.path.join(ORIGIN, test), BASEDIR)
-                    for test in args]
+        tests = None
 
-        return [os.path.relpath(os.path.dirname(p), BASEDIR)
-                for p in Testsuite.find_testcases(
-                    os.path.join(BASEDIR, 'tests'))]
+        if args:
+            tests = [os.path.relpath(os.path.join(ORIGIN, test), BASEDIR)
+                     for test in args]
+        else:
+            basedir = os.path.join(BASEDIR, 'tests')
+            tests = [os.path.relpath(os.path.dirname(p), BASEDIR)
+                     for p in Testsuite.find_testcases(basedir)]
+
+        return [TestEncoder.encode(path) for path in tests]
 
     def parse_command_line(self):
         """Handle command-line parsing and internal configuration."""
@@ -151,7 +157,7 @@ class Testsuite(object):
 
         self.testcase_runner = generate_run_testcase(
             os.path.join(BASEDIR, 'run-test'),
-            self.discs, self.main.options, use_basename=False)
+            self.discs, self.main.options)
 
         MainLoop(self.testcases,
                  self.testcase_runner,
@@ -182,9 +188,6 @@ class Testsuite(object):
     def collect_result(self, name, process, job_info):
         """Custom collect_result function."""
 
-        display_name = os.path.relpath(os.path.join(BASEDIR, name), BASEDIR)
-        display_name = display_name.replace(os.path.sep, '.')
-
         def resource(ext):
             """Returns the path to the testcase resource with the given ext."""
             return os.path.join(
@@ -205,7 +208,7 @@ class Testsuite(object):
             duration = 0
 
         result = {
-            'name': display_name,
+            'name': name,
             'status': status,
             'message': message,
             'duration': duration

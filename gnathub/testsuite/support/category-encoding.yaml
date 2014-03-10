@@ -1,0 +1,5 @@
+'tests':            'gnathub.others'
+'tests/api-python': 'gnathub.python.api'
+'tests/switches':   'gnathub.switches'
+'tests/tools':      'gnathub.plugins'
+'tests/validation': 'gnathub.validation'

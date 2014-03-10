@@ -8,12 +8,14 @@ Usage: run-test [options] testcase-directory
 # pylint: disable=C0103
 # Disable "Invalid module name" (this is a script, not a module)
 
+import os
+import sys
+
 from gnatpython.env import Env
 from gnatpython.main import Main
 from gnatpython.testdriver import TestRunner, add_run_test_options
 
-import os
-import sys
+from support import TestEncoder
 
 
 # Base directory for the testsuite
@@ -35,6 +37,9 @@ class GNAThubTestRunner(TestRunner):
         # Activate tests duration monitoring
         self.opt_results['TIMING'] = 0
         self.opt_results['CMD'] = 'test.sh'
+
+        # Decode the test name
+        self.test = TestEncoder.decode(self.test)
 
 
 def run_single_testcase():
@@ -64,8 +69,7 @@ def run_single_testcase():
         driver.options.enable_cleanup,
         driver.options.restricted_discs,
         len(driver.args) > 1 and driver.args[1:] or None,
-        driver.options.failed_only,
-        use_basename=False)
+        driver.options.failed_only)
 
     runner.execute()
 

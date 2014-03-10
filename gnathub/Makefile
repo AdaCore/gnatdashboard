@@ -63,12 +63,12 @@ check-style:
 	$(PY_ACTIVATE) && flake8 src/lib/GNAThub
 	$(PY_ACTIVATE) && flake8 share/gnathub/{core,extras,sql}
 	$(PY_ACTIVATE) && pylint \
-		--rcfile=t/etc/pylintrc \
+		--rcfile=testsuite/etc/pylintrc \
 		--output-format=parseable \
 		--reports=n GNAThub share/gnathub/{core,extras,sql}/*.py
 
 tests: all
-	@python t/testsuite.py --colorize --with-diff
+	@python testsuite/testsuite.py --colorize --with-diff
 
 tests-coverage:
 	BUILD_MODE=Coverage $(MAKE) all tests analyse-gcov
