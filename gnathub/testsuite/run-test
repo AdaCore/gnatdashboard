@@ -45,9 +45,6 @@ class GNAThubTestRunner(TestRunner):
 def run_single_testcase():
     """Run a single testcase."""
 
-    Env().add_path(os.path.normpath(
-        os.path.join(BASEDIR, '..', 'build', 'bin')))
-
     driver = Main()
     add_run_test_options(driver)
 

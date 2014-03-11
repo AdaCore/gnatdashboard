@@ -17,13 +17,13 @@
 ##                                                                          ##
 ##############################################################################
 
-include shared.mk
+include config.mk
 
 all: gnathub-bin gnathub-pylib gnathub-plugins
 
 gnathub-bin: gnathub.gpr src/gnathub/gnathub-version.ads
 	@echo ":: Building GNAThub driver"
-	BUILD_DIR="$(BUILD_DIR)" gprbuild -p -P $<
+	gprbuild -p -P $< -XBUILD_DIR="$(BUILD_DIR)"
 
 gnathub.gpr: gnathub.gpr.in
 	cat $< |sed -e 's/@VERSION@/$(VERSION)/g' > $@
@@ -59,7 +59,11 @@ generate-orm:
 python-env: $(PYTHON_HOME)
 
 $(PYTHON_HOME):
-	$(MAKE) -f python.mk
+	@echo "Error: no Python distribution installed at:"
+	@echo ""
+	@echo "  $(PYTHON_HOME)"
+	@echo ""
+	@echo "Please refer to the README file for the build procedure"
 
 check-style:
 	@echo ":: Style-checking GNAThub's Python API"

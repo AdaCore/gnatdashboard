@@ -109,7 +109,7 @@ package body GNAThub.Python is
    is
       Log_Class     : constant Class_Type := Repository.New_Class ("Log");
       Project_Class : constant Class_Type :=
-        Repository.New_Class ("Project");
+                        Repository.New_Class ("Project");
 
    begin
       --  GNAThub module
@@ -224,10 +224,10 @@ package body GNAThub.Python is
              (GNATCOLL.Scripts.Lookup_Scripting_Language
                 (Repository, Python_Name));
 
-         Log.Debug ("Registering GNAThub core modules");
-
+         Log.Debug ("Registering GNAThub::Core modules");
          Register_Core_Modules;
 
+         Log.Debug ("Registering GNAThub::Database::API module");
          Register_Database_Interaction_API (Repository);
       end if;
    end Initialize;

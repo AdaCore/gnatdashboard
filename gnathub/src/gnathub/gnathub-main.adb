@@ -132,7 +132,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
       declare
          Python_Path : Unbounded_String :=
-                         To_Unbounded_String ("sys.path = [");
+                         To_Unbounded_String ("sys.path.extend([");
       begin
          for Dir of Python_Path_List loop
             Log.Debug ("  - " & Dir.Display_Full_Name);
@@ -140,13 +140,13 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
               To_Unbounded_String ("r'" & Dir.Display_Full_Name & "',");
          end loop;
 
-         Python_Path := Python_Path & To_Unbounded_String ("] + sys.path");
+         Python_Path := Python_Path & To_Unbounded_String ("])");
 
          GNAThub.Python.Execute (To_String (Python_Path), Had_Errors);
       end;
 
       if Had_Errors then
-         Log.Warn ("Could not set the search path for python");
+         Log.Warn ("Failed to update sys.path");
       end if;
 
       --  Execute the python script that runs all the plugins
@@ -192,7 +192,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
             (GNAThub.Project.Object_Dir, Database_File.Full_Name),
          Remove_Previous_Database => True);
 
-      Log.Info ("gnathub.sql.save(" & GNAThub.Configuration.Project & ")");
+      Log.Info ("gnathub.sql.store " & GNAThub.Configuration.Project);
       GNAThub.Project.Save_Project_Tree;
    end Create_Or_Override_Database;
 
@@ -211,11 +211,19 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    end Finalize_Application;
 
 begin
+   --  Load the traces' configuration file
    GNATCOLL.Traces.Parse_Config_File;
 
-   GNAThub.Python.Initialize;
-   GNAThub.Project.Initialize;
+   --  Configure GNAThub (through the command line). In particular, set the
+   --  output verbosity (with the switches --quiet or --verbose) after the
+   --  trace mecanism initialization.
    GNAThub.Configuration.Initialize;
+
+   --  Configure the Python VM that will run the plug-ins and user scripts
+   GNAThub.Python.Initialize;
+
+   --  Load the user's project file and store the configuration in memory
+   GNAThub.Project.Initialize;
 
    Log.Debug ("Loading project: " & GNAThub.Configuration.Project);
    GNAThub.Project.Load (GNAThub.Configuration.Project);
@@ -254,7 +262,16 @@ exception
 
    when E : Command_Line_Error =>
       Log.Fatal (Exception_Message (E));
-      GNAT.Command_Line.Try_Help;
+      --  NOTE: For the moment, GNAT.Command_Line.Try_Help is not available in
+      --  stable-gnat (only in nightlies). To avoid the dependency to the daily
+      --  gnat build, we currently manually display the Try_Help message.
+      --
+      --  This will need to be updated when stable-gnat's version is bumped and
+      --  it provides the required symbol.
+      --
+      --  ??? GNAT.Command_Line.Try_Help;
+
+      Log.Info ("try `gnathub --help` for more information.");
       Finalize_Application;
 
       return Ada.Command_Line.Failure;

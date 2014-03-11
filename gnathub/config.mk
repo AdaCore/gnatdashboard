@@ -65,7 +65,7 @@ else
   PYTHON_BIN_DIR := $(PYTHON_HOME)/bin
 endif
 
-PY_ENV     := PATH="$(PYTHON_BIN_DIR):$(PATH)"; export PATH;
+PY_ENV := PATH="$(PYTHON_BIN_DIR):$(PATH)"; export PATH;
 
 # Useful aliases
 
