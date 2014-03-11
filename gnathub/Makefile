@@ -22,7 +22,8 @@ include shared.mk
 all: gnathub-bin gnathub-pylib gnathub-plugins
 
 gnathub-bin: gnathub.gpr src/gnathub/gnathub-version.ads
-	BUILD_DIR="$(BUILD_DIR)" gprbuild -q -p -P $<
+	@echo ":: Building GNAThub driver"
+	BUILD_DIR="$(BUILD_DIR)" gprbuild -p -P $<
 
 gnathub.gpr: gnathub.gpr.in
 	cat $< |sed -e 's/@VERSION@/$(VERSION)/g' > $@
@@ -35,20 +36,22 @@ src/gnathub/gnathub-version.ads: src/gnathub/gnathub-version.ads.in
 		> $@
 
 gnathub-pylib: python-env
+	@echo ":: Building GNAThub's Python API"
 	$(PYTHON) src/lib/setup.py -q build -b "$(BUILD_DIR)" install
 
 gnathub-plugins:
+	@echo ":: Deploying GNAThub's core plug-ins"
 	(cd share/gnathub && tar cf - core extras sql) | \
 		(cd $(BUILD_DIR)/share/gnathub && tar xf -)
 
 createdb:
-	# Create the database from the schema
+	@echo ":: Generating the GNAThub's database"
 	$(MKDIR) src/orm-gen
 	cd src/orm-gen && gnatcoll_db2ada -dbtype=sqlite -dbname=gnathub.db \
 		-dbmodel=$(TOP)/share/gnathub/sql/db.model -createdb
 
 generate-orm:
-	# Generate the Ada API
+	@echo ":: Generating the GNAThub's database API"
 	$(MKDIR) src/orm-gen
 	cd src/orm-gen && gnatcoll_db2ada -api=Database -orm=ORM \
 		-dbmodel=$(TOP)/share/gnathub/sql/db.model
@@ -59,11 +62,13 @@ $(PYTHON_HOME):
 	$(MAKE) -f python.mk
 
 check-style:
+	@echo ":: Style-checking GNAThub's Python API"
 	$(PY_ENV) flake8 src/lib/GNAThub
 	$(PY_ENV) flake8 share/gnathub/{core,extras,sql}
 
 tests: all
-	@python testsuite/testsuite.py --colorize --with-diff
+	@echo ":: Running the GNAThub testsuite"
+	$(PY_ENV) testsuite/testsuite.py --colorize --with-diff
 
 tests-coverage:
 	BUILD_MODE=Coverage $(MAKE) all tests analyse-gcov
