@@ -15,7 +15,7 @@ is
    end Linker;
 
    package dashboard is
-      for Plugin_Off use
+      for Plugins_Off use
         ("gnatcheck", "gnatprove", "codepeer", "sonarrunner");
    end dashboard;
 

@@ -1,0 +1,22 @@
+.. Custom macro definitions
+
+.. |Product|     replace:: **GNATdashboard**
+.. |Driver|      replace:: **GNAThub**
+
+.. |SQLite|      replace:: **SQLite**
+
+.. |GNAT|         replace:: **GNAT**
+.. |GNATpro|      replace:: **GNAT Pro**
+.. |CodePeer|     replace:: **CodePeer**
+.. |GNATcheck|    replace:: **GNAT Check**
+.. |GNATcoverage| replace:: **GNAT Coverage**
+.. |GNATmetric|   replace:: **GNAT Metric**
+.. |GNATprove|    replace:: **GNAT Prove**
+.. |Gcov|         replace:: **Gcov**
+
+.. |GNATtracker|  replace:: **GNAT Tracker**
+
+.. |SonarQube|    replace:: **SonarQube**
+.. |SonarSource|  replace:: *Sonar Source*
+
+.. |Squoring|     replace:: **Squoring**

@@ -47,11 +47,11 @@ class PluginRunner(object):
     SONARRUNNER_PLUGIN = 'sonarrunner'
 
     def __remove_plugin_to_deactivate(self, plugins):
-        """Deactivate plugins according to attribute Plugin_Off in the project
+        """Deactivate plugins according to attribute Plugins_Off in the project
         file.
         """
 
-        for plugin in GNAThub.Project.property_as_list('Plugin_Off'):
+        for plugin in GNAThub.Project.property_as_list('Plugins_Off'):
             if plugin in plugins:
                 plugins.remove(plugin)
                 Log.debug('Plugin %s is deactivated' % plugin)
@@ -123,7 +123,7 @@ class PluginRunner(object):
         else:
             plugins = GNAThub.Project.property_as_list('Plugins')
 
-            # GPS CLI returns: a empty list if property is not mentionned
+            # Return a empty list if property is not mentionned
             if not plugins:
                 self.__get_plugins_from_dirs(plugins)
             else:

@@ -9,7 +9,7 @@ project default is
    package Dashboard is
       for Project_Key use "Default::Main";
       for Project_Version use "1.0.0b";
-      for Plugin_Off use ("gnatprove", "codepeer");
+      for Plugins_Off use ("gnatprove", "codepeer");
    end Dashboard;
 
 end default;

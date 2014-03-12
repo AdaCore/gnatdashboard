@@ -45,6 +45,6 @@ assert project_version == '1.0.0b', \
     '%s: unexpected property value for Project_Version' % project_version
 
 # GNAThub.Project.property_as_list
-plugins_off = GNAThub.Project.property_as_list('Plugin_Off')
-assert 'codepeer' in plugins_off, 'missing "codepeer" plugin in Plugin_Off'
-assert 'gnatprove' in plugins_off, 'missing "gnatprove" plugin in Plugin_Off'
+plugins_off = GNAThub.Project.property_as_list('Plugins_Off')
+assert 'codepeer' in plugins_off, 'missing "codepeer" plugin in Plugins_Off'
+assert 'gnatprove' in plugins_off, 'missing "gnatprove" plugin in Plugins_Off'

@@ -1,11 +1,17 @@
 # Makefile for Sphinx documentation
 #
 
+include ../config.mk
+
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
+SPHINXBUILD   = PYTHONPATH=$(TOP)/src/lib sphinx-build
+SPHINXAPIDOC  = sphinx-apidoc
 PAPER         =
-BUILDDIR      = build
+BUILDDIR      = $(BUILD_DIR)/docs
+APIDOC        = source/api-doc
+
+PY_API_SOURCES = $(shell find $(TOP)/src/lib/GNAThub -name '*.py')
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -39,7 +45,11 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 
 clean:
+	-rm -rf $(APIDOC)
 	-rm -rf $(BUILDDIR)/*
+
+api-doc: $(PY_API_SOURCES)
+	$(SPHINXAPIDOC) -o $(APIDOC) $(TOP)/src/lib/GNAThub
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

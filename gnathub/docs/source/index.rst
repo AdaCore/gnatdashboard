@@ -1,19 +1,13 @@
-.. GNATdashboard documentation
+.. GNATdashboard Documentation
 
-GNATdashboard User's Manual
-=========================================
+.. include:: defines.hrst
 
-Contents:
+|Product| Documentation
+=======================
 
 .. toctree::
-   :maxdepth: 2
+    :numbered:
+    :maxdepth: 3
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+    user-manual/index
+    api-doc/GNAThub
