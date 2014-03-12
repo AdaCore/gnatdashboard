@@ -24,6 +24,10 @@ all: gnathub-bin gnathub-pylib gnathub-plugins
 gnathub-bin: gnathub.gpr src/gnathub/gnathub-version.ads
 	@echo ":: Building GNAThub driver"
 	gprbuild -p -P $< -XBUILD_DIR="$(BUILD_DIR)"
+ifeq ($(target),x86-windows)
+	$(MKDIR) $(BUILD_DIR)/bin
+	-$(CP) $(PYTHON_HOME)/python27.dll $(BUILD_DIR)/bin/.
+endif
 
 gnathub.gpr: gnathub.gpr.in
 	cat $< |sed -e 's/@VERSION@/$(VERSION)/g' > $@
