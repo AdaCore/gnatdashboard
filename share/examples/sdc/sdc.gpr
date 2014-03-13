@@ -10,23 +10,20 @@ project Sdc is
 
    package Compiler is
       for Default_Switches ("Ada") use
-        ("-O2", "-gnatn", "-gnatwe", "-gnaty", "-gnatp");
+        ("-O2", "-gnatn", "-gnatwe", "-gnaty", "-gnatp",
+         "-ftest-coverage", "-fprofile-arcs");
    end Compiler;
 
    package Binder is
       for Default_Switches ("Ada") use ("-static");
    end Binder;
 
-   package Ide is
-      for Vcs_Kind use "Git";
-   end Ide;
+   package Linker is
+      for Default_Switches ("ada") use ("-fprofile-generate");
+   end Linker;
 
    package Check is
        for Default_Switches ("Ada") use ("-rules", "-from=gnatcheck.rules");
    end Check;
-
-    package GNAThub is
-        for Project_Name use "Poney";
-    end GNAThub;
 
 end Sdc;

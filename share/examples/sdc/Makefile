@@ -1,18 +1,20 @@
-sdc:
+all: build run gcov gnathub gnathub_report
+
+build:
 	gprbuild -p -P sdc
 
-metric:
-	gnatmetric -P sdc
+run: build
+	obj/sdc < input.txt
 
-check:
-	-gnatcheck -P sdc --show-rule
+gcov: run
+	cd obj && \
+	gcov input instructions screen_output sdc stack tokens values-operations values
 
-prove:
-	gnatprove -P sdc
+gnathub:
+	gnathub -Psdc
 
-codepeer:
-	codepeer -P sdc -update-scil -level 1
-	odepeer_msg_reader -csv obj/codepeer/sdc.output
+gnathub_report: gnathub
+	gnathub -Psdc --exec simple_dump.py
 
 clean:
-	gprclean -P sdc
+	gprclean -q -P sdc
