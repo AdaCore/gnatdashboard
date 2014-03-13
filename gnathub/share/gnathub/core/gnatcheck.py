@@ -179,7 +179,8 @@ class GNATcheck(GNAThub.Plugin):
         # Extract each component from the message:
         #       ('input.adb', '3', '19', 'use clause for package',
         #        'USE_PACKAGE_Clauses')
-        src = regex.group('file')
+        base = regex.group('file')
+        src = GNAThub.Project.source_file(base)
         line = regex.group('line')
         column = regex.group('column')
         message = regex.group('message')
