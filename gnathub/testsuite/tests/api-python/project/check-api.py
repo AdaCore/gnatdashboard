@@ -44,7 +44,19 @@ project_version = GNAThub.Project.property_as_string('Project_Version')
 assert project_version == '1.0.0b', \
     '%s: unexpected property value for Project_Version' % project_version
 
+encoding = GNAThub.Project.property_as_string('Source_Encoding')
+assert encoding == 'My_Encoding', \
+    '%s: unexpected property value for Encoding' % project_version
+
 # GNAThub.Project.property_as_list
+plugins = GNAThub.Project.property_as_list('Plugins')
+assert 'codepeer' in plugins, 'missing "codepeer" plugin in Plugins'
+assert 'sonarconfig' in plugins, 'missing "sonarconfig" plugin in Plugins'
+
+specific = GNAThub.Project.property_as_list('Specific_Plugins')
+assert 'foo' in specific, 'missing "foo" plugin in Specific_Plugins'
+assert 'bar' in specific, 'missing "bar" plugin in Specific_Plugins'
+
 plugins_off = GNAThub.Project.property_as_list('Plugins_Off')
 assert 'codepeer' in plugins_off, 'missing "codepeer" plugin in Plugins_Off'
 assert 'gnatprove' in plugins_off, 'missing "gnatprove" plugin in Plugins_Off'
