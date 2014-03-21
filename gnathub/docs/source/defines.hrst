@@ -1,7 +1,7 @@
 .. Custom macro definitions
 
-.. |Product|     replace:: **GNATdashboard**
-.. |Driver|      replace:: **GNAThub**
+.. |GNATdashboard|     replace:: **GNATdashboard**
+.. |GNAThub|      replace:: **GNAThub**
 
 .. |SQLite|      replace:: **SQLite**
 
