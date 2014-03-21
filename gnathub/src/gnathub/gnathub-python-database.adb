@@ -669,6 +669,32 @@ package body GNAThub.Python.Database is
             end loop;
          end;
 
+      elsif Command = "get" then
+         declare
+            Name : constant String := Nth_Arg (Data, 1);
+            Q : SQL_Query;
+            R : Forward_Cursor;
+         begin
+            Q := SQL_Select
+              (To_List ((0 => +D.Resources.Id,
+                         1 => +D.Resources.Name,
+                         2 => +D.Resources.Kind)),
+               From  => D.Resources,
+               Where => D.Resources.Name = Name);
+            R.Fetch (DB, Q);
+
+            while R.Has_Row loop
+               Resource_Inst := New_Instance
+                 (Get_Script (Data), Resource_Class);
+               Set_Resource_Fields
+                 (Resource_Inst,
+                  R.Integer_Value (0), R.Value (1), R.Integer_Value (2));
+               Set_Return_Value (Data, Resource_Inst);
+
+               R.Next;
+            end loop;
+         end;
+
       elsif Command = "add_message" then
          Name_Parameters
            (Data,
@@ -891,6 +917,10 @@ package body GNAThub.Python.Database is
       Repository.Register_Command
         (Constructor_Method, 2, 2,
          Resource_Command_Handler'Access, Resource_Class, False);
+
+      Repository.Register_Command
+        ("get", 1, 1,
+         Resource_Command_Handler'Access, Resource_Class, True);
 
       Repository.Register_Command
         ("list", 0, 0,

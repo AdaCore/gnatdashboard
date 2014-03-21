@@ -190,5 +190,7 @@ class GNATprove(GNAThub.Plugin):
         rule = GNAThub.Rule(rule_id, rule_id, db.RULE_KIND, self.tool)
         message = GNAThub.Message(rule, msg)
 
-        resource = GNAThub.Resource(src, db.FILE_KIND)
-        resource.add_message(message, int(line), col_begin=int(col_begin))
+        resource = GNAThub.Resource.get(src)
+
+        if resource:
+            resource.add_message(message, int(line), col_begin=int(col_begin))

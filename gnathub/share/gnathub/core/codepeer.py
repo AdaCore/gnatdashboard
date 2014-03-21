@@ -222,5 +222,9 @@ class CodePeer(GNAThub.Plugin):
         rule = GNAThub.Rule(rule_id, rule_id, db.RULE_KIND, self.tool)
         cat = GNAThub.Category(category)
         message = GNAThub.Message(rule, msg, cat)
-        resource = GNAThub.Resource(src, db.FILE_KIND)
-        resource.add_message(message, line=int(line), col_begin=int(column))
+        resource = GNAThub.Resource.get(src)
+
+        if resource:
+            resource.add_message(
+                message,
+                line=int(line), col_begin=int(column))

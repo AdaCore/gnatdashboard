@@ -103,7 +103,7 @@ class Gcov(GNAThub.Plugin):
                 base, _ = os.path.splitext(os.path.basename(filename))
                 src = GNAThub.Project.source_file(base)
 
-                resource = GNAThub.Resource(src, db.FILE_KIND)
+                resource = GNAThub.Resource.get(src)
 
                 if resource:
                     with open(filename, 'r') as gcov_file:

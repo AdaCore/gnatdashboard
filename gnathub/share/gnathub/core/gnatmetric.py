@@ -122,8 +122,7 @@ class GNATmetric(GNAThub.Plugin):
             total = len(files)
 
             for index, file_node in enumerate(files, start=1):
-                resource = GNAThub.Resource(file_node.attrib.get('name'),
-                                            db.FILE_KIND)
+                resource = GNAThub.Resource.get(file_node.attrib.get('name'))
 
                 # Save file level metrics
                 if resource:
