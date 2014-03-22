@@ -41,7 +41,6 @@ public class AdaDao {
             + "AND dir.id = tree_dir.child_id  AND prj.id = tree_dir.parent_id";
 
     public List<AdaFile> selectAllResources() {
-
         return JDBCUtils.query(BASIC_RESOURCE_QUERY, resourceMapper);
     }
 

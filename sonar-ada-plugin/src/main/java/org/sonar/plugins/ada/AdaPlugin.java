@@ -24,7 +24,6 @@ import org.sonar.plugins.ada.gnatmetric.AdaGnatMetricSensor;
 import org.sonar.plugins.ada.gnatmetric.GnatMetrics;
 import org.sonar.plugins.ada.gnatprove.GNATproveRuleRepository;
 import org.sonar.plugins.ada.persistence.JDBCUtils;
-import org.sonar.plugins.ada.ui.gwt.GnatMetricViewerDefinition;
 import org.sonar.plugins.ada.ui.rubyWidget.CodePeerViolationsRubyWidget;
 import org.sonar.plugins.ada.ui.rubyWidget.GnatCheckViolationsRubyWidget;
 
@@ -72,7 +71,6 @@ public final class AdaPlugin extends SonarPlugin {
 
         // GNATmetric
         l.add(AdaGnatMetricSensor.class);
-        l.add(GnatMetricViewerDefinition.class);
         l.add(GnatMetrics.class);
 
         // Gcov

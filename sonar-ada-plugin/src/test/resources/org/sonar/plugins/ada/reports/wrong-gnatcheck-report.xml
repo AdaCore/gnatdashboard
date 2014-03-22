@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-  <!--Gnatcheck rules violation report-->
-   directory="src" file="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb" id="USE_PACKAGE_Clauses" line="3" msg="use clause for package" project="Hello"/>
-  <error directory="src" file="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb" id="Anonymous_Subtypes" line="8" msg="anonymous subtype" project="Hello"/>
-  <error directory="src" file="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb" id="Anonymous_Subtypes" line="10" msg="anonymous subtype" project="Hello"/>
-  <errors directory="src" file="/Users/kiwi/projects/qualimetrics/share/examples/sdc/common/input.adb" id="Anonymous_Subtypes" msg="anonymous subtype" project="Hello"/>
-
