@@ -200,7 +200,7 @@ class Project(object):
         pass    # Implemented in Ada
 
     @staticmethod
-    def sources():
+    def source_dirs():
         """Returns the list of source directories.
 
         RETURNS

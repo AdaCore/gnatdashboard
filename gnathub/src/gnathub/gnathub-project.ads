@@ -67,6 +67,9 @@ package GNAThub.Project is
      with Pre => Initialized and then Loaded;
    --  Return the object directory file
 
+   function Source_Dirs return File_Array;
+   --  Return the list of source directories
+
    function Property_As_String (Property : String) return String
      with Pre => Initialized and then Loaded;
    --  Return the given property as a string. Return the empty string if the

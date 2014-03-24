@@ -42,7 +42,7 @@ class _SonarConfiguration(object):
 
     CONFIG = {'sonar.language': ('ada', None),
               'sonar.sourceEncoding': ('UTF-8', 'Source_Encoding'),
-              'sonar.sources': ('.', None),
+              'sonar.sources': (','.join(GNAThub.Project.source_dirs()), None),
               'sonar.projectVersion': ('1.0-SNAPSHOT', 'Project_Version'),
               'sonar.projectName': (GNAThub.Project.name(), 'Project_Name'),
               'sonar.projectKey': ('%s::Project' % GNAThub.Project.name(),

@@ -30,6 +30,14 @@ obj = GNAThub.Project.object_dir()
 assert relpath(obj) == 'obj', '%s: unexpected project path' % obj
 assert os.path.isdir(obj), '%s: no such directory' % obj
 
+source_dirs = GNAThub.Project.source_dirs()
+assert len(source_dirs) == 2, \
+    'unexpected number of Source Dirs: expected 2, got %d' % len(source_dirs)
+assert relpath(source_dirs[0]) == '.', \
+    '$s: unexpected source dirs, expected "."' % source_dirs[0]
+assert relpath(source_dirs[1]) == 'src', \
+    '$s: unexpected source dirs, expected "src"' % source_dirs[1]
+
 # GNAThub.Project.source_file
 source = GNAThub.Project.source_file('hello.adb')
 assert relpath(source) == 'hello.adb', '%s: unexpected source file' % source

@@ -53,6 +53,7 @@ package body GNAThub.Python is
    Project_Path_Method               : constant String := "path";
    Project_Object_Dir_Method         : constant String := "object_dir";
    Project_Source_File_Method        : constant String := "source_file";
+   Project_Source_Dirs_Method        : constant String := "source_dirs";
    Project_Property_As_String_Method : constant String := "property_as_string";
    Project_Property_As_List_Method   : constant String := "property_as_list";
 
@@ -168,6 +169,13 @@ package body GNAThub.Python is
       Repository.Register_Command
         (Command       => Project_Source_File_Method,
          Params        => (1 .. 1 => Param ("name")),
+         Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Source_Dirs_Method,
+         Params        => No_Params,
          Handler       => Project_Class_Accessors_Handler'Access,
          Class         => Project_Class,
          Static_Method => True);
@@ -294,7 +302,9 @@ package body GNAThub.Python is
 
    procedure Project_Class_Accessors_Handler
      (Data    : in out Callback_Data'Class;
-      Command : String) is
+      Command : String)
+   is
+      use GNATCOLL.VFS;
    begin
       if Command = Project_Name_Method then
          Set_Return_Value (Data, GNAThub.Project.Name);
@@ -311,6 +321,17 @@ package body GNAThub.Python is
          begin
             Set_Return_Value
               (Data, GNAThub.Project.File (Name).Display_Full_Name);
+         end;
+
+      elsif Command = Project_Source_Dirs_Method then
+         Set_Return_Value_As_List (Data);
+
+         declare
+            Source_Dirs : File_Array := GNAThub.Project.Source_Dirs;
+         begin
+            for Dir of Source_Dirs loop
+               Set_Return_Value (Data, Dir.Display_Full_Name);
+            end loop;
          end;
 
       else

@@ -94,6 +94,15 @@ package body GNAThub.Project is
       return Project_Tree.Root_Project.Object_Dir;
    end Object_Dir;
 
+   -----------------
+   -- Source_Dirs --
+   -----------------
+
+   function Source_Dirs return File_Array is
+   begin
+      return Project_Tree.Root_Project.Source_Dirs (Recursive => True);
+   end Source_Dirs;
+
    ----------
    -- Path --
    ----------
