@@ -40,13 +40,13 @@ public final class AdaUtils {
                             return (Metric) field.get(null);
                         }
                     } catch (IllegalAccessException e) {
-                        throw new SonarException("While saving Codepeer metrics, cannot load metrics from " + CodePeerMetrics.class.getSimpleName(), e);
+                        throw new SonarException("While saving CodePeer metrics, cannot load metrics from " + CodePeerMetrics.class.getSimpleName(), e);
                     }
                 }
             }
             return null;
         } catch (ClassNotFoundException ex) {
-            throw new SonarException("Plugin metric class not found with rule repository key and class name: " + ruleRepoKey + ", " +className, ex);
+            throw new SonarException("Plugin metric class not found with rule repository key and class name: " + ruleRepoKey + ", " + className, ex);
         }
     }
 }
