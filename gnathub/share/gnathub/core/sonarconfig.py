@@ -21,15 +21,13 @@
 
 It exports the SonarConfig Python class which implements the GNAThub.Plugin
 interface. This allows GNAThub's plug-in scanner to automatically find this
-module and load it as part of the GNAThub default excecution.
+module and load it as part of the GNAThub default execution.
 """
 
 import ConfigParser
-
-import GNAThub
-
 import os
 
+import GNAThub
 from GNAThub import Log
 
 # pylint: disable=F0401

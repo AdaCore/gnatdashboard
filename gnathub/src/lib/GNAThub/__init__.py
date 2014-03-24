@@ -117,7 +117,7 @@ class Log(object):
     def __init__(self):
         """Instance constructor."""
 
-        raise Error('GNAThub.Log must not be instanciated')
+        raise Error('GNAThub.Log must not be instantiated')
 
     @staticmethod
     def info(message):
@@ -153,7 +153,7 @@ class Log(object):
 
     @staticmethod
     def progress(current, natural, new_line=False):
-        """Prints a progess message. Activated at default verbosity level.  If
+        """Prints a progress message. Activated at default verbosity level.  If
         new_line is True, then terminate the line with a '\n' character.
         Defaults to False.
         """
@@ -167,7 +167,7 @@ class Project(object):
     def __init__(self):
         """Instance constructor."""
 
-        raise Error('GNAThub.Project must not be instanciated')
+        raise Error('GNAThub.Project must not be instantiated')
 
     @staticmethod
     def name():
@@ -195,6 +195,16 @@ class Project(object):
 
         RETURNS
             :rtype: string
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def sources():
+        """Returns the list of source directories.
+
+        RETURNS
+            :rtype: list of string
         """
 
         pass    # Implemented in Ada
@@ -319,7 +329,7 @@ class Plugin:
     def teardown(self):
         """This method is called after a call to Plugin.execute.
 
-        This is where environment cleanup should be done to ensure a consistant
+        This is where environment cleanup should be done to ensure a consistent
         state for a future execution.
         """
 
@@ -331,7 +341,7 @@ class Plugin:
 
         Can be one of the following:
             GNAThub.NOT_EXECUTED: plugin did not run yet
-            GNAThub.EXEC_FAIL: an error occured during the plugin execution
+            GNAThub.EXEC_FAIL: an error occurred during the plugin execution
             GNAThub.EXEC_SUCCESS: the plugin execution completed successfully
 
         RETURNS
@@ -347,7 +357,7 @@ class Plugin:
 
         Can be one of the following:
             GNAThub.NOT_EXECUTED: plugin did not run yet
-            GNAThub.EXEC_FAIL: an error occured during the plugin execution
+            GNAThub.EXEC_FAIL: an error occurred during the plugin execution
             GNAThub.EXEC_SUCCESS: the plugin execution completed successfully
 
         PARAMETERS
@@ -390,7 +400,7 @@ class Run(object):
     def __init__(self, name, argv, env=None, workdir=None, out=None):
         """Instance constructor.
 
-        Spawnes the process via subprocess.Popen and returns the process exit
+        Spawns the process via subprocess.Popen and returns the process exit
         code.
 
         PARAMETERS
@@ -504,7 +514,7 @@ def register(plugin):
     """Registers a plugin.
 
     A plugin must implement the GNAThub.Plugin Abstract Base Class. All
-    registered plugins are chained for sequencial execution.
+    registered plugins are chained for sequential execution.
 
     PARAMETERS
         :param plugin: The plugin to register.

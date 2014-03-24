@@ -21,9 +21,9 @@
 SonarRunner.
 """
 
-import GNAThub
-
 import os
+
+import GNAThub
 
 
 class SonarQube(object):

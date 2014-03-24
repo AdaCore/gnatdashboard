@@ -21,15 +21,13 @@
 
 It exports the Gcov Python class which implements the GNAThub.Plugin interface.
 This allows GNAThub's plug-in scanner to automatically find this module and
-load it as part of the GNAThub default excecution.
+load it as part of the GNAThub default execution.
 """
-
-import GNAThub
 
 import os
 
-from GNAThub import Log
-from GNAThub import db
+import GNAThub
+from GNAThub import Log, db
 
 
 class Gcov(GNAThub.Plugin):
@@ -43,9 +41,10 @@ class Gcov(GNAThub.Plugin):
     GCOV_SUFFIX = '.gcov'
 
     def __init__(self):
-        """Instance constructor."""
-
         super(Gcov, self).__init__()
+
+        self.tool = None
+        self.rule = None
 
     def display_command_line(self):
         """Inherited."""

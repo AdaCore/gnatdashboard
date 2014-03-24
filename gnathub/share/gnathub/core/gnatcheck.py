@@ -21,10 +21,8 @@
 
 It exports the GNATcheck Python class which implements the GNAThub.Plugin
 interface. This allows GNAThub's plug-in scanner to automatically find this
-module and load it as part of the GNAThub default excecution.
+module and load it as part of the GNAThub default execution.
 """
-
-import GNAThub
 
 import os
 import re
@@ -33,14 +31,14 @@ import re
 # Disable: Unable to import '{}'
 from _gnat import SLOC_PATTERN
 
-from GNAThub import Log
-from GNAThub import db
+import GNAThub
+from GNAThub import Log, db
 
 
 class GNATcheck(GNAThub.Plugin):
     """GNATcheck plugin for GNAThub.
 
-    Configures and executes GNATcheck, then analizes the output.
+    Configures and executes GNATcheck, then analyzes the output.
     """
 
     TOOL_NAME = 'GNATcheck'
@@ -57,10 +55,9 @@ class GNATcheck(GNAThub.Plugin):
     VALID_EXIT_CODES = (0, 1)
 
     def __init__(self):
-        """Instance constructor."""
-
         super(GNATcheck, self).__init__()
 
+        self.tool = None
         self.report = os.path.join(GNAThub.Project.object_dir(), self.REPORT)
 
     def display_command_line(self):
@@ -151,7 +148,7 @@ class GNATcheck(GNAThub.Plugin):
                     Log.progress(index, total, new_line=(index == total))
 
             self.exec_status = GNAThub.EXEC_SUCCESS
-            Log.debug('%s: all objects commited to database' % self.fqn)
+            Log.debug('%s: all objects committed to database' % self.fqn)
 
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAIL
@@ -162,7 +159,7 @@ class GNATcheck(GNAThub.Plugin):
         """Parses a GNATcheck message line and add the message to the current
         database session.
 
-        Retrieves following informations:
+        Retrieves following information:
             - source basename,
             - line in source,
             - rule identification,
@@ -206,5 +203,6 @@ class GNATcheck(GNAThub.Plugin):
         rule = GNAThub.Rule(rule_id, rule_id, db.RULE_KIND, self.tool)
         message = GNAThub.Message(rule, msg)
         resource = GNAThub.Resource.get(src)
+
         if resource:
             resource.add_message(message, int(line), int(col_begin))

@@ -21,10 +21,8 @@
 
 It exports the GNATprove Python class which implements the GNAThub.Plugin
 interface. This allows GNAThub's plug-in scanner to automatically find this
-module and load it as part of the GNAThub default excecution.
+module and load it as part of the GNAThub default execution.
 """
-
-import GNAThub
 
 import re
 
@@ -32,14 +30,14 @@ import re
 # Disable: Unable to import '{}'
 from _gnat import SLOC_PATTERN
 
-from GNAThub import Log
-from GNAThub import db
+import GNAThub
+from GNAThub import Log, db
 
 
 class GNATprove(GNAThub.Plugin):
     """GNATprove plugin for GNAThub.
 
-    Configures and executes GNATprove, then analizes its output.
+    Configures and executes GNATprove, then analyzes its output.
     """
 
     TOOL_NAME = 'GNATprove'
@@ -56,6 +54,7 @@ class GNATprove(GNAThub.Plugin):
 
     def __init__(self):
         super(GNATprove, self).__init__()
+        self.tool = None
 
     def display_command_line(self):
         """Inherited."""
@@ -104,7 +103,7 @@ class GNATprove(GNAThub.Plugin):
 
         Identifies two types of messages with different format:
             - standard messages.
-            - messages for package instanciations.
+            - messages for package instantiations.
 
         Sets the exec_status property according to the success of the
         analysis:
@@ -133,7 +132,7 @@ class GNATprove(GNAThub.Plugin):
     def __parse_line(self, regex):
         """Parses a GNATprove message line and adds it to the database.
 
-        Extracts the following informations:
+        Extracts the following information:
             - source basename,
             - line in source,
             - rule identification,
@@ -193,4 +192,4 @@ class GNATprove(GNAThub.Plugin):
         resource = GNAThub.Resource.get(src)
 
         if resource:
-            resource.add_message(message, int(line), col_begin=int(col_begin))
+            resource.add_message(message, int(line), int(col_begin))

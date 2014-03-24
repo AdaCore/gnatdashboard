@@ -21,15 +21,13 @@
 
 It exports the GNATmetric Python class which implements the GNAThub.Plugin
 interface. This allows GNAThub's plug-in scanner to automatically find this
-module and load it as part of the GNAThub default excecution.
+module and load it as part of the GNAThub default execution.
 """
-
-import GNAThub
 
 import os
 
-from GNAThub import Log
-from GNAThub import db
+import GNAThub
+from GNAThub import Log, db
 
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
@@ -46,10 +44,9 @@ class GNATmetric(GNAThub.Plugin):
     VALID_EXIT_CODES = (0, 1)
 
     def __init__(self):
-        """Instance contsructor."""
-
         super(GNATmetric, self).__init__()
 
+        self.tool = None
         self.report = os.path.join(GNAThub.Project.object_dir(), self.REPORT)
 
     def __cmd_line(self):
@@ -156,7 +153,7 @@ class GNATmetric(GNAThub.Plugin):
 
             self.exec_status = GNAThub.EXEC_SUCCESS
 
-            Log.debug('%s: all objects commited to database' % self.fqn)
+            Log.debug('%s: all objects committed to database' % self.fqn)
 
         except ParseError as ex:
             self.exec_status = GNAThub.EXEC_FAIL

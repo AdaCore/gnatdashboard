@@ -24,11 +24,10 @@
 spawning the main event loop.
 """
 
-import GNAThub
-
 import abc
 import os
 
+import GNAThub
 from GNAThub import Log
 
 
@@ -69,7 +68,7 @@ class PluginRunner(object):
             plugins.append(self.SONARRUNNER_PLUGIN)
 
     def __get_plugins_from_dirs(self, plugins):
-        """Retrieves projet sepecific plugins specified in the project file."""
+        """Retrieves project specific plugins specified in the project file."""
 
         files = os.listdir(GNAThub.core_plugins())
         files.extend(os.listdir(GNAThub.extra_plugins()))
@@ -92,9 +91,9 @@ class PluginRunner(object):
         for plugin in GNAThub.Project.property_as_list('Specific_Plugins'):
             if os.path.exists(plugin):
                 try:
-                    plugin_golbals = {}
-                    execfile(plugin, plugin_golbals)
-                    specific_plugins.append(plugin_golbals)
+                    plugin_globals = {}
+                    execfile(plugin, plugin_globals)
+                    specific_plugins.append(plugin_globals)
                     Log.debug('Load specific plugin file: %s' % plugin)
 
                 except IOError:
@@ -123,7 +122,7 @@ class PluginRunner(object):
         else:
             plugins = GNAThub.Project.property_as_list('Plugins')
 
-            # Return a empty list if property is not mentionned
+            # Return a empty list if property is not mentioned
             if not plugins:
                 self.__get_plugins_from_dirs(plugins)
             else:
@@ -131,7 +130,7 @@ class PluginRunner(object):
 
         plugins = plugins + self.__get_plugin_project_specific()
 
-        # Remove from the list plugin to deactive
+        # Remove from the list plugin to deactivate
         self.__remove_plugin_to_deactivate(plugins)
         self.__move_sonar_to_end(plugins)
 
@@ -175,7 +174,8 @@ class PluginRunner(object):
 
     def __execute_plugin(self, plugin):
         """Call method setup, execute and teardown for a plugin instance.
-           Manage final ouput for the the plugin, if succed or not.
+           Manage final output for the the plugin, whether the execution was
+           successful or not.
 
            Parameter:
                - plugin_instance: instance of the plugin to execute
@@ -194,7 +194,7 @@ class PluginRunner(object):
 
     def run_plugins(self):
         """Fetch all python plugins: core, user, project specific; retrieve the
-           plugin class and instanciate it.
+           plugin class and instantiate it.
            Manage creation and destruction of database session for the plugins.
 
            Parameter:

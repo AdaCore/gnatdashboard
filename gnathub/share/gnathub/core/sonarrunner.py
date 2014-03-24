@@ -21,26 +21,23 @@
 
 It exports the SonarRunner Python class which implements the GNAThub.Plugin
 interface. This allows GNAThub's plug-in scanner to automatically find this
-module and load it as part of the GNAThub default excecution.
+module and load it as part of the GNAThub default execution.
 """
 
-import GNAThub
 import os
 
+import GNAThub
 from GNAThub import Log
 
 from _sonarqube import SonarQube
 
 
 class SonarRunner(GNAThub.Plugin):
-    """GNATmetric plugin for GNAThub.
-    """
+    """GNATmetric plugin for GNAThub."""
 
     TOOL_NAME = 'Sonar Runner'
 
     def __init__(self):
-        """Instance constructor."""
-
         super(SonarRunner, self).__init__()
 
     def setup(self):
@@ -54,8 +51,12 @@ class SonarRunner(GNAThub.Plugin):
     def __cmd_line(self):
         """Returns command line for sonar runner execution."""
 
+        # Enable verbose and debugging output with -e and -X. This is handy for
+        # debugging in case of issue in the SonarRunner step.
+
         return ['sonar-runner',
-                '-Dproject.settings=%s' % SonarQube.configuration()]
+                '-Dproject.settings=%s' % SonarQube.configuration(),
+                '-e', '-X']
 
     def display_command_line(self):
         """Inherited."""

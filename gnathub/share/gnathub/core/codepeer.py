@@ -21,31 +21,29 @@
 
 It exports the CodePeer Python class which implements the GNAThub.Plugin
 interface. This allows GNAThub's plug-in scanner to automatically find this
-module and load it as part of the GNAThub default excecution.
+module and load it as part of the GNAThub default execution.
 """
-
-import GNAThub
 
 import csv
 import os
 
-from GNAThub import Log
-from GNAThub import db
+import GNAThub
+from GNAThub import Log, db
 
 
 class CodePeer(GNAThub.Plugin):
     """CodePeer plugin for GNAThub
 
-    Configures and executes CodePeer, then analizes the output.
+    Configures and executes CodePeer, then analyzes the output.
     """
 
     REPORT = 'codepeer.out'
     TOOL_NAME = 'CodePeer'
 
     def __init__(self):
-        """Instance constructor."""
-
         super(CodePeer, self).__init__()
+
+        self.tool = None
 
         output = '%s.csv' % GNAThub.Project.name().lower()
         self.csv_report = os.path.join(GNAThub.Project.object_dir(),
@@ -225,6 +223,4 @@ class CodePeer(GNAThub.Plugin):
         resource = GNAThub.Resource.get(src)
 
         if resource:
-            resource.add_message(
-                message,
-                line=int(line), col_begin=int(column))
+            resource.add_message(message, int(line), int(column))
