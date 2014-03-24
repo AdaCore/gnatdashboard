@@ -35,7 +35,7 @@ public final class AdaUtils {
                 if (Metric.class.isAssignableFrom(field.getType())) {
                     try {
                         if ((category == null && field.getName().contains(severity)) ||
-                                (category != null &&field.getName().contains(severity) &&
+                                (category != null && field.getName().contains(severity) &&
                                  field.getName().contains(category))) {
                             return (Metric) field.get(null);
                         }
