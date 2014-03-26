@@ -77,11 +77,11 @@ class GNATmetric(GNAThub.Plugin):
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAIL: on any error
+            GNAThub.EXEC_FAILURE: on any error
         """
 
         if exit_code not in GNATmetric.VALID_EXIT_CODES:
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             return
 
         self.__parse_xml_report()
@@ -101,7 +101,8 @@ class GNATmetric(GNAThub.Plugin):
         analysis:
 
             GNAThub.EXEC_SUCCESS: if transaction have been comitted to database
-            GNAThub.EXEC_FAIL: if error happened while parsing the xml report
+            GNAThub.EXEC_FAILURE: if error happened while parsing the xml
+                                  report
         """
 
         Log.info('%s.analyse %s' % (self.fqn, os.path.relpath(self.report)))
@@ -156,12 +157,12 @@ class GNATmetric(GNAThub.Plugin):
             Log.debug('%s: all objects committed to database' % self.fqn)
 
         except ParseError as ex:
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             Log.error('%s: unable to parse XML report' % self.fqn)
             Log.error('%s:%s:%s - :%s' % (ex.filename, ex.lineno, ex.text,
                                           ex.msg))
 
         except IOError as ex:
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             Log.error('%s: unable to parse XML report' % self.fqn)
             Log.error(str(ex))

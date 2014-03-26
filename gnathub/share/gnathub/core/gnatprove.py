@@ -89,11 +89,11 @@ class GNATprove(GNAThub.Plugin):
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAIL: on any error
+            GNAThub.EXEC_FAILURE: on any error
         """
 
         if exit_code != 0:
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             return
 
         self.__parse_output(logfile)
@@ -109,7 +109,7 @@ class GNATprove(GNAThub.Plugin):
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful analysis
-            GNAThub.EXEC_FAIL: on any error
+            GNAThub.EXEC_FAILURE: on any error
         """
 
         self.tool = GNAThub.Tool(self.name)
@@ -125,7 +125,7 @@ class GNATprove(GNAThub.Plugin):
             self.exec_status = GNAThub.EXEC_SUCCESS
 
         except IOError as ex:
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             Log.error('%s: failed to parse output: %s' % (self.fqn, logfile))
             Log.error(str(ex))
 

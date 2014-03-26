@@ -260,7 +260,7 @@ import os
 from abc import ABCMeta, abstractmethod
 from subprocess import Popen, STDOUT
 
-EXEC_FAIL, EXEC_SUCCESS, NOT_EXECUTED = range(3)
+EXEC_SUCCESS, EXEC_FAILURE, NOT_EXECUTED = range(3)
 
 
 class Error(Exception):
@@ -341,7 +341,7 @@ class Plugin:
 
         Can be one of the following:
             GNAThub.NOT_EXECUTED: plugin did not run yet
-            GNAThub.EXEC_FAIL: an error occurred during the plugin execution
+            GNAThub.EXEC_FAILURE: an error occurred during the plugin execution
             GNAThub.EXEC_SUCCESS: the plugin execution completed successfully
 
         RETURNS
@@ -357,7 +357,7 @@ class Plugin:
 
         Can be one of the following:
             GNAThub.NOT_EXECUTED: plugin did not run yet
-            GNAThub.EXEC_FAIL: an error occurred during the plugin execution
+            GNAThub.EXEC_FAILURE: an error occurred during the plugin execution
             GNAThub.EXEC_SUCCESS: the plugin execution completed successfully
 
         PARAMETERS
@@ -365,7 +365,7 @@ class Plugin:
             :type status: a number.
         """
 
-        if status not in (EXEC_FAIL, EXEC_SUCCESS, NOT_EXECUTED):
+        if status not in (EXEC_FAILURE, EXEC_SUCCESS, NOT_EXECUTED):
             raise Error('invalid execution status code')
 
         self._exec_status = status

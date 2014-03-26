@@ -75,7 +75,7 @@ class Gcov(GNAThub.Plugin):
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAIL: on any error
+            GNAThub.EXEC_FAILURE: on any error
         """
 
         # Fetch all files in project object directory and retrieve only
@@ -87,7 +87,7 @@ class Gcov(GNAThub.Plugin):
         # If no .gcov file found, plugin returns on failure
         if not files:
             Log.error('No gcov file found in project root object directory')
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             return
 
         self.tool = GNAThub.Tool(self.name)
@@ -129,7 +129,7 @@ class Gcov(GNAThub.Plugin):
 
         except IOError as ex:
             Log.error('%s: %s' % (self.fqn, str(ex)))
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
 
     def execute(self):
         """Finds the Gcov output files and parses them."""

@@ -115,11 +115,11 @@ class CodePeer(GNAThub.Plugin):
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAIL: on any error
+            GNAThub.EXEC_FAILURE: on any error
         """
 
         if exit_code != 0:
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             return
 
         self.__parse_csv_report()
@@ -131,7 +131,7 @@ class CodePeer(GNAThub.Plugin):
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAIL: on any error
+            GNAThub.EXEC_FAILURE: on any error
         """
 
         Log.info('%s.analyse %s' % (self.fqn,
@@ -143,7 +143,7 @@ class CodePeer(GNAThub.Plugin):
         Log.debug('%s: parsing CSV report: %s' % (self.fqn, self.csv_report))
 
         if not os.path.exists(self.csv_report):
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             Log.error('%s: no report found, aborting.' % self.fqn)
             return
 
@@ -194,7 +194,7 @@ class CodePeer(GNAThub.Plugin):
                 Log.error('%s: report analysis failed.' % self.fqn)
                 Log.error('%s: file %s, line %d: %s' % (self.fqn, report,
                                                         total, ex))
-                self.exec_status = GNAThub.EXEC_FAIL
+                self.exec_status = GNAThub.EXEC_FAILURE
                 return
 
             self.exec_status = GNAThub.EXEC_SUCCESS

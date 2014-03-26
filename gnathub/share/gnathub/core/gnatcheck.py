@@ -96,11 +96,11 @@ class GNATcheck(GNAThub.Plugin):
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAIL: on any error
+            GNAThub.EXEC_FAILURE: on any error
         """
 
         if exit_code not in GNATcheck.VALID_EXIT_CODES:
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             return
 
         self.__parse_report()
@@ -112,7 +112,7 @@ class GNATcheck(GNAThub.Plugin):
         analysis:
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAIL: on any error
+            GNAThub.EXEC_FAILURE: on any error
 
         Identify 2 type of messages with different format:
             - basic message
@@ -127,7 +127,7 @@ class GNATcheck(GNAThub.Plugin):
         Log.debug('%s: parsing report: %s' % (self.fqn, self.report))
 
         if not os.path.exists(self.report):
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             Log.error('%s: no report found, aborting.' % self.fqn)
             return
 
@@ -151,7 +151,7 @@ class GNATcheck(GNAThub.Plugin):
             Log.debug('%s: all objects committed to database' % self.fqn)
 
         except IOError as ex:
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             Log.error('%s: unable to parse report' % self.fqn)
             Log.error(str(ex))
 

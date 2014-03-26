@@ -137,5 +137,5 @@ class SonarConfig(GNAThub.Plugin):
             self.exec_status = GNAThub.EXEC_SUCCESS
 
         except IOError as ex:
-            self.exec_status = GNAThub.EXEC_FAIL
+            self.exec_status = GNAThub.EXEC_FAILURE
             Log.fatal(str(ex))
