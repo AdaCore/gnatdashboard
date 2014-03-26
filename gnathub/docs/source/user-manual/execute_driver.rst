@@ -31,32 +31,30 @@ optional, to be set in the project file.
 General attributes
 ^^^^^^^^^^^^^^^^^^
 
+:command:`Local_Repository`
+"""""""""""""""""""""""""""
+
+Path to a directory containing custom plug-ins to add to the execution queue of
+|Driver|. This is a supplementary list of plug-ins, with means it will extend
+the initial plug-ins list which is either computed from the :command:`[system]`
+repository, or the :command:`[global]` repository.
+
+The complete list of repositories can be found in :func:`GNAThub.repositories`.
+
 :command:`Plugins`
 """"""""""""""""""
 
-List of the names of plug-ins to load and execute for this
-project. |GNAThub| ignores this attribute if you specify the
-:command:`--plugins` switch on the command line. You can tailor this list
-by specifying the :command:`Specific_Plugins` and :command:`Plugins_Off`
+List of the names of plug-ins to load and execute for this project. |GNAThub|
+ignores this attribute if you specify the :command:`--plugins` switch on the
+command line. You can tailor this list by specifying the :command:`Plugins_Off`
 attributes.
-
-:command:`Specific_Plugins`
-"""""""""""""""""""""""""""
-
-List of files containing custom plug-ins to add to the execution queue of
-|Driver|. This is a supplementary list of plugins, with means it will
-extend the initial plug-ins list which is either computed from the command
-line input (the :command:`--plugins` switch), the project file (the
-:command:`Plugins` attribute), or the default (all plug-ins found in either
-the :func:`GNAThub.core_plugins` or :func:`GNAThub.extra_plugins()`
-directories).
 
 :command:`Plugins_Off`
 """"""""""""""""""""""
 
-List of plug-ins names to remove from the execution queue if present. Use
-this to disable one or more plug-ins in the context of a specific project.
-This filter is applied after the computation of the complete plug-ins list.
+List of plug-ins names to remove from the execution queue if present. Use this
+to disable one or more plug-ins in the context of a specific project. This
+filter is applied after the computation of the complete plug-ins list.
 
 |SonarQube|-specific attributes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -92,8 +90,9 @@ of reading and indexing all source files).
 |Driver|'s core plug-ins
 ------------------------
 
-|Product|'s driver comes with a set of core plug-ins, allowing quick
-integration with a software development team's workflow.
+|Product|'s driver comes with a set of core plug-ins, available in the
+:command:`[system]` repository, allowing quick integration with a software
+development team's workflow.
 
 The following tools are currently supported by the |Driver|'s core plugins:
 
@@ -107,7 +106,7 @@ The following tools are currently supported by the |Driver|'s core plugins:
 | |GNATprove|  | gnatprove       | Execute |GNATprove| and parse the results  |
 +--------------+-----------------+--------------------------------------------+
 | |CodePeer|   | codepeer        | Execute |CodePeer| and                     |
-|              |                 | :program:`msg-reader`` and parse the       |
+|              |                 | :program:`msg-reader` and parse the        |
 |              |                 | results                                    |
 +--------------+-----------------+--------------------------------------------+
 | |Gcov|       | gcov            | Parse the :file:`.gcov` files              |
@@ -116,7 +115,7 @@ The following tools are currently supported by the |Driver|'s core plugins:
 |Driver|'s additonal plug-ins
 -----------------------------
 
-An additional :file:`extra` directory is available for the user to store
+An additional :command:`[global]` repository is available for the user to store
 plugins.  |Driver| searches this directory looking for additional plugins
 to load. This directory is never be overridden by an update, making it a
 good place to store custom plug-ins.
@@ -134,10 +133,9 @@ supported switches.  Each switch has an argument, specified below.
 
 A comma-separated list of plug-in names. This list is used as the initial
 execution queue of the driver, replacing the list of plug-ins computed from
-the project attribute :command:`Plugins` and the ones available in both the
-:file:`core` and :file:`extra` plug-in directories.  However, the project
-attribute :command:`Plugins_Off` still applies to that list and removes any
-explicitly disabled plug-ins.
+the project attribute :command:`Plugins`. However, the project attribute
+:command:`Plugins_Off` still applies to that list and removes any explicitly
+disabled plug-ins.
 
 :command:`--exec`
 ^^^^^^^^^^^^^^^^^
@@ -153,4 +151,4 @@ API.
 
 Maximum number of processes to be executed concurrently.  Similar to the
 :command:`-j` switch passed to :program:`make`. :command:`0` is a special
-value meaning "as many processes as possible". The default is :command`1`.
+value meaning "as many processes as possible". The default is :command:`1`.

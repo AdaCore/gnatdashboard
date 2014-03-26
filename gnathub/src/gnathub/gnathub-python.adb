@@ -61,18 +61,16 @@ package body GNAThub.Python is
    Logs_Function          : aliased String := "logs";
    Jobs_Function          : aliased String := "jobs";
    Plugins_Function       : aliased String := "plugins";
-   Core_Plugins_Function  : aliased String := "core_plugins";
-   Extra_Plugins_Function : aliased String := "extra_plugins";
    Database_Function      : aliased String := "database";
+   Repositories_Function  : aliased String := "repositories";
 
-   Root_Module_Functions : constant array (1 .. 7) of access String :=
+   Root_Module_Functions : constant array (1 .. 6) of access String :=
       (Root_Function'Access,
        Logs_Function'Access,
        Jobs_Function'Access,
        Plugins_Function'Access,
-       Core_Plugins_Function'Access,
-       Extra_Plugins_Function'Access,
-       Database_Function'Access);
+       Database_Function'Access,
+       Repositories_Function'Access);
 
    procedure Root_Module_Handler
      (Data    : in out Callback_Data'Class;
@@ -404,15 +402,7 @@ package body GNAThub.Python is
      (Data    : in out Callback_Data'Class;
       Command : String) is
    begin
-      if Command = Extra_Plugins_Function then
-         Set_Return_Value
-           (Data, GNAThub.Constants.Extra_Plugins_Dir.Display_Full_Name);
-
-      elsif Command = Core_Plugins_Function then
-         Set_Return_Value
-           (Data, GNAThub.Constants.Core_Plugins_Dir.Display_Full_Name);
-
-      elsif Command = Root_Function then
+      if Command = Root_Function then
          Set_Return_Value
            (Data,
             Create_From_Dir
@@ -438,6 +428,23 @@ package body GNAThub.Python is
 
       elsif Command = Plugins_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Plugins);
+
+      elsif Command = Repositories_Function then
+         --  Create a dictionary containing 3 keys: system, global, local
+         --  Each key is associated with the path to the corresponding
+         --  repository.
+
+         Set_Return_Value
+           (Data, GNAThub.Constants.Core_Plugins_Dir.Display_Full_Name);
+         Set_Return_Value_Key (Data, "system");
+
+         Set_Return_Value
+           (Data, GNAThub.Constants.Extra_Plugins_Dir.Display_Full_Name);
+         Set_Return_Value_Key (Data, "global");
+
+         Set_Return_Value
+           (Data, GNAThub.Project.Property_As_String ("Local_Repository"));
+         Set_Return_Value_Key (Data, "local");
 
       else
          raise Python_Error with "Unknown method GNAThub." & Command;

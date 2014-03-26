@@ -36,10 +36,11 @@ assert GNAThub.jobs() == 0
 assert len(GNAThub.plugins()) == 0
 
 # We ensure that the core and extra plugins directories exist
-assert os.path.isdir(GNAThub.core_plugins()), \
+repos = GNAThub.repositories()
+assert os.path.isdir(repos['system']), \
     '%s: no such directory' % GNAThub.core_plugins()
 
-assert os.path.isdir(GNAThub.extra_plugins()), \
+assert os.path.isdir(repos['global']), \
     '%s: no such directory' % GNAThub.extra_plugins()
 
 # GNAThub.run

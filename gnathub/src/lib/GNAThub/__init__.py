@@ -72,27 +72,20 @@ def plugins():
     pass        # Implemented in Ada
 
 
-def core_plugins():
-    """Returns the path to the GNAThub-specific core plugins.
-    Usually:
+def repositories():
+    """Returns the list of available repositories.
 
-        <gnathub_root>/share/gnathub/core
+    The dictionary contains 3 keys:
+        * system
+        * global
+        * local
 
-    RETURNS
-        :rtype: a path as a string.
-    """
-
-    pass        # Implemented in Ada
-
-
-def extra_plugins():
-    """Returns the path to the GNAThub-specific extra (user-defined) plugins.
-    Usually:
-
-        <gnathub_root>/share/gnathub/extras
+    These repositories correspond respectively to the [core] and [extra]
+    directories from the GNAThub installation, and the Local_Repository the
+    user can specify in its project file.
 
     RETURNS
-        :rtype: a path as a string.
+        :rtype: dict.<string, string>
     """
 
     pass        # Implemented in Ada
@@ -397,6 +390,7 @@ class Run(object):
     """Class to handle processes.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(self, name, argv, env=None, workdir=None, out=None):
         """Instance constructor.
 
@@ -503,44 +497,3 @@ class Run(object):
         """
 
         return self.out or os.path.join(logs(), self.name + '.log')
-
-
-# A chain of plugin in the order in which they are registered through the
-# GNAThub.register() function.
-_PLUGINS = []
-
-
-def register(plugin):
-    """Registers a plugin.
-
-    A plugin must implement the GNAThub.Plugin Abstract Base Class. All
-    registered plugins are chained for sequential execution.
-
-    PARAMETERS
-        :param plugin: The plugin to register.
-        :type plugin: An object derived from GNAThub.Plugin.
-    """
-
-    _PLUGINS.append(plugin)
-
-
-def run():
-    """Plugins main loop."""
-
-    if not _PLUGINS:
-        Log.info('gnathub: nothing to do.')
-        return
-
-    for plugin in _PLUGINS:
-        try:
-            plugin.setup()
-            plugin.execute()
-            plugin.teardown()
-
-        except KeyboardInterrupt:
-            Log.info('%sInterrupt caught...' % os.linesep)
-            return
-
-        except Exception as why:
-            Log.error('Unexpected error: %s' % why.message)
-            Log.debug(str(why))

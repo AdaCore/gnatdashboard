@@ -71,11 +71,3 @@ except GNAThub.Error:
     pass
 
 PLUGIN.exec_status = GNAThub.EXEC_SUCCESS
-
-# Register the plugin and run the GNAThub execution
-GNAThub.register(PLUGIN)
-
-# Ensure that the plugin did run
-assert not MY_VARIABLE, 'control assay'
-GNAThub.run()
-assert MY_VARIABLE, 'MyCustomPlugin.execute not executed'

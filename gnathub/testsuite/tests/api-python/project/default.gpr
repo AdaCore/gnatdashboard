@@ -11,8 +11,8 @@ project default is
       for Project_Key use "Default::Main";
       for Project_Version use "1.0.0b";
       for Source_Encoding use "My_Encoding";
+      for Local_Repository use "repo";
       for Plugins use ("sonarconfig", "codepeer");
-      for Specific_Plugins use ("foo", "bar");
       for Plugins_Off use ("gnatprove", "codepeer");
    end Dashboard;
 

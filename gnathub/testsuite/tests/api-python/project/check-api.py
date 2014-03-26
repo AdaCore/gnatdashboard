@@ -61,9 +61,9 @@ plugins = GNAThub.Project.property_as_list('Plugins')
 assert 'codepeer' in plugins, 'missing "codepeer" plugin in Plugins'
 assert 'sonarconfig' in plugins, 'missing "sonarconfig" plugin in Plugins'
 
-specific = GNAThub.Project.property_as_list('Specific_Plugins')
-assert 'foo' in specific, 'missing "foo" plugin in Specific_Plugins'
-assert 'bar' in specific, 'missing "bar" plugin in Specific_Plugins'
+local_repo = GNAThub.Project.property_as_string('Local_Repository')
+assert relpath(local_repo) == 'repo', \
+    '$s: unexpected local repository, expected "repo"' % local_repo
 
 plugins_off = GNAThub.Project.property_as_list('Plugins_Off')
 assert 'codepeer' in plugins_off, 'missing "codepeer" plugin in Plugins_Off'

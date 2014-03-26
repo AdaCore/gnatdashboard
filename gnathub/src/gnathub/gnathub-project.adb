@@ -161,8 +161,9 @@ package body GNAThub.Project is
 
       Internal_Register ("Source_Encoding");
 
+      Internal_Register ("Local_Repository");
+
       Internal_Register ("Plugins", Is_List => True);
-      Internal_Register ("Specific_Plugins", Is_List => True);
       Internal_Register ("Plugins_Off", Is_List => True);
    end Register_Custom_Attributes;
 
