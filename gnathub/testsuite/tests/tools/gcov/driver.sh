@@ -5,7 +5,7 @@ gprbuild -q -p -Pdefault
 (cd obj && ./hello && gcov hello f > /dev/null 2>&1)
 
 # launch gnathub
-gnathub -q -Pdefault
+gnathub -q -Pdefault --plugins gnatmetric,gcov
 
 # launch the print script
 gnathub -q -Pdefault --exec script.py
