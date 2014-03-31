@@ -27,7 +27,7 @@ module and load it as part of the GNAThub default execution.
 import os
 
 import GNAThub
-from GNAThub import Log
+from GNAThub import System
 
 from _sonarqube import SonarQube
 
@@ -72,7 +72,7 @@ class SonarRunner(GNAThub.Plugin):
         SonarRunner.postprocess() will be called upon process completion.
         """
 
-        Log.info('%s.run %s' % (self.fqn, self.display_command_line()))
+        System.info('%s.run %s' % (self.fqn, self.display_command_line()))
         proc = GNAThub.Run(self.name, self.__cmd_line())
         self.postprocess(proc.status)
 

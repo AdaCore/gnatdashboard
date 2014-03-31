@@ -32,7 +32,7 @@ import re
 from _gnat import SLOC_PATTERN
 
 import GNAThub
-from GNAThub import Log, db
+from GNAThub import System
 
 
 class GNATcheck(GNAThub.Plugin):
@@ -84,7 +84,7 @@ class GNATcheck(GNAThub.Plugin):
         GNATcheck.postprocess() will be called upon process completion.
         """
 
-        Log.info('%s.run %s' % (self.fqn, self.display_command_line()))
+        System.info('%s.run %s' % (self.fqn, self.display_command_line()))
         proc = GNAThub.Run(self.name, self.__cmd_line())
         self.postprocess(proc.status)
 
@@ -119,16 +119,17 @@ class GNATcheck(GNAThub.Plugin):
             - message for package instantiation
         """
 
-        Log.info('%s.analyse %s' % (self.fqn, os.path.relpath(self.report)))
+        System.info('%s.analyse %s' %
+                    (self.fqn, os.path.relpath(self.report)))
 
-        Log.debug('%s: storing tool in database' % self.fqn)
+        self.log.debug('%s: storing tool in database' % self.fqn)
         self.tool = GNAThub.Tool(self.name)
 
-        Log.debug('%s: parsing report: %s' % (self.fqn, self.report))
+        self.log.debug('%s: parsing report: %s' % (self.fqn, self.report))
 
         if not os.path.exists(self.report):
             self.exec_status = GNAThub.EXEC_FAILURE
-            Log.error('%s: no report found, aborting.' % self.fqn)
+            System.error('%s: no report found, aborting.' % self.fqn)
             return
 
         try:
@@ -137,23 +138,23 @@ class GNATcheck(GNAThub.Plugin):
                 total = len(lines)
 
                 for index, line in enumerate(lines, start=1):
-                    Log.debug('Parsing line: %s' % line)
+                    self.log.debug('Parsing line: %s' % line)
 
                     match = self._MESSAGE.match(line)
 
                     if match:
-                        Log.debug('Matched groups: %s' % str(match.groups()))
+                        self.log.debug('Matched: %s' % str(match.groups()))
                         self.__parse_line(match)
 
-                    Log.progress(index, total, new_line=(index == total))
+                    System.progress(index, total, new_line=(index == total))
 
             self.exec_status = GNAThub.EXEC_SUCCESS
-            Log.debug('%s: all objects committed to database' % self.fqn)
+            self.log.debug('%s: all objects committed to database' % self.fqn)
 
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAILURE
-            Log.error('%s: unable to parse report' % self.fqn)
-            Log.error(str(ex))
+            System.error('%s: unable to parse report' % self.fqn)
+            System.error(str(ex))
 
     def __parse_line(self, regex):
         """Parses a GNATcheck message line and add the message to the current

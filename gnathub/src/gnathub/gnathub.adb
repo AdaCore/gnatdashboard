@@ -19,162 +19,233 @@ with Ada.Calendar;                  use Ada.Calendar;
 with Ada.Calendar.Formatting;
 with Ada.Text_IO;                   use Ada.Text_IO;
 
-with GNATCOLL.Traces;               use GNATCOLL.Traces;
-
 package body GNAThub is
+   Me : constant Trace_Handle := Create ("GNATHUB.OUTPUT");
+   --  The handle to use to log messages displayed with Info, Warn, Error and
+   --  Fail procedures.
+
+   Application_Start_Time : constant Time := Clock;
+   --  The start time of the application, used by Ellapsed
+
+   Output_Verbosity : Verbosity_Level := Default;
+   --  Verbosity of the program
+
+   ------------------------
+   -- Initialize_Logging --
+   ------------------------
+
+   procedure Initialize_Logging is
+   begin
+      GNATCOLL.Traces.Parse_Config_File;
+
+      Set_Active (Create ("DEBUG.ABSOLUTE_TIME"), True);
+      Set_Active (Create ("DEBUG.COLORS"), True);
+   end Initialize_Logging;
+
+   ----------
+   -- Info --
+   ----------
+
+   procedure Info
+     (Message      : String;
+      Availability : Verbosity_Level := Default)
+   is
+      Output : constant String := "gnathub: " & Message;
+   begin
+      if Output_Verbosity >= Availability then
+         Put_Line (Output);
+      end if;
+
+      Log.Info (Me, Output);
+   end Info;
+
+   ----------
+   -- Warn --
+   ----------
+
+   procedure Warn (Message : String)
+   is
+      Output : constant String := "warning: " & Message;
+   begin
+      Put_Line (Standard_Error, Output);
+      Log.Warn (Me, Output);
+   end Warn;
+
+   -----------
+   -- Error --
+   -----------
+
+   procedure Error (Message : String)
+   is
+      Output : constant String := "error: " & Message;
+   begin
+      Put_Line (Standard_Error, Output);
+      Log.Error (Me, Output);
+   end Error;
+
+   ----------
+   -- Fail --
+   ----------
+
+   procedure Fail (Message : String)
+   is
+      Output : constant String := "fatal: " & Message;
+   begin
+      Put_Line (Standard_Error, Output);
+      Log.Fatal (Me, Output);
+
+      raise Silent_Error;
+   end Fail;
+
+   -------------------
+   -- Set_Verbosity --
+   -------------------
+
+   procedure Set_Verbosity (Verbosity : Verbosity_Level) is
+   begin
+      Output_Verbosity := Verbosity;
+   end Set_Verbosity;
+
+   --------------
+   -- Progress --
+   --------------
+
+   procedure Progress
+     (Current : Natural; Total : Positive; New_Line : Boolean := False)
+   is
+      function Image (Number : Integer) return String;
+      --  Prints the image of a number w/o the leading space
+
+      -----------
+      -- Image --
+      -----------
+
+      function Image (Number : Integer) return String is
+         Img : constant String := Integer'Image (Number);
+      begin
+         return Img (Img'First + 1 .. Img'Last);
+      end Image;
+
+      Percent : constant Integer := Current * 100 / Total;
+      Message : constant String  := "... completed " & Image (Current) &
+                                    " out of " & Image (Total) &
+                                    " (" & Image (Percent) & "%)";
+
+   begin
+      if Output_Verbosity >= Default then
+         Put (Message & ASCII.CR);
+
+         if New_Line then
+            Ada.Text_IO.New_Line;
+         end if;
+      end if;
+   end Progress;
+
+   --------------
+   -- Ellapsed --
+   --------------
+
+   procedure Ellapsed is
+      Total : constant Duration := Clock - Application_Start_Time;
+   begin
+      Info ("Ellapsed time: " & Ada.Calendar.Formatting.Image (Total));
+   end Ellapsed;
+
+   -----------------
+   -- Package Log --
+   -----------------
 
    package body Log is
-      Application_Start_Time : constant Time := Clock;
+      Log_Verbosity : Log_Level := Log_All;
+      --  Verbosity of the trace engine
 
-      Info_Handle    : constant Trace_Handle := Create ("INFO", On);
-      Warning_Handle : constant Trace_Handle := Create ("WARN", On);
-      Error_Handle   : constant Trace_Handle := Create ("ERROR", On);
-      Fatal_Handle   : constant Trace_Handle := Create ("FATAL", On);
-      Debug_Handle   : constant Trace_Handle := Create ("TRACE", Off);
-      --  Trace handles
+      procedure Log_If_At_Least
+        (Handle  : Trace_Handle;
+         Message : String;
+         Level   : Log_Level := Log_Info);
+      --  Log the message if Output_Verbosity matches at least Level
 
-      Ada_Verbosity    : Verbosity_Level := Default;
-      --  Verbosity of the Ada Trace engine
+      ---------------------
+      -- Log_If_At_Least --
+      ---------------------
 
-      procedure Print_With_Prefix (Message : String);
-      --  Print the message prefixed by "gnathub:"
-
-      -----------------------
-      -- Print_With_Prefix --
-      -----------------------
-
-      procedure Print_With_Prefix (Message : String) is
+      procedure Log_If_At_Least
+        (Handle  : Trace_Handle;
+         Message : String;
+         Level   : Log_Level := Log_Info)
+      is
       begin
-         Put_Line ("gnathub: " & Message);
-      end Print_With_Prefix;
+         if Log_Verbosity >= Level then
+            Trace (Handle, Message);
+         end if;
+      end Log_If_At_Least;
+
+      -------------------
+      -- Set_Log_Level --
+      -------------------
+
+      procedure Set_Log_Level (Level : Log_Level) is
+      begin
+         Log_Verbosity := Level;
+      end Set_Log_Level;
+
+      -----------
+      -- Debug --
+      -----------
+
+      procedure Debug (Handle : Trace_Handle; Message : String) is
+      begin
+         Log_If_At_Least (Handle, Message, Log_Debug);
+      end Debug;
 
       ----------
       -- Info --
       ----------
 
-      procedure Info (Message : String) is
+      procedure Info (Handle : Trace_Handle; Message : String) is
       begin
-         if Ada_Verbosity = Default then
-            Put_Line (Message);
-         elsif Ada_Verbosity = Verbose then
-            Trace (Info_Handle, Message);
-         end if;
+         Log_If_At_Least (Handle, Message, Log_Info);
       end Info;
 
       ----------
       -- Warn --
       ----------
 
-      procedure Warn (Message : String) is
+      procedure Warn (Handle : Trace_Handle; Message : String) is
       begin
-         if Ada_Verbosity = Default then
-            Print_With_Prefix (Message);
-         elsif Ada_Verbosity = Verbose then
-            Trace (Warning_Handle, Message);
-         end if;
+         Log_If_At_Least (Handle, Message, Log_Warn);
       end Warn;
 
       -----------
       -- Error --
       -----------
 
-      procedure Error (Message : String) is
+      procedure Error (Handle : Trace_Handle; Message : String) is
       begin
-         if Ada_Verbosity = Default then
-            Print_With_Prefix (Message);
-         elsif Ada_Verbosity = Verbose then
-            Trace (Error_Handle, Message);
-         end if;
+         Log_If_At_Least (Handle, Message, Log_Error);
       end Error;
 
       -----------
       -- Fatal --
       -----------
 
-      procedure Fatal (Message : String) is
+      procedure Fatal (Handle : Trace_Handle; Message : String) is
       begin
-         if Ada_Verbosity = Default then
-            Print_With_Prefix (Message);
-         elsif Ada_Verbosity = Verbose then
-            Trace (Fatal_Handle, Message);
-         end if;
+         Log_If_At_Least (Handle, Message, Log_Fatal);
       end Fatal;
 
-      -----------
-      -- Debug --
-      -----------
+      ----------------------
+      -- Exception_Raised --
+      ----------------------
 
-      procedure Debug (Message : String) is
+      procedure Exception_Raised
+        (Handle : Trace_Handle;
+         E      : Ada.Exceptions.Exception_Occurrence) is
       begin
-         Trace (Debug_Handle, Message);
-      end Debug;
-
-      --------------
-      -- Progress --
-      --------------
-
-      procedure Progress
-        (Current : Natural; Total : Positive; New_Line : Boolean := False)
-      is
-         function Image (Number : Integer) return String;
-         --  Prints the image of a number w/o the leading space
-
-         -----------
-         -- Image --
-         -----------
-
-         function Image (Number : Integer) return String is
-            Img : constant String := Integer'Image (Number);
-         begin
-            return Img (Img'First + 1 .. Img'Last);
-         end Image;
-
-         Percent : constant Integer := Current * 100 / Total;
-         Message : constant String  := "... completed " & Image (Current) &
-           " out of " & Image (Total) & " (" & Image (Percent) & "%)";
-
-      begin
-         if Ada_Verbosity = Default then
-            Put (Message & ASCII.CR);
-
-            if New_Line then
-               Ada.Text_IO.New_Line;
-            end if;
-
-         elsif Ada_Verbosity = Verbose then
-            Trace (Info_Handle, Message);
+         if Log_Verbosity > Log_None then
+            Trace (Handle, E);
          end if;
-      end Progress;
-
-      --------------
-      -- Ellapsed --
-      --------------
-
-      procedure Ellapsed is
-         Total : constant Duration := Clock - Application_Start_Time;
-      begin
-         Info ("Ellapsed time: " & Ada.Calendar.Formatting.Image (Total));
-      end Ellapsed;
-
-      -------------------
-      -- Set_Verbosity --
-      -------------------
-
-      procedure Set_Verbosity (Verbosity : Verbosity_Level) is
-      begin
-         Ada_Verbosity := Verbosity;
-
-         Set_Active (Fatal_Handle, True);
-         Set_Active (Error_Handle, True);
-
-         Set_Active (Info_Handle, Ada_Verbosity > Quiet);
-         Set_Active (Warning_Handle, Ada_Verbosity > Quiet);
-
-         Set_Active (Debug_Handle, Ada_Verbosity = Verbose);
-
-         Set_Active (Create ("DEBUG.ABSOLUTE_TIME"), Ada_Verbosity = Verbose);
-         Set_Active (Create ("DEBUG.COLORS"), Ada_Verbosity = Verbose);
-      end Set_Verbosity;
+      end Exception_Raised;
 
    end Log;
 

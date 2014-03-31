@@ -18,36 +18,42 @@
 with Ada.Strings.Unbounded;         use Ada.Strings.Unbounded;
 
 with GNAT.OS_Lib;                   use GNAT.OS_Lib;
+with GNAT.Source_Info;
 
 with GNATCOLL.SQL;                  use GNATCOLL.SQL;
 with GNATCOLL.Scripts;              use GNATCOLL.Scripts;
 with GNATCOLL.Scripts.Python;       use GNATCOLL.Scripts.Python;
 with GNATCOLL.VFS;                  use GNATCOLL.VFS;
 
-with GNAThub.Constants;             use GNAThub.Constants;
+with GNAThub.Constants;
 with GNAThub.Configuration;         use GNAThub.Configuration;
 with GNAThub.Project;
 with GNAThub.Python.Database;       use GNAThub.Python.Database;
 
 package body GNAThub.Python is
+   Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
 
    Repository : Scripts_Repository := null;
    Python     : Python_Scripting   := null;
 
-   Log_Info_Method  : aliased String := "info";
-   Log_Warn_Method  : aliased String := "warn";
-   Log_Error_Method : aliased String := "error";
-   Log_Fatal_Method : aliased String := "fatal";
-   Log_Debug_Method : aliased String := "debug";
+   Logger_Info_Method      : aliased String := "info";
+   Logger_Warn_Method      : aliased String := "warn";
+   Logger_Error_Method     : aliased String := "error";
+   Logger_Fatal_Method     : aliased String := "fatal";
+   Logger_Debug_Method     : aliased String := "debug";
+   Logger_Exception_Method : aliased String := "exception";
 
-   Log_Progress_Method : constant String := "progress";
+   Logger_Class_Instance_Methods : constant array (1 .. 5) of access String :=
+      (Logger_Info_Method'Access,
+       Logger_Warn_Method'Access,
+       Logger_Error_Method'Access,
+       Logger_Fatal_Method'Access,
+       Logger_Debug_Method'Access);
 
-   Log_Class_Static_Methods : constant array (1 .. 5) of access String :=
-      (Log_Info_Method'Access,
-       Log_Warn_Method'Access,
-       Log_Error_Method'Access,
-       Log_Fatal_Method'Access,
-       Log_Debug_Method'Access);
+   System_Info_Method     : constant String := "info";
+   System_Warn_Method     : constant String := "warn";
+   System_Error_Method    : constant String := "error";
+   System_Progress_Method : constant String := "progress";
 
    Project_Name_Method               : constant String := "name";
    Project_Path_Method               : constant String := "path";
@@ -72,20 +78,60 @@ package body GNAThub.Python is
        Database_Function'Access,
        Repositories_Function'Access);
 
+   --------------------
+   -- GNAThub Module --
+   --------------------
+
+   procedure Register_Core_Modules;
+   --  Registers the core modules and functions of GNAThub Python module.
+
    procedure Root_Module_Handler
      (Data    : in out Callback_Data'Class;
       Command : String);
    --  GNAThub.Env class methods handler
 
-   procedure Log_Class_Handler
-     (Data    : in out Callback_Data'Class;
-      Command : String);
-   --  GNAThub.Log class methods handler
+   --------------------------
+   -- GNAThub.System Class --
+   --------------------------
 
-   procedure Log_Progress_Handler
+   procedure System_Class_Method_Handler
      (Data    : in out Callback_Data'Class;
       Command : String);
-   --  GNAThub.Log.progress class method handler
+   --  GNAThub.System class methods handler
+
+   procedure System_Progress_Method_Handler
+     (Data    : in out Callback_Data'Class;
+      Command : String);
+   --  GNAThub.System.progress class method handler
+
+   procedure Register_System_Class (System_Class : Class_Type);
+   --  Load the GNAThub.System class in the Python VM
+
+   --------------------------
+   -- GNAThub.Logger Class --
+   --------------------------
+
+   type Logger_Property is new Instance_Property_Record with record
+      Handle : Trace_Handle;
+   end record;
+
+   procedure Set_Handle (Inst : Class_Instance; Name : String);
+   --  Set the Trace_Handle held by this GNAThub.Logger instance
+
+   function Get_Handle (Inst : Class_Instance) return Trace_Handle;
+   --  Return the Trace_Handle held by this GNAThub.Logger instance
+
+   procedure Logger_Instance_Method_Handler
+     (Data    : in out Callback_Data'Class;
+      Command : String);
+   --  GNAThub.Logger.* instance methods handler
+
+   procedure Register_Logger_Class (Logger_Class : Class_Type);
+   --  Load the GNAThub.Logger class in the Python VM
+
+   ---------------------------
+   -- GNAThub.Project Class --
+   ---------------------------
 
    procedure Project_Class_Accessors_Handler
      (Data    : in out Callback_Data'Class;
@@ -97,52 +143,86 @@ package body GNAThub.Python is
       Command : String);
    --  GNAThub.Project.property_as_* class method handler
 
-   procedure Register_Core_Modules;
-   --  Registers the core modules and functions of GNAThub Python module.
+   procedure Register_Project_Class (Project_Class : Class_Type);
+   --  Load the GNAThub.Project class in the Python VM
 
    ---------------------------
-   -- Register_Core_Modules --
+   -- Register_System_Class --
    ---------------------------
 
-   procedure Register_Core_Modules
-   is
-      Log_Class     : constant Class_Type := Repository.New_Class ("Log");
-      Project_Class : constant Class_Type :=
-                        Repository.New_Class ("Project");
-
+   procedure Register_System_Class (System_Class : Class_Type) is
    begin
-      --  GNAThub module
-
-      for Command of Root_Module_Functions loop
-         Repository.Register_Command
-           (Command       => Command.all,
-            Params        => No_Params,
-            Handler       => Root_Module_Handler'Access);
-      end loop;
-
-      --  GNAThub.Log class
-
-      for Command of Log_Class_Static_Methods loop
-         Repository.Register_Command
-           (Command       => Command.all,
-            Params        => (1 .. 1 => Param ("message")),
-            Handler       => Log_Class_Handler'Access,
-            Class         => Log_Class,
-            Static_Method => True);
-      end loop;
+      Repository.Register_Command
+        (Command       => System_Info_Method,
+         Params        => (1 .. 1 => Param ("message")),
+         Handler       => System_Class_Method_Handler'Access,
+         Class         => System_Class,
+         Static_Method => True);
 
       Repository.Register_Command
-        (Command       => Log_Progress_Method,
+        (Command       => System_Warn_Method,
+         Params        =>
+           (Param ("message"),
+            Param ("why", Optional => True)),
+         Handler       => System_Class_Method_Handler'Access,
+         Class         => System_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => System_Error_Method,
+         Params        =>
+           (Param ("message"),
+            Param ("why", Optional => True)),
+         Handler       => System_Class_Method_Handler'Access,
+         Class         => System_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => System_Progress_Method,
          Params        =>
            (Param ("current"),
             Param ("total"),
             Param ("new_line", Optional => True)),
-         Handler       => Log_Progress_Handler'Access,
-         Class         => Log_Class,
+         Handler       => System_Progress_Method_Handler'Access,
+         Class         => System_Class,
          Static_Method => True);
+   end Register_System_Class;
 
-      --  GNAThub.Project class
+   ---------------------------
+   -- Register_Logger_Class --
+   ---------------------------
 
+   procedure Register_Logger_Class (Logger_Class : Class_Type) is
+   begin
+      Repository.Register_Command
+        (Command => Constructor_Method,
+         Params  => (1 .. 1 => Param ("name")),
+         Handler => Logger_Instance_Method_Handler'Access,
+         Class   => Logger_Class);
+
+      for Command of Logger_Class_Instance_Methods loop
+         Repository.Register_Command
+           (Command       => Command.all,
+            Params        => (1 .. 1 => Param ("message")),
+            Handler       => Logger_Instance_Method_Handler'Access,
+            Class         => Logger_Class);
+      end loop;
+
+      --  Note: We need to retrieve the Python exception here
+      --
+      --  Repository.Register_Command
+      --    (Command => Log_Exception_Method,
+      --     Params  => (1 .. 1 => Param ("exception")),
+      --     Handler => Logger_Instance_Method_Handler'Access,
+      --     Class   => Logger_Class);
+   end Register_Logger_Class;
+
+   ----------------------------
+   -- Register_Project_Class --
+   ----------------------------
+
+   procedure Register_Project_Class (Project_Class : Class_Type) is
+   begin
       Repository.Register_Command
         (Command       => Project_Name_Method,
          Params        => No_Params,
@@ -191,6 +271,40 @@ package body GNAThub.Python is
          Handler       => Project_Class_Properties_Handler'Access,
          Class         => Project_Class,
          Static_Method => True);
+   end Register_Project_Class;
+
+   ---------------------------
+   -- Register_Core_Modules --
+   ---------------------------
+
+   procedure Register_Core_Modules
+   is
+      System_Class  : constant Class_Type := Repository.New_Class ("System");
+      Logger_Class  : constant Class_Type := Repository.New_Class ("Logger");
+      Project_Class : constant Class_Type := Repository.New_Class ("Project");
+
+   begin
+      --  Modules
+
+      Log.Debug (Me, "  + GNAThub.Core");
+
+      for Command of Root_Module_Functions loop
+         Repository.Register_Command
+           (Command => Command.all,
+            Params  => No_Params,
+            Handler => Root_Module_Handler'Access);
+      end loop;
+
+      --  Classes
+
+      Log.Debug (Me, "  + GNAThub.Core.System");
+      Register_System_Class (System_Class);
+
+      Log.Debug (Me, "  + GNAThub.Core.Logger");
+      Register_Logger_Class (Logger_Class);
+
+      Log.Debug (Me, "  + GNAThub.Core.Project");
+      Register_Project_Class (Project_Class);
    end Register_Core_Modules;
 
    -----------------
@@ -207,35 +321,37 @@ package body GNAThub.Python is
    ----------------
 
    procedure Initialize is
+      use GNAThub.Constants;
    begin
-      if Repository = null then
-         Repository := new Scripts_Repository_Record;
-
-         Log.Debug
-           ("Registering in Python environment: " &
-            Python_Home.Display_Full_Name);
-
-         Register_Python_Scripting
-           (Repo        => Repository,
-            Module      => Python_Root_Module,
-            Python_Home => Python_Home.Display_Full_Name);
-
-         Register_Standard_Classes
-           (Repo               => Repository,
-            Console_Class_Name => "Console",
-            Logger_Class_Name  => "Traces");
-
-         Python :=
-           GNATCOLL.Scripts.Python.Python_Scripting
-             (GNATCOLL.Scripts.Lookup_Scripting_Language
-                (Repository, Python_Name));
-
-         Log.Debug ("Registering GNAThub::Core modules");
-         Register_Core_Modules;
-
-         Log.Debug ("Registering GNAThub::Database::API module");
-         Register_Database_Interaction_API (Repository);
+      if Repository /= null then
+         Log.Warn (Me, "Python VM already initialized");
+         return;
       end if;
+
+      Log.Info (Me, "Initialize Python VM: " & Python_Home.Display_Full_Name);
+
+      Repository := new Scripts_Repository_Record;
+
+      Register_Python_Scripting
+        (Repo        => Repository,
+         Module      => Python_Root_Module,
+         Python_Home => Python_Home.Display_Full_Name);
+
+      Register_Standard_Classes
+        (Repo               => Repository,
+         Console_Class_Name => "Console",
+         Logger_Class_Name  => "Traces");
+
+      Python :=
+        GNATCOLL.Scripts.Python.Python_Scripting
+          (GNATCOLL.Scripts.Lookup_Scripting_Language
+            (Repository, Python_Name));
+
+      Log.Info (Me, "Register Python modules");
+      Register_Core_Modules;
+
+      Log.Debug (Me, "  + GNAThub.Database_API");
+      Register_Database_Interaction_API (Repository);
    end Initialize;
 
    --------------
@@ -247,41 +363,35 @@ package body GNAThub.Python is
       null;
    end Finalize;
 
-   -----------------------
-   -- Log_Class_Handler --
-   -----------------------
+   ---------------------------------
+   -- System_Class_Method_Handler --
+   ---------------------------------
 
-   procedure Log_Class_Handler
+   procedure System_Class_Method_Handler
      (Data    : in out Callback_Data'Class;
       Command : String)
    is
       Message : constant String := Data.Nth_Arg (1);
    begin
-      if Command = Log_Info_Method then
-         Log.Info (Message);
+      if Command = System_Info_Method then
+         Info (Message);
 
-      elsif Command = Log_Warn_Method then
-         Log.Warn (Message);
+      elsif Command = System_Warn_Method then
+         Warn (Message);
 
-      elsif Command = Log_Error_Method then
-         Log.Error (Message);
-
-      elsif Command = Log_Fatal_Method then
-         Log.Fatal (Message);
-
-      elsif Command = Log_Debug_Method then
-         Log.Debug (Message);
+      elsif Command = System_Error_Method then
+         Error (Message);
 
       else
-         raise Python_Error with "Unknown method GNAThub.Log." & Command;
+         raise Python_Error with "Unknown method GNAThub.System." & Command;
       end if;
-   end Log_Class_Handler;
+   end System_Class_Method_Handler;
 
-   --------------------------
-   -- Log_Progress_Handler --
-   --------------------------
+   ------------------------------------
+   -- System_Progress_Method_Handler --
+   ------------------------------------
 
-   procedure Log_Progress_Handler
+   procedure System_Progress_Method_Handler
      (Data    : in out Callback_Data'Class;
       Command : String)
    is
@@ -290,9 +400,64 @@ package body GNAThub.Python is
       New_Line : constant Boolean  := Data.Nth_Arg (3, Default => False);
 
    begin
-      pragma Assert (Command = Log_Progress_Method);
-      Log.Progress (Current, Total, New_Line);
-   end Log_Progress_Handler;
+      pragma Assert (Command = System_Progress_Method);
+      Progress (Current, Total, New_Line);
+   end System_Progress_Method_Handler;
+
+   ----------------
+   -- Set_Handle --
+   ----------------
+
+   procedure Set_Handle (Inst : Class_Instance; Name : String) is
+   begin
+      GNATCOLL.Scripts.Set_Data
+        (Inst, "_ada_logger", Logger_Property'(Handle => Create (Name, Off)));
+   end Set_Handle;
+
+   ----------------
+   -- Get_Handle --
+   ----------------
+
+   function Get_Handle (Inst : Class_Instance) return Trace_Handle is
+   begin
+      return Logger_Property (Get_Data (Inst, "_ada_logger").all).Handle;
+   end Get_Handle;
+
+   ------------------------------------
+   -- Logger_Instance_Method_Handler --
+   ------------------------------------
+
+   procedure Logger_Instance_Method_Handler
+     (Data    : in out Callback_Data'Class;
+      Command : String)
+   is
+      Inst : constant Class_Instance := Data.Nth_Arg (1);
+   begin
+      if Command = Constructor_Method then
+         Set_Handle (Inst, Name => Data.Nth_Arg (2));
+
+      elsif Command = Logger_Info_Method then
+         Log.Info (Get_Handle (Inst), Data.Nth_Arg (2));
+
+      elsif Command = Logger_Warn_Method then
+         Log.Warn (Get_Handle (Inst), Data.Nth_Arg (2));
+
+      elsif Command = Logger_Error_Method then
+         Log.Error (Get_Handle (Inst), Data.Nth_Arg (2));
+
+      elsif Command = Logger_Fatal_Method then
+         Log.Fatal (Get_Handle (Inst), Data.Nth_Arg (2));
+
+      elsif Command = Logger_Debug_Method then
+         Log.Debug (Get_Handle (Inst), Data.Nth_Arg (2));
+
+      --  elsif Command = Logger_Exception_Method then
+      --     null;
+
+      else
+         raise Python_Error with "Unknown method GNAThub.Logger." & Command;
+      end if;
+   end Logger_Instance_Method_Handler;
 
    -------------------------------------
    -- Project_Class_Accessors_Handler --
@@ -302,35 +467,30 @@ package body GNAThub.Python is
      (Data    : in out Callback_Data'Class;
       Command : String)
    is
-      use GNATCOLL.VFS;
+      use GNAThub.Project;
    begin
       if Command = Project_Name_Method then
-         Set_Return_Value (Data, GNAThub.Project.Name);
+         Set_Return_Value (Data, Name);
 
       elsif Command = Project_Path_Method then
-         Set_Return_Value (Data, GNAThub.Project.Path.Display_Full_Name);
+         Set_Return_Value (Data, Path.Display_Full_Name);
 
       elsif Command = Project_Object_Dir_Method then
-         Set_Return_Value (Data, GNAThub.Project.Object_Dir.Display_Full_Name);
+         Set_Return_Value (Data, Object_Dir.Display_Full_Name);
 
       elsif Command = Project_Source_File_Method then
          declare
             Name : constant String := Data.Nth_Arg (1);
          begin
-            Set_Return_Value
-              (Data, GNAThub.Project.File (Name).Display_Full_Name);
+            Set_Return_Value (Data, File (Name).Display_Full_Name);
          end;
 
       elsif Command = Project_Source_Dirs_Method then
          Set_Return_Value_As_List (Data);
 
-         declare
-            Source_Dirs : File_Array := GNAThub.Project.Source_Dirs;
-         begin
-            for Dir of Source_Dirs loop
-               Set_Return_Value (Data, Dir.Display_Full_Name);
-            end loop;
-         end;
+         for Dir of Source_Dirs loop
+            Set_Return_Value (Data, Dir.Display_Full_Name);
+         end loop;
 
       else
          raise Python_Error with "Unknown method GNAThub.Project." & Command;
@@ -345,11 +505,11 @@ package body GNAThub.Python is
      (Data    : in out Callback_Data'Class;
       Command : String)
    is
-      Property : constant String := Data.Nth_Arg (1);
-      Value    : constant String :=
-                   GNAThub.Project.Property_As_String (Property);
-      List     : String_List_Access :=
-                   GNAThub.Project.Property_As_List (Property);
+      use GNAThub.Project;
+
+      Property : constant String    := Data.Nth_Arg (1);
+      Value    : constant String    := Property_As_String (Property);
+      List     : String_List_Access := Property_As_List (Property);
 
    begin
       if Command = Project_Property_As_String_Method then
@@ -400,28 +560,28 @@ package body GNAThub.Python is
 
    procedure Root_Module_Handler
      (Data    : in out Callback_Data'Class;
-      Command : String) is
+      Command : String)
+   is
+      use GNAThub.Constants;
+      use GNAThub.Project;
    begin
       if Command = Root_Function then
          Set_Return_Value
            (Data,
             Create_From_Dir
-              (GNAThub.Project.Object_Dir,
-               GNAThub.Constants.Root_Dir.Full_Name).Display_Full_Name);
+              (Object_Dir, Root_Dir.Full_Name).Display_Full_Name);
 
       elsif Command = Database_Function then
          Set_Return_Value
            (Data,
             Create_From_Dir
-              (GNAThub.Project.Object_Dir,
-               GNAThub.Constants.Database_File.Full_Name).Display_Full_Name);
+              (Object_Dir, Database_File.Full_Name).Display_Full_Name);
 
       elsif Command = Logs_Function then
          Set_Return_Value
            (Data,
             Create_From_Dir
-              (GNAThub.Project.Object_Dir,
-               GNAThub.Constants.Logs_Dir.Full_Name).Display_Full_Name);
+              (Object_Dir, Logs_Dir.Full_Name).Display_Full_Name);
 
       elsif Command = Jobs_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Jobs);
@@ -434,16 +594,13 @@ package body GNAThub.Python is
          --  Each key is associated with the path to the corresponding
          --  repository.
 
-         Set_Return_Value
-           (Data, GNAThub.Constants.Core_Plugins_Dir.Display_Full_Name);
+         Set_Return_Value (Data, Core_Plugins_Dir.Display_Full_Name);
          Set_Return_Value_Key (Data, "system");
 
-         Set_Return_Value
-           (Data, GNAThub.Constants.Extra_Plugins_Dir.Display_Full_Name);
+         Set_Return_Value (Data, Extra_Plugins_Dir.Display_Full_Name);
          Set_Return_Value_Key (Data, "global");
 
-         Set_Return_Value
-           (Data, GNAThub.Project.Property_As_String ("Local_Repository"));
+         Set_Return_Value (Data, Property_As_String ("Local_Repository"));
          Set_Return_Value_Key (Data, "local");
 
       else

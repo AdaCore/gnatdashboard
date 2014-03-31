@@ -18,12 +18,12 @@
 with Ada.Command_Line;
 with Ada.Exceptions;             use Ada.Exceptions;
 with Ada.Strings.Unbounded;      use Ada.Strings.Unbounded;
+with Ada.Text_IO;                use Ada.Text_IO;
 
-with GNAT.Command_Line;
 with GNAT.Directory_Operations;  use GNAT.Directory_Operations;
+with GNAT.Source_Info;
 
 with GNATCOLL.Projects;          use GNATCOLL.Projects;
-with GNATCOLL.Traces;            use GNATCOLL.Traces;
 with GNATCOLL.VFS;               use GNATCOLL.VFS;
 
 with GNAThub.Constants;          use GNAThub.Constants;
@@ -37,6 +37,7 @@ with GNAThub.Python;
    -------------
 
 function GNAThub.Main return Ada.Command_Line.Exit_Status is
+   Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
 
    function Interpreter_Mode return Boolean;
    --  Whether to run GNAThub in interpreter mode (--exec) or normal mode.
@@ -82,7 +83,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       --  Check whether the project object directory exists
 
       if Object_Directory = No_File then
-         raise Error
+         raise Fatal_Error
            with "Project file forces no object directory, execution aborted";
       end if;
 
@@ -90,7 +91,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
       if Is_Regular_File (Logs_Directory) then
          if not Is_Directory (Logs_Directory) then
-            raise Error
+            raise Fatal_Error
               with Logs_Directory.Display_Full_Name & " is not a directory";
          end if;
       else
@@ -99,9 +100,10 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
    exception
       when E : Directory_Error =>
-         raise Error with "Unexpected error while initializing environment: " &
-                          Object_Directory.Display_Full_Name & ": " &
-                          Exception_Information (E);
+         raise Fatal_Error with
+           "Cannot initialize environment: " &
+           Object_Directory.Display_Full_Name & ": " &
+           Exception_Information (E);
 
    end Create_Project_Directory_Env;
 
@@ -128,14 +130,14 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       --  Add the default search path for GNAThub plugins
       --  and GNAThub python API
 
-      Log.Debug ("Loading plugins from: ");
+      Log.Info (Me, "Loading plugins from: ");
 
       declare
          Python_Path : Unbounded_String :=
                          To_Unbounded_String ("sys.path.extend([");
       begin
          for Dir of Python_Path_List loop
-            Log.Debug ("  - " & Dir.Display_Full_Name);
+            Log.Info (Me, "  + " & Dir.Display_Full_Name);
             Python_Path := Python_Path &
               To_Unbounded_String ("r'" & Dir.Display_Full_Name & "',");
          end loop;
@@ -146,18 +148,18 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       end;
 
       if Had_Errors then
-         Log.Warn ("Failed to update sys.path");
+         Warn ("Failed to update sys.path");
       end if;
 
       --  Execute the python script that runs all the plugins
 
-      Log.Debug ("Executing plugin: " & Plugin_Runner.Display_Base_Name);
+      Log.Info (Me, "Executing plugin: " & Plugin_Runner.Display_Base_Name);
 
       GNAThub.Python.Execute_File
         (Plugin_Runner.Display_Full_Name, Had_Errors);
 
       if Had_Errors then
-         raise Error with "Unexpected plug-in error";
+         raise Fatal_Error with "Unexpected plug-in error";
       end if;
    end Execute_Plugin_Runner;
 
@@ -170,12 +172,12 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       Errors : Boolean := False;
    begin
       if Script /= "" then
-         Log.Info ("gnathub.python.execute " & Script);
+         Info ("gnathub.python.execute " & Script);
 
          GNAThub.Python.Execute_File (Script, Errors);
 
          if Errors then
-            raise Error with "execution failed: " & Script;
+            raise Fatal_Error with "execution failed: " & Script;
          end if;
       end if;
    end Execute_User_Script;
@@ -186,13 +188,13 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
    procedure Create_Or_Override_Database is
    begin
-      Log.Info ("gnathub.sql.create " & Database_File.Display_Full_Name);
+      Info ("gnathub.sql.create " & Database_File.Display_Full_Name);
       GNAThub.Database.Initialize
          (Create_From_Dir
             (GNAThub.Project.Object_Dir, Database_File.Full_Name),
          Remove_Previous_Database => True);
 
-      Log.Info ("gnathub.sql.store " & GNAThub.Configuration.Project);
+      Info ("gnathub.sql.store " & GNAThub.Configuration.Project);
       GNAThub.Project.Save_Project_Tree;
    end Create_Or_Override_Database;
 
@@ -228,28 +230,28 @@ begin
    Log.Debug ("Loading project: " & GNAThub.Configuration.Project);
    GNAThub.Project.Load (GNAThub.Configuration.Project);
 
-   Log.Debug ("Creating execution environment...");
+   Log.Info (Me, "Creating execution environment...");
    Create_Project_Directory_Env;
 
    if Interpreter_Mode then
-      Log.Debug ("Connecting to existing database...");
+      Log.Info (Me, "Connecting to existing database...");
       GNAThub.Database.Initialize
         (Create_From_Dir
            (GNAThub.Project.Object_Dir, Database_File.Full_Name),
         Remove_Previous_Database => False);
 
-      Log.Debug ("Executing user script: " & Script);
+      Log.Info (Me, "Executing user script: " & Script);
       Execute_User_Script;
 
    else
-      Log.Debug ("Creating local application database...");
+      Log.Info (Me, "Creating local application database...");
       Create_Or_Override_Database;
 
-      Log.Debug ("Executing Plugin Runner");
+      Log.Info (Me, "Executing Plugin Runner");
       Execute_Plugin_Runner;
    end if;
 
-   Log.Debug ("Execution completed");
+   Log.Info (Me, "Execution completed");
    Finalize_Application;
 
    return Ada.Command_Line.Success;
@@ -261,7 +263,8 @@ exception
       return Ada.Command_Line.Failure;
 
    when E : Command_Line_Error =>
-      Log.Fatal (Exception_Message (E));
+      Log.Exception_Raised (Me, E);
+
       --  NOTE: For the moment, GNAT.Command_Line.Try_Help is not available in
       --  stable-gnat (only in nightlies). To avoid the dependency to the daily
       --  gnat build, we currently manually display the Try_Help message.
@@ -269,21 +272,14 @@ exception
       --  This will need to be updated when stable-gnat's version is bumped and
       --  it provides the required symbol.
       --
-      --  ??? GNAT.Command_Line.Try_Help;
-
-      Log.Info ("try `gnathub --help` for more information.");
-      Finalize_Application;
-
-      return Ada.Command_Line.Failure;
-
-   when E : Error =>
-      Log.Fatal (Exception_Message (E));
+      --  GNAT.Command_Line.Try_Help;
+      Put_Line ("try ""gnathub --help"" for more information.");
       Finalize_Application;
 
       return Ada.Command_Line.Failure;
 
    when E : Fatal_Error =>
-      Log.Fatal (Exception_Information (E));
+      Log.Exception_Raised (Me, E);
       Finalize_Application;
 
       return Ada.Command_Line.Failure;

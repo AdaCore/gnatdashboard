@@ -28,7 +28,7 @@ import csv
 import os
 
 import GNAThub
-from GNAThub import Log, db
+from GNAThub import System
 
 
 class CodePeer(GNAThub.Plugin):
@@ -87,7 +87,7 @@ class CodePeer(GNAThub.Plugin):
         CodePeer.execute_msg_reader() will be called upon process completion.
         """
 
-        Log.info('%s.run %s' % (self.fqn, self.display_command_line()))
+        System.info('%s.run %s' % (self.fqn, self.display_command_line()))
         proc = GNAThub.Run(self.name, self.__cmd_line())
 
         if proc.status:
@@ -101,7 +101,7 @@ class CodePeer(GNAThub.Plugin):
         CodePeer.postprocess() will be called upon process completion.
         """
 
-        Log.info('%s.msg_reader' % self.fqn)
+        System.info('%s.msg_reader' % self.fqn)
         proc = GNAThub.Run('msg_reader', self.__msg_reader_cmd_line(),
                            out=self.csv_report)
 
@@ -134,17 +134,18 @@ class CodePeer(GNAThub.Plugin):
             GNAThub.EXEC_FAILURE: on any error
         """
 
-        Log.info('%s.analyse %s' % (self.fqn,
-                                    os.path.relpath(self.csv_report)))
+        System.info('%s.analyse %s' %
+                    (self.fqn, os.path.relpath(self.csv_report)))
 
-        Log.debug('%s: storing tool in database' % self.fqn)
+        self.log.debug('%s: storing tool in database' % self.fqn)
         self.tool = GNAThub.Tool(self.name)
 
-        Log.debug('%s: parsing CSV report: %s' % (self.fqn, self.csv_report))
+        self.log.debug('%s: parsing CSV report: %s' %
+                       (self.fqn, self.csv_report))
 
         if not os.path.exists(self.csv_report):
             self.exec_status = GNAThub.EXEC_FAILURE
-            Log.error('%s: no report found, aborting.' % self.fqn)
+            self.log.error('%s: no report found, aborting.' % self.fqn)
             return
 
         with open(self.csv_report, 'rb') as report:
@@ -162,11 +163,11 @@ class CodePeer(GNAThub.Plugin):
 
                 # Drop the first line (containing the columns name)
                 header = reader.next()
-                Log.debug('Dropping header line: %s' % header)
+                self.log.debug('Dropping header line: %s' % header)
 
                 # Iterate over each relevant record
                 for index, record in enumerate(reader, start=1):
-                    Log.debug('Parsing record: %r' % record)
+                    self.log.debug('Parsing record: %r' % record)
 
                     # Each row is a list of strings:
                     # [File, Line, Column, Category, New?, Review?, Ranking,
@@ -188,12 +189,12 @@ class CodePeer(GNAThub.Plugin):
                     self.__add_message(source, line, column, rule, message,
                                        category)
 
-                    Log.progress(index, total, new_line=(index == total))
+                    System.progress(index, total, new_line=(index == total))
 
             except csv.Error as ex:
-                Log.error('%s: report analysis failed.' % self.fqn)
-                Log.error('%s: file %s, line %d: %s' % (self.fqn, report,
-                                                        total, ex))
+                System.error('%s: report analysis failed.' % self.fqn)
+                System.error('%s: file %s, line %d: %s' % (self.fqn, report,
+                                                           total, ex))
                 self.exec_status = GNAThub.EXEC_FAILURE
                 return
 

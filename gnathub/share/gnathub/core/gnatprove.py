@@ -31,7 +31,7 @@ import re
 from _gnat import SLOC_PATTERN
 
 import GNAThub
-from GNAThub import Log, db
+from GNAThub import System
 
 
 class GNATprove(GNAThub.Plugin):
@@ -77,7 +77,7 @@ class GNATprove(GNAThub.Plugin):
         GNATprove.postprocess() will be called upon process completion.
         """
 
-        Log.info('%s.run %s' % (self.fqn, self.display_command_line()))
+        System.info('%s.run %s' % (self.fqn, self.display_command_line()))
         proc = GNAThub.Run(self.name, self.__cmd_line())
         self.postprocess(proc.status, proc.output())
 
@@ -121,13 +121,13 @@ class GNATprove(GNAThub.Plugin):
                     if match:
                         self.__parse_line(match)
 
-            self.session.commit()
             self.exec_status = GNAThub.EXEC_SUCCESS
 
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAILURE
-            Log.error('%s: failed to parse output: %s' % (self.fqn, logfile))
-            Log.error(str(ex))
+            System.error('%s: failed to parse output: %s' %
+                         (self.fqn, logfile))
+            System.error(str(ex))
 
     def __parse_line(self, regex):
         """Parses a GNATprove message line and adds it to the database.
@@ -168,7 +168,7 @@ class GNATprove(GNAThub.Plugin):
             self.__add_message(src, line, column, rule_id, message)
 
         except KeyError:
-            Log.warn('Unknown severity: %s' % severity)
+            System.warn('Unknown severity: %s' % severity)
 
     def __add_message(self, src, line, col_begin, rule_id, msg):
         """Registers a new message in the database.

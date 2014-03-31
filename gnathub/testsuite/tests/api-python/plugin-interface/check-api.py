@@ -1,7 +1,6 @@
 """Check the integrity of the GNAThub Python module."""
 
-# pylint: disable=C0103
-# Disable "Invalid module name" (this is a script, not a module)
+# pylint: disable=invalid-name
 
 import GNAThub
 

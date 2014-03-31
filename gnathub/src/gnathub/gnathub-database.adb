@@ -15,6 +15,8 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
+with GNAT.Source_Info;
+
 with GNATCOLL.SQL;            use GNATCOLL.SQL;
 with GNATCOLL.SQL.Exec;       use GNATCOLL.SQL.Exec;
 with GNATCOLL.SQL.Inspect;    use GNATCOLL.SQL.Inspect;
@@ -26,9 +28,9 @@ with GNATCOLL.VFS;            use GNATCOLL.VFS;
 with GNAThub.Constants;       use GNAThub.Constants;
 
 package body GNAThub.Database is
+   Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
 
    Max_Sessions : constant Natural := 2;
-
    Schema_IO    : DB_Schema_IO;
 
    function Kind_Factory
@@ -91,28 +93,27 @@ package body GNAThub.Database is
          --  Check existence of a database, delete it before creating a new one
 
          if Is_Regular_File (Database_File) then
-            Log.Debug ("Removing previous copy of the database: " &
-                         Database_File.Display_Full_Name);
+            Log.Info (Me, "Removing previous copy of the database: " &
+                          Database_File.Display_Full_Name);
 
             Delete (Database_File, Delete_Succeed);
 
             if not Delete_Succeed then
-               raise Error with "Unable to delete old Sqlite file: " &
+               raise Fatal_Error with
+                 "Unable to delete old Sqlite file: " &
                  Database_File.Display_Full_Name;
             end if;
          end if;
 
          --  Retieve schema from text file
-         Log.Debug
-           ("Loading database schema: " &
-              GNAThub.Constants.Database_Model_File.Display_Full_Name);
+         Log.Info (Me, "Loading database schema: " &
+                       Database_Model_File.Display_Full_Name);
 
-         Schema := New_Schema_IO
-           (GNAThub.Constants.Database_Model_File).Read_Schema;
+         Schema := New_Schema_IO (Database_Model_File).Read_Schema;
       end if;
 
       Descr := GNATCOLL.SQL.Sqlite.Setup
-        (Database => Database_File.Display_Full_Name);
+                 (Database => Database_File.Display_Full_Name);
 
       Schema_IO.DB := Descr.Build_Connection;
 
@@ -125,7 +126,7 @@ package body GNAThub.Database is
       Set_Default_Factory (Kind_Factory'Access);
 
       if not Schema_IO.DB.Success then
-         raise Error with "Unable to initialize the Database";
+         raise Fatal_Error with "Unable to initialize the Database";
       end if;
    end Initialize;
 

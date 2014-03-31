@@ -15,43 +15,79 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Exceptions;
+
+with GNATCOLL.Traces;               use GNATCOLL.Traces;
+
 package GNAThub is
 
-   Error        : exception;
    Fatal_Error  : exception;
    Silent_Error : exception;
 
+   type Verbosity_Level is (Quiet, Default, Verbose);
+   --  The three possible thresholds of verbosity for this application
+
+   procedure Initialize_Logging;
+   --  Setup the logger and load the configuration file if available
+
+   procedure Info
+     (Message      : String;
+      Availability : Verbosity_Level := Default);
+   --  Print an informative message. Activated at default verbosity output
+
+   procedure Warn (Message : String);
+   --  Print a warning message. Always activated
+
+   procedure Error (Message : String);
+   --  Print an error message. Always activated
+
+   procedure Fail (Message : String);
+   --  Print a fatal message and exit. Always activated
+
+   procedure Set_Verbosity (Verbosity : Verbosity_Level);
+   --  Set the output verbosity of the GNAThub application
+
+   procedure Progress
+     (Current  : Natural;
+      Total    : Positive;
+      New_Line : Boolean := False);
+   --  Print a progess message. Activated at default verbosity level.
+   --  If New_Line is True, then terminate the line with a ASCII.LF
+   --  character. Defaults to False.
+
+   procedure Ellapsed;
+   --  Print the ellapsed time since the beginning of the application
+   --  execution.
+
    package Log is
-      type Verbosity_Level is (Quiet, Default, Verbose);
-      --  The three possible thresholds of verbosity for this application.
 
-      procedure Info (Message : String);
-      --  Print an informative message. Activated at default verbosity output.
+      type Log_Level is
+        (Log_None, Log_Fatal, Log_Error, Log_Warn, Log_Info, Log_Debug,
+         Log_All);
 
-      procedure Warn (Message : String);
-      --  Print a warning message. Activated at default verbosity output.
+      procedure Set_Log_Level (Level : Log_Level);
+      --  Set the logger verbosity
 
-      procedure Error (Message : String);
-      --  Print an error message. Always activated.
+      procedure Info (Handle : Trace_Handle; Message : String);
+      --  Log an informative message. Activated at default verbosity output
 
-      procedure Fatal (Message : String);
-      --  Print a fatal message. Always activated.
+      procedure Warn (Handle : Trace_Handle; Message : String);
+      --  Log a warning message. Activated at default verbosity output
 
-      procedure Debug (Message : String);
-      --  Print a debug message. Activated at higher verbosity level.
+      procedure Error (Handle : Trace_Handle; Message : String);
+      --  Log an error message. Always activated
 
-      procedure Progress
-        (Current : Natural; Total : Positive; New_Line : Boolean := False);
-      --  Print a progess message. Activated at default verbosity level.
-      --  If New_Line is True, then terminate the line with a ASCII.LF
-      --  character. Defaults to False.
+      procedure Fatal (Handle : Trace_Handle; Message : String);
+      --  Log a fatal message. Always activated
 
-      procedure Ellapsed;
-      --  Print the ellapsed time since the beginning of the application
-      --  execution.
+      procedure Debug (Handle : Trace_Handle; Message : String);
+      --  Log a debug message. Activated at higher verbosity level
 
-      procedure Set_Verbosity (Verbosity : Verbosity_Level);
-      --  Set the output verbosity of the GNAThub application.
+      procedure Exception_Raised
+        (Handle : Trace_Handle;
+         E      : Ada.Exceptions.Exception_Occurrence);
+      --  Log a debug message. Activated at higher verbosity level
+
    end Log;
 
 end GNAThub;

@@ -104,13 +104,43 @@ def database():
     pass        # Implemented in Ada
 
 
-class Log(object):
+class Logger(object):
     """A logger object. Fully implemented in Ada."""
 
-    def __init__(self):
+    def __init__(self, name):
         """Instance constructor."""
 
-        raise Error('GNAThub.Log must not be instantiated')
+        pass    # Implemented in Ada
+
+    def info(message):
+        """Prints an informative message. Activated at default verbosity
+        output.
+        """
+
+        pass    # Implemented in Ada
+
+    def warn(message):
+        """Prints a warning message. Activated at default verbosity output."""
+
+        pass    # Implemented in Ada
+
+    def error(message):
+        """Prints an error message. Always activated."""
+
+        pass    # Implemented in Ada
+
+    def fatal(message):
+        """Prints a fatal message. Always activated."""
+
+        pass    # Implemented in Ada
+
+    def debug(message):
+        """Prints a debug message. Activated at higher verbosity level."""
+
+        pass    # Implemented in Ada
+
+class System(object):
+    """Provides several helper routines implemented in Ada."""
 
     @staticmethod
     def info(message):
@@ -129,18 +159,6 @@ class Log(object):
     @staticmethod
     def error(message):
         """Prints an error message. Always activated."""
-
-        pass    # Implemented in Ada
-
-    @staticmethod
-    def fatal(message):
-        """Prints a fatal message. Always activated."""
-
-        pass    # Implemented in Ada
-
-    @staticmethod
-    def debug(message):
-        """Prints a debug message. Activated at higher verbosity level."""
 
         pass    # Implemented in Ada
 
@@ -290,6 +308,15 @@ class Plugin:
     def __init__(self):
         """Instance constructor."""
 
+        # A custom instance of a logger. It is implemented in Ada and based on
+        # the GNATCOLL.Traces module. This unrelated to the LOG_FILE class
+        # variable with specifies the file in which to redirect the output of
+        # tools being executed by the Plugin.
+        self.log = Logger(self.__class__.__name__)
+
+        # The execution status of this plugin. Initialized to NOT_EXECUTED.
+        # Should be set to EXEC_FAILURE or EXEC_SUCCESS by the plugin in the
+        # Plugin.execute method.
         self._exec_status = NOT_EXECUTED
 
     def display_command_line(self):
@@ -422,14 +449,15 @@ class Run(object):
         self.argv = argv
         self.status = None
         self.out = out
+        self.log = Logger(self.__class__.__name__)
 
-        Log.debug('Run: cd %s; %s' % (
+        self.log.debug('Run: cd %s; %s' % (
             workdir if workdir is not None else os.getcwd(),
             self.cmdline_image()))
 
         try:
             with open(self.output(), 'w') as output:
-                Log.info('... output redirected to %s' % output.name)
+                System.info('... output redirected to %s' % output.name)
                 self.internal = Popen(argv, env=env, stdin=None, stdout=output,
                                       stderr=STDOUT, cwd=workdir)
                 self.pid = self.internal.pid
@@ -437,12 +465,12 @@ class Run(object):
 
         except OSError as ex:
             self.__error()
-            Log.error('%s: %s' % (self.argv[0], ex.strerror))
+            System.error('%s: %s' % (self.argv[0], ex.strerror))
             return
 
         except Exception as ex:
             self.__error()
-            Log.error(str(ex))
+            System.error(str(ex))
             raise
 
     def wait(self):

@@ -196,7 +196,7 @@ package body GNAThub.Project is
    exception
       when Invalid_Project =>
          --  Errors are already printed on the standard error stream
-         raise Error with "Failed to load project file: " & Path.all;
+         raise Fatal_Error with "Failed to load project file: " & Path.all;
 
    end Load;
 

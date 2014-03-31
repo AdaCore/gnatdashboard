@@ -27,7 +27,7 @@ module and load it as part of the GNAThub default execution.
 import os
 
 import GNAThub
-from GNAThub import Log, db
+from GNAThub import System
 
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
@@ -65,7 +65,7 @@ class GNATmetric(GNAThub.Plugin):
         GNATmetric.postprocess() will be called upon process completion.
         """
 
-        Log.info('%s.run %s' % (self.fqn, self.display_command_line()))
+        System.info('%s.run %s' % (self.fqn, self.display_command_line()))
         proc = GNAThub.Run(self.name, self.__cmd_line())
         self.postprocess(proc.status)
 
@@ -105,12 +105,13 @@ class GNATmetric(GNAThub.Plugin):
                                   report
         """
 
-        Log.info('%s.analyse %s' % (self.fqn, os.path.relpath(self.report)))
+        System.info('%s.analyse %s' %
+                    (self.fqn, os.path.relpath(self.report)))
 
-        Log.debug('%s: storing tool in database' % self.fqn)
+        self.log.debug('%s: storing tool in database' % self.fqn)
         tool = GNAThub.Tool(self.name)
 
-        Log.debug('%s: parsing XML report: %s' % (self.fqn, self.report))
+        self.log.debug('%s: parsing XML report: %s' % (self.fqn, self.report))
 
         try:
             tree = ElementTree.parse(self.report)
@@ -119,12 +120,12 @@ class GNATmetric(GNAThub.Plugin):
             files = tree.findall('./file')
             total = len(files)
 
-            for index, file_node in enumerate(files, start=1):
-                resource = GNAThub.Resource.get(file_node.attrib.get('name'))
+            for index, node in enumerate(files, start=1):
+                resource = GNAThub.Resource.get(node.attrib.get('name'))
 
                 # Save file level metrics
                 if resource:
-                    for metric in file_node.findall('./metric'):
+                    for metric in node.findall('./metric'):
                         name = metric.attrib.get('name')
                         rule = GNAThub.Rule(name, name, GNAThub.METRIC_KIND,
                                             tool)
@@ -135,35 +136,35 @@ class GNATmetric(GNAThub.Plugin):
                         resource.add_message(message)
 
                 else:
-                    Log.warn('File not found, skipping all messages from: %s' %
-                             file_node.attrib.get('name'))
+                    System.warn('File not found, skipping messages for: %s' %
+                                node.attrib.get('name'))
                     continue
 
                 # Save unit level metric
-                for unit in file_node.findall('.//unit'):
+                for unit in node.findall('.//unit'):
                     for metric in unit.findall('./metric'):
                         pass
                         # /!\ Not handle for now: to be done /!\
-                        # File --> file_node.attrib.get('name'),
+                        # File --> node.attrib.get('name'),
                         # Entity Line --> unit.attrib.get('line'),
                         # Entity name --> unit.attrib.get('name'),
                         # Entity Col --> unit.attrib.get('col'),
                         # Metric name --> metric.attrib.get('name'),
                         # Metric value --> metric.text)
 
-                Log.progress(index, total, new_line=(index == total))
+                System.progress(index, total, new_line=(index == total))
 
             self.exec_status = GNAThub.EXEC_SUCCESS
 
-            Log.debug('%s: all objects committed to database' % self.fqn)
+            self.log.debug('%s: all objects committed to database' % self.fqn)
 
         except ParseError as ex:
             self.exec_status = GNAThub.EXEC_FAILURE
-            Log.error('%s: unable to parse XML report' % self.fqn)
-            Log.error('%s:%s:%s - :%s' % (ex.filename, ex.lineno, ex.text,
-                                          ex.msg))
+            System.error('%s: unable to parse XML report' % self.fqn)
+            System.error('%s:%s:%s - :%s' % (ex.filename, ex.lineno, ex.text,
+                                             ex.msg))
 
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAILURE
-            Log.error('%s: unable to parse XML report' % self.fqn)
-            Log.error(str(ex))
+            System.error('%s: unable to parse XML report' % self.fqn)
+            System.error(str(ex))

@@ -28,7 +28,7 @@ import ConfigParser
 import os
 
 import GNAThub
-from GNAThub import Log
+from GNAThub import System
 
 # pylint: disable=F0401
 # Disable: Unable to import '{}'
@@ -48,6 +48,9 @@ class _SonarConfiguration(object):
               'sonar.projectKey': ('%s::Project' % GNAThub.Project.name(),
                                    'Project_Key'),
               'sonar.ada.qmt.db.path': (GNAThub.database(), None)}
+
+    def __init__(self, logger=None):
+        self.log = logger
 
     def _add(self, config, key, value, attribute=None):
         """Adds property in sonar configuration
@@ -69,11 +72,11 @@ class _SonarConfiguration(object):
         if attribute:
             attr_value = GNAThub.Project.property_as_string(attribute)
             if attr_value:
-                Log.debug('%s.%s: overriding default with %s' %
-                          (section, key, attr_value))
+                self.log.debug('%s.%s: overriding default with %s' %
+                               (section, key, attr_value))
                 value = attr_value
 
-        Log.debug('%s.%s = %s' % (section, key, value))
+        self.log.debug('%s.%s = %s' % (section, key, value))
         config.set(section, key, value)
 
     def write(self, filename):
@@ -131,11 +134,11 @@ class SonarConfig(GNAThub.Plugin):
         """Generates SonarQube Runner configuration file and dumps it."""
 
         try:
-            config = _SonarConfiguration()
+            config = _SonarConfiguration(logger=self.log)
             config.write(SonarQube.configuration())
 
             self.exec_status = GNAThub.EXEC_SUCCESS
 
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAILURE
-            Log.fatal(str(ex))
+            System.error(str(ex))

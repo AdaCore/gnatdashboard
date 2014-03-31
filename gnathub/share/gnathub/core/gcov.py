@@ -27,7 +27,7 @@ load it as part of the GNAThub default execution.
 import os
 
 import GNAThub
-from GNAThub import Log, db
+from GNAThub import System
 
 
 class Gcov(GNAThub.Plugin):
@@ -86,7 +86,7 @@ class Gcov(GNAThub.Plugin):
 
         # If no .gcov file found, plugin returns on failure
         if not files:
-            Log.error('No gcov file found in project root object directory')
+            System.error('No .gcov file in object directory')
             self.exec_status = GNAThub.EXEC_FAILURE
             return
 
@@ -123,16 +123,16 @@ class Gcov(GNAThub.Plugin):
                                 self.__add_line_hits(resource, int(line_id),
                                                      hits)
 
-                Log.progress(index, total, new_line=(index == total))
+                System.progress(index, total, new_line=(index == total))
 
             self.exec_status = GNAThub.EXEC_SUCCESS
 
         except IOError as ex:
-            Log.error('%s: %s' % (self.fqn, str(ex)))
+            System.error('%s: %s' % (self.fqn, str(ex)))
             self.exec_status = GNAThub.EXEC_FAILURE
 
     def execute(self):
         """Finds the Gcov output files and parses them."""
 
-        Log.info('%s.parse: *%s' % (self.fqn, self.GCOV_SUFFIX))
+        System.info('%s.parse: *%s' % (self.fqn, self.GCOV_SUFFIX))
         self.__parse_gcov_report()

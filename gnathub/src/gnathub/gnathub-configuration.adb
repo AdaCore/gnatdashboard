@@ -17,8 +17,10 @@
 
 with Ada.Strings;
 with Ada.Strings.Fixed;
+with Ada.Text_IO;
 
 with GNAT.Command_Line;       use GNAT.Command_Line;
+with GNAT.Source_Info;
 
 with GNATCOLL.Projects;       use GNATCOLL.Projects;
 with GNATCOLL.Utils;          use GNATCOLL.Utils;
@@ -29,6 +31,7 @@ with GNAThub.Project;
 with GNAThub.Version;
 
 package body GNAThub.Configuration is
+   Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
 
    Config      : GNAT.Command_Line.Command_Line_Configuration;
 
@@ -36,9 +39,9 @@ package body GNAThub.Configuration is
    Plugins_Arg : aliased GNAT.Strings.String_Access;
    Script_Arg  : aliased GNAT.Strings.String_Access;
    Jobs_Arg    : aliased Integer;
-   Version     : aliased Boolean;
-   Quiet       : aliased Boolean;
-   Verbose     : aliased Boolean;
+   Version_Arg : aliased Boolean;
+   Quiet_Arg   : aliased Boolean;
+   Verbose_Arg : aliased Boolean;
 
    procedure Parse_Command_Line;
    --  Parse the command line and handle -X switches
@@ -88,7 +91,7 @@ package body GNAThub.Configuration is
 
       Define_Switch
         (Config      => Config,
-         Output      => Verbose'Access,
+         Output      => Verbose_Arg'Access,
          Switch      => "-v",
          Long_Switch => "--verbose",
          Help        => "Toggle verbose mode on",
@@ -96,7 +99,7 @@ package body GNAThub.Configuration is
 
       Define_Switch
         (Config      => Config,
-         Output      => Quiet'Access,
+         Output      => Quiet_Arg'Access,
          Switch      => "-q",
          Long_Switch => "--quiet",
          Help        => "Toggle quiet mode on",
@@ -104,7 +107,7 @@ package body GNAThub.Configuration is
 
       Define_Switch
         (Config      => Config,
-         Output      => Version'Access,
+         Output      => Version_Arg'Access,
          Switch      => "-V",
          Long_Switch => "--version",
          Help        => "Print the version and exit",
@@ -148,12 +151,10 @@ package body GNAThub.Configuration is
                   Value => Parameter (Equal + 1 .. Parameter'Last));
 
             else
-               Log.Warn
-                 ("Ignoring switch -X, missing name or/and value for: " &
-                  Switch & Parameter);
+               Warn ("Ignoring switch -X, missing name or/and value for: " &
+                     Switch & Parameter);
             end if;
          end if;
-
       end Local_Parse_Command_Line;
 
    begin
@@ -166,6 +167,7 @@ package body GNAThub.Configuration is
 
    procedure Evaluate_Command_Line
    is
+      use Ada.Text_IO;
       use GNAT.Strings;
       --  Bring the '=' operator in the scope
 
@@ -179,29 +181,27 @@ package body GNAThub.Configuration is
       pragma Assert (Script_Arg /= null, "unexpected null script argument");
 
       --  Print the version and exit if --version is supplied
-      if Version then
-         Log.Info
-           ("GNAThub " & GNAThub.Version.Version & " " &
-            GNAThub.Version.Date & " for GNATdashboard Suite");
-
-         Log.Info ("Copyright (C) " & GNAThub.Version.Year & ", AdaCore");
+      if Version_Arg then
+         Put_Line ("GNAThub " & GNAThub.Version.Version & " " &
+                   GNAThub.Version.Date & " for GNATdashboard Suite");
+         Put_Line ("Copyright (C) 2013-" & GNAThub.Version.Year & ", AdaCore");
 
          raise GNAT.Command_Line.Exit_From_Command_Line;
       end if;
 
       --  Ensure consistency of use for --quiet and --verbose and set the
       --  logging level accordingly
-      if Quiet and then Verbose then
+      if Quiet_Arg and then Verbose_Arg then
          raise Command_Line_Error
            with "--verbose and --quiet are mutually exclusive.";
       end if;
 
-      if Quiet then
-         Log.Set_Verbosity (Log.Quiet);
+      if Quiet_Arg then
+         GNAThub.Set_Verbosity (Quiet);
       end if;
 
-      if Verbose then
-         Log.Set_Verbosity (Log.Verbose);
+      if Verbose_Arg then
+         GNAThub.Set_Verbosity (Verbose);
       end if;
 
       --  Ensure consistency of use for --plugins and --exec
@@ -221,6 +221,8 @@ package body GNAThub.Configuration is
          raise Command_Line_Error with "no project file specified";
       end if;
 
+      Log.Info (Me, "Using project file: " & Project_Arg.all);
+
       --  Check existence of the given path on disk
       declare
          Project : constant String := Project_Arg.all;
@@ -232,7 +234,7 @@ package body GNAThub.Configuration is
          end if;
 
          if not Is_Regular_File (Filesystem_String (Project_Arg.all)) then
-            raise Error with Project & ": no such file or directory";
+            raise Fatal_Error with Project & ": no such file or directory";
          end if;
       end;
 
