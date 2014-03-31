@@ -130,6 +130,8 @@ package body GNAThub.Configuration is
    ------------------------
 
    procedure Parse_Command_Line is
+      use GNAT.Strings;
+
       procedure Local_Parse_Command_Line (Switch, Parameter, Section : String);
       --  Allow to manage every occurance of -X switch for scenario variable
 
@@ -158,7 +160,34 @@ package body GNAThub.Configuration is
       end Local_Parse_Command_Line;
 
    begin
+      --  Parse the command line
+
       Getopt (Config, Local_Parse_Command_Line'Unrestricted_Access);
+
+      --  If -P is not provided, expect the project file to be the first
+      --  positional argument.
+
+      if Project_Arg = null or else Project_Arg.all = "" then
+         declare
+            Arg : constant String := Get_Argument;
+         begin
+            if Arg /= "" then
+               Project_Arg := new String'(Arg);
+            end if;
+         end;
+      end if;
+
+      --  Display a warning message for each extra positional argument
+
+      loop
+         declare
+            Arg : constant String := Get_Argument;
+         begin
+            exit when Arg = "";
+
+            Warn ("Ignoring extra argument: " & Arg);
+         end;
+      end loop;
    end Parse_Command_Line;
 
    ---------------------------
