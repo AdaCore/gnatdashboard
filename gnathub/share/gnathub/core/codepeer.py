@@ -217,7 +217,7 @@ class CodePeer(GNAThub.Plugin):
             :type category: a string
         """
 
-        rule = GNAThub.Rule(rule_id, rule_id, db.RULE_KIND, self.tool)
+        rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
         cat = GNAThub.Category(category)
         message = GNAThub.Message(rule, msg, cat)
         resource = GNAThub.Resource.get(src)

@@ -91,8 +91,8 @@ class Gcov(GNAThub.Plugin):
             return
 
         self.tool = GNAThub.Tool(self.name)
-        self.rule = GNAThub.Rule('coverage', 'coverage', db.METRIC_KIND,
-                                 self.tool)
+        self.rule = GNAThub.Rule('coverage', 'coverage',
+                                 GNAThub.METRIC_KIND, self.tool)
 
         total = len(files)
 

@@ -126,7 +126,8 @@ class GNATmetric(GNAThub.Plugin):
                 if resource:
                     for metric in file_node.findall('./metric'):
                         name = metric.attrib.get('name')
-                        rule = GNAThub.Rule(name, name, db.METRIC_KIND, tool)
+                        rule = GNAThub.Rule(name, name, GNAThub.METRIC_KIND,
+                                            tool)
 
                         # pylint: disable=E1103
                         # Disable "Module {} has no member {}" error

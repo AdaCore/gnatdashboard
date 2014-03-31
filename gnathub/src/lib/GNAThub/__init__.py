@@ -255,6 +255,9 @@ from subprocess import Popen, STDOUT
 
 EXEC_SUCCESS, EXEC_FAILURE, NOT_EXECUTED = range(3)
 
+# Database-related constants
+RULE_KIND, METRIC_KIND = range(2)
+PROJECT_KIND, DIRECTORY_KIND, FILE_KIND = range(3)
 
 class Error(Exception):
     """Base class for exceptions in this module."""

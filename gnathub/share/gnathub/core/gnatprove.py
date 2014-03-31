@@ -186,7 +186,7 @@ class GNATprove(GNAThub.Plugin):
             :type msg: A string.
         """
 
-        rule = GNAThub.Rule(rule_id, rule_id, db.RULE_KIND, self.tool)
+        rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
         message = GNAThub.Message(rule, msg)
 
         resource = GNAThub.Resource.get(src)
