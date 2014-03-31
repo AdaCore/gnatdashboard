@@ -186,6 +186,12 @@ class PluginRunner(object):
             LOG.info('  + %d new script(s) found' % len(repo_scripts))
             scripts.update(repo_scripts)
 
+            if len(repo_scripts):
+                # Add the repository to sys.path so that modules can import
+                # themselves. Do this only if scripts were found in this
+                # repository.
+                sys.path.append(path)
+
         # Compute the plugins list given the program input and their priority.
         # Priority order:
         #       1. Command line

@@ -104,6 +104,8 @@ package body GNAThub is
    procedure Set_Verbosity (Verbosity : Verbosity_Level) is
    begin
       Output_Verbosity := Verbosity;
+      Log.Info (Me,
+         "Output_Verbosity set to " & Verbosity_Level'Image (Verbosity));
    end Set_Verbosity;
 
    --------------
@@ -139,6 +141,8 @@ package body GNAThub is
             Ada.Text_IO.New_Line;
          end if;
       end if;
+
+      Log.Info (Me, Message);
    end Progress;
 
    --------------
@@ -187,6 +191,7 @@ package body GNAThub is
       procedure Set_Log_Level (Level : Log_Level) is
       begin
          Log_Verbosity := Level;
+         Log.Info (Me, "Log_Level set to " & Log_Level'Image (Level));
       end Set_Log_Level;
 
       -----------

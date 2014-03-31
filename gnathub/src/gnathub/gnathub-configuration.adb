@@ -132,29 +132,31 @@ package body GNAThub.Configuration is
    procedure Parse_Command_Line is
       use GNAT.Strings;
 
-      procedure Local_Parse_Command_Line (Switch, Parameter, Section : String);
+      procedure Local_Parse_Command_Line (Switch, Param, Section : String);
       --  Allow to manage every occurance of -X switch for scenario variable
 
       ------------------------------
       -- Local_Parse_Command_Line --
       ------------------------------
 
-      procedure Local_Parse_Command_Line (Switch, Parameter, Section : String)
+      procedure Local_Parse_Command_Line (Switch, Param, Section : String)
       is
          pragma Unreferenced (Section);
          Equal : Natural;
       begin
          if Switch = "-X" then
-            Equal := Ada.Strings.Fixed.Index (Parameter, "=");
+            Equal := Ada.Strings.Fixed.Index (Param, "=");
 
             if Equal /= 0 then
-               GNAThub.Project.Update_Env
-                 (Key   => Parameter (Parameter'First .. Equal - 1),
-                  Value => Parameter (Equal + 1 .. Parameter'Last));
-
+               declare
+                  Key   : constant String := Param (Param'First .. Equal - 1);
+                  Value : constant String := Param (Equal + 1 .. Param'Last);
+               begin
+                  GNAThub.Project.Update_Env (Key, Value);
+               end;
             else
-               Warn ("Ignoring switch -X, missing name or/and value for: " &
-                     Switch & Parameter);
+               Warn ("Unexpected argument for -X:");
+               Warn ("Expected ""key:value"", got " & Param);
             end if;
          end if;
       end Local_Parse_Command_Line;
@@ -172,6 +174,7 @@ package body GNAThub.Configuration is
             Arg : constant String := Get_Argument;
          begin
             if Arg /= "" then
+               Log.Debug (Me, "Project file supplied with implicit -P");
                Project_Arg := new String'(Arg);
             end if;
          end;
@@ -184,7 +187,6 @@ package body GNAThub.Configuration is
             Arg : constant String := Get_Argument;
          begin
             exit when Arg = "";
-
             Warn ("Ignoring extra argument: " & Arg);
          end;
       end loop;
@@ -250,9 +252,7 @@ package body GNAThub.Configuration is
          raise Command_Line_Error with "no project file specified";
       end if;
 
-      Log.Info (Me, "Using project file: " & Project_Arg.all);
-
-      --  Check existence of the given path on disk
+      --  Check existence of the given paths on disk
       declare
          Project : constant String := Project_Arg.all;
          Ext     : constant String := +Project_File_Extension;
@@ -266,6 +266,8 @@ package body GNAThub.Configuration is
             raise Fatal_Error with Project & ": no such file or directory";
          end if;
       end;
+
+      Log.Info (Me, "Using project file " & Project_Arg.all);
 
    exception
       when GNAT.Command_Line.Exit_From_Command_Line =>

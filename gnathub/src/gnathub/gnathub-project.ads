@@ -16,7 +16,6 @@
 ------------------------------------------------------------------------------
 
 with GNAT.OS_Lib;       use GNAT.OS_Lib;
-with GNAT.Strings;
 
 with GNATCOLL.VFS;      use GNATCOLL.VFS;
 with GNATCOLL.Projects; use GNATCOLL.Projects;
@@ -35,7 +34,7 @@ package GNAThub.Project is
    procedure Initialize;
    --  Initialize this module
 
-   procedure Load (Path : GNAT.Strings.String_Access)
+   procedure Load (Path : String)
       with Pre => Initialized;
    --  Load the project file in memory
 
@@ -53,7 +52,6 @@ package GNAThub.Project is
    procedure Save_Project_Tree
      with Pre => Initialized and then Loaded;
    --  Store the project details in database
-   --  ???: Re-think this part
 
    function Name return String
      with Pre => Initialized and then Loaded;

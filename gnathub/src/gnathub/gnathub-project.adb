@@ -22,12 +22,15 @@ with Ada.Strings.Unbounded;               use Ada.Strings.Unbounded;
 with Ada.Strings.Unbounded.Hash;
 with Ada.Strings.Equal_Case_Insensitive;
 
+with GNAT.Source_Info;
+
 with GNATCOLL.VFS_Utils;                  use GNATCOLL.VFS_Utils;
 
 with GNAThub.Database;                    use GNAThub.Database;
 with Orm;                                 use Orm;
 
 package body GNAThub.Project is
+   Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
 
    Package_Name : constant String := "dashboard";
    --  Package_Name MUST be in lower case to avoid Prj error "cannot
@@ -56,7 +59,7 @@ package body GNAThub.Project is
    procedure Save_Project_Sources
      (Project     : Project_Type;
       Project_Orm : Detached_Resource);
-   --  ???
+   --  Save source files and directories associated with a project
 
    ------------
    -- Loaded --
@@ -152,6 +155,8 @@ package body GNAThub.Project is
             raise Project_Error with
               "Failed to register custom attribute " & Key;
          end if;
+
+         Log.Debug (Me, "Register GNATdashboard package attribute: " & Key);
       end Internal_Register;
 
    begin
@@ -173,7 +178,10 @@ package body GNAThub.Project is
 
    procedure Initialize is
    begin
+      Log.Info (Me, "Initialize project loader");
       GNATCOLL.Projects.Initialize (Project_Env);
+
+      Log.Info (Me, "Register custom GNATdashboard package attributes");
       Register_Custom_Attributes;
 
       Is_Initialized := True;
@@ -183,20 +191,24 @@ package body GNAThub.Project is
    -- Load--
    ---------
 
-   procedure Load (Path : GNAT.Strings.String_Access)
+   procedure Load (Path : String)
    is
-      Project_File : constant Virtual_File := GNATCOLL.VFS.Create (+Path.all);
+      Project_File : constant Virtual_File := GNATCOLL.VFS.Create (+Path);
    begin
+      Log.Info (Me, "Load project file " & Path);
+
       Project_Tree.Load
         (Root_Project_Path => Project_File,
          Env               => Project_Env);
 
       Is_Project_Loaded := True;
 
+      Log.Info (Me, "Project """ & Name & """ loaded");
+
    exception
       when Invalid_Project =>
          --  Errors are already printed on the standard error stream
-         raise Fatal_Error with "Failed to load project file: " & Path.all;
+         raise Fatal_Error with "Failed to load project file: " & Path;
 
    end Load;
 
@@ -206,6 +218,7 @@ package body GNAThub.Project is
 
    procedure Update_Env (Key, Value : String) is
    begin
+      Log.Info (Me, "Update project environment: " & Key & " = " & Value);
       Project_Env.Change_Environment (Key, Value);
    end Update_Env;
 
@@ -237,12 +250,13 @@ package body GNAThub.Project is
       Files         : File_Array_Access;
 
    begin
+      Log.Info (Me, "Save project sources: " & Project.Name);
+
       --  Initialisation
       Files := Project.Source_Files;
       Directory_Orm := No_Detached_Resource;
 
       for F in Files'Range loop
-
          --  Save source directory
          if (not (Directory_Orm = No_Detached_Resource)
              and then not Ada.Strings.Equal_Case_Insensitive
@@ -255,6 +269,9 @@ package body GNAThub.Project is
               (Name => Files (F).Display_Dir_Name,
                Kind => Kind_Directory);
             Save_Resource_Tree (Directory_Orm, Project_Orm);
+
+            Log.Debug (Me,
+              "New source directory: " & Files (F).Display_Dir_Name);
          end if;
 
          --  Save source file, and source tree
@@ -262,13 +279,14 @@ package body GNAThub.Project is
            (Name => Files (F).Display_Full_Name,
             Kind => Kind_File);
          Save_Resource_Tree (File_Orm, Directory_Orm);
-      end loop;
 
+         Log.Debug (Me, "New source file: " & Files (F).Display_Full_Name);
+      end loop;
    end Save_Project_Sources;
 
-   ------------------
-   -- Load_Project --
-   ------------------
+   -----------------------
+   -- Save_Project_Tree --
+   -----------------------
 
    procedure Save_Project_Tree is
       Project_Orm_By_Name : Project_Map.Map;
@@ -281,7 +299,6 @@ package body GNAThub.Project is
 
       function Get_Project_Orm
         (Project : Project_Type) return Detached_Resource;
-      --  ???
 
       ---------------------
       -- Get_Project_Orm --

@@ -41,7 +41,7 @@ package body GNAThub.Python is
    Logger_Error_Method     : aliased String := "error";
    Logger_Fatal_Method     : aliased String := "fatal";
    Logger_Debug_Method     : aliased String := "debug";
-   Logger_Exception_Method : aliased String := "exception";
+   --  Logger_Exception_Method : aliased String := "exception";
 
    Logger_Class_Instance_Methods : constant array (1 .. 5) of access String :=
       (Logger_Info_Method'Access,

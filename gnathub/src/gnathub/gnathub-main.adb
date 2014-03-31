@@ -87,7 +87,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
       if Object_Directory = No_File then
          raise Fatal_Error
-           with "Project file forces no object directory, execution aborted";
+           with "No object directory policy enforced by project";
       end if;
 
       --  Create both root and log directories
@@ -95,9 +95,11 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       if Is_Regular_File (Logs_Directory) then
          if not Is_Directory (Logs_Directory) then
             raise Fatal_Error
-              with Logs_Directory.Display_Full_Name & " is not a directory";
+              with Logs_Directory.Display_Full_Name & " must be a directory";
          end if;
       else
+         Log.Debug (Me,
+           "Create logs directory: " & Logs_Directory.Display_Full_Name);
          Make_Dir (Logs_Directory, Recursive => True);
       end if;
 
@@ -123,46 +125,16 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    -- Execute_Plugin_Runner --
    ---------------------------
 
-   procedure Execute_Plugin_Runner is
-      Had_Errors : Boolean;
-
-      Python_Path_List : constant array (1 .. 2) of Virtual_File :=
-        (Core_Plugins_Dir, Extra_Plugins_Dir);
-
+   procedure Execute_Plugin_Runner
+   is
+      Runner_Script : constant String := Plugin_Runner.Display_Full_Name;
+      Had_Errors    : Boolean := False;
    begin
-      --  Add the default search path for GNAThub plugins
-      --  and GNAThub python API
-
-      Log.Info (Me, "Loading plugins from: ");
-
-      declare
-         Python_Path : Unbounded_String :=
-                         To_Unbounded_String ("sys.path.extend([");
-      begin
-         for Dir of Python_Path_List loop
-            Log.Info (Me, "  + " & Dir.Display_Full_Name);
-            Python_Path := Python_Path &
-              To_Unbounded_String ("r'" & Dir.Display_Full_Name & "',");
-         end loop;
-
-         Python_Path := Python_Path & To_Unbounded_String ("])");
-
-         GNAThub.Python.Execute (To_String (Python_Path), Had_Errors);
-      end;
+      Log.Info (Me, "Execute plug-ins mainloop: " & Runner_Script);
+      GNAThub.Python.Execute_File (Runner_Script, Had_Errors);
 
       if Had_Errors then
-         Warn ("Failed to update sys.path");
-      end if;
-
-      --  Execute the python script that runs all the plugins
-
-      Log.Info (Me, "Executing plugin: " & Plugin_Runner.Display_Base_Name);
-
-      GNAThub.Python.Execute_File
-        (Plugin_Runner.Display_Full_Name, Had_Errors);
-
-      if Had_Errors then
-         raise Fatal_Error with "Unexpected plug-in error";
+         raise Fatal_Error with Runner_Script & ": unexpected errors";
       end if;
    end Execute_Plugin_Runner;
 
@@ -170,17 +142,17 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    -- Execute_User_Script --
    -------------------------
 
-   procedure Execute_User_Script is
-      Script : constant String := GNAThub.Configuration.Script;
-      Errors : Boolean := False;
+   procedure Execute_User_Script
+   is
+      User_Script : constant String := GNAThub.Configuration.Script;
+      Had_Errors  : Boolean := False;
    begin
-      if Script /= "" then
-         Info ("gnathub.python.execute " & Script);
+      if User_Script /= "" then
+         Info ("gnathub.python.execute " & User_Script);
+         GNAThub.Python.Execute_File (User_Script, Had_Errors);
 
-         GNAThub.Python.Execute_File (Script, Errors);
-
-         if Errors then
-            raise Fatal_Error with "execution failed: " & Script;
+         if Had_Errors then
+            raise Fatal_Error with User_Script & ": unexpected errors";
          end if;
       end if;
    end Execute_User_Script;
@@ -191,14 +163,18 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
    procedure Create_Or_Override_Database is
    begin
-      Info ("gnathub.sql.create " & Database_File.Display_Full_Name);
+      Log.Debug (Me,
+        "Create or override database: " & Database_File.Display_Full_Name);
+
       GNAThub.Database.Initialize
          (Create_From_Dir
             (GNAThub.Project.Object_Dir, Database_File.Full_Name),
-         Remove_Previous_Database => True);
+          Remove_Previous_Database => True);
 
-      Info ("gnathub.sql.store " & GNAThub.Configuration.Project);
+      Log.Debug (Me, "Populate database with project information");
       GNAThub.Project.Save_Project_Tree;
+
+      Log.Info (Me, "Database initialized");
    end Create_Or_Override_Database;
 
    ----------------------------
@@ -239,27 +215,27 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 begin
    Initialize_Application;
 
-   Log.Info (Me, "Loading project: " & GNAThub.Configuration.Project);
+   Log.Info (Me, "Load project " & GNAThub.Configuration.Project);
    GNAThub.Project.Load (GNAThub.Configuration.Project);
 
-   Log.Info (Me, "Creating execution environment...");
+   Log.Info (Me, "Setup execution environment");
    Create_Project_Directory_Env;
 
    if Interpreter_Mode then
-      Log.Info (Me, "Connecting to existing database...");
+      Log.Info (Me, "Connect to existing database");
       GNAThub.Database.Initialize
         (Create_From_Dir
            (GNAThub.Project.Object_Dir, Database_File.Full_Name),
         Remove_Previous_Database => False);
 
-      Log.Info (Me, "Executing user script: " & Script);
+      Log.Info (Me, "Execute user script: " & Script);
       Execute_User_Script;
 
    else
-      Log.Info (Me, "Creating local application database...");
+      Log.Info (Me, "Create local application database");
       Create_Or_Override_Database;
 
-      Log.Info (Me, "Executing Plugin Runner");
+      Log.Info (Me, "Execute plug-in runner");
       Execute_Plugin_Runner;
    end if;
 

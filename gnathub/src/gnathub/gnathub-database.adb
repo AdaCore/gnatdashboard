@@ -98,31 +98,26 @@ package body GNAThub.Database is
          --  Check existence of a database, delete it before creating a new one
 
          if Is_Regular_File (Database_File) then
-            Log.Info (Me, "Removing previous copy of the database: " &
-                          Database_File.Display_Full_Name);
-
+            Log.Info (Me, "Removing existing copy of the database");
             Delete (Database_File, Delete_Succeed);
 
             if not Delete_Succeed then
-               raise Fatal_Error with
-                 "Unable to delete old Sqlite file: " &
-                 Database_File.Display_Full_Name;
+               raise Fatal_Error with "Failed to delete existing database";
             end if;
          end if;
 
-         --  Retieve schema from text file
-         Log.Info (Me, "Loading database schema: " &
-                       Database_Model_File.Display_Full_Name);
+         --  Retrieve schema from text file
+         Log.Debug (Me,
+           "Read database schema: " & Database_Model_File.Display_Full_Name);
 
          Schema := New_Schema_IO (Database_Model_File).Read_Schema;
       end if;
 
-      Descr := GNATCOLL.SQL.Sqlite.Setup
-                 (Database => Database_File.Display_Full_Name);
-
+      Descr := GNATCOLL.SQL.Sqlite.Setup (Database_File.Display_Full_Name);
       Schema_IO.DB := Descr.Build_Connection;
 
       if Remove_Previous_Database then
+         Log.Debug (Me, "Write the schema to the database (reset database)");
          Write_Schema (Schema_IO, Schema);
       end if;
 
@@ -131,7 +126,7 @@ package body GNAThub.Database is
       Set_Default_Factory (Kind_Factory'Access);
 
       if not Schema_IO.DB.Success then
-         raise Fatal_Error with "Unable to initialize the Database";
+         raise Fatal_Error with "Unable to initialize the database";
       end if;
    end Initialize;
 
@@ -146,11 +141,15 @@ package body GNAThub.Database is
       Session  : constant Session_Type := Get_New_Session;
       Resource : constant Detached_Resource'Class := New_Resource;
    begin
+      Log.Debug (Me, "Create resource """ & Name & """");
+
       Resource.Set_Name (Name);
       Resource.Set_Kind (Resource_Kind'Pos (Kind));
 
       Session.Persist (Resource);
       Session.Commit;
+
+      Log.Debug (Me, "Resource """ & Name & """ saved to database");
 
       return Detached_Resource (Resource);
    end Create_And_Save_Resource;
