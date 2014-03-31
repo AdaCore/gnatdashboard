@@ -49,7 +49,7 @@ project GNAThub is
          when "Debug" =>
             for Default_Switches ("Ada") use
               Compiler'Default_Switches ("Ada") &
-              ("-gnatwa", "-gnatyyBdOSux", "-gnata", "-g", "-O0");
+              ("-gnatwa", "-gnatwe", "-gnatyyBdOSux", "-gnata", "-g", "-O0");
 
          when "Production" =>
             for Default_Switches ("Ada") use ("-gnatwa", "-gnatn", "-O2");
