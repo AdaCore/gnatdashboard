@@ -40,7 +40,7 @@ class GNATprove(GNAThub.Plugin):
     Configures and executes GNATprove, then analyzes its output.
     """
 
-    TOOL_NAME = 'GNATprove'
+    name = 'gnatprove'
 
     SEVERITIES = {'info': 'INFO', 'warning': 'MINOR', 'error': 'MAJOR'}
 
@@ -55,11 +55,6 @@ class GNATprove(GNAThub.Plugin):
     def __init__(self):
         super(GNATprove, self).__init__()
         self.tool = None
-
-    def display_command_line(self):
-        """Inherited."""
-
-        return ' '.join(['-P', GNAThub.Project.name()])
 
     def __cmd_line(self):
         """Creates GNATcheck command line arguments list.
@@ -77,7 +72,6 @@ class GNATprove(GNAThub.Plugin):
         GNATprove.postprocess() will be called upon process completion.
         """
 
-        System.info('%s.run %s' % (self.fqn, self.display_command_line()))
         proc = GNAThub.Run(self.name, self.__cmd_line())
         self.postprocess(proc.status, proc.output())
 
@@ -125,9 +119,7 @@ class GNATprove(GNAThub.Plugin):
 
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAILURE
-            System.error('%s: failed to parse output: %s' %
-                         (self.fqn, logfile))
-            System.error(str(ex))
+            System.error('%s: error: %s' % (self.name, ex))
 
     def __parse_line(self, regex):
         """Parses a GNATprove message line and adds it to the database.
@@ -168,7 +160,7 @@ class GNATprove(GNAThub.Plugin):
             self.__add_message(src, line, column, rule_id, message)
 
         except KeyError:
-            System.warn('Unknown severity: %s' % severity)
+            System.warn('%s: unknown severity: %s' % (sel.name, severity))
 
     def __add_message(self, src, line, col_begin, rule_id, msg):
         """Registers a new message in the database.

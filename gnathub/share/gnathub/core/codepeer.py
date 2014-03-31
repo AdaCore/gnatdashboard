@@ -37,8 +37,7 @@ class CodePeer(GNAThub.Plugin):
     Configures and executes CodePeer, then analyzes the output.
     """
 
-    REPORT = 'codepeer.out'
-    TOOL_NAME = 'CodePeer'
+    name = 'codepeer'
 
     def __init__(self):
         super(CodePeer, self).__init__()
@@ -49,15 +48,8 @@ class CodePeer(GNAThub.Plugin):
         self.csv_report = os.path.join(GNAThub.Project.object_dir(),
                                        'codepeer', output)
 
-        self.report = os.path.join(GNAThub.Project.object_dir(), self.REPORT)
-
-    def display_command_line(self):
-        """Inherited."""
-
-        cmdline = ['-P', GNAThub.Project.name()]
-        cmdline.extend(['-o', os.path.relpath(self.report)])
-
-        return ' '.join(cmdline)
+        self.report = os.path.join(GNAThub.Project.object_dir(),
+                                   '%s.out' % self.name)
 
     def __cmd_line(self):
         """Creates CodePeer command line arguments list.
@@ -87,7 +79,6 @@ class CodePeer(GNAThub.Plugin):
         CodePeer.execute_msg_reader() will be called upon process completion.
         """
 
-        System.info('%s.run %s' % (self.fqn, self.display_command_line()))
         proc = GNAThub.Run(self.name, self.__cmd_line())
 
         if proc.status:
@@ -101,7 +92,7 @@ class CodePeer(GNAThub.Plugin):
         CodePeer.postprocess() will be called upon process completion.
         """
 
-        System.info('%s.msg_reader' % self.fqn)
+        System.info('%s: execute msg_reader to collect results' % self.name)
         proc = GNAThub.Run('msg_reader', self.__msg_reader_cmd_line(),
                            out=self.csv_report)
 
@@ -134,18 +125,14 @@ class CodePeer(GNAThub.Plugin):
             GNAThub.EXEC_FAILURE: on any error
         """
 
-        System.info('%s.analyse %s' %
-                    (self.fqn, os.path.relpath(self.csv_report)))
-
-        self.log.debug('%s: storing tool in database' % self.fqn)
+        System.info('%s: analysing CSV report', self.name)
         self.tool = GNAThub.Tool(self.name)
 
-        self.log.debug('%s: parsing CSV report: %s' %
-                       (self.fqn, self.csv_report))
+        self.log.debug('Parse report: %s' % self.csv_report)
 
         if not os.path.exists(self.csv_report):
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.error('%s: no report found, aborting.' % self.fqn)
+            System.error('%s: no report found' % self.name)
             return
 
         with open(self.csv_report, 'rb') as report:
@@ -163,11 +150,11 @@ class CodePeer(GNAThub.Plugin):
 
                 # Drop the first line (containing the columns name)
                 header = reader.next()
-                self.log.debug('Dropping header line: %s' % header)
+                self.log.debug('Drop header line: %s' % header)
 
                 # Iterate over each relevant record
                 for index, record in enumerate(reader, start=1):
-                    self.log.debug('Parsing record: %r' % record)
+                    self.log.debug('Parse record: %r' % record)
 
                     # Each row is a list of strings:
                     # [File, Line, Column, Category, New?, Review?, Ranking,
@@ -192,10 +179,9 @@ class CodePeer(GNAThub.Plugin):
                     System.progress(index, total, new_line=(index == total))
 
             except csv.Error as ex:
-                System.error('%s: report analysis failed.' % self.fqn)
-                System.error('%s: file %s, line %d: %s' % (self.fqn, report,
-                                                           total, ex))
                 self.exec_status = GNAThub.EXEC_FAILURE
+                System.error('%s: error: %s (%s:%d)' %
+                             (self.name, ex, os.path.basename(report), total))
                 return
 
             self.exec_status = GNAThub.EXEC_SUCCESS

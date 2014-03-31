@@ -41,8 +41,7 @@ class GNATcheck(GNAThub.Plugin):
     Configures and executes GNATcheck, then analyzes the output.
     """
 
-    TOOL_NAME = 'GNATcheck'
-    REPORT = 'gnatcheck.out'
+    name = 'gnatcheck'
 
     # Regex to identify lines that contain messages
     _RULE_PATTERN = '(?P<message>.+)\s\[(?P<rule>[A-Za-z_]+)\]$'
@@ -58,15 +57,8 @@ class GNATcheck(GNAThub.Plugin):
         super(GNATcheck, self).__init__()
 
         self.tool = None
-        self.report = os.path.join(GNAThub.Project.object_dir(), self.REPORT)
-
-    def display_command_line(self):
-        """Inherited."""
-
-        cmdline = ['-P', GNAThub.Project.name()]
-        cmdline.extend(['-o', os.path.relpath(self.report)])
-
-        return ' '.join(cmdline)
+        self.report = os.path.join(GNAThub.Project.object_dir(),
+                                   '%s.out' % self.name)
 
     def __cmd_line(self):
         """Creates GNATcheck command line arguments list.
@@ -84,7 +76,6 @@ class GNATcheck(GNAThub.Plugin):
         GNATcheck.postprocess() will be called upon process completion.
         """
 
-        System.info('%s.run %s' % (self.fqn, self.display_command_line()))
         proc = GNAThub.Run(self.name, self.__cmd_line())
         self.postprocess(proc.status)
 
@@ -119,17 +110,14 @@ class GNATcheck(GNAThub.Plugin):
             - message for package instantiation
         """
 
-        System.info('%s.analyse %s' %
-                    (self.fqn, os.path.relpath(self.report)))
+        System.info('%s: analysing report' % self.name)
 
-        self.log.debug('%s: storing tool in database' % self.fqn)
         self.tool = GNAThub.Tool(self.name)
-
-        self.log.debug('%s: parsing report: %s' % (self.fqn, self.report))
+        self.log.debug('Parse report: %s' % self.report)
 
         if not os.path.exists(self.report):
             self.exec_status = GNAThub.EXEC_FAILURE
-            System.error('%s: no report found, aborting.' % self.fqn)
+            System.error('%s: no report found' % self.name)
             return
 
         try:
@@ -138,7 +126,7 @@ class GNATcheck(GNAThub.Plugin):
                 total = len(lines)
 
                 for index, line in enumerate(lines, start=1):
-                    self.log.debug('Parsing line: %s' % line)
+                    self.log.debug('Parse line: %s' % line)
 
                     match = self._MESSAGE.match(line)
 
@@ -149,12 +137,10 @@ class GNATcheck(GNAThub.Plugin):
                     System.progress(index, total, new_line=(index == total))
 
             self.exec_status = GNAThub.EXEC_SUCCESS
-            self.log.debug('%s: all objects committed to database' % self.fqn)
 
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAILURE
-            System.error('%s: unable to parse report' % self.fqn)
-            System.error(str(ex))
+            System.error('%s: error: %s' % (self.name, ex))
 
     def __parse_line(self, regex):
         """Parses a GNATcheck message line and add the message to the current

@@ -48,15 +48,13 @@ package body GNAThub is
 
    procedure Info
      (Message      : String;
-      Availability : Verbosity_Level := Default)
-   is
-      Output : constant String := "gnathub: " & Message;
+      Availability : Verbosity_Level := Default) is
    begin
       if Output_Verbosity >= Availability then
-         Put_Line (Output);
+         Put_Line (Message);
       end if;
 
-      Log.Info (Me, Output);
+      Log.Info (Me, Message);
    end Info;
 
    ----------

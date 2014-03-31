@@ -35,7 +35,7 @@ from _sonarqube import SonarQube
 class SonarRunner(GNAThub.Plugin):
     """GNATmetric plugin for GNAThub."""
 
-    TOOL_NAME = 'Sonar Runner'
+    name = 'sonar-runner'
 
     def __init__(self):
         super(SonarRunner, self).__init__()
@@ -58,21 +58,12 @@ class SonarRunner(GNAThub.Plugin):
                 '-Dproject.settings=%s' % SonarQube.configuration(),
                 '-e', '-X']
 
-    def display_command_line(self):
-        """Inherited."""
-
-        cmdline = ['-Dproject.settings=%s' %
-                   os.path.relpath(SonarQube.configuration())]
-
-        return ' '.join(cmdline)
-
     def execute(self):
         """Executes the Sonar Runner.
 
         SonarRunner.postprocess() will be called upon process completion.
         """
 
-        System.info('%s.run %s' % (self.fqn, self.display_command_line()))
         proc = GNAThub.Run(self.name, self.__cmd_line())
         self.postprocess(proc.status)
 

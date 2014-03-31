@@ -268,7 +268,7 @@ from GNAThubCore import *       # NOQA (disable warning from flake8)
 
 import os
 
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta, abstractmethod, abstractproperty
 from subprocess import Popen, STDOUT
 
 EXEC_SUCCESS, EXEC_FAILURE, NOT_EXECUTED = range(3)
@@ -302,16 +302,11 @@ class Plugin:
 
     __metaclass__ = ABCMeta
 
-    TOOL_NAME = None
-    LOG_FILE = None
-
     def __init__(self):
         """Instance constructor."""
 
         # A custom instance of a logger. It is implemented in Ada and based on
-        # the GNATCOLL.Traces module. This unrelated to the LOG_FILE class
-        # variable with specifies the file in which to redirect the output of
-        # tools being executed by the Plugin.
+        # the GNATCOLL.Traces module.
         self.log = Logger(self.__class__.__name__)
 
         # The execution status of this plugin. Initialized to NOT_EXECUTED.
@@ -319,16 +314,16 @@ class Plugin:
         # Plugin.execute method.
         self._exec_status = NOT_EXECUTED
 
-    def display_command_line(self):
-        """This method returns a list similar to argv. However, this command
-        line does not need to be functional and its only purpose is to be
-        printed on the GNAThub tool output.
+    @abstractproperty
+    def name(self):
+        """Returns the name of the tool, as specified by the TOOL_NAME class
+        variable.
 
         RETURNS
-            :rtype: a string
+            :rtype: a string.
         """
 
-        return self.name.lower()
+        pass
 
     def setup(self):
         """This method is called prior to a call to Plugin.execute.
@@ -393,28 +388,6 @@ class Plugin:
 
         self._exec_status = status
 
-    @property
-    def name(self):
-        """Returns the name of the tool, as specified by the TOOL_NAME class
-        variable.
-
-        RETURNS
-            :rtype: a string.
-        """
-
-        return self.TOOL_NAME
-
-    @property
-    def fqn(self):
-        """Returns the fully qualified name of the tool, as specified by the
-        TOOL_NAME class variable.
-
-        RETURNS
-            :rtype: a string.
-        """
-
-        return 'gnathub.%s' % self.name.lower().replace(' ', '-')
-
 
 class Run(object):
     """Class to handle processes.
@@ -457,7 +430,7 @@ class Run(object):
 
         try:
             with open(self.output(), 'w') as output:
-                System.info('... output redirected to %s' % output.name)
+                System.info('output redirected to %s' % output.name)
                 self.internal = Popen(argv, env=env, stdin=None, stdout=output,
                                       stderr=STDOUT, cwd=workdir)
                 self.pid = self.internal.pid

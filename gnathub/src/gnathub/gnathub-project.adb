@@ -156,7 +156,7 @@ package body GNAThub.Project is
               "Failed to register custom attribute " & Key;
          end if;
 
-         Log.Debug (Me, "Register GNATdashboard package attribute: " & Key);
+         Log.Debug (Me, "  + " & Key);
       end Internal_Register;
 
    begin

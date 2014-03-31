@@ -207,9 +207,9 @@ package body GNAThub.Configuration is
       Parse_Command_Line;
 
       --  Sanity checks
-      pragma Assert (Project_Arg /= null, "unexpected null project");
-      pragma Assert (Plugins_Arg /= null, "unexpected null plugins list");
-      pragma Assert (Script_Arg /= null, "unexpected null script argument");
+      Assert (Me, Project_Arg /= null, "unexpected null project");
+      Assert (Me, Plugins_Arg /= null, "unexpected null plugins list");
+      Assert (Me, Script_Arg /= null, "unexpected null script argument");
 
       --  Print the version and exit if --version is supplied
       if Version_Arg then
@@ -267,7 +267,7 @@ package body GNAThub.Configuration is
          end if;
       end;
 
-      Log.Info (Me, "Using project file " & Project_Arg.all);
+      Log.Info (Me, "Use project file " & Project_Arg.all);
 
    exception
       when GNAT.Command_Line.Exit_From_Command_Line =>

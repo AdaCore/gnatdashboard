@@ -18,8 +18,8 @@ EXPECTED_FILES = [
     ('obj', 'gnatcheck.out'),
     ('obj', 'gnatcheck-source-list.out'),
     ('obj', 'gnathub', 'gnathub.db'),
-    ('obj', 'gnathub', 'logs', 'GNATcheck.log'),
-    ('obj', 'gnathub', 'logs', 'GNATmetric.log'),
+    ('obj', 'gnathub', 'logs', 'gnatcheck.log'),
+    ('obj', 'gnathub', 'logs', 'gnatmetric.log'),
     ('obj', 'gnathub', 'sonar', 'sonar-project.properties'),
     ('obj', 'hello.adb.metrix'),
     ('obj', 'metrix.xml')

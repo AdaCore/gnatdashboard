@@ -251,29 +251,30 @@ class PluginRunner(object):
         inst = plugin()
         start = time.time()
 
-        LOG.info('[%-22s] setup environment' % inst.fqn)
+        System.info('executing plug-in %s' % inst.name)
+
+        LOG.info('%s: setup environment' % inst.name)
         inst.setup()
 
-        LOG.info('[%-22s] execute plugin' % inst.fqn)
         inst.execute()
 
-        LOG.info('[%-22s] post execution' % inst.fqn)
+        LOG.info('%s: post execution' % inst.name)
         inst.teardown()
 
         ellapsed = time.time() - start
 
         if inst.exec_status == GNAThub.EXEC_SUCCESS:
             System.info('%s: completed (in %d seconds)' %
-                        (inst.fqn, ellapsed))
+                        (inst.name, ellapsed))
 
         elif inst.exec_status == GNAThub.EXEC_FAILURE:
-            System.error('%s: execution failed' % inst.fqn)
+            System.error('%s: execution failed' % inst.name)
 
         elif inst.exec_status != GNAThub.NOT_EXECUTED:
-            System.error('%s: unknown plugin execution code: %d' %
-                         (inst.fqn, inst.exec_status))
+            System.error('%s: unknown plug-in execution code: %d' %
+                         (inst.name, inst.exec_status))
         else:
-            LOG.info('%s: not executed' % inst.fqn)
+            LOG.info('%s: not executed' % inst.name)
 
     def mainloop(self):
         """Plugins main loop."""
@@ -281,7 +282,7 @@ class PluginRunner(object):
         LOG.info('Load plugins')
 
         if not self.plugins:
-            System.info('gnathub: nothing to do.')
+            System.info('gnathub: nothing to do')
             return
 
         for plugin in self.plugins:
@@ -295,8 +296,7 @@ class PluginRunner(object):
                 System.info('%sInterrupt caught...' % os.linesep)
 
             except Exception as why:
-                System.error('Unexpected error: %s' % why.message)
-                System.error(str(why))
+                System.error('Unexpected error: %s' % why)
 
 
 # Script entry point

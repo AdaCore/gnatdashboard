@@ -67,17 +67,15 @@ class _SonarConfiguration(object):
             :type value: a string.
         """
 
-        section = _SonarConfiguration.SONAR_SECTION
-
         if attribute:
             attr_value = GNAThub.Project.property_as_string(attribute)
             if attr_value:
-                self.log.debug('%s.%s: overriding default with %s' %
-                               (section, key, attr_value))
+                self.log.debug('%s: overriding default with %s' %
+                               (key, attr_value))
                 value = attr_value
 
-        self.log.debug('%s.%s = %s' % (section, key, value))
-        config.set(section, key, value)
+        self.log.debug('%s = %s' % (key, value))
+        config.set(_SonarConfiguration.SONAR_SECTION, key, value)
 
     def write(self, filename):
         """Dumps sonar-project.properties file in sonar working directory.
@@ -112,7 +110,7 @@ class SonarConfig(GNAThub.Plugin):
     """SonarConfig plugin for GNAThub.
     """
 
-    TOOL_NAME = 'Sonar Config'
+    name = 'sonar-config'
 
     def setup(self):
         """Inherited."""
@@ -122,18 +120,13 @@ class SonarConfig(GNAThub.Plugin):
 
         SonarQube.make_workdir()
 
-    def display_command_line(self):
-        """Inherited."""
-
-        cmdline = ['-P', GNAThub.Project.name()]
-        cmdline.extend(['-o', os.path.relpath(SonarQube.configuration())])
-
-        return ' '.join(cmdline)
-
     def execute(self):
         """Generates SonarQube Runner configuration file and dumps it."""
 
         try:
+            System.info('%s: generating %s' %
+                        (self.name, SonarQube.CONFIGURATION))
+
             config = _SonarConfiguration(logger=self.log)
             config.write(SonarQube.configuration())
 
@@ -141,4 +134,4 @@ class SonarConfig(GNAThub.Plugin):
 
         except IOError as ex:
             self.exec_status = GNAThub.EXEC_FAILURE
-            System.error(str(ex))
+            System.error('%s: error: %s' % (self.name, ex))

@@ -130,7 +130,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       Runner_Script : constant String := Plugin_Runner.Display_Full_Name;
       Had_Errors    : Boolean := False;
    begin
-      Log.Info (Me, "Execute plug-ins mainloop: " & Runner_Script);
+      Log.Info (Me, "Plug-ins mainloop: " & Runner_Script);
       GNAThub.Python.Execute_File (Runner_Script, Had_Errors);
 
       if Had_Errors then
@@ -235,7 +235,7 @@ begin
       Log.Info (Me, "Create local application database");
       Create_Or_Override_Database;
 
-      Log.Info (Me, "Execute plug-in runner");
+      Log.Info (Me, "Execute plugin-runner");
       Execute_Plugin_Runner;
    end if;
 

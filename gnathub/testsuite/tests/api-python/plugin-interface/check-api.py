@@ -16,16 +16,14 @@ class MyIncompletePlugin(GNAThub.Plugin):
     However, do not implement the EXECUTE method to test error case.
     """
 
-    TOOL_NAME = 'My Incomplete Plugin'
-    LOG_FILE = 'incomplete.log'
+    name = 'My Incomplete Plugin'
 
 
 # pylint: disable=no-init, too-few-public-methods
 class MyCustomPlugin(GNAThub.Plugin):
     """Declare a custom plugin that extends the GNAThub Plugin interface."""
 
-    TOOL_NAME = 'My Custom Plugin'
-    LOG_FILE = 'custom.log'
+    name = 'My Custom Plugin'
 
     # pylint: disable=no-self-use, global-statement
     def execute(self):
@@ -48,15 +46,6 @@ PLUGIN = MyCustomPlugin()
 # GNAThub.Plugin.name
 assert PLUGIN.name == 'My Custom Plugin', \
     'unexpected plugin name "%s"' % PLUGIN.name
-
-# GNAThub.Plugin.display_command_line()
-assert PLUGIN.display_command_line() == 'my custom plugin', \
-    ('unexpected plugin display command line "%s"' %
-     PLUGIN.display_command_line())
-
-# GNAThub.Plugin.fqn
-assert PLUGIN.fqn == 'gnathub.my-custom-plugin', \
-    'unexpected plugin fully qualified name "%s"' % PLUGIN.fqn
 
 # GNAThub.Plugin.exec_status (getter)
 assert PLUGIN.exec_status == GNAThub.NOT_EXECUTED, \

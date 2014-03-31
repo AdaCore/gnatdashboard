@@ -37,19 +37,14 @@ class Gcov(GNAThub.Plugin):
     parses them and feeds the database with the data collected from each files.
     """
 
-    TOOL_NAME = 'Gcov'
-    GCOV_SUFFIX = '.gcov'
+    name = 'gcov'
+    GCOV_EXT = '.gcov'
 
     def __init__(self):
         super(Gcov, self).__init__()
 
         self.tool = None
         self.rule = None
-
-    def display_command_line(self):
-        """Inherited."""
-
-        return ' '.join(['-P', GNAThub.Project.name()])
 
     def __add_line_hits(self, resource, line_num, hits):
         """Registers hits count for a specific line in the given file.
@@ -78,15 +73,18 @@ class Gcov(GNAThub.Plugin):
             GNAThub.EXEC_FAILURE: on any error
         """
 
+        System.info('%s: parsing coverage reports (%s)' %
+                    (self.name, self.GCOV_EXT))
+
         # Fetch all files in project object directory and retrieve only
         # .gcov files, absolute path
         files = [os.path.join(GNAThub.Project.object_dir(), filename)
                  for filename in os.listdir(GNAThub.Project.object_dir())
-                 if filename.endswith(self.GCOV_SUFFIX)]
+                 if filename.endswith(self.GCOV_EXT)]
 
         # If no .gcov file found, plugin returns on failure
         if not files:
-            System.error('No .gcov file in object directory')
+            System.error('%s: no .gcov file in object directory' % self.name)
             self.exec_status = GNAThub.EXEC_FAILURE
             return
 
@@ -128,11 +126,10 @@ class Gcov(GNAThub.Plugin):
             self.exec_status = GNAThub.EXEC_SUCCESS
 
         except IOError as ex:
-            System.error('%s: %s' % (self.fqn, str(ex)))
             self.exec_status = GNAThub.EXEC_FAILURE
+            System.error('%s: error: %s' % (self.name, ex))
 
     def execute(self):
         """Finds the Gcov output files and parses them."""
 
-        System.info('%s.parse: *%s' % (self.fqn, self.GCOV_SUFFIX))
         self.__parse_gcov_report()

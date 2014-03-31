@@ -411,7 +411,8 @@ package body GNAThub.Python is
    procedure Set_Handle (Inst : Class_Instance; Name : String) is
    begin
       GNATCOLL.Scripts.Set_Data
-        (Inst, "_ada_logger", Logger_Property'(Handle => Create (Name, Off)));
+        (Inst, "_ada_logger",
+         Logger_Property'(Handle => Create ("GNATHUB.PLUGIN." & Name)));
    end Set_Handle;
 
    ----------------
