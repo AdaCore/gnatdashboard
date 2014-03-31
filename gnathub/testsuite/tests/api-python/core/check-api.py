@@ -37,11 +37,8 @@ assert len(GNAThub.plugins()) == 0
 
 # We ensure that the core and extra plugins directories exist
 repos = GNAThub.repositories()
-assert os.path.isdir(repos['system']), \
-    '%s: no such directory' % GNAThub.core_plugins()
-
-assert os.path.isdir(repos['global']), \
-    '%s: no such directory' % GNAThub.extra_plugins()
+for kind in ('system', 'global'):
+    assert os.path.isdir(repos[kind]), '%s: no such directory' % repos[kind]
 
 # GNAThub.run
 TO_BE_ECHOED = 'this is the message to display on the standard output'
