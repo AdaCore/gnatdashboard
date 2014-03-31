@@ -63,6 +63,9 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    --       └── sonar/
    --           └── sonar-project.properties
 
+   procedure Initialize_Application;
+   --  Initialize every module that needs initialization.
+
    procedure Finalize_Application;
    --  Dispose of every allocated object.
 
@@ -198,6 +201,27 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       GNAThub.Project.Save_Project_Tree;
    end Create_Or_Override_Database;
 
+   ----------------------------
+   -- Initialize_Application --
+   ----------------------------
+
+   procedure Initialize_Application is
+   begin
+      --  Load the logging module
+      GNAThub.Initialize_Logging;
+
+      --  Configure GNAThub (through the command line). In particular, set the
+      --  output verbosity (with the switches --quiet or --verbose) after the
+      --  logging module initialization.
+      GNAThub.Configuration.Initialize;
+
+      --  Configure the Python VM that will run the plug-ins and user scripts
+      GNAThub.Python.Initialize;
+
+      --  Load the user's project file and store the configuration in memory
+      GNAThub.Project.Initialize;
+   end Initialize_Application;
+
    --------------------------
    -- Finalize_Application --
    --------------------------
@@ -213,21 +237,9 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    end Finalize_Application;
 
 begin
-   --  Load the traces' configuration file
-   GNATCOLL.Traces.Parse_Config_File;
+   Initialize_Application;
 
-   --  Configure GNAThub (through the command line). In particular, set the
-   --  output verbosity (with the switches --quiet or --verbose) after the
-   --  trace mecanism initialization.
-   GNAThub.Configuration.Initialize;
-
-   --  Configure the Python VM that will run the plug-ins and user scripts
-   GNAThub.Python.Initialize;
-
-   --  Load the user's project file and store the configuration in memory
-   GNAThub.Project.Initialize;
-
-   Log.Debug ("Loading project: " & GNAThub.Configuration.Project);
+   Log.Info (Me, "Loading project: " & GNAThub.Configuration.Project);
    GNAThub.Project.Load (GNAThub.Configuration.Project);
 
    Log.Info (Me, "Creating execution environment...");

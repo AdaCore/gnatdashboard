@@ -50,26 +50,31 @@ package body GNAThub.Database is
       --  Manage rule kind
       if From in Rule'Class then
          case Rule (From).Kind is
-         when Rule_Kind'Pos (Kind_Rule) =>
-            return R : My_Detached_Rule do null; end return;
-         when Rule_Kind'Pos (Kind_Metric) =>
-            return R : Detached_Metric do null; end return;
-         when others =>
-            return Default;
+            when Rule_Kind'Pos (Kind_Rule) =>
+               return R : My_Detached_Rule do null; end return;
+
+            when Rule_Kind'Pos (Kind_Metric) =>
+               return R : Detached_Metric do null; end return;
+
+            when others =>
+               return Default;
          end case;
       end if;
 
       --  Manage resource kind
       if From in Resource'Class then
          case Resource (From).Kind is
-         when Resource_Kind'Pos (Kind_Project) =>
-            return R : Detached_Project do null; end return;
-         when Resource_Kind'Pos (Kind_Directory) =>
-            return R : Detached_Directory do null; end return;
-         when Resource_Kind'Pos (Kind_File) =>
-            return R : Detached_File do null; end return;
-         when others =>
-            return Default;
+            when Resource_Kind'Pos (Kind_Project) =>
+               return R : Detached_Project do null; end return;
+
+            when Resource_Kind'Pos (Kind_Directory) =>
+               return R : Detached_Directory do null; end return;
+
+            when Resource_Kind'Pos (Kind_File) =>
+               return R : Detached_File do null; end return;
+
+            when others =>
+               return Default;
          end case;
       end if;
 
@@ -138,7 +143,7 @@ package body GNAThub.Database is
      (Name : String;
       Kind : Resource_Kind) return Detached_Resource
    is
-      Session      : constant Session_Type := Get_New_Session;
+      Session  : constant Session_Type := Get_New_Session;
       Resource : constant Detached_Resource'Class := New_Resource;
    begin
       Resource.Set_Name (Name);
@@ -158,10 +163,11 @@ package body GNAThub.Database is
      (Child  : Detached_Resource;
       Parent : Detached_Resource)
    is
-      Session  : constant Session_Type := Get_New_Session;
-      Tree     : constant Detached_Resource_Tree'Class := New_Resource_Tree;
+      Session : constant Session_Type := Get_New_Session;
+      Tree    : constant Detached_Resource_Tree'Class := New_Resource_Tree;
    begin
       Tree.Set_Child_Id (Child);
+
       if not (Parent = No_Detached_Resource) then
          Tree.Set_Parent_Id (Parent);
       end if;
