@@ -15,26 +15,26 @@
  * of the license.                                                          *
  ****************************************************************************/
 
-package org.sonar.plugins.ada;
+package org.sonar.plugins.ada.ui;
 
-import lombok.AllArgsConstructor;
-import org.sonar.api.profiles.ProfileDefinition;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.profiles.XMLProfileParser;
-import org.sonar.api.utils.ValidationMessages;
+import org.sonar.api.web.*;
 
-@AllArgsConstructor
-public class AdaDefaultProfile extends ProfileDefinition {
-  private final XMLProfileParser xmlProfileParser;
+@UserRole(UserRole.USER)
+@Description("Shows Codepeer messages, per severity and category")
+@WidgetCategory("Rules")
+public class CodePeerViolationsRubyWidget
+    extends AbstractRubyTemplate implements RubyRailsWidget
+{
+  public String getId() {
+    return "CodepeerViolations";
+  }
 
-  /**
-   * Import the default Sonar Ada profile
-   */
+  public String getTitle() {
+    return "Codepeer Messages";
+  }
+
   @Override
-  public RulesProfile createProfile(ValidationMessages messages) {
-    RulesProfile profile = xmlProfileParser.parseResource(
-        getClass().getClassLoader(), "default-profile.xml", messages);
-    profile.setDefaultProfile(true);
-    return profile;
+  protected String getTemplatePath() {
+    return "/org/sonar/plugins/ada/ui/codepeer_violations.html.erb";
   }
 }

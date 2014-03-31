@@ -1,89 +1,101 @@
-/*
- * Sonar Ada Plugin
- *  Copyright (C) 2012-2013, AdaCore
- */
+/****************************************************************************
+ *                              Sonar Ada Plugin                            *
+ *                                                                          *
+ *                     Copyright (C) 2013-2014, AdaCore                     *
+ *                                                                          *
+ * This is free software;  you can redistribute it  and/or modify it  under *
+ * terms of the  GNU General Public License as published  by the Free Soft- *
+ * ware  Foundation;  either version 3,  or (at your option) any later ver- *
+ * sion.  This software is distributed in the hope  that it will be useful, *
+ * but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- *
+ * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public *
+ * License for  more details.  You should have  received  a copy of the GNU *
+ * General  Public  License  distributed  with  this  software;   see  file *
+ * COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy *
+ * of the license.                                                          *
+ ****************************************************************************/
+
 package org.sonar.plugins.ada;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.sonar.api.Extension;
+import com.google.common.collect.ImmutableList;
+import lombok.ToString;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
-import org.sonar.api.resources.Project;
-import org.sonar.plugins.ada.codepeer.AdaCodePeerRuleRepository;
+import org.sonar.plugins.ada.codepeer.CodePeerRuleRepository;
 import org.sonar.plugins.ada.codepeer.CodePeerMetrics;
 import org.sonar.plugins.ada.codepeer.CodePeerViolationsDecorator;
-import org.sonar.plugins.ada.gcov.GcovSensor;
-import org.sonar.plugins.ada.gnatcheck.AdaGnatCheckRuleRepository;
-import org.sonar.plugins.ada.gnatcheck.GnatCheckMetrics;
-import org.sonar.plugins.ada.gnatcheck.GnatCheckViolationsDecorator;
-import org.sonar.plugins.ada.gnatcheck.GnatCheckViolationsDensityDecorator;
-import org.sonar.plugins.ada.gnatcheck.GnatCheckWeightedViolationsDecorator;
-import org.sonar.plugins.ada.gnatmetric.AdaGnatMetricSensor;
-import org.sonar.plugins.ada.gnatmetric.GnatMetrics;
-import org.sonar.plugins.ada.gnatprove.GNATproveRuleRepository;
-import org.sonar.plugins.ada.persistence.JDBCUtils;
-import org.sonar.plugins.ada.ui.rubyWidget.CodePeerViolationsRubyWidget;
-import org.sonar.plugins.ada.ui.rubyWidget.GnatCheckViolationsRubyWidget;
+import org.sonar.plugins.ada.gnat.*;
+import org.sonar.plugins.ada.gnu.GcovSensor;
+import org.sonar.plugins.ada.lang.Ada;
+import org.sonar.plugins.ada.lang.AdaColorizer;
+import org.sonar.plugins.ada.ui.CodePeerViolationsRubyWidget;
+import org.sonar.plugins.ada.ui.GNATcheckViolationsRubyWidget;
 
+import java.util.List;
+
+@ToString
 @Properties({
-    @Property(key = JDBCUtils.QMT_DB_PATH,
-    name = "Path to qualimetrics database",
-    description = "Qualimetrics DB relative path to the project root",
-    global = false,
-    project = true)})
-/**
- * Implements Ada Plugin for Sonar
- */
+    @Property(
+        key = AdaPlugin.FILE_SUFFIXES_KEY,
+        defaultValue = Ada.DEFAULT_FILE_SUFFIXES,
+        name = "File Suffixes",
+        description = "Comma-separated list of suffixes of PHP files to analyze.",
+        global = true,
+        project = true),
+    @Property(
+        key = AdaPlugin.GNATHUB_DB_KEY,
+        name = "Path to GNAThub database",
+        description = "GNAThub DB relative path to the project root",
+        global = false,
+        project = true)
+})
 public final class AdaPlugin extends SonarPlugin {
 
-    /**
-     * Returns Sonar Extensions used into the plugin
-     *
-     * @return the classes to use into the plugin
-     */
-    @Override
-    public List getExtensions() {
-        List<Class<? extends Extension>> l = new ArrayList<Class<? extends Extension>>();
+  public static final String GNATHUB_DB_KEY = "sonar.ada.gnathub.db";
+  public static final String FILE_SUFFIXES_KEY = "sonar.ada.file.suffixes";
 
-        l.add(Ada.class);
-        l.add(AdaSourceImporter.class);
-        l.add(AdaDefaultProfile.class);
-        l.add(AdaColorizer.class);
+  /**
+   * Gets the extensions.
+   *
+   * @return the extensions
+   * @see org.sonar.api.SonarPlugin#getExtensions()
+   */
+  @Override
+  public List getExtensions() {
+    return ImmutableList.of(
+        Ada.class,
+        AdaProjectContext.class,
+
+        AdaSourceImporter.class,
+        AdaDefaultProfile.class,
+        AdaColorizer.class,
 
         // Issues
-        l.add(GNATIssuesSensor.class);
+        AdaIssueSensor.class,
 
         // CodeePeer
-        l.add(AdaCodePeerRuleRepository.class);
-        l.add(CodePeerMetrics.class);
-        l.add(CodePeerViolationsRubyWidget.class);
-        l.add(CodePeerViolationsDecorator.class);
+        CodePeerRuleRepository.class,
+        CodePeerMetrics.class,
+        CodePeerViolationsRubyWidget.class,
+        CodePeerViolationsDecorator.class,
 
         // GNATcheck
-        l.add(AdaGnatCheckRuleRepository.class);
-        l.add(GnatCheckMetrics.class);
-        l.add(GnatCheckViolationsRubyWidget.class);
-        l.add(GnatCheckViolationsDecorator.class);
-        l.add(GnatCheckViolationsDensityDecorator.class);
-        l.add(GnatCheckWeightedViolationsDecorator.class);
+        GNATcheckRuleRepository.class,
+        GNATcheckMetrics.class,
+        GNATcheckViolationsRubyWidget.class,
+        GNATcheckViolationsDecorator.class,
+        GNATcheckViolationsDensityDecorator.class,
+        GNATcheckWeightedViolationsDecorator.class,
 
         // GNATmetric
-        l.add(AdaGnatMetricSensor.class);
-        l.add(GnatMetrics.class);
+        GNATmetricSensor.class,
+        GNATmetricMetrics.class,
 
         // Gcov
-        l.add(GcovSensor.class);
+        GcovSensor.class,
 
         // GNATprove
-        l.add(GNATproveRuleRepository.class);
-
-        return l;
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
+        GNATproveRuleRepository.class);
+  }
 }

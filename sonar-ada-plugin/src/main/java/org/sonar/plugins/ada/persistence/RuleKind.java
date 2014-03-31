@@ -1,7 +1,7 @@
 /****************************************************************************
  *                              Sonar Ada Plugin                            *
  *                                                                          *
- *                     Copyright (C) 2013-2014, AdaCore                     *
+ *                        Copyright (C) 2014, AdaCore                       *
  *                                                                          *
  * This is free software;  you can redistribute it  and/or modify it  under *
  * terms of the  GNU General Public License as published  by the Free Soft- *
@@ -15,26 +15,16 @@
  * of the license.                                                          *
  ****************************************************************************/
 
-package org.sonar.plugins.ada;
+package org.sonar.plugins.ada.persistence;
 
 import lombok.AllArgsConstructor;
-import org.sonar.api.profiles.ProfileDefinition;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.profiles.XMLProfileParser;
-import org.sonar.api.utils.ValidationMessages;
 
+/**
+ * Enumeration of resource kind.
+ */
 @AllArgsConstructor
-public class AdaDefaultProfile extends ProfileDefinition {
-  private final XMLProfileParser xmlProfileParser;
+public enum RuleKind {
+  ISSUE(0), MEASURE(1);
 
-  /**
-   * Import the default Sonar Ada profile
-   */
-  @Override
-  public RulesProfile createProfile(ValidationMessages messages) {
-    RulesProfile profile = xmlProfileParser.parseResource(
-        getClass().getClassLoader(), "default-profile.xml", messages);
-    profile.setDefaultProfile(true);
-    return profile;
-  }
+  public final int img;
 }

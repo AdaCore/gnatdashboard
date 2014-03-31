@@ -15,26 +15,26 @@
  * of the license.                                                          *
  ****************************************************************************/
 
-package org.sonar.plugins.ada;
+package org.sonar.plugins.ada.ui;
 
-import lombok.AllArgsConstructor;
-import org.sonar.api.profiles.ProfileDefinition;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.profiles.XMLProfileParser;
-import org.sonar.api.utils.ValidationMessages;
+import org.sonar.api.web.*;
 
-@AllArgsConstructor
-public class AdaDefaultProfile extends ProfileDefinition {
-  private final XMLProfileParser xmlProfileParser;
+@UserRole(UserRole.USER)
+@Description("Report GNATcheck violations on coding standards")
+@WidgetCategory("Rules")
+public class GNATcheckViolationsRubyWidget
+    extends AbstractRubyTemplate implements RubyRailsWidget
+{
+  public String getId() {
+    return "GNATCheckViolations";
+  }
 
-  /**
-   * Import the default Sonar Ada profile
-   */
+  public String getTitle() {
+    return "GNATcheck violations";
+  }
+
   @Override
-  public RulesProfile createProfile(ValidationMessages messages) {
-    RulesProfile profile = xmlProfileParser.parseResource(
-        getClass().getClassLoader(), "default-profile.xml", messages);
-    profile.setDefaultProfile(true);
-    return profile;
+  protected String getTemplatePath() {
+    return "/org/sonar/plugins/ada/ui/gnatcheck_violations.html.erb";
   }
 }

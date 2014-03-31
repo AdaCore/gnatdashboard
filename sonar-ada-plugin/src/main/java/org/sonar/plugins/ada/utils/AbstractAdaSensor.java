@@ -15,26 +15,21 @@
  * of the license.                                                          *
  ****************************************************************************/
 
-package org.sonar.plugins.ada;
+package org.sonar.plugins.ada.utils;
 
-import lombok.AllArgsConstructor;
-import org.sonar.api.profiles.ProfileDefinition;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.profiles.XMLProfileParser;
-import org.sonar.api.utils.ValidationMessages;
+import org.sonar.api.batch.Sensor;
+import org.sonar.api.resources.Project;
+import org.sonar.plugins.ada.lang.Ada;
 
-@AllArgsConstructor
-public class AdaDefaultProfile extends ProfileDefinition {
-  private final XMLProfileParser xmlProfileParser;
-
+/**
+ * Generic Sensor for external tool, retrieve analysis results from reports.
+ */
+public abstract class AbstractAdaSensor implements Sensor {
   /**
-   * Import the default Sonar Ada profile
+   * This sensor is executed only for Ada projects.
    */
   @Override
-  public RulesProfile createProfile(ValidationMessages messages) {
-    RulesProfile profile = xmlProfileParser.parseResource(
-        getClass().getClassLoader(), "default-profile.xml", messages);
-    profile.setDefaultProfile(true);
-    return profile;
+  public boolean shouldExecuteOnProject(Project project) {
+    return Ada.KEY.equals(project.getLanguageKey());
   }
 }

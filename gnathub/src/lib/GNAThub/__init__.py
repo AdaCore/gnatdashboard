@@ -546,9 +546,9 @@ try:
     from GNAThubCore import *       # NOQA (disable warning from flake8)
 
 except ImportError:
-    logging.warn('Failed to import Ada implementation of the module.')
-    logging.warn('This module was likely not loaded by the GNAThub driver.')
-    logging.warn('This may be expected. GNAThub module implementation will'
+    logging.warn('Failed to import Ada implementation of the module.\n'
+                 'This module was likely not loaded by the GNAThub driver.\n'
+                 'This may be expected. GNAThub module implementation will'
                  'not be available (stubs will not be populated).')
 
 # Now that all Ada extensions have been planted into this module, we can

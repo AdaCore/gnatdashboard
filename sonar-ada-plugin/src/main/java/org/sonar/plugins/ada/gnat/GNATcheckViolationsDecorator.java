@@ -15,32 +15,27 @@
  * of the license.                                                          *
  ****************************************************************************/
 
-package org.sonar.plugins.ada.codepeer;
+package org.sonar.plugins.ada.gnat;
 
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multiset;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.extern.slf4j.Slf4j;
 import org.sonar.api.batch.DecoratorBarriers;
 import org.sonar.api.batch.DecoratorContext;
 import org.sonar.api.batch.DependsUpon;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.MeasureUtils;
-import org.sonar.api.measures.MeasuresFilters;
-import org.sonar.api.measures.Metric;
+import org.sonar.api.measures.*;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RulePriority;
 import org.sonar.api.rules.Violation;
 import org.sonar.plugins.ada.utils.AbstractAdaDecorator;
 import org.sonar.plugins.ada.utils.CustomMetrics;
-import org.sonar.plugins.ada.utils.GNAThubEncoding;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
- * Decorator for CodePeer violations metrics.
+ * Decorator for GNATcheck violations metrics.
  *
  * Uses the same computation algorithm than in
  * {@code org.sonar.plugins.core.sensors.ViolationsDecorator}.
@@ -51,18 +46,12 @@ import java.util.Collection;
  * to be able to distinguish them in order to represent it differently
  * in the GUI.
  */
-@Slf4j
 @DependsUpon(DecoratorBarriers.ISSUES_TRACKED)
-public class CodePeerViolationsDecorator extends AbstractAdaDecorator {
+public class GNATcheckViolationsDecorator extends AbstractAdaDecorator {
 
-  @EqualsAndHashCode
-  @AllArgsConstructor
-  private class Entry {
-    private final RulePriority severity;
-    private final CodePeerCategory category;
-  }
-
-  private final Multiset<Entry> counts = HashMultiset.create();
+  private final Multiset<Rule> rules = HashMultiset.create();
+  private final Multiset<RulePriority> severities = HashMultiset.create();
+  private final Map<Rule, RulePriority> ruleToSeverity = Maps.newHashMap();
 
   @Override
   public void decorate(Resource resource, DecoratorContext context) {
@@ -70,7 +59,8 @@ public class CodePeerViolationsDecorator extends AbstractAdaDecorator {
       resetCounters();
       countViolations(context);
       saveTotalViolations(context);
-      saveViolationsBySeverityAndCategory(context);
+      saveViolationsByRule(context);
+      saveViolationsBySeverity(context);
     }
   }
 
@@ -78,36 +68,61 @@ public class CodePeerViolationsDecorator extends AbstractAdaDecorator {
    * Resets variable and container that store temporary values.
    */
   private void resetCounters() {
-    counts.clear();
+    rules.clear();
+    severities.clear();
+    ruleToSeverity.clear();
   }
 
   /**
-   * Saves CodePeer violations measure for the current resource.
-   * Count the number of violations for each association of CodePeer
-   * categories - severities.
+   * Saves GNATcheck violations measure for the current resource.
+   * Count the number of violations for each severity.
    *
    * @param context To save the measure.
    */
-  private void saveViolationsBySeverityAndCategory(DecoratorContext context) {
-    for (final CodePeerCategory category : CodePeerCategory.values()) {
-      for (final RulePriority severity : RulePriority.values()) {
-        if (severity.equals(RulePriority.BLOCKER)) {
-          // CodePeer has no BLOCKER level rule
-          continue;
-        }
+  private void saveViolationsBySeverity(DecoratorContext context) {
+    for (final RulePriority severity : RulePriority.values()) {
+      final Metric metric = CustomMetrics.getMetric(GNATcheckMetrics.class,
+          severity.toString(), null /* category */);
 
-        final Metric metric = CustomMetrics.getMetric(CodePeerMetrics.class,
-            severity.toString(), category.toString());
+      if (metric != null && context.getMeasure(metric) == null) {
+        final Collection<Measure> children =
+            context.getChildrenMeasures(MeasuresFilters.metric(metric));
+        final Double sum = MeasureUtils.sum(true, children) +
+            severities.count(severity);
 
-        if (metric != null && context.getMeasure(metric) == null) {
-          final Collection<Measure> measures =
-              context.getChildrenMeasures(MeasuresFilters.metric(metric));
-          final Double sum = MeasureUtils.sum(true, measures) +
-              counts.count(new Entry(severity, category));
-
-          context.saveMeasure(metric, sum);
-        }
+        context.saveMeasure(metric, sum);
       }
+    }
+  }
+
+  /**
+   * Saves GNATcheck violations measure for the current resource.
+   * Count the number of violations for each rule.
+   *
+   * @param context To save the measure.
+   */
+  private void saveViolationsByRule(DecoratorContext context) {
+    final Metric metric = GNATcheckMetrics.GNATCHECK_VIOLATIONS;
+    final Collection<Measure> measures =
+        context.getChildrenMeasures(MeasuresFilters.rules(metric));
+
+    for (final Measure measure : measures) {
+      final RuleMeasure rm = (RuleMeasure) measure;
+      final Rule rule = rm.getRule();
+
+      if (rule != null && MeasureUtils.hasValue(rm)) {
+        rules.add(rule, rm.getValue().intValue());
+        ruleToSeverity.put(rm.getRule(), rm.getSeverity());
+      }
+    }
+
+    for (final Multiset.Entry<Rule> entry : rules.entrySet()) {
+      final Rule rule = entry.getElement();
+      final RuleMeasure measure =
+          RuleMeasure.createForRule(metric, rule, (double) entry.getCount());
+
+      measure.setSeverity(ruleToSeverity.get(rule));
+      context.saveMeasure(measure);
     }
   }
 
@@ -117,17 +132,17 @@ public class CodePeerViolationsDecorator extends AbstractAdaDecorator {
    * @param context To save the measure.
    */
   private void saveTotalViolations(DecoratorContext context) {
-    final Metric cv = CodePeerMetrics.CODEPEER_VIOLATIONS;
+    final Metric gcv = GNATcheckMetrics.GNATCHECK_VIOLATIONS;
 
-    // Find violations measure for the resource
-    if (context.getMeasure(cv) == null) {
-      final Collection<Measure> violations = context.getChildrenMeasures(cv);
+    // Finds violations measure for the resource
+    if (context.getMeasure(gcv) == null) {
+      final Collection<Measure> violations = context.getChildrenMeasures(gcv);
 
       // For source files sum of children = 0, for directories total = 0
-      final Double sum = MeasureUtils.sum(true, violations) + counts.size();
+      final Double sum = MeasureUtils.sum(true, violations) + severities.size();
 
       // Add the measure for the current resource
-      context.saveMeasure(cv, sum);
+      context.saveMeasure(gcv, sum);
     }
   }
 
@@ -141,24 +156,16 @@ public class CodePeerViolationsDecorator extends AbstractAdaDecorator {
     for (final Violation violation : context.getViolations()) {
       final Rule rule = violation.getRule();
 
-      if (rule.getRepositoryKey().equals(CodePeerRuleRepository.KEY)) {
-        // CodePeer rules are encoded as: SEVERITY__CATEGORY__RULE
-        final String[] parts = GNAThubEncoding.fromSonarRuleKey(rule.getKey());
-
-        try {
-          final CodePeerCategory category = CodePeerCategory.valueOf(parts[1]);
-          counts.add(new Entry(rule.getSeverity(), category));
-
-        } catch (IllegalArgumentException why) {
-          log.warn("{}: unknown category, skipping {}",
-              new Object[]{parts[1], violation.getMessage()}, why);
-        }
+      if (rule.getRepositoryKey().equals(GNATcheckRuleRepository.KEY)) {
+        rules.add(violation.getRule());
+        severities.add(rule.getSeverity());
+        ruleToSeverity.put(rule, violation.getSeverity());
       }
     }
   }
 
   @Override
   public String toString() {
-    return "CodePeer Decorator :: Compute CodePeer Metrics from Issues";
+    return "GNATcheck Decorator :: Compute GNATcheck Metrics from Issues";
   }
 }

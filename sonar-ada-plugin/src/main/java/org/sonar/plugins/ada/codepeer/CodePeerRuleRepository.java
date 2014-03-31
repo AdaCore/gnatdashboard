@@ -15,26 +15,31 @@
  * of the license.                                                          *
  ****************************************************************************/
 
-package org.sonar.plugins.ada;
+package org.sonar.plugins.ada.codepeer;
 
-import lombok.AllArgsConstructor;
-import org.sonar.api.profiles.ProfileDefinition;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.profiles.XMLProfileParser;
-import org.sonar.api.utils.ValidationMessages;
+import org.sonar.plugins.ada.utils.AbstractAdaRuleRepository;
 
-@AllArgsConstructor
-public class AdaDefaultProfile extends ProfileDefinition {
-  private final XMLProfileParser xmlProfileParser;
+/**
+ * Represent CodePeer rule repository.
+ */
+public class CodePeerRuleRepository extends AbstractAdaRuleRepository {
+
+  public static final String KEY = "codepeer";
+
+  public CodePeerRuleRepository() {
+    super(KEY);
+    setName(KEY);
+  }
 
   /**
-   * Import the default Sonar Ada profile
+   * Return location of CodePeer rule repository, from resource directory.
+   *
+   * For now, as it not possible to set a severity to a violation, 4 rules
+   * has been created for every CodePeer rule corresponding to each Sonar
+   * severity.
    */
   @Override
-  public RulesProfile createProfile(ValidationMessages messages) {
-    RulesProfile profile = xmlProfileParser.parseResource(
-        getClass().getClassLoader(), "default-profile.xml", messages);
-    profile.setDefaultProfile(true);
-    return profile;
+  protected String fileName() {
+    return "/codepeer.xml";
   }
 }

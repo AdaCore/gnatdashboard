@@ -1,7 +1,7 @@
 /****************************************************************************
  *                              Sonar Ada Plugin                            *
  *                                                                          *
- *                     Copyright (C) 2013-2014, AdaCore                     *
+ *                        Copyright (C) 2014, AdaCore                       *
  *                                                                          *
  * This is free software;  you can redistribute it  and/or modify it  under *
  * terms of the  GNU General Public License as published  by the Free Soft- *
@@ -17,24 +17,26 @@
 
 package org.sonar.plugins.ada;
 
-import lombok.AllArgsConstructor;
-import org.sonar.api.profiles.ProfileDefinition;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.profiles.XMLProfileParser;
-import org.sonar.api.utils.ValidationMessages;
+import lombok.Getter;
+import org.sonar.api.BatchExtension;
+import org.sonar.api.config.Settings;
+import org.sonar.api.resources.Project;
+import org.sonar.plugins.ada.persistence.ProjectDAO;
 
-@AllArgsConstructor
-public class AdaDefaultProfile extends ProfileDefinition {
-  private final XMLProfileParser xmlProfileParser;
+/**
+ * Project context. Contains among other things the configuration (eg. DB path).
+ */
+public class AdaProjectContext implements BatchExtension {
+  protected final Settings settings;
+  protected final Project project;
 
-  /**
-   * Import the default Sonar Ada profile
-   */
-  @Override
-  public RulesProfile createProfile(ValidationMessages messages) {
-    RulesProfile profile = xmlProfileParser.parseResource(
-        getClass().getClassLoader(), "default-profile.xml", messages);
-    profile.setDefaultProfile(true);
-    return profile;
+  @Getter protected final ProjectDAO dao;
+
+  public AdaProjectContext(final Project project, final Settings settings) {
+    this.settings = settings;
+    this.project = project;
+
+    final String dbUrl = settings.getString(AdaPlugin.GNATHUB_DB_KEY);
+    this.dao = new ProjectDAO(project, dbUrl);
   }
 }

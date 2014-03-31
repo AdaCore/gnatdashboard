@@ -1,7 +1,7 @@
 /****************************************************************************
  *                              Sonar Ada Plugin                            *
  *                                                                          *
- *                     Copyright (C) 2013-2014, AdaCore                     *
+ *                        Copyright (C) 2014, AdaCore                       *
  *                                                                          *
  * This is free software;  you can redistribute it  and/or modify it  under *
  * terms of the  GNU General Public License as published  by the Free Soft- *
@@ -15,26 +15,31 @@
  * of the license.                                                          *
  ****************************************************************************/
 
-package org.sonar.plugins.ada;
+package org.sonar.plugins.ada.utils;
 
-import lombok.AllArgsConstructor;
-import org.sonar.api.profiles.ProfileDefinition;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.profiles.XMLProfileParser;
-import org.sonar.api.utils.ValidationMessages;
+import org.sonar.api.batch.Decorator;
+import org.sonar.api.resources.Language;
+import org.sonar.api.resources.Project;
+import org.sonar.api.resources.Resource;
+import org.sonar.plugins.ada.lang.Ada;
 
-@AllArgsConstructor
-public class AdaDefaultProfile extends ProfileDefinition {
-  private final XMLProfileParser xmlProfileParser;
-
+/**
+ * Interface for a decorator for the Ada language.
+ */
+public abstract class AbstractAdaDecorator implements Decorator {
   /**
-   * Import the default Sonar Ada profile
+   * Decorates only Ada project
    */
   @Override
-  public RulesProfile createProfile(ValidationMessages messages) {
-    RulesProfile profile = xmlProfileParser.parseResource(
-        getClass().getClassLoader(), "default-profile.xml", messages);
-    profile.setDefaultProfile(true);
-    return profile;
+  public boolean shouldExecuteOnProject(Project project) {
+    return project.getLanguageKey().equals(Ada.KEY);
+  }
+
+  /**
+   * Decorates only Ada resource
+   */
+  protected boolean shouldDecorateResource(Resource resource) {
+    final Language lang = resource.getLanguage();
+    return lang != null && lang.getKey().equals(Ada.KEY);
   }
 }

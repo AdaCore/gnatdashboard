@@ -24,95 +24,10 @@ interface. This allows GNAThub's plug-in scanner to automatically find this
 module and load it as part of the GNAThub default execution.
 """
 
-import ConfigParser
-
 import GNAThub
 
-# pylint: disable=F0401
-# Disable: Unable to import '{}'
-from _sonarqube import SonarQube
-
-
-class _SonarConfiguration(object):
-    """Represent Sonar configuration"""
-
-    SONAR_SECTION = 'Sonar'
-
-    SONAR_ATTRIBUTES = {
-        'language': ('ada', None),
-        'sourceEncoding': ('UTF-8', 'Source_Encoding'),
-        'sources': ('.', None),
-        'projectVersion': ('1.0-SNAPSHOT', 'Project_Version'),
-        'projectName': (GNAThub.Project.name(), 'Project_Name'),
-        'projectKey': (GNAThub.Project.name(), 'Project_Key'),
-        'ada.gnathub.db': (GNAThub.database().replace('\\', '\\\\'), None),
-        'ada.file.suffixes': (','.join(GNAThub.Project.source_suffixes("Ada")),
-                              None)}
-
-    def __init__(self, logger=None):
-        self.log = logger
-
-    def _add(self, config, key, value, attribute=None):
-        """Adds property in sonar configuration
-
-        :param ConfigParser.ConfigParser config: The configuration object.
-        :param str key: Property key.
-        :param str value: Property value.
-        :param str attribute: Custom project file attribute for this key.
-            If None, the default value will be used. Defaults to None.
-
-        """
-
-        if attribute and GNAThub.Project.property_as_string(attribute):
-            value = GNAThub.Project.property_as_string(attribute)
-            self.log.debug('%s = %s (overriding default)', key, value)
-        else:
-            self.log.debug('%s = %s', key, value)
-
-        config.set(_SonarConfiguration.SONAR_SECTION, key, value)
-
-    def write(self, filename):
-        """Dumps sonar-project.properties file in sonar working directory.
-
-        :param str filename: The configuration file name.
-
-        """
-
-        config = ConfigParser.ConfigParser()
-
-        # Enable case-sensitive keys feature
-        config.optionxform = str
-
-        # Create the [Sonar] section in the configuration file
-        config.add_section(_SonarConfiguration.SONAR_SECTION)
-
-        # Set properties
-        for key, value in _SonarConfiguration.SONAR_ATTRIBUTES.iteritems():
-            # Unpack the tuple containing the default value and the custom
-            # project attribute for this key.
-            default, attribute = value
-
-            # Insert the key in the configuration file
-            self._add(config, 'sonar.%s' % key, default, attribute)
-
-        project_name = GNAThub.Project.name()
-        project_source_dirs = GNAThub.Project.source_dirs()[project_name]
-        self._add(config, 'sonar.sources', ','.join(project_source_dirs))
-
-        modules = {k: v for k, v in GNAThub.Project.source_dirs().iteritems()
-                   if k != GNAThub.Project.name() and v}
-
-        self._add(config, 'sonar.modules',
-                  ','.join([m.lower() for m in modules.keys()]))
-
-        for name, sources in modules.iteritems():
-            module = name.lower()
-            self._add(config, '%s.sonar.projectName' % module, name)
-            self._add(config, '%s.sonar.projectKey' % module, name)
-            self._add(config, '%s.sonar.sources' % module, ','.join(sources))
-
-        with open(filename, 'w') as configuration:
-            config.write(configuration)
+# pylint: disable=import-error
+from _sonarqube import SonarQube, SonarRunnerProperties
 
 
 class SonarConfig(GNAThub.Plugin):
@@ -124,9 +39,7 @@ class SonarConfig(GNAThub.Plugin):
     def setup(self):
         """Inherited."""
 
-        # Do not call the super method: we do not need a database session to be
-        # opened.
-
+        super(SonarConfig, self).setup()
         SonarQube.make_workdir()
 
     def execute(self):
@@ -135,8 +48,7 @@ class SonarConfig(GNAThub.Plugin):
         self.info('generate %s' % SonarQube.CONFIGURATION)
 
         try:
-            config = _SonarConfiguration(logger=self.log)
-            config.write(SonarQube.configuration())
+            SonarRunnerProperties(self.log).write(SonarQube.configuration())
 
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE

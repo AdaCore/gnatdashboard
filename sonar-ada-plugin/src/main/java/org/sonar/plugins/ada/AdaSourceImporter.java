@@ -1,28 +1,25 @@
-/*
- * Sonar Ada Plugin
- *  Copyright (C) 2012-2013, AdaCore
- */
+/****************************************************************************
+ *                              Sonar Ada Plugin                            *
+ *                                                                          *
+ *                     Copyright (C) 2013-2014, AdaCore                     *
+ *                                                                          *
+ * This is free software;  you can redistribute it  and/or modify it  under *
+ * terms of the  GNU General Public License as published  by the Free Soft- *
+ * ware  Foundation;  either version 3,  or (at your option) any later ver- *
+ * sion.  This software is distributed in the hope  that it will be useful, *
+ * but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- *
+ * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public *
+ * License for  more details.  You should have  received  a copy of the GNU *
+ * General  Public  License  distributed  with  this  software;   see  file *
+ * COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy *
+ * of the license.                                                          *
+ ****************************************************************************/
+
 package org.sonar.plugins.ada;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.sonar.api.batch.AbstractSourceImporter;
 import org.sonar.api.batch.Phase;
-import org.sonar.api.batch.ResourceCreationLock;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
-import org.sonar.api.utils.SonarException;
-import org.sonar.plugins.ada.api.resource.AdaFile;
-import org.sonar.plugins.ada.persistence.AdaDao;
-import org.sonar.plugins.ada.persistence.JDBCUtils;
+import org.sonar.plugins.ada.lang.Ada;
 
 /**
  * Extension of AbstractSourceImporter for Ada project import all project
@@ -30,70 +27,20 @@ import org.sonar.plugins.ada.persistence.JDBCUtils;
  */
 @Phase(name = Phase.Name.PRE)
 public class AdaSourceImporter extends AbstractSourceImporter {
+  /**
+   * Instantiates a new Ada source importer.
+   *
+   * @param ada The language Ada.
+   */
+  public AdaSourceImporter(Ada ada) {
+    super(ada);
+  }
 
-    // <editor-fold desc="Class's attibutes" defaultstate="collapsed">
-
-    private Logger logger = Logger.getLogger(AdaSourceImporter.class);
-    private ResourceCreationLock lock;
-    private Configuration config;
-    // </editor-fold>
-
-    public AdaSourceImporter(ResourceCreationLock lock, Configuration config) {
-        super(Ada.INSTANCE);
-        this.lock = lock;
-        this.config = config;
-    }
-
-    /**
-     * {@inheritDoc} Initialize the sourceMap and import sources
-     */
-    @Override
-    public void analyse(Project project, SensorContext context) {
-        saveResources(context, project.getFileSystem().getSourceCharset());
-        onFinished();
-    }
-
-    /**
-     * Import resource content and save it in the context.
-     *
-     * @param context
-     * @param source encoding
-     */
-    protected void saveResources(SensorContext context, Charset sourcesEncoding) {
-        JDBCUtils.setDBurl(config.getString(JDBCUtils.QMT_DB_PATH));
-        AdaDao dao = new AdaDao();
-
-        for (AdaFile resource : dao.selectAllResources()) {
-            File file = new File(resource.getLongName());
-            try {
-                String source = FileUtils.readFileToString(file, sourcesEncoding.name());
-                context.saveSource(resource, source);
-            } catch (FileNotFoundException ex){
-               logger.info("File not found: " + file.getAbsolutePath());
-            } catch (IOException e) {
-                throw new SonarException("Unable to read and import the source file : '"
-                        + file.getAbsolutePath() + "' with the charset : '"
-                        + sourcesEncoding.name() + "'.", e);
-            }
-        }
-    }
-
-    protected Resource createResource(File file, boolean unitTest, String project, String directory) {
-        return file != null ? AdaFile.fromIOFile(file, project, directory) : null;
-    }
-
-    /**
-     * Forbids the creation of resources when saving violations and measures. By
-     * default it's unlocked, so only warnings are logged. When locked, then an
-     * exception is thrown.
-     */
-    @Override
-    protected void onFinished() {
-        lock.lock();
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString() {
+    return "Ada Source Importer";
+  }
 }

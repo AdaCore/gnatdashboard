@@ -15,26 +15,44 @@
  * of the license.                                                          *
  ****************************************************************************/
 
-package org.sonar.plugins.ada;
+package org.sonar.plugins.ada.gnat;
 
 import lombok.AllArgsConstructor;
-import org.sonar.api.profiles.ProfileDefinition;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.profiles.XMLProfileParser;
-import org.sonar.api.utils.ValidationMessages;
+import lombok.extern.slf4j.Slf4j;
+import org.sonar.api.batch.SensorContext;
+import org.sonar.api.measures.Measure;
+import org.sonar.api.measures.Metric;
+import org.sonar.api.resources.File;
+import org.sonar.api.resources.Project;
+import org.sonar.plugins.ada.AdaProjectContext;
+import org.sonar.plugins.ada.persistence.MeasureRecord;
+import org.sonar.plugins.ada.utils.AbstractAdaSensor;
 
+/**
+ * Sensor for GNATmetric external tool, retrieve information from a report and
+ * save the measures.
+ */
+@Slf4j
 @AllArgsConstructor
-public class AdaDefaultProfile extends ProfileDefinition {
-  private final XMLProfileParser xmlProfileParser;
+public class GNATmetricSensor extends AbstractAdaSensor {
+  private static final String NAME = "GNATmetric";
 
-  /**
-   * Import the default Sonar Ada profile
-   */
+  private AdaProjectContext adaContext;
+
   @Override
-  public RulesProfile createProfile(ValidationMessages messages) {
-    RulesProfile profile = xmlProfileParser.parseResource(
-        getClass().getClassLoader(), "default-profile.xml", messages);
-    profile.setDefaultProfile(true);
-    return profile;
+  public void analyse(Project project, SensorContext context) {
+    log.info("Collecting GNATmetric measures");
+
+    for (final MeasureRecord am : adaContext.getDao().getMeasuresByTool(NAME)) {
+      final File file = am.getFile();
+      log.trace("Saving measure '{}' for file: {}",
+          am.getMeasure().getMetricKey(), file.getLongName());
+
+      final Metric metric = GNATmetricMetrics.Mapping.valueOf(
+          am.getMeasure().getMetricKey().toUpperCase()).getMetric();
+      final Measure measure = new Measure(metric, am.getMeasure().getValue());
+
+      context.saveMeasure(file, measure);
+    }
   }
 }
