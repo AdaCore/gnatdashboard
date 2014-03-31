@@ -2,7 +2,7 @@
 ##                                                                          ##
 ##                               G N A T h u b                              ##
 ##                                                                          ##
-##                        Copyright (C) 2013, AdaCore                       ##
+##                     Copyright (C) 2013-2014, AdaCore                     ##
 ##                                                                          ##
 ## The QM is free software; you can redistribute it  and/or modify it       ##
 ## under terms of the GNU General Public License as published by the Free   ##
