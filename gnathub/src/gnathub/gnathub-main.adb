@@ -17,7 +17,6 @@
 
 with Ada.Command_Line;
 with Ada.Exceptions;             use Ada.Exceptions;
-with Ada.Strings.Unbounded;      use Ada.Strings.Unbounded;
 with Ada.Text_IO;                use Ada.Text_IO;
 
 with GNAT.Directory_Operations;  use GNAT.Directory_Operations;
