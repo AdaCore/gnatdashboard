@@ -57,6 +57,10 @@ PKG_DIR     := $(TOP)/gnathub-$(target)
 PYTHON_HOME := $(BUILD_DIR)/share/gnathub/python
 INSTALL_DIR := ${PREFIX}
 
+# Python module manifest. Record the list of file installed so that they can be
+# removed prior any re-installation. This avoid issues when removing files.
+SETUP_PY_MANIFEST := $(BUILD_DIR)/GNAThub.MANIFEST
+
 ifeq ($(target),x86-windows)
   PYTHON         := $(PYTHON_HOME)/python
   PYTHON_BIN_DIR := $(PYTHON_HOME)/Scripts
@@ -73,6 +77,7 @@ MKDIR := mkdir -p
 RM    := rm -f
 RMDIR := rm -rf
 CP    := cp -pr
+RSYNC := rsync -a --delete
 
 # Build variables
 

@@ -1,5 +1,4 @@
 # Makefile for GNAThub
-#
 
 include config.mk
 
@@ -28,7 +27,9 @@ src/gnathub/gnathub-version.ads: src/gnathub/gnathub-version.ads.in
 
 gnathub-pylib: python-env
 	@echo ":: Building GNAThub's Python API"
-	$(PYTHON) src/lib/setup.py -q build -b "$(BUILD_DIR)" install
+	-[ -f $(SETUP_PY_MANIFEST) ] && cat $(SETUP_PY_MANIFEST) |xargs rm -rf
+	$(PYTHON) src/lib/setup.py -q build -b "$(BUILD_DIR)" install \
+		--record $(SETUP_PY_MANIFEST)
 
 gnathub-plugins:
 	@echo ":: Deploying GNAThub's core plug-ins"
@@ -100,4 +101,4 @@ package: all
 	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
 
 install: package
-	(cd $(PKG_DIR) && tar cf - *) | (cd $(INSTALL_DIR) && tar xf -)
+	$(RSYNC) $(PKG_DIR) $(INSTALL_DIR)
