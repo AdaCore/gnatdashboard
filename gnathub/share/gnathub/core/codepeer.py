@@ -125,7 +125,7 @@ class CodePeer(GNAThub.Plugin):
             GNAThub.EXEC_FAILURE: on any error
         """
 
-        System.info('%s: analysing CSV report', self.name)
+        System.info('%s: analysing CSV report' % self.name)
         self.tool = GNAThub.Tool(self.name)
 
         self.log.debug('Parse report: %s' % self.csv_report)
