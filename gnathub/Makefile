@@ -101,6 +101,8 @@ package: all docs-html
 	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
 	$(MKDIR) $(PKG_DIR)/share/doc
 	$(RSYNC) $(BUILD_DIR)/docs/html $(PKG_DIR)/share/doc/gnatdashboard
+	$(MKDIR) $(PKG_DIR)/share/examples
+	(cd share/examples && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/examples && tar xf -)
 
 install: package
 	$(RSYNC) $(PKG_DIR) $(INSTALL_DIR)
