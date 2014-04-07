@@ -125,9 +125,10 @@ class Gcov(GNAThub.Plugin):
 
             self.exec_status = GNAThub.EXEC_SUCCESS
 
-        except IOError as ex:
+        except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            System.error('%s: error: %s' % (self.name, ex))
+            self.log.exception('Failed to parse GCov reports')
+            System.error('%s: error: %s' % (self.name, why))
 
     def execute(self):
         """Finds the Gcov output files and parses them."""

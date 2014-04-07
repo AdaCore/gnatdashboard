@@ -128,7 +128,7 @@ class CodePeer(GNAThub.Plugin):
         System.info('%s: analysing CSV report' % self.name)
         self.tool = GNAThub.Tool(self.name)
 
-        self.log.debug('Parse report: %s' % self.csv_report)
+        self.log.debug('Parse report: %s', self.csv_report)
 
         if not os.path.exists(self.csv_report):
             self.exec_status = GNAThub.EXEC_FAILURE
@@ -150,11 +150,11 @@ class CodePeer(GNAThub.Plugin):
 
                 # Drop the first line (containing the columns name)
                 header = reader.next()
-                self.log.debug('Drop header line: %s' % header)
+                self.log.debug('Drop header line: %s', header)
 
                 # Iterate over each relevant record
                 for index, record in enumerate(reader, start=1):
-                    self.log.debug('Parse record: %r' % record)
+                    self.log.debug('Parse record: %r', record)
 
                     # Each row is a list of strings:
                     # [File, Line, Column, Category, New?, Review?, Ranking,
@@ -178,10 +178,11 @@ class CodePeer(GNAThub.Plugin):
 
                     System.progress(index, total, new_line=(index == total))
 
-            except csv.Error as ex:
+            except csv.Error as why:
                 self.exec_status = GNAThub.EXEC_FAILURE
+                self.log.exception('Failed to parse CodePeer CSV report')
                 System.error('%s: error: %s (%s:%d)' %
-                             (self.name, ex, os.path.basename(report), total))
+                             (self.name, why, os.path.basename(report), total))
                 return
 
             self.exec_status = GNAThub.EXEC_SUCCESS

@@ -98,7 +98,7 @@ class GNATmetric(GNAThub.Plugin):
         System.info('%s: analysing report' % self.name)
 
         tool = GNAThub.Tool(self.name)
-        self.log.debug('Parse XML report: %s' % self.report)
+        self.log.debug('Parse XML report: %s', self.report)
 
         try:
             tree = ElementTree.parse(self.report)
@@ -142,11 +142,8 @@ class GNATmetric(GNAThub.Plugin):
 
             self.exec_status = GNAThub.EXEC_SUCCESS
 
-        except ParseError as ex:
+        except (ParseError, IOError) as why:
             self.exec_status = GNAThub.EXEC_FAILURE
+            self.log.exception('Failed to parse GNATcheck XML report')
             System.error('%s: error: %s (%s:%s)' %
-                         (self.name, ex.msg, ex.filename, ex.lineno))
-
-        except IOError as ex:
-            self.exec_status = GNAThub.EXEC_FAILURE
-            System.error('%s: error: %s' % (self.name, ex))
+                         (self.name, why.msg, why.filename, why.lineno))

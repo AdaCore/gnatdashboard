@@ -24,6 +24,7 @@ spawning the main event loop.
 """
 
 import inspect
+import logging
 import os
 import time
 
@@ -33,7 +34,49 @@ from GNAThub import System
 
 
 # Create this script logger
-LOG = GNAThub.Logger('plugin-runner')
+LOG = logging.getLogger('plugin-runner')
+
+
+class GNAThubLoggingHandler(logging.Handler):
+    """Custom logging handler that uses GNAThub.Logger as back-end."""
+
+    LOGGING_FUNCTIONS = {
+        'DEBUG': GNAThub.Logger.debug,
+        'INFO': GNAThub.Logger.info,
+        'WARNING': GNAThub.Logger.warn,
+        'ERROR': GNAThub.Logger.error,
+        'CRITICAL': GNAThub.Logger.fatal
+    }
+
+    def __init__(self):
+        super(GNAThubLoggingHandler, self).__init__()
+
+        # Instances of GNAThub.Logger
+        # This is used to select the correct logger to log with.
+        self.loggers = {}
+
+    def emit(self, record):
+        """Inherited."""
+
+        if record.name in self.loggers:
+            logger = self.loggers[record.name]
+        else:
+            logger = GNAThub.Logger(record.name)
+            self.loggers[record.name] = logger
+
+        # pylint: disable=broad-except
+        try:
+            message = self.format(record)
+
+            method = GNAThubLoggingHandler.LOGGING_FUNCTIONS[record.levelname]
+            method.__get__(logger)(message)
+
+        except (KeyboardInterrupt, SystemExit):
+            raise
+
+        except:
+            self.handleError(record)
+            return
 
 
 class PluginRunner(object):
@@ -139,10 +182,11 @@ class PluginRunner(object):
 
         # pylint: disable=broad-except
         try:
-            LOG.debug('  + %s' % script)
+            LOG.debug('  + %s', script)
             execfile(script, namespace)
 
         except Exception as why:
+            LOG.exception('Failed to load script: %s', script)
             System.warn('%s: failed to load: %s' % (script, str(why)))
 
         for _, obj in namespace.items():
@@ -177,13 +221,13 @@ class PluginRunner(object):
 
         for name, path in GNAThub.repositories().items():
             if not os.path.isdir(path):
-                LOG.info('Skipping repository [%s] (not found)' % name)
+                LOG.info('Skipping repository [%s] (not found)', name)
                 continue
 
-            LOG.info('Load scripts from [%s] repository' % name)
+            LOG.info('Load scripts from [%s] repository', name)
             repo_scripts = list(PluginRunner.walk_repository(path))
 
-            LOG.info('  + %d new script(s) found' % len(repo_scripts))
+            LOG.info('  + %d new script(s) found', len(repo_scripts))
             scripts.update(repo_scripts)
 
             if len(repo_scripts):
@@ -229,11 +273,11 @@ class PluginRunner(object):
         for name in GNAThub.Project.property_as_list('Plugins_Off'):
             for plugin in plugins:
                 if plugin.name == name:
-                    LOG.info('Disable %s [Plugin_Off]' % name)
+                    LOG.info('Disable %s [Plugin_Off]', name)
                     plugins.remove(plugin)
                     break
 
-            LOG.warn('%s explicitly disabled but not loaded' % name)
+            LOG.warn('%s explicitly disabled but not loaded', name)
 
         return PluginRunner.schedule(plugins)
 
@@ -253,19 +297,19 @@ class PluginRunner(object):
 
         System.info('executing plug-in %s' % inst.name)
 
-        LOG.info('%s: setup environment' % inst.name)
+        LOG.info('%s: setup environment', inst.name)
         inst.setup()
 
         inst.execute()
 
-        LOG.info('%s: post execution' % inst.name)
+        LOG.info('%s: post execution', inst.name)
         inst.teardown()
 
-        ellapsed = time.time() - start
+        elapsed = time.time() - start
 
         if inst.exec_status == GNAThub.EXEC_SUCCESS:
             System.info('%s: completed (in %d seconds)' %
-                        (inst.name, ellapsed))
+                        (inst.name, elapsed))
 
         elif inst.exec_status == GNAThub.EXEC_FAILURE:
             System.error('%s: execution failed' % inst.name)
@@ -274,7 +318,7 @@ class PluginRunner(object):
             System.error('%s: unknown plug-in execution code: %d' %
                          (inst.name, inst.exec_status))
         else:
-            LOG.info('%s: not executed' % inst.name)
+            LOG.info('%s: not executed', inst.name)
 
     def mainloop(self):
         """Plugins main loop."""
@@ -286,7 +330,7 @@ class PluginRunner(object):
             return
 
         for plugin in self.plugins:
-            LOG.info('  + %s' % plugin.__name__)
+            LOG.info('  + %s', plugin.__name__)
 
         for plugin in self.plugins:
             try:
@@ -296,9 +340,21 @@ class PluginRunner(object):
                 System.info('%sInterrupt caught...' % os.linesep)
 
             except Exception as why:
+                LOG.exception('Plug-in execution failed')
                 System.error('Unexpected error: %s' % why)
 
 
 # Script entry point
 if __name__ == '__main__':
+    formatter = logging.Formatter(
+        fmt='[%(asctime)s.%(msecs)03d %(name)s] %(message)s',
+        datefmt='%H:%M:%S')
+
+    handler = GNAThubLoggingHandler()
+    handler.setFormatter(formatter)
+
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
+    root_logger.addHandler(handler)
+
     PluginRunner().mainloop()

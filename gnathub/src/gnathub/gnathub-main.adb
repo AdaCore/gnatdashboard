@@ -231,7 +231,7 @@ begin
       Execute_User_Script;
 
    else
-      Log.Info (Me, "Create local application database");
+      Log.Info (Me, "Initialize local database");
       Create_Or_Override_Database;
 
       Log.Info (Me, "Execute plugin-runner");

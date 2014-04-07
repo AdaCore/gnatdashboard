@@ -37,9 +37,6 @@ package body GNAThub is
    procedure Initialize_Logging is
    begin
       GNATCOLL.Traces.Parse_Config_File;
-
-      Set_Active (Create ("DEBUG.ABSOLUTE_TIME"), True);
-      Set_Active (Create ("DEBUG.COLORS"), True);
    end Initialize_Logging;
 
    ----------

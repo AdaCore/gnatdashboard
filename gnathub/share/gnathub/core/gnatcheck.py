@@ -113,7 +113,7 @@ class GNATcheck(GNAThub.Plugin):
         System.info('%s: analysing report' % self.name)
 
         self.tool = GNAThub.Tool(self.name)
-        self.log.debug('Parse report: %s' % self.report)
+        self.log.debug('Parse report: %s', self.report)
 
         if not os.path.exists(self.report):
             self.exec_status = GNAThub.EXEC_FAILURE
@@ -126,21 +126,22 @@ class GNATcheck(GNAThub.Plugin):
                 total = len(lines)
 
                 for index, line in enumerate(lines, start=1):
-                    self.log.debug('Parse line: %s' % line)
+                    self.log.debug('Parse line: %s', line)
 
                     match = self._MESSAGE.match(line)
 
                     if match:
-                        self.log.debug('Matched: %s' % str(match.groups()))
+                        self.log.debug('Matched: %s', str(match.groups()))
                         self.__parse_line(match)
 
                     System.progress(index, total, new_line=(index == total))
 
             self.exec_status = GNAThub.EXEC_SUCCESS
 
-        except IOError as ex:
+        except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            System.error('%s: error: %s' % (self.name, ex))
+            self.log.exception('Failed to parse GNATcheck report')
+            System.error('%s: error: %s' % (self.name, why))
 
     def __parse_line(self, regex):
         """Parses a GNATcheck message line and add the message to the current

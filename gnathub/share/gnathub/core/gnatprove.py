@@ -117,9 +117,10 @@ class GNATprove(GNAThub.Plugin):
 
             self.exec_status = GNAThub.EXEC_SUCCESS
 
-        except IOError as ex:
+        except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            System.error('%s: error: %s' % (self.name, ex))
+            self.log.exception('Failed to parse GNATprove output')
+            System.error('%s: error: %s' % (self.name, why))
 
     def __parse_line(self, regex):
         """Parses a GNATprove message line and adds it to the database.
@@ -160,7 +161,7 @@ class GNATprove(GNAThub.Plugin):
             self.__add_message(src, line, column, rule_id, message)
 
         except KeyError:
-            System.warn('%s: unknown severity: %s' % (sel.name, severity))
+            System.warn('%s: unknown severity: %s' % (self.name, severity))
 
     def __add_message(self, src, line, col_begin, rule_id, msg):
         """Registers a new message in the database.

@@ -25,7 +25,6 @@ module and load it as part of the GNAThub default execution.
 """
 
 import ConfigParser
-import os
 
 import GNAThub
 from GNAThub import System
@@ -67,14 +66,12 @@ class _SonarConfiguration(object):
             :type value: a string.
         """
 
-        if attribute:
-            attr_value = GNAThub.Project.property_as_string(attribute)
-            if attr_value:
-                self.log.debug('%s: overriding default with %s' %
-                               (key, attr_value))
-                value = attr_value
+        if attribute and GNAThub.Project.property_as_string(attribute):
+            value = GNAThub.Project.property_as_string(attribute)
+            self.log.debug('%s = %s (overriding default)', key, value)
+        else:
+            self.log.debug('%s = %s', key, value)
 
-        self.log.debug('%s = %s' % (key, value))
         config.set(_SonarConfiguration.SONAR_SECTION, key, value)
 
     def write(self, filename):
@@ -132,6 +129,7 @@ class SonarConfig(GNAThub.Plugin):
 
             self.exec_status = GNAThub.EXEC_SUCCESS
 
-        except IOError as ex:
+        except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            System.error('%s: error: %s' % (self.name, ex))
+            self.log.exception('Failed to generate SonarRunner configuration')
+            System.error('%s: error: %s' % (self.name, why))

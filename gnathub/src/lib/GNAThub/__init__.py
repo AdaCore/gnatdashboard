@@ -267,6 +267,7 @@ from GNAThubCore import *       # NOQA (disable warning from flake8)
 # Now that all Ada extensions have been planted into this module, we can
 # define pure-Python extensions.
 
+import logging
 import os
 
 from abc import ABCMeta, abstractmethod, abstractproperty
@@ -277,6 +278,7 @@ EXEC_SUCCESS, EXEC_FAILURE, NOT_EXECUTED = range(3)
 # Database-related constants
 RULE_KIND, METRIC_KIND = range(2)
 PROJECT_KIND, DIRECTORY_KIND, FILE_KIND = range(3)
+
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -308,7 +310,7 @@ class Plugin:
 
         # A custom instance of a logger. It is implemented in Ada and based on
         # the GNATCOLL.Traces module.
-        self.log = Logger(self.__class__.__name__)
+        self.log = logging.getLogger(self.name or self.__class__.__name__)
 
         # The execution status of this plugin. Initialized to NOT_EXECUTED.
         # Should be set to EXEC_FAILURE or EXEC_SUCCESS by the plugin in the
@@ -423,11 +425,11 @@ class Run(object):
         self.argv = argv
         self.status = None
         self.out = out
-        self.log = Logger(self.__class__.__name__)
+        self.log = logging.getLogger(self.__class__.__name__)
 
-        self.log.debug('Run: cd %s; %s' % (
-            workdir if workdir is not None else os.getcwd(),
-            self.cmdline_image()))
+        self.log.debug('Run: cd %s; %s',
+                       workdir if workdir is not None else os.getcwd(),
+                       self.cmdline_image())
 
         try:
             with open(self.output(), 'w') as output:
