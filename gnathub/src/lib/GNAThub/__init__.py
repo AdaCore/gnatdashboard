@@ -139,6 +139,7 @@ class Logger(object):
 
         pass    # Implemented in Ada
 
+
 class System(object):
     """Provides several helper routines implemented in Ada."""
 
@@ -436,14 +437,14 @@ class Run(object):
                 self.pid = self.internal.pid
                 self.wait()
 
-        except OSError as ex:
+        except OSError as why:
             self.__error()
-            System.error('%s: %s' % (self.argv[0], ex.strerror))
+            System.error('%s: %s' % (self.argv[0], why.strerror))
             return
 
-        except Exception as ex:
+        except Exception as why:
             self.__error()
-            System.error(str(ex))
+            System.error(str(why))
             raise
 
     def wait(self):
