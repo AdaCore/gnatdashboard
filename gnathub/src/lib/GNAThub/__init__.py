@@ -112,29 +112,29 @@ class Logger(object):
 
         pass    # Implemented in Ada
 
-    def info(message):
+    def info(self, message):
         """Prints an informative message. Activated at default verbosity
         output.
         """
 
         pass    # Implemented in Ada
 
-    def warn(message):
+    def warn(self, message):
         """Prints a warning message. Activated at default verbosity output."""
 
         pass    # Implemented in Ada
 
-    def error(message):
+    def error(self, message):
         """Prints an error message. Always activated."""
 
         pass    # Implemented in Ada
 
-    def fatal(message):
+    def fatal(self, message):
         """Prints a fatal message. Always activated."""
 
         pass    # Implemented in Ada
 
-    def debug(message):
+    def debug(self, message):
         """Prints a debug message. Activated at higher verbosity level."""
 
         pass    # Implemented in Ada
