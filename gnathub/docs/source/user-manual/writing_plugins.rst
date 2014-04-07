@@ -1,24 +1,22 @@
 .. include:: ../defines.hrst
 
-Writing a |Driver| plug-in
-==========================
+Writing a |GNAThub| plug-in
+===========================
 
 Location for user-defined plug-ins
 ----------------------------------
 
-Store your plug-ins in the :file:`extra` directory. |Driver| attempts to
+Store your plug-ins in the :file:`extra` directory. |GNAThub| attempts to
 load all files in this directory except the ones whose name starts with an
-underscore (:kbd`_`), which are expected to be support files referenced by
+underscore (:kbd:`_`), which are expected to be support files referenced by
 multiple plug-ins.
-
 
 Plug-in structure
 -----------------
 
-A |Driver| plug-in is a Python class that extends the
+A |GNAThub| plug-in is a Python class that extends the
 :class:`GNAThub.Plugin` abstract class. It must override the
-:meth:`GNAThub.Plugin.execute` method and set the :command:`TOOL_NAME` and
-:command:`LOG_FILE` attributes.
+:meth:`GNAThub.Plugin.execute` method and set the :command:`name` property.
 
 Additionally, the user can override the two following methods:
 
@@ -31,7 +29,7 @@ These will be called respectively before and after the
 Plug-in execution
 -----------------
 
-The plug-in is discovered and loaded by the |Driver| driver unless
+The plug-in is discovered and loaded by the |GNAThub| driver unless
 explicitly disabled in the project file using the :command:`Plugins_Off`
 attribute.  If it remains enabled, it is executed along with the other
 plugins without any further action.

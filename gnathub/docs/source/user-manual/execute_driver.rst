@@ -1,18 +1,18 @@
 .. include:: ../defines.hrst
 .. highlight:: console
 
-How to execute the |Driver| driver
-==================================
+How to execute the |GNAThub| driver
+===================================
 
 Getting started
 ---------------
 
-Execute |Driver| as you would other |GNAT| tool.  In most cases, you will
+Execute |GNAThub| as you would other |GNAT| tool.  In most cases, you will
 provide a |GNAT| project file (:file:`.gpr`)::
 
     $ gnathub -P my_project.gpr
 
-This executes each |Driver| plug-in for the project, collects the results
+This executes each |GNAThub| plug-in for the project, collects the results
 of each tool, and stores those results in its local |SQLite| database.
 
 |SQLite| is a software library implementing a self-contained, serverless,
@@ -25,21 +25,11 @@ platforms.
 Project file attributes
 -----------------------
 
-The |Driver| driver expects a number of attributes, some required and some
+The |GNAThub| driver expects a number of attributes, some required and some
 optional, to be set in the project file.
 
 General attributes
 ^^^^^^^^^^^^^^^^^^
-
-:command:`Local_Repository`
-"""""""""""""""""""""""""""
-
-Path to a directory containing custom plug-ins to add to the execution queue of
-|Driver|. This is a supplementary list of plug-ins, with means it will extend
-the initial plug-ins list which is either computed from the :command:`[system]`
-repository, or the :command:`[global]` repository.
-
-The complete list of repositories can be found in :func:`GNAThub.repositories`.
 
 :command:`Plugins`
 """"""""""""""""""
@@ -55,6 +45,16 @@ attributes.
 List of plug-ins names to remove from the execution queue if present. Use this
 to disable one or more plug-ins in the context of a specific project. This
 filter is applied after the computation of the complete plug-ins list.
+
+:command:`Local_Repository`
+"""""""""""""""""""""""""""
+
+Path to a directory containing custom plug-ins to add to the execution queue of
+|GNAThub|. This is a supplementary list of plug-ins, with means it will extend
+the initial plug-ins list which is computed from the :command:`[system]` and
+:command:`[global]` repositories.
+
+The complete list of repositories can be found in :func:`GNAThub.repositories`.
 
 |SonarQube|-specific attributes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -87,14 +87,14 @@ Encoding to use to read files from this project. This is used by the
 (:command:`UTF-8`) and forward this value to |SonarQube| (which takes care
 of reading and indexing all source files).
 
-|Driver|'s core plug-ins
-------------------------
+|GNAThub|'s core plug-ins
+-------------------------
 
 |Product|'s driver comes with a set of core plug-ins, available in the
 :command:`[system]` repository, allowing quick integration with a software
 development team's workflow.
 
-The following tools are currently supported by the |Driver|'s core plugins:
+The following tools are currently supported by the |GNAThub|'s core plugins:
 
 +--------------+-----------------+--------------------------------------------+
 | **Tool**     | **Plugin name** | **Description**                            |
@@ -105,24 +105,22 @@ The following tools are currently supported by the |Driver|'s core plugins:
 +--------------+-----------------+--------------------------------------------+
 | |GNATprove|  | gnatprove       | Execute |GNATprove| and parse the results  |
 +--------------+-----------------+--------------------------------------------+
-| |CodePeer|   | codepeer        | Execute |CodePeer| and                     |
-|              |                 | :program:`msg-reader` and parse the        |
-|              |                 | results                                    |
+| |CodePeer|   | codepeer        | Execute |CodePeer| and parse the results   |
 +--------------+-----------------+--------------------------------------------+
 | |Gcov|       | gcov            | Parse the :file:`.gcov` files              |
 +--------------+-----------------+--------------------------------------------+
 
-|Driver|'s additonal plug-ins
------------------------------
+|GNAThub|'s additonal plug-ins
+------------------------------
 
 An additional :command:`[global]` repository is available for the user to store
-plugins.  |Driver| searches this directory looking for additional plugins
+plugins.  |GNAThub| searches this directory looking for additional plugins
 to load. This directory is never be overridden by an update, making it a
 good place to store custom plug-ins.
 
 
-|Driver|'s command line
------------------------
+|GNAThub|'s command line
+------------------------
 
 You can specify switches on the command line to tune each execution of the
 driver. Please use :command:`gnathub --help` to see the full list of
@@ -141,7 +139,7 @@ disabled plug-ins.
 ^^^^^^^^^^^^^^^^^
 
 A Python file. Instead of its default behavior, when you specify
-:command:`--exec`, |Driver| retains any previous database (instead of
+:command:`--exec`, |GNAThub| retains any previous database (instead of
 clearing it) and executes the specified Python file. This allows for
 post-processing, possibly on the local database, using the exposed Python
 API.
