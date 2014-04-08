@@ -94,13 +94,11 @@ distclean: clean
 	$(RMDIR) $(BUILD_DIR)
 	$(RMDIR) testsuite/out
 
-package: all docs-html
+package: all
 	$(RMDIR) $(PKG_DIR)
 	$(MKDIR) $(PKG_DIR)
 	(tar cf - COPYING3) | (cd $(PKG_DIR) && tar xf -)
 	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
-	$(MKDIR) $(PKG_DIR)/share/doc
-	$(RSYNC) $(BUILD_DIR)/docs/html $(PKG_DIR)/share/doc/gnatdashboard
 	$(MKDIR) $(PKG_DIR)/share/examples
 	(cd share/examples && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/examples && tar xf -)
 
