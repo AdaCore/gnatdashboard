@@ -24,6 +24,7 @@ interface. This allows GNAThub's plug-in scanner to automatically find this
 module and load it as part of the GNAThub default execution.
 """
 
+import platform
 import os
 
 import GNAThub
@@ -54,9 +55,14 @@ class SonarRunner(GNAThub.Plugin):
         # Enable verbose and debugging output with -e and -X. This is handy for
         # debugging in case of issue in the SonarRunner step.
 
-        return ['sonar-runner',
-                '-Dproject.settings=%s' % SonarQube.configuration(),
-                '-e', '-X']
+        if platform.system() == 'Windows':
+            return ['cmd', '/c',
+                    'sonar-runner -Dproject.settings=%s -e -X'
+                    % SonarQube.configuration()]
+        else:
+            return ['sonar-runner',
+                    '-Dproject.settings=%s' % SonarQube.configuration(),
+                    '-e', '-X']
 
     def execute(self):
         """Executes the Sonar Runner.
