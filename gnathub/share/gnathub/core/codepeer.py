@@ -26,6 +26,7 @@ module and load it as part of the GNAThub default execution.
 
 import csv
 import os
+import os.path
 
 import GNAThub
 from GNAThub import System
@@ -208,7 +209,9 @@ class CodePeer(GNAThub.Plugin):
         rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
         cat = GNAThub.Category(category)
         message = GNAThub.Message(rule, msg, cat)
-        resource = GNAThub.Resource.get(src)
+
+        base = GNAThub.Project.source_file(os.path.basename(src))
+        resource = GNAThub.Resource.get(base)
 
         if resource:
             resource.add_message(message, int(line), int(column))
