@@ -101,6 +101,11 @@ package: all
 	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
 	$(MKDIR) $(PKG_DIR)/share/examples
 	(cd share/examples && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/examples && tar xf -)
+ifeq ($(target),x86-windows)
+	$(MAKE) -C docs html
+	$(MKDIR) $(PKG_DIR)/share/doc
+	$(RSYNC) $(BUILD_DIR)/docs/html $(PKG_DIR)/share/doc/gnatdashboard
+endif
 
 install: package
 	$(RSYNC) $(PKG_DIR) $(INSTALL_DIR)
