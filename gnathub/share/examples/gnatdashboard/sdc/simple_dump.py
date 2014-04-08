@@ -1,7 +1,6 @@
 import os.path
 
 import GNAThub
-from GNAThub import db
 
 # Create a dictionary of tools
 
@@ -23,7 +22,7 @@ for r in GNAThub.Rule.list():
 files = []
 
 for r in GNAThub.Resource.list():
-    if r.kind == db.FILE_KIND:
+    if r.kind == GNAThub.FILE_KIND:
         files.append(r)
 
 files.sort(key=lambda x: x.name)
