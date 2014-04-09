@@ -29,7 +29,7 @@ import os
 import os.path
 
 import GNAThub
-from GNAThub import System
+from GNAThub import Console
 
 
 class CodePeer(GNAThub.Plugin):
@@ -52,7 +52,8 @@ class CodePeer(GNAThub.Plugin):
         self.report = os.path.join(GNAThub.Project.object_dir(),
                                    '%s.out' % self.name)
 
-    def __cmd_line(self):
+    @staticmethod
+    def __cmd_line():
         """Creates CodePeer command line arguments list.
 
         RETURNS
@@ -62,7 +63,8 @@ class CodePeer(GNAThub.Plugin):
         return ['codepeer', '-update-scil', '-level', '1',
                 '-P', GNAThub.Project.path(), '-jobs', str(GNAThub.jobs())]
 
-    def __msg_reader_cmd_line(self):
+    @staticmethod
+    def __msg_reader_cmd_line():
         """Creates CodePeer Message Reader command line arguments list.
 
         RETURNS
@@ -80,7 +82,7 @@ class CodePeer(GNAThub.Plugin):
         CodePeer.execute_msg_reader() will be called upon process completion.
         """
 
-        proc = GNAThub.Run(self.name, self.__cmd_line())
+        proc = GNAThub.Run(self.name, CodePeer.__cmd_line())
 
         if proc.status:
             return
@@ -93,8 +95,8 @@ class CodePeer(GNAThub.Plugin):
         CodePeer.postprocess() will be called upon process completion.
         """
 
-        System.info('%s: execute msg_reader to collect results' % self.name)
-        proc = GNAThub.Run('msg_reader', self.__msg_reader_cmd_line(),
+        self.info('collect results with msg_reader')
+        proc = GNAThub.Run('msg_reader', CodePeer.__msg_reader_cmd_line(),
                            out=self.csv_report)
 
         self.postprocess(proc.status)
@@ -126,14 +128,14 @@ class CodePeer(GNAThub.Plugin):
             GNAThub.EXEC_FAILURE: on any error
         """
 
-        System.info('%s: analysing CSV report' % self.name)
+        self.info('analyse CSV report')
         self.tool = GNAThub.Tool(self.name)
 
-        self.log.debug('Parse report: %s', self.csv_report)
+        self.log.debug('parse report: %s', self.csv_report)
 
         if not os.path.exists(self.csv_report):
             self.exec_status = GNAThub.EXEC_FAILURE
-            System.error('%s: no report found' % self.name)
+            self.error('no report found')
             return
 
         with open(self.csv_report, 'rb') as report:
@@ -151,11 +153,11 @@ class CodePeer(GNAThub.Plugin):
 
                 # Drop the first line (containing the columns name)
                 header = reader.next()
-                self.log.debug('Drop header line: %s', header)
+                self.log.debug('drop header line: %s', header)
 
                 # Iterate over each relevant record
                 for index, record in enumerate(reader, start=1):
-                    self.log.debug('Parse record: %r', record)
+                    self.log.debug('parse record: %r', record)
 
                     # Each row is a list of strings:
                     # [File, Line, Column, Category, New?, Review?, Ranking,
@@ -177,16 +179,17 @@ class CodePeer(GNAThub.Plugin):
                     self.__add_message(source, line, column, rule, message,
                                        category)
 
-                    System.progress(index, total, new_line=(index == total))
+                    Console.progress(index, total, new_line=(index == total))
 
             except csv.Error as why:
                 self.exec_status = GNAThub.EXEC_FAILURE
-                self.log.exception('Failed to parse CodePeer CSV report')
-                System.error('%s: error: %s (%s:%d)' %
-                             (self.name, why, os.path.basename(report), total))
-                return
+                self.log.exception('failed to parse CodePeer CSV report')
 
-            self.exec_status = GNAThub.EXEC_SUCCESS
+                report_basename = os.path.basename(self.csv_report)
+                self.error('%s (%s:%d)' % (why, report_basename, total))
+
+            else:
+                self.exec_status = GNAThub.EXEC_SUCCESS
 
     def __add_message(self, src, line, column, rule_id, msg, category):
         """Adds CodePeer message to current session database.

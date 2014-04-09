@@ -30,6 +30,10 @@ package body GNAThub is
    Output_Verbosity : Verbosity_Level := Default;
    --  Verbosity of the program
 
+   function Format_Message
+     (Message : String; Prefix : String := "") return String;
+   --  Format the message with the prefix if given
+
    ------------------------
    -- Initialize_Logging --
    ------------------------
@@ -39,28 +43,45 @@ package body GNAThub is
       GNATCOLL.Traces.Parse_Config_File;
    end Initialize_Logging;
 
+   --------------------
+   -- Format_Message --
+   --------------------
+
+   function Format_Message
+     (Message : String; Prefix : String := "") return String
+   is
+      Msg : constant String :=
+              (if Prefix /= "" then Prefix & ": " else "") & Message;
+   begin
+      return Msg;
+   end Format_Message;
+
    ----------
    -- Info --
    ----------
 
    procedure Info
      (Message      : String;
-      Availability : Verbosity_Level := Default) is
+      Prefix       : String          := Console_Prefix;
+      Availability : Verbosity_Level := Default)
+   is
+      Output : constant String := Format_Message (Message, Prefix);
    begin
       if Output_Verbosity >= Availability then
-         Put_Line (Message);
+         Put_Line (Output);
       end if;
 
-      Log.Info (Me, Message);
+      Log.Info (Me, Output);
    end Info;
 
    ----------
    -- Warn --
    ----------
 
-   procedure Warn (Message : String)
+   procedure Warn (Message : String; Prefix : String := Console_Prefix)
    is
-      Output : constant String := "warning: " & Message;
+      Output : constant String := Format_Message
+                                    ("warning: " & Message, Prefix);
    begin
       Put_Line (Standard_Error, Output);
       Log.Warn (Me, Output);
@@ -70,9 +91,9 @@ package body GNAThub is
    -- Error --
    -----------
 
-   procedure Error (Message : String)
+   procedure Error (Message : String; Prefix : String := Console_Prefix)
    is
-      Output : constant String := "error: " & Message;
+      Output : constant String := Format_Message ("error: " & Message, Prefix);
    begin
       Put_Line (Standard_Error, Output);
       Log.Error (Me, Output);
@@ -82,9 +103,9 @@ package body GNAThub is
    -- Fail --
    ----------
 
-   procedure Fail (Message : String)
+   procedure Fail (Message : String; Prefix : String := Console_Prefix)
    is
-      Output : constant String := "fatal: " & Message;
+      Output : constant String := Format_Message ("fatal: " & Message, Prefix);
    begin
       Put_Line (Standard_Error, Output);
       Log.Fatal (Me, Output);
@@ -140,15 +161,15 @@ package body GNAThub is
       Log.Info (Me, Message);
    end Progress;
 
-   --------------
-   -- Ellapsed --
-   --------------
+   -------------
+   -- Elapsed --
+   -------------
 
-   procedure Ellapsed is
+   procedure Elapsed is
       Total : constant Duration := Clock - Application_Start_Time;
    begin
-      Info ("Ellapsed time: " & Ada.Calendar.Formatting.Image (Total));
-   end Ellapsed;
+      Info ("Elapsed time: " & Ada.Calendar.Formatting.Image (Total));
+   end Elapsed;
 
    -----------------
    -- Package Log --

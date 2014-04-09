@@ -25,10 +25,8 @@ module and load it as part of the GNAThub default execution.
 """
 
 import platform
-import os
 
 import GNAThub
-from GNAThub import System
 
 from _sonarqube import SonarQube
 
@@ -49,7 +47,8 @@ class SonarRunner(GNAThub.Plugin):
 
         SonarQube.make_workdir()
 
-    def __cmd_line(self):
+    @staticmethod
+    def __cmd_line():
         """Returns command line for sonar runner execution."""
 
         # Enable verbose and debugging output with -e and -X. This is handy for
@@ -70,7 +69,7 @@ class SonarRunner(GNAThub.Plugin):
         SonarRunner.postprocess() will be called upon process completion.
         """
 
-        proc = GNAThub.Run(self.name, self.__cmd_line())
+        proc = GNAThub.Run(self.name, SonarRunner.__cmd_line())
         self.postprocess(proc.status)
 
     def postprocess(self, exit_code):
@@ -86,6 +85,5 @@ class SonarRunner(GNAThub.Plugin):
 
         if exit_code != 0:
             self.exec_status = GNAThub.EXEC_FAILURE
-            return
-
-        self.exec_status = GNAThub.EXEC_SUCCESS
+        else:
+            self.exec_status = GNAThub.EXEC_SUCCESS

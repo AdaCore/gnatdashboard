@@ -27,7 +27,7 @@ load it as part of the GNAThub default execution.
 import os
 
 import GNAThub
-from GNAThub import System
+from GNAThub import Console
 
 
 class Gcov(GNAThub.Plugin):
@@ -73,8 +73,7 @@ class Gcov(GNAThub.Plugin):
             GNAThub.EXEC_FAILURE: on any error
         """
 
-        System.info('%s: parsing coverage reports (%s)' %
-                    (self.name, self.GCOV_EXT))
+        self.info('parse coverage reports (%s)' % self.GCOV_EXT)
 
         # Fetch all files in project object directory and retrieve only
         # .gcov files, absolute path
@@ -84,7 +83,7 @@ class Gcov(GNAThub.Plugin):
 
         # If no .gcov file found, plugin returns on failure
         if not files:
-            System.error('%s: no .gcov file in object directory' % self.name)
+            self.error('no %s file in object directory' % self.GCOV_EXT)
             self.exec_status = GNAThub.EXEC_FAILURE
             return
 
@@ -110,25 +109,26 @@ class Gcov(GNAThub.Plugin):
 
                             # Skip useless line
                             if line.strip()[0] != '-':
-                                line_infos = line.split(':', 2)
-                                hits = line_infos[0].strip()
+                                line_info = line.split(':', 2)
+                                hits = line_info[0].strip()
 
                                 # Line is not covered
                                 if hits == '#####' or hits == '=====':
                                     hits = '0'
 
-                                line_id = line_infos[1].strip()
+                                line_id = line_info[1].strip()
                                 self.__add_line_hits(resource, int(line_id),
                                                      hits)
 
-                System.progress(index, total, new_line=(index == total))
-
-            self.exec_status = GNAThub.EXEC_SUCCESS
+                Console.progress(index, total, new_line=(index == total))
 
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('Failed to parse GCov reports')
-            System.error('%s: error: %s' % (self.name, why))
+            self.log.exception('failed to parse GCov reports')
+            self.error(str(why))
+
+        else:
+            self.exec_status = GNAThub.EXEC_SUCCESS
 
     def execute(self):
         """Finds the Gcov output files and parses them."""

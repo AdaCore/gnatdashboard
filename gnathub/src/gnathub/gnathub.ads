@@ -24,6 +24,8 @@ package GNAThub is
    Fatal_Error  : exception;
    Silent_Error : exception;
 
+   Console_Prefix : constant String := "gnathub";
+
    type Verbosity_Level is (Quiet, Default, Verbose);
    --  The three possible thresholds of verbosity for this application
 
@@ -32,16 +34,17 @@ package GNAThub is
 
    procedure Info
      (Message      : String;
+      Prefix       : String          := Console_Prefix;
       Availability : Verbosity_Level := Default);
    --  Print an informative message. Activated at default verbosity output
 
-   procedure Warn (Message : String);
+   procedure Warn (Message : String; Prefix : String := Console_Prefix);
    --  Print a warning message. Always activated
 
-   procedure Error (Message : String);
+   procedure Error (Message : String; Prefix : String := Console_Prefix);
    --  Print an error message. Always activated
 
-   procedure Fail (Message : String);
+   procedure Fail (Message : String; Prefix : String := Console_Prefix);
    --  Print a fatal message and exit. Always activated
 
    procedure Set_Verbosity (Verbosity : Verbosity_Level);
@@ -55,8 +58,8 @@ package GNAThub is
    --  If New_Line is True, then terminate the line with a ASCII.LF
    --  character. Defaults to False.
 
-   procedure Ellapsed;
-   --  Print the ellapsed time since the beginning of the application
+   procedure Elapsed;
+   --  Print the elapsed time since the beginning of the application
    --  execution.
 
    package Log is

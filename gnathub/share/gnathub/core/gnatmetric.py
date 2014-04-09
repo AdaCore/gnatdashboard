@@ -27,7 +27,7 @@ module and load it as part of the GNAThub default execution.
 import os
 
 import GNAThub
-from GNAThub import System
+from GNAThub import Console
 
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
@@ -90,15 +90,16 @@ class GNATmetric(GNAThub.Plugin):
         Sets the exec_status property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: if transaction have been comitted to database
+            GNAThub.EXEC_SUCCESS: if transaction have been committed to
+                                  database
             GNAThub.EXEC_FAILURE: if error happened while parsing the xml
                                   report
         """
 
-        System.info('%s: analysing report' % self.name)
+        self.info('analyse report')
 
         tool = GNAThub.Tool(self.name)
-        self.log.debug('Parse XML report: %s', self.report)
+        self.log.debug('parse XML report: %s', self.report)
 
         try:
             tree = ElementTree.parse(self.report)
@@ -112,8 +113,8 @@ class GNATmetric(GNAThub.Plugin):
 
                 # Save file level metrics
                 if not resource:
-                    System.warn('%s: skipping "%s" message (file not found)' %
-                                (self.name, node.attrib.get('name')))
+                    self.warn('skip "%s" message (file not found)' %
+                              node.attrib.get('name'))
                     continue
 
                 for metric in node.findall('./metric'):
@@ -130,7 +131,7 @@ class GNATmetric(GNAThub.Plugin):
                 for unit in node.findall('.//unit'):
                     for metric in unit.findall('./metric'):
                         pass
-                        # /!\ Not handle for now: to be done /!\
+                        # /!\ Not handled for now: to be done /!\
                         # File --> node.attrib.get('name'),
                         # Entity Line --> unit.attrib.get('line'),
                         # Entity name --> unit.attrib.get('name'),
@@ -138,12 +139,12 @@ class GNATmetric(GNAThub.Plugin):
                         # Metric name --> metric.attrib.get('name'),
                         # Metric value --> metric.text)
 
-                System.progress(index, total, new_line=(index == total))
+                Console.progress(index, total, new_line=(index == total))
 
-            self.exec_status = GNAThub.EXEC_SUCCESS
-
-        except (ParseError, IOError) as why:
+        except ParseError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('Failed to parse GNATcheck XML report')
-            System.error('%s: error: %s (%s:%s)' %
-                         (self.name, why.msg, why.filename, why.lineno))
+            self.log.exception('failed to parse GNATcheck XML report')
+            self.error('%s (%s:%s)' % (why, why.filename, why.lineno))
+
+        else:
+            self.exec_status = GNAThub.EXEC_SUCCESS

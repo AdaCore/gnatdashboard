@@ -27,7 +27,6 @@ module and load it as part of the GNAThub default execution.
 import ConfigParser
 
 import GNAThub
-from GNAThub import System
 
 # pylint: disable=F0401
 # Disable: Unable to import '{}'
@@ -39,15 +38,14 @@ class _SonarConfiguration(object):
 
     SONAR_SECTION = 'Sonar'
 
-    CONFIG = {'sonar.language': ('ada', None),
-              'sonar.sourceEncoding': ('UTF-8', 'Source_Encoding'),
-              'sonar.sources': ('.', None),
-              'sonar.projectVersion': ('1.0-SNAPSHOT', 'Project_Version'),
-              'sonar.projectName': (GNAThub.Project.name(), 'Project_Name'),
-              'sonar.projectKey': ('%s::Project' % GNAThub.Project.name(),
-                                   'Project_Key'),
-              'sonar.ada.qmt.db.path': (GNAThub.database().replace('\\', '\\\\'),
-                                        None)}
+    SONAR_ATTRIBUTES = {
+        'language': ('ada', None),
+        'sourceEncoding': ('UTF-8', 'Source_Encoding'),
+        'sources': ('.', None),
+        'projectVersion': ('1.0-SNAPSHOT', 'Project_Version'),
+        'projectName': (GNAThub.Project.name(), 'Project_Name'),
+        'projectKey': ('%s::Project' % GNAThub.Project.name(), 'Project_Key'),
+        'ada.qmt.db.path': (GNAThub.database().replace('\\', '\\\\'), None)}
 
     def __init__(self, logger=None):
         self.log = logger
@@ -92,13 +90,13 @@ class _SonarConfiguration(object):
         config.add_section(_SonarConfiguration.SONAR_SECTION)
 
         # Set properties
-        for key, value in _SonarConfiguration.CONFIG.iteritems():
+        for key, value in _SonarConfiguration.SONAR_ATTRIBUTES.iteritems():
             # Unpack the tuple containing the default value and the custom
             # project attribute for this key.
             default, attribute = value
 
             # Insert the key in the configuration file
-            self._add(config, key, default, attribute)
+            self._add(config, 'sonar.%s' % key, default, attribute)
 
         with open(filename, 'w') as configuration:
             config.write(configuration)
@@ -121,16 +119,16 @@ class SonarConfig(GNAThub.Plugin):
     def execute(self):
         """Generates SonarQube Runner configuration file and dumps it."""
 
-        try:
-            System.info('%s: generating %s' %
-                        (self.name, SonarQube.CONFIGURATION))
+        self.info('generate %s' % SonarQube.CONFIGURATION)
 
+        try:
             config = _SonarConfiguration(logger=self.log)
             config.write(SonarQube.configuration())
 
-            self.exec_status = GNAThub.EXEC_SUCCESS
-
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('Failed to generate SonarRunner configuration')
-            System.error('%s: error: %s' % (self.name, why))
+            self.log.exception('failed to generate SonarRunner configuration')
+            self.error(str(why))
+
+        else:
+            self.exec_status = GNAThub.EXEC_SUCCESS

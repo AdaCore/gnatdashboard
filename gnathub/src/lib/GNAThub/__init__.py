@@ -140,11 +140,11 @@ class Logger(object):
         pass    # Implemented in Ada
 
 
-class System(object):
+class Console(object):
     """Provides several helper routines implemented in Ada."""
 
     @staticmethod
-    def info(message):
+    def info(message, prefix=None):
         """Prints an informative message. Activated at default verbosity
         output.
         """
@@ -152,13 +152,13 @@ class System(object):
         pass    # Implemented in Ada
 
     @staticmethod
-    def warn(message):
+    def warn(message, prefix=None):
         """Prints a warning message. Activated at default verbosity output."""
 
         pass    # Implemented in Ada
 
     @staticmethod
-    def error(message):
+    def error(message, prefix=None):
         """Prints an error message. Always activated."""
 
         pass    # Implemented in Ada
@@ -328,6 +328,21 @@ class Plugin:
 
         pass
 
+    def info(self, message):
+        """Displays an informative message, prefixed with the plug-in name."""
+
+        Console.info(message, prefix=self.name)
+
+    def warn(self, message):
+        """Displays a warning message, prefixed with the plug-in name."""
+
+        Console.warn(message, prefix=self.name)
+
+    def error(self, message):
+        """Displays an error message, prefixed with the plug-in name."""
+
+        Console.error(message, prefix=self.name)
+
     def setup(self):
         """This method is called prior to a call to Plugin.execute.
 
@@ -423,7 +438,8 @@ class Run(object):
 
         self.name = name
         self.argv = argv
-        self.status = None
+        self.status = 127
+        self.pid = -1
         self.out = out
         self.log = logging.getLogger(self.__class__.__name__)
 
@@ -433,27 +449,28 @@ class Run(object):
 
         try:
             with open(self.output(), 'w') as output:
-                System.info('output redirected to %s' % output.name)
                 self.internal = Popen(argv, env=env, stdin=None, stdout=output,
                                       stderr=STDOUT, cwd=workdir)
+
+                Console.info('output redirected to %s' % output.name)
                 self.pid = self.internal.pid
                 self.wait()
 
         except OSError as why:
-            self.__error()
-            System.error('%s: %s' % (self.argv[0], why.strerror))
-            return
+            import errno
+            executable = self.argv[0]
+
+            if why.errno == errno.ENOENT:
+                Console.error('%s not installed or not in PATH' % executable)
+            else:
+                Console.error('%s: %s' % (executable, str(why)))
 
         except Exception as why:
-            self.__error()
-            System.error(str(why))
+            Console.error(str(why))
             raise
 
     def wait(self):
         """Waits until process ends and return its status."""
-
-        if self.status == 127:
-            return self.status
 
         self.status = self.internal.wait()
         return self.status
@@ -489,12 +506,6 @@ class Run(object):
         """
 
         return ' '.join((Run.quote(arg) for arg in self.argv))
-
-    def __error(self):
-        """Set pid to -1 and status to 127."""
-
-        self.pid = -1
-        self.status = 127
 
     def output(self):
         """Returns the path to the output file.

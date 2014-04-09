@@ -31,7 +31,6 @@ import re
 from _gnat import SLOC_PATTERN
 
 import GNAThub
-from GNAThub import System
 
 
 class GNATprove(GNAThub.Plugin):
@@ -56,7 +55,8 @@ class GNATprove(GNAThub.Plugin):
         super(GNATprove, self).__init__()
         self.tool = None
 
-    def __cmd_line(self):
+    @staticmethod
+    def __cmd_line():
         """Creates GNATcheck command line arguments list.
 
         RETURNS
@@ -72,7 +72,7 @@ class GNATprove(GNAThub.Plugin):
         GNATprove.postprocess() will be called upon process completion.
         """
 
-        proc = GNAThub.Run(self.name, self.__cmd_line())
+        proc = GNAThub.Run(self.name, GNATprove.__cmd_line())
         self.postprocess(proc.status, proc.output())
 
     def postprocess(self, exit_code, logfile):
@@ -115,12 +115,13 @@ class GNATprove(GNAThub.Plugin):
                     if match:
                         self.__parse_line(match)
 
-            self.exec_status = GNAThub.EXEC_SUCCESS
-
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('Failed to parse GNATprove output')
-            System.error('%s: error: %s' % (self.name, why))
+            self.log.exception('failed to parse GNATprove output')
+            self.error(str(why))
+
+        else:
+            self.exec_status = GNAThub.EXEC_SUCCESS
 
     def __parse_line(self, regex):
         """Parses a GNATprove message line and adds it to the database.
@@ -139,29 +140,25 @@ class GNATprove(GNAThub.Plugin):
         # The following Regex results are explained using this example.
         # 'nose_gear.adb:144:50: info: overflow check proved [overflow_check]'
 
-        try:
-            # Extract each component from the message:
-            #       ('nose_gear.adb', '140', '44', 'info',
-            #        'overflow check proved [overflow_check]')
-            src = regex.group('file')
-            line = regex.group('line')
-            column = regex.group('column')
-            severity = regex.group('severity')
-            message = regex.group('message')
+        # Extract each component from the message:
+        #       ('nose_gear.adb', '140', '44', 'info',
+        #        'overflow check proved [overflow_check]')
+        src = regex.group('file')
+        line = regex.group('line')
+        column = regex.group('column')
+        severity = regex.group('severity')
+        message = regex.group('message')
 
-            severity = self.SEVERITIES[severity if severity else 'error']
+        severity = self.SEVERITIES[severity if severity else 'error']
 
-            # Extract the rule from the message: ('overflow_check')
-            match = self.RULE_RE.match(message)
-            rule = match.group('rule')
+        # Extract the rule from the message: ('overflow_check')
+        match = self.RULE_RE.match(message)
+        rule = match.group('rule')
 
-            # Generates the rule ID
-            rule_id = '%s__%s' % (severity, rule)
+        # Generates the rule ID
+        rule_id = '%s__%s' % (severity, rule)
 
-            self.__add_message(src, line, column, rule_id, message)
-
-        except KeyError:
-            System.warn('%s: unknown severity: %s' % (self.name, severity))
+        self.__add_message(src, line, column, rule_id, message)
 
     def __add_message(self, src, line, col_begin, rule_id, msg):
         """Registers a new message in the database.

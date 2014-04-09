@@ -32,7 +32,7 @@ import re
 from _gnat import SLOC_PATTERN
 
 import GNAThub
-from GNAThub import System
+from GNAThub import Console
 
 
 class GNATcheck(GNAThub.Plugin):
@@ -110,14 +110,14 @@ class GNATcheck(GNAThub.Plugin):
             - message for package instantiation
         """
 
-        System.info('%s: analysing report' % self.name)
+        self.info('analyse report')
 
         self.tool = GNAThub.Tool(self.name)
-        self.log.debug('Parse report: %s', self.report)
+        self.log.debug('parse report: %s', self.report)
 
         if not os.path.exists(self.report):
             self.exec_status = GNAThub.EXEC_FAILURE
-            System.error('%s: no report found' % self.name)
+            self.error('no report found')
             return
 
         try:
@@ -126,22 +126,23 @@ class GNATcheck(GNAThub.Plugin):
                 total = len(lines)
 
                 for index, line in enumerate(lines, start=1):
-                    self.log.debug('Parse line: %s', line)
+                    self.log.debug('parse line: %s', line)
 
                     match = self._MESSAGE.match(line)
 
                     if match:
-                        self.log.debug('Matched: %s', str(match.groups()))
+                        self.log.debug('matched: %s', str(match.groups()))
                         self.__parse_line(match)
 
-                    System.progress(index, total, new_line=(index == total))
-
-            self.exec_status = GNAThub.EXEC_SUCCESS
+                    Console.progress(index, total, new_line=(index == total))
 
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('Failed to parse GNATcheck report')
-            System.error('%s: error: %s' % (self.name, why))
+            self.log.exception('failed to parse GNATcheck report')
+            self.error(str(why))
+
+        else:
+            self.exec_status = GNAThub.EXEC_SUCCESS
 
     def __parse_line(self, regex):
         """Parses a GNATcheck message line and add the message to the current
