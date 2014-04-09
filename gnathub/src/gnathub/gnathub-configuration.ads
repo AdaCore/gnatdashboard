@@ -48,6 +48,12 @@ package GNAThub.Configuration is
    function Jobs return Natural;
    --  Return the number of jobs to execute in parallel
 
+   function Interpreter_Mode return Boolean;
+   --  Whether to run GNAThub in interpreter mode (--exec) or normal mode
+
+   function Incremental return Boolean;
+   --  Whether the run should be incremental (not removing the DB) or not
+
    procedure Finalize;
    --  Free allocated memory
 

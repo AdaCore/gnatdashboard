@@ -35,13 +35,14 @@ package body GNAThub.Configuration is
 
    Config      : GNAT.Command_Line.Command_Line_Configuration;
 
-   Project_Arg : aliased GNAT.Strings.String_Access;
-   Plugins_Arg : aliased GNAT.Strings.String_Access;
-   Script_Arg  : aliased GNAT.Strings.String_Access;
-   Jobs_Arg    : aliased Integer;
-   Version_Arg : aliased Boolean;
-   Quiet_Arg   : aliased Boolean;
-   Verbose_Arg : aliased Boolean;
+   Project_Arg     : aliased GNAT.Strings.String_Access;
+   Plugins_Arg     : aliased GNAT.Strings.String_Access;
+   Script_Arg      : aliased GNAT.Strings.String_Access;
+   Jobs_Arg        : aliased Integer;
+   Version_Arg     : aliased Boolean;
+   Quiet_Arg       : aliased Boolean;
+   Verbose_Arg     : aliased Boolean;
+   Incremental_Arg : aliased Boolean;
 
    procedure Parse_Command_Line;
    --  Parse the command line and handle -X switches
@@ -79,7 +80,7 @@ package body GNAThub.Configuration is
         (Config      => Config,
          Output      => Script_Arg'Access,
          Long_Switch => "--exec=",
-         Help        => "Python script to execute");
+         Help        => "Python script to execute (implies --incremental)");
 
       Define_Switch
         (Config      => Config,
@@ -111,6 +112,14 @@ package body GNAThub.Configuration is
          Switch      => "-V",
          Long_Switch => "--version",
          Help        => "Print the version and exit",
+         Value       => True);
+
+      Define_Switch
+        (Config      => Config,
+         Output      => Incremental_Arg'Access,
+         Switch      => "-i",
+         Long_Switch => "--incremental",
+         Help        => "Do not remove database if exists",
          Value       => True);
 
       --  Usage
@@ -269,6 +278,10 @@ package body GNAThub.Configuration is
 
       Log.Info (Me, "Use project file " & Project_Arg.all);
 
+      if Script_Arg.all /= "" and then Incremental_Arg then
+         Warn ("--incremental implied by --exec");
+      end if;
+
    exception
       when GNAT.Command_Line.Exit_From_Command_Line =>
          --  Help is already displayed
@@ -334,6 +347,24 @@ package body GNAThub.Configuration is
    begin
       return Jobs_Arg;
    end Jobs;
+
+   ----------------------
+   -- Interpreter_Mode --
+   ----------------------
+
+   function Interpreter_Mode return Boolean is
+   begin
+      return Script_Arg.all /= "";
+   end Interpreter_Mode;
+
+   -----------------
+   -- Incremental --
+   -----------------
+
+   function Incremental return Boolean is
+   begin
+      return Interpreter_Mode or else Incremental_Arg;
+   end Incremental;
 
    --------------
    -- Finalize --

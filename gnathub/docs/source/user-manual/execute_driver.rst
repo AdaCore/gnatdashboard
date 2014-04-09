@@ -118,35 +118,40 @@ plugins.  |GNAThub| searches this directory looking for additional plugins
 to load. This directory is never be overridden by an update, making it a
 good place to store custom plug-ins.
 
-
 |GNAThub|'s command line
 ------------------------
 
 You can specify switches on the command line to tune each execution of the
 driver. Please use :command:`gnathub --help` to see the full list of
-supported switches.  Each switch has an argument, specified below.
+supported switches.
 
 :command:`--plugins`
 ^^^^^^^^^^^^^^^^^^^^
 
-A comma-separated list of plug-in names. This list is used as the initial
-execution queue of the driver, replacing the list of plug-ins computed from
-the project attribute :command:`Plugins`. However, the project attribute
-:command:`Plugins_Off` still applies to that list and removes any explicitly
-disabled plug-ins.
+Expects a comma-separated list of plug-in names as argument. This list is used
+as the initial execution queue of the driver, replacing the list of plug-ins
+computed from the project attribute :command:`Plugins`. However, the project
+attribute :command:`Plugins_Off` still applies to that list and removes any
+explicitly disabled plug-ins.
+
+:command:`--incremental`
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Takes no argument. Instead of its default behavior, when you specify
+:command:`--incremental`, |GNAThub| retains any previous database (instead of
+clearing it).
 
 :command:`--exec`
 ^^^^^^^^^^^^^^^^^
 
-A Python file. Instead of its default behavior, when you specify
-:command:`--exec`, |GNAThub| retains any previous database (instead of
-clearing it) and executes the specified Python file. This allows for
-post-processing, possibly on the local database, using the exposed Python
-API.
+Expects a Python file as argument. Executes the specified Python file. This
+allows for post-processing, possibly on the local database, using the exposed
+Python API. Implies :command:`--incremental` (retains any previous database).
 
 :command:`--jobs`
 ^^^^^^^^^^^^^^^^^
 
-Maximum number of processes to be executed concurrently.  Similar to the
-:command:`-j` switch passed to :program:`make`. :command:`0` is a special
-value meaning "as many processes as possible". The default is :command:`1`.
+Expects the maximum number of processes to be executed concurrently as argument.
+Similar to the :command:`-j` switch passed to :program:`make`. :command:`0` is a
+special value meaning "as many processes as possible". The default is
+:command:`1`.

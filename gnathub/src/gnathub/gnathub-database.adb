@@ -111,6 +111,8 @@ package body GNAThub.Database is
            "Read database schema: " & Database_Model_File.Display_Full_Name);
 
          Schema := New_Schema_IO (Database_Model_File).Read_Schema;
+      else
+         Log.Info (Me, "Keeping existing copy of the database");
       end if;
 
       Descr := GNATCOLL.SQL.Sqlite.Setup (Database_File.Display_Full_Name);
