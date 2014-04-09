@@ -52,7 +52,9 @@ project GNAThub is
               ("-gnatwa", "-gnatwe", "-gnatyyBdOSux", "-gnata", "-g", "-O0");
 
          when "Production" =>
-            for Default_Switches ("Ada") use ("-gnatwa", "-gnatn", "-O2");
+            for Default_Switches ("Ada") use
+              Compiler'Default_Switches ("Ada") &
+              ("-gnatwa", "-gnatwe", "-gnatyyBdOSux", "-gnatn", "-O2");
 
          when "Coverage" =>
             for Default_Switches ("ada") use
