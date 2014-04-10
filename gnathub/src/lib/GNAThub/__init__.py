@@ -286,9 +286,7 @@ class Error(Exception):
     pass
 
 
-# pylint: disable=C1001,R0921
-# Disable "Old-style class defined"
-# Disable "Abstract class not referenced"
+# pylint: disable=old-style-class,abstract-class-not-used
 class Plugin:
     """GNAThub plugin interface.
 
@@ -387,7 +385,6 @@ class Plugin:
 
         return self._exec_status
 
-    # pylint: disable=E1101, E0102
     @exec_status.setter
     def exec_status(self, status):
         """Sets the execution status for the tool.
