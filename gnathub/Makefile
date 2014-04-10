@@ -6,19 +6,22 @@ include config.mk
 
 all: gnathub-bin gnathub-pylib gnathub-plugins
 
-gnathub-bin: gnathub.gpr src/gnathub/gnathub-version.ads
+gnathub-bin: $(GENERATED_DIR)/lib/gnat/gnathub_shared.gpr $(GENERATED_DIR)/src/gnathub-version.ads
 	@echo ":: Building GNAThub driver"
-	gprbuild -p -P $< -XBUILD_DIR="$(BUILD_DIR)"
+	GPR_PROJECT_PATH="$(GENERATED_DIR)/lib/gnat:$(GPR_PROJECT_PATH)" \
+		gprbuild -p -P gnathub.gpr -XBUILD_DIR="$(BUILD_DIR)"
 ifeq ($(target),x86-windows)
 	$(MKDIR) $(BUILD_DIR)/bin
 	cp $(PYTHON_HOME)/python27.dll $(BUILD_DIR)/bin/.
 	chmod +x $(BUILD_DIR)/bin/python27.dll
 endif
 
-gnathub.gpr: gnathub.gpr.in
+$(GENERATED_DIR)/lib/gnat/gnathub_shared.gpr: templates/gnathub_shared.gpr.in VERSION
+	$(MKDIR) $(GENERATED_DIR)/lib/gnat
 	cat $< |sed -e 's/@VERSION@/$(VERSION)/g' > $@
 
-src/gnathub/gnathub-version.ads: src/gnathub/gnathub-version.ads.in
+$(GENERATED_DIR)/src/gnathub-version.ads: templates/gnathub-version.ads.in
+	$(MKDIR) $(GENERATED_DIR)/src
 	cat $< |sed \
 		-e 's/@DATE@/$(DATE)/g' \
 		-e 's/@YEAR@/$(YEAR)/g' \

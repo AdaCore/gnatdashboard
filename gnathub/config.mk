@@ -57,6 +57,10 @@ PKG_DIR     := $(TOP)/gnathub-$(target)
 PYTHON_HOME := $(BUILD_DIR)/share/gnathub/python
 INSTALL_DIR := ${PREFIX}
 
+# Directory in which the Makefile generates files needed for compilation (eg.
+# gnathub-version.ads and gnathub_shared.gpr).
+GENERATED_DIR := $(BUILD_DIR)/gnathub-gen
+
 # Python module manifest. Record the list of file installed so that they can be
 # removed prior any re-installation. This avoid issues when removing files.
 SETUP_PY_MANIFEST := $(BUILD_DIR)/GNAThub.MANIFEST

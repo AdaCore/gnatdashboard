@@ -2,6 +2,8 @@ with "gnatcoll";
 with "gnatcoll_python";
 with "gnatcoll_sqlite";
 
+with "gnathub_shared";
+
 project GNAThub is
 
    type Mode is ("Debug", "Production", "Coverage");
@@ -21,6 +23,7 @@ project GNAThub is
       "src/lib/scripts/",
       "src/gnathub",
       "src/orm-gen",                       --  automatically generated files
+      Build_Dir & "/gnathub-gen/src",      --  Makefile generated files
       "share/gnathub/sql",
       "share/gnathub/core",
       "share/gnathub/extras",
@@ -81,9 +84,6 @@ project GNAThub is
         ("-rules", "-from=tests/etc/gnatcheck.rules");
    end Check;
 
-   package Dashboard is
-      for Project_Key use "GNATdashboard::GNAThub";
-      for Project_Version use "@VERSION@";
-   end Dashboard;
+   package Dashboard renames GNAThub_Shared.Dashboard;
 
 end GNAThub;

@@ -1,0 +1,10 @@
+project GNAThub_Shared is
+
+   for Source_Dirs use ();
+
+   package Dashboard is
+      for Project_Key use "GNATdashboard::GNAThub";
+      for Project_Version use "@VERSION@";
+   end Dashboard;
+
+end GNAThub_Shared;
