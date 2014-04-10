@@ -34,6 +34,7 @@ package GNAThub is
 
    procedure Info
      (Message      : String;
+      New_Line     : Boolean         := True;
       Prefix       : String          := Console_Prefix;
       Availability : Verbosity_Level := Default);
    --  Print an informative message. Activated at default verbosity output

@@ -355,13 +355,13 @@ package body GNAThub.Python is
       Prefix  : constant String := Data.Nth_Arg (2, "");
    begin
       if Command = Console_Info_Method then
-         Info (Message, Prefix);
+         Info (Message, Prefix => Prefix);
 
       elsif Command = Console_Warn_Method then
-         Warn (Message, Prefix);
+         Warn (Message, Prefix => Prefix);
 
       elsif Command = Console_Error_Method then
-         Error (Message, Prefix);
+         Error (Message, Prefix => Prefix);
 
       else
          raise Python_Error with "Unknown method GNAThub.Console." & Command;

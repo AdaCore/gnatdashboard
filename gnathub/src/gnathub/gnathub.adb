@@ -62,13 +62,18 @@ package body GNAThub is
 
    procedure Info
      (Message      : String;
+      New_Line     : Boolean         := True;
       Prefix       : String          := Console_Prefix;
       Availability : Verbosity_Level := Default)
    is
       Output : constant String := Format_Message (Message, Prefix);
    begin
       if Output_Verbosity >= Availability then
-         Put_Line (Output);
+         Put (Output);
+      end if;
+
+      if New_Line then
+         Ada.Text_IO.New_Line;
       end if;
 
       Log.Info (Me, Output);
