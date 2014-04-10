@@ -111,15 +111,6 @@ package body GNAThub.Project is
       return Project_Tree.Root_Project.Object_Dir;
    end Object_Dir;
 
-   -----------------
-   -- Source_Dirs --
-   -----------------
-
-   function Source_Dirs return File_Array is
-   begin
-      return Project_Tree.Root_Project.Source_Dirs (Recursive => True);
-   end Source_Dirs;
-
    ----------
    -- Path --
    ----------
@@ -251,6 +242,27 @@ package body GNAThub.Project is
 
       return File;
    end File;
+
+   ------------------
+   -- All_Projects --
+   ------------------
+
+   function All_Projects return Project_Vectors.Vector is
+      Iterator : Project_Iterator := Project_Tree.Root_Project.Start;
+   begin
+      return Projects : Project_Vectors.Vector do
+         loop
+            declare
+               Project : constant Project_Type := Current (Iterator);
+            begin
+               exit when Project = No_Project;
+
+               Projects.Append (Project);
+               Next (Iterator);
+            end;
+         end loop;
+      end return;
+   end All_Projects;
 
    --------------------------
    -- Save_Project_Sources --

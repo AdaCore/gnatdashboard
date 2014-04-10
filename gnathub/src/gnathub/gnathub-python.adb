@@ -468,10 +468,14 @@ package body GNAThub.Python is
          end;
 
       elsif Command = Project_Source_Dirs_Method then
-         Set_Return_Value_As_List (Data);
+         for Project of GNAThub.Project.All_Projects loop
+            Set_Return_Value_As_List (Data);
 
-         for Dir of Source_Dirs loop
-            Set_Return_Value (Data, Dir.Display_Full_Name);
+            for Dir of Project.Source_Dirs (Recursive => False) loop
+               Set_Return_Value (Data, Dir.Display_Full_Name);
+            end loop;
+
+            Set_Return_Value_Key (Data, Project.Name);
          end loop;
 
       else

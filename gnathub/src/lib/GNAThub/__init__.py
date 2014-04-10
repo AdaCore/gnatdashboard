@@ -213,10 +213,11 @@ class Project(object):
 
     @staticmethod
     def source_dirs():
-        """Returns the list of source directories.
+        """Returns the list of source directories for each project.
 
         RETURNS
-            :rtype: list of string
+            :rtype: a dictionary associating a project name to a list of source
+                directories
         """
 
         pass    # Implemented in Ada
@@ -225,7 +226,7 @@ class Project(object):
     def source_file(name):
         """Create a new file. This will automatically try to solve Name to an
         absolute path if it currently is a base name.  If Name is an absolute
-        path, it is returned as is. Otherwise, only the base name is used (ie
+        path, it is returned as is. Otherwise, only the base name is used (ie.
         we remove any directory information from Name).
 
         RETURNS

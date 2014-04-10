@@ -15,6 +15,8 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Containers.Vectors;
+
 with GNAT.OS_Lib;       use GNAT.OS_Lib;
 
 with GNATCOLL.VFS;      use GNATCOLL.VFS;
@@ -24,6 +26,10 @@ package GNAThub.Project is
 
    Project_Error : exception;
    --  Custom error for this module
+
+   package Project_Vectors is
+     new Ada.Containers.Vectors (Positive, Project_Type);
+   --  A list of Projects
 
    function Loaded return Boolean;
    --  Whether a call to Load has already been made
@@ -53,6 +59,10 @@ package GNAThub.Project is
      with Pre => Initialized and then Loaded;
    --  Store the project details in database
 
+   function All_Projects return Project_Vectors.Vector
+      with Pre => Initialized;
+   --  Return a flat list of all Projects.
+
    function Name return String
      with Pre => Initialized and then Loaded;
    --  Return the name of the root project
@@ -64,9 +74,6 @@ package GNAThub.Project is
    function Object_Dir return Virtual_File
      with Pre => Initialized and then Loaded;
    --  Return the object directory file
-
-   function Source_Dirs return File_Array;
-   --  Return the list of source directories
 
    function Property_As_String (Property : String) return String
      with Pre => Initialized and then Loaded;
