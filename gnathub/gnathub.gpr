@@ -2,13 +2,12 @@ with "gnatcoll";
 with "gnatcoll_python";
 with "gnatcoll_sqlite";
 
-with "gnathub_shared";
-
 project GNAThub is
 
    type Mode is ("Debug", "Production", "Coverage");
    Build_Mode : Mode := External ("BUILD_MODE", "Debug");
 
+   Version    := External ("VERSION", "unknown");
    Build_Dir  := External ("BUILD_DIR", "build");
    Processors := External ("PROCESSORS", "0");
 
@@ -84,6 +83,10 @@ project GNAThub is
         ("-rules", "-from=tests/etc/gnatcheck.rules");
    end Check;
 
-   package Dashboard renames GNAThub_Shared.Dashboard;
+   package Dashboard is
+      for Project_Key use "GNATdashboard::GNAThub";
+      for Project_Version use Version;
+   end Dashboard;
+
 
 end GNAThub;
