@@ -36,8 +36,6 @@ from xml.etree.ElementTree import ParseError
 class GNATmetric(GNAThub.Plugin):
     """GNATmetric plugin for GNAThub."""
 
-    name = 'gnatmetric'
-
     # GNATmetric exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
 
@@ -46,6 +44,10 @@ class GNATmetric(GNAThub.Plugin):
 
         self.tool = None
         self.report = os.path.join(GNAThub.Project.object_dir(), 'metrix.xml')
+
+    @property
+    def name(self):
+        return 'gnatmetric'
 
     def __cmd_line(self):
         """Creates GNATmetric command line arguments list.
@@ -58,9 +60,9 @@ class GNATmetric(GNAThub.Plugin):
                 '-U'] + GNAThub.Project.scenario_switches()
 
     def execute(self):
-        """Executes the GNATmetric.
+        """Executes GNATmetric.
 
-        GNATmetric.postprocess() will be called upon process completion.
+        :meth:`postprocess()` is called upon process completion.
 
         """
 
@@ -74,8 +76,8 @@ class GNATmetric(GNAThub.Plugin):
         Sets the exec_status property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAILURE: on any error
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_FAILURE``: on any error
 
         """
 
@@ -85,14 +87,15 @@ class GNATmetric(GNAThub.Plugin):
 
         self.__parse_xml_report()
 
+    # pylint: disable=too-many-locals
     def __parse_xml_report(self):
         """Parses GNATmetric XML report and save data to the database.
 
         Sets the exec_status property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: transaction have been committed to database
-            GNAThub.EXEC_FAILURE: error happened while parsing the xml report
+            * ``GNAThub.EXEC_SUCCESS``: transactions committed to database
+            * ``GNAThub.EXEC_FAILURE``: error while parsing the xml report
 
         """
 
@@ -108,19 +111,17 @@ class GNATmetric(GNAThub.Plugin):
             files = tree.findall('./file')
             total = len(files)
 
+            # Map of rules (couple (name, rule): dict[str,Rule])
             rules = {}
-            # Dict of rules
-            # key: name,  value: rule
 
+            # Map of messages (couple (rule, message): dict[str,Message)
             messages = {}
-            # Dict of messages.
-            # key: (rule, metric text), value: Message instance
 
             for index, node in enumerate(files, start=1):
                 resource = GNAThub.Resource.get(node.attrib.get('name'))
 
-                message_data = []
                 # A list of message data suitable for bulk addition
+                message_data = []
 
                 # Save file level metrics
                 if not resource:
@@ -139,12 +140,12 @@ class GNATmetric(GNAThub.Plugin):
                         rules[name] = rule
 
                     if (rule, metric.text) in messages:
-                        m = messages[(rule, metric.text)]
+                        msg = messages[(rule, metric.text)]
                     else:
-                        m = GNAThub.Message(rule, metric.text)
-                        messages[(rule, metric.text)] = m
+                        msg = GNAThub.Message(rule, metric.text)
+                        messages[(rule, metric.text)] = msg
 
-                    message_data.append([m, 0, 1, 1])
+                    message_data.append([msg, 0, 1, 1])
 
                 # Save unit level metric
                 for unit in node.findall('.//unit'):

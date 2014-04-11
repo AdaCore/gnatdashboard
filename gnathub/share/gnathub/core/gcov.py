@@ -30,6 +30,7 @@ import GNAThub
 from GNAThub import Console
 
 
+# pylint: disable=too-few-public-methods
 class Gcov(GNAThub.Plugin):
     """Gcov plugin for GNAThub.
 
@@ -38,7 +39,6 @@ class Gcov(GNAThub.Plugin):
 
     """
 
-    name = 'gcov'
     GCOV_EXT = '.gcov'
 
     def __init__(self):
@@ -47,13 +47,21 @@ class Gcov(GNAThub.Plugin):
         self.tool = None
         self.rule = None
 
-        self.hits = {}
         # A dictionary containing all messages, to allow bulk insertion in the
         # database: key is an string representing the number of hits,
         # value is the corresponding Message instance.
+        self.hits = {}
+
+    @property
+    def name(self):
+        return 'gcov'
 
     def __process_file(self, resource, filename):
-        """ Process one file, adding in bulk all coverage info found.
+        """Processes one file, adding in bulk all coverage info found.
+
+        :param GNAThub.Resource resource: The resource being processed.
+        :param str filename: The name of the resource.
+
         """
 
         message_data = []
@@ -77,12 +85,12 @@ class Gcov(GNAThub.Plugin):
                     # find the message corresponding to this hits number
 
                     if hits in self.hits:
-                        m = self.hits[hits]
+                        msg = self.hits[hits]
                     else:
-                        m = GNAThub.Message(self.rule, hits)
-                        self.hits[hits] = m
+                        msg = GNAThub.Message(self.rule, hits)
+                        self.hits[hits] = msg
 
-                    message_data.append([m, line, 1, 1])
+                    message_data.append([msg, line, 1, 1])
 
         # We now have a list of messages in message_data: do the bulk insert
         resource.add_messages(message_data)
@@ -95,8 +103,8 @@ class Gcov(GNAThub.Plugin):
         Sets the exec_status property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAILURE: on any error
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_FAILURE``: on any error
 
         """
 

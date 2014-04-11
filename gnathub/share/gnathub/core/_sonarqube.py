@@ -42,9 +42,10 @@ class SonarQube(object):
         """Returns the sonar execution directory located within GNAThub's root
         directory:
 
-            <project_object_dir>/gnathub/sonar.
+            ``<project_object_dir>/gnathub/sonar``
 
-        :returns: str
+        :return: The path to the working directory.
+        :rtype: str
 
         """
 
@@ -55,9 +56,10 @@ class SonarQube(object):
         """Returns the path to the SonarQube Runner configuration file located
         in the Sonar-specific directory:
 
-            <project_object_dir>/gnathub/sonar/sonar-project.properties
+            ``<project_object_dir>/gnathub/sonar/sonar-project.properties``
 
-        :returns: str
+        :return: The path to the configuration file.
+        :rtype: str
 
         """
 
@@ -71,6 +73,7 @@ class SonarQube(object):
             os.makedirs(SonarQube.workdir())
 
 
+# pylint: disable=too-few-public-methods
 class SonarRunnerProperties(object):
     """Builder object for the sonar-runner configuration file."""
 
@@ -86,8 +89,10 @@ class SonarRunnerProperties(object):
         """Generates the full key.
 
         :param str key: Property key.
-        :param str module: Module to which belongs the key. If None, use
+        :param str module: Module to which belongs the key. If ``None``, use
             the default sonar module.
+        :return: The key.
+        :rtype: str
 
         """
 
@@ -98,7 +103,7 @@ class SonarRunnerProperties(object):
 
         :param str key: Property key.
         :param str value: Property value.
-        :param str module: Module to which belongs the key. If None, use
+        :param str module: Module to which belongs the key. If ``None``, use
             the default sonar module.
 
         """
@@ -109,7 +114,7 @@ class SonarRunnerProperties(object):
         """Adds properties in the sonar-runner configuration.
 
         :param dict[str, str] attributes: Attributes to set.
-        :param str module: Module to which belongs the key. If None, use
+        :param str module: Module to which belongs the key. If ``None``, use
             the default sonar module.
 
         """
@@ -124,7 +129,7 @@ class SonarRunnerProperties(object):
         Those properties can be user-customizable via the project file.
 
         :param dict[str, (str, str)] attributes: Attributes to set.
-        :param str module: Module to which belongs the key. If None, use
+        :param str module: Module to which belongs the key. If ``None``, use
             the default sonar module.
 
         """
@@ -148,9 +153,10 @@ class SonarRunnerProperties(object):
         """Returns the property in the sonar-runner configuration.
 
         :param str key: Property key.
-        :param str module: Module to which belongs the key. If None, use
+        :param str module: Module to which belongs the key. If ``None``, use
             the default sonar module.
-        :returns: str
+        :return: The value of the property ``key``.
+        :rtype: str
 
         """
 
@@ -159,16 +165,15 @@ class SonarRunnerProperties(object):
     def _generate(self):
         """Generates the content of the sonar-runner.properties file.
 
-        Do not create the file yet. See #write for this.
+        Do not create the file yet. See :meth:`write` for this.
 
         """
 
         escaped_db = GNAThub.database().replace('\\', '\\\\')
         project_name = GNAThub.Project.name()
         project_source_dirs = GNAThub.Project.source_dirs()[project_name]
-        ada_source_suffixes = map(
-            lambda s: s[1:] if s.startswith('.') else s,
-            GNAThub.Project.source_suffixes('Ada'))
+        ada_source_suffixes = [s[1:] if s.startswith('.') else s
+                               for s in GNAThub.Project.source_suffixes('Ada')]
 
         modules = {k: v for k, v in GNAThub.Project.source_dirs().iteritems()
                    if k != project_name and v}

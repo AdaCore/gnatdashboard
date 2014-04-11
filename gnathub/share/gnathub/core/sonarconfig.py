@@ -26,21 +26,19 @@ module and load it as part of the GNAThub default execution.
 
 import GNAThub
 
-# pylint: disable=import-error
 from _sonarqube import SonarQube, SonarRunnerProperties
 
 
 class SonarConfig(GNAThub.Plugin):
-    """SonarConfig plugin for GNAThub.
-    """
-
-    name = 'sonar-config'
+    """SonarConfig plugin for GNAThub."""
 
     def setup(self):
-        """Inherited."""
-
         super(SonarConfig, self).setup()
         SonarQube.make_workdir()
+
+    @property
+    def name(self):
+        return 'sonar-config'
 
     def execute(self):
         """Generates SonarQube Runner configuration file and dumps it."""

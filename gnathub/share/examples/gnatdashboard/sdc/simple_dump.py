@@ -1,44 +1,75 @@
+"""A simple script that uses the GNAThub API to query the SQLite database and
+display its content.
+"""
+
 import os.path
+import sys
 
 import GNAThub
 
-# Create a dictionary of tools
 
-tools = {}
+def _fetch():
+    """Queries the database to fetch tools, rules and files.
 
-for t in GNAThub.Tool.list():
-    tools[t.id] = t
+    :return: A dictionnary suitable for being used as kwargs for
+        :meth:`_display`.
+    :rtype: dict[str,*]
 
-# Create a dictionary of rules
+    """
 
-rules = {}
+    # Create a dictionary of tools
+    tools = {tool.id: tool for tool in GNAThub.Tool.list()}
 
-for r in GNAThub.Rule.list():
-    r.tool_name = tools[r.tool_id].name
-    rules[r.id] = r
+    # Create a dictionary of rules
+    rules = {rule.id: rule for rule in GNAThub.Rule.list()}
 
-# Traverse all resources looking for files
+    for rule in rules:
+        rule.tool_name = tools[rule.tool_id].name
 
-files = []
+    # Traverse all resources looking for files
+    files = [r for r in GNAThub.Resource.list() if r.kind == GNAThub.FILE_KIND]
+    files.sort(key=lambda x: x.name)
 
-for r in GNAThub.Resource.list():
-    if r.kind == GNAThub.FILE_KIND:
-        files.append(r)
+    return {'rules': rules, 'files': files}
 
-files.sort(key=lambda x: x.name)
 
-for r in files:
-    print "[%s]" % os.path.basename(r.name)
+def _display(rules, files, stream=sys.stdout):
+    """Dumps the content of the database.
 
-    # list all the messages in this file
+    :param dict[int,GNAThub.Rule] rules: List of all rules in the DB.
+    :param dict[int,GNAThub.Resource] files: List of all resouces in the DB.
+    :param File stream: The output stream in which to send the dump.
 
-    for m in r.list_messages():
-        if not m.line:
-            print "    [%s:%s] : %s" % (
-                rules[m.rule_id].tool_name,
-                rules[m.rule_id].name, m.data)
-        else:
-            print "    line %s:\t [%s:%s] : %s" % (
-                m.line,
-                rules[m.rule_id].tool_name,
-                rules[m.rule_id].name, m.data)
+    """
+
+    def write(message):
+        """Writes the input message in the output stream.
+
+        :param str message: The content to write in the stream.
+
+        """
+
+        print >> stream, message
+
+    for resource in files:
+        write("[%s]" % os.path.basename(resource.name))
+
+        # list all the messages in this file
+
+        for msg in resource.list_messages():
+            if not msg.line:
+                write("    [%s:%s] : %s" %
+                      (rules[msg.rule_id].tool_name,
+                       rules[msg.rule_id].name,
+                       msg.data))
+            else:
+                write("    line %s:\t [%s:%s] : %s" %
+                      (msg.line,
+                       rules[msg.rule_id].tool_name,
+                       rules[msg.rule_id].name,
+                       msg.data))
+
+
+if __name__ == '__main__':
+    # pylint: disable=star-args
+    _display(**_fetch())

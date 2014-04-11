@@ -34,14 +34,14 @@ from _sonarqube import SonarQube
 class SonarRunner(GNAThub.Plugin):
     """GNATmetric plugin for GNAThub."""
 
-    name = 'sonar-runner'
-
     def __init__(self):
         super(SonarRunner, self).__init__()
 
-    def setup(self):
-        """Inherited."""
+    @property
+    def name(self):
+        return 'sonar-runner'
 
+    def setup(self):
         # Do not call the super method: we do not need a database session to be
         # opened.
 
@@ -70,7 +70,7 @@ class SonarRunner(GNAThub.Plugin):
     def execute(self):
         """Executes the Sonar Runner.
 
-        SonarRunner.postprocess() will be called upon process completion.
+        :meth:`postprocess()` is called upon process completion.
 
         """
 
@@ -84,8 +84,8 @@ class SonarRunner(GNAThub.Plugin):
         Sets the exec_status property according to the successful of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAILURE: on any error
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_FAILURE``: on any error
 
         """
 

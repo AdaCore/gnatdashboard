@@ -39,8 +39,6 @@ class CodePeer(GNAThub.Plugin):
 
     """
 
-    name = 'codepeer'
-
     def __init__(self):
         super(CodePeer, self).__init__()
 
@@ -53,11 +51,16 @@ class CodePeer(GNAThub.Plugin):
         self.report = os.path.join(GNAThub.Project.object_dir(),
                                    '%s.out' % self.name)
 
+    @property
+    def name(self):
+        return 'codepeer'
+
     @staticmethod
     def __cmd_line():
         """Creates CodePeer command line arguments list.
 
-        :returns: list[str]
+        :return: The CodePeer command line.
+        :rtype: list[str]
 
         """
 
@@ -69,7 +72,8 @@ class CodePeer(GNAThub.Plugin):
     def __msg_reader_cmd_line():
         """Creates CodePeer Message Reader command line arguments list.
 
-        :returns: list[str]
+        :return: The CodePeer message reader command line.
+        :rtype: list[str]
 
         """
 
@@ -79,9 +83,9 @@ class CodePeer(GNAThub.Plugin):
         return ['codepeer_msg_reader', '-csv', msg_dir]
 
     def execute(self):
-        """Executes the CodePeer.
+        """Executes CodePeer.
 
-        CodePeer.execute_msg_reader() will be called upon process completion.
+        :meth:`execute_msg_reader()` is called upon process completion.
 
         """
 
@@ -93,9 +97,9 @@ class CodePeer(GNAThub.Plugin):
         self.execute_msg_reader()
 
     def execute_msg_reader(self):
-        """Executes the CodePeer Message Reader.
+        """Executes CodePeer Message Reader.
 
-        CodePeer.postprocess() will be called upon process completion.
+        :meth:`postprocess()` is called upon process completion.
 
         """
 
@@ -112,8 +116,8 @@ class CodePeer(GNAThub.Plugin):
         Sets the exec_status property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAILURE: on any error
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_FAILURE``: on any error
 
         """
 
@@ -129,8 +133,8 @@ class CodePeer(GNAThub.Plugin):
         Sets the exec_status property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAILURE: on any error
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_FAILURE``: on any error
 
         """
 
@@ -191,12 +195,13 @@ class CodePeer(GNAThub.Plugin):
                 self.exec_status = GNAThub.EXEC_FAILURE
                 self.log.exception('failed to parse CodePeer CSV report')
 
-                report_basename = os.path.basename(self.csv_report)
-                self.error('%s (%s:%d)' % (why, report_basename, total))
+                self.error('%s (%s:%d)' %
+                           (why, os.path.basename(self.csv_report), total))
 
             else:
                 self.exec_status = GNAThub.EXEC_SUCCESS
 
+    # pylint: disable=too-many-arguments
     def __add_message(self, src, line, column, rule_id, msg, category):
         """Adds CodePeer message to current session database.
 

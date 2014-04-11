@@ -26,8 +26,6 @@ module and load it as part of the GNAThub default execution.
 
 import re
 
-# pylint: disable=F0401
-# Disable: Unable to import '{}'
 from _gnat import SLOC_PATTERN
 
 import GNAThub
@@ -40,14 +38,12 @@ class GNATprove(GNAThub.Plugin):
 
     """
 
-    name = 'gnatprove'
-
     SEVERITIES = {'info': 'INFO', 'warning': 'MINOR', 'error': 'MAJOR'}
 
     # Regex to identify line that contains message
     MSG_PATTERN = \
-        '%s:(:\s(?P<severity>[a-z]+))?:\s(?P<message>.+)' % SLOC_PATTERN
-    RULE_PATTERN = ' \[(?P<rule>[a-z_]+)\]$'
+        r'%s:(:\s(?P<severity>[a-z]+))?:\s(?P<message>.+)' % SLOC_PATTERN
+    RULE_PATTERN = r' \[(?P<rule>[a-z_]+)\]$'
 
     MSG_RE = re.compile(MSG_PATTERN)
     RULE_RE = re.compile(RULE_PATTERN)
@@ -55,6 +51,10 @@ class GNATprove(GNAThub.Plugin):
     def __init__(self):
         super(GNATprove, self).__init__()
         self.tool = None
+
+    @property
+    def name(self):
+        return 'gnatprove'
 
     @staticmethod
     def __cmd_line():
@@ -68,9 +68,9 @@ class GNATprove(GNAThub.Plugin):
                 '-j%d' % GNAThub.jobs()]
 
     def execute(self):
-        """Executes the GNATprove.
+        """Executes GNATprove.
 
-        GNATprove.postprocess() will be called upon process completion.
+        :meth:``postprocess()`` is called upon process completion.
 
         """
 
@@ -84,8 +84,8 @@ class GNATprove(GNAThub.Plugin):
         Sets the exec_status property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAILURE: on any error
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_FAILURE``: on any error
 
         """
 
@@ -99,14 +99,15 @@ class GNATprove(GNAThub.Plugin):
         """Parses GNATprove output file (logs recorded during execution).
 
         Identifies two types of messages with different format:
-            - standard messages.
-            - messages for package instantiations.
+
+            * standard messages
+            * messages for package instantiations
 
         Sets the exec_status property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: on successful analysis
-            GNAThub.EXEC_FAILURE: on any error
+            * ``GNAThub.EXEC_SUCCESS``: on successful analysis
+            * ``GNAThub.EXEC_FAILURE``: on any error
 
         """
 
@@ -131,12 +132,13 @@ class GNATprove(GNAThub.Plugin):
         """Parses a GNATprove message line and adds it to the database.
 
         Extracts the following information:
-            - source basename,
-            - line in source,
-            - rule identification,
-            - message description
 
-        :param re.RegexObject regex: The result of the MSG_RE regex.
+            * source basename
+            * line in source
+            * rule identification
+            * message description
+
+        :param re.RegexObject regex: The result of the ``MSG_RE`` regex.
 
         """
 
@@ -163,6 +165,7 @@ class GNATprove(GNAThub.Plugin):
 
         self.__add_message(src, line, column, rule_id, message)
 
+    # pylint: disable=too-many-arguments
     def __add_message(self, src, line, col_begin, rule_id, msg):
         """Registers a new message in the database.
 

@@ -27,8 +27,6 @@ module and load it as part of the GNAThub default execution.
 import os
 import re
 
-# pylint: disable=F0401
-# Disable: Unable to import '{}'
 from _gnat import SLOC_PATTERN
 
 import GNAThub
@@ -42,14 +40,12 @@ class GNATcheck(GNAThub.Plugin):
 
     """
 
-    name = 'gnatcheck'
-
     # Regex to identify lines that contain messages
-    _RULE_PATTERN = '(?P<message>.+)\s\[(?P<rule>[A-Za-z_]+)\]$'
+    _RULE_PATTERN = r'(?P<message>.+)\s\[(?P<rule>[A-Za-z_]+)\]$'
 
     # Regular expression to match GNATcheck output and extract all relevant
     # information stored in it.
-    _MESSAGE = re.compile('%s:\s%s' % (SLOC_PATTERN, _RULE_PATTERN))
+    _MESSAGE = re.compile(r'%s:\s%s' % (SLOC_PATTERN, _RULE_PATTERN))
 
     # GNATcheck exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
@@ -61,21 +57,26 @@ class GNATcheck(GNAThub.Plugin):
         self.report = os.path.join(GNAThub.Project.object_dir(),
                                    '%s.out' % self.name)
 
+    @property
+    def name(self):
+        return 'gnatcheck'
+
     def __cmd_line(self):
         """Creates GNATcheck command line arguments list.
 
-        :returns: list[str]
+        :return: The GNATcheck command line.
+        :rtype: list[str]
 
         """
 
         return ['gnatcheck', '--show-rule', '-o', self.report,
-                '-P', GNAThub.Project.path(), '-j%d' % GNAThub.jobs()
-                ] + GNAThub.Project.scenario_switches()
+                '-P', GNAThub.Project.path(),
+                '-j%d' % GNAThub.jobs()] + GNAThub.Project.scenario_switches()
 
     def execute(self):
-        """Executes the GNATcheck.
+        """Executes GNATcheck.
 
-        GNATcheck.postprocess() will be called upon process completion.
+        :meth:`postprocess()` is called upon process completion.
 
         """
 
@@ -83,14 +84,14 @@ class GNATcheck(GNAThub.Plugin):
         self.postprocess(proc.status)
 
     def postprocess(self, exit_code):
-        """Postprocesses the tool execution: parse the output report on
+        """Postprocesses the tool execution: parses the output report on
         success.
 
-        Sets the exec_status property according to the success of the
+        Sets the ``exec_status`` property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAILURE: on any error
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_FAILURE``: on any error
 
         """
 
@@ -106,12 +107,13 @@ class GNATcheck(GNAThub.Plugin):
         Sets the exec_status property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: on successful execution and analysis
-            GNAThub.EXEC_FAILURE: on any error
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_FAILURE``: on any error
 
-        Identify 2 type of messages with different format:
-            - basic message
-            - message for package instantiation
+        Identify two type of messages with different format:
+
+            * basic message
+            * message for package instantiation
 
         """
 
@@ -154,10 +156,11 @@ class GNATcheck(GNAThub.Plugin):
         database session.
 
         Retrieves following information:
-            - source basename,
-            - line in source,
-            - rule identification,
-            - message description
+
+            * source basename
+            * line in source
+            * rule identification
+            * message description
 
         :param re.RegexObject regex: The result of the MSG_RE regex.
 
@@ -178,6 +181,7 @@ class GNATcheck(GNAThub.Plugin):
 
         self.__add_message(src, line, column, rule, message)
 
+    # pylint: disable=too-many-arguments
     def __add_message(self, src, line, col_begin, rule_id, msg):
         """Adds GNATcheck message to current session database.
 
@@ -188,6 +192,7 @@ class GNATcheck(GNAThub.Plugin):
         :param str msg: Description of the message.
 
         """
+
         rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
         message = GNAThub.Message(rule, msg)
         resource = GNAThub.Resource.get(src)

@@ -41,7 +41,7 @@ LOG = logging.getLogger(MODULE)
 
 
 class GNAThubLoggingHandler(logging.Handler):
-    """Custom logging handler that uses GNAThub.Logger as back-end."""
+    """Custom logging handler that uses :class:`GNAThub.Logger` as back-end."""
 
     LOGGING_FUNCTIONS = {
         'DEBUG': GNAThub.Logger.debug,
@@ -85,12 +85,12 @@ class GNAThubLoggingHandler(logging.Handler):
 class PluginRunner(object):
     """Class that loads python plugins.
 
-       Retrieve all plugins: core and user
+    Retrieve all plugins: core and user
 
-       Plugin execution order:
-            - core plugin
-            - user plugin
-            - sonar plugin if active
+    Plugin execution order:
+      * core plugin
+      * user plugin
+      * sonar plugin (if active)
 
     """
 
@@ -128,7 +128,8 @@ class PluginRunner(object):
         of ordering the plugins in their final execution order.
 
         :param list[GNAThub.Plugin] plugins: Plugins to be executed.
-        :returns: list[GNAThub.Plugin]
+        :return: The ordered list of plugins.
+        :rtype: list[GNAThub.Plugin]
 
         """
 
@@ -144,7 +145,8 @@ class PluginRunner(object):
 
             :param GNAThub.Plugin a: First plugin.
             :param GNAThub.Plugin b: Second plugin.
-            :returns: int
+            :return: -1, 0 or 1 depending on the input.
+            :rtype: int
 
             """
 
@@ -216,13 +218,14 @@ class PluginRunner(object):
 
         This list of plugins is then filtered given the parameters of the run,
         ie.:
-            - If the switch --plugins is supplied on the command line, execute
+            * If the switch --plugins is supplied on the command line, execute
               only plugins whose name is in this list;
-            - Otherwise, if the project file contains the GNATdashboard.Plugins
+            * Otherwise, if the project file contains the GNATdashboard.Plugins
               attribute, execute only plugins whose name is in this list;
-            - Otherwise, execute all available plugins.
+            * Otherwise, execute all available plugins.
 
-        :returns: list[GNAThub.Plugin]
+        :return: The list of plugins available in the current environment.
+        :rtype: list[GNAThub.Plugin]
 
         """
 
@@ -269,7 +272,7 @@ class PluginRunner(object):
         # Generate the final list of plugin classes. Inspect Python scripts to
         # extract class definition and filter out those that will not be used.
 
-        LOG.info('load %d scripts' % len(scripts))
+        LOG.info('load %d scripts', len(scripts))
         plugins = sum([list(PluginRunner.inspect(s)) for s in scripts], [])
 
         if explicit:
@@ -297,7 +300,7 @@ class PluginRunner(object):
     def execute(plugin):
         """Executes the plugin.
 
-        Calls methods setup, execute and teardown for a plugin instance.
+        Call methods setup, execute and teardown for a plugin instance.
 
         :param GNAThub.Plugin plugin: Instance of the plugin to execute.
 
@@ -332,7 +335,7 @@ class PluginRunner(object):
     def mainloop(self):
         """Plugins main loop."""
 
-        LOG.info('load (%d) plugins' % len(self.plugins))
+        LOG.info('load (%d) plugins', len(self.plugins))
 
         if not self.plugins:
             PluginRunner.info('nothing to do')
