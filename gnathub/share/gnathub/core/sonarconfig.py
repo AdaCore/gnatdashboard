@@ -44,8 +44,10 @@ class _SonarConfiguration(object):
         'sources': ('.', None),
         'projectVersion': ('1.0-SNAPSHOT', 'Project_Version'),
         'projectName': (GNAThub.Project.name(), 'Project_Name'),
-        'projectKey': ('%s::Project' % GNAThub.Project.name(), 'Project_Key'),
-        'ada.gnathub.db': (GNAThub.database().replace('\\', '\\\\'), None)}
+        'projectKey': (GNAThub.Project.name(), 'Project_Key'),
+        'ada.gnathub.db': (GNAThub.database().replace('\\', '\\\\'), None),
+        'ada.file.suffixes': (','.join(GNAThub.Project.source_suffixes("Ada")),
+                              None)}
 
     def __init__(self, logger=None):
         self.log = logger
@@ -92,6 +94,22 @@ class _SonarConfiguration(object):
 
             # Insert the key in the configuration file
             self._add(config, 'sonar.%s' % key, default, attribute)
+
+        project_name = GNAThub.Project.name()
+        project_source_dirs = GNAThub.Project.source_dirs()[project_name]
+        self._add(config, 'sonar.sources', ','.join(project_source_dirs))
+
+        modules = {k: v for k, v in GNAThub.Project.source_dirs().iteritems()
+                   if k != GNAThub.Project.name() and v}
+
+        self._add(config, 'sonar.modules',
+                  ','.join([m.lower() for m in modules.keys()]))
+
+        for name, sources in modules.iteritems():
+            module = name.lower()
+            self._add(config, '%s.sonar.projectName' % module, name)
+            self._add(config, '%s.sonar.projectKey' % module, name)
+            self._add(config, '%s.sonar.sources' % module, ','.join(sources))
 
         with open(filename, 'w') as configuration:
             config.write(configuration)

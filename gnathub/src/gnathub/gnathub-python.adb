@@ -68,6 +68,7 @@ package body GNAThub.Python is
    Project_Object_Dir_Method         : constant String := "object_dir";
    Project_Source_File_Method        : constant String := "source_file";
    Project_Source_Dirs_Method        : constant String := "source_dirs";
+   Project_Source_Suffixes_Method    : constant String := "source_suffixes";
    Project_Property_As_String_Method : constant String := "property_as_string";
    Project_Property_As_List_Method   : constant String := "property_as_list";
    Scenario_Switches_Method          : constant String := "scenario_switches";
@@ -154,6 +155,11 @@ package body GNAThub.Python is
      (Data    : in out Callback_Data'Class;
       Command : String);
    --  GNAThub.Project.property_as_* class method handler
+
+   procedure Project_Class_Source_Suffixes_Handler
+     (Data    : in out Callback_Data'Class;
+      Command : String);
+   --  GNAThub.Project.source_suffixes class method handler
 
    procedure Register_Project_Class (Project_Class : Class_Type);
    --  Load the GNAThub.Project class in the Python VM
@@ -245,6 +251,13 @@ package body GNAThub.Python is
         (Command       => Project_Source_Dirs_Method,
          Params        => No_Params,
          Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Source_Suffixes_Method,
+         Params        => (1 .. 1 => Param ("language")),
+         Handler       => Project_Class_Source_Suffixes_Handler'Access,
          Class         => Project_Class,
          Static_Method => True);
 
@@ -514,6 +527,36 @@ package body GNAThub.Python is
          raise Python_Error with "Unknown method GNAThub.Project." & Command;
       end if;
    end Project_Class_Accessors_Handler;
+
+   -------------------------------------------
+   -- Project_Class_Source_Suffixes_Handler --
+   -------------------------------------------
+
+   procedure Project_Class_Source_Suffixes_Handler
+     (Data    : in out Callback_Data'Class;
+      Command : String)
+   is
+      use GNAThub.Project;
+
+      Language : constant String := Data.Nth_Arg (1);
+
+      Spec_Ext : constant String :=
+        Property_As_String (Property     => "Spec_Suffix",
+                            Package_Name => Naming_Package,
+                            Index        => Language);
+
+      Body_Ext : constant String :=
+        Property_As_String (Property     => "Body_Suffix",
+                            Package_Name => Naming_Package,
+                            Index        => Language);
+
+   begin
+      pragma Assert (Command = Project_Source_Suffixes_Method);
+
+      Set_Return_Value_As_List (Data);
+      Set_Return_Value (Data, Spec_Ext);
+      Set_Return_Value (Data, Body_Ext);
+   end Project_Class_Source_Suffixes_Handler;
 
    --------------------------------------
    -- Project_Class_Properties_Handler --

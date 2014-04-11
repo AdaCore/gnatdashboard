@@ -122,10 +122,12 @@ package body GNAThub.Project is
 
    function Property_As_String
      (Property     : String;
-      Package_Name : String := GNATdashboard_Package) return String is
+      Package_Name : String := GNATdashboard_Package;
+      Index        : String := "") return String is
    begin
       return Project_Tree.Root_Project.Attribute_Value
                (Attribute_Pkg_String'(Build (Package_Name, Property)),
+                Index   => Index,
                 Default => "");
    end Property_As_String;
 
@@ -135,11 +137,12 @@ package body GNAThub.Project is
 
    function Property_As_List
      (Property     : String;
-      Package_Name : String := GNATdashboard_Package) return String_List_Access
-   is
+      Package_Name : String := GNATdashboard_Package;
+      Index        : String := "") return String_List_Access is
    begin
       return Project_Tree.Root_Project.Attribute_Value
-               (Attribute_Pkg_List'(Build (Package_Name, Property)));
+               (Attribute_Pkg_List'(Build (Package_Name, Property)),
+                Index => Index);
    end Property_As_List;
 
    --------------------------------

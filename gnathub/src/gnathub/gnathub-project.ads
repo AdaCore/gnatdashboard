@@ -17,10 +17,10 @@
 
 with Ada.Containers.Vectors;
 
-with GNAT.OS_Lib;       use GNAT.OS_Lib;
+with GNAT.OS_Lib;                   use GNAT.OS_Lib;
 
-with GNATCOLL.VFS;      use GNATCOLL.VFS;
-with GNATCOLL.Projects; use GNATCOLL.Projects;
+with GNATCOLL.VFS;                  use GNATCOLL.VFS;
+with GNATCOLL.Projects;             use GNATCOLL.Projects;
 
 package GNAThub.Project is
 
@@ -84,14 +84,16 @@ package GNAThub.Project is
 
    function Property_As_String
      (Property     : String;
-      Package_Name : String := GNATdashboard_Package) return String
+      Package_Name : String := GNATdashboard_Package;
+      Index        : String := "") return String
      with Pre => Initialized and then Loaded;
    --  Return the given property as a string. Return the empty string if the
    --  property does not exist
 
    function Property_As_List
      (Property     : String;
-      Package_Name : String := GNATdashboard_Package) return String_List_Access
+      Package_Name : String := GNATdashboard_Package;
+      Index        : String := "") return String_List_Access
      with Pre => Initialized and then Loaded;
    --  Return the given property as a list. Return an empty list if the
    --  property does not exist
