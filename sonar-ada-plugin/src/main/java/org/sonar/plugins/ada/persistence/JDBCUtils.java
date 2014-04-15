@@ -19,8 +19,8 @@ import org.sqlite.JDBC;
 public class JDBCUtils {
 
     public static final String DEFAULT_DB_PATH = "obj" + System.getProperty("file.separator")
-                                                       + "qualimetrics.db";
-    public static final String QMT_DB_PATH = "sonar.ada.qmt.db.path";
+                                                       + "gnathub.db";
+    public static final String QMT_DB_PATH = "sonar.ada.gnathub.db";
     private static String DBurl;
     private static Connection connection = null;
 

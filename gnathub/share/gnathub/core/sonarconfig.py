@@ -45,7 +45,7 @@ class _SonarConfiguration(object):
         'projectVersion': ('1.0-SNAPSHOT', 'Project_Version'),
         'projectName': (GNAThub.Project.name(), 'Project_Name'),
         'projectKey': ('%s::Project' % GNAThub.Project.name(), 'Project_Key'),
-        'ada.qmt.db.path': (GNAThub.database().replace('\\', '\\\\'), None)}
+        'ada.gnathub.db': (GNAThub.database().replace('\\', '\\\\'), None)}
 
     def __init__(self, logger=None):
         self.log = logger
