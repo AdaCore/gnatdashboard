@@ -6,9 +6,9 @@
     <groupId>org.codehaus.sonar.plugins</groupId>
     <artifactId>sonar-ada-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>0.9w</version>
+    <version>1.0.0w</version>
     <name>Sonar Ada Plugin</name>
-    <description>Ada Plugin for Sonar</description>
+    <description>Ada Plugin for SonarQube 3.7.x</description>
     <inceptionYear>2012</inceptionYear>
 
     <licenses>
