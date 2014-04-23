@@ -258,6 +258,161 @@ class Project(object):
         pass    # Implemented in Ada
 
 
+class Tool(object):
+    """???"""
+
+    def __init__(self, name):
+        """???
+
+        :param str name: ???
+
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def list():
+        """???
+
+        :returns: list[GNAThub.Tool]
+
+        """
+
+        pass    # Implemented in Ada
+
+
+class Category(object):
+    """???"""
+
+    def __init__(self, label, on_side=False):
+        """???
+
+        :param str label: ???
+        :param bool on_side: ???
+
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def list():
+        """???
+
+        :returns: list[GNAThub.Category]
+
+        """
+
+        pass    # Implemented in Ada
+
+
+class Rule(object):
+    """???"""
+
+    def __init__(self, name, identifier, kind, tool):
+        """???
+
+        :param str name: ???
+        :param str identifier: ???
+        :param int kind: ???
+        :param GNAThub.Tool tool: ???
+
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def list():
+        """???
+
+        :returns: list[GNAThub.Rule]
+
+        """
+
+        pass    # Implemented in Ada
+
+
+class Message(object):
+    """???"""
+
+    def __init__(self, rule, rule_id, message, category):
+        """???
+
+        :param GNAThub.Rule rule: ???
+        :param int rule_id: ???
+        :param str message: ???
+        :param GNAThub.Category category: ???
+
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def list():
+        """???
+
+        :returns: list[GNAThub.Message]
+
+        """
+
+        pass    # Implemented in Ada
+
+
+class Resource(object):
+    """???"""
+
+    def __init__(self, name, kind):
+        """???
+
+        :param str name: ???
+        :param int kind: ???
+
+        """
+
+        pass    # Implemented in Ada
+
+    def add_message(self, message, line, col_begin, col_end=None):
+        """???
+
+        :param GNAThub.Message message: ???
+        :param int line: ???
+        :param int col_begin: ???
+        :param int col_end: ???
+
+        """
+
+        pass    # Implemented in Ada
+
+    def list_messages(self):
+        """???
+
+        :returns: list[GNAThub.Message]
+
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def get(name):
+        """???
+
+        :param str name: ???
+        :returns: GNAThub.Resource
+
+        """
+
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def list():
+        """???
+
+        :returns: list[GNAThub.Resource]
+
+        """
+
+        pass    # Implemented in Ada
+
+
 # Install all Ada extensions, i.e. functions and classes implemented in Ada and
 # exported to Python. These extensions should be declared above this statement
 # with no implementation.
