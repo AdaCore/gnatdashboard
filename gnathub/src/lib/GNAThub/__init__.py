@@ -17,11 +17,14 @@
 ##                                                                          ##
 ##############################################################################
 
-"""
-This module defines the core components of GNAThub plugin mechanism:
+"""This module defines the core components of GNAThub plugin mechanism.
 
-    - The GNAThub.Plugin Abstract Base Class
-    - The GPSTarget Helper Class
+It declares module routines and classes implemented in Ada and exported to
+Python.
+
+In particular the :class:`GNAThub.Plugin` is the base class to use for writing
+plug-ins.
+
 """
 
 
@@ -31,8 +34,8 @@ def root():
 
         <project_object_dir>/gnathub
 
-    RETURNS
-        :rtype: a path as a string.
+    :returns: str
+
     """
 
     pass        # Implemented in Ada
@@ -44,8 +47,8 @@ def logs():
 
         <project_object_dir>/gnathub/logs
 
-    RETURNS
-        :rtype: a path as a string.
+    :returns: str
+
     """
 
     pass        # Implemented in Ada
@@ -54,8 +57,8 @@ def logs():
 def jobs():
     """Returns the number of parallel jobs to execute (equivalent to -j).
 
-    RETURNS
-        :rtype: a number >= 0
+    :returns: int
+
     """
 
     pass        # Implemented in Ada
@@ -65,8 +68,8 @@ def plugins():
     """Returns the list of comma-separated plug-ins name specified on the
     command-line.
 
-    RETURNS
-        :rtype: a string.
+    :returns: str
+
     """
 
     pass        # Implemented in Ada
@@ -84,8 +87,8 @@ def repositories():
     directories from the GNAThub installation, and the Local_Repository the
     user can specify in its project file.
 
-    RETURNS
-        :rtype: dict.<string, string>
+    :returns: dict[str, str]
+
     """
 
     pass        # Implemented in Ada
@@ -97,8 +100,8 @@ def database():
 
         <project_object_dir>/gnathub/gnathub.db
 
-    RETURNS
-        :rtype: a path as a string.
+    :returns: str
+
     """
 
     pass        # Implemented in Ada
@@ -113,29 +116,27 @@ class Logger(object):
         pass    # Implemented in Ada
 
     def info(self, message):
-        """Prints an informative message. Activated at default verbosity
-        output.
-        """
+        """Prints an informative message."""
 
         pass    # Implemented in Ada
 
     def warn(self, message):
-        """Prints a warning message. Activated at default verbosity output."""
+        """Prints a warning message."""
 
         pass    # Implemented in Ada
 
     def error(self, message):
-        """Prints an error message. Always activated."""
+        """Prints an error message."""
 
         pass    # Implemented in Ada
 
     def fatal(self, message):
-        """Prints a fatal message. Always activated."""
+        """Prints a fatal message."""
 
         pass    # Implemented in Ada
 
     def debug(self, message):
-        """Prints a debug message. Activated at higher verbosity level."""
+        """Prints a debug message."""
 
         pass    # Implemented in Ada
 
@@ -145,9 +146,7 @@ class Console(object):
 
     @staticmethod
     def info(message, prefix=None):
-        """Prints an informative message. Activated at default verbosity
-        output.
-        """
+        """Prints an informative message. Activated at default verbosity."""
 
         pass    # Implemented in Ada
 
@@ -167,7 +166,9 @@ class Console(object):
     def progress(current, natural, new_line=False):
         """Prints a progress message. Activated at default verbosity level.  If
         new_line is True, then terminate the line with a '\n' character.
+
         Defaults to False.
+
         """
 
         pass    # Implemented in Ada
@@ -185,8 +186,8 @@ class Project(object):
     def name():
         """Returns the name of the root project.
 
-        RETURNS
-            :rtype: string
+        :returns: str
+
         """
 
         pass    # Implemented in Ada
@@ -195,8 +196,8 @@ class Project(object):
     def path():
         """Returns the full path to the root project.
 
-        RETURNS
-            :rtype: string
+        :returns: str
+
         """
 
         pass    # Implemented in Ada
@@ -205,8 +206,8 @@ class Project(object):
     def object_dir():
         """Returns the full path to the root project object directory.
 
-        RETURNS
-            :rtype: string
+        :returns: str
+
         """
 
         pass    # Implemented in Ada
@@ -215,9 +216,8 @@ class Project(object):
     def source_dirs():
         """Returns the list of source directories for each project.
 
-        RETURNS
-            :rtype: a dictionary associating a project name to a list of source
-                directories
+        :returns: dict[str, list[str]]
+
         """
 
         pass    # Implemented in Ada
@@ -229,8 +229,8 @@ class Project(object):
         path, it is returned as is. Otherwise, only the base name is used (ie.
         we remove any directory information from Name).
 
-        RETURNS
-            :rtype: a string
+        :returns: str
+
         """
 
         pass    # Implemented in Ada
@@ -240,8 +240,8 @@ class Project(object):
         """Returns the string representation of the project property from the
         package GNATdashboard.
 
-        RETURNS
-            :rtype: string
+        :returns: str
+
         """
 
         pass    # Implemented in Ada
@@ -251,8 +251,8 @@ class Project(object):
         """Returns the list of string representation of the project property
         from the package GNATdashboard.
 
-        RETURNS
-            :rtype: list
+        :returns: list[str]
+
         """
 
         pass    # Implemented in Ada
@@ -300,6 +300,7 @@ class Plugin:
     All plugins are collected using the inheritance mechanism, i.e. the GNAThub
     driver will automatically find all classes implementing the GNAThub.Plugin
     interface. No manual registration needed.
+
     """
 
     __metaclass__ = ABCMeta
@@ -321,8 +322,8 @@ class Plugin:
         """Returns the name of the tool, as specified by the TOOL_NAME class
         variable.
 
-        RETURNS
-            :rtype: a string.
+        :returns: str
+
         """
 
         pass
@@ -347,6 +348,7 @@ class Plugin:
 
         This is where environment setup should be done to ensure a correct
         execution of the tool.
+
         """
 
         pass
@@ -357,6 +359,7 @@ class Plugin:
 
         Executes the external tool. This method is called after setup() and
         before teardown().
+
         """
 
         pass
@@ -366,6 +369,7 @@ class Plugin:
 
         This is where environment cleanup should be done to ensure a consistent
         state for a future execution.
+
         """
 
         pass
@@ -379,8 +383,8 @@ class Plugin:
             GNAThub.EXEC_FAILURE: an error occurred during the plugin execution
             GNAThub.EXEC_SUCCESS: the plugin execution completed successfully
 
-        RETURNS
-            :rtype: a number.
+        :returns: int
+
         """
 
         return self._exec_status
@@ -394,9 +398,8 @@ class Plugin:
             GNAThub.EXEC_FAILURE: an error occurred during the plugin execution
             GNAThub.EXEC_SUCCESS: the plugin execution completed successfully
 
-        PARAMETERS
-            :param status: the new execution status.
-            :type status: a number.
+        :param int status: The new execution status.
+
         """
 
         if status not in (EXEC_FAILURE, EXEC_SUCCESS, NOT_EXECUTED):
@@ -406,8 +409,7 @@ class Plugin:
 
 
 class Run(object):
-    """Class to handle processes.
-    """
+    """Class to handle processes."""
 
     # pylint: disable=too-many-arguments
     def __init__(self, name, argv, env=None, workdir=None, out=None):
@@ -416,22 +418,15 @@ class Run(object):
         Spawns the process via subprocess.Popen and returns the process exit
         code.
 
-        PARAMETERS
-            :param name: the name of the executable.
-            :type name: a string.
-            :param argv: the argument array.
-            :type argv: an array of strings.
-            :param env: dictionary containing the environment to pass through
-                to the process. If None, os.environ is used.
-            :type env: a dictionary.
-            :param workdir: the directory in which to execute the process. If
-                None, use the current directory.
-            :type workdir: a string.
-            :param out: the log file to use.
-            :type out: a path to a file.
+        :param str name: the name of the executable.
+        :param list[str] argv: the argument array.
+        :param dict[str, str] env: Dictionary containing the environment to
+            pass through to the process. If None, os.environ is used.
+        :param str workdir: The directory in which to execute the process. If
+            None, use the current directory.
+        :param str out: The log file to use.
+        :returns: int
 
-        RETURNS
-            :rtype: a number
         """
 
         self.name = name
@@ -477,12 +472,9 @@ class Run(object):
     def quote(arg):
         """Returns the quoted version of the given argument.
 
-        PARAMETERS
-            :param arg: the argument to quote.
-            :type arg: a string.
+        :param str arg: The argument to quote.
+        :returns: str
 
-        RETURNS
-            :rtype: a string.
         """
 
         specials = ('|', '&', ';', '<', '>', '(', ')', '$', '`', '\\', '"',
@@ -499,8 +491,8 @@ class Run(object):
     def cmdline_image(self):
         """Returns a string image of the given command.
 
-        RETURNS
-            :rtype: a string.
+        :returns: str
+
         """
 
         return ' '.join((Run.quote(arg) for arg in self.argv))
@@ -508,8 +500,8 @@ class Run(object):
     def output(self):
         """Returns the path to the output file.
 
-        RETURNS
-            :rtype: a string
+        :returns: str
+
         """
 
         return self.out or os.path.join(logs(), self.name + '.log')

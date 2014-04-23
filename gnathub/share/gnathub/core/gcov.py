@@ -35,6 +35,7 @@ class Gcov(GNAThub.Plugin):
 
     Retrieves .gcov generated files from teh project root object directory,
     parses them and feeds the database with the data collected from each files.
+
     """
 
     name = 'gcov'
@@ -49,13 +50,10 @@ class Gcov(GNAThub.Plugin):
     def __add_line_hits(self, resource, line_num, hits):
         """Registers hits count for a specific line in the given file.
 
-        PARAMETERS
-            :param resource: the resource object for the file.
-            :type resource: a GNAThub.Resource object.
-            :param line_num: the line number in the file.
-            :type line_num: a number.
-            :param hits: the coverage hit for this line.
-            :type hits: a string.
+        :param GNAThub.Resource resource: The resource object for the file.
+        :param int line_num: The line number in the file.
+        :param str hits: The coverage hit for this line.
+
         """
 
         message = GNAThub.Message(self.rule, hits)
@@ -71,6 +69,7 @@ class Gcov(GNAThub.Plugin):
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
             GNAThub.EXEC_FAILURE: on any error
+
         """
 
         self.info('parse coverage reports (%s)' % self.GCOV_EXT)

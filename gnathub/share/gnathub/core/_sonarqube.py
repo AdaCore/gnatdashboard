@@ -29,6 +29,7 @@ import GNAThub
 class SonarQube(object):
     """Provides a set of helper static methods used by both the SonarQube
     Runner plug-in and the SonarConfig plug-in.
+
     """
 
     EXEC_DIRECTORY = 'sonar'
@@ -41,8 +42,8 @@ class SonarQube(object):
 
             <project_object_dir>/gnathub/sonar.
 
-        RETURNS
-            :rtype: a string.
+        :returns: str
+
         """
 
         return os.path.join(GNAThub.root(), SonarQube.EXEC_DIRECTORY)
@@ -54,8 +55,8 @@ class SonarQube(object):
 
             <project_object_dir>/gnathub/sonar/sonar-project.properties
 
-        RETURNS
-            :rtype: a string.
+        :returns: str
+
         """
 
         return os.path.join(SonarQube.workdir(), SonarQube.CONFIGURATION)

@@ -49,7 +49,11 @@ class SonarRunner(GNAThub.Plugin):
 
     @staticmethod
     def __cmd_line():
-        """Returns command line for sonar runner execution."""
+        """Returns command line for sonar runner execution.
+
+        :returns: list[str]
+
+        """
 
         # Enable verbose and debugging output with -e and -X. This is handy for
         # debugging in case of issue in the SonarRunner step.
@@ -67,6 +71,7 @@ class SonarRunner(GNAThub.Plugin):
         """Executes the Sonar Runner.
 
         SonarRunner.postprocess() will be called upon process completion.
+
         """
 
         proc = GNAThub.Run(self.name, SonarRunner.__cmd_line())
@@ -81,6 +86,7 @@ class SonarRunner(GNAThub.Plugin):
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
             GNAThub.EXEC_FAILURE: on any error
+
         """
 
         if exit_code != 0:

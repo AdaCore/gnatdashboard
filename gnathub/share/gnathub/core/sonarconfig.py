@@ -53,16 +53,12 @@ class _SonarConfiguration(object):
     def _add(self, config, key, value, attribute=None):
         """Adds property in sonar configuration
 
-        PARAMETERS
-            :param config: the configuration object.
-            :type config: a ConfigParser.ConfigParser object.
-            :param key: property key.
-            :type key: a string.
-            :param value: property value.
-            :type value: a string.
-            :param attribute: custom project file attribute for this key.
-                If None, the default value will be used. Defaults to None.
-            :type value: a string.
+        :param ConfigParser.ConfigParser config: The configuration object.
+        :param str key: Property key.
+        :param str value: Property value.
+        :param str attribute: Custom project file attribute for this key.
+            If None, the default value will be used. Defaults to None.
+
         """
 
         if attribute and GNAThub.Project.property_as_string(attribute):
@@ -76,9 +72,8 @@ class _SonarConfiguration(object):
     def write(self, filename):
         """Dumps sonar-project.properties file in sonar working directory.
 
-        PARAMETERS
-            :param filename: the configuration file name.
-            :type filename: a string.
+        :param str filename: The configuration file name.
+
         """
 
         config = ConfigParser.ConfigParser()

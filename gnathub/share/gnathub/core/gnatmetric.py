@@ -34,8 +34,7 @@ from xml.etree.ElementTree import ParseError
 
 
 class GNATmetric(GNAThub.Plugin):
-    """GNATmetric plugin for GNAThub.
-    """
+    """GNATmetric plugin for GNAThub."""
 
     name = 'gnatmetric'
 
@@ -51,8 +50,8 @@ class GNATmetric(GNAThub.Plugin):
     def __cmd_line(self):
         """Creates GNATmetric command line arguments list.
 
-        RETURNS
-            :rtype: a list of string
+        :returns: list[str]
+
         """
 
         return ['gnatmetric', '-ox', self.report, '-P', GNAThub.Project.path(),
@@ -62,6 +61,7 @@ class GNATmetric(GNAThub.Plugin):
         """Executes the GNATmetric.
 
         GNATmetric.postprocess() will be called upon process completion.
+
         """
 
         proc = GNAThub.Run(self.name, self.__cmd_line())
@@ -76,6 +76,7 @@ class GNATmetric(GNAThub.Plugin):
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
             GNAThub.EXEC_FAILURE: on any error
+
         """
 
         if exit_code not in GNATmetric.VALID_EXIT_CODES:
@@ -90,10 +91,9 @@ class GNATmetric(GNAThub.Plugin):
         Sets the exec_status property according to the success of the
         analysis:
 
-            GNAThub.EXEC_SUCCESS: if transaction have been committed to
-                                  database
-            GNAThub.EXEC_FAILURE: if error happened while parsing the xml
-                                  report
+            GNAThub.EXEC_SUCCESS: transaction have been committed to database
+            GNAThub.EXEC_FAILURE: error happened while parsing the xml report
+
         """
 
         self.info('analyse report')

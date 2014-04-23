@@ -36,6 +36,7 @@ class CodePeer(GNAThub.Plugin):
     """CodePeer plugin for GNAThub
 
     Configures and executes CodePeer, then analyzes the output.
+
     """
 
     name = 'codepeer'
@@ -56,8 +57,8 @@ class CodePeer(GNAThub.Plugin):
     def __cmd_line():
         """Creates CodePeer command line arguments list.
 
-        RETURNS
-            :rtype: a list of string
+        :returns: list[str]
+
         """
 
         return ['codepeer', '-update-scil', '-level', '1',
@@ -67,8 +68,8 @@ class CodePeer(GNAThub.Plugin):
     def __msg_reader_cmd_line():
         """Creates CodePeer Message Reader command line arguments list.
 
-        RETURNS
-            :rtype: a list of string
+        :returns: list[str]
+
         """
 
         msg_dir = os.path.join(GNAThub.Project.object_dir(), 'codepeer',
@@ -80,6 +81,7 @@ class CodePeer(GNAThub.Plugin):
         """Executes the CodePeer.
 
         CodePeer.execute_msg_reader() will be called upon process completion.
+
         """
 
         proc = GNAThub.Run(self.name, CodePeer.__cmd_line())
@@ -93,6 +95,7 @@ class CodePeer(GNAThub.Plugin):
         """Executes the CodePeer Message Reader.
 
         CodePeer.postprocess() will be called upon process completion.
+
         """
 
         self.info('collect results with msg_reader')
@@ -110,6 +113,7 @@ class CodePeer(GNAThub.Plugin):
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
             GNAThub.EXEC_FAILURE: on any error
+
         """
 
         if exit_code != 0:
@@ -126,6 +130,7 @@ class CodePeer(GNAThub.Plugin):
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
             GNAThub.EXEC_FAILURE: on any error
+
         """
 
         self.info('analyse CSV report')
@@ -194,19 +199,13 @@ class CodePeer(GNAThub.Plugin):
     def __add_message(self, src, line, column, rule_id, msg, category):
         """Adds CodePeer message to current session database.
 
-        Parameters:
-            :param src: message source file
-            :type src: a string
-            :param line: message line number
-            :type line: a string
-            :param column: message column number
-            :type column: a string
-            :param rule_id: message's rule identifier
-            :type rule_id: a string
-            :param msg: description of the message
-            :type msg: a string
-            :param category: the category of the message
-            :type category: a string
+        :param str src: Message source file.
+        :param str line: Message line number.
+        :param str column: Message column number.
+        :param str rule_id: Message's rule identifier.
+        :param str msg: Description of the message.
+        :param str category: The category of the message.
+
         """
 
         rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)

@@ -37,6 +37,7 @@ class GNATprove(GNAThub.Plugin):
     """GNATprove plugin for GNAThub.
 
     Configures and executes GNATprove, then analyzes its output.
+
     """
 
     name = 'gnatprove'
@@ -59,8 +60,8 @@ class GNATprove(GNAThub.Plugin):
     def __cmd_line():
         """Creates GNATcheck command line arguments list.
 
-        RETURNS
-            :rtype: a list of string
+        :returns: list[str]
+
         """
 
         return ['gnatprove', '-P', GNAThub.Project.path(),
@@ -70,6 +71,7 @@ class GNATprove(GNAThub.Plugin):
         """Executes the GNATprove.
 
         GNATprove.postprocess() will be called upon process completion.
+
         """
 
         proc = GNAThub.Run(self.name, GNATprove.__cmd_line())
@@ -84,6 +86,7 @@ class GNATprove(GNAThub.Plugin):
 
             GNAThub.EXEC_SUCCESS: on successful execution and analysis
             GNAThub.EXEC_FAILURE: on any error
+
         """
 
         if exit_code != 0:
@@ -104,6 +107,7 @@ class GNATprove(GNAThub.Plugin):
 
             GNAThub.EXEC_SUCCESS: on successful analysis
             GNAThub.EXEC_FAILURE: on any error
+
         """
 
         self.tool = GNAThub.Tool(self.name)
@@ -132,9 +136,8 @@ class GNATprove(GNAThub.Plugin):
             - rule identification,
             - message description
 
-        PARAMETERS
-            :param regex: the result of the MSG_RE regex.
-            :type regex: a regex result.
+        :param re.RegexObject regex: The result of the MSG_RE regex.
+
         """
 
         # The following Regex results are explained using this example.
@@ -163,17 +166,12 @@ class GNATprove(GNAThub.Plugin):
     def __add_message(self, src, line, col_begin, rule_id, msg):
         """Registers a new message in the database.
 
-        PARAMETERS
-            :param src: The source file containing the message.
-            :type src: A string, representing the full path to a file.
-            :param line: A line from that source file.
-            :type line: A string.
-            :param col_begin: The starting column in the line.
-            :type col_begin: A string.
-            :param rule_id: The GNAThub rule ID.
-            :type rule_id: A string.
-            :param msg: The message to record.
-            :type msg: A string.
+        :param str src: The source file containing the message.
+        :param str line: A line from that source file.
+        :param str col_begin: The starting column in the line.
+        :param str rule_id: The GNAThub rule ID.
+        :param str msg: The message to record.
+
         """
 
         rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)

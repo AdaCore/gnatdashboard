@@ -21,6 +21,7 @@
 
 """Scans for GNAThub-specific plug-ins and registers their execution before
 spawning the main event loop.
+
 """
 
 import inspect
@@ -90,6 +91,7 @@ class PluginRunner(object):
             - core plugin
             - user plugin
             - sonar plugin if active
+
     """
 
     PLUGIN_EXT = '.py'
@@ -125,12 +127,9 @@ class PluginRunner(object):
         for example, for the Sonar Runner plugin, last. This routine takes care
         of ordering the plugins in their final execution order.
 
-        PARAMETERS
-            :param plugins: the list of plugins to be executed
-            :type plugins: a list of GNAThub.Plugin class
+        :param list[GNAThub.Plugin] plugins: Plugins to be executed.
+        :returns: list[GNAThub.Plugin]
 
-        RETURNS
-            :rtype: the list of plugins, ordered for sequential execution
         """
 
         def plugin_sort_fn(a, b):
@@ -143,14 +142,10 @@ class PluginRunner(object):
             the first argument is considered smaller than, equal to, or larger
             than the second argument.
 
-            PARAMETERS
-                :param a: first plugin
-                :type a: GNAThub.Plugin class
-                :param b: first plugin
-                :type b: GNAThub.Plugin class
+            :param GNAThub.Plugin a: First plugin.
+            :param GNAThub.Plugin b: Second plugin.
+            :returns: int
 
-            RETURNS
-                :rtype: number
             """
 
             if a.__name__ == PluginRunner.SONAR_RUNNER:
@@ -171,9 +166,8 @@ class PluginRunner(object):
 
         This method is a generator, which yields on every script it finds.
 
-        PARAMETERS
-            :param repository: the path to the repository to inspect
-            :type repository: string
+        :param str repository: The path to the repository to inspect.
+
         """
 
         for script in os.listdir(repository):
@@ -189,9 +183,8 @@ class PluginRunner(object):
         This method should be used as a generator. It will yield on new every
         new plugin it will find during its inspection of the script.
 
-        PARAMETERS
-            :param script: the path to the Python script to load
-            :type script: string
+        :param str script: Path to the Python script to load.
+
         """
 
         if not os.path.isfile(script):
@@ -229,9 +222,8 @@ class PluginRunner(object):
               attribute, execute only plugins whose name is in this list;
             - Otherwise, execute all available plugins.
 
-        RETURNS
-            :rtype: the list of GNAThub.Plugin in the recommended order of
-                execution.
+        :returns: list[GNAThub.Plugin]
+
         """
 
         # Locate all Python scripts that might hold the definition of one or
@@ -307,9 +299,8 @@ class PluginRunner(object):
 
         Calls methods setup, execute and teardown for a plugin instance.
 
-        PARAMETERS
-            :param plugin: instance of the plugin to execute
-            :type plugin: GNAThub.Plugin
+        :param GNAThub.Plugin plugin: Instance of the plugin to execute.
+
         """
 
         start = time.time()
