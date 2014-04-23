@@ -90,7 +90,7 @@ of reading and indexing all source files).
 |GNAThub|'s core plug-ins
 -------------------------
 
-|Product|'s driver comes with a set of core plug-ins, available in the
+|GNATdashboard|'s driver comes with a set of core plug-ins, available in the
 :command:`[system]` repository, allowing quick integration with a software
 development team's workflow.
 

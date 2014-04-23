@@ -15,6 +15,7 @@ serve to show the default.
 
 import os
 import re
+import sys
 
 # pylint: disable=invalid-name,redefined-builtin
 
@@ -26,13 +27,11 @@ VERSION_PATTERN = (r'^(?P<major>[0-9]+)\.(?P<minor>[0-9]+)'
                    r'(?P<tag>(alpha|beta|rc|w)([0-9]+)?)?$')
 VERSION_RE = re.compile(VERSION_PATTERN)
 
-# ??? Needed for sphinx.ext.autodoc to find the GNAThub module
-# sys.path.insert(0, os.path.join(TOP, 'src', 'lib', 'GNAThub'))
-
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.join(TOP, 'src', 'lib', 'GNAThub'))
+
 
 # -- General configuration ----------------------------------------------------
 
@@ -41,8 +40,7 @@ VERSION_RE = re.compile(VERSION_PATTERN)
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-# extensions = ['sphinx.ext.autodoc']
-extensions = []
+extensions = ['sphinx.ext.autodoc']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -251,7 +249,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'GNATdashboard', u'GNATdashboard Documentation', u'AdaCore',
-     'GNATdashboard', 'One line description of project.', 'Miscellaneous'),
+     'GNATdashboard', 'An integrator for all our quality tools.',
+     'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.

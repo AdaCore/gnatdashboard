@@ -262,13 +262,21 @@ class Project(object):
 # exported to Python. These extensions should be declared above this statement
 # with no implementation.
 
-# pylint: disable=W0401, W0622, F0401
-from GNAThubCore import *       # NOQA (disable warning from flake8)
+import logging
+
+try:
+    # pylint: disable=wildcard-import, import-error
+    from GNAThubCore import *       # NOQA (disable warning from flake8)
+
+except ImportError:
+    logging.warn('Failed to import Ada implementation of the module.')
+    logging.warn('This module was likely not loaded by the GNAThub driver.')
+    logging.warn('This may be expected. GNAThub module implementation will'
+                 'not be available (stubs will not be populated).')
 
 # Now that all Ada extensions have been planted into this module, we can
 # define pure-Python extensions.
 
-import logging
 import os
 
 from abc import ABCMeta, abstractmethod, abstractproperty

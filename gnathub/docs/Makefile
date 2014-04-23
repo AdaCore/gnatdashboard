@@ -5,7 +5,7 @@ include ../config.mk
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = PYTHONPATH=$(TOP)/src/lib sphinx-build
+SPHINXBUILD   = PYTHONPATH=$(TOP)/src/lib sphinx-build -n
 SPHINXAPIDOC  = sphinx-apidoc
 PAPER         =
 BUILDDIR      = $(BUILD_DIR)/docs

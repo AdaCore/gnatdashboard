@@ -54,6 +54,7 @@ TOP := $(shell cd $(dir $(ME)); pwd)
 
 BUILD_DIR   := $(TOP)/build
 PKG_DIR     := $(TOP)/gnathub-$(target)
+DOCS_DIR    := $(PKG_DIR)/share/doc/gnatdashboard
 PYTHON_HOME := $(BUILD_DIR)/share/gnathub/python
 INSTALL_DIR := ${PREFIX}
 

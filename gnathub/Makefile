@@ -34,15 +34,24 @@ gnathub-plugins:
 	(cd share/gnathub && tar cf - core extras sql) | \
 		(cd $(BUILD_DIR)/share/gnathub && tar xf -)
 
-docs: docs-html
+gnathub-api-docs: docs/Makefile
+	$(MAKE) -C docs api-doc
 
-docs-html: docs/Makefile
+# Generate both HTML and PDF documents in BUILD_DIR and install them in DOCS_DIR
+docs: gnathub-api-docs docs-html docs-pdf
+	$(MKDIR) $(DOCS_DIR)/pdf $(DOCS_DIR)/html
+	$(CP) $(BUILD_DIR)/docs/latex/GNATdashboard.pdf $(DOCS_DIR)/pdf
+	$(RSYNC) $(BUILD_DIR)/docs/html $(DOCS_DIR)
+
+# Generate the HTML documentation in BUILD_DIR
+docs-html: gnathub-api-docs
 	$(MAKE) -C docs html
 
-docs-pdf: docs/Makefile
+# Generate the PDF documentation in BUILD_DIR
+docs-pdf: gnathub-api-docs
 	$(MAKE) -C docs latexpdf
 
-createdb:
+create-db:
 	@echo ":: Generating the GNAThub's database"
 	$(MKDIR) src/orm-gen
 	cd src/orm-gen && gnatcoll_db2ada -dbtype=sqlite -dbname=gnathub.db \
@@ -99,11 +108,6 @@ package: all
 	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
 	$(MKDIR) $(PKG_DIR)/share/examples
 	(cd share/examples && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/examples && tar xf -)
-ifeq ($(target),x86-windows)
-	$(MAKE) -C docs html
-	$(MKDIR) $(PKG_DIR)/share/doc
-	$(RSYNC) $(BUILD_DIR)/docs/html $(PKG_DIR)/share/doc/gnatdashboard
-endif
 
 install: package
 	$(RSYNC) $(PKG_DIR) $(INSTALL_DIR)

@@ -33,4 +33,3 @@ The plug-in is discovered and loaded by the |GNAThub| driver unless
 explicitly disabled in the project file using the :command:`Plugins_Off`
 attribute.  If it remains enabled, it is executed along with the other
 plugins without any further action.
-
