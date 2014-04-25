@@ -1,0 +1,31 @@
+project Disabled is
+
+   for Object_Dir use "obj";
+   for Source_Dirs use ("src");
+
+   for Main use ("simple.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada")
+        use ("-ftest-coverage", "-fprofile-arcs", "-gnatws");
+   end Compiler;
+
+   package Linker is
+      for Default_Switches ("Ada") use ("-fprofile-generate");
+   end Linker;
+
+   package Check is
+      for Default_Switches ("Ada") use ("-rules", "-from=gnatcheck.rules");
+   end Check;
+
+   package Dashboard is
+      for Project_Key use "Disabled :: Core";
+      for Project_Version use "1.2.1b";
+      for Source_Encoding use "My_Custom_Encoding";
+      for Local_Repository use "local_repo";
+      for Plugins use ("sonarconfig");
+      for Plugins_Off use ("gnatcheck", "gnatmetric", "gcov", "codepeer",
+                           "gnatprove");
+   end Dashboard;
+
+end Disabled;

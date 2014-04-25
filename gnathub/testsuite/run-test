@@ -5,25 +5,25 @@
 Usage: run-test [options] testcase-directory
 """
 
-# pylint: disable=C0103
-# Disable "Invalid module name" (this is a script, not a module)
+# pylint: disable=invalid-name
 
 import os
+import re
 import sys
 
 from gnatpython.env import Env
+from gnatpython.fileutils import split_file
 from gnatpython.main import Main
 from gnatpython.testdriver import TestRunner, add_run_test_options
 
 from support import TestEncoder
 
 
-# Base directory for the testsuite
-BASEDIR = os.path.dirname(os.path.realpath(__file__))
-
-
 class GNAThubTestRunner(TestRunner):
     """Test runner for a GNAThub test."""
+
+    UNITTEST_PATTERN = 'test*.py'
+    DEFAULT, UNITTEST = range(2)
 
     # pylint: disable=too-many-arguments
     def __init__(self, test, discs, result_dir, temp_dir=Env().tmp_dir,
@@ -36,10 +36,72 @@ class GNAThubTestRunner(TestRunner):
 
         # Activate tests duration monitoring
         self.opt_results['TIMING'] = 0
-        self.opt_results['CMD'] = 'test.sh'
 
         # Decode the test name
         self.test = TestEncoder.decode(self.test)
+
+        # Guess the kind of test
+        if os.path.isfile(os.path.join(self.test, 'test.sh')):
+            self.kind = GNAThubTestRunner.DEFAULT
+            self.opt_results['CMD'] = 'test.sh'
+        else:
+            self.kind = GNAThubTestRunner.UNITTEST
+            self.opt_results['CMD'] = sys.executable
+
+    def adjust_to_context(self):
+        super(GNAThubTestRunner, self).adjust_to_context()
+        if self.kind == GNAThubTestRunner.UNITTEST:
+            # Reset initial test status
+            self.result = {'result': 'UNKNOWN', 'msg': '', 'is_failure': True}
+
+    def compute_cmd_line_cmd(self, filesize_limit):
+        if self.kind != GNAThubTestRunner.UNITTEST:
+            super(GNAThubTestRunner, self).compute_cmd_line_cmd(filesize_limit)
+        else:
+            self.cmd_line = [sys.executable, '-m', 'unittest', 'discover',
+                             '-p', GNAThubTestRunner.UNITTEST_PATTERN]
+
+    @staticmethod
+    def parse_unittest_output(output):
+        summary = output[0]
+
+        if output[1] not in ('-' * 70, '=' * 70):
+            return {
+                'result': 'CRASH',
+                'is_failure': True,
+                'msg': 'failed to parse test results'
+            }
+
+        if re.match('^\.*$', summary):
+            return {'result': 'OK', 'is_failure': False, 'msg': ''}
+
+        return {
+            'msg': '%d assertions raised' % len(summary.replace('.', '')),
+            'result': 'DIFF', 'is_failure': True
+        }
+
+    def analyze(self, ignore_white_chars=True):
+        if self.kind != GNAThubTestRunner.UNITTEST:
+            super(GNAThubTestRunner, self).analyze(ignore_white_chars)
+            return
+
+        output = split_file(self.output, ignore_errors=True)
+        self.result = GNAThubTestRunner.parse_unittest_output(output)
+
+        if self.result['result'] == 'DIFF':
+            with open(self.output, 'w') as fdout:
+                fdout.write('\n'.join([self.result['msg']] + output) + '\n')
+
+        xfail = self.opt_results['XFAIL']
+
+        if not isinstance(xfail, bool) and xfail:
+            if result['result'] in ('DIFF', 'CRASH'):
+                # Override the result file (remove visual clutter)
+                open(self.output, 'w').close()
+                self.result.update({'result': 'XFAIL', 'msg': xfail})
+
+            elif result['result'] == 'OK':
+                self.result.update({'result': 'UOK', 'msg': xfail})
 
 
 def run_single_testcase():

@@ -28,6 +28,7 @@ from pygments.styles import get_style_by_name
 
 from pygments.token import Token as Token
 
+from support import const
 from support import TestEncoder
 
 
@@ -152,6 +153,10 @@ class Testsuite(object):
 
     def execute(self):
         """Run the testsuite and execute testcases."""
+
+        # Add the support directory in the PYTHONPATH so that modules are
+        # accessible from each test case.
+        Env().add_search_path('PYTHONPATH', os.path.dirname(const.basedir))
 
         self.parse_command_line()
 
