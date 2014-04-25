@@ -106,6 +106,8 @@ package: all
 	$(MKDIR) $(PKG_DIR)
 	(tar cf - COPYING3) | (cd $(PKG_DIR) && tar xf -)
 	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
+	$(MKDIR) $(PKG_DIR)/share/doc
+	-(cd share/doc && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/doc && tar xf -)
 	$(MKDIR) $(PKG_DIR)/share/examples
 	(cd share/examples && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/examples && tar xf -)
 
