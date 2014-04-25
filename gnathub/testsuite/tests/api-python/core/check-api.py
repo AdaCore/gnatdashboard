@@ -1,7 +1,6 @@
 """Check the integrity of the GNAThub Python module."""
 
-# pylint: disable=C0103
-# Disable "Invalid module name" (this is a script, not a module)
+# pylint: disable=invalid-name
 
 import GNAThub
 
@@ -13,7 +12,13 @@ BASEDIR = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 
 def relpath(path):
-    """Relative path to PATH from BASEDIR."""
+    """Returns the relative path to :param:`path` from BASEDIR.
+
+    :param str path: The full path.
+    :returns: str
+
+    """
+
     return os.path.relpath(path, BASEDIR)
 
 
