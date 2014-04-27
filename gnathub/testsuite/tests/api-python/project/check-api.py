@@ -44,7 +44,8 @@ assert relpath(source_dirs['Disabled'][0]) == 'src', \
 
 # GNAThub.Project.source_file
 source = GNAThub.Project.source_file('simple.adb')
-assert relpath(source) == 'src/simple.adb', '%s: unexpected source file' % source
+expected = 'src%ssimple.adb' % os.path.sep
+assert relpath(source) == expected, '%s: unexpected source file' % source
 assert os.path.isfile(source), '%s: no such file' % source
 
 # GNAThub.Project.property_as_string
