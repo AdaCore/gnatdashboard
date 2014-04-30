@@ -61,7 +61,7 @@ class CodePeer(GNAThub.Plugin):
 
         """
 
-        return ['codepeer', '-update-scil', '-level', '1',
+        return ['codepeer', '-update-scil',
                 '-P', GNAThub.Project.path(), '-jobs', str(GNAThub.jobs())]
 
     @staticmethod
