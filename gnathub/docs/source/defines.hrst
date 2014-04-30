@@ -1,22 +1,24 @@
 .. Custom macro definitions
 
-.. |GNATdashboard|     replace:: :program:`GNATdashboard`
-.. |GNAThub|      replace:: :program:`GNAThub`
+.. |GNATdashboard|  replace:: :program:`GNATdashboard`
+.. |GNAThub|        replace:: :program:`GNAThub`
+.. |SonarAdaPlugin| replace:: :program:`Sonar Ada Plugin`
 
-.. |SQLite|      replace:: :program:`SQLite`
+.. |SQLite|         replace:: :program:`SQLite`
 
-.. |GNAT|         replace:: :program:`GNAT`
-.. |GNATpro|      replace:: :program:`GNAT Pro`
-.. |CodePeer|     replace:: :program:`CodePeer`
-.. |GNATcheck|    replace:: :program:`GNAT Check`
-.. |GNATcoverage| replace:: :program:`GNAT Coverage`
-.. |GNATmetric|   replace:: :program:`GNAT Metric`
-.. |GNATprove|    replace:: :program:`GNAT Prove`
-.. |Gcov|         replace:: :program:`Gcov`
+.. |GNAT|           replace:: :program:`GNAT`
+.. |GNATpro|        replace:: :program:`GNAT Pro`
+.. |CodePeer|       replace:: :program:`CodePeer`
+.. |GNATcheck|      replace:: :program:`GNAT Check`
+.. |GNATcoverage|   replace:: :program:`GNAT Coverage`
+.. |GNATmetric|     replace:: :program:`GNAT Metric`
+.. |GNATprove|      replace:: :program:`GNAT Prove`
+.. |Gcov|           replace:: :program:`Gcov`
 
-.. |GNATtracker|  replace:: :program:`GNAT Tracker`
+.. |GNATtracker|    replace:: :program:`GNAT Tracker`
 
-.. |SonarQube|    replace:: :program:`SonarQube`
-.. |SonarSource|  replace:: :program:`Sonar Source`
+.. |SonarQube|      replace:: :program:`SonarQube`
+.. |SonarRunner|    replace:: :program:`Sonar Runner`
+.. |SonarSource|    replace:: :program:`Sonar Source`
 
-.. |Squoring|     replace:: :program:`Squoring`
+.. |Squoring|       replace:: :program:`Squoring`

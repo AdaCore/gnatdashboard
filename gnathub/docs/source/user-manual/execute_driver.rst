@@ -4,6 +4,8 @@
 How to execute the |GNAThub| driver
 ===================================
 
+.. _getting-started:
+
 Getting started
 ---------------
 
@@ -38,6 +40,8 @@ List of the names of plug-ins to load and execute for this project. |GNAThub|
 ignores this attribute if you specify the :command:`--plugins` switch on the
 command line. You can tailor this list by specifying the :command:`Plugins_Off`
 attributes.
+
+.. _project-attr-plugins-off:
 
 :command:`Plugins_Off`
 """"""""""""""""""""""
@@ -134,12 +138,16 @@ computed from the project attribute :command:`Plugins`. However, the project
 attribute :command:`Plugins_Off` still applies to that list and removes any
 explicitly disabled plug-ins.
 
+.. _gnathub-switch-incremental:
+
 :command:`--incremental`
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 Takes no argument. Instead of its default behavior, when you specify
 :command:`--incremental`, |GNAThub| retains any previous database (instead of
 clearing it).
+
+.. _gnathub-switch-exec:
 
 :command:`--exec`
 ^^^^^^^^^^^^^^^^^

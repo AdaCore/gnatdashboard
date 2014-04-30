@@ -56,5 +56,5 @@ Setting your environment
 ------------------------
 
 To use |GNAThub| you must have all the tools you are planning to use on
-your project in your :file:`$PATH` (some tools come with the |GNAT|
+your project in your :envvar:`$PATH` (some tools come with the |GNAT|
 distribution, while others are available as separate packages).
