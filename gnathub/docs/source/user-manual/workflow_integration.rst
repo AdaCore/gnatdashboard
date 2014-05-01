@@ -3,13 +3,15 @@
 Integrating |GNATdashboard| into your workflow
 ==============================================
 
-|GNATdashboard| provides out-of-the-box integration with the |SonarSource|
+|GNATdashboard| provides an integration with the |SonarSource|
 software. |SonarQube| is an open platform to manage code quality. It is
 extensible with plug-ins to add support for new languages and rules.
 
 The |SonarAdaPlugin| provided with |GNATdashboard| packages currently only
-support |SonarQube| LTS (long-term support) version, that is *3.7.4*. Plans in
-the future are to support both LTS and latest stable version (currently *4.2*).
+supports the |SonarQube| LTS (long-term support) version (currently *3.7.4*).
+
+In the future, both the LTS and latest stable (currently *4.2*) will be
+supported.
 
 How |GNAThub| integrates with |SonarQube|
 -----------------------------------------
@@ -47,31 +49,31 @@ See `Installing and Configuring SonarQube Runner <http://docs.codehaus.org/displ
 and `Analyzing with SonarQube Runner <http://docs.codehaus.org/display/SONAR/Analyzing+with+SonarQube+Runner>`_
 for more information on |SonarRunner|.
 
-|GNAThub| will also attempt to run |SonarRunner| using the configuration
-previously generated. This execution is handled by the :program:`sonar-runner`
-plug-in of |GNAThub|. This plug-in is currently always scheduled last by
-|GNAThub| to ensure that each plug-in completes, storing the result analysis of
-each tool in |GNAThub| database and that :file:`sonar-runner.properties` has
-been generated prior to |SonarRunner| execution.
+By default, |GNAThub| will create the |SonarRunner| configuration file, and
+launch the |SonarRunner| itself.
+
+This execution is handled by the :program:`sonar-runner`
+plug-in of |GNAThub|. This is always scheduled as the last |GNAThub| plugin:
+this ensures that the output of all other tools is available in
+the |GNAThub| database and that :file:`sonar-runner.properties` has
+been generated prior to launching the |SonarRunner|.
 
 .. note::
 
     |GNAThub| expects :program:`sonar-runner` or :program:`sonar-runner.bat` to
-    be available. You must set your :envvar:`$PATH` accordingly prior to
-    execution.
+    be available on the :envvar:`$PATH`.
 
 |GNATdashboard| without |SonarQube|
 -----------------------------------
 
 |SonarQube| is only used to display results from various analysis. It is
-therefor not mandatory to run those analysis. One can choose to ignore
-|SonarQube| integration and use custom scripting to extract analysis results
-stored in |GNAThub| database, and process them with an other external or custom
-code quality management platform.
+therefore not mandatory to display the analysis: for instance, you can choose
+not to use the |SonarQube| integration but use custom scripting to extract
+the analysis results stored in the |GNAThub| database.
 
-To disable both :program:`sonar-config` and :program:`sonar-runner` plug-ins of
-|GNAThub|, one can use the :command:`Plugins_Off` project attribute (see
-:ref:`project-attr-plugins-off`).
+To disable the :program:`sonar-config` and :program:`sonar-runner` plug-ins,
+use the :command:`Plugins_Off` project attribute
+(see :ref:`project-attr-plugins-off`).
 
 Incremental analysis
 --------------------
@@ -89,7 +91,7 @@ Use :ref:`gnathub-switch-incremental` to enable incremental mode::
   $ gnathub --incremental --plugins sonarconfig -P project.gpr
   $ gnathub --incremental --plugins sonarrunner -P project.gpr
 
-Integrators not willing to take advantage of the |SonarQube| integration can
+If you do not wish to use the |SonarQube| integration, you can
 simply omit the last two |GNAThub| executions and use the
 :ref:`gnathub-switch-exec` switch for custom database processing::
 

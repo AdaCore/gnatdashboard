@@ -3,10 +3,11 @@
 Introduction
 ============
 
-|GNATdashboard| is a tool that monitors the software quality of Ada projects.
+|GNATdashboard| is a product for monitoring the software quality of Ada
+projects.
 
 |GNATdashboard| fits naturally into a software development team's workflow
-by using projects files to configure, run, and analyze the ouput from
+by leveraging on project files to configure, run, and analyze the ouput from
 |GNAT| tools. Its driver program processes data such as compiler warnings,
 |CodePeer| diagnostic messages, style check violations, and coverage data,
 and makes it available for reference and analysis through its local
@@ -35,11 +36,13 @@ To use |GNATdashboard| you must have both the |GNAT| tools you intend to
 run on your project (such as |GNATmetric| and |GNATcheck|) and |GNAThub|
 installed.
 
+In order to visualize results in the |SonarQube| platform, the corresponding
+plug-in must be deployed.
+
 Release
 -------
 
 The current version is |release|.
-
 
 Installation
 ------------
@@ -51,6 +54,8 @@ On Windows, run the graphical installer. On other platforms, un-zip the
 downloaded archive and install it on your system (usually at some location
 such as :file:`/usr/local/gnatpro`).
 
+The |SonarQube| plug-in is located in the directory
+ :file:`<install_prefix>\share\sonar`. This needs to be installed manually.
 
 Setting your environment
 ------------------------
