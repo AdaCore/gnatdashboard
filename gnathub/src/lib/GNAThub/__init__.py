@@ -259,12 +259,12 @@ class Project(object):
 
 
 class Tool(object):
-    """???"""
+    """A Tool object, mapping to a Tool entry in the database."""
 
     def __init__(self, name):
-        """???
+        """Return the tool of the given name, creating it if necessary.
 
-        :param str name: ???
+        :param str name: The name of the tool to create or retrieve.
 
         """
 
@@ -272,7 +272,7 @@ class Tool(object):
 
     @staticmethod
     def list():
-        """???
+        """Lists all the Tools currently present in the database.
 
         :returns: list[GNAThub.Tool]
 
@@ -282,13 +282,16 @@ class Tool(object):
 
 
 class Category(object):
-    """???"""
+    """A Category object, representing a category in the database"""
 
     def __init__(self, label, on_side=False):
-        """???
+        """Return the category of the given label and property, creating it
+        if necessary.
 
-        :param str label: ???
-        :param bool on_side: ???
+        :param str label: The label of the category.
+        :param bool on_side: Whether messages belonging to this category should
+            be displayed on the side of the lines when representing a source
+            file.
 
         """
 
@@ -296,7 +299,7 @@ class Category(object):
 
     @staticmethod
     def list():
-        """???
+        """Return all Categories present in the database.
 
         :returns: list[GNAThub.Category]
 
@@ -306,15 +309,18 @@ class Category(object):
 
 
 class Rule(object):
-    """???"""
+    """A Rule object, representing a rule in the database"""
 
     def __init__(self, name, identifier, kind, tool):
-        """???
+        """Return the rule of the given properties, creating it if necessary.
 
-        :param str name: ???
-        :param str identifier: ???
-        :param int kind: ???
-        :param GNAThub.Tool tool: ???
+        :param str name: The name of the rule.
+        :param str identifier: An unique identifier for this rule (typically,
+            the same as name).
+        :param int kind: RULE_KIND to indicate a rule where messages are
+             given without a numeric value, or METRIC_KIND to indicate a
+             rule where messages correspond to a numeric value.
+        :param GNAThub.Tool tool: The tool that defines this rule.
 
         """
 
@@ -322,7 +328,7 @@ class Rule(object):
 
     @staticmethod
     def list():
-        """???
+        """Returns all the rules present in the database.
 
         :returns: list[GNAThub.Rule]
 
@@ -332,15 +338,16 @@ class Rule(object):
 
 
 class Message(object):
-    """???"""
+    """A Message object, representing one message in the database"""
 
     def __init__(self, rule, rule_id, message, category):
-        """???
+        """Return the message matching the given properties.
 
-        :param GNAThub.Rule rule: ???
-        :param int rule_id: ???
-        :param str message: ???
-        :param GNAThub.Category category: ???
+        :param GNAThub.Rule rule: the rule to which this message belongs.
+        :param str message: The data to associate to the message:
+            this should be a numeric value if the rule is of METRIC_KIND.
+        :param GNAThub.Category category: The category to which this message
+            belongs.
 
         """
 
@@ -348,7 +355,7 @@ class Message(object):
 
     @staticmethod
     def list():
-        """???
+        """Return all messages present in the database.
 
         :returns: list[GNAThub.Message]
 
@@ -358,32 +365,43 @@ class Message(object):
 
 
 class Resource(object):
-    """???"""
+    """A Resource object, corresponding to a resource in the database.
+       A resource represents either a file, a directory, or a project.
+    """
 
     def __init__(self, name, kind):
-        """???
+        """Return a Resource for the given parameters, creating it if
+            necessary.
 
-        :param str name: ???
-        :param int kind: ???
+        :param str name: The name of the resource. For files and directories,
+            this should be a normalized full path: the full path with all
+            links resolved, and with the original filesystem casing.
+            For a project, this is the cased name of the project.
+        :param int kind: PROJECT_KIND, DIRECTORY_KIND, FILE_KIND for
+            projects, directories, and files, respectively.
 
         """
 
         pass    # Implemented in Ada
 
-    def add_message(self, message, line, col_begin, col_end=None):
-        """???
+    def add_message(self, message, line=-1, col_begin=1, col_end=None):
+        """Add a message to the given resource.
 
-        :param GNAThub.Message message: ???
-        :param int line: ???
-        :param int col_begin: ???
-        :param int col_end: ???
+        :param GNAThub.Message message: The Message to add.
+        :param int line: The line to associate the message to, if the
+            resource is a file.
+            Use -1 to indicate a message which should be associated to the
+            resource but not to a specific line.
+        :param int col_begin: The begin column of the message.
+        :param int col_end: The end column of the message. None means that
+            the end column should be the same as the begin column.
 
         """
 
         pass    # Implemented in Ada
 
     def list_messages(self):
-        """???
+        """List all messages associated with this resource.
 
         :returns: list[GNAThub.Message]
 
@@ -393,9 +411,10 @@ class Resource(object):
 
     @staticmethod
     def get(name):
-        """???
+        """Return the Resource with the given name, not creating it if it
+            doesn't exist.
 
-        :param str name: ???
+        :param str name: the name of the resource to get.
         :returns: GNAThub.Resource
 
         """
@@ -404,7 +423,7 @@ class Resource(object):
 
     @staticmethod
     def list():
-        """???
+        """List all resources present in the database.
 
         :returns: list[GNAThub.Resource]
 
