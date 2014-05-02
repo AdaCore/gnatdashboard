@@ -30,9 +30,8 @@ plug-ins.
 
 def root():
     """Returns the path to the GNAThub-specific root directory.
-    Usually:
 
-        <project_object_dir>/gnathub
+    Usually :file:`<project_object_dir>/gnathub`.
 
     :returns: str
 
@@ -43,9 +42,8 @@ def root():
 
 def logs():
     """Returns the path to the GNAThub-specific directory for logs.
-    Usually:
 
-        <project_object_dir>/gnathub/logs
+    Usually :file:`<project_object_dir>/gnathub/logs`.
 
     :returns: str
 
@@ -55,7 +53,8 @@ def logs():
 
 
 def jobs():
-    """Returns the number of parallel jobs to execute (equivalent to -j).
+    """Returns the number of parallel jobs to execute (equivalent to
+    :command:`-j`).
 
     :returns: int
 
@@ -79,13 +78,14 @@ def repositories():
     """Returns the list of available repositories.
 
     The dictionary contains 3 keys:
-        * system
-        * global
-        * local
+
+    * :command:`system`
+    * :command:`global`
+    * :command:`local`
 
     These repositories correspond respectively to the [core] and [extra]
-    directories from the GNAThub installation, and the Local_Repository the
-    user can specify in its project file.
+    directories from the GNAThub installation, and the
+    :command:`Local_Repository` the user can specify in its project file.
 
     :returns: dict[str, str]
 
@@ -96,9 +96,8 @@ def repositories():
 
 def database():
     """Returns the path to the GNAThub SQLite database.
-    Usually:
 
-        <project_object_dir>/gnathub/gnathub.db
+    Usually :file:`<project_object_dir>/gnathub/gnathub.db`.
 
     :returns: str
 
@@ -111,32 +110,62 @@ class Logger(object):
     """A logger object. Fully implemented in Ada."""
 
     def __init__(self, name):
-        """Instance constructor."""
+        """Creates a new Ada logger object.
+
+        From :program:`GNAThub` plug-ins, prefer the use of :module:`logging`
+        instead of this logger class. A custom :class:`logging.Handler` is
+        automatically installed to use :module:`logging` as logging front-end
+        and :class:`GNAThub.Logger` as logging back-end.
+
+        :param str name: The name of the logger.
+        :returns: GNAThub.Logger
+
+        """
 
         pass    # Implemented in Ada
 
     def info(self, message):
-        """Prints an informative message."""
+        """Prints an informative message.
+
+        :param str message: The message to log.
+
+        """
 
         pass    # Implemented in Ada
 
     def warn(self, message):
-        """Prints a warning message."""
+        """Prints a warning message.
+
+        :param str message: The message to log.
+
+        """
 
         pass    # Implemented in Ada
 
     def error(self, message):
-        """Prints an error message."""
+        """Prints an error message.
+
+        :param str message: The message to log.
+
+        """
 
         pass    # Implemented in Ada
 
     def fatal(self, message):
-        """Prints a fatal message."""
+        """Prints a fatal message.
+
+        :param str message: The message to log.
+
+        """
 
         pass    # Implemented in Ada
 
     def debug(self, message):
-        """Prints a debug message."""
+        """Prints a debug message.
+
+        :param str message: The message to log.
+
+        """
 
         pass    # Implemented in Ada
 
@@ -146,28 +175,47 @@ class Console(object):
 
     @staticmethod
     def info(message, prefix=None):
-        """Prints an informative message. Activated at default verbosity."""
+        """Prints an informative message. Activated at default verbosity.
+
+        :param str message: The message to display.
+        :param str prefix: Optional prefix to the message.
+
+        """
 
         pass    # Implemented in Ada
 
     @staticmethod
     def warn(message, prefix=None):
-        """Prints a warning message. Activated at default verbosity output."""
+        """Prints a warning message. Activated at default verbosity output.
+
+        :param str message: The message to display.
+        :param str prefix: Optional prefix to the message.
+
+        """
 
         pass    # Implemented in Ada
 
     @staticmethod
     def error(message, prefix=None):
-        """Prints an error message. Always activated."""
+        """Prints an error message. Always activated.
+
+        :param str message: The message to display.
+        :param str prefix: Optional prefix to the message.
+
+        """
 
         pass    # Implemented in Ada
 
     @staticmethod
-    def progress(current, natural, new_line=False):
-        """Prints a progress message. Activated at default verbosity level.  If
-        new_line is True, then terminate the line with a '\n' character.
+    def progress(current, total, new_line=False):
+        """Prints a progress message.
 
-        Defaults to False.
+        Activated at default verbosity level. If :param:`new_line` is
+        :command:`True`, then terminate the line with a :kbd:`\n` character.
+
+        :param int current: The current value.
+        :param int total: The total value.
+        :param boolean new_line: Whether to terminate with a new line.
 
         """
 
@@ -180,7 +228,7 @@ class Project(object):
     def __init__(self):
         """Instance constructor."""
 
-        raise Error('GNAThub.Project must not be instantiated')
+        raise Error('GNAThub.Project must not be instantiated manually')
 
     @staticmethod
     def name():
@@ -224,10 +272,11 @@ class Project(object):
 
     @staticmethod
     def source_file(name):
-        """Create a new file. This will automatically try to solve Name to an
-        absolute path if it currently is a base name.  If Name is an absolute
-        path, it is returned as is. Otherwise, only the base name is used (ie.
-        we remove any directory information from Name).
+        """Creates a new file. This will automatically try to solve
+        :param:`name` to an absolute path if it currently is a base name. If
+        :param:`name` is an absolute path, it is returned as is. Otherwise,
+        only the base name is used (i.e. we remove any directory information
+        from :param:`name`).
 
         :returns: str
 
@@ -262,7 +311,7 @@ class Tool(object):
     """A Tool object, mapping to a Tool entry in the database."""
 
     def __init__(self, name):
-        """Return the tool of the given name, creating it if necessary.
+        """Returns the tool of the given name, creating it if necessary.
 
         :param str name: The name of the tool to create or retrieve.
 
@@ -285,7 +334,7 @@ class Category(object):
     """A Category object, representing a category in the database"""
 
     def __init__(self, label, on_side=False):
-        """Return the category of the given label and property, creating it
+        """Returns the category of the given label and property, creating it
         if necessary.
 
         :param str label: The label of the category.
@@ -299,7 +348,7 @@ class Category(object):
 
     @staticmethod
     def list():
-        """Return all Categories present in the database.
+        """Returns all Categories present in the database.
 
         :returns: list[GNAThub.Category]
 
@@ -312,14 +361,14 @@ class Rule(object):
     """A Rule object, representing a rule in the database"""
 
     def __init__(self, name, identifier, kind, tool):
-        """Return the rule of the given properties, creating it if necessary.
+        """Returns the rule of the given properties, creating it if necessary.
 
         :param str name: The name of the rule.
         :param str identifier: An unique identifier for this rule (typically,
             the same as name).
-        :param int kind: RULE_KIND to indicate a rule where messages are
-             given without a numeric value, or METRIC_KIND to indicate a
-             rule where messages correspond to a numeric value.
+        :param int kind: RULE_KIND to indicate a rule where messages are given
+            without a numeric value, or METRIC_KIND to indicate a rule where
+            messages correspond to a numeric value.
         :param GNAThub.Tool tool: The tool that defines this rule.
 
         """
@@ -341,9 +390,9 @@ class Message(object):
     """A Message object, representing one message in the database"""
 
     def __init__(self, rule, rule_id, message, category):
-        """Return the message matching the given properties.
+        """Returns the message matching the given properties.
 
-        :param GNAThub.Rule rule: the rule to which this message belongs.
+        :param GNAThub.Rule rule: The rule to which this message belongs.
         :param str message: The data to associate to the message:
             this should be a numeric value if the rule is of METRIC_KIND.
         :param GNAThub.Category category: The category to which this message
@@ -355,7 +404,7 @@ class Message(object):
 
     @staticmethod
     def list():
-        """Return all messages present in the database.
+        """Returns all messages present in the database.
 
         :returns: list[GNAThub.Message]
 
@@ -366,12 +415,14 @@ class Message(object):
 
 class Resource(object):
     """A Resource object, corresponding to a resource in the database.
-       A resource represents either a file, a directory, or a project.
+
+    A resource represents either a file, a directory, or a project.
+
     """
 
     def __init__(self, name, kind):
-        """Return a Resource for the given parameters, creating it if
-            necessary.
+        """Returns a Resource for the given parameters, creating it if
+        necessary.
 
         :param str name: The name of the resource. For files and directories,
             this should be a normalized full path: the full path with all
@@ -385,13 +436,12 @@ class Resource(object):
         pass    # Implemented in Ada
 
     def add_message(self, message, line=-1, col_begin=1, col_end=None):
-        """Add a message to the given resource.
+        """Adds a message to the given resource.
 
         :param GNAThub.Message message: The Message to add.
         :param int line: The line to associate the message to, if the
-            resource is a file.
-            Use -1 to indicate a message which should be associated to the
-            resource but not to a specific line.
+            resource is a file. Use -1 to indicate a message which should be
+            associated to the resource but not to a specific line.
         :param int col_begin: The begin column of the message.
         :param int col_end: The end column of the message. None means that
             the end column should be the same as the begin column.
@@ -401,7 +451,7 @@ class Resource(object):
         pass    # Implemented in Ada
 
     def list_messages(self):
-        """List all messages associated with this resource.
+        """Lists all messages associated with this resource.
 
         :returns: list[GNAThub.Message]
 
@@ -411,10 +461,10 @@ class Resource(object):
 
     @staticmethod
     def get(name):
-        """Return the Resource with the given name, not creating it if it
-            doesn't exist.
+        """Returns the Resource with the given name, not creating it if it
+        doesn't exist.
 
-        :param str name: the name of the resource to get.
+        :param str name: The name of the resource to get.
         :returns: GNAThub.Resource
 
         """
@@ -423,7 +473,7 @@ class Resource(object):
 
     @staticmethod
     def list():
-        """List all resources present in the database.
+        """Lists all resources present in the database.
 
         :returns: list[GNAThub.Resource]
 
@@ -474,14 +524,15 @@ class Plugin:
 
     A plugin is a Python class that describe how to configure, run and collect
     data output by an external tool.
+
     Each plugin should be dedicated to only one tool.
 
     To implement a now plugin, simply creates a new Python class inheriting
-    from this (GNAThub.Plugin) abstract base class.
+    from this (:class:`GNAThub.Plugin`) abstract base class.
 
     All plugins are collected using the inheritance mechanism, i.e. the GNAThub
-    driver will automatically find all classes implementing the GNAThub.Plugin
-    interface. No manual registration needed.
+    driver will automatically find all classes implementing the
+    :class:`GNAThub.Plugin` interface. No manual registration needed.
 
     """
 
@@ -511,22 +562,34 @@ class Plugin:
         pass
 
     def info(self, message):
-        """Displays an informative message, prefixed with the plug-in name."""
+        """Displays an informative message, prefixed with the plug-in name.
+
+        :param str message: The message to display.
+
+        """
 
         Console.info(message, prefix=self.name)
 
     def warn(self, message):
-        """Displays a warning message, prefixed with the plug-in name."""
+        """Displays a warning message, prefixed with the plug-in name.
+
+        :param str message: The message to display.
+
+        """
 
         Console.warn(message, prefix=self.name)
 
     def error(self, message):
-        """Displays an error message, prefixed with the plug-in name."""
+        """Displays an error message, prefixed with the plug-in name.
+
+        :param str message: The message to display.
+
+        """
 
         Console.error(message, prefix=self.name)
 
     def setup(self):
-        """This method is called prior to a call to Plugin.execute.
+        """This method is called prior to a call to :meth:`Plugin.execute`.
 
         This is where environment setup should be done to ensure a correct
         execution of the tool.
@@ -539,15 +602,15 @@ class Plugin:
     def execute(self):
         """Abstract method. Need implementation.
 
-        Executes the external tool. This method is called after setup() and
-        before teardown().
+        Executes the external tool. This method is called after :meth:`setup`
+        and before :meth:`teardown`.
 
         """
 
         pass
 
     def teardown(self):
-        """This method is called after a call to Plugin.execute.
+        """This method is called after a call to :meth:`Plugin.execute`.
 
         This is where environment cleanup should be done to ensure a consistent
         state for a future execution.
@@ -561,9 +624,12 @@ class Plugin:
         """Returns the execution status for the tool.
 
         Can be one of the following:
-            GNAThub.NOT_EXECUTED: plugin did not run yet
-            GNAThub.EXEC_FAILURE: an error occurred during the plugin execution
-            GNAThub.EXEC_SUCCESS: the plugin execution completed successfully
+
+        * :command:`GNAThub.NOT_EXECUTED`: plugin did not run yet
+        * :command:`GNAThub.EXEC_FAILURE`: an error occurred during the plugin
+          execution
+        * :command:`GNAThub.EXEC_SUCCESS`: the plugin execution completed
+          successfully
 
         :returns: int
 
@@ -576,9 +642,12 @@ class Plugin:
         """Sets the execution status for the tool.
 
         Can be one of the following:
-            GNAThub.NOT_EXECUTED: plugin did not run yet
-            GNAThub.EXEC_FAILURE: an error occurred during the plugin execution
-            GNAThub.EXEC_SUCCESS: the plugin execution completed successfully
+
+        * :command:`GNAThub.NOT_EXECUTED`: plugin did not run yet
+        * :command:`GNAThub.EXEC_FAILURE`: an error occurred during the plugin
+          execution
+        * :command:`GNAThub.EXEC_SUCCESS`: the plugin execution completed
+          successfully
 
         :param int status: The new execution status.
 
