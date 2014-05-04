@@ -210,7 +210,7 @@ class Console(object):
     def progress(current, total, new_line=False):
         """Prints a progress message.
 
-        Activated at default verbosity level. If :param:`new_line` is
+        Activated at default verbosity level. If ``new_line`` is
         :command:`True`, then terminate the line with a :kbd:`\n` character.
 
         :param int current: The current value.
@@ -273,10 +273,10 @@ class Project(object):
     @staticmethod
     def source_file(name):
         """Creates a new file. This will automatically try to solve
-        :param:`name` to an absolute path if it currently is a base name. If
-        :param:`name` is an absolute path, it is returned as is. Otherwise,
+        ``name`` to an absolute path if it currently is a base name. If
+        ``name`` is an absolute path, it is returned as is. Otherwise,
         only the base name is used (i.e. we remove any directory information
-        from :param:`name`).
+        from ``name``).
 
         :returns: str
 

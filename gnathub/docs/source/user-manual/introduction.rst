@@ -55,7 +55,7 @@ downloaded archive and install it on your system (usually at some location
 such as :file:`/usr/local/gnatpro`).
 
 The |SonarQube| plug-in is located in the directory
- :file:`<install_prefix>\share\sonar`. This needs to be installed manually.
+:file:`<install_prefix>/share/sonar`. This needs to be installed manually.
 
 Setting your environment
 ------------------------
