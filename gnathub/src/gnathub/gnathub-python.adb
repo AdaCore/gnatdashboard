@@ -246,14 +246,18 @@ package body GNAThub.Python is
 
       Repository.Register_Command
         (Command       => Project_Property_As_String_Method,
-         Params        => (1 .. 1 => Param ("property")),
+         Params        =>
+           (Param ("property"),
+            Param ("package", Optional => True)),
          Handler       => Project_Class_Properties_Handler'Access,
          Class         => Project_Class,
          Static_Method => True);
 
       Repository.Register_Command
         (Command       => Project_Property_As_List_Method,
-         Params        => (1 .. 1 => Param ("property")),
+         Params        =>
+           (Param ("property"),
+            Param ("package", Optional => True)),
          Handler       => Project_Class_Properties_Handler'Access,
          Class         => Project_Class,
          Static_Method => True);
@@ -493,9 +497,13 @@ package body GNAThub.Python is
    is
       use GNAThub.Project;
 
-      Property : constant String    := Data.Nth_Arg (1);
-      Value    : constant String    := Property_As_String (Property);
-      List     : String_List_Access := Property_As_List (Property);
+      Property     : constant String    := Data.Nth_Arg (1);
+      Package_Name : constant String    :=
+                       Data.Nth_Arg (2, GNATdashboard_Package);
+      Value        : constant String    :=
+                       Property_As_String (Property, Package_Name);
+      List         : String_List_Access :=
+                       Property_As_List (Property, Package_Name);
 
    begin
       if Command = Project_Property_As_String_Method then

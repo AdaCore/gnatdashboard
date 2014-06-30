@@ -1,9 +1,7 @@
 """Check that all files have been created."""
 
-import os
-
 from unittest import TestCase
-from support import GNAThub, Project, Script
+from support import GNAThub, Project
 
 
 class TestSimpleExample(TestCase):

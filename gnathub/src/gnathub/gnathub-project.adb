@@ -32,10 +32,6 @@ with Orm;                                 use Orm;
 package body GNAThub.Project is
    Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
 
-   Package_Name : constant String := "dashboard";
-   --  Package_Name MUST be in lower case to avoid Prj error "cannot
-   --  register a package with a non unique name"
-
    Project_Tree : GNATCOLL.Projects.Project_Tree;
    Project_Env  : Project_Environment_Access;
    --  GNATCOLL.Projects specificities
@@ -124,7 +120,9 @@ package body GNAThub.Project is
    -- Property_As_String --
    ------------------------
 
-   function Property_As_String (Property : String) return String is
+   function Property_As_String
+     (Property     : String;
+      Package_Name : String := GNATdashboard_Package) return String is
    begin
       return Project_Tree.Root_Project.Attribute_Value
                (Attribute_Pkg_String'(Build (Package_Name, Property)),
@@ -135,7 +133,10 @@ package body GNAThub.Project is
    -- Property_As_List --
    ----------------------
 
-   function Property_As_List (Property : String) return String_List_Access is
+   function Property_As_List
+     (Property     : String;
+      Package_Name : String := GNATdashboard_Package) return String_List_Access
+   is
    begin
       return Project_Tree.Root_Project.Attribute_Value
                (Attribute_Pkg_List'(Build (Package_Name, Property)));
@@ -153,7 +154,7 @@ package body GNAThub.Project is
          Ret : constant String :=
                  Register_New_Attribute
                    (Name    => Key,
-                    Pkg     => Package_Name,
+                    Pkg     => GNATdashboard_Package,
                     Is_List => Is_List);
       begin
          if Ret /= "" then

@@ -1,0 +1,20 @@
+=============================
+GNAThub 1.0 NEW FEATURES LIST
+=============================
+
+Copyright (C) 2014, AdaCore
+
+This file contains a list of new features introduced in GNAThub. A full
+description of all GNAThub features can be found in the GNAThub documentation.
+
+An ISO date (YYYY-MM-DD) appears in parentheses after the description line.
+This date shows the implementation date of the feature.
+
+New features in 1.0
+-------------------
+
+NF-10-N623-022 Add Python API support for any project attribute (2014-06-30)
+
+  It is now possible to call GNAThub.Project.property_as_list and
+  GNAThub.Project.property_as_string with an optional "package" argument to
+  read any attribute defined in the project file (eg. "Main").

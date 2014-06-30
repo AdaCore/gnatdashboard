@@ -278,6 +278,7 @@ class Project(object):
         only the base name is used (i.e. we remove any directory information
         from ``name``).
 
+        :param str name: The source file basename.
         :returns: str
 
         """
@@ -285,10 +286,12 @@ class Project(object):
         pass    # Implemented in Ada
 
     @staticmethod
-    def property_as_string(key):
+    def property_as_string(key, package=None):
         """Returns the string representation of the project property from the
         package GNATdashboard.
 
+        :param str key: The property name.
+        :param str package: The package name. Default to GNATdashboard package.
         :returns: str
 
         """
@@ -296,10 +299,12 @@ class Project(object):
         pass    # Implemented in Ada
 
     @staticmethod
-    def property_as_list(key):
+    def property_as_list(key, package=None):
         """Returns the list of string representation of the project property
         from the package GNATdashboard.
 
+        :param str key: The property name.
+        :param str package: The package name. Default to GNATdashboard package.
         :returns: list[str]
 
         """

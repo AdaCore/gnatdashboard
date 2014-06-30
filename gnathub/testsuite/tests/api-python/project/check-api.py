@@ -69,9 +69,13 @@ local_repo = GNAThub.Project.property_as_string('Local_Repository')
 assert relpath(local_repo) == 'local_repo', \
     '$s: unexpected local repository, expected "local_repo"' % local_repo
 
+main = GNAThub.Project.property_as_string('Main', package='')
+assert main == 'simple.adb'
+
 plugins_off = GNAThub.Project.property_as_list('Plugins_Off')
 assert 'gnatcheck' in plugins_off, 'missing "gnatcheck" plugin in Plugins_Off'
-assert 'gnatmetric' in plugins_off, 'missing "gnatmetric" plugin in Plugins_Off'
+assert 'gnatmetric' in plugins_off, \
+    'missing "gnatmetric" plugin in Plugins_Off'
 assert 'gcov' in plugins_off, 'missing "gcov" plugin in Plugins_Off'
 assert 'codepeer' in plugins_off, 'missing "codepeer" plugin in Plugins_Off'
 assert 'gnatprove' in plugins_off, 'missing "gnatprove" plugin in Plugins_Off'

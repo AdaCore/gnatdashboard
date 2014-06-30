@@ -24,6 +24,10 @@ with GNATCOLL.Projects; use GNATCOLL.Projects;
 
 package GNAThub.Project is
 
+   GNATdashboard_Package : constant String;
+   --  GNATdashboard_Package MUST be in lower case to avoid Prj error "cannot
+   --  register a package with a non unique name"
+
    Project_Error : exception;
    --  Custom error for this module
 
@@ -75,17 +79,26 @@ package GNAThub.Project is
      with Pre => Initialized and then Loaded;
    --  Return the object directory file
 
-   function Property_As_String (Property : String) return String
+   function Property_As_String
+     (Property     : String;
+      Package_Name : String := GNATdashboard_Package) return String
      with Pre => Initialized and then Loaded;
    --  Return the given property as a string. Return the empty string if the
    --  property does not exist
 
-   function Property_As_List (Property : String) return String_List_Access
+   function Property_As_List
+     (Property     : String;
+      Package_Name : String := GNATdashboard_Package) return String_List_Access
      with Pre => Initialized and then Loaded;
    --  Return the given property as a list. Return an empty list if the
    --  property does not exist
 
    procedure Finalize;
    --  Free memory used by this package
+
+private
+
+   GNATdashboard_Package : constant String := "dashboard";
+   --  GNATdashboard_Package value
 
 end GNAThub.Project;
