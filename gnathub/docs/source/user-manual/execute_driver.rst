@@ -91,6 +91,38 @@ Encoding to use to read files from this project. This is used by the
 (:command:`UTF-8`) and forward this value to |SonarQube| (which takes care
 of reading and indexing all source files).
 
+Example
+^^^^^^^
+
+An example is worth a thousand words::
+
+  project My_Project is
+
+     [...]
+
+     package Dashboard is
+        for Project_Name use "My_Custom_Project_Name";
+        --  Translate to SonarRunner property: sonar.projectName
+
+        for Project_Key use "Custom_Key_For_SonarQube";
+        --  Translate to SonarRunner property: sonar.projectKey
+
+        for Project_Version use "1.9.0";
+        --  Translate to SonarRunner property: sonar.projectVersion
+
+        for Source_Encoding use "UTF-8";
+        --  Translate to SonarRunner property: sonar.sourceEncoding
+
+        for Plugin_Off use ("CodePeer", "GNATprove");
+        --  Disable CodePeer and GNATprove plug-ins
+
+        for Local_Repository use ("extra/gnathdashboard_plugins");
+        --  Declare a local repository where GNAThub will look for additional
+        --  plug-ins.
+     end Dashboard;
+
+  end project
+
 |GNAThub|'s core plug-ins
 -------------------------
 
