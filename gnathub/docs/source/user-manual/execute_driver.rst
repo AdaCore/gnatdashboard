@@ -113,7 +113,7 @@ An example is worth a thousand words::
         for Source_Encoding use "UTF-8";
         --  Translate to SonarRunner property: sonar.sourceEncoding
 
-        for Plugin_Off use ("CodePeer", "GNATprove");
+        for Plugins_Off use ("CodePeer", "GNATprove");
         --  Disable CodePeer and GNATprove plug-ins
 
         for Local_Repository use ("extra/gnathdashboard_plugins");
