@@ -49,6 +49,10 @@ assert relpath(source) == expected, '%s: unexpected source file' % source
 assert os.path.isfile(source), '%s: no such file' % source
 
 # GNAThub.Project.property_as_string
+project_name = GNAThub.Project.property_as_string('Project_Name')
+assert project_name == 'My_Disabled_Project', \
+    '%s: unexpected property value for Project_Name' % project_name
+
 project_key = GNAThub.Project.property_as_string('Project_Key')
 assert project_key == 'Disabled :: Core', \
     '%s: unexpected property value for Project_Key' % project_key

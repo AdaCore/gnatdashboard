@@ -19,6 +19,7 @@ project Disabled is
    end Check;
 
    package Dashboard is
+      for Project_Name use "My_Disabled_Project";
       for Project_Key use "Disabled :: Core";
       for Project_Version use "1.2.1b";
       for Source_Encoding use "My_Custom_Encoding";
