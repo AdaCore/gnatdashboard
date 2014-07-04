@@ -1,0 +1,14 @@
+===============================
+GNAThub 0.9 KNOWN PROBLEMS LIST
+===============================
+
+Copyright (C) 2014, AdaCore
+
+KP-09-N704-008 GNAThub crashes with switch -X
+
+  Problem:    GNAThub raises a CONSTRAINT_ERROR when the -X switch is used
+              because of a wrong module initialization order.
+
+  Status:     Fixed in GNAThub 1.0.0 on 2014-07-04
+
+  Workaround: None

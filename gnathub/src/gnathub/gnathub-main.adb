@@ -174,16 +174,16 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       --  Load the logging module
       GNAThub.Initialize_Logging;
 
-      --  Configure GNAThub (through the command line). In particular, set the
-      --  output verbosity (with the switches --quiet or --verbose) after the
-      --  logging module initialization.
-      GNAThub.Configuration.Initialize;
-
       --  Configure the Python VM that will run the plug-ins and user scripts
       GNAThub.Python.Initialize;
 
       --  Load the user's project file and store the configuration in memory
       GNAThub.Project.Initialize;
+
+      --  Configure GNAThub (through the command line). In particular, set the
+      --  output verbosity (with the switches --quiet or --verbose) after the
+      --  logging module initialization.
+      GNAThub.Configuration.Initialize;
    end Initialize_Application;
 
    --------------------------
