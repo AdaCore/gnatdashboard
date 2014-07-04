@@ -116,7 +116,7 @@ An example is worth a thousand words::
         for Plugins_Off use ("CodePeer", "GNATprove");
         --  Disable CodePeer and GNATprove plug-ins
 
-        for Local_Repository use ("extra/gnathdashboard_plugins");
+        for Local_Repository use "extra/gnathdashboard_plugins";
         --  Declare a local repository where GNAThub will look for additional
         --  plug-ins.
      end Dashboard;
