@@ -394,7 +394,7 @@ class Rule(object):
 class Message(object):
     """A Message object, representing one message in the database"""
 
-    def __init__(self, rule, rule_id, message, category):
+    def __init__(self, rule, message, category):
         """Returns the message matching the given properties.
 
         :param GNAThub.Rule rule: The rule to which this message belongs.
