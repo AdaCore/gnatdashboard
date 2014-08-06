@@ -698,6 +698,7 @@ class Run(object):
 
         try:
             with open(self.output(), 'w') as output:
+                output.write(self.cmdline_image() + "\n")
                 self.internal = Popen(argv, env=env, stdin=None, stdout=output,
                                       stderr=STDOUT, cwd=workdir)
 
