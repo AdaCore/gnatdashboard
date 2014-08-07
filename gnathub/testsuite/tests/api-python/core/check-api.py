@@ -62,4 +62,5 @@ assert os.path.isfile(process.output()), '%s: no such file' % process.output()
 
 with open(process.output(), 'r') as logs:
     content = logs.read().strip()
-    assert content == TO_BE_ECHOED, 'unexpected process output: ' + content
+    assert content == "%s\necho '%s'" % (
+        TO_BE_ECHOED, TO_BE_ECHOED), 'unexpected process output: ' + content
