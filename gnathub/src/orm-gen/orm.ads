@@ -44,7 +44,7 @@ package Orm is
    No_Category : constant Category;
 
    type Entity is new Orm_Element with null record;
-   type Entity_DDR is new Detached_Data (6) with private;
+   type Entity_DDR is new Detached_Data (5) with private;
    type Detached_Entity is  --  Get() returns a Entity_DDR
    new Sessions.Detached_Element with private;
    type Detached_Entity_Access is access all Detached_Entity'Class;
@@ -58,22 +58,6 @@ package Orm is
    type Detached_Entity_Message_Access is access all Detached_Entity_Message'Class;
    No_Detached_Entity_Message : constant Detached_Entity_Message;
    No_Entity_Message : constant Entity_Message;
-
-   type Line is new Orm_Element with null record;
-   type Line_DDR is new Detached_Data (4) with private;
-   type Detached_Line is  --  Get() returns a Line_DDR
-   new Sessions.Detached_Element with private;
-   type Detached_Line_Access is access all Detached_Line'Class;
-   No_Detached_Line : constant Detached_Line;
-   No_Line : constant Line;
-
-   type Line_Message is new Orm_Element with null record;
-   type Line_Message_DDR is new Detached_Data (7) with private;
-   type Detached_Line_Message is  --  Get() returns a Line_Message_DDR
-   new Sessions.Detached_Element with private;
-   type Detached_Line_Message_Access is access all Detached_Line_Message'Class;
-   No_Detached_Line_Message : constant Detached_Line_Message;
-   No_Line_Message : constant Line_Message;
 
    type Message is new Orm_Element with null record;
    type Message_DDR is new Detached_Data (6) with private;
@@ -100,7 +84,7 @@ package Orm is
    No_Resource : constant Resource;
 
    type Resource_Message is new Orm_Element with null record;
-   type Resource_Message_DDR is new Detached_Data (5) with private;
+   type Resource_Message_DDR is new Detached_Data (8) with private;
    type Detached_Resource_Message is  --  Get() returns a Resource_Message_DDR
    new Sessions.Detached_Element with private;
    type Detached_Resource_Message_Access is access all Detached_Resource_Message'Class;
@@ -197,7 +181,7 @@ package Orm is
    function Kind (Self : Rule) return Integer;
    function Kind (Self : Detached_Rule) return Integer;
    procedure Set_Kind (Self : Detached_Rule; Value : Integer);
-   --  Wether it is a rule or a metric. 0 for rule, 1 for metric
+   --  Whether it is a rule or a metric. 0 for rule, 1 for metric
 
    function Name (Self : Rule) return String;
    function Name (Self : Detached_Rule) return String;
@@ -235,9 +219,24 @@ package Orm is
    --  Compares two elements using only the primary keys. All other fields are
    --  ignored
 
+   function Col_Begin (Self : Resource_Message) return Integer;
+   function Col_Begin (Self : Detached_Resource_Message) return Integer;
+   procedure Set_Col_Begin (Self : Detached_Resource_Message; Value : Integer);
+   --  Lines' column begin
+
+   function Col_End (Self : Resource_Message) return Integer;
+   function Col_End (Self : Detached_Resource_Message) return Integer;
+   procedure Set_Col_End (Self : Detached_Resource_Message; Value : Integer);
+   --  Lines' column end
+
    function Id (Self : Resource_Message) return Integer;
    function Id (Self : Detached_Resource_Message) return Integer;
    --  Auto-generated id
+
+   function Line (Self : Resource_Message) return Integer;
+   function Line (Self : Detached_Resource_Message) return Integer;
+   procedure Set_Line (Self : Detached_Resource_Message; Value : Integer);
+   --  Corresponding line for message - zero means not associated to a line
 
    function Message_Id (Self : Resource_Message) return Integer;
    function Message_Id (Self : Detached_Resource_Message) return Integer;
@@ -249,7 +248,7 @@ package Orm is
    procedure Set_Message_Id
      (Self  : Detached_Resource_Message;
       Value : Detached_Message'Class);
-   --  Resources' associated message
+   --  the associated message
 
    function Resource_Id (Self : Resource_Message) return Integer;
    function Resource_Id (Self : Detached_Resource_Message) return Integer;
@@ -335,7 +334,7 @@ package Orm is
    function Col_Begin (Self : Entity) return Integer;
    function Col_Begin (Self : Detached_Entity) return Integer;
    procedure Set_Col_Begin (Self : Detached_Entity; Value : Integer);
-   --  Entities' colunm begin
+   --  Entities' column begin
 
    function Col_End (Self : Entity) return Integer;
    function Col_End (Self : Detached_Entity) return Integer;
@@ -346,14 +345,9 @@ package Orm is
    function Id (Self : Detached_Entity) return Integer;
    --  Auto-generated id
 
-   function Line_Begin_Id (Self : Entity) return Integer;
-   function Line_Begin_Id (Self : Detached_Entity) return Integer;
-   procedure Set_Line_Begin_Id (Self : Detached_Entity; Value : Integer);
-   function Line_Begin_Id (Self : Entity) return Line'Class;
-   function Line_Begin_Id (Self : Detached_Entity) return Detached_Line'Class;
-   procedure Set_Line_Begin_Id
-     (Self  : Detached_Entity;
-      Value : Detached_Line'Class);
+   function Line (Self : Entity) return Integer;
+   function Line (Self : Detached_Entity) return Integer;
+   procedure Set_Line (Self : Detached_Entity; Value : Integer);
    --  Entities' line begin
 
    function Name (Self : Entity) return String;
@@ -409,67 +403,6 @@ package Orm is
    --  not, the returned value will be a null element (test with Is_Null)
 
    function New_Category return Detached_Category'Class;
-
-   ------------------------------
-   -- Elements: Lines_Messages --
-   ------------------------------
-
-   function "=" (Op1 : Line_Message; Op2 : Line_Message) return Boolean;
-   function "="
-     (Op1 : Detached_Line_Message;
-      Op2 : Detached_Line_Message)
-     return Boolean;
-   --  Compares two elements using only the primary keys. All other fields are
-   --  ignored
-
-   function Col_Begin (Self : Line_Message) return Integer;
-   function Col_Begin (Self : Detached_Line_Message) return Integer;
-   procedure Set_Col_Begin (Self : Detached_Line_Message; Value : Integer);
-   --  Lines' column begin
-
-   function Col_End (Self : Line_Message) return Integer;
-   function Col_End (Self : Detached_Line_Message) return Integer;
-   procedure Set_Col_End (Self : Detached_Line_Message; Value : Integer);
-   --  Lines' column end
-
-   function Id (Self : Line_Message) return Integer;
-   function Id (Self : Detached_Line_Message) return Integer;
-   --  Auto-generated id
-
-   function Line_Id (Self : Line_Message) return Integer;
-   function Line_Id (Self : Detached_Line_Message) return Integer;
-   procedure Set_Line_Id (Self : Detached_Line_Message; Value : Integer);
-   function Line_Id (Self : Line_Message) return Line'Class;
-   function Line_Id (Self : Detached_Line_Message) return Detached_Line'Class;
-   procedure Set_Line_Id
-     (Self  : Detached_Line_Message;
-      Value : Detached_Line'Class);
-   --  Corresponding line for message
-
-   function Message_Id (Self : Line_Message) return Integer;
-   function Message_Id (Self : Detached_Line_Message) return Integer;
-   procedure Set_Message_Id (Self : Detached_Line_Message; Value : Integer);
-   function Message_Id (Self : Line_Message) return Message'Class;
-   function Message_Id
-     (Self : Detached_Line_Message)
-     return Detached_Message'Class;
-   procedure Set_Message_Id
-     (Self  : Detached_Line_Message;
-      Value : Detached_Message'Class);
-   --  Lines' associated message
-
-   function Detach
-     (Self : Line_Message'Class)
-     return Detached_Line_Message'Class;
-
-   function From_Cache
-     (Session : Session_Type;
-      Id      : Integer)
-     return Detached_Line_Message'Class;
-   --  Check whether there is already an element with this primary key. If
-   --  not, the returned value will be a null element (test with Is_Null)
-
-   function New_Line_Message return Detached_Line_Message'Class;
 
    ---------------------------------
    -- Elements: Entities_Messages --
@@ -553,46 +486,6 @@ package Orm is
 
    function New_Tool return Detached_Tool'Class;
 
-   ---------------------
-   -- Elements: Lines --
-   ---------------------
-
-   function "=" (Op1 : Line; Op2 : Line) return Boolean;
-   function "=" (Op1 : Detached_Line; Op2 : Detached_Line) return Boolean;
-   --  Compares two elements using only the primary keys. All other fields are
-   --  ignored
-
-   function Get_Line (Self : Line) return Integer;
-   function Get_Line (Self : Detached_Line) return Integer;
-   --  Line number
-
-   function Id (Self : Line) return Integer;
-   function Id (Self : Detached_Line) return Integer;
-   --  Auto-generated id
-
-   procedure Set_Line (Self : Detached_Line; Value : Integer);
-
-   function Resource_Id (Self : Line) return Integer;
-   function Resource_Id (Self : Detached_Line) return Integer;
-   procedure Set_Resource_Id (Self : Detached_Line; Value : Integer);
-   function Resource_Id (Self : Line) return Resource'Class;
-   function Resource_Id (Self : Detached_Line) return Detached_Resource'Class;
-   procedure Set_Resource_Id
-     (Self  : Detached_Line;
-      Value : Detached_Resource'Class);
-   --  Lines' resource file
-
-   function Detach (Self : Line'Class) return Detached_Line'Class;
-
-   function From_Cache
-     (Session : Session_Type;
-      Id      : Integer)
-     return Detached_Line'Class;
-   --  Check whether there is already an element with this primary key. If
-   --  not, the returned value will be a null element (test with Is_Null)
-
-   function New_Line return Detached_Line'Class;
-
    -------------------------
    -- Elements: Resources --
    -------------------------
@@ -612,17 +505,17 @@ package Orm is
    function Kind (Self : Resource) return Integer;
    function Kind (Self : Detached_Resource) return Integer;
    procedure Set_Kind (Self : Detached_Resource; Value : Integer);
-   --  Resources' kind: project, directory or file
+   --  Resource's kind: project, directory or file
 
    function Name (Self : Resource) return String;
    function Name (Self : Detached_Resource) return String;
    procedure Set_Name (Self : Detached_Resource; Value : String);
-   --  Reources' name
+   --  Resource's name
 
    function Timestamp (Self : Resource) return Ada.Calendar.Time;
    function Timestamp (Self : Detached_Resource) return Ada.Calendar.Time;
    procedure Set_Timestamp (Self : Detached_Resource; Value : Ada.Calendar.Time);
-   --  Resources' timestamp
+   --  Resource's timestamp
 
    function Detach (Self : Resource'Class) return Detached_Resource'Class;
 
@@ -656,22 +549,6 @@ package Orm is
       Pk_Only   : Boolean := False);
 
    procedure Internal_Query_Entities_Messages
-     (Fields    : in out SQL_Field_List;
-      From      : out SQL_Table_List;
-      Criteria  : in out Sql_Criteria;
-      Depth     : Natural;
-      Follow_LJ : Boolean;
-      Pk_Only   : Boolean := False);
-
-   procedure Internal_Query_Lines
-     (Fields    : in out SQL_Field_List;
-      From      : out SQL_Table_List;
-      Criteria  : in out Sql_Criteria;
-      Depth     : Natural;
-      Follow_LJ : Boolean;
-      Pk_Only   : Boolean := False);
-
-   procedure Internal_Query_Lines_Messages
      (Fields    : in out SQL_Field_List;
       From      : out SQL_Table_List;
       Criteria  : in out Sql_Criteria;
@@ -772,34 +649,6 @@ package Orm is
    Empty_Entity_Message_List : constant Entity_Message_List := I_Entities_Messages.Empty_List;
    Empty_Direct_Entity_Message_List : constant Direct_Entity_Message_List :=
    I_Entities_Messages.Empty_Direct_List;
-
-   type I_Lines_Managers is abstract new Manager with null record;
-   package I_Lines is new Generic_Managers
-     (I_Lines_Managers, Line, Related_Depth, DBA.Lines,
-      Internal_Query_Lines);
-   subtype Lines_Managers is I_Lines.Manager;
-   subtype Lines_Stmt is I_Lines.ORM_Prepared_Statement;
-
-   All_Lines : constant Lines_Managers := I_Lines.All_Managers;
-   subtype Line_List is I_Lines.List;
-   subtype Direct_Line_List is I_Lines.Direct_List;
-   Empty_Line_List : constant Line_List := I_Lines.Empty_List;
-   Empty_Direct_Line_List : constant Direct_Line_List :=
-   I_Lines.Empty_Direct_List;
-
-   type I_Lines_Messages_Managers is abstract new Manager with null record;
-   package I_Lines_Messages is new Generic_Managers
-     (I_Lines_Messages_Managers, Line_Message, Related_Depth, DBA.Lines_Messages,
-      Internal_Query_Lines_Messages);
-   subtype Lines_Messages_Managers is I_Lines_Messages.Manager;
-   subtype Lines_Messages_Stmt is I_Lines_Messages.ORM_Prepared_Statement;
-
-   All_Lines_Messages : constant Lines_Messages_Managers := I_Lines_Messages.All_Managers;
-   subtype Line_Message_List is I_Lines_Messages.List;
-   subtype Direct_Line_Message_List is I_Lines_Messages.Direct_List;
-   Empty_Line_Message_List : constant Line_Message_List := I_Lines_Messages.Empty_List;
-   Empty_Direct_Line_Message_List : constant Direct_Line_Message_List :=
-   I_Lines_Messages.Empty_Direct_List;
 
    type I_Messages_Managers is abstract new Manager with null record;
    package I_Messages is new Generic_Managers
@@ -938,7 +787,10 @@ package Orm is
      (Self        : Resources_Messages_Managers'Class;
       Id          : Integer := -1;
       Message_Id  : Integer := -1;
-      Resource_Id : Integer := -1)
+      Resource_Id : Integer := -1;
+      Line        : Integer := -1;
+      Col_Begin   : Integer := -1;
+      Col_End     : Integer := -1)
      return Resources_Messages_Managers;
 
    function Get_Resource_Message
@@ -951,6 +803,16 @@ package Orm is
    -----------------------
    -- Manager: Messages --
    -----------------------
+
+   function Get_Message
+     (Self : Message'Class)
+     return Resources_Messages_Managers;
+   function Get_Message
+     (Self : Detached_Message'Class)
+     return Resources_Messages_Managers;
+   function Get_Message
+     (Self : I_Messages_Managers'Class)
+     return Resources_Messages_Managers;
 
    function Filter
      (Self        : Messages_Managers'Class;
@@ -977,23 +839,6 @@ package Orm is
      (Self : I_Messages_Managers'Class)
      return Entities_Messages_Managers;
 
-   function Message_Lines
-     (Self : Message'Class)
-     return Resources_Messages_Managers;
-   function Message_Lines
-     (Self : Detached_Message'Class)
-     return Resources_Messages_Managers;
-   function Message_Lines
-     (Self : I_Messages_Managers'Class)
-     return Resources_Messages_Managers;
-   function Message_Lines (Self : Message'Class) return Lines_Messages_Managers;
-   function Message_Lines
-     (Self : Detached_Message'Class)
-     return Lines_Messages_Managers;
-   function Message_Lines
-     (Self : I_Messages_Managers'Class)
-     return Lines_Messages_Managers;
-
    -----------------------
    -- Manager: Entities --
    -----------------------
@@ -1009,12 +854,12 @@ package Orm is
      return Entities_Messages_Managers;
 
    function Filter
-     (Self          : Entities_Managers'Class;
-      Id            : Integer := -1;
-      Line_Begin_Id : Integer := -1;
-      Name          : String := No_Update;
-      Col_Begin     : Integer := -1;
-      Col_End       : Integer := -1)
+     (Self      : Entities_Managers'Class;
+      Id        : Integer := -1;
+      Name      : String := No_Update;
+      Line      : Integer := -1;
+      Col_Begin : Integer := -1;
+      Col_End   : Integer := -1)
      return Entities_Managers;
 
    function Get_Entity
@@ -1049,26 +894,6 @@ package Orm is
       Depth            : Related_Depth := 0;
       Follow_Left_Join : Boolean := False)
      return Detached_Category'Class;
-
-   -----------------------------
-   -- Manager: Lines_Messages --
-   -----------------------------
-
-   function Filter
-     (Self       : Lines_Messages_Managers'Class;
-      Id         : Integer := -1;
-      Message_Id : Integer := -1;
-      Line_Id    : Integer := -1;
-      Col_Begin  : Integer := -1;
-      Col_End    : Integer := -1)
-     return Lines_Messages_Managers;
-
-   function Get_Line_Message
-     (Session          : Session_Type;
-      Id               : Integer;
-      Depth            : Related_Depth := 0;
-      Follow_Left_Join : Boolean := False)
-     return Detached_Line_Message'Class;
 
    --------------------------------
    -- Manager: Entities_Messages --
@@ -1109,43 +934,19 @@ package Orm is
    function Tool_Rules (Self : Detached_Tool'Class) return Rules_Managers;
    function Tool_Rules (Self : I_Tools_Managers'Class) return Rules_Managers;
 
-   --------------------
-   -- Manager: Lines --
-   --------------------
-
-   function Filter
-     (Self        : Lines_Managers'Class;
-      Id          : Integer := -1;
-      Resource_Id : Integer := -1;
-      Line        : Integer := -1)
-     return Lines_Managers;
-
-   function Get_Line
-     (Session          : Session_Type;
-      Id               : Integer;
-      Depth            : Related_Depth := 0;
-      Follow_Left_Join : Boolean := False)
-     return Detached_Line'Class;
-
-   function Line_Begin_Entity (Self : Line'Class) return Entities_Managers;
-   function Line_Begin_Entity
-     (Self : Detached_Line'Class)
-     return Entities_Managers;
-   function Line_Begin_Entity
-     (Self : I_Lines_Managers'Class)
-     return Entities_Managers;
-
-   function Line_Messages (Self : Line'Class) return Lines_Messages_Managers;
-   function Line_Messages
-     (Self : Detached_Line'Class)
-     return Lines_Messages_Managers;
-   function Line_Messages
-     (Self : I_Lines_Managers'Class)
-     return Lines_Messages_Managers;
-
    ------------------------
    -- Manager: Resources --
    ------------------------
+
+   function Get_Resource
+     (Self : Resource'Class)
+     return Resources_Messages_Managers;
+   function Get_Resource
+     (Self : Detached_Resource'Class)
+     return Resources_Messages_Managers;
+   function Get_Resource
+     (Self : I_Resources_Managers'Class)
+     return Resources_Messages_Managers;
 
    function Filter
      (Self      : Resources_Managers'Class;
@@ -1172,24 +973,6 @@ package Orm is
      (Self : I_Resources_Managers'Class)
      return Resource_Trees_Managers;
 
-   function Resource_Lines (Self : Resource'Class) return Lines_Managers;
-   function Resource_Lines
-     (Self : Detached_Resource'Class)
-     return Lines_Managers;
-   function Resource_Lines
-     (Self : I_Resources_Managers'Class)
-     return Lines_Managers;
-
-   function Resource_Messages
-     (Self : Resource'Class)
-     return Resources_Messages_Managers;
-   function Resource_Messages
-     (Self : Detached_Resource'Class)
-     return Resources_Messages_Managers;
-   function Resource_Messages
-     (Self : I_Resources_Managers'Class)
-     return Resources_Messages_Managers;
-
    function Resource_Parent
      (Self : Resource'Class)
      return Resource_Trees_Managers;
@@ -1207,8 +990,6 @@ package Orm is
    overriding procedure Free (Self : in out Category_Ddr);
    overriding procedure Free (Self : in out Entity_Ddr);
    overriding procedure Free (Self : in out Entity_Message_Ddr);
-   overriding procedure Free (Self : in out Line_Ddr);
-   overriding procedure Free (Self : in out Line_Message_Ddr);
    overriding procedure Free (Self : in out Message_Ddr);
    overriding procedure Free (Self : in out Resource_Tree_Ddr);
    overriding procedure Free (Self : in out Resource_Ddr);
@@ -1226,14 +1007,6 @@ package Orm is
       Mask        : Dirty_Mask);
    overriding procedure Insert_Or_Update
      (Self        : in out Detached_Entity_Message;
-      Pk_Modified : in out Boolean;
-      Mask        : Dirty_Mask);
-   overriding procedure Insert_Or_Update
-     (Self        : in out Detached_Line;
-      Pk_Modified : in out Boolean;
-      Mask        : Dirty_Mask);
-   overriding procedure Insert_Or_Update
-     (Self        : in out Detached_Line_Message;
       Pk_Modified : in out Boolean;
       Mask        : Dirty_Mask);
    overriding procedure Insert_Or_Update
@@ -1264,8 +1037,6 @@ package Orm is
    overriding procedure Internal_Delete (Self : Detached_Category);
    overriding procedure Internal_Delete (Self : Detached_Entity);
    overriding procedure Internal_Delete (Self : Detached_Entity_Message);
-   overriding procedure Internal_Delete (Self : Detached_Line);
-   overriding procedure Internal_Delete (Self : Detached_Line_Message);
    overriding procedure Internal_Delete (Self : Detached_Message);
    overriding procedure Internal_Delete (Self : Detached_Resource_Tree);
    overriding procedure Internal_Delete (Self : Detached_Resource);
@@ -1276,8 +1047,6 @@ package Orm is
    overriding function Key (Self : Category_Ddr) return Element_Key;
    overriding function Key (Self : Entity_Ddr) return Element_Key;
    overriding function Key (Self : Entity_Message_Ddr) return Element_Key;
-   overriding function Key (Self : Line_Ddr) return Element_Key;
-   overriding function Key (Self : Line_Message_Ddr) return Element_Key;
    overriding function Key (Self : Message_Ddr) return Element_Key;
    overriding function Key (Self : Resource_Tree_Ddr) return Element_Key;
    overriding function Key (Self : Resource_Ddr) return Element_Key;
@@ -1285,10 +1054,7 @@ package Orm is
    overriding function Key (Self : Rule_Ddr) return Element_Key;
    overriding function Key (Self : Tool_Ddr) return Element_Key;
 
-   overriding procedure On_Persist (Self : Detached_Entity);
    overriding procedure On_Persist (Self : Detached_Entity_Message);
-   overriding procedure On_Persist (Self : Detached_Line);
-   overriding procedure On_Persist (Self : Detached_Line_Message);
    overriding procedure On_Persist (Self : Detached_Message);
    overriding procedure On_Persist (Self : Detached_Resource_Tree);
    overriding procedure On_Persist (Self : Detached_Resource_Message);
@@ -1303,13 +1069,12 @@ private
     end record;
     type Category_Data is access all Category_DDR;
     
-    type Entity_DDR is new Detached_Data (6) with record
-       ORM_Col_Begin        : Integer := -1;
-       ORM_Col_End          : Integer := -1;
-       ORM_FK_Line_Begin_Id : Detached_Line_Access := null;
-       ORM_Id               : Integer := -1;
-       ORM_Line_Begin_Id    : Integer := -1;
-       ORM_Name             : GNAT.Strings.String_Access := null;
+    type Entity_DDR is new Detached_Data (5) with record
+       ORM_Col_Begin    : Integer := -1;
+       ORM_Col_End      : Integer := -1;
+       ORM_Id           : Integer := -1;
+       ORM_Line         : Integer := -1;
+       ORM_Name         : GNAT.Strings.String_Access := null;
     end record;
     type Entity_Data is access all Entity_DDR;
     
@@ -1321,25 +1086,6 @@ private
        ORM_Message_Id    : Integer := -1;
     end record;
     type Entity_Message_Data is access all Entity_Message_DDR;
-    
-    type Line_DDR is new Detached_Data (4) with record
-       ORM_FK_Resource_Id : Detached_Resource_Access := null;
-       ORM_Id             : Integer := -1;
-       ORM_Line           : Integer := -1;
-       ORM_Resource_Id    : Integer := -1;
-    end record;
-    type Line_Data is access all Line_DDR;
-    
-    type Line_Message_DDR is new Detached_Data (7) with record
-       ORM_Col_Begin     : Integer := -1;
-       ORM_Col_End       : Integer := -1;
-       ORM_FK_Line_Id    : Detached_Line_Access := null;
-       ORM_FK_Message_Id : Detached_Message_Access := null;
-       ORM_Id            : Integer := -1;
-       ORM_Line_Id       : Integer := -1;
-       ORM_Message_Id    : Integer := -1;
-    end record;
-    type Line_Message_Data is access all Line_Message_DDR;
     
     type Message_DDR is new Detached_Data (6) with record
        ORM_Category_Id    : Integer := -1;
@@ -1368,10 +1114,13 @@ private
     end record;
     type Resource_Data is access all Resource_DDR;
     
-    type Resource_Message_DDR is new Detached_Data (5) with record
+    type Resource_Message_DDR is new Detached_Data (8) with record
+       ORM_Col_Begin      : Integer := -1;
+       ORM_Col_End        : Integer := -1;
        ORM_FK_Message_Id  : Detached_Message_Access := null;
        ORM_FK_Resource_Id : Detached_Resource_Access := null;
        ORM_Id             : Integer := -1;
+       ORM_Line           : Integer := -1;
        ORM_Message_Id     : Integer := -1;
        ORM_Resource_Id    : Integer := -1;
     end record;
@@ -1410,18 +1159,6 @@ private
        is new Sessions.Detached_Element with null record;
     No_Entity_Message : constant Entity_Message :=(No_Orm_Element with null record);
     No_Detached_Entity_Message : constant Detached_Entity_Message :=
-      (Sessions.Detached_Element with null record);
- 
-    type Detached_Line
-       is new Sessions.Detached_Element with null record;
-    No_Line : constant Line :=(No_Orm_Element with null record);
-    No_Detached_Line : constant Detached_Line :=
-      (Sessions.Detached_Element with null record);
- 
-    type Detached_Line_Message
-       is new Sessions.Detached_Element with null record;
-    No_Line_Message : constant Line_Message :=(No_Orm_Element with null record);
-    No_Detached_Line_Message : constant Detached_Line_Message :=
       (Sessions.Detached_Element with null record);
  
     type Detached_Message

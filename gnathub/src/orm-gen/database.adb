@@ -2,11 +2,6 @@ package body Database is
    pragma Style_Checks (Off);
    use type Cst_String_Access;
 
-   function FK (Self : T_Entities'Class; Foreign : T_Lines'Class) return SQL_Criteria is
-   begin
-      return Self.Line_Begin_Id = Foreign.Id;
-   end FK;
-
    function FK (Self : T_Entities_Messages'Class; Foreign : T_Entities'Class) return SQL_Criteria is
    begin
       return Self.Entity_Id = Foreign.Id;
@@ -15,21 +10,6 @@ package body Database is
    function FK (Self : T_Entities_Messages'Class; Foreign : T_Messages'Class) return SQL_Criteria is
    begin
       return Self.Message_Id = Foreign.Id;
-   end FK;
-
-   function FK (Self : T_Lines'Class; Foreign : T_Resources'Class) return SQL_Criteria is
-   begin
-      return Self.Resource_Id = Foreign.Id;
-   end FK;
-
-   function FK (Self : T_Lines_Messages'Class; Foreign : T_Messages'Class) return SQL_Criteria is
-   begin
-      return Self.Message_Id = Foreign.Id;
-   end FK;
-
-   function FK (Self : T_Lines_Messages'Class; Foreign : T_Lines'Class) return SQL_Criteria is
-   begin
-      return Self.Line_Id = Foreign.Id;
    end FK;
 
    function FK (Self : T_Messages'Class; Foreign : T_Rules'Class) return SQL_Criteria is

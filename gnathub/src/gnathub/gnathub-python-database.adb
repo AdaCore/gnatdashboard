@@ -35,10 +35,20 @@ package body GNAThub.Python.Database is
    Col_End_Cst   : aliased constant String := "col_end";
    Line_Cst      : aliased constant String := "line";
    Message_Cst   : aliased constant String := "message";
+   List_Cst      : aliased constant String := "list";
 
-   --------------
-   -- Mappings --
-   --------------
+   -------------------------
+   -- Prepared statements --
+   -------------------------
+
+   Insert_Message : constant Prepared_Statement :=
+     Prepare
+       (SQL_Insert
+          (((D.Resources_Messages.Message_Id   = Integer_Param (1))
+           & (D.Resources_Messages.Resource_Id = Integer_Param (2))
+           & (D.Resources_Messages.Line        = Integer_Param (3))
+           & (D.Resources_Messages.Col_Begin   = Integer_Param (4))
+           & (D.Resources_Messages.Col_End     = Integer_Param (5)))));
 
    -----------
    -- Tools --
@@ -152,6 +162,7 @@ package body GNAThub.Python.Database is
    procedure Resource_Command_Handler
      (Data    : in out Callback_Data'Class;
       Command : String);
+   --  Handler for Resource commands
 
    procedure Set_Resource_Fields
      (Resource_Inst : Class_Instance;
@@ -695,6 +706,45 @@ package body GNAThub.Python.Database is
             end loop;
          end;
 
+      elsif Command = "add_messages" then
+         Name_Parameters
+           (Data,
+            (1 => List_Cst'Access));
+
+         declare
+            --  Required parameters
+            Resource    : constant Class_Instance := Nth_Arg (Data, 1);
+            Resource_Id : constant Integer := Resource_Property
+              (Get_Data (Resource, Resource_Class_Name)).Id;
+            Global_List   : constant List_Instance := Nth_Arg (Data, 2);
+         begin
+            Database.DB.Automatic_Transactions (False);
+            Database.DB.Execute ("BEGIN");
+
+            for J in 1 .. Global_List.Number_Of_Arguments loop
+               declare
+                  List : constant List_Instance := Nth_Arg (Global_List, J);
+
+                  Message      : constant Class_Instance := List.Nth_Arg (1);
+                  Message_Id   : constant Integer := Message_Property
+                    (Get_Data (Message, Message_Class_Name)).Id;
+                  Line         : constant Integer := List.Nth_Arg (2);
+                  Col_Begin    : constant Integer := List.Nth_Arg (3);
+                  Col_End      : constant Integer := List.Nth_Arg (4);
+               begin
+                  Database.DB.Execute
+                    (Stmt   => Insert_Message,
+                     Params => (1 => +Message_Id,
+                                2 => +Resource_Id,
+                                3 => +Line,
+                                4 => +Col_Begin,
+                                5 => +Col_End));
+               end;
+            end loop;
+
+            Database.DB.Commit_Or_Rollback;
+         end;
+
       elsif Command = "add_message" then
          Name_Parameters
            (Data,
@@ -713,58 +763,17 @@ package body GNAThub.Python.Database is
               (Get_Data (Message, Message_Class_Name)).Id;
 
             --  Optional parameters
-            Line        : constant Integer := Nth_Arg (Data, 3, -1);
+            Line        : constant Integer := Nth_Arg (Data, 3, 0);
             Col_Begin   : constant Integer := Nth_Arg (Data, 4, 1);
             Col_End     : constant Integer := Nth_Arg (Data, 5, Col_Begin);
-
-            Q           : SQL_Query;
-            R           : Forward_Cursor;
-            Line_Id     : Integer;
-
-            Id          : Integer;
-            pragma Unreferenced (Id);
          begin
-            if Line = -1 then
-               --  No line: insert in table resources_messages
-
-               Id := DB.Insert_And_Get_PK
-                 (SQL_Insert (
-                  ((D.Resources_Messages.Message_Id = Message_Id)
-                  & (D.Resources_Messages.Resource_Id = Resource_Id))),
-                  PK => D.Resources_Messages.Id);
-            else
-               --  Line specified: first find/create an entry in lines that
-               --  matches...
-
-               Q := SQL_Select
-                 (To_List ((0 => +D.Lines.Id)),
-                  From  => D.Lines,
-                  Where => D.Lines.Resource_Id = Resource_Id
-                  and D.Lines.Line = Line);
-
-               R.Fetch (DB, Q);
-
-               if R.Has_Row then
-                  Line_Id := R.Integer_Value (0);
-               else
-                  Line_Id := DB.Insert_And_Get_PK
-                    (SQL_Insert (
-                     ((D.Lines.Resource_Id = Resource_Id)
-                     & (D.Lines.Line = Line))),
-                     PK => D.Lines.Id);
-               end if;
-
-               --  ... then add an entry in table lines_messages
-
-               Id := DB.Insert_And_Get_PK
-                 (SQL_Insert (
-                  ((D.Lines_Messages.Message_Id = Message_Id)
-                  & (D.Lines_Messages.Line_Id = Line_Id)
-                  & (D.Lines_Messages.Col_Begin = Col_Begin)
-                  & (D.Lines_Messages.Col_End = Col_End))),
-                  PK => D.Lines_Messages.Id);
-            end if;
-
+            Database.DB.Execute
+              (Stmt   => Insert_Message,
+               Params => (1 => +Message_Id,
+                          2 => +Resource_Id,
+                          3 => +Line,
+                          4 => +Col_Begin,
+                          5 => +Col_End));
             DB.Commit;
          end;
 
@@ -780,40 +789,7 @@ package body GNAThub.Python.Database is
             Q : SQL_Query;
             R : Forward_Cursor;
          begin
-            --  First list all messages in resource_messages
-
-            Q := SQL_Select
-              (To_List
-                 ((0 => +D.Messages.Id,
-                   1 => +D.Messages.Rule_Id,
-                   2 => +D.Messages.Data,
-                   3 => +D.Messages.Category_Id
-                  )),
-               From  => D.Messages & D.Resources_Messages,
-               Where => D.Resources_Messages.Resource_Id = Resource_Id
-               and D.Messages.Id = D.Resources_Messages.Message_Id);
-
-            R.Fetch (DB, Q);
-
-            while R.Has_Row loop
-               Message_Inst := New_Instance (Get_Script (Data), Message_Class);
-
-               Set_Message_Fields
-                 (Message_Inst => Message_Inst,
-                  Id           => R.Integer_Value (0),
-                  Rule_Id      => R.Integer_Value (1),
-                  Message_Data => R.Value (2),
-                  Category_Id  => R.Integer_Value (3, -1),
-                  Line         => 0,
-                  Col_Begin    => 0,
-                  Col_End      => 0);
-
-               Set_Return_Value (Data, Message_Inst);
-
-               R.Next;
-            end loop;
-
-            --  Now list all message in lines_messages
+            --  list all message in resources_messages
 
             Q := SQL_Select
               (To_List
@@ -821,14 +797,15 @@ package body GNAThub.Python.Database is
                    1 => +D.Messages.Rule_Id,
                    2 => +D.Messages.Data,
                    3 => +D.Messages.Category_Id,
-                   4 => +D.Lines.Line,
-                   5 => +D.Lines_Messages.Col_Begin,
-                   6 => +D.Lines_Messages.Col_End
+                   4 => +D.Resources_Messages.Line,
+                   5 => +D.Resources_Messages.Col_Begin,
+                   6 => +D.Resources_Messages.Col_End
                   )),
-               From  => D.Messages & D.Lines & D.Lines_Messages,
-               Where => D.Lines.Resource_Id = Resource_Id
-               and D.Lines_Messages.Line_ID = D.Lines.Id
-               and D.Messages.Id = D.Lines_Messages.Message_Id);
+
+               From  => D.Messages & D.Resources_Messages,
+
+               Where => D.Resources_Messages.Resource_Id = Resource_Id
+                    and D.Messages.Id = D.Resources_Messages.Message_Id);
 
             R.Fetch (DB, Q);
 
@@ -928,6 +905,10 @@ package body GNAThub.Python.Database is
 
       Repository.Register_Command
         ("add_message", 1, 5,
+         Resource_Command_Handler'Access, Resource_Class, False);
+
+      Repository.Register_Command
+        ("add_messages", 1, 1,
          Resource_Command_Handler'Access, Resource_Class, False);
 
       Repository.Register_Command

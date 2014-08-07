@@ -31,27 +31,18 @@
 | child_id  | FK resources(resource_children) | NULL          |   | Resources as a child  |
 | parent_id | FK resources(resource_parent)   | NULL          |   | Resource as a parent  |
 
-| TABLE       | resources_messages              | resource_message |   | Association between messages and resources |
-| id          | AUTOINCREMENT                   | PK               |   | Auto-generated id                          |
-| message_id  | FK messages(message_lines)      | NOT NULL         |   | Resources' associated message              |
-| resource_id | FK resources(resource_messages) | NOT NULL         |   | Corresponding resource for message         |
-
-| TABLE       | lines                        | line     |   | Lines in source file |
-| id          | AUTOINCREMENT                | PK       |   | Auto-generated id    |
-| resource_id | FK resources(resource_lines) | NOT NULL |   | Lines' resource file |
-| line        | INTEGER                      | NOT NULL |   | Line number          |
-
-| TABLE      | lines_messages             | line_message |   | Association between messages and location in source (line, column) |
-| id         | AUTOINCREMENT              | PK           |   | Auto-generated id                                                  |
-| message_id | FK messages(message_lines) | NOT NULL     |   | Lines' associated message                                          |
-| line_id    | FK lines(line_messages)    | NOT NULL     |   | Corresponding line for message                                     |
-| col_begin  | INTEGER                    | NULL         |   | Lines' column begin                                                |
-| col_end    | INTEGER                    | NULL         |   | Lines' column end                                                  |
+| TABLE       | resources_messages              | resource_message |   | Association between messages and location in source (line, column)   |
+| id          | AUTOINCREMENT                   | PK               |   | Auto-generated id                                                    |
+| message_id  | FK messages(message)            | NOT NULL         |   | the associated message                                               |
+| resource_id | FK resources(resource)          | NOT NULL         |   | Corresponding resource for message                                   |
+| line        | INTEGER                         | NULL             |   | Corresponding line for message - zero means not associated to a line |
+| col_begin   | INTEGER                         | NULL             |   | Lines' column begin                                                  |
+| col_end     | INTEGER                         | NULL             |   | Lines' column end                                                    |
 
 | TABLE         | entities                    | entity   |   | Entity                 |
 | id            | AUTOINCREMENT               | PK       |   | Auto-generated id      |
-| line_begin_id | FK lines(line_begin_entity) | NOT NULL |   | Entities' line begin   |
 | name          | TEXT                        | NOT NULL |   | Entities' name         |
+| line          | INTEGER                     | NOT NULL |   | Entities' line begin   |
 | col_begin     | INTEGER                     | NOT NULL |   | Entities' column begin |
 | col_end       | INTEGER                     | NOT NULL |   | Entities' column end   |
 
@@ -59,3 +50,4 @@
 | id         | AUTOINCREMENT                 | PK             |   | Auto-generated id                         |
 | entity_id  | FK entities(entity_messages)  | NOT NULL       |   | Corresponding entity for message          |
 | message_id | FK messages(message_entities) | NOT NULL       |   | Entities' associated message              |
+

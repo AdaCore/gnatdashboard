@@ -16,10 +16,6 @@ package body Orm is
    procedure Unchecked_Free is new Ada.Unchecked_Deallocation
       ( Entity_Message_DDR, Entity_Message_Data);
    procedure Unchecked_Free is new Ada.Unchecked_Deallocation
-      ( Line_DDR, Line_Data);
-   procedure Unchecked_Free is new Ada.Unchecked_Deallocation
-      ( Line_Message_DDR, Line_Message_Data);
-   procedure Unchecked_Free is new Ada.Unchecked_Deallocation
       ( Message_DDR, Message_Data);
    procedure Unchecked_Free is new Ada.Unchecked_Deallocation
       ( Resource_DDR, Resource_Data);
@@ -36,8 +32,6 @@ package body Orm is
    procedure Unchecked_Free is new Ada.Unchecked_Deallocation
      (Detached_Entity'Class, Detached_Entity_Access);
    procedure Unchecked_Free is new Ada.Unchecked_Deallocation
-     (Detached_Line'Class, Detached_Line_Access);
-   procedure Unchecked_Free is new Ada.Unchecked_Deallocation
      (Detached_Message'Class, Detached_Message_Access);
    procedure Unchecked_Free is new Ada.Unchecked_Deallocation
      (Detached_Resource'Class, Detached_Resource_Access);
@@ -51,34 +45,19 @@ package body Orm is
    F_Categories_On_Side : constant := 2;
    Counts_Categories : constant Counts := ((3,3),(3,3),(3,3),(3,3));
    Alias_Categories : constant Alias_Array := (0 => -1);
-   F_Entities_Id            : constant := 0;
-   F_Entities_Line_Begin_Id : constant := 1;
-   F_Entities_Name          : constant := 2;
-   F_Entities_Col_Begin     : constant := 3;
-   F_Entities_Col_End       : constant := 4;
-   Counts_Entities : constant Counts := ((5,5),(8,8),(12,12),(12,12));
-   Upto_Entities_0 : constant Counts := ((5,5),(5,5),(5,5),(5,5));
-   Alias_Entities : constant Alias_Array := (-1,2,-1,4,-1);
+   F_Entities_Id        : constant := 0;
+   F_Entities_Name      : constant := 1;
+   F_Entities_Line      : constant := 2;
+   F_Entities_Col_Begin : constant := 3;
+   F_Entities_Col_End   : constant := 4;
+   Counts_Entities : constant Counts := ((5,5),(5,5),(5,5),(5,5));
+   Alias_Entities : constant Alias_Array := (0 => -1);
    F_Entities_Messages_Id         : constant := 0;
    F_Entities_Messages_Entity_Id  : constant := 1;
    F_Entities_Messages_Message_Id : constant := 2;
    Upto_Entities_Messages_0 : constant Counts := ((3,3),(3,3),(3,3),(3,3));
-   Upto_Entities_Messages_1 : constant Counts := ((3,3),(8,8),(11,11),(15,15));
-   Alias_Entities_Messages : constant Alias_Array := (-1,3,8,-1,5,-1,7,-1,-1,11,14,-1,13,-1,-1);
-   F_Lines_Id          : constant := 0;
-   F_Lines_Resource_Id : constant := 1;
-   F_Lines_Line        : constant := 2;
-   Counts_Lines : constant Counts := ((3,3),(7,7),(7,7),(7,7));
-   Upto_Lines_0 : constant Counts := ((3,3),(3,3),(3,3),(3,3));
-   Alias_Lines : constant Alias_Array := (-1,2,-1);
-   F_Lines_Messages_Id         : constant := 0;
-   F_Lines_Messages_Message_Id : constant := 1;
-   F_Lines_Messages_Line_Id    : constant := 2;
-   F_Lines_Messages_Col_Begin  : constant := 3;
-   F_Lines_Messages_Col_End    : constant := 4;
-   Upto_Lines_Messages_0 : constant Counts := ((5,5),(5,5),(5,5),(5,5));
-   Upto_Lines_Messages_1 : constant Counts := ((5,5),(9,9),(14,17),(16,19));
-   Alias_Lines_Messages : constant Alias_Array := (-1,3,10,-1,6,9,-1,8,-1,-1,-1,12,-1);
+   Upto_Entities_Messages_1 : constant Counts := ((3,3),(8,8),(8,8),(8,8));
+   Alias_Entities_Messages : constant Alias_Array := (-1,3,4,-1,-1,7,10,-1,9,-1,-1);
    F_Messages_Id          : constant := 0;
    F_Messages_Rule_Id     : constant := 1;
    F_Messages_Data        : constant := 2;
@@ -102,8 +81,11 @@ package body Orm is
    F_Resources_Messages_Id          : constant := 0;
    F_Resources_Messages_Message_Id  : constant := 1;
    F_Resources_Messages_Resource_Id : constant := 2;
-   Upto_Resources_Messages_0 : constant Counts := ((3,3),(3,3),(3,3),(3,3));
-   Upto_Resources_Messages_1 : constant Counts := ((3,3),(7,7),(12,15),(14,17));
+   F_Resources_Messages_Line        : constant := 3;
+   F_Resources_Messages_Col_Begin   : constant := 4;
+   F_Resources_Messages_Col_End     : constant := 5;
+   Upto_Resources_Messages_0 : constant Counts := ((6,6),(6,6),(6,6),(6,6));
+   Upto_Resources_Messages_1 : constant Counts := ((6,6),(10,10),(15,18),(17,20));
    Alias_Resources_Messages : constant Alias_Array := (-1,3,10,-1,6,9,-1,8,-1,-1,-1);
    F_Rules_Id         : constant := 0;
    F_Rules_Name       : constant := 1;
@@ -134,14 +116,6 @@ package body Orm is
       Session : Session_Type)
      return Detached_Entity_Message'Class;
    function Detach_No_Lookup
-     (Self    : Line'Class;
-      Session : Session_Type)
-     return Detached_Line'Class;
-   function Detach_No_Lookup
-     (Self    : Line_Message'Class;
-      Session : Session_Type)
-     return Detached_Line_Message'Class;
-   function Detach_No_Lookup
      (Self    : Message'Class;
       Session : Session_Type)
      return Detached_Message'Class;
@@ -171,9 +145,7 @@ package body Orm is
    --  Same as Detach, but does not check the session cache Same as Detach, but
    --  does not check the session cache Same as Detach, but does not check the
    --  session cache Same as Detach, but does not check the session cache Same
-   --  as Detach, but does not check the session cache Same as Detach, but does
-   --  not check the session cache Same as Detach, but does not check the
-   --  session cache
+   --  as Detach, but does not check the session cache
 
    procedure Do_Query_Categories
      (Fields    : in out SQL_Field_List;
@@ -196,26 +168,6 @@ package body Orm is
       Pk_Only   : Boolean := False);
 
    procedure Do_Query_Entities_Messages
-     (Fields    : in out SQL_Field_List;
-      From      : out SQL_Table_List;
-      Criteria  : in out Sql_Criteria;
-      Base      : Natural;
-      Aliases   : Alias_Array;
-      Depth     : Natural;
-      Follow_LJ : Boolean;
-      Pk_Only   : Boolean := False);
-
-   procedure Do_Query_Lines
-     (Fields    : in out SQL_Field_List;
-      From      : out SQL_Table_List;
-      Criteria  : in out Sql_Criteria;
-      Base      : Natural;
-      Aliases   : Alias_Array;
-      Depth     : Natural;
-      Follow_LJ : Boolean;
-      Pk_Only   : Boolean := False);
-
-   procedure Do_Query_Lines_Messages
      (Fields    : in out SQL_Field_List;
       From      : out SQL_Table_List;
       Criteria  : in out Sql_Criteria;
@@ -445,33 +397,6 @@ package body Orm is
    -- "=" --
    ---------
 
-   function "=" (Op1 : Line_Message; Op2 : Line_Message) return Boolean is
-   begin
-      return Integer'(Op1.Id) = Op2.Id;
-   end "=";
-
-   ---------
-   -- "=" --
-   ---------
-
-   function "="
-     (Op1 : Detached_Line_Message;
-      Op2 : Detached_Line_Message)
-     return Boolean is
-   begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
-         return False;
-      else
-         return Integer'(Op1.Id) = Op2.Id;
-      end if;
-   end "=";
-
-   ---------
-   -- "=" --
-   ---------
-
    function "=" (Op1 : Entity_Message; Op2 : Entity_Message) return Boolean is
    begin
       return Integer'(Op1.Id) = Op2.Id;
@@ -509,30 +434,6 @@ package body Orm is
    ---------
 
    function "=" (Op1 : Detached_Tool; Op2 : Detached_Tool) return Boolean is
-   begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
-         return False;
-      else
-         return Integer'(Op1.Id) = Op2.Id;
-      end if;
-   end "=";
-
-   ---------
-   -- "=" --
-   ---------
-
-   function "=" (Op1 : Line; Op2 : Line) return Boolean is
-   begin
-      return Integer'(Op1.Id) = Op2.Id;
-   end "=";
-
-   ---------
-   -- "=" --
-   ---------
-
-   function "=" (Op1 : Detached_Line; Op2 : Detached_Line) return Boolean is
    begin
       if Op1.Get = null then
          return Op2.Get = null;
@@ -712,6 +613,24 @@ package body Orm is
    -- Col_Begin --
    ---------------
 
+   function Col_Begin (Self : Resource_Message) return Integer is
+   begin
+      return Integer_Value (Self, F_Resources_Messages_Col_Begin);
+   end Col_Begin;
+
+   ---------------
+   -- Col_Begin --
+   ---------------
+
+   function Col_Begin (Self : Detached_Resource_Message) return Integer is
+   begin
+      return Resource_Message_Data (Self.Get).ORM_Col_Begin;
+   end Col_Begin;
+
+   ---------------
+   -- Col_Begin --
+   ---------------
+
    function Col_Begin (Self : Entity) return Integer is
    begin
       return Integer_Value (Self, F_Entities_Col_Begin);
@@ -726,23 +645,23 @@ package body Orm is
       return Entity_Data (Self.Get).ORM_Col_Begin;
    end Col_Begin;
 
-   ---------------
-   -- Col_Begin --
-   ---------------
+   -------------
+   -- Col_End --
+   -------------
 
-   function Col_Begin (Self : Line_Message) return Integer is
+   function Col_End (Self : Resource_Message) return Integer is
    begin
-      return Integer_Value (Self, F_Lines_Messages_Col_Begin);
-   end Col_Begin;
+      return Integer_Value (Self, F_Resources_Messages_Col_End);
+   end Col_End;
 
-   ---------------
-   -- Col_Begin --
-   ---------------
+   -------------
+   -- Col_End --
+   -------------
 
-   function Col_Begin (Self : Detached_Line_Message) return Integer is
+   function Col_End (Self : Detached_Resource_Message) return Integer is
    begin
-      return Line_Message_Data (Self.Get).ORM_Col_Begin;
-   end Col_Begin;
+      return Resource_Message_Data (Self.Get).ORM_Col_End;
+   end Col_End;
 
    -------------
    -- Col_End --
@@ -760,24 +679,6 @@ package body Orm is
    function Col_End (Self : Detached_Entity) return Integer is
    begin
       return Entity_Data (Self.Get).ORM_Col_End;
-   end Col_End;
-
-   -------------
-   -- Col_End --
-   -------------
-
-   function Col_End (Self : Line_Message) return Integer is
-   begin
-      return Integer_Value (Self, F_Lines_Messages_Col_End);
-   end Col_End;
-
-   -------------
-   -- Col_End --
-   -------------
-
-   function Col_End (Self : Detached_Line_Message) return Integer is
-   begin
-      return Line_Message_Data (Self.Get).ORM_Col_End;
    end Col_End;
 
    ----------
@@ -868,23 +769,77 @@ package body Orm is
       return D.ORM_FK_Entity_Id.all;
    end Entity_Id;
 
-   --------------
-   -- Get_Line --
-   --------------
+   -----------------
+   -- Get_Message --
+   -----------------
 
-   function Get_Line (Self : Line) return Integer is
+   function Get_Message
+     (Self : Message'Class)
+     return Resources_Messages_Managers is
    begin
-      return Integer_Value (Self, F_Lines_Line);
-   end Get_Line;
+      return All_Resources_Messages.Filter(Message_Id => Self.Id);
+   end Get_Message;
 
-   --------------
-   -- Get_Line --
-   --------------
+   -----------------
+   -- Get_Message --
+   -----------------
 
-   function Get_Line (Self : Detached_Line) return Integer is
+   function Get_Message
+     (Self : Detached_Message'Class)
+     return Resources_Messages_Managers is
    begin
-      return Line_Data (Self.Get).ORM_Line;
-   end Get_Line;
+      return All_Resources_Messages.Filter (Message_Id => Self.Id);
+   end Get_Message;
+
+   -----------------
+   -- Get_Message --
+   -----------------
+
+   function Get_Message
+     (Self : I_Messages_Managers'Class)
+     return Resources_Messages_Managers
+   is
+      Q : constant SQL_Query := I_Messages.Build_Query(Self, +DBA.Messages.Id);
+   begin
+      return All_Resources_Messages.Filter
+        (SQL_In(DBA.Resources_Messages.Message_Id, Q));
+   end Get_Message;
+
+   ------------------
+   -- Get_Resource --
+   ------------------
+
+   function Get_Resource
+     (Self : Resource'Class)
+     return Resources_Messages_Managers is
+   begin
+      return All_Resources_Messages.Filter(Resource_Id => Self.Id);
+   end Get_Resource;
+
+   ------------------
+   -- Get_Resource --
+   ------------------
+
+   function Get_Resource
+     (Self : Detached_Resource'Class)
+     return Resources_Messages_Managers is
+   begin
+      return All_Resources_Messages.Filter (Resource_Id => Self.Id);
+   end Get_Resource;
+
+   ------------------
+   -- Get_Resource --
+   ------------------
+
+   function Get_Resource
+     (Self : I_Resources_Managers'Class)
+     return Resources_Messages_Managers
+   is
+      Q : constant SQL_Query := I_Resources.Build_Query(Self, +DBA.Resources.Id);
+   begin
+      return All_Resources_Messages.Filter
+        (SQL_In(DBA.Resources_Messages.Resource_Id, Q));
+   end Get_Resource;
 
    --------
    -- Id --
@@ -998,24 +953,6 @@ package body Orm is
    -- Id --
    --------
 
-   function Id (Self : Line_Message) return Integer is
-   begin
-      return Integer_Value (Self, F_Lines_Messages_Id);
-   end Id;
-
-   --------
-   -- Id --
-   --------
-
-   function Id (Self : Detached_Line_Message) return Integer is
-   begin
-      return Line_Message_Data (Self.Get).ORM_Id;
-   end Id;
-
-   --------
-   -- Id --
-   --------
-
    function Id (Self : Entity_Message) return Integer is
    begin
       return Integer_Value (Self, F_Entities_Messages_Id);
@@ -1046,24 +983,6 @@ package body Orm is
    function Id (Self : Detached_Tool) return Integer is
    begin
       return Tool_Data (Self.Get).ORM_Id;
-   end Id;
-
-   --------
-   -- Id --
-   --------
-
-   function Id (Self : Line) return Integer is
-   begin
-      return Integer_Value (Self, F_Lines_Id);
-   end Id;
-
-   --------
-   -- Id --
-   --------
-
-   function Id (Self : Detached_Line) return Integer is
-   begin
-      return Line_Data (Self.Get).ORM_Id;
    end Id;
 
    --------
@@ -1156,141 +1075,41 @@ package body Orm is
       return Str_Or_Empty (Category_Data (Self.Get).ORM_Label);
    end Label;
 
-   -------------------
-   -- Line_Begin_Id --
-   -------------------
+   ----------
+   -- Line --
+   ----------
 
-   function Line_Begin_Id (Self : Entity) return Integer is
+   function Line (Self : Resource_Message) return Integer is
    begin
-      return Integer_Value (Self, F_Entities_Line_Begin_Id);
-   end Line_Begin_Id;
+      return Integer_Value (Self, F_Resources_Messages_Line);
+   end Line;
 
-   -------------------
-   -- Line_Begin_Id --
-   -------------------
+   ----------
+   -- Line --
+   ----------
 
-   function Line_Begin_Id (Self : Detached_Entity) return Integer is
+   function Line (Self : Detached_Resource_Message) return Integer is
    begin
-      return Entity_Data (Self.Get).ORM_Line_Begin_Id;
-   end Line_Begin_Id;
+      return Resource_Message_Data (Self.Get).ORM_Line;
+   end Line;
 
-   -------------------
-   -- Line_Begin_Id --
-   -------------------
+   ----------
+   -- Line --
+   ----------
 
-   function Line_Begin_Id (Self : Entity) return Line'Class is
+   function Line (Self : Entity) return Integer is
    begin
-      if Current (Self.Current) /= Self.Index then
-         raise Cursor_Has_Moved;
-      end if;
+      return Integer_Value (Self, F_Entities_Line);
+   end Line;
 
-      if Self.Depth > 0 then
-         return I_Lines.Internal_Element
-           (Self,
-            Upto_Entities_0 (Self.Depth, Self.Data.Follow_LJ));
-      else
-         if not Dynamic_Fetching then
-            raise Field_Not_Available with
-            "Dynamic fetching disabled for Line_Begin_Id";
-         end if;
+   ----------
+   -- Line --
+   ----------
 
-         return All_Lines.Filter (Id => Self.Line_Begin_Id)
-         .Limit (1).Get (Self.Data.Session).Element;
-      end if;
-   end Line_Begin_Id;
-
-   -------------------
-   -- Line_Begin_Id --
-   -------------------
-
-   function Line_Begin_Id (Self : Detached_Entity) return Detached_Line'Class
-   is
-      D : constant Entity_Data := Entity_Data (Self.Get);
-      S : Session_Type;
+   function Line (Self : Detached_Entity) return Integer is
    begin
-      if D.ORM_FK_Line_Begin_Id = null then
-         if not Dynamic_Fetching then
-            raise Field_Not_Available with
-            "Dynamic fetching disabled for Line_Begin_Id";
-         end if;
-         S := Session (Self);
-         if S = No_Session then
-            raise Field_Not_Available with
-            "Element is detached from any session";
-         end if;
-         D.ORM_FK_Line_Begin_Id := new Detached_Line'Class'
-           (Get_Line (S, Id => D.ORM_Line_Begin_Id));
-      end if;
-      return D.ORM_FK_Line_Begin_Id.all;
-   end Line_Begin_Id;
-
-   -------------
-   -- Line_Id --
-   -------------
-
-   function Line_Id (Self : Line_Message) return Integer is
-   begin
-      return Integer_Value (Self, F_Lines_Messages_Line_Id);
-   end Line_Id;
-
-   -------------
-   -- Line_Id --
-   -------------
-
-   function Line_Id (Self : Detached_Line_Message) return Integer is
-   begin
-      return Line_Message_Data (Self.Get).ORM_Line_Id;
-   end Line_Id;
-
-   -------------
-   -- Line_Id --
-   -------------
-
-   function Line_Id (Self : Line_Message) return Line'Class is
-   begin
-      if Current (Self.Current) /= Self.Index then
-         raise Cursor_Has_Moved;
-      end if;
-
-      if Self.Depth > 0 then
-         return I_Lines.Internal_Element
-           (Self,
-            Upto_Lines_Messages_1 (Self.Depth, Self.Data.Follow_LJ));
-      else
-         if not Dynamic_Fetching then
-            raise Field_Not_Available with
-            "Dynamic fetching disabled for Line_Id";
-         end if;
-
-         return All_Lines.Filter (Id => Self.Line_Id)
-         .Limit (1).Get (Self.Data.Session).Element;
-      end if;
-   end Line_Id;
-
-   -------------
-   -- Line_Id --
-   -------------
-
-   function Line_Id (Self : Detached_Line_Message) return Detached_Line'Class
-   is
-      D : constant Line_Message_Data := Line_Message_Data (Self.Get);
-      S : Session_Type;
-   begin
-      if D.ORM_FK_Line_Id = null then
-         if not Dynamic_Fetching then
-            raise Field_Not_Available with
-            "Dynamic fetching disabled for Line_Id";
-         end if;
-         S := Session (Self);
-         if S = No_Session then
-            raise Field_Not_Available with
-            "Element is detached from any session";
-         end if;
-         D.ORM_FK_Line_Id := new Detached_Line'Class'
-           (Get_Line (S, Id => D.ORM_Line_Id));
-      end if;
-      return D.ORM_FK_Line_Id.all;
-   end Line_Id;
+      return Entity_Data (Self.Get).ORM_Line;
+   end Line;
 
    ----------------
    -- Message_Id --
@@ -1344,76 +1163,6 @@ package body Orm is
      return Detached_Message'Class
    is
       D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
-      S : Session_Type;
-   begin
-      if D.ORM_FK_Message_Id = null then
-         if not Dynamic_Fetching then
-            raise Field_Not_Available with
-            "Dynamic fetching disabled for Message_Id";
-         end if;
-         S := Session (Self);
-         if S = No_Session then
-            raise Field_Not_Available with
-            "Element is detached from any session";
-         end if;
-         D.ORM_FK_Message_Id := new Detached_Message'Class'
-           (Get_Message (S, Id => D.ORM_Message_Id));
-      end if;
-      return D.ORM_FK_Message_Id.all;
-   end Message_Id;
-
-   ----------------
-   -- Message_Id --
-   ----------------
-
-   function Message_Id (Self : Line_Message) return Integer is
-   begin
-      return Integer_Value (Self, F_Lines_Messages_Message_Id);
-   end Message_Id;
-
-   ----------------
-   -- Message_Id --
-   ----------------
-
-   function Message_Id (Self : Detached_Line_Message) return Integer is
-   begin
-      return Line_Message_Data (Self.Get).ORM_Message_Id;
-   end Message_Id;
-
-   ----------------
-   -- Message_Id --
-   ----------------
-
-   function Message_Id (Self : Line_Message) return Message'Class is
-   begin
-      if Current (Self.Current) /= Self.Index then
-         raise Cursor_Has_Moved;
-      end if;
-
-      if Self.Depth > 0 then
-         return I_Messages.Internal_Element
-           (Self,
-            Upto_Lines_Messages_0 (Self.Depth, Self.Data.Follow_LJ));
-      else
-         if not Dynamic_Fetching then
-            raise Field_Not_Available with
-            "Dynamic fetching disabled for Message_Id";
-         end if;
-
-         return All_Messages.Filter (Id => Self.Message_Id)
-         .Limit (1).Get (Self.Data.Session).Element;
-      end if;
-   end Message_Id;
-
-   ----------------
-   -- Message_Id --
-   ----------------
-
-   function Message_Id
-     (Self : Detached_Line_Message)
-     return Detached_Message'Class
-   is
-      D : constant Line_Message_Data := Line_Message_Data (Self.Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Message_Id = null then
@@ -1714,74 +1463,6 @@ package body Orm is
      return Detached_Resource'Class
    is
       D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
-      S : Session_Type;
-   begin
-      if D.ORM_FK_Resource_Id = null then
-         if not Dynamic_Fetching then
-            raise Field_Not_Available with
-            "Dynamic fetching disabled for Resource_Id";
-         end if;
-         S := Session (Self);
-         if S = No_Session then
-            raise Field_Not_Available with
-            "Element is detached from any session";
-         end if;
-         D.ORM_FK_Resource_Id := new Detached_Resource'Class'
-           (Get_Resource (S, Id => D.ORM_Resource_Id));
-      end if;
-      return D.ORM_FK_Resource_Id.all;
-   end Resource_Id;
-
-   -----------------
-   -- Resource_Id --
-   -----------------
-
-   function Resource_Id (Self : Line) return Integer is
-   begin
-      return Integer_Value (Self, F_Lines_Resource_Id);
-   end Resource_Id;
-
-   -----------------
-   -- Resource_Id --
-   -----------------
-
-   function Resource_Id (Self : Detached_Line) return Integer is
-   begin
-      return Line_Data (Self.Get).ORM_Resource_Id;
-   end Resource_Id;
-
-   -----------------
-   -- Resource_Id --
-   -----------------
-
-   function Resource_Id (Self : Line) return Resource'Class is
-   begin
-      if Current (Self.Current) /= Self.Index then
-         raise Cursor_Has_Moved;
-      end if;
-
-      if Self.Depth > 0 then
-         return I_Resources.Internal_Element
-           (Self,
-            Upto_Lines_0 (Self.Depth, Self.Data.Follow_LJ));
-      else
-         if not Dynamic_Fetching then
-            raise Field_Not_Available with
-            "Dynamic fetching disabled for Resource_Id";
-         end if;
-
-         return All_Resources.Filter (Id => Self.Resource_Id)
-         .Limit (1).Get (Self.Data.Session).Element;
-      end if;
-   end Resource_Id;
-
-   -----------------
-   -- Resource_Id --
-   -----------------
-
-   function Resource_Id (Self : Detached_Line) return Detached_Resource'Class
-   is
-      D : constant Line_Data := Line_Data (Self.Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Resource_Id = null then
@@ -2101,23 +1782,6 @@ package body Orm is
    ------------
 
    function Detach
-     (Self : Line_Message'Class)
-     return Detached_Line_Message'Class
-   is
-      R : constant Detached_Line_Message'Class := From_Cache (Self.Data.Session, Self.Id);
-   begin
-      if R.Is_Null then
-         return Detach_No_Lookup (Self, Self.Data.Session);
-      else
-         return R;
-      end if;
-   end Detach;
-
-   ------------
-   -- Detach --
-   ------------
-
-   function Detach
      (Self : Entity_Message'Class)
      return Detached_Entity_Message'Class
    is
@@ -2137,21 +1801,6 @@ package body Orm is
    function Detach (Self : Tool'Class) return Detached_Tool'Class
    is
       R : constant Detached_Tool'Class := From_Cache (Self.Data.Session, Self.Id);
-   begin
-      if R.Is_Null then
-         return Detach_No_Lookup (Self, Self.Data.Session);
-      else
-         return R;
-      end if;
-   end Detach;
-
-   ------------
-   -- Detach --
-   ------------
-
-   function Detach (Self : Line'Class) return Detached_Line'Class
-   is
-      R : constant Detached_Line'Class := From_Cache (Self.Data.Session, Self.Id);
    begin
       if R.Is_Null then
          return Detach_No_Lookup (Self, Self.Data.Session);
@@ -2211,11 +1860,9 @@ package body Orm is
       Session : Session_Type)
      return Detached_Entity'Class
    is
-      Default          : Detached_Entity;
-      Result           : Detached_Entity'Class := Detached_Entity'Class (Session.Factory (Self, Default));
-      Fk_Line_Begin_Id : Detached_Line_Access;
-      Lj               : constant Boolean := Self.Data.Follow_LJ;
-      Tmp              : Entity_Data;
+      Default : Detached_Entity;
+      Result  : Detached_Entity'Class := Detached_Entity'Class (Session.Factory (Self, Default));
+      Tmp     : Entity_Data;
    begin
       Tmp := Entity_Data (Result.Get);
       if Tmp = null then
@@ -2223,19 +1870,12 @@ package body Orm is
          Set (Result, Tmp);
       end if;
 
-      if Self.Depth > 0 then
-         FK_Line_Begin_Id := new Detached_Line'Class'(
-            I_Lines.Internal_Element
-              (Self, Upto_Entities_0 (Self.Depth, LJ)).Detach);
-      end if;
-
       Free (Tmp.ORM_Name);
-      Tmp.ORM_Col_Begin        := Integer_Value (Self, F_Entities_Col_Begin);
-      Tmp.ORM_Col_End          := Integer_Value (Self, F_Entities_Col_End);
-      Tmp.ORM_FK_Line_Begin_Id := FK_Line_Begin_Id;
-      Tmp.ORM_Id               := Integer_Value (Self, F_Entities_Id);
-      Tmp.ORM_Line_Begin_Id    := Integer_Value (Self, F_Entities_Line_Begin_Id);
-      Tmp.ORM_Name             := new String'(String_Value (Self, F_Entities_Name));
+      Tmp.ORM_Col_Begin    := Integer_Value (Self, F_Entities_Col_Begin);
+      Tmp.ORM_Col_End      := Integer_Value (Self, F_Entities_Col_End);
+      Tmp.ORM_Id           := Integer_Value (Self, F_Entities_Id);
+      Tmp.ORM_Line         := Integer_Value (Self, F_Entities_Line);
+      Tmp.ORM_Name         := new String'(String_Value (Self, F_Entities_Name));
       Session.Persist (Result);
       return Result;
    end Detach_No_Lookup;
@@ -2276,83 +1916,6 @@ package body Orm is
       Tmp.ORM_FK_Message_Id := FK_Message_Id;
       Tmp.ORM_Id            := Integer_Value (Self, F_Entities_Messages_Id);
       Tmp.ORM_Message_Id    := Integer_Value (Self, F_Entities_Messages_Message_Id);
-      Session.Persist (Result);
-      return Result;
-   end Detach_No_Lookup;
-
-   ----------------------
-   -- Detach_No_Lookup --
-   ----------------------
-
-   function Detach_No_Lookup
-     (Self    : Line'Class;
-      Session : Session_Type)
-     return Detached_Line'Class
-   is
-      Default        : Detached_Line;
-      Result         : Detached_Line'Class := Detached_Line'Class (Session.Factory (Self, Default));
-      Fk_Resource_Id : Detached_Resource_Access;
-      Lj             : constant Boolean := Self.Data.Follow_LJ;
-      Tmp            : Line_Data;
-   begin
-      Tmp := Line_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Line_DDR;
-         Set (Result, Tmp);
-      end if;
-
-      if Self.Depth > 0 then
-         FK_Resource_Id := new Detached_Resource'Class'(
-            I_Resources.Internal_Element
-              (Self, Upto_Lines_0 (Self.Depth, LJ)).Detach);
-      end if;
-
-      Tmp.ORM_FK_Resource_Id := FK_Resource_Id;
-      Tmp.ORM_Id             := Integer_Value (Self, F_Lines_Id);
-      Tmp.ORM_Line           := Integer_Value (Self, F_Lines_Line);
-      Tmp.ORM_Resource_Id    := Integer_Value (Self, F_Lines_Resource_Id);
-      Session.Persist (Result);
-      return Result;
-   end Detach_No_Lookup;
-
-   ----------------------
-   -- Detach_No_Lookup --
-   ----------------------
-
-   function Detach_No_Lookup
-     (Self    : Line_Message'Class;
-      Session : Session_Type)
-     return Detached_Line_Message'Class
-   is
-      Default       : Detached_Line_Message;
-      Result        : Detached_Line_Message'Class := Detached_Line_Message'Class (Session.Factory (Self, Default));
-      Fk_Message_Id : Detached_Message_Access;
-      Fk_Line_Id    : Detached_Line_Access;
-      Lj            : constant Boolean := Self.Data.Follow_LJ;
-      Tmp           : Line_Message_Data;
-   begin
-      Tmp := Line_Message_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Line_Message_DDR;
-         Set (Result, Tmp);
-      end if;
-
-      if Self.Depth > 0 then
-         FK_Message_Id := new Detached_Message'Class'(
-            I_Messages.Internal_Element
-              (Self, Upto_Lines_Messages_0 (Self.Depth, LJ)).Detach);
-         FK_Line_Id := new Detached_Line'Class'(
-            I_Lines.Internal_Element
-              (Self, Upto_Lines_Messages_1 (Self.Depth, LJ)).Detach);
-      end if;
-
-      Tmp.ORM_Col_Begin     := Integer_Value (Self, F_Lines_Messages_Col_Begin);
-      Tmp.ORM_Col_End       := Integer_Value (Self, F_Lines_Messages_Col_End);
-      Tmp.ORM_FK_Line_Id    := FK_Line_Id;
-      Tmp.ORM_FK_Message_Id := FK_Message_Id;
-      Tmp.ORM_Id            := Integer_Value (Self, F_Lines_Messages_Id);
-      Tmp.ORM_Line_Id       := Integer_Value (Self, F_Lines_Messages_Line_Id);
-      Tmp.ORM_Message_Id    := Integer_Value (Self, F_Lines_Messages_Message_Id);
       Session.Persist (Result);
       return Result;
    end Detach_No_Lookup;
@@ -2507,9 +2070,12 @@ package body Orm is
               (Self, Upto_Resources_Messages_1 (Self.Depth, LJ)).Detach);
       end if;
 
+      Tmp.ORM_Col_Begin      := Integer_Value (Self, F_Resources_Messages_Col_Begin);
+      Tmp.ORM_Col_End        := Integer_Value (Self, F_Resources_Messages_Col_End);
       Tmp.ORM_FK_Message_Id  := FK_Message_Id;
       Tmp.ORM_FK_Resource_Id := FK_Resource_Id;
       Tmp.ORM_Id             := Integer_Value (Self, F_Resources_Messages_Id);
+      Tmp.ORM_Line           := Integer_Value (Self, F_Resources_Messages_Line);
       Tmp.ORM_Message_Id     := Integer_Value (Self, F_Resources_Messages_Message_Id);
       Tmp.ORM_Resource_Id    := Integer_Value (Self, F_Resources_Messages_Resource_Id);
       Session.Persist (Result);
@@ -2622,36 +2188,19 @@ package body Orm is
       Follow_LJ : Boolean;
       Pk_Only   : Boolean := False)
    is
+      pragma Unreferenced (Criteria, Depth, Follow_LJ);
       Table : T_Numbered_Entities(Aliases(Base));
-      C2    : Sql_Criteria;
-      T     : SQL_Table_List;
    begin
       if PK_Only then
          Fields := Fields & Table.Id;
       else
          Fields := Fields & Table.Id
-         & Table.Line_Begin_Id
          & Table.Name
+         & Table.Line
          & Table.Col_Begin
          & Table.Col_End;
       end if;
       From := Empty_Table_List;
-      if Depth > 0 then
-
-         declare
-            FK1 : T_Numbered_Lines(Aliases(Aliases(Base + 1)));
-         begin Criteria := Criteria
-         and Table.Line_Begin_Id = FK1.Id;
-         From := +Table;
-         C2 := No_Criteria;
-         Do_Query_Lines(Fields, T, C2,Aliases(Base + 1),
-            Aliases, Depth - 1, Follow_LJ);
-         if Depth > 1 then
-            Criteria := Criteria and C2;
-         end if;
-         From := From & T;
-      end;
-   end if;
    end Do_Query_Entities;
 
    --------------------------------
@@ -2707,106 +2256,6 @@ package body Orm is
       end;
    end if;
    end Do_Query_Entities_Messages;
-
-   --------------------
-   -- Do_Query_Lines --
-   --------------------
-
-   procedure Do_Query_Lines
-     (Fields    : in out SQL_Field_List;
-      From      : out SQL_Table_List;
-      Criteria  : in out Sql_Criteria;
-      Base      : Natural;
-      Aliases   : Alias_Array;
-      Depth     : Natural;
-      Follow_LJ : Boolean;
-      Pk_Only   : Boolean := False)
-   is
-      Table : T_Numbered_Lines(Aliases(Base));
-      C2    : Sql_Criteria;
-      T     : SQL_Table_List;
-   begin
-      if PK_Only then
-         Fields := Fields & Table.Id;
-      else
-         Fields := Fields & Table.Id
-         & Table.Resource_Id
-         & Table.Line;
-      end if;
-      From := Empty_Table_List;
-      if Depth > 0 then
-
-         declare
-            FK1 : T_Numbered_Resources(Aliases(Aliases(Base + 1)));
-         begin Criteria := Criteria
-         and Table.Resource_Id = FK1.Id;
-         From := +Table;
-         C2 := No_Criteria;
-         Do_Query_Resources(Fields, T, C2,Aliases(Base + 1),
-            Aliases, Depth - 1, Follow_LJ);
-         if Depth > 1 then
-            Criteria := Criteria and C2;
-         end if;
-         From := From & T;
-      end;
-   end if;
-   end Do_Query_Lines;
-
-   -----------------------------
-   -- Do_Query_Lines_Messages --
-   -----------------------------
-
-   procedure Do_Query_Lines_Messages
-     (Fields    : in out SQL_Field_List;
-      From      : out SQL_Table_List;
-      Criteria  : in out Sql_Criteria;
-      Base      : Natural;
-      Aliases   : Alias_Array;
-      Depth     : Natural;
-      Follow_LJ : Boolean;
-      Pk_Only   : Boolean := False)
-   is
-      Table : T_Numbered_Lines_Messages(Aliases(Base));
-      C2    : Sql_Criteria;
-      T     : SQL_Table_List;
-   begin
-      if PK_Only then
-         Fields := Fields & Table.Id;
-      else
-         Fields := Fields & Table.Id
-         & Table.Message_Id
-         & Table.Line_Id
-         & Table.Col_Begin
-         & Table.Col_End;
-      end if;
-      From := Empty_Table_List;
-      if Depth > 0 then
-
-         declare
-            FK1 : T_Numbered_Messages(Aliases(Aliases(Base + 1)));
-            FK2 : T_Numbered_Lines(Aliases(Aliases(Base + 2)));
-         begin Criteria := Criteria
-         and Table.Message_Id = FK1.Id
-         and Table.Line_Id = FK2.Id;
-         From := +Table;
-         C2 := No_Criteria;
-         Do_Query_Messages(Fields, T, C2,Aliases(Base + 1),
-            Aliases, Depth - 1, Follow_LJ);
-         if Depth > 1 then
-            Criteria := Criteria and C2;
-         end if;
-         From := From & T;
-
-         C2 := No_Criteria;
-         Do_Query_Lines(Fields, T, C2,Aliases(Base + 2),
-            Aliases, Depth - 1, Follow_LJ);
-         if Depth > 1 then
-            Criteria := Criteria and C2;
-         end if;
-         From := From & T;
-      end;
-   end if;
-   end Do_Query_Lines_Messages;
 
    -----------------------
    -- Do_Query_Messages --
@@ -2975,7 +2424,10 @@ package body Orm is
       else
          Fields := Fields & Table.Id
          & Table.Message_Id
-         & Table.Resource_Id;
+         & Table.Resource_Id
+         & Table.Line
+         & Table.Col_Begin
+         & Table.Col_End;
       end if;
       From := Empty_Table_List;
       if Depth > 0 then
@@ -3184,7 +2636,10 @@ package body Orm is
      (Self        : Resources_Messages_Managers'Class;
       Id          : Integer := -1;
       Message_Id  : Integer := -1;
-      Resource_Id : Integer := -1)
+      Resource_Id : Integer := -1;
+      Line        : Integer := -1;
+      Col_Begin   : Integer := -1;
+      Col_End     : Integer := -1)
      return Resources_Messages_Managers
    is
       C      : Sql_Criteria := No_Criteria;
@@ -3198,6 +2653,15 @@ package body Orm is
       end if;
       if Resource_Id /= -1 then
          C := C and DBA.Resources_Messages.Resource_Id = Resource_Id;
+      end if;
+      if Line /= -1 then
+         C := C and DBA.Resources_Messages.Line = Line;
+      end if;
+      if Col_Begin /= -1 then
+         C := C and DBA.Resources_Messages.Col_Begin = Col_Begin;
+      end if;
+      if Col_End /= -1 then
+         C := C and DBA.Resources_Messages.Col_End = Col_End;
       end if;
       Copy(Self.Filter(C), Into => Result);
       return Result;
@@ -3239,12 +2703,12 @@ package body Orm is
    ------------
 
    function Filter
-     (Self          : Entities_Managers'Class;
-      Id            : Integer := -1;
-      Line_Begin_Id : Integer := -1;
-      Name          : String := No_Update;
-      Col_Begin     : Integer := -1;
-      Col_End       : Integer := -1)
+     (Self      : Entities_Managers'Class;
+      Id        : Integer := -1;
+      Name      : String := No_Update;
+      Line      : Integer := -1;
+      Col_Begin : Integer := -1;
+      Col_End   : Integer := -1)
      return Entities_Managers
    is
       C      : Sql_Criteria := No_Criteria;
@@ -3253,11 +2717,11 @@ package body Orm is
       if Id /= -1 then
          C := C and DBA.Entities.Id = Id;
       end if;
-      if Line_Begin_Id /= -1 then
-         C := C and DBA.Entities.Line_Begin_Id = Line_Begin_Id;
-      end if;
       if Name /= No_Update then
          C := C and DBA.Entities.Name = Name;
+      end if;
+      if Line /= -1 then
+         C := C and DBA.Entities.Line = Line;
       end if;
       if Col_Begin /= -1 then
          C := C and DBA.Entities.Col_Begin = Col_Begin;
@@ -3291,41 +2755,6 @@ package body Orm is
       end if;
       if On_Side /= Indeterminate then
          C := C and DBA.Categories.On_Side = To_Boolean(On_Side);
-      end if;
-      Copy(Self.Filter(C), Into => Result);
-      return Result;
-   end Filter;
-
-   ------------
-   -- Filter --
-   ------------
-
-   function Filter
-     (Self       : Lines_Messages_Managers'Class;
-      Id         : Integer := -1;
-      Message_Id : Integer := -1;
-      Line_Id    : Integer := -1;
-      Col_Begin  : Integer := -1;
-      Col_End    : Integer := -1)
-     return Lines_Messages_Managers
-   is
-      C      : Sql_Criteria := No_Criteria;
-      Result : Lines_Messages_Managers;
-   begin
-      if Id /= -1 then
-         C := C and DBA.Lines_Messages.Id = Id;
-      end if;
-      if Message_Id /= -1 then
-         C := C and DBA.Lines_Messages.Message_Id = Message_Id;
-      end if;
-      if Line_Id /= -1 then
-         C := C and DBA.Lines_Messages.Line_Id = Line_Id;
-      end if;
-      if Col_Begin /= -1 then
-         C := C and DBA.Lines_Messages.Col_Begin = Col_Begin;
-      end if;
-      if Col_End /= -1 then
-         C := C and DBA.Lines_Messages.Col_End = Col_End;
       end if;
       Copy(Self.Filter(C), Into => Result);
       return Result;
@@ -3386,33 +2815,6 @@ package body Orm is
    ------------
 
    function Filter
-     (Self        : Lines_Managers'Class;
-      Id          : Integer := -1;
-      Resource_Id : Integer := -1;
-      Line        : Integer := -1)
-     return Lines_Managers
-   is
-      C      : Sql_Criteria := No_Criteria;
-      Result : Lines_Managers;
-   begin
-      if Id /= -1 then
-         C := C and DBA.Lines.Id = Id;
-      end if;
-      if Resource_Id /= -1 then
-         C := C and DBA.Lines.Resource_Id = Resource_Id;
-      end if;
-      if Line /= -1 then
-         C := C and DBA.Lines.Line = Line;
-      end if;
-      Copy(Self.Filter(C), Into => Result);
-      return Result;
-   end Filter;
-
-   ------------
-   -- Filter --
-   ------------
-
-   function Filter
      (Self      : Resources_Managers'Class;
       Id        : Integer := -1;
       Name      : String := No_Update;
@@ -3455,8 +2857,6 @@ package body Orm is
 
    overriding procedure Free (Self : in out Entity_Ddr) is
    begin
-      Unchecked_Free (Self.ORM_FK_Line_Begin_Id);
-
       Free (Self.ORM_Name);
 
       Free (Detached_Data (Self));
@@ -3470,29 +2870,6 @@ package body Orm is
    begin
       Unchecked_Free (Self.ORM_FK_Entity_Id);
       Unchecked_Free (Self.ORM_FK_Message_Id);
-
-      Free (Detached_Data (Self));
-   end Free;
-
-   ----------
-   -- Free --
-   ----------
-
-   overriding procedure Free (Self : in out Line_Ddr) is
-   begin
-      Unchecked_Free (Self.ORM_FK_Resource_Id);
-
-      Free (Detached_Data (Self));
-   end Free;
-
-   ----------
-   -- Free --
-   ----------
-
-   overriding procedure Free (Self : in out Line_Message_Ddr) is
-   begin
-      Unchecked_Free (Self.ORM_FK_Message_Id);
-      Unchecked_Free (Self.ORM_FK_Line_Id);
 
       Free (Detached_Data (Self));
    end Free;
@@ -3626,7 +3003,7 @@ package body Orm is
       Id      : Integer)
      return Detached_Entity'Class is
    begin
-      return Detached_Entity'Class (Session.From_Cache ((9000000, Id), No_Detached_Entity));
+      return Detached_Entity'Class (Session.From_Cache ((7000000, Id), No_Detached_Entity));
    end From_Cache;
 
    ----------------
@@ -3648,21 +3025,9 @@ package body Orm is
    function From_Cache
      (Session : Session_Type;
       Id      : Integer)
-     return Detached_Line_Message'Class is
-   begin
-      return Detached_Line_Message'Class (Session.From_Cache ((8000000, Id), No_Detached_Line_Message));
-   end From_Cache;
-
-   ----------------
-   -- From_Cache --
-   ----------------
-
-   function From_Cache
-     (Session : Session_Type;
-      Id      : Integer)
      return Detached_Entity_Message'Class is
    begin
-      return Detached_Entity_Message'Class (Session.From_Cache ((10000000, Id), No_Detached_Entity_Message));
+      return Detached_Entity_Message'Class (Session.From_Cache ((8000000, Id), No_Detached_Entity_Message));
    end From_Cache;
 
    ----------------
@@ -3675,18 +3040,6 @@ package body Orm is
      return Detached_Tool'Class is
    begin
       return Detached_Tool'Class (Session.From_Cache ((0, Id), No_Detached_Tool));
-   end From_Cache;
-
-   ----------------
-   -- From_Cache --
-   ----------------
-
-   function From_Cache
-     (Session : Session_Type;
-      Id      : Integer)
-     return Detached_Line'Class is
-   begin
-      return Detached_Line'Class (Session.From_Cache ((7000000, Id), No_Detached_Line));
    end From_Cache;
 
    ----------------
@@ -3829,92 +3182,6 @@ package body Orm is
          end;
       end if;
    end Get_Entity_Message;
-
-   --------------
-   -- Get_Line --
-   --------------
-
-   function Get_Line
-     (Session          : Session_Type;
-      Id               : Integer;
-      Depth            : Related_Depth := 0;
-      Follow_Left_Join : Boolean := False)
-     return Detached_Line'Class
-   is
-      R : constant Detached_Line'Class := From_Cache (Session, Id);
-   begin
-      if not R.Is_Null then
-         return R;
-      else
-
-         declare
-            M : Lines_Managers := All_Lines.Filter
-              (Id => Id);
-            L : I_Lines.List;
-         begin
-            M.Select_Related
-              (Depth, Follow_Left_Join => Follow_Left_Join);
-            M.Limit (1);
-            L := M.Get(Session);
-            if not L.Has_Row then
-               return No_Detached_Line;
-            else
-
-               declare
-                  E : constant Line := L.Element;
-               begin
-                  --  Workaround bug in gnat which is missing a call
-                  --  to Finalize if we do not reset the list (K321-012)
-                  L := I_Lines.Empty_List;
-                  return E.Detach_No_Lookup (Session);
-               end;
-            end if;
-         end;
-      end if;
-   end Get_Line;
-
-   ----------------------
-   -- Get_Line_Message --
-   ----------------------
-
-   function Get_Line_Message
-     (Session          : Session_Type;
-      Id               : Integer;
-      Depth            : Related_Depth := 0;
-      Follow_Left_Join : Boolean := False)
-     return Detached_Line_Message'Class
-   is
-      R : constant Detached_Line_Message'Class := From_Cache (Session, Id);
-   begin
-      if not R.Is_Null then
-         return R;
-      else
-
-         declare
-            M : Lines_Messages_Managers := All_Lines_Messages.Filter
-              (Id => Id);
-            L : I_Lines_Messages.List;
-         begin
-            M.Select_Related
-              (Depth, Follow_Left_Join => Follow_Left_Join);
-            M.Limit (1);
-            L := M.Get(Session);
-            if not L.Has_Row then
-               return No_Detached_Line_Message;
-            else
-
-               declare
-                  E : constant Line_Message := L.Element;
-               begin
-                  --  Workaround bug in gnat which is missing a call
-                  --  to Finalize if we do not reset the list (K321-012)
-                  L := I_Lines_Messages.Empty_List;
-                  return E.Detach_No_Lookup (Session);
-               end;
-            end if;
-         end;
-      end if;
-   end Get_Line_Message;
 
    -----------------
    -- Get_Message --
@@ -4224,25 +3491,10 @@ package body Orm is
       R          : Forward_Cursor;
    begin
       if Mask (2) then
-         if D.ORM_Line_Begin_Id /= -1 then
-            A := A & (DBA.Entities.Line_Begin_Id = D.ORM_Line_Begin_Id);
-         else
-
-            declare
-               D2 : constant Line_Data :=
-               Line_data (D.ORM_FK_Line_Begin_Id.Get);
-            begin
-               if D2.ORM_Id = -1 then
-                  Self.Session.Insert_Or_Update
-                    (D.ORM_FK_Line_Begin_Id.all);
-               end if;
-
-               A := A & (DBA.Entities.Line_Begin_Id = D2.ORM_Id);
-            end;
-         end if;
+         A := A & (DBA.Entities.Name = Str_Or_Empty (D.ORM_Name));
       end if;
       if Mask (3) then
-         A := A & (DBA.Entities.Name = Str_Or_Empty (D.ORM_Name));
+         A := A & (DBA.Entities.Line = D.ORM_Line);
       end if;
       if Mask (4) then
          A := A & (DBA.Entities.Col_Begin = D.ORM_Col_Begin);
@@ -4324,125 +3576,6 @@ package body Orm is
       if Missing_PK and then Success (Self.Session.DB) then
          PK_Modified := True;
          D.ORM_Id := R.Last_Id (Self.Session.DB, DBA.Entities_Messages.Id);
-      end if;
-   end Insert_Or_Update;
-
-   ----------------------
-   -- Insert_Or_Update --
-   ----------------------
-
-   overriding procedure Insert_Or_Update
-     (Self        : in out Detached_Line;
-      Pk_Modified : in out Boolean;
-      Mask        : Dirty_Mask)
-   is
-      D          : constant Line_Data := Line_Data (Self.Get);
-      Q          : SQL_Query;
-      A          : Sql_Assignment := No_Assignment;
-      Missing_Pk : constant Boolean := D.ORM_Id = -1;
-      R          : Forward_Cursor;
-   begin
-      if Mask (2) then
-         if D.ORM_Resource_Id /= -1 then
-            A := A & (DBA.Lines.Resource_Id = D.ORM_Resource_Id);
-         else
-
-            declare
-               D2 : constant Resource_Data :=
-               Resource_data (D.ORM_FK_Resource_Id.Get);
-            begin
-               if D2.ORM_Id = -1 then
-                  Self.Session.Insert_Or_Update
-                    (D.ORM_FK_Resource_Id.all);
-               end if;
-
-               A := A & (DBA.Lines.Resource_Id = D2.ORM_Id);
-            end;
-         end if;
-      end if;
-      if Mask (3) then
-         A := A & (DBA.Lines.Line = D.ORM_Line);
-      end if;
-      if Missing_PK then
-         Q := SQL_Insert (A);
-      else
-         Q := SQL_Update (DBA.Lines, A, DBA.Lines.Id = D.ORM_Id);
-      end if;
-      R.Fetch (Self.Session.DB, Q);
-
-      if Missing_PK and then Success (Self.Session.DB) then
-         PK_Modified := True;
-         D.ORM_Id := R.Last_Id (Self.Session.DB, DBA.Lines.Id);
-      end if;
-   end Insert_Or_Update;
-
-   ----------------------
-   -- Insert_Or_Update --
-   ----------------------
-
-   overriding procedure Insert_Or_Update
-     (Self        : in out Detached_Line_Message;
-      Pk_Modified : in out Boolean;
-      Mask        : Dirty_Mask)
-   is
-      D          : constant Line_Message_Data := Line_Message_Data (Self.Get);
-      Q          : SQL_Query;
-      A          : Sql_Assignment := No_Assignment;
-      Missing_Pk : constant Boolean := D.ORM_Id = -1;
-      R          : Forward_Cursor;
-   begin
-      if Mask (2) then
-         if D.ORM_Message_Id /= -1 then
-            A := A & (DBA.Lines_Messages.Message_Id = D.ORM_Message_Id);
-         else
-
-            declare
-               D2 : constant Message_Data :=
-               Message_data (D.ORM_FK_Message_Id.Get);
-            begin
-               if D2.ORM_Id = -1 then
-                  Self.Session.Insert_Or_Update
-                    (D.ORM_FK_Message_Id.all);
-               end if;
-
-               A := A & (DBA.Lines_Messages.Message_Id = D2.ORM_Id);
-            end;
-         end if;
-      end if;
-      if Mask (3) then
-         if D.ORM_Line_Id /= -1 then
-            A := A & (DBA.Lines_Messages.Line_Id = D.ORM_Line_Id);
-         else
-
-            declare
-               D2 : constant Line_Data :=
-               Line_data (D.ORM_FK_Line_Id.Get);
-            begin
-               if D2.ORM_Id = -1 then
-                  Self.Session.Insert_Or_Update
-                    (D.ORM_FK_Line_Id.all);
-               end if;
-
-               A := A & (DBA.Lines_Messages.Line_Id = D2.ORM_Id);
-            end;
-         end if;
-      end if;
-      if Mask (4) then
-         A := A & (DBA.Lines_Messages.Col_Begin = D.ORM_Col_Begin);
-      end if;
-      if Mask (5) then
-         A := A & (DBA.Lines_Messages.Col_End = D.ORM_Col_End);
-      end if;
-      if Missing_PK then
-         Q := SQL_Insert (A);
-      else
-         Q := SQL_Update (DBA.Lines_Messages, A, DBA.Lines_Messages.Id = D.ORM_Id);
-      end if;
-      R.Fetch (Self.Session.DB, Q);
-
-      if Missing_PK and then Success (Self.Session.DB) then
-         PK_Modified := True;
-         D.ORM_Id := R.Last_Id (Self.Session.DB, DBA.Lines_Messages.Id);
       end if;
    end Insert_Or_Update;
 
@@ -4665,6 +3798,15 @@ package body Orm is
             end;
          end if;
       end if;
+      if Mask (4) then
+         A := A & (DBA.Resources_Messages.Line = D.ORM_Line);
+      end if;
+      if Mask (5) then
+         A := A & (DBA.Resources_Messages.Col_Begin = D.ORM_Col_Begin);
+      end if;
+      if Mask (6) then
+         A := A & (DBA.Resources_Messages.Col_End = D.ORM_Col_End);
+      end if;
       if Missing_PK then
          Q := SQL_Insert (A);
       else
@@ -4801,28 +3943,6 @@ package body Orm is
    -- Internal_Delete --
    ---------------------
 
-   overriding procedure Internal_Delete (Self : Detached_Line)
-   is
-      D : constant Line_Data := Line_Data (Self.Get);
-   begin
-      Execute (Self.Session.DB, SQL_Delete (DBA.Lines, DBA.Lines.Id = D.ORM_Id));
-   end Internal_Delete;
-
-   ---------------------
-   -- Internal_Delete --
-   ---------------------
-
-   overriding procedure Internal_Delete (Self : Detached_Line_Message)
-   is
-      D : constant Line_Message_Data := Line_Message_Data (Self.Get);
-   begin
-      Execute (Self.Session.DB, SQL_Delete (DBA.Lines_Messages, DBA.Lines_Messages.Id = D.ORM_Id));
-   end Internal_Delete;
-
-   ---------------------
-   -- Internal_Delete --
-   ---------------------
-
    overriding procedure Internal_Delete (Self : Detached_Message)
    is
       D : constant Message_Data := Message_Data (Self.Get);
@@ -4932,38 +4052,6 @@ package body Orm is
       Do_Query_Entities_Messages(Fields, From, Criteria,
          0, Alias_Entities_Messages, Depth, Follow_LJ, PK_Only);
    end Internal_Query_Entities_Messages;
-
-   --------------------------
-   -- Internal_Query_Lines --
-   --------------------------
-
-   procedure Internal_Query_Lines
-     (Fields    : in out SQL_Field_List;
-      From      : out SQL_Table_List;
-      Criteria  : in out Sql_Criteria;
-      Depth     : Natural;
-      Follow_LJ : Boolean;
-      Pk_Only   : Boolean := False) is
-   begin
-      Do_Query_Lines(Fields, From, Criteria,
-         0, Alias_Lines, Depth, Follow_LJ, PK_Only);
-   end Internal_Query_Lines;
-
-   -----------------------------------
-   -- Internal_Query_Lines_Messages --
-   -----------------------------------
-
-   procedure Internal_Query_Lines_Messages
-     (Fields    : in out SQL_Field_List;
-      From      : out SQL_Table_List;
-      Criteria  : in out Sql_Criteria;
-      Depth     : Natural;
-      Follow_LJ : Boolean;
-      Pk_Only   : Boolean := False) is
-   begin
-      Do_Query_Lines_Messages(Fields, From, Criteria,
-         0, Alias_Lines_Messages, Depth, Follow_LJ, PK_Only);
-   end Internal_Query_Lines_Messages;
 
    -----------------------------
    -- Internal_Query_Messages --
@@ -5081,32 +4169,6 @@ package body Orm is
    overriding function Key (Self : Entity_Ddr) return Element_Key is
    begin
       if Self.ORM_Id = -1 then
-         return (9000000, No_Primary_Key);
-      else
-         return (9000000, Self.ORM_Id);
-      end if;
-   end Key;
-
-   ---------
-   -- Key --
-   ---------
-
-   overriding function Key (Self : Entity_Message_Ddr) return Element_Key is
-   begin
-      if Self.ORM_Id = -1 then
-         return (10000000, No_Primary_Key);
-      else
-         return (10000000, Self.ORM_Id);
-      end if;
-   end Key;
-
-   ---------
-   -- Key --
-   ---------
-
-   overriding function Key (Self : Line_Ddr) return Element_Key is
-   begin
-      if Self.ORM_Id = -1 then
          return (7000000, No_Primary_Key);
       else
          return (7000000, Self.ORM_Id);
@@ -5117,7 +4179,7 @@ package body Orm is
    -- Key --
    ---------
 
-   overriding function Key (Self : Line_Message_Ddr) return Element_Key is
+   overriding function Key (Self : Entity_Message_Ddr) return Element_Key is
    begin
       if Self.ORM_Id = -1 then
          return (8000000, No_Primary_Key);
@@ -5204,75 +4266,6 @@ package body Orm is
       end if;
    end Key;
 
-   -----------------------
-   -- Line_Begin_Entity --
-   -----------------------
-
-   function Line_Begin_Entity (Self : Line'Class) return Entities_Managers is
-   begin
-      return All_Entities.Filter(Line_Begin_Id => Self.Id);
-   end Line_Begin_Entity;
-
-   -----------------------
-   -- Line_Begin_Entity --
-   -----------------------
-
-   function Line_Begin_Entity
-     (Self : Detached_Line'Class)
-     return Entities_Managers is
-   begin
-      return All_Entities.Filter (Line_Begin_Id => Self.Id);
-   end Line_Begin_Entity;
-
-   -----------------------
-   -- Line_Begin_Entity --
-   -----------------------
-
-   function Line_Begin_Entity
-     (Self : I_Lines_Managers'Class)
-     return Entities_Managers
-   is
-      Q : constant SQL_Query := I_Lines.Build_Query(Self, +DBA.Lines.Id);
-   begin
-      return All_Entities.Filter
-        (SQL_In(DBA.Entities.Line_Begin_Id, Q));
-   end Line_Begin_Entity;
-
-   -------------------
-   -- Line_Messages --
-   -------------------
-
-   function Line_Messages (Self : Line'Class) return Lines_Messages_Managers
-   is
-   begin
-      return All_Lines_Messages.Filter(Line_Id => Self.Id);
-   end Line_Messages;
-
-   -------------------
-   -- Line_Messages --
-   -------------------
-
-   function Line_Messages
-     (Self : Detached_Line'Class)
-     return Lines_Messages_Managers is
-   begin
-      return All_Lines_Messages.Filter (Line_Id => Self.Id);
-   end Line_Messages;
-
-   -------------------
-   -- Line_Messages --
-   -------------------
-
-   function Line_Messages
-     (Self : I_Lines_Managers'Class)
-     return Lines_Messages_Managers
-   is
-      Q : constant SQL_Query := I_Lines.Build_Query(Self, +DBA.Lines.Id);
-   begin
-      return All_Lines_Messages.Filter
-        (SQL_In(DBA.Lines_Messages.Line_Id, Q));
-   end Line_Messages;
-
    ----------------------
    -- Message_Entities --
    ----------------------
@@ -5308,77 +4301,6 @@ package body Orm is
       return All_Entities_Messages.Filter
         (SQL_In(DBA.Entities_Messages.Message_Id, Q));
    end Message_Entities;
-
-   -------------------
-   -- Message_Lines --
-   -------------------
-
-   function Message_Lines
-     (Self : Message'Class)
-     return Resources_Messages_Managers is
-   begin
-      return All_Resources_Messages.Filter(Message_Id => Self.Id);
-   end Message_Lines;
-
-   -------------------
-   -- Message_Lines --
-   -------------------
-
-   function Message_Lines
-     (Self : Detached_Message'Class)
-     return Resources_Messages_Managers is
-   begin
-      return All_Resources_Messages.Filter (Message_Id => Self.Id);
-   end Message_Lines;
-
-   -------------------
-   -- Message_Lines --
-   -------------------
-
-   function Message_Lines
-     (Self : I_Messages_Managers'Class)
-     return Resources_Messages_Managers
-   is
-      Q : constant SQL_Query := I_Messages.Build_Query(Self, +DBA.Messages.Id);
-   begin
-      return All_Resources_Messages.Filter
-        (SQL_In(DBA.Resources_Messages.Message_Id, Q));
-   end Message_Lines;
-
-   -------------------
-   -- Message_Lines --
-   -------------------
-
-   function Message_Lines (Self : Message'Class) return Lines_Messages_Managers
-   is
-   begin
-      return All_Lines_Messages.Filter(Message_Id => Self.Id);
-   end Message_Lines;
-
-   -------------------
-   -- Message_Lines --
-   -------------------
-
-   function Message_Lines
-     (Self : Detached_Message'Class)
-     return Lines_Messages_Managers is
-   begin
-      return All_Lines_Messages.Filter (Message_Id => Self.Id);
-   end Message_Lines;
-
-   -------------------
-   -- Message_Lines --
-   -------------------
-
-   function Message_Lines
-     (Self : I_Messages_Managers'Class)
-     return Lines_Messages_Managers
-   is
-      Q : constant SQL_Query := I_Messages.Build_Query(Self, +DBA.Messages.Id);
-   begin
-      return All_Lines_Messages.Filter
-        (SQL_In(DBA.Lines_Messages.Message_Id, Q));
-   end Message_Lines;
 
    ------------------
    -- New_Category --
@@ -5418,32 +4340,6 @@ package body Orm is
       Set (Result, Data);
       return Result;
    end New_Entity_Message;
-
-   --------------
-   -- New_Line --
-   --------------
-
-   function New_Line return Detached_Line'Class
-   is
-      Result : Detached_Line;
-      Data   : constant Line_Data := new Line_DDR;
-   begin
-      Set (Result, Data);
-      return Result;
-   end New_Line;
-
-   ----------------------
-   -- New_Line_Message --
-   ----------------------
-
-   function New_Line_Message return Detached_Line_Message'Class
-   is
-      Result : Detached_Line_Message;
-      Data   : constant Line_Message_Data := new Line_Message_DDR;
-   begin
-      Set (Result, Data);
-      return Result;
-   end New_Line_Message;
 
    -----------------
    -- New_Message --
@@ -5527,21 +4423,6 @@ package body Orm is
    -- On_Persist --
    ----------------
 
-   overriding procedure On_Persist (Self : Detached_Entity)
-   is
-      D : constant Entity_Data := Entity_Data (Self.Get);
-   begin
-      if Persist_Cascade (Self.Session) then
-         if D.ORM_FK_Line_Begin_Id /= null then
-            Self.Session.Persist (D.ORM_FK_Line_Begin_Id.all);
-         end if;
-      end if;
-   end On_Persist;
-
-   ----------------
-   -- On_Persist --
-   ----------------
-
    overriding procedure On_Persist (Self : Detached_Entity_Message)
    is
       D : constant Entity_Message_Data := Entity_Message_Data (Self.Get);
@@ -5552,39 +4433,6 @@ package body Orm is
          end if;
          if D.ORM_FK_Message_Id /= null then
             Self.Session.Persist (D.ORM_FK_Message_Id.all);
-         end if;
-      end if;
-   end On_Persist;
-
-   ----------------
-   -- On_Persist --
-   ----------------
-
-   overriding procedure On_Persist (Self : Detached_Line)
-   is
-      D : constant Line_Data := Line_Data (Self.Get);
-   begin
-      if Persist_Cascade (Self.Session) then
-         if D.ORM_FK_Resource_Id /= null then
-            Self.Session.Persist (D.ORM_FK_Resource_Id.all);
-         end if;
-      end if;
-   end On_Persist;
-
-   ----------------
-   -- On_Persist --
-   ----------------
-
-   overriding procedure On_Persist (Self : Detached_Line_Message)
-   is
-      D : constant Line_Message_Data := Line_Message_Data (Self.Get);
-   begin
-      if Persist_Cascade (Self.Session) then
-         if D.ORM_FK_Message_Id /= null then
-            Self.Session.Persist (D.ORM_FK_Message_Id.all);
-         end if;
-         if D.ORM_FK_Line_Id /= null then
-            Self.Session.Persist (D.ORM_FK_Line_Id.all);
          end if;
       end if;
    end On_Persist;
@@ -5693,76 +4541,6 @@ package body Orm is
       return All_Resource_Trees.Filter
         (SQL_In(DBA.Resource_Trees.Child_Id, Q));
    end Resource_Children;
-
-   --------------------
-   -- Resource_Lines --
-   --------------------
-
-   function Resource_Lines (Self : Resource'Class) return Lines_Managers is
-   begin
-      return All_Lines.Filter(Resource_Id => Self.Id);
-   end Resource_Lines;
-
-   --------------------
-   -- Resource_Lines --
-   --------------------
-
-   function Resource_Lines
-     (Self : Detached_Resource'Class)
-     return Lines_Managers is
-   begin
-      return All_Lines.Filter (Resource_Id => Self.Id);
-   end Resource_Lines;
-
-   --------------------
-   -- Resource_Lines --
-   --------------------
-
-   function Resource_Lines
-     (Self : I_Resources_Managers'Class)
-     return Lines_Managers
-   is
-      Q : constant SQL_Query := I_Resources.Build_Query(Self, +DBA.Resources.Id);
-   begin
-      return All_Lines.Filter
-        (SQL_In(DBA.Lines.Resource_Id, Q));
-   end Resource_Lines;
-
-   -----------------------
-   -- Resource_Messages --
-   -----------------------
-
-   function Resource_Messages
-     (Self : Resource'Class)
-     return Resources_Messages_Managers is
-   begin
-      return All_Resources_Messages.Filter(Resource_Id => Self.Id);
-   end Resource_Messages;
-
-   -----------------------
-   -- Resource_Messages --
-   -----------------------
-
-   function Resource_Messages
-     (Self : Detached_Resource'Class)
-     return Resources_Messages_Managers is
-   begin
-      return All_Resources_Messages.Filter (Resource_Id => Self.Id);
-   end Resource_Messages;
-
-   -----------------------
-   -- Resource_Messages --
-   -----------------------
-
-   function Resource_Messages
-     (Self : I_Resources_Managers'Class)
-     return Resources_Messages_Managers
-   is
-      Q : constant SQL_Query := I_Resources.Build_Query(Self, +DBA.Resources.Id);
-   begin
-      return All_Resources_Messages.Filter
-        (SQL_In(DBA.Resources_Messages.Resource_Id, Q));
-   end Resource_Messages;
 
    ---------------------
    -- Resource_Parent --
@@ -5903,6 +4681,18 @@ package body Orm is
    -- Set_Col_Begin --
    -------------------
 
+   procedure Set_Col_Begin (Self : Detached_Resource_Message; Value : Integer)
+   is
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+   begin
+      D.ORM_Col_Begin := Value;
+      Self.Set_Modified (5);
+   end Set_Col_Begin;
+
+   -------------------
+   -- Set_Col_Begin --
+   -------------------
+
    procedure Set_Col_Begin (Self : Detached_Entity; Value : Integer)
    is
       D : constant Entity_Data := Entity_Data (Self.Get);
@@ -5911,17 +4701,17 @@ package body Orm is
       Self.Set_Modified (4);
    end Set_Col_Begin;
 
-   -------------------
-   -- Set_Col_Begin --
-   -------------------
+   -----------------
+   -- Set_Col_End --
+   -----------------
 
-   procedure Set_Col_Begin (Self : Detached_Line_Message; Value : Integer)
+   procedure Set_Col_End (Self : Detached_Resource_Message; Value : Integer)
    is
-      D : constant Line_Message_Data := Line_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
    begin
-      D.ORM_Col_Begin := Value;
-      Self.Set_Modified (4);
-   end Set_Col_Begin;
+      D.ORM_Col_End := Value;
+      Self.Set_Modified (6);
+   end Set_Col_End;
 
    -----------------
    -- Set_Col_End --
@@ -5930,18 +4720,6 @@ package body Orm is
    procedure Set_Col_End (Self : Detached_Entity; Value : Integer)
    is
       D : constant Entity_Data := Entity_Data (Self.Get);
-   begin
-      D.ORM_Col_End := Value;
-      Self.Set_Modified (5);
-   end Set_Col_End;
-
-   -----------------
-   -- Set_Col_End --
-   -----------------
-
-   procedure Set_Col_End (Self : Detached_Line_Message; Value : Integer)
-   is
-      D : constant Line_Message_Data := Line_Message_Data (Self.Get);
    begin
       D.ORM_Col_End := Value;
       Self.Set_Modified (5);
@@ -6047,79 +4825,25 @@ package body Orm is
    -- Set_Line --
    --------------
 
-   procedure Set_Line (Self : Detached_Line; Value : Integer)
+   procedure Set_Line (Self : Detached_Resource_Message; Value : Integer)
    is
-      D : constant Line_Data := Line_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+   begin
+      D.ORM_Line := Value;
+      Self.Set_Modified (4);
+   end Set_Line;
+
+   --------------
+   -- Set_Line --
+   --------------
+
+   procedure Set_Line (Self : Detached_Entity; Value : Integer)
+   is
+      D : constant Entity_Data := Entity_Data (Self.Get);
    begin
       D.ORM_Line := Value;
       Self.Set_Modified (3);
    end Set_Line;
-
-   -----------------------
-   -- Set_Line_Begin_Id --
-   -----------------------
-
-   procedure Set_Line_Begin_Id (Self : Detached_Entity; Value : Integer)
-   is
-      D : constant Entity_Data := Entity_Data (Self.Get);
-   begin
-      Unchecked_Free (D.ORM_FK_Line_Begin_Id);
-      D.ORM_Line_Begin_Id := Value;
-      Self.Set_Modified (2);
-   end Set_Line_Begin_Id;
-
-   -----------------------
-   -- Set_Line_Begin_Id --
-   -----------------------
-
-   procedure Set_Line_Begin_Id
-     (Self  : Detached_Entity;
-      Value : Detached_Line'Class)
-   is
-      D : constant Entity_Data := Entity_Data (Self.Get);
-   begin
-      Unchecked_Free (D.ORM_FK_Line_Begin_Id);
-      D.ORM_Line_Begin_Id := Value.Id;
-      D.ORM_FK_Line_Begin_Id := new Detached_Line'Class'(Value);
-
-      Self.Set_Modified (2);
-      if Persist_Cascade (Self.Session) then
-         Self.Session.Persist (D.ORM_FK_Line_Begin_Id.all);
-      end if;
-   end Set_Line_Begin_Id;
-
-   -----------------
-   -- Set_Line_Id --
-   -----------------
-
-   procedure Set_Line_Id (Self : Detached_Line_Message; Value : Integer)
-   is
-      D : constant Line_Message_Data := Line_Message_Data (Self.Get);
-   begin
-      Unchecked_Free (D.ORM_FK_Line_Id);
-      D.ORM_Line_Id := Value;
-      Self.Set_Modified (3);
-   end Set_Line_Id;
-
-   -----------------
-   -- Set_Line_Id --
-   -----------------
-
-   procedure Set_Line_Id
-     (Self  : Detached_Line_Message;
-      Value : Detached_Line'Class)
-   is
-      D : constant Line_Message_Data := Line_Message_Data (Self.Get);
-   begin
-      Unchecked_Free (D.ORM_FK_Line_Id);
-      D.ORM_Line_Id := Value.Id;
-      D.ORM_FK_Line_Id := new Detached_Line'Class'(Value);
-
-      Self.Set_Modified (3);
-      if Persist_Cascade (Self.Session) then
-         Self.Session.Persist (D.ORM_FK_Line_Id.all);
-      end if;
-   end Set_Line_Id;
 
    --------------------
    -- Set_Message_Id --
@@ -6143,39 +4867,6 @@ package body Orm is
       Value : Detached_Message'Class)
    is
       D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
-   begin
-      Unchecked_Free (D.ORM_FK_Message_Id);
-      D.ORM_Message_Id := Value.Id;
-      D.ORM_FK_Message_Id := new Detached_Message'Class'(Value);
-
-      Self.Set_Modified (2);
-      if Persist_Cascade (Self.Session) then
-         Self.Session.Persist (D.ORM_FK_Message_Id.all);
-      end if;
-   end Set_Message_Id;
-
-   --------------------
-   -- Set_Message_Id --
-   --------------------
-
-   procedure Set_Message_Id (Self : Detached_Line_Message; Value : Integer)
-   is
-      D : constant Line_Message_Data := Line_Message_Data (Self.Get);
-   begin
-      Unchecked_Free (D.ORM_FK_Message_Id);
-      D.ORM_Message_Id := Value;
-      Self.Set_Modified (2);
-   end Set_Message_Id;
-
-   --------------------
-   -- Set_Message_Id --
-   --------------------
-
-   procedure Set_Message_Id
-     (Self  : Detached_Line_Message;
-      Value : Detached_Message'Class)
-   is
-      D : constant Line_Message_Data := Line_Message_Data (Self.Get);
    begin
       Unchecked_Free (D.ORM_FK_Message_Id);
       D.ORM_Message_Id := Value.Id;
@@ -6243,7 +4934,7 @@ package body Orm is
    begin
       Free (D.ORM_Name);
       D.ORM_Name := new String'(Value);
-      Self.Set_Modified (3);
+      Self.Set_Modified (2);
    end Set_Name;
 
    --------------
@@ -6345,39 +5036,6 @@ package body Orm is
       D.ORM_FK_Resource_Id := new Detached_Resource'Class'(Value);
 
       Self.Set_Modified (3);
-      if Persist_Cascade (Self.Session) then
-         Self.Session.Persist (D.ORM_FK_Resource_Id.all);
-      end if;
-   end Set_Resource_Id;
-
-   ---------------------
-   -- Set_Resource_Id --
-   ---------------------
-
-   procedure Set_Resource_Id (Self : Detached_Line; Value : Integer)
-   is
-      D : constant Line_Data := Line_Data (Self.Get);
-   begin
-      Unchecked_Free (D.ORM_FK_Resource_Id);
-      D.ORM_Resource_Id := Value;
-      Self.Set_Modified (2);
-   end Set_Resource_Id;
-
-   ---------------------
-   -- Set_Resource_Id --
-   ---------------------
-
-   procedure Set_Resource_Id
-     (Self  : Detached_Line;
-      Value : Detached_Resource'Class)
-   is
-      D : constant Line_Data := Line_Data (Self.Get);
-   begin
-      Unchecked_Free (D.ORM_FK_Resource_Id);
-      D.ORM_Resource_Id := Value.Id;
-      D.ORM_FK_Resource_Id := new Detached_Resource'Class'(Value);
-
-      Self.Set_Modified (2);
       if Persist_Cascade (Self.Session) then
          Self.Session.Persist (D.ORM_FK_Resource_Id.all);
       end if;

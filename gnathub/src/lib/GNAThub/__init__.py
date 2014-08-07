@@ -440,12 +440,12 @@ class Resource(object):
 
         pass    # Implemented in Ada
 
-    def add_message(self, message, line=-1, col_begin=1, col_end=None):
+    def add_message(self, message, line=0, col_begin=1, col_end=None):
         """Adds a message to the given resource.
 
         :param GNAThub.Message message: The Message to add.
         :param int line: The line to associate the message to, if the
-            resource is a file. Use -1 to indicate a message which should be
+            resource is a file. Use 0 to indicate a message which should be
             associated to the resource but not to a specific line.
         :param int col_begin: The begin column of the message.
         :param int col_end: The end column of the message. None means that
@@ -454,6 +454,31 @@ class Resource(object):
         """
 
         pass    # Implemented in Ada
+
+    def add_messages(self, messages):
+        """ Adds multiple messages to the given resource.
+            Prefer this function when there are a lot of messages to insert.
+
+            messages is a list, each entry being a list of the form
+                [message, line, col_begin, col_end]
+
+            Where:
+                message is the Message to add
+                line, col_begin, col_end: integers, see add_message.
+
+            For example:
+
+                resource.add_messages([
+                  [ message, 1, 2, 2 ],
+                  [ message, 2, 1, 1 ],
+                  [ message, 0, 1, 1 ],
+                  [ message, 10002, 1, 1 ],
+                  [ message, 10003, 1, 1 ],
+                  [ message, 10005, 1, 1 ],
+                 ])
+
+        """
+        pass    # implemented in Ada
 
     def list_messages(self):
         """Lists all messages associated with this resource.
