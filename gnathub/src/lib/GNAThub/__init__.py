@@ -456,28 +456,32 @@ class Resource(object):
         pass    # Implemented in Ada
 
     def add_messages(self, messages):
-        """ Adds multiple messages to the given resource.
-            Prefer this function when there are a lot of messages to insert.
+        """Adds multiple messages to the given resource.
 
-            messages is a list, each entry being a list of the form
-                [message, line, col_begin, col_end]
+        Prefer this function when there are a lot of messages to insert, for
+        efficiency. ``messages`` is a list, each entry being a list of the
+        form::
 
-            Where:
-                message is the Message to add
-                line, col_begin, col_end: integers, see add_message.
+            [message, line, col_begin, col_end]
 
-            For example:
+            message is the :class:`Message` to add
+            line, col_begin, col_end: int, see :meth:`add_message`.
 
-                resource.add_messages([
-                  [ message, 1, 2, 2 ],
-                  [ message, 2, 1, 1 ],
-                  [ message, 0, 1, 1 ],
-                  [ message, 10002, 1, 1 ],
-                  [ message, 10003, 1, 1 ],
-                  [ message, 10005, 1, 1 ],
-                 ])
+        Example::
+
+            resource.add_messages([
+              [ message, 1, 2, 2 ],
+              [ message, 2, 1, 1 ],
+              [ message, 0, 1, 1 ],
+              [ message, 10002, 1, 1 ],
+              [ message, 10003, 1, 1 ],
+              [ message, 10005, 1, 1 ],
+             ])
+
+        :param list[list] messages: The messages to add.
 
         """
+
         pass    # implemented in Ada
 
     def list_messages(self):
