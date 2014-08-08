@@ -29,6 +29,8 @@ assert os.path.isdir(GNAThub.logs()), '%s: no such directory' % GNAThub.logs()
 assert relpath(GNAThub.logs()) == os.path.join('obj', 'gnathub', 'logs'), \
     'unexpected value'
 
+assert not GNAThub.verbose(), 'unexpected activated verbose mode'
+
 assert os.path.isfile(GNAThub.database()), \
     '%s: no such file' % GNAThub.database()
 assert relpath(GNAThub.database()) == \
@@ -62,5 +64,4 @@ assert os.path.isfile(process.output()), '%s: no such file' % process.output()
 
 with open(process.output(), 'r') as logs:
     content = logs.read().strip()
-    assert content == "%s\necho '%s'" % (
-        TO_BE_ECHOED, TO_BE_ECHOED), 'unexpected process output: ' + content
+    assert content == TO_BE_ECHOED, 'unexpected process output: ' + content

@@ -348,6 +348,15 @@ package body GNAThub.Configuration is
       return Jobs_Arg;
    end Jobs;
 
+   -------------
+   -- Verbose --
+   -------------
+
+   function Verbose return Boolean is
+   begin
+      return Verbose_Arg;
+   end Verbose;
+
    ----------------------
    -- Interpreter_Mode --
    ----------------------

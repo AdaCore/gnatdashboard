@@ -52,6 +52,16 @@ def logs():
     pass        # Implemented in Ada
 
 
+def verbose():
+    """Whether the verbose flag was passed to the GNAThub driver or not.
+
+    :returns: boolean
+
+    """
+
+    pass        # Implemented in Ada
+
+
 def jobs():
     """Returns the number of parallel jobs to execute (equivalent to
     :command:`-j`).
@@ -725,9 +735,11 @@ class Run(object):
                        workdir if workdir is not None else os.getcwd(),
                        self.cmdline_image())
 
+        if verbose():
+            Console.info(self.cmdline_image())
+
         try:
             with open(self.output(), 'w') as output:
-                output.write(self.cmdline_image() + "\n")
                 self.internal = Popen(argv, env=env, stdin=None, stdout=output,
                                       stderr=STDOUT, cwd=workdir)
 
