@@ -101,7 +101,7 @@ public class SQLQueries {
       +     "resources file, resources_messages rm, "
       +     "rules rule, tools tool, messages msg "
       + "WHERE "
-      +     "file.kind = %d AND file.id = rm.resource_id "
+      +     "rm.line = 0 AND file.kind = %d AND file.id = rm.resource_id "
       +     "AND msg.id = rm.message_id AND rule.tool_id = tool.id "
       +     "AND msg.rule_id = rule.id AND rule.kind = %d",
       ResourceKind.FILE.img, RuleKind.MEASURE.img);
@@ -115,31 +115,30 @@ public class SQLQueries {
       +     "msg.data as message, "
       +     "rule.identifier as key, "
       +     "REPLACE(LOWER(tool.name), ' ', '') as tool_name, "
-      +     "line.line as line_no, "
+      +     "rm.line as line_no, "
       +     "c.label as category "
       + "FROM "
-      +     "lines_messages lm, rules rule, tools tool, lines line, "
+      +     "resources_messages rm, rules rule, tools tool, "
       +     "messages msg, resources file "
       + "LEFT OUTER JOIN "
       +     "categories c ON msg.category_id = c.id "
       + "WHERE "
-      +     "msg.rule_id = rule.id AND lm.message_id = msg.id "
-      +     "AND rule.tool_id = tool.id AND lm.line_id = line.id "
-      +     "AND line.resource_id = file.id AND rule.kind = %d",
-      RuleKind.ISSUE.img);
+      +     "msg.rule_id = rule.id AND rm.message_id = msg.id "
+      +     "AND rule.tool_id = tool.id AND rm.resource_id = file.id "
+      +     "AND rule.kind = %d", RuleKind.ISSUE.img);
 
   private final static String BASE_COVERAGE_QUERY =
         "SELECT "
       +     "file.name as path, "
-      +     "line.line as line_no, "
+      +     "rm.line as line_no, "
       +     "msg.data as hits "
       + "FROM "
-      +     "resources file, lines_messages lm, messages msg, tools tool, "
-      +     "rules rule, lines line "
+      +     "resources file, resources_messages rm, messages msg, tools tool, "
+      +     "rules rule "
       + "WHERE "
       +     "tool.id = rule.tool_id AND rule.id = msg.rule_id "
-      +     "AND msg.id = lm.message_id AND lm.line_id = line.id "
-      +     "AND line.resource_id = file.id";
+      +     "AND msg.id = rm.message_id AND rm.line != 0 "
+      +     "AND rm.resource_id = file.id";
 
   private final static String COVERAGE_PER_TOOL =
       BASE_COVERAGE_QUERY + " AND LOWER(tool.name) = LOWER('%s')";
