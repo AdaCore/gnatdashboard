@@ -108,6 +108,12 @@ class GNATmetric(GNAThub.Plugin):
             files = tree.findall('./file')
             total = len(files)
 
+            messages = {}
+            # Dict of messages. key: metric text, value: Message instance
+
+            message_data = []
+            # A list of message data suitable for bulk addition
+
             for index, node in enumerate(files, start=1):
                 resource = GNAThub.Resource.get(node.attrib.get('name'))
 
@@ -122,10 +128,13 @@ class GNATmetric(GNAThub.Plugin):
                     rule = GNAThub.Rule(name, name, GNAThub.METRIC_KIND,
                                         tool)
 
-                    # pylint: disable=E1103
-                    # Disable "Module {} has no member {}" error
-                    message = GNAThub.Message(rule, metric.text)
-                    resource.add_message(message)
+                    if metric.text in messages:
+                        m = messages[metric.text]
+                    else:
+                        m = GNAThub.Message(rule, metric.text)
+                        messages[metric.text] = m
+
+                    message_data.append([m, 0, 1, 1])
 
                 # Save unit level metric
                 for unit in node.findall('.//unit'):
@@ -140,6 +149,8 @@ class GNATmetric(GNAThub.Plugin):
                         # Metric value --> metric.text)
 
                 Console.progress(index, total, new_line=(index == total))
+
+            resource.add_messages(message_data)
 
         except ParseError as why:
             self.exec_status = GNAThub.EXEC_FAILURE

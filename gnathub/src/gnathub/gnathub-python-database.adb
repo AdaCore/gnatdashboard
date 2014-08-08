@@ -48,7 +48,8 @@ package body GNAThub.Python.Database is
            & (D.Resources_Messages.Resource_Id = Integer_Param (2))
            & (D.Resources_Messages.Line        = Integer_Param (3))
            & (D.Resources_Messages.Col_Begin   = Integer_Param (4))
-           & (D.Resources_Messages.Col_End     = Integer_Param (5)))));
+           & (D.Resources_Messages.Col_End     = Integer_Param (5)))),
+       On_Server => True);
 
    -----------
    -- Tools --
@@ -743,6 +744,7 @@ package body GNAThub.Python.Database is
             end loop;
 
             Database.DB.Commit_Or_Rollback;
+            Database.DB.Automatic_Transactions (True);
          end;
 
       elsif Command = "add_message" then
