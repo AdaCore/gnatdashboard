@@ -53,13 +53,12 @@ public class AdaDao {
     public List<Violation> selectAllViolations() {
         String queryString = "SELECT m.data as \"msg\", r.identifier as \"rule_key\", "
                 + "REPLACE(LOWER(t.name), ' ', '') as \"rule_repository\", "
-                + "l.line, l.resource_id, c.label as \"category\" "
-                + "FROM lines_messages lm, rules r, tools t, lines l,"
+                + "rm.line, rm.resource_id, c.label as \"category\" "
+                + "FROM resources_messages rm, rules r, tools t, "
                 + "messages m  LEFT OUTER JOIN categories c ON m.category_id = c.id "
                 + "WHERE m.rule_id = r.id "
-                + "AND lm.message_id = m.id "
+                + "AND rm.message_id = m.id "
                 + "AND r.tool_id = t.id "
-                + "AND lm.line_id = l.id "
                 + "AND r.kind = 0";
 
         RowMapper violationMapper = new RowMapper() {
@@ -126,15 +125,14 @@ public class AdaDao {
     }
 
     public List<CoverageData> getCoverageData() {
-        String queryString = "SELECT rs.id as resource_id, l.line as line, "
+        String queryString = "SELECT rs.id as resource_id, rm.line as line, "
                            +         "m.data as hits "
-                           + "FROM resources rs, lines_messages lm, "
-                           +       "messages m, tools t, rules r, lines l "
+                           + "FROM resources rs, resources_messages rm, "
+                           +       "messages m, tools t, rules r "
                            + "WHERE t.id = r.tool_id "
                            + "AND r.id = m.rule_id "
-                           + "AND m.id = lm.message_id "
-                           + "AND lm.line_id = l.id "
-                           + "AND l.resource_id = rs.id "
+                           + "AND m.id = rm.message_id "
+                           + "AND rm.resource_id = rs.id "
                            + "AND UPPER(t.name) = UPPER('Gcov') "
                            + "ORDER BY (rs.id);";
 
