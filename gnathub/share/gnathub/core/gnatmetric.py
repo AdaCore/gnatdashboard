@@ -108,8 +108,13 @@ class GNATmetric(GNAThub.Plugin):
             files = tree.findall('./file')
             total = len(files)
 
+            rules = {}
+            # Dict of rules
+            # key: name,  value: rule
+
             messages = {}
-            # Dict of messages. key: metric text, value: Message instance
+            # Dict of messages.
+            # key: (rule, metric text), value: Message instance
 
             message_data = []
             # A list of message data suitable for bulk addition
@@ -125,14 +130,19 @@ class GNATmetric(GNAThub.Plugin):
 
                 for metric in node.findall('./metric'):
                     name = metric.attrib.get('name')
-                    rule = GNAThub.Rule(name, name, GNAThub.METRIC_KIND,
-                                        tool)
 
-                    if metric.text in messages:
-                        m = messages[metric.text]
+                    if name in rules:
+                        rule = rules[name]
+                    else:
+                        rule = GNAThub.Rule(name, name, GNAThub.METRIC_KIND,
+                                            tool)
+                        rules[name] = rule
+
+                    if (rule, metric.text) in messages:
+                        m = messages[(rule, metric.text)]
                     else:
                         m = GNAThub.Message(rule, metric.text)
-                        messages[metric.text] = m
+                        messages[(rule, metric.text)] = m
 
                     message_data.append([m, 0, 1, 1])
 
@@ -148,9 +158,8 @@ class GNATmetric(GNAThub.Plugin):
                         # Metric name --> metric.attrib.get('name'),
                         # Metric value --> metric.text)
 
+                resource.add_messages(message_data)
                 Console.progress(index, total, new_line=(index == total))
-
-            resource.add_messages(message_data)
 
         except ParseError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
