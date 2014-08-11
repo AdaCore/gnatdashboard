@@ -1,11 +1,12 @@
 BUILD_DIR := target
 
 MVN            := BUILD_DIR=$(BUILD_DIR) mvn -PalternateBuildDir
+MVN_OPTS       := -Xmx512m
 MVN_BUILD_OPTS := -Dmaven.test.skip=true
 MVN_TEST_OPTS  :=
 
 build:
-	$(MVN) $(MVN_BUILD_OPTS) package
+	MAVEN_OPTS=$(MVN_OPTS) $(MVN) $(MVN_BUILD_OPTS) package
 
 test:
 	$(MVN) $(MVN_TEST_OPTS) test
