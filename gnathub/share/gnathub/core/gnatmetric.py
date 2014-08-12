@@ -55,7 +55,7 @@ class GNATmetric(GNAThub.Plugin):
         """
 
         return ['gnatmetric', '-ox', self.report, '-P', GNAThub.Project.path(),
-                '-U']
+                '-U'] + GNAThub.Project.scenario_switches()
 
     def execute(self):
         """Executes the GNATmetric.

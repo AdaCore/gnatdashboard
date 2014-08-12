@@ -62,7 +62,8 @@ class CodePeer(GNAThub.Plugin):
         """
 
         return ['codepeer', '-update-scil',
-                '-P', GNAThub.Project.path(), '-jobs', str(GNAThub.jobs())]
+                '-P', GNAThub.Project.path(), '-jobs', str(GNAThub.jobs())
+                ] + GNAThub.Project.scenario_switches()
 
     @staticmethod
     def __msg_reader_cmd_line():

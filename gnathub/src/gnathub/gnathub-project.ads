@@ -67,6 +67,9 @@ package GNAThub.Project is
       with Pre => Initialized;
    --  Return a flat list of all Projects.
 
+   function Tree return GNATCOLL.Projects.Project_Tree;
+   --  Return the loaded project tree
+
    function Name return String
      with Pre => Initialized and then Loaded;
    --  Return the name of the root project

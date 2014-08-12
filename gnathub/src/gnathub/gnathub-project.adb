@@ -265,6 +265,15 @@ package body GNAThub.Project is
       end return;
    end All_Projects;
 
+   ----------
+   -- Tree --
+   ----------
+
+   function Tree return GNATCOLL.Projects.Project_Tree is
+   begin
+      return Project_Tree;
+   end Tree;
+
    --------------------------
    -- Save_Project_Sources --
    --------------------------

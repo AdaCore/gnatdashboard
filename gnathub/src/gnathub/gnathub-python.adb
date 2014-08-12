@@ -20,6 +20,7 @@ with Ada.Strings.Unbounded;         use Ada.Strings.Unbounded;
 with GNAT.OS_Lib;                   use GNAT.OS_Lib;
 with GNAT.Source_Info;
 
+with GNATCOLL.Projects;             use GNATCOLL.Projects;
 with GNATCOLL.SQL;                  use GNATCOLL.SQL;
 with GNATCOLL.Scripts;              use GNATCOLL.Scripts;
 with GNATCOLL.Scripts.Python;       use GNATCOLL.Scripts.Python;
@@ -69,6 +70,7 @@ package body GNAThub.Python is
    Project_Source_Dirs_Method        : constant String := "source_dirs";
    Project_Property_As_String_Method : constant String := "property_as_string";
    Project_Property_As_List_Method   : constant String := "property_as_list";
+   Scenario_Switches_Method          : constant String := "scenario_switches";
 
    Root_Function          : aliased constant String := "root";
    Logs_Function          : aliased constant String := "logs";
@@ -261,6 +263,12 @@ package body GNAThub.Python is
            (Param ("property"),
             Param ("package", Optional => True)),
          Handler       => Project_Class_Properties_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Scenario_Switches_Method,
+         Handler       => Project_Class_Accessors_Handler'Access,
          Class         => Project_Class,
          Static_Method => True);
    end Register_Project_Class;
@@ -483,6 +491,24 @@ package body GNAThub.Python is
 
             Set_Return_Value_Key (Data, Project.Name);
          end loop;
+
+      elsif Command = Scenario_Switches_Method then
+         Set_Return_Value_As_List (Data);
+
+         declare
+            Vars : constant Scenario_Variable_Array := Tree.Scenario_Variables;
+         begin
+            for J in Vars'Range loop
+               declare
+                  Name : constant String := External_Name (Vars (J));
+               begin
+                  if Name /= "" then
+                     Set_Return_Value
+                       (Data, "-X" & Name & "=" & Value (Vars (J)));
+                  end if;
+               end;
+            end loop;
+         end;
 
       else
          raise Python_Error with "Unknown method GNAThub.Project." & Command;

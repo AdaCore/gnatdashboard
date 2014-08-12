@@ -321,6 +321,15 @@ class Project(object):
 
         pass    # Implemented in Ada
 
+    @staticmethod
+    def scenario_switches():
+        """Returns the scenario as a list of switches of the form -Xvar=value.
+
+        :returns: list[str]
+        """
+
+        pass    # Implemented in Ada
+
 
 class Tool(object):
     """A Tool object, mapping to a Tool entry in the database."""
