@@ -116,11 +116,11 @@ class GNATmetric(GNAThub.Plugin):
             # Dict of messages.
             # key: (rule, metric text), value: Message instance
 
-            message_data = []
-            # A list of message data suitable for bulk addition
-
             for index, node in enumerate(files, start=1):
                 resource = GNAThub.Resource.get(node.attrib.get('name'))
+
+                message_data = []
+                # A list of message data suitable for bulk addition
 
                 # Save file level metrics
                 if not resource:
