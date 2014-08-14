@@ -52,10 +52,6 @@ class GNATprove(GNAThub.Plugin):
         super(GNATprove, self).__init__()
         self.tool = None
 
-    @property
-    def name(self):
-        return 'gnatprove'
-
     @staticmethod
     def __cmd_line():
         """Creates GNATcheck command line arguments list.

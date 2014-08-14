@@ -45,10 +45,6 @@ class GNATmetric(GNAThub.Plugin):
         self.tool = None
         self.report = os.path.join(GNAThub.Project.object_dir(), 'metrix.xml')
 
-    @property
-    def name(self):
-        return 'gnatmetric'
-
     def __cmd_line(self):
         """Creates GNATmetric command line arguments list.
 

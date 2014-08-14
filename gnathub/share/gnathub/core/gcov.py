@@ -52,10 +52,6 @@ class Gcov(GNAThub.Plugin):
         # value is the corresponding Message instance.
         self.hits = {}
 
-    @property
-    def name(self):
-        return 'gcov'
-
     def __process_file(self, resource, filename):
         """Processes one file, adding in bulk all coverage info found.
 

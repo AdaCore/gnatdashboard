@@ -665,7 +665,7 @@ class Plugin(object):
         # Plugin.execute method.
         self._exec_status = NOT_EXECUTED
 
-    @abstractproperty
+    @property
     def name(self):
         """Returns the name of the tool, as specified by the TOOL_NAME class
         variable.
@@ -675,7 +675,7 @@ class Plugin(object):
 
         """
 
-        return NotImplemented   # Implemented in Ada
+        return type(self).__name__.lower()
 
     def info(self, message):
         """Displays an informative message, prefixed with the plug-in name.

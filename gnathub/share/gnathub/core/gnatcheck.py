@@ -57,10 +57,6 @@ class GNATcheck(GNAThub.Plugin):
         self.report = os.path.join(GNAThub.Project.object_dir(),
                                    '%s.out' % self.name)
 
-    @property
-    def name(self):
-        return 'gnatcheck'
-
     def __cmd_line(self):
         """Creates GNATcheck command line arguments list.
 

@@ -24,7 +24,7 @@ project Disabled is
       for Project_Version use "1.2.1b";
       for Source_Encoding use "My_Custom_Encoding";
       for Local_Repository use "local_repo";
-      for Plugins use ("sonarconfig");
+      for Plugins use ("sonar-config");
       for Plugins_Off use ("gnatcheck", "gnatmetric", "gcov", "codepeer",
                            "gnatprove");
    end Dashboard;

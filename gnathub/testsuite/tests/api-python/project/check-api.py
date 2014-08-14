@@ -67,7 +67,7 @@ assert encoding == 'My_Custom_Encoding', \
 
 # GNAThub.Project.property_as_list
 plugins = GNAThub.Project.property_as_list('Plugins')
-assert 'sonarconfig' in plugins, 'missing "sonarconfig" plugin in Plugins'
+assert 'sonar-config' in plugins, 'missing "sonar-config" plugin in Plugins'
 
 local_repo = GNAThub.Project.property_as_string('Local_Repository')
 assert relpath(local_repo) == 'local_repo', \

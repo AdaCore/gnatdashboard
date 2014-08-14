@@ -11,7 +11,7 @@ class TestSimpleExample(TestCase):
         self.longMessage = True
 
         # Run GNAThub with only the sonar-config plugin
-        self.gnathub = GNAThub(Project.simple(), plugins=['sonarconfig'])
+        self.gnathub = GNAThub(Project.simple(), plugins=['sonar-config'])
 
     def testDatabaseContent(self):
         # Extract coverage information from the database

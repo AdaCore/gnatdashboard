@@ -26,7 +26,7 @@ FILES = [
 
 class TestSimpleExample(TestCase):
     def setUp(self):
-        plugins = ['gnatmetric', 'gnatcheck', 'sonarconfig']
+        plugins = ['gnatmetric', 'gnatcheck', 'sonar-config']
         self.gnathub = GNAThub(Project.simple(), plugins=plugins)
 
     def testFilesCreated(self):

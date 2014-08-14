@@ -12,3 +12,15 @@ KP-09-N704-008 GNAThub crashes with switch -X
   Status:     Fixed in GNAThub 1.0.0 on 2014-07-04
 
   Workaround: None
+
+KP-09-N623-022 GNAThub indexes plug-ins by the name of the Python class only
+
+  Problem:    The name property of a plug-in is not used when selecting
+              plug-ins to run, only for display (eg. in logs). This is
+              confusing and users expect to use the custom name attribute to
+              discriminate their plug-ins rather than the name of the Python
+              class holding the implementation.
+
+  Status:     Fixed in GNAThub 1.0.0 on 2014-08-14
+
+  Workaround: Use the name of the Python class.

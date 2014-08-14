@@ -51,10 +51,6 @@ class CodePeer(GNAThub.Plugin):
         self.report = os.path.join(GNAThub.Project.object_dir(),
                                    '%s.out' % self.name)
 
-    @property
-    def name(self):
-        return 'codepeer'
-
     @staticmethod
     def __cmd_line():
         """Creates CodePeer command line arguments list.

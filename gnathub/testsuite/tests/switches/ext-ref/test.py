@@ -9,7 +9,7 @@ class TestSimpleExample(TestCase):
         self.longMessage = True
 
         # Run GNAThub with only the sonar-config plugin
-        self.gnathub = GNAThub(Project.disabled(), plugins=['sonarconfig'])
+        self.gnathub = GNAThub(Project.disabled(), plugins=['sonar-config'])
 
     def testExternalRefsSwitch(self):
         # Pass a -Xkey=value option to GNAThub

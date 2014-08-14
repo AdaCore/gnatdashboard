@@ -95,7 +95,7 @@ class PluginRunner(object):
     """
 
     PLUGIN_EXT = '.py'
-    SONAR_RUNNER = 'SonarRunner'
+    SONAR_RUNNER = 'sonar-runner'
 
     def __init__(self):
         # The list of plugins to be sequentially executed
@@ -150,9 +150,9 @@ class PluginRunner(object):
 
             """
 
-            if a.__name__ == PluginRunner.SONAR_RUNNER:
+            if a().name == PluginRunner.SONAR_RUNNER:
                 return 1
-            if b.__name__ == PluginRunner.SONAR_RUNNER:
+            if b().name == PluginRunner.SONAR_RUNNER:
                 return -1
             return 0
 
@@ -208,6 +208,7 @@ class PluginRunner(object):
             if inspect.isclass(obj) and obj.__base__ is GNAThub.Plugin:
                 yield obj
 
+    # pylint: disable=too-many-branches
     @staticmethod
     def auto_discover_plugins():
         """Retrieves all plugins for GNAThub.
@@ -275,6 +276,35 @@ class PluginRunner(object):
         LOG.info('load %d scripts', len(scripts))
         plugins = sum([list(PluginRunner.inspect(s)) for s in scripts], [])
 
+        def is_plugin(clazz, name):
+            """Checks whether this plugin name is ``name``.
+
+            :param type clazz: The plugin type object.
+            :param str name: The expected name.
+            :return: ``True`` if this plugin name is ``name``.
+            :rtype: boolean
+
+            """
+
+            return (clazz.__name__.lower() == name.lower() or
+                    clazz().name.lower() == name.lower())
+
+        def contains_plugin_name(clazz, names):
+            """Checks whether the plugin name is in ``names``.
+
+            :param type clazz: The plugin type object.
+            :param list[str] names: The list of name.
+            :return: ``True`` if the plugin name is in ``names``.
+            :rtype: boolean
+
+            """
+
+            for name in names:
+                if is_plugin(clazz, name):
+                    return True
+
+            return False
+
         if explicit:
             # Cleanup user input if needed. The following statement remove
             # None and empty string values as well as duplicates. It also set
@@ -282,14 +312,14 @@ class PluginRunner(object):
             explicit = set([p.lower() for p in explicit if p])
 
             # Filter out any plugin whose name is not in the "explicit" set
-            plugins = [p for p in plugins if p.__name__.lower() in explicit]
+            plugins = [c for c in plugins if contains_plugin_name(c, explicit)]
 
         # Remove explicitly disabled plugins
         for name in GNAThub.Project.property_as_list('Plugins_Off'):
-            for plugin in plugins:
-                if plugin.name == name:
+            for clazz in plugins:
+                if is_plugin(clazz, name):
                     LOG.info('disable %s [Plugin_Off]', name)
-                    plugins.remove(plugin)
+                    plugins.remove(clazz)
                     break
 
             LOG.warn('%s explicitly disabled but not loaded', name)
@@ -342,7 +372,7 @@ class PluginRunner(object):
             return
 
         for plugin in self.plugins:
-            LOG.info('  + %s', plugin.__name__)
+            LOG.info('  + %s', plugin.name)
 
         for plugin in self.plugins:
             try:
