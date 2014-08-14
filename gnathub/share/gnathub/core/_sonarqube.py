@@ -200,18 +200,18 @@ class SonarRunnerProperties(object):
             ('sourceEncoding', ('UTF-8', 'Source_Encoding'))
         ])
 
-    def _generate_single_module(self, db_path, name, suffixes):
+    def _generate_single_module(self, db_path, project_name, suffixes):
         """Generates the content of the sonar-runner.properties file.
 
         Do not create the file yet. See :meth:`write` for this.
 
         :param str db_path: Full path to the DB.
-        :param str name: Project name.
+        :param str project_name: Project name.
         :param list[str] suffixes: List of Ada extensions.
 
         """
 
-        project_source_dirs = GNAThub.Project.source_dirs()[name]
+        project_source_dirs = GNAThub.Project.source_dirs()[project_name]
 
         non_customizable_attributes = collections.OrderedDict([
             ('language', 'ada'),
@@ -222,16 +222,16 @@ class SonarRunnerProperties(object):
 
         # Set project properties
         self._set_project_customizable_dict(
-            SonarRunnerProperties._generate_customizable_attr(name))
+            SonarRunnerProperties._generate_customizable_attr(project_name))
         self._set_dict(non_customizable_attributes)
 
-    def _generate_multi_module(self, db_path, name, suffixes):
+    def _generate_multi_module(self, db_path, project_name, suffixes):
         """Generates the content of the sonar-runner.properties file.
 
         Do not create the file yet. See :meth:`write` for this.
 
         :param str db_path: Full path to the DB.
-        :param str name: Project name.
+        :param str project_name: Project name.
         :param list[str] suffixes: List of Ada extensions.
 
         """
@@ -247,7 +247,7 @@ class SonarRunnerProperties(object):
 
         # Set project properties
         self._set_project_customizable_dict(
-            SonarRunnerProperties._generate_customizable_attr(name))
+            SonarRunnerProperties._generate_customizable_attr(project_name))
         self._set_dict(non_customizable_attributes)
 
         project_key = self._get('projectKey')
