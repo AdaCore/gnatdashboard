@@ -169,32 +169,85 @@ class SonarRunnerProperties(object):
 
         """
 
-        escaped_db = GNAThub.database().replace('\\', '\\\\')
-        project_name = GNAThub.Project.name()
-        project_source_dirs = GNAThub.Project.source_dirs()[project_name]
-        ada_source_suffixes = [s[1:] if s.startswith('.') else s
-                               for s in GNAThub.Project.source_suffixes('Ada')]
+        kwargs = {
+            'db': GNAThub.database().replace('\\', '\\\\'),
+            'project_name': GNAThub.Project.name(),
+            'suffixes': [s[1:] if s.startswith('.') else s
+                         for s in GNAThub.Project.source_suffixes('Ada')]
+        }
 
-        modules = {k: v for k, v in GNAThub.Project.source_dirs().iteritems()
-                   if k != project_name and v}
+        # pylint: disable=star-args
+        if len(GNAThub.Project.source_dirs()) == 1:
+            self._generate_single_module(**kwargs)
+        else:
+            self._generate_multi_module(**kwargs)
 
-        customizable_attributes = collections.OrderedDict([
+    @staticmethod
+    def _generate_customizable_attr(project_name):
+        """A dictionary of customizable attributes for the
+        :file:`sonar-project.properties`.
+
+        :param str project_name: The project name.
+        :return: The attributes and their value.
+        :rtype: collections.OrderedDict
+
+        """
+
+        return collections.OrderedDict([
             ('projectName', (project_name, 'Project_Name')),
             ('projectKey', (project_name, 'Project_Key')),
             ('projectVersion', ('unknown', 'Project_Version')),
             ('sourceEncoding', ('UTF-8', 'Source_Encoding'))
         ])
 
+    def _generate_single_module(self, db_path, name, suffixes):
+        """Generates the content of the sonar-runner.properties file.
+
+        Do not create the file yet. See :meth:`write` for this.
+
+        :param str db_path: Full path to the DB.
+        :param str name: Project name.
+        :param list[str] suffixes: List of Ada extensions.
+
+        """
+
+        project_source_dirs = GNAThub.Project.source_dirs()[name]
+
         non_customizable_attributes = collections.OrderedDict([
             ('language', 'ada'),
             ('sources', ','.join(project_source_dirs)),
-            ('ada.gnathub.db', escaped_db),
-            ('ada.file.suffixes', ','.join(ada_source_suffixes)),
+            ('ada.gnathub.db', db_path),
+            ('ada.file.suffixes', ','.join(suffixes))
+        ])
+
+        # Set project properties
+        self._set_project_customizable_dict(
+            SonarRunnerProperties._generate_customizable_attr(name))
+        self._set_dict(non_customizable_attributes)
+
+    def _generate_multi_module(self, db_path, name, suffixes):
+        """Generates the content of the sonar-runner.properties file.
+
+        Do not create the file yet. See :meth:`write` for this.
+
+        :param str db_path: Full path to the DB.
+        :param str name: Project name.
+        :param list[str] suffixes: List of Ada extensions.
+
+        """
+
+        modules = {k: v for k, v in GNAThub.Project.source_dirs().items() if v}
+
+        non_customizable_attributes = collections.OrderedDict([
+            ('language', 'ada'),
+            ('ada.gnathub.db', db_path),
+            ('ada.file.suffixes', ','.join(suffixes)),
             ('modules', ','.join([m.lower() for m in modules.keys()]))
         ])
 
         # Set project properties
-        self._set_project_customizable_dict(customizable_attributes)
+        self._set_project_customizable_dict(
+            SonarRunnerProperties._generate_customizable_attr(name))
         self._set_dict(non_customizable_attributes)
 
         project_key = self._get('projectKey')
@@ -204,7 +257,7 @@ class SonarRunnerProperties(object):
             module_attributes = collections.OrderedDict([
                 ('projectName', subproject_name),
                 ('projectKey', '%s::%s' % (project_key, subproject_name)),
-                ('projectBaseDir', sources[0]),
+                ('projectBaseDir', os.path.commonprefix(sources)),
                 ('sources', ','.join(sources))
             ])
 
