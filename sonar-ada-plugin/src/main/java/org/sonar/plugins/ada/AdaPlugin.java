@@ -40,7 +40,7 @@ import java.util.List;
         key = AdaPlugin.FILE_SUFFIXES_KEY,
         defaultValue = Ada.DEFAULT_FILE_SUFFIXES,
         name = "File Suffixes",
-        description = "Comma-separated list of suffixes of PHP files to analyze.",
+        description = "Comma-separated list of suffixes of Ada files to analyze.",
         global = true,
         project = true),
     @Property(
