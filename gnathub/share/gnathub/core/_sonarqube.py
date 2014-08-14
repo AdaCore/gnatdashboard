@@ -170,7 +170,7 @@ class SonarRunnerProperties(object):
         """
 
         kwargs = {
-            'db': GNAThub.database().replace('\\', '\\\\'),
+            'db_path': GNAThub.database().replace('\\', '\\\\'),
             'project_name': GNAThub.Project.name(),
             'suffixes': [s[1:] if s.startswith('.') else s
                          for s in GNAThub.Project.source_suffixes('Ada')]
