@@ -18,25 +18,46 @@
 package org.sonar.plugins.ada;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.ada.persistence.ProjectDAO;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * Project context. Contains among other things the configuration (eg. DB path).
  */
+@Slf4j
 public class AdaProjectContext implements BatchExtension {
   protected final Settings settings;
   protected final Project project;
 
+  @Getter protected final Properties srcMapping;
   @Getter protected final ProjectDAO dao;
 
   public AdaProjectContext(final Project project, final Settings settings) {
     this.settings = settings;
     this.project = project;
 
+    final String srcMappingUrl =
+        settings.getString(AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
+    this.srcMapping = new Properties();
+
     final String dbUrl = settings.getString(AdaPlugin.GNATHUB_DB_KEY);
-    this.dao = new ProjectDAO(project, dbUrl);
+    this.dao = new ProjectDAO(project, dbUrl, this.srcMapping);
+
+    try {
+      this.srcMapping.load(new FileInputStream(srcMappingUrl));
+
+    } catch (FileNotFoundException why) {
+      log.error("Cannot load source file mapping", why);
+    } catch (IOException why) {
+      log.error("Error reading source file mapping", why);
+    }
   }
 }

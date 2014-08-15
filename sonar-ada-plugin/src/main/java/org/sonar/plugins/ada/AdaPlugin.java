@@ -46,13 +46,21 @@ import java.util.List;
     @Property(
         key = AdaPlugin.GNATHUB_DB_KEY,
         name = "Path to GNAThub database",
-        description = "GNAThub DB relative path to the project root",
+        description = "GNAThub DB full path",
+        global = false,
+        project = true),
+    @Property(
+        key = AdaPlugin.GNATHUB_SRC_MAPPING_KEY,
+        name = "Path to GNAThub source mapping file",
+        description = "GNAThub source mapping file full path",
         global = false,
         project = true)
 })
 public final class AdaPlugin extends SonarPlugin {
 
   public static final String GNATHUB_DB_KEY = "sonar.ada.gnathub.db";
+  public static final String GNATHUB_SRC_MAPPING_KEY =
+      "sonar.ada.gnathub.src_mapping";
   public static final String FILE_SUFFIXES_KEY = "sonar.ada.file.suffixes";
 
   /**

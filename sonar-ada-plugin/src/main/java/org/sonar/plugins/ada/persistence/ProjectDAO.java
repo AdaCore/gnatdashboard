@@ -27,6 +27,7 @@ import org.sonar.plugins.ada.utils.GNAThubEncoding;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Data Access Object for the content of the project database.
@@ -36,6 +37,7 @@ public class ProjectDAO {
   private final String dbUrl;
   private final Project project;
   private final Connector connector;
+  private final Properties srcMapping;
 
   /**
    * Project DAO constructor. Initializes the database connector with the URL.
@@ -43,10 +45,33 @@ public class ProjectDAO {
    * @param project The project being analyzed.
    * @param dbUrl The URL pointing to the SQLite database to connect to.
    */
-  public ProjectDAO(final Project project, final String dbUrl) {
+  public ProjectDAO(final Project project, final String dbUrl,
+                    final Properties srcMapping) {
     this.dbUrl = dbUrl;
     this.project = project;
     this.connector = new Connector(this.dbUrl);
+    this.srcMapping = srcMapping;
+  }
+
+  /**
+   * Returns the path to the file.
+   *
+   * Use source mapping to compute the local cached file path. If it fails,
+   * uses the original path as fallback.
+   *
+   * @param original The original path for the file.
+   * @return The mapped path, or the original one if not mapped.
+   */
+  private String getPath(final String original) {
+    final String path = srcMapping.getProperty(original, original);
+
+    if (path.equals(original)) {
+      log.error("No source mapping found for: {}", path);
+      // Do not return so that we fallback using the original file if
+      // available.
+    }
+
+    return path;
   }
 
   /**
@@ -55,11 +80,11 @@ public class ProjectDAO {
   private final RowMapper<File> fileRowMapper = new RowMapper<File>() {
     @Override
     public File mapRow(ResultSet resultSet) throws SQLException {
-      final String path = resultSet.getString("path");
+      final String path = getPath(resultSet.getString("path"));
       final File file = File.fromIOFile(new java.io.File(path), project);
 
       if (file == null) {
-        log.trace("File excluded from analysis closure: {}", path);
+        log.debug("File excluded from analysis closure: {}", path);
         return null;
       }
 
@@ -75,7 +100,7 @@ public class ProjectDAO {
       new RowMapper<MeasureRecord>() {
         @Override
         public MeasureRecord mapRow(ResultSet resultSet) throws SQLException {
-          final String path = resultSet.getString("path");
+          final String path = getPath(resultSet.getString("path"));
           final String key = resultSet.getString("key");
           final Double value = resultSet.getDouble("value");
           final File file = File.fromIOFile(new java.io.File(path), project);
@@ -100,7 +125,7 @@ public class ProjectDAO {
       new RowMapper<CoverageRecord>() {
         @Override
         public CoverageRecord mapRow(ResultSet resultSet) throws SQLException {
-          final String path = resultSet.getString("path");
+          final String path = getPath(resultSet.getString("path"));
           final Integer lineNo = resultSet.getInt("line_no");
           final Integer hits = resultSet.getInt("hits");
           final File file = File.fromIOFile(new java.io.File(path), project);
@@ -121,7 +146,7 @@ public class ProjectDAO {
   private final RowMapper<IssueRecord> issueRowMapper = new RowMapper<IssueRecord>() {
     @Override
     public IssueRecord mapRow(ResultSet resultSet) throws SQLException {
-      final String path = resultSet.getString("path");
+      final String path = getPath(resultSet.getString("path"));
       final int lineNo = resultSet.getInt("line_no");
       final String message = resultSet.getString("message");
       final String toolName = resultSet.getString("tool_name");

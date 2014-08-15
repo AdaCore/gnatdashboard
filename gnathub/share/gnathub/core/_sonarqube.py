@@ -24,8 +24,10 @@ SonarRunner.
 import collections
 import logging
 import os
+import shutil
 
 import GNAThub
+from GNAThub import Console
 
 
 class SonarQube(object):
@@ -36,6 +38,9 @@ class SonarQube(object):
 
     EXEC_DIRECTORY = 'sonar'
     CONFIGURATION = 'sonar-project.properties'
+
+    SOURCE_CACHE = 'sources.cache'
+    SOURCE_MAPPING = 'sources-mapping.properties'
 
     @staticmethod
     def workdir():
@@ -66,6 +71,34 @@ class SonarQube(object):
         return os.path.join(SonarQube.workdir(), SonarQube.CONFIGURATION)
 
     @staticmethod
+    def src_mapping():
+        """Returns the path to the mapping file associating original sources
+        path with the equivalent source in the local cache:
+
+            ``<project_object_dir>/gnathub/sonar/sources.map``
+
+        :return: The path to the configuration file.
+        :rtype: str
+
+        """
+
+        return os.path.join(SonarQube.workdir(), SonarQube.SOURCE_MAPPING)
+
+    @staticmethod
+    def src_cache():
+        """Returns the path to the local source cache containing a copy of all
+        analysed sources:
+
+            ``<project_object_dir>/gnathub/sonar/sources.cache``
+
+        :return: The path to the source cache.
+        :rtype: str
+
+        """
+
+        return os.path.join(SonarQube.workdir(), SonarQube.SOURCE_CACHE)
+
+    @staticmethod
     def make_workdir():
         """Creates the Sonar execution directory if it does not exist."""
 
@@ -77,12 +110,34 @@ class SonarQube(object):
 class SonarRunnerProperties(object):
     """Builder object for the sonar-runner configuration file."""
 
+    CONSOLE_NAME = 'sonar-gen-config'
+
     def __init__(self, logger=None):
         self.log = logger or logging.getLogger(self.__class__.__name__)
+
         self.attributes = collections.OrderedDict()
+        self.src_mapping = collections.OrderedDict()
 
         # Generate the configuration
         self._generate()
+
+    def info(self, message):
+        """Displays an informative message.
+
+        :param str message: The message to display.
+
+        """
+
+        Console.info(message, prefix=SonarRunnerProperties.CONSOLE_NAME)
+
+    def error(self, message):
+        """Displays an error message.
+
+        :param str message: The message to display.
+
+        """
+
+        Console.error(message, prefix=SonarRunnerProperties.CONSOLE_NAME)
 
     @staticmethod
     def _key(key, module=None):
@@ -119,7 +174,7 @@ class SonarRunnerProperties(object):
 
         """
 
-        for key, value in attributes.iteritems():
+        for key, value in attributes.items():
             self.log.debug('%s = %s', key, value)
             self._set(key, value, module)
 
@@ -134,7 +189,7 @@ class SonarRunnerProperties(object):
 
         """
 
-        for key, value in attributes.iteritems():
+        for key, value in attributes.items():
             # Unpack the tuple containing the default value and the custom
             # project attribute for this key.
             value, attribute = value
@@ -211,11 +266,12 @@ class SonarRunnerProperties(object):
 
         """
 
-        project_source_dirs = GNAThub.Project.source_dirs()[project_name]
+        source_dirs = GNAThub.Project.source_dirs()[project_name]
+        sources, _ = self._generate_source_dirs({project_name: source_dirs})
 
         non_customizable_attributes = collections.OrderedDict([
             ('language', 'ada'),
-            ('sources', ','.join(project_source_dirs)),
+            ('sources', sources),
             ('ada.gnathub.db', db_path),
             ('ada.file.suffixes', ','.join(suffixes))
         ])
@@ -237,10 +293,12 @@ class SonarRunnerProperties(object):
         """
 
         modules = {k: v for k, v in GNAThub.Project.source_dirs().items() if v}
+        _, modules = self._generate_source_dirs(modules)
 
         non_customizable_attributes = collections.OrderedDict([
             ('language', 'ada'),
             ('ada.gnathub.db', db_path),
+            ('ada.gnathub.src_mapping', SonarQube.src_mapping()),
             ('ada.file.suffixes', ','.join(suffixes)),
             ('modules', ','.join([m.lower() for m in modules.keys()]))
         ])
@@ -253,23 +311,136 @@ class SonarRunnerProperties(object):
         project_key = self._get('projectKey')
 
         # Set modules properties
-        for subproject_name, sources in modules.iteritems():
+        for subproject_name, sources in modules.items():
             module_attributes = collections.OrderedDict([
                 ('projectName', subproject_name),
                 ('projectKey', '%s::%s' % (project_key, subproject_name)),
-                ('projectBaseDir', os.path.commonprefix(sources)),
-                ('sources', ','.join(sources))
+                ('projectBaseDir', sources),
+                ('sources', sources)
             ])
 
             self._set_dict(module_attributes, module=subproject_name.lower())
 
-    def write(self, filename):
-        """Dumps sonar-project.properties in filename.
+    def _add_src_mapping(self, original, cached):
+        """Saves a new source mapping associating the original source file with
+        its copy in the local source cache.
 
-        :param str filename: The configuration file name.
+        :param str original: The path to the original source file.
+        :param str cached: The path to the local copy of that source file.
 
         """
 
-        with open(filename, 'w') as configuration:
-            for key, value in self.attributes.iteritems():
-                configuration.write('%s = %s\n' % (key, value))
+        if original in self.src_mapping:
+            prev = self.src_mapping[original]
+            self.log.warn('overriding existing mapping: %s -> %s',
+                          original, prev)
+
+        self.src_mapping[original] = cached
+
+    def _generate_source_dirs(self, modules):
+        """Copy over all sources in a temporary directory before running the
+        Sonar Runner. This is to work around recent version of SonarQube source
+        importer implementation that looks recursively in source directories
+        (which is inconsistent with GPR files semantic).
+
+        :param dict[str,list[str]] modules: Project modules and their
+            associated source directories.
+        :return: The path to the root source directory and a copy of the input
+            ``modules`` directory with updated path to source directories
+            (pointing to the local copy).
+        :rtype: (str, dict[str,list[str]])
+
+        """
+
+        self.log.debug('caching source dirs prior to sonar-runner execution')
+
+        # Compute the total dirs count to copy to display progress
+        count = 0
+        total = sum([len(dirs) for dirs in modules.itervalues()])
+
+        root_source_dir = SonarQube.src_cache()
+
+        self.info('prepare source dirs for sonar-runner scan')
+        self.log.info('copy source files from the project closure to %s' %
+                      os.path.relpath(root_source_dir))
+
+        # Remove any previous analysis left-over
+        shutil.rmtree(root_source_dir, ignore_errors=True)
+        new_modules_mapping = collections.OrderedDict()
+
+        for module_name in modules:
+            module_root_source_dir = os.path.join(root_source_dir, module_name)
+            new_modules_mapping[module_name] = module_root_source_dir
+
+            # Create the local source directory
+            if not os.path.exists(module_root_source_dir):
+                os.makedirs(module_root_source_dir)
+
+            # Use a set to ensure we don't have duplicated names
+            source_files = {}
+
+            # Copy each source dir content
+            self.info('prepare files from module: %s' % module_name)
+            for source_dir in modules[module_name]:
+                self.log.info(' + %s' % os.path.relpath(source_dir))
+
+                # Copy over all files
+                for entry in os.listdir(source_dir):
+                    entry_path = os.path.join(source_dir, entry)
+
+                    if not os.path.isfile(entry_path):
+                        continue
+
+                    if entry in source_files:
+                        self.error('duplicated source file: %s' % entry)
+                        self.error('  + %s' % source_files[entry])
+                        self.error('  + %s' % entry_path)
+
+                    source_files[entry] = entry_path
+
+                    new_path = os.path.join(module_root_source_dir, entry)
+                    self.log.debug('%s -> %s', entry_path, new_path)
+
+                    shutil.copy(entry_path, new_path)
+                    self._add_src_mapping(entry_path, new_path)
+
+                count = count + 1
+                Console.progress(count, total, count == total)
+
+        return root_source_dir, new_modules_mapping
+
+    def write(self, properties_fname):
+        """Dumps the Sonar Runner configuration files:
+
+            * :file:`sonar-project.properties` -> ``properties_fname``
+            * :file:`sources.map` -> ``SonarQube.src_mapping()``
+
+        :param str properties_fname: The configuration file name.
+
+        """
+
+        def _escape(key):
+            """Escapes the given key to comply with java.util.Properties parser
+            (see the ``java.util.Properties.load`` method documentation).
+
+            :param str key: The key to escape.
+            :return: The escaped key.
+            :rtype: str
+            :see: docs.oracle.com/javase/8/docs/api/java/util/Properties.html
+
+            """
+
+            escaped = key
+            for sym in (':', '=', ' '):
+                escaped = escaped.replace(sym, r'\%s' % sym)
+            return escaped
+
+        self.info('generate %s' % os.path.relpath(properties_fname))
+        with open(properties_fname, 'w') as configuration:
+            for pair in self.attributes.items():
+                configuration.write('%s = %s\n' % pair)
+
+        self.info('generate %s' % os.path.relpath(SonarQube.src_mapping()))
+        with open(SonarQube.src_mapping(), 'w') as mapping:
+            for key, value in self.src_mapping.items():
+                mapping.write('%s = %s\n' % (_escape(key), value))
