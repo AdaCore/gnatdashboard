@@ -128,6 +128,7 @@ class SonarRunnerProperties(object):
 
         """
 
+        # pylint: disable=no-self-use
         Console.info(message, prefix=SonarRunnerProperties.CONSOLE_NAME)
 
     def error(self, message):
@@ -137,6 +138,7 @@ class SonarRunnerProperties(object):
 
         """
 
+        # pylint: disable=no-self-use
         Console.error(message, prefix=SonarRunnerProperties.CONSOLE_NAME)
 
     @staticmethod
@@ -315,28 +317,13 @@ class SonarRunnerProperties(object):
             module_attributes = collections.OrderedDict([
                 ('projectName', subproject_name),
                 ('projectKey', '%s::%s' % (project_key, subproject_name)),
-                ('projectBaseDir', sources),
+                ('projectBaseDir', SonarQube.src_cache()),
                 ('sources', sources)
             ])
 
             self._set_dict(module_attributes, module=subproject_name.lower())
 
-    def _add_src_mapping(self, original, cached):
-        """Saves a new source mapping associating the original source file with
-        its copy in the local source cache.
-
-        :param str original: The path to the original source file.
-        :param str cached: The path to the local copy of that source file.
-
-        """
-
-        if original in self.src_mapping:
-            prev = self.src_mapping[original]
-            self.log.warn('overriding existing mapping: %s -> %s',
-                          original, prev)
-
-        self.src_mapping[original] = cached
-
+    # pylint: disable=too-many-locals
     def _generate_source_dirs(self, modules):
         """Copy over all sources in a temporary directory before running the
         Sonar Runner. This is to work around recent version of SonarQube source
@@ -358,58 +345,90 @@ class SonarRunnerProperties(object):
         count = 0
         total = sum([len(dirs) for dirs in modules.itervalues()])
 
-        root_source_dir = SonarQube.src_cache()
+        root_src_dir = SonarQube.src_cache()
 
         self.info('prepare source dirs for sonar-runner scan')
         self.log.info('copy source files from the project closure to %s' %
-                      os.path.relpath(root_source_dir))
+                      os.path.relpath(root_src_dir))
 
         # Remove any previous analysis left-over
-        shutil.rmtree(root_source_dir, ignore_errors=True)
+        shutil.rmtree(root_src_dir, ignore_errors=True)
         new_modules_mapping = collections.OrderedDict()
 
         for module_name in modules:
-            module_root_source_dir = os.path.join(root_source_dir, module_name)
-            new_modules_mapping[module_name] = module_root_source_dir
+            module_root_src_dir = os.path.join(root_src_dir, module_name)
+            new_modules_mapping[module_name] = module_root_src_dir
+
+            # Add an additional subdirectory.
+            # NOTE: SonarQube uses "[root]" as the root directory name, which
+            # means that when we have a flat list of source files, they all end
+            # up in different "[root]" dirs in SonarQube UI.  Since each
+            # project can have a "[root]" directory, it makes it harder to read
+            # the hierarchy.  To work around that, we interpose an additional
+            # "<module-name>-src" directory to make things clearer from a UI
+            # point of view.
+            module_root_src_dir = os.path.join(module_root_src_dir,
+                                               module_name.lower() + '-src')
 
             # Create the local source directory
-            if not os.path.exists(module_root_source_dir):
-                os.makedirs(module_root_source_dir)
+            if not os.path.exists(module_root_src_dir):
+                os.makedirs(module_root_src_dir)
 
-            # Use a set to ensure we don't have duplicated names
-            source_files = {}
+            # Compute the base directory for source dirs.
+            # NOTE: The GNAT Project language allows the user to specify a list
+            # of source directories that are not necessarily all under the same
+            # hierarchy. Furthermore, and this is the default behavior, it
+            # allows the user to specify non-recursive source directories:
+            # source directories which contain sub-directories which are not
+            # themselves source directories. The SonarQube model requires all
+            # sources in specified source directories to be in the source
+            # closure: to satisfy this requirement, we gather all sources under
+            # a same tree, and do a best effort to mimic the original
+            # organization of sources.
+            module_src_dirs = modules[module_name]
+            dirs_commonprefix = os.path.commonprefix(module_src_dirs)
+            self.log.info('source dirs common prefix: %s', dirs_commonprefix)
+
+            # Use a dict to ensure we don't have duplicated names
+            src_files = {}
 
             # Copy each source dir content
             self.info('prepare files from module: %s' % module_name)
-            for source_dir in modules[module_name]:
-                self.log.info(' + %s' % os.path.relpath(source_dir))
+            for src_dir in modules[module_name]:
+                src_dir_relpath = os.path.relpath(src_dir, dirs_commonprefix)
+                src_dir_path = os.path.join(module_root_src_dir,
+                                            src_dir_relpath)
+                self.log.info(' + %s' % src_dir_path)
+
+                if not os.path.exists(src_dir_path):
+                    os.makedirs(src_dir_path)
 
                 # Copy over all files
-                for entry in os.listdir(source_dir):
-                    entry_path = os.path.join(source_dir, entry)
+                for entry in os.listdir(src_dir):
+                    entry_path = os.path.join(src_dir, entry)
 
                     if not os.path.isfile(entry_path):
                         continue
 
-                    if entry in source_files:
+                    if entry in src_files:
                         self.error('duplicated source file: %s' % entry)
-                        self.error('  + %s' % source_files[entry])
+                        self.error('  + %s' % src_files[entry])
                         self.error('  + %s' % entry_path)
 
-                    source_files[entry] = entry_path
+                    src_files[entry] = entry_path
 
-                    new_path = os.path.join(module_root_source_dir, entry)
+                    new_path = os.path.join(src_dir_path, entry)
                     self.log.debug('%s -> %s', entry_path, new_path)
 
                     shutil.copy(entry_path, new_path)
-                    self._add_src_mapping(entry_path, new_path)
+                    self.src_mapping[entry_path] = new_path
 
                 count = count + 1
                 Console.progress(count, total, count == total)
 
-        return root_source_dir, new_modules_mapping
+        return root_src_dir, new_modules_mapping
 
-    def write(self, properties_fname):
+    def write(self, properties_fname=SonarQube.configuration()):
         """Dumps the Sonar Runner configuration files:
 
             * :file:`sonar-project.properties` -> ``properties_fname``
