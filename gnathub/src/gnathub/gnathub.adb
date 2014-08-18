@@ -104,6 +104,18 @@ package body GNAThub is
       Log.Error (Me, Output);
    end Error;
 
+   -----------
+   -- Error --
+   -----------
+
+   procedure Error
+     (E      : Ada.Exceptions.Exception_Occurrence;
+      Prefix : String := Console_Prefix) is
+   begin
+      Error (Ada.Exceptions.Exception_Message (E), Prefix);
+      Log.Exception_Raised (Me, E);
+   end Error;
+
    ----------
    -- Fail --
    ----------

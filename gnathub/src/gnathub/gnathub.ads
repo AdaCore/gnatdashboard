@@ -45,6 +45,11 @@ package GNAThub is
    procedure Error (Message : String; Prefix : String := Console_Prefix);
    --  Print an error message. Always activated
 
+   procedure Error
+     (E      : Ada.Exceptions.Exception_Occurrence;
+      Prefix : String := Console_Prefix);
+   --  Print the error message and log the exception. Always activated.
+
    procedure Fail (Message : String; Prefix : String := Console_Prefix);
    --  Print a fatal message and exit. Always activated
 

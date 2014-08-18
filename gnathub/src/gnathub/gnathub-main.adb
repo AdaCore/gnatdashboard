@@ -17,8 +17,8 @@
 
 with Ada.Command_Line;
 with Ada.Exceptions;             use Ada.Exceptions;
-with Ada.Text_IO;                use Ada.Text_IO;
 
+with GNAT.Command_Line;
 with GNAT.Directory_Operations;  use GNAT.Directory_Operations;
 with GNAT.Source_Info;
 
@@ -232,23 +232,14 @@ exception
       return Ada.Command_Line.Failure;
 
    when E : Command_Line_Error =>
-      Log.Exception_Raised (Me, E);
-
-      --  NOTE: For the moment, GNAT.Command_Line.Try_Help is not available in
-      --  stable-gnat (only in nightlies). To avoid the dependency to the daily
-      --  gnat build, we currently manually display the Try_Help message.
-      --
-      --  This will need to be updated when stable-gnat's version is bumped and
-      --  it provides the required symbol.
-      --
-      --  GNAT.Command_Line.Try_Help;
-      Put_Line ("try ""gnathub --help"" for more information.");
+      Error (E);
+      GNAT.Command_Line.Try_Help;
       Finalize_Application;
 
       return Ada.Command_Line.Failure;
 
    when E : Fatal_Error =>
-      Log.Exception_Raised (Me, E);
+      Error (E);
       Finalize_Application;
 
       return Ada.Command_Line.Failure;
