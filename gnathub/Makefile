@@ -88,19 +88,6 @@ analyse-gcov:
 	find . -name '*.gcda' > $(BUILD_DIR)/obj/gcov_input.txt
 	cd $(BUILD_DIR)/obj && gcov @gcov_input.txt > gcov_run.log
 
-clean: gnathub.gpr
-	gprclean -q -P $<
-	find . -name '*.pyc' -exec rm -f {} \;
-	$(RM) gnathub.gpr
-	$(RM) src/gnathub/gnathub-version.ads
-	$(RMDIR) $(BUILD_DIR)/obj
-	$(RMDIR) $(BUILD_DIR)/lib.*
-	$(RMDIR) $(BUILD_DIR)/docs
-
-distclean: clean
-	$(RMDIR) $(BUILD_DIR)
-	$(RMDIR) testsuite/out
-
 package: all
 	$(RMDIR) $(PKG_DIR)
 	$(MKDIR) $(PKG_DIR)
@@ -113,3 +100,20 @@ package: all
 
 install: package
 	$(RSYNC) $(PKG_DIR) $(INSTALL_DIR)
+
+setenv: $(GENERATED_DIR)/src/gnathub-version.ads
+	@echo "PYTHONPATH=\"$(TOP)/src/lib:$$PYTHONPATH\""
+	@echo "export PYTHONPATH"
+
+clean: gnathub.gpr
+	gprclean -q -P $<
+	find . -name '*.pyc' -exec rm -f {} \;
+	$(RM) gnathub.gpr
+	$(RM) src/gnathub/gnathub-version.ads
+	$(RMDIR) $(BUILD_DIR)/obj
+	$(RMDIR) $(BUILD_DIR)/lib.*
+	$(RMDIR) $(BUILD_DIR)/docs
+
+distclean: clean
+	$(RMDIR) $(BUILD_DIR)
+	$(RMDIR) testsuite/out
