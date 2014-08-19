@@ -110,7 +110,7 @@ class GNATmetric(GNAThub.Plugin):
             # Map of rules (couple (name, rule): dict[str,Rule])
             rules = {}
 
-            # Map of messages (couple (rule, message): dict[str,Message)
+            # Map of messages (couple (rule, message): dict[str,Message])
             messages = {}
 
             for index, node in enumerate(files, start=1):
