@@ -14,6 +14,15 @@ KP-09-N818-014 GNAThub does not display fatal errors
 
   Workaround: Use the log file to retrieve the error message.
 
+KP-09-N805-033 message insertion is slow
+
+  Problem:    Message insertion in the database is slow, in particular for
+              plugins codepeer, gnatmetric and gcov.
+
+  Status:     Fixed in GNAThub 1.0.0 on 2014-08-19
+
+  Workaround: None
+
 KP-09-N725-012 -X parameters are not passed to underlying tools.
 
   Problem:    -X switches passed to the gnathub drivers are not propagated
