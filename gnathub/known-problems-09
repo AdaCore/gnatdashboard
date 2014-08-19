@@ -14,6 +14,15 @@ KP-09-N818-014 GNAThub does not display fatal errors
 
   Workaround: Use the log file to retrieve the error message.
 
+KP-09-N725-012 -X parameters are not passed to underlying tools.
+
+  Problem:    -X switches passed to the gnathub drivers are not propagated
+              to underlying project-aware tools.
+
+  Status:     Fixed in GNAThub 1.0.0 on 2014-08-12
+
+  Workaround: None
+
 KP-09-N704-008 GNAThub crashes with switch -X
 
   Problem:    GNAThub raises a CONSTRAINT_ERROR when the -X switch is used
