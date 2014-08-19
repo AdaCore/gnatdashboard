@@ -51,6 +51,18 @@ class CodePeer(GNAThub.Plugin):
         self.report = os.path.join(GNAThub.Project.object_dir(),
                                    '%s.out' % self.name)
 
+        # Map of rules (couple (name, rule): dict[str,Rule])
+        self.rules = {}
+
+        # Map of categories (couple (name, category): dict[str,Category])
+        self.categories = {}
+
+        # Map of messages (couple (rule, message): dict[str,Message])
+        self.messages = {}
+
+        # Map of bulk data (couple (source, message_data): dict[str,list])
+        self.bulk_data = {}
+
     @staticmethod
     def __cmd_line():
         """Creates CodePeer command line arguments list.
@@ -59,7 +71,6 @@ class CodePeer(GNAThub.Plugin):
         :rtype: list[str]
 
         """
-
         return ['codepeer', '-update-scil',
                 '-P', GNAThub.Project.path(), '-jobs', str(GNAThub.jobs())
                 ] + GNAThub.Project.scenario_switches()
@@ -195,6 +206,7 @@ class CodePeer(GNAThub.Plugin):
                            (why, os.path.basename(self.csv_report), total))
 
             else:
+                self.__do_bulk_insert()
                 self.exec_status = GNAThub.EXEC_SUCCESS
 
     # pylint: disable=too-many-arguments
@@ -210,12 +222,41 @@ class CodePeer(GNAThub.Plugin):
 
         """
 
-        rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
-        cat = GNAThub.Category(category)
-        message = GNAThub.Message(rule, msg, cat)
+        # Cache the rules
+        if rule_id in self.rules:
+            rule = self.rules[rule_id]
+        else:
+            rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
+            self.rules[rule_id] = rule
 
-        base = GNAThub.Project.source_file(os.path.basename(src))
-        resource = GNAThub.Resource.get(base)
+        # cache the categories
+        if category in self.categories:
+            cat = self.categories[category]
+        else:
+            cat = GNAThub.Category(category)
+            self.categories[category] = cat
 
-        if resource:
-            resource.add_message(message, int(line), int(column))
+        # cache the messages
+        if (rule, msg, cat) in self.messages:
+            message = self.messages[(rule, msg, cat)]
+        else:
+            message = GNAThub.Message(rule, msg, cat)
+            self.messages[(rule, msg, cat)] = message
+
+        # Add the message to the given resource
+        if src in self.bulk_data:
+            self.bulk_data[src].append(
+                [message, int(line), int(column), int(column)])
+        else:
+            self.bulk_data[src] = [
+                [message, int(line), int(column), int(column)]]
+
+    def __do_bulk_insert(self):
+        """Insert the codepeer messages in bulk on each resource."""
+
+        for src in self.bulk_data:
+            base = GNAThub.Project.source_file(os.path.basename(src))
+            resource = GNAThub.Resource.get(base)
+
+            if resource:
+                resource.add_messages(self.bulk_data[src])
