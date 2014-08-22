@@ -1,0 +1,330 @@
+#! /bin/bash
+
+# SonarQube & Runner version
+
+# Stable version for SonarQube
+SONARQUBE_VERSION=4.4
+# LTS (Long Term Support) version for SonarQube
+# SONARQUBE_VERSION=3.7.4
+
+# Stable version for SonarQube Runner
+SONARRUNN_VERSION=2.4
+
+MAJOR_VERSION=$(echo "$SONARQUBE_VERSION" |cut -d. -f1)
+
+if [ $MAJOR_VERSION -lt 4 ]; then
+    SONARQUBE_PACKAGE=sonar
+else
+    SONARQUBE_PACKAGE=sonarqube
+fi
+
+# Download URLs
+SONARQUBE_DOWNLOAD_URL="http://dist.sonar.codehaus.org/$SONARQUBE_PACKAGE-$SONARQUBE_VERSION.zip"
+SONARRUNN_DOWNLOAD_URL="http://repo1.maven.org/maven2/org/codehaus/sonar/runner/sonar-runner-dist/$SONARRUNN_VERSION/sonar-runner-dist-$SONARRUNN_VERSION.zip"
+
+case `uname` in
+    Darwin)
+        platform="macosx-universal-64"
+        ;;
+    Linux)
+        case `uname -m` in
+            x86_64)
+                platform="linux-x86-64"
+                ;;
+            *)
+                platform="linux-x86-32"
+                ;;
+        esac
+        ;;
+    *)
+        echo "error: platform not supported. Aborting."
+        exit 1
+        ;;
+esac
+
+SONAR_SH="$SONAR_SANDBOX/$SONARQUBE_PACKAGE-$SONARQUBE_VERSION/bin/$platform/sonar.sh"
+
+
+function usage {
+    (
+        # Redirect all usage to stderr
+        exec >&2
+
+        echo "usage: sonar COMMAND"
+        echo ""
+        echo "  help            show this help and exit"
+        echo "  start           start the SonarQube server"
+        echo "  stop            stop the SonarQube server"
+        echo "  status          display the SonarQube server status"
+        echo "  install         prepare and install the sandbox"
+        echo "  logs            display live SonarQube logs"
+        echo "  deploy-plugin   install a plugin in the SonarQube server"
+        echo "  getenv          print the environment to evaluate on stdout"
+    )
+
+    return 1
+}
+
+
+function _check_sandbox {
+    if [ "$SONAR_SANDBOX" ]; then
+        return 0
+    else
+        echo "\$SONAR_SANDBOX not set" >&2
+        return 1
+    fi
+}
+
+
+function _check_sandbox_installed {
+    _check_sandbox || return 1
+
+    if [ -d "$SONAR_SANDBOX" ] && [ -x "$SONAR_SH" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+
+function _enforce_sandbox_installed {
+    if ! _check_sandbox_installed; then
+        echo "SonarQube not installed." >&2
+        echo "See \"sonar install\" for more information." >&2
+        return 1
+    else
+        return 0
+    fi
+}
+
+# Creates a temporary directory.
+# Returns the path to the new directory.
+function _mktemp {
+    case `uname` in
+        Darwin) tmpdir=`mktemp -d -t sonar` ;;
+        *)      tmpdir=`mktemp -d` ;;
+    esac
+
+    echo $tmpdir
+}
+
+
+function _download_as {
+    case `uname` in
+        Darwin) curl -L "$1" -o "$2";;
+        *)      wget    "$1" -O "$2";;
+    esac
+}
+
+
+function _install_sonarqube {
+    # Check for sandbox or return immediately
+    _check_sandbox || return 1
+
+    port=$1
+    tmpdir=$(_mktemp)
+
+    (
+        set -e
+
+        deflated="$SONARQUBE_PACKAGE-$SONARQUBE_VERSION"
+        zipball="$tmpdir/$deflated.zip"
+
+        _download_as "$SONARQUBE_DOWNLOAD_URL" "$zipball"
+
+        if ! [ -f "$zipball" ]; then
+            echo "Cannot download SonarQube. Installation FAILED"
+            return 1
+        fi
+
+        unzip -q "$zipball" -d "$SONAR_SANDBOX"
+
+        # Configure the Sonar Runner to connect to our local instance
+        properties="$SONAR_SANDBOX/$SONARQUBE_PACKAGE-$SONARQUBE_VERSION/conf/sonar.properties"
+
+        echo "" >> "$properties"    # Fix no new line at the end of the file
+        echo "sonar.web.port=$port" >> "$properties"
+    )
+
+    exit_status=$?
+    rm -rf "$tmpdir"
+
+    return $exit_status
+}
+
+
+function _install_sonarrunner {
+    # Check for sandbox or return immediately
+    _check_sandbox || return 1
+
+    port=$1
+    tmpdir=$(_mktemp)
+
+    (
+        set -e
+
+        deflated="sonar-runner-$SONARRUNN_VERSION"
+        zipball="$tmpdir/$deflated.zip"
+
+        _download_as "$SONARRUNN_DOWNLOAD_URL" "$zipball"
+
+        if ! [ -f "$zipball" ]; then
+            echo "Cannot download Sonar Runner. Installation FAILED"
+            return 1
+        fi
+
+        unzip -q "$zipball" -d "$SONAR_SANDBOX"
+
+        # Configure the Sonar Runner to connect to our local instance
+        properties="$SONAR_SANDBOX/sonar-runner-$SONARRUNN_VERSION/conf/sonar-runner.properties"
+
+        echo "" >> "$properties"    # Fix no new line at the end of the file
+        echo "sonar.host.url=http://localhost:$port" >> "$properties"
+    )
+
+    exit_status=$?
+    rm -rf "$tmpdir"
+
+    return $exit_status
+}
+
+
+function start {
+    # Check for sandbox or return immediately
+    _enforce_sandbox_installed || return 1
+
+    sh $SONAR_SH start
+    return $?
+}
+
+
+function stop {
+    # Check for sandbox or return immediately
+    _enforce_sandbox_installed || return 1
+
+    sh $SONAR_SH stop
+    return $?
+}
+
+
+function status {
+    # Check for sandbox or return immediately
+    _enforce_sandbox_installed || return 1
+
+    sh $SONAR_SH status
+    return $?
+}
+
+
+function logs {
+    # Check for sandbox or return immediately
+    _enforce_sandbox_installed || return 1
+
+    tail -f $SONAR_SANDBOX/$SONARQUBE_PACKAGE-$SONARQUBE_VERSION/logs/sonar.log
+    return $?
+}
+
+
+function install {
+    # Check for $SONAR_SANDBOX or return immediately
+    _check_sandbox || return 1
+
+    port="$1"
+
+    if ! [ "$port" ]; then
+        echo "error: no port provided." >&2
+        echo "usage: sonar install <port>" >&2
+        return 1
+    fi
+
+    case $port in
+        ''|*[!0-9]*)
+            echo "error: argument is not a number." >&2
+            echo "error: please provide a valid port number." >&2
+            return 1
+            ;;
+    esac
+
+    if [ -d "$SONAR_SANDBOX" ]; then
+        echo "SonarQube already installed." >&2
+        echo "Please remove it completelly before installation:" >&2
+        echo "" >&2
+        echo "  $ sonar stop" >&2
+        echo "  $ rm -rf \"$SONAR_SANDBOX\"" >&2
+        echo "" >&2
+
+        return 1
+    fi
+
+    mkdir -p "$SONAR_SANDBOX"
+
+    (
+        set -e
+
+        _install_sonarqube $port
+        _install_sonarrunner $port
+    ) || return 1
+
+    echo "Sandbox created at: $SONAR_SANDBOX"
+    echo "Use \"sonar start\" to start the SonarQube server."
+}
+
+
+function deploy_plugin {
+    # Check for sandbox or return immediately
+    _enforce_sandbox_installed || return 1
+
+    plugin="$1"
+    plugin_repo="$SONAR_SANDBOX/$SONARQUBE_PACKAGE-$SONARQUBE_VERSION/extensions/plugins"
+
+    if ! [ -f "$plugin" ]; then
+        echo "error: No plugin provided." >&2
+        echo "usage: sonar deploy-plugin <plugin>.jar" >&2
+        return 1
+    fi
+
+    echo "Installing plugin: $plugin"
+
+    echo -n " * stopping any running SonarQube instance... "
+    sh "$SONAR_SH" stop > /dev/null
+    echo "done"
+
+    echo -n " * copying plugin to $plugin_repo... "
+    cp "$plugin" "$plugin_repo"
+    echo "done"
+
+    echo -n " * starting SonarQube instance... "
+    sh "$SONAR_SH" start > /dev/null
+    echo "done"
+}
+
+
+function getenv {
+    # Display an error message on the error stream if $SONAR_SANDBOX is not set
+    _check_sandbox || return 1
+
+    # Display a warning message if SonarQube is not installed.
+    _enforce_sandbox_installed
+
+    # Display the environment on the standard output stream
+    echo "PATH=\"$SONAR_SANDBOX/sonar-runner-$SONARRUNN_VERSION/bin:$PATH\""
+    echo "export PATH"
+
+    # Always return successfully
+    return 0
+}
+
+
+case "$1" in
+    status)        shift; status;;
+    start)         shift; start;;
+    stop)          shift; stop;;
+    logs)          shift; logs;;
+    install)       shift; install $@;;
+    deploy-plugin) shift; deploy_plugin $@;;
+    getenv)        shift; getenv;;
+    help)          usage; exit 0;;
+    *)             usage;
+esac
+
+exit $?
