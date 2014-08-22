@@ -8528,28 +8528,6 @@
                 gnatcheck
             </repositoryKey>
             <key>
-                Forbidden_Attributes
-            </key>
-            <priority>
-                MAJOR
-            </priority>
-        </rule>
-        <rule>
-            <repositoryKey>
-                gnatcheck
-            </repositoryKey>
-            <key>
-                Forbidden_Pragmas
-            </key>
-            <priority>
-                MAJOR
-            </priority>
-        </rule>
-        <rule>
-            <repositoryKey>
-                gnatcheck
-            </repositoryKey>
-            <key>
                 Forbidden_Pragmas
             </key>
             <priority>
