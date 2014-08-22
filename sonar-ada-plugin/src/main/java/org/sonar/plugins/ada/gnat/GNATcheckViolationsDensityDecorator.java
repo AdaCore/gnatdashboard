@@ -69,8 +69,10 @@ public class GNATcheckViolationsDensityDecorator extends AbstractAdaDecorator {
           debtValue = debt.getIntValue();
         }
 
-        double density = calculate(debtValue, ncloc.getIntValue());
-        context.saveMeasure(metric, density);
+        if (!MeasureUtils.hasValue(context.getMeasure(metric))) {
+          double density = calculate(debtValue, ncloc.getIntValue());
+          context.saveMeasure(metric, density);
+        }
       }
     }
   }

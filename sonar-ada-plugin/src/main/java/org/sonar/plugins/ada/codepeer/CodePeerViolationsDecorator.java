@@ -101,7 +101,8 @@ public class CodePeerViolationsDecorator extends AbstractAdaDecorator {
 
         if (metric != null && context.getMeasure(metric) == null) {
           final Collection<Measure> measures =
-              context.getChildrenMeasures(MeasuresFilters.metric(metric));
+              context.getChildrenMeasures(
+                  MeasuresFilters.metric(metric.getKey()));
           final Double sum = MeasureUtils.sum(true, measures) +
               counts.count(new Entry(severity, category));
 

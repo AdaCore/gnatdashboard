@@ -86,7 +86,8 @@ public class GNATcheckViolationsDecorator extends AbstractAdaDecorator {
 
       if (metric != null && context.getMeasure(metric) == null) {
         final Collection<Measure> children =
-            context.getChildrenMeasures(MeasuresFilters.metric(metric));
+            context.getChildrenMeasures(
+                MeasuresFilters.metric(metric.getKey()));
         final Double sum = MeasureUtils.sum(true, children) +
             severities.count(severity);
 
