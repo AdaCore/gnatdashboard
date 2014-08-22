@@ -7,7 +7,7 @@
     <artifactId>sonar-ada-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
     <version>1.0.0w</version>
-    <name>Sonar Ada Plugin</name>
+    <name>Ada</name>
     <description>Ada Plugin for SonarQube 3.7.x</description>
     <inceptionYear>2012</inceptionYear>
     <url>https://docs.adacore.com/gnatdashboard-docs/</url>
