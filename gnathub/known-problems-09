@@ -17,7 +17,7 @@ KP-09-N818-014 GNAThub does not display fatal errors
 KP-09-N805-033 message insertion is slow
 
   Problem:    Message insertion in the database is slow, in particular for
-              plugins codepeer, gnatmetric and gcov.
+              plug-ins codepeer, gnatmetric and gcov.
 
   Status:     Fixed in GNAThub 1.0.0 on 2014-08-19
 
