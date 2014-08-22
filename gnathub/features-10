@@ -13,6 +13,28 @@ This date shows the implementation date of the feature.
 New features in 1.0
 -------------------
 
+NF-10-N822-008 Add support for SonarQube 4.2 and higher (2014-08-22)
+
+  The Sonar Ada Plugin now supports SonarQube from the LTS (Long Term Support)
+  version (3.7.4) to the latest and greatest stable (4.4).
+
+NF-10-N806-028 Log command-line of external tools (2014-08-08)
+
+  When --verbose switch is used, GNAThub will print the command-line of
+  external tools executed by plug-ins to STDOUT. A new GNAThub.verbose function
+  is also available in the Python API.
+
+NF-10-N805-033 Add support for messages bulk insertion (2014-08-07)
+
+  The SQLite database schema was updated for faster insertions, and a new
+  Python API method GNAThub.Resource.add_messages is now available to allow
+  plug-ins to insert multiple messages at once.
+
+NF-10-N725-023 New function to Python API for scenario switches (2014-08-12)
+
+  A new GNAThub.Project.scenario_switches function is available to retrieve
+  the list of key/value pair scenario switches passed through -X to gnathub.
+
 NF-10-N623-022 Add Python API support for any project attribute (2014-06-30)
 
   It is now possible to call GNAThub.Project.property_as_list and
