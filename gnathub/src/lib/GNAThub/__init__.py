@@ -529,14 +529,14 @@ class Resource(object):
 
         Prefer this function when there are many messages to insert, for
         efficiency. ``messages`` is a list, each entry being a list of the
-        form::
+        form:
 
             [message, line, col_begin, col_end]
 
-            message is the :class:`GNAThub.Message` to add
-            line, col_begin, col_end: int, see :meth:`add_message`.
+        ``message`` is the :class:`GNAThub.Message` to add ``line``,
+        ``col_begin``, ``col_end``: int, see :meth:`add_message`.
 
-        Example::
+        Example:
 
             resource.add_messages([
                 [ message, 1, 2, 2 ],
