@@ -229,7 +229,7 @@ class Console(object):
         """Prints a progress message.
 
         Activated at default verbosity level. If ``new_line`` is
-        :command:`True`, then terminate the line with a :kbd:`\n` character.
+        :command:`True`, then terminate the line with a :kbd:`\\n` character.
 
         :param int current: The current value.
         :param int total: The total value.
@@ -529,14 +529,14 @@ class Resource(object):
 
         Prefer this function when there are many messages to insert, for
         efficiency. ``messages`` is a list, each entry being a list of the
-        form:
+        form::
 
             [message, line, col_begin, col_end]
 
         ``message`` is the :class:`GNAThub.Message` to add ``line``,
         ``col_begin``, ``col_end``: int, see :meth:`add_message`.
 
-        Example:
+        Example::
 
             resource.add_messages([
                 [ message, 1, 2, 2 ],
@@ -545,7 +545,7 @@ class Resource(object):
                 [ message, 10002, 1, 1 ],
                 [ message, 10003, 1, 1 ],
                 [ message, 10005, 1, 1 ],
-             ])
+            ])
 
         :param list[list] messages: The messages to add.
 
@@ -583,10 +583,6 @@ class Resource(object):
         :return: The list of all resources.
         :rtype: list[GNAThub.Resource]
 
-=======
-        :returns: list[str]
-
->>>>>>> Normalize Python comments.
         """
 
         return NotImplemented   # Implemented in Ada
