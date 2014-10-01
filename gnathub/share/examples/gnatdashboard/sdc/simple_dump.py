@@ -23,7 +23,7 @@ def _fetch():
     # Create a dictionary of rules
     rules = {rule.id: rule for rule in GNAThub.Rule.list()}
 
-    for rule in rules:
+    for rule in rules.values():
         rule.tool_name = tools[rule.tool_id].name
 
     # Traverse all resources looking for files
