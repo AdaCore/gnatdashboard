@@ -6,7 +6,7 @@ Getting Started with |GNATdashboard|
 Prerequisites
 -------------
 
-  * a |SonarRunner| installation configured for the targetted |SonarQube|
+  * a |SonarRunner| installation configured for the targeted |SonarQube|
     instance, and in your :envvar:`$PATH`
 
   * a |GNATPro| installation (the most recent installed on the system), and in
