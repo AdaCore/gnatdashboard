@@ -6,6 +6,15 @@
 |GNATdashboard| Documentation
 =============================
 
+|GNATdashboard| Quick CookBook
+==============================
+
+.. toctree::
+    :numbered:
+    :maxdepth: 3
+
+    cook-book/introduction
+
 |GNATdashboard| Administrator and User's Manual
 ===============================================
 
