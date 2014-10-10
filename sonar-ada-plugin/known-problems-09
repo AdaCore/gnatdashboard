@@ -1,0 +1,16 @@
+======================================
+SonarAdaPlugin 0.9 KNOWN PROBLEMS LIST
+======================================
+
+Copyright (C) 2014, AdaCore
+
+KP-09-NA10-041 SonarRunner crash when missing project properties
+
+  Problem:    SonarRunner crashes with NPE when the sonar-project.properties
+              file is missing important properties, namely:
+                * sonar.ada.gnathub.db
+                * sonar.ada.gnathub.src_mapping
+
+  Status:     Fixed in SonarAdaPlugin 1.0.0 on 2014-10-10
+
+  Workaround: Generate sonar-project.properties with GNAThub

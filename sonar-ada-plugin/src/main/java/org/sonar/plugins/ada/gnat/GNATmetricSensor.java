@@ -43,6 +43,11 @@ public class GNATmetricSensor extends AbstractAdaSensor {
   public void analyse(Project project, SensorContext context) {
     log.info("Collecting GNATmetric measures");
 
+    if (!adaContext.isDAOLoaded()) {
+      log.error("GNAThub db not loaded, cannot fetch GNATmetric measures");
+      return;
+    }
+
     for (final MeasureRecord am : adaContext.getDao().getMeasuresByTool(NAME)) {
       final File file = am.getFile();
       log.trace("Saving measure '{}' for file: {}",

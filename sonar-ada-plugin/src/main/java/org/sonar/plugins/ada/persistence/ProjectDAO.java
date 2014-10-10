@@ -44,6 +44,7 @@ public class ProjectDAO {
    *
    * @param project The project being analyzed.
    * @param dbUrl The URL pointing to the SQLite database to connect to.
+   * @param srcMapping Source file mapping.
    */
   public ProjectDAO(final Project project, final String dbUrl,
                     final Properties srcMapping) {
@@ -66,7 +67,7 @@ public class ProjectDAO {
     final String path = srcMapping.getProperty(original, original);
 
     if (path.equals(original)) {
-      log.error("No source mapping found for: {}", path);
+      log.warn("No source mapping found for: {}", path);
       // Do not return so that we fallback using the original file if
       // available.
     }

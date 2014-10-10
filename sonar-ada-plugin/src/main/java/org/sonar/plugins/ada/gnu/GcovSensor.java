@@ -37,12 +37,16 @@ public class GcovSensor extends AbstractAdaSensor {
   public void analyse(Project project, SensorContext context) {
     log.info("Collecting Gcov measures");
 
+    if (!adaContext.isDAOLoaded()) {
+      log.error("GNAThub db not loaded, cannot fetch Gcov measures");
+      return;
+    }
+
     File currentFile = null;
     CoverageMeasuresBuilder builder = CoverageMeasuresBuilder.create();
 
     // Retrieve all coverage data ordered by resource
     for (CoverageRecord data : adaContext.getDao().getCoverageByTool("GCov")) {
-      // Initialization of the current file var
       if (currentFile == null) {
         currentFile = data.getFile();
       }

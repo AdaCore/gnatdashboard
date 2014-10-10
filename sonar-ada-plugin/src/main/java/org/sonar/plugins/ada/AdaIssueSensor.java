@@ -43,6 +43,11 @@ public class AdaIssueSensor extends AbstractAdaSensor {
   public void analyse(Project project, SensorContext context) {
     log.info("Collecting all issues from DB...");
 
+    if (!adaContext.isDAOLoaded()) {
+      log.error("GNAThub db not loaded, cannot fetch project Issues");
+      return;
+    }
+
     for (IssueRecord ai : adaContext.getDao().getIssues()) {
       log.debug("Issue: \"{}\" @ {}", ai.getMessage(), ai.getFile().getName());
 

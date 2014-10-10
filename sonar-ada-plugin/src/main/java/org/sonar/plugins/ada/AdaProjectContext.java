@@ -49,15 +49,38 @@ public class AdaProjectContext implements BatchExtension {
     this.srcMapping = new Properties();
 
     final String dbUrl = settings.getString(AdaPlugin.GNATHUB_DB_KEY);
-    this.dao = new ProjectDAO(project, dbUrl, this.srcMapping);
+    if (dbUrl == null) {
+      log.warn("{} is not defined in the project properties file",
+          AdaPlugin.GNATHUB_DB_KEY);
+
+      // There's no point in creating the DAO if we cannot locate the database
+      this.dao = null;
+      return;
+    }
 
     try {
-      this.srcMapping.load(new FileInputStream(srcMappingUrl));
+      if (srcMappingUrl == null) {
+        log.warn("{} is not defined in the project properties file",
+            AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
+        // At this point, this.srcMapping is an empty Property set:
+      } else {
+        this.srcMapping.load(new FileInputStream(srcMappingUrl));
+      }
 
     } catch (FileNotFoundException why) {
       log.error("Cannot load source file mapping", why);
     } catch (IOException why) {
       log.error("Error reading source file mapping", why);
     }
+
+    this.dao = new ProjectDAO(project, dbUrl, this.srcMapping);
+  }
+
+  /**
+   * @return {@code true} if we successfully loaded the DAO,
+   *    {@code false} otherwise.
+   */
+  public boolean isDAOLoaded() {
+    return this.dao != null;
   }
 }
