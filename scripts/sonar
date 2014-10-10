@@ -3,7 +3,7 @@
 # SonarQube & Runner version
 
 # Stable version for SonarQube
-SONARQUBE_VERSION=4.4
+SONARQUBE_VERSION=4.5
 # LTS (Long Term Support) version for SonarQube
 # SONARQUBE_VERSION=3.7.4
 
