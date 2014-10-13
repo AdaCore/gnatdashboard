@@ -17,9 +17,9 @@
 #                                                                          #
 ############################################################################
 
-"""GNAThub plug-in for the GNATcheck command-line tool.
+"""GNAThub plug-in for the GNATcheck command-line tool
 
-It exports the GNATcheck Python class which implements the GNAThub.Plugin
+It exports the GNATcheck class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
 module and load it as part of the GNAThub default execution.
 """
@@ -34,10 +34,9 @@ from GNAThub import Console
 
 
 class GNATcheck(GNAThub.Plugin):
-    """GNATcheck plugin for GNAThub.
+    """GNATcheck plugin for GNAThub
 
     Configures and executes GNATcheck, then analyzes the output.
-
     """
 
     # Regex to identify lines that contain messages
@@ -58,11 +57,10 @@ class GNATcheck(GNAThub.Plugin):
                                    '%s.out' % self.name)
 
     def __cmd_line(self):
-        """Creates GNATcheck command line arguments list.
+        """Creates GNATcheck command line arguments list
 
-        :return: The GNATcheck command line.
+        :return: the GNATcheck command line
         :rtype: list[str]
-
         """
 
         return ['gnatcheck', '--show-rule', '-o', self.report,
@@ -70,25 +68,22 @@ class GNATcheck(GNAThub.Plugin):
                 '-j%d' % GNAThub.jobs()] + GNAThub.Project.scenario_switches()
 
     def execute(self):
-        """Executes GNATcheck.
+        """Executes GNATcheck
 
         :meth:`postprocess()` is called upon process completion.
-
         """
 
         proc = GNAThub.Run(self.name, self.__cmd_line())
         self.postprocess(proc.status)
 
     def postprocess(self, exit_code):
-        """Postprocesses the tool execution: parses the output report on
-        success.
+        """Parses the output report if GNATcheck completed successfully
 
         Sets the ``exec_status`` property according to the success of the
         analysis:
 
             * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
             * ``GNAThub.EXEC_FAILURE``: on any error
-
         """
 
         if exit_code not in GNATcheck.VALID_EXIT_CODES:
@@ -98,7 +93,7 @@ class GNATcheck(GNAThub.Plugin):
         self.__parse_report()
 
     def __parse_report(self):
-        """Parses GNATcheck output file report.
+        """Parses GNATcheck output file report
 
         Sets the exec_status property according to the success of the
         analysis:
@@ -110,7 +105,6 @@ class GNATcheck(GNAThub.Plugin):
 
             * basic message
             * message for package instantiation
-
         """
 
         self.info('analyse report')
@@ -148,8 +142,9 @@ class GNATcheck(GNAThub.Plugin):
             self.exec_status = GNAThub.EXEC_SUCCESS
 
     def __parse_line(self, regex):
-        """Parses a GNATcheck message line and add the message to the current
-        database session.
+        """Parses a GNATcheck message line
+
+        Add the message to the current database session.
 
         Retrieves following information:
 
@@ -158,8 +153,8 @@ class GNATcheck(GNAThub.Plugin):
             * rule identification
             * message description
 
-        :param re.RegexObject regex: The result of the MSG_RE regex.
-
+        :param regex: the result of the MSG_RE regex
+        :type regex: re.RegexObject
         """
 
         # The following Regex results are explained using this example.
@@ -177,16 +172,19 @@ class GNATcheck(GNAThub.Plugin):
 
         self.__add_message(src, line, column, rule, message)
 
-    # pylint: disable=too-many-arguments
     def __add_message(self, src, line, col_begin, rule_id, msg):
-        """Adds GNATcheck message to current session database.
+        """Adds GNATcheck message to current session database
 
-        :param str src: Message source file.
-        :param str line: Message line number.
-        :param str col_begin: Message column number.
-        :param str rule_id: Message's rule identifier.
-        :param str msg: Description of the message.
-
+        :param src: Message source file.
+        :type src: str
+        :param line: Message line number.
+        :type line: str
+        :param col_begin: Message column number.
+        :type col_begin: str
+        :param rule_id: Message's rule identifier.
+        :type rule_id: str
+        :param msg: Description of the message.
+        :type msg: str
         """
 
         rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)

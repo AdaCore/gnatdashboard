@@ -10,8 +10,10 @@ SPHINXAPIDOC  = sphinx-apidoc -f
 PAPER         =
 BUILDDIR      = $(BUILD_DIR)/docs
 APIDOC        = source/api-doc
+PLUGINSDOC    = source/plugins-doc
 
 PY_API_SOURCES = $(shell find $(TOP)/src/lib/GNAThub -name '*.py')
+PY_PLUGINS_SOURCES = $(shell find $(TOP)/share/gnathub/core -name '*.py')
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -50,6 +52,9 @@ clean:
 
 api-doc: $(PY_API_SOURCES)
 	$(SPHINXAPIDOC) -o $(APIDOC) $(TOP)/src/lib/GNAThub
+
+plugins-doc: $(PY_PLUGINS_SOURCES)
+	$(SPHINXAPIDOC) -o $(PLUGINSDOC) $(TOP)/share/gnathub/core
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

@@ -17,8 +17,7 @@
 #                                                                          #
 ############################################################################
 
-"""Provides common components to GNAT Pro Tool Suite.
-"""
+"""Provides common components to GNAT Pro Tool Suite"""
 
 # A source location regex pattern
 SLOC_PATTERN = \

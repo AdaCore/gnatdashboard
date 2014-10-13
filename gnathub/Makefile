@@ -36,6 +36,7 @@ gnathub-plugins:
 
 gnathub-api-docs: docs/Makefile
 	$(MAKE) -C docs api-doc
+	$(MAKE) -C docs plugins-doc
 
 # Generate both HTML and PDF documents in BUILD_DIR and install them in DOCS_DIR
 docs: gnathub-api-docs docs-html docs-pdf

@@ -8,4 +8,5 @@
 /gnathub-*/
 /docs/source/api-doc
 /share/examples/gnatdashboard/sdc/obj
+/docs/source/plugins-doc
 .idea/

@@ -17,9 +17,9 @@
 #                                                                          #
 ############################################################################
 
-"""GNAThub plug-in for the GNATmetric command-line tool.
+"""GNAThub plug-in for the GNATmetric command-line tool
 
-It exports the GNATmetric Python class which implements the GNAThub.Plugin
+It exports the GNATmetric class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
 module and load it as part of the GNAThub default execution.
 """
@@ -34,7 +34,7 @@ from xml.etree.ElementTree import ParseError
 
 
 class GNATmetric(GNAThub.Plugin):
-    """GNATmetric plugin for GNAThub."""
+    """GNATmetric plugin for GNAThub"""
 
     # GNATmetric exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
@@ -46,35 +46,32 @@ class GNATmetric(GNAThub.Plugin):
         self.report = os.path.join(GNAThub.Project.object_dir(), 'metrix.xml')
 
     def __cmd_line(self):
-        """Creates GNATmetric command line arguments list.
+        """Creates GNATmetric command line arguments list
 
-        :returns: list[str]
-
+        :return: the GNATmetric command line
+        :rtype: list[str]
         """
 
         return ['gnatmetric', '-ox', self.report, '-P', GNAThub.Project.path(),
                 '-U'] + GNAThub.Project.scenario_switches()
 
     def execute(self):
-        """Executes GNATmetric.
+        """Executes GNATmetric
 
         :meth:`postprocess()` is called upon process completion.
-
         """
 
         proc = GNAThub.Run(self.name, self.__cmd_line())
         self.postprocess(proc.status)
 
     def postprocess(self, exit_code):
-        """Postprocesses the tool execution: parse the output XML report on
-        success.
+        """Parses the output XML report if GNATmetric completed successfully
 
         Sets the exec_status property according to the success of the
         analysis:
 
             * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
             * ``GNAThub.EXEC_FAILURE``: on any error
-
         """
 
         if exit_code not in GNATmetric.VALID_EXIT_CODES:
@@ -83,16 +80,14 @@ class GNATmetric(GNAThub.Plugin):
 
         self.__parse_xml_report()
 
-    # pylint: disable=too-many-locals
     def __parse_xml_report(self):
-        """Parses GNATmetric XML report and save data to the database.
+        """Parses GNATmetric XML report and save data to the database
 
         Sets the exec_status property according to the success of the
         analysis:
 
             * ``GNAThub.EXEC_SUCCESS``: transactions committed to database
             * ``GNAThub.EXEC_FAILURE``: error while parsing the xml report
-
         """
 
         self.info('analyse report')

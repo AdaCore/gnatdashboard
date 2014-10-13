@@ -17,9 +17,9 @@
 #                                                                          #
 ############################################################################
 
-"""GNAThub plug-in for the CodePeer command-line tool.
+"""GNAThub plug-in for the CodePeer command-line tool
 
-It exports the CodePeer Python class which implements the GNAThub.Plugin
+It exports the CodePeer class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
 module and load it as part of the GNAThub default execution.
 """
@@ -36,7 +36,6 @@ class CodePeer(GNAThub.Plugin):
     """CodePeer plugin for GNAThub
 
     Configures and executes CodePeer, then analyzes the output.
-
     """
 
     def __init__(self):
@@ -65,11 +64,10 @@ class CodePeer(GNAThub.Plugin):
 
     @staticmethod
     def __cmd_line():
-        """Creates CodePeer command line arguments list.
+        """Creates CodePeer command line arguments list
 
-        :return: The CodePeer command line.
+        :return: the CodePeer command line
         :rtype: list[str]
-
         """
         return ['codepeer', '-update-scil',
                 '-P', GNAThub.Project.path(), '-jobs', str(GNAThub.jobs())
@@ -77,11 +75,10 @@ class CodePeer(GNAThub.Plugin):
 
     @staticmethod
     def __msg_reader_cmd_line():
-        """Creates CodePeer Message Reader command line arguments list.
+        """Creates CodePeer Message Reader command line arguments list
 
-        :return: The CodePeer message reader command line.
+        :return: the CodePeer message reader command line
         :rtype: list[str]
-
         """
 
         msg_dir = os.path.join(GNAThub.Project.object_dir(), 'codepeer',
@@ -90,10 +87,9 @@ class CodePeer(GNAThub.Plugin):
         return ['codepeer_msg_reader', '-csv', msg_dir]
 
     def execute(self):
-        """Executes CodePeer.
+        """Executes CodePeer
 
         :meth:`execute_msg_reader()` is called upon process completion.
-
         """
 
         proc = GNAThub.Run(self.name, CodePeer.__cmd_line())
@@ -104,10 +100,9 @@ class CodePeer(GNAThub.Plugin):
         self.execute_msg_reader()
 
     def execute_msg_reader(self):
-        """Executes CodePeer Message Reader.
+        """Executes CodePeer Message Reader
 
         :meth:`postprocess()` is called upon process completion.
-
         """
 
         self.info('collect results with msg_reader')
@@ -117,15 +112,13 @@ class CodePeer(GNAThub.Plugin):
         self.postprocess(proc.status)
 
     def postprocess(self, exit_code):
-        """Postprocesses the tool execution: parse the output report on
-        success.
+        """Parse the output report if CodePeer completed successfully
 
         Sets the exec_status property according to the success of the
         analysis:
 
             * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
             * ``GNAThub.EXEC_FAILURE``: on any error
-
         """
 
         if exit_code != 0:
@@ -135,14 +128,13 @@ class CodePeer(GNAThub.Plugin):
         self.__parse_csv_report()
 
     def __parse_csv_report(self):
-        """Parses CodePeer output CSV report.
+        """Parses CodePeer output CSV report
 
         Sets the exec_status property according to the success of the
         analysis:
 
             * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
             * ``GNAThub.EXEC_FAILURE``: on any error
-
         """
 
         self.info('analyse CSV report')
@@ -209,17 +201,21 @@ class CodePeer(GNAThub.Plugin):
                 self.__do_bulk_insert()
                 self.exec_status = GNAThub.EXEC_SUCCESS
 
-    # pylint: disable=too-many-arguments
     def __add_message(self, src, line, column, rule_id, msg, category):
         """Adds CodePeer message to current session database.
 
-        :param str src: Message source file.
-        :param str line: Message line number.
-        :param str column: Message column number.
-        :param str rule_id: Message's rule identifier.
-        :param str msg: Description of the message.
-        :param str category: The category of the message.
-
+        :param src: message source file
+        :type src: str
+        :param line: message line number
+        :type line: str
+        :param column: message column number
+        :type column: str
+        :param rule_id: message rule identifier
+        :type rule_id: str
+        :param msg: description of the message
+        :type msg: str
+        :param category: the category of the message
+        :type category: str
         """
 
         # Cache the rules
@@ -252,7 +248,7 @@ class CodePeer(GNAThub.Plugin):
                 [message, int(line), int(column), int(column)]]
 
     def __do_bulk_insert(self):
-        """Insert the codepeer messages in bulk on each resource."""
+        """Insert the codepeer messages in bulk on each resource"""
 
         for src in self.bulk_data:
             base = GNAThub.Project.source_file(os.path.basename(src))

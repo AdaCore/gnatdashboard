@@ -35,7 +35,6 @@ class TestEncoder(object):
         if cls.encoding is not None and cls.reverse_encoding is not None:
             return
 
-        # pylint: disable=invalid-name
         with open(os.path.join(const.basedir, 'category-encoding.yaml')) as fd:
             cls.encoding = yaml.load(fd.read())
             cls.reverse_encoding = {v: k for k, v in cls.encoding.iteritems()}

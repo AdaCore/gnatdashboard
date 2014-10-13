@@ -57,8 +57,6 @@ def update_dict(origin, extras):
     return final
 
 
-# pylint: disable=R0903
-# Disable "Too few public methods"
 class GNAThubOutputStyle(Style):
     """The pygments style to apply to the output."""
 
@@ -75,7 +73,6 @@ class GNAThubOutputStyle(Style):
     })
 
 
-# pylint: disable=too-many-instance-attributes
 class Testsuite(object):
     """The GNAThub testsuite."""
 
@@ -189,7 +186,6 @@ class Testsuite(object):
         assert self.formatter is not None, 'Internal error'
         print >> stream, pygments.format(tokens, self.formatter)
 
-    # pylint: disable=unused-argument
     def collect_result(self, name, process, job_info):
         """Custom collect_result function."""
 

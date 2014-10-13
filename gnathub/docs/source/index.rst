@@ -35,3 +35,4 @@
     :maxdepth: 3
 
     api-doc/modules
+    plugins-doc/modules

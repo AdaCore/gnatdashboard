@@ -3,7 +3,6 @@
 import sys
 
 
-# pylint: disable=too-few-public-methods
 class _const(object):
     """Handles the constness of this module's attributes."""
 

@@ -17,80 +17,77 @@
 #                                                                          #
 ############################################################################
 
-"""This module defines the core components of GNAThub plugin mechanism.
+"""This module defines the core components of GNAThub plugin mechanism
 
 It declares module routines and classes implemented in Ada and exported to
 Python.
 
 In particular the :class:`GNAThub.Plugin` is the base class to use for writing
 plug-ins.
-
 """
 
 
 def root():
-    """Returns the path to the GNAThub-specific root directory.
+    """Returns the path to the GNAThub-specific root directory
 
     Usually :file:`<project_object_dir>/gnathub`.
 
-    :return: The full path to the directory.
+    :return: the full path to the directory
     :rtype: str
-
     """
 
     return NotImplemented   # Implemented in Ada
 
 
 def logs():
-    """Returns the path to the GNAThub-specific directory for logs.
+    """Returns the path to the GNAThub-specific directory for logs
 
     Usually :file:`<project_object_dir>/gnathub/logs`.
 
-    :return: The full path to the log directory.
+    :return: the full path to the log directory
     :rtype: str
-
     """
 
     return NotImplemented   # Implemented in Ada
 
 
 def verbose():
-    """Whether the verbose flag was passed to the GNAThub driver or not.
+    """Whether the verbose flag was passed to the GNAThub driver or not
 
-    :return: Whether the verbosity flag is enabled.
-    :rtype: boolean
-
+    :return: whether the verbosity flag is enabled or not
+    :rtype: bool
     """
 
     return NotImplemented   # Implemented in Ada
 
 
 def jobs():
-    """Returns the number of parallel jobs to execute (equivalent to
-    :command:`-j`).
+    """Returns the number of parallel jobs to execute.
 
-    :return: The maximum number of separate processes to spawn.
+    This is the equivalent to using :command:`-j` on the command-line.
+
+    :return: the maximum number of separate processes to spawn
     :rtype: int
-
     """
 
     return NotImplemented   # Implemented in Ada
 
 
 def plugins():
-    """Returns the list of comma-separated plug-in name as specified on the
-    command-line.
+    """Returns the list of comma-separated plug-in names
 
-    :return: The list of plug-in name.
+    This is the list of plug-ins as specified on the command-line with the
+    :command:`--plugins` switch.
+
+    :return: the list of plug-in name
     :rtype: str
-
     """
 
     return NotImplemented   # Implemented in Ada
 
 
 def repositories():
-    """Returns the list of available repositories.
+    """Returns the list of available repositories
 
     The dictionary contains 3 keys:
 
@@ -98,434 +95,433 @@ def repositories():
     * :command:`global`
     * :command:`local`
 
-    These repositories correspond respectively to the [core] and [extra]
+    These repositories correspond respectively to the ``[core]`` and ``[extra]``
     directories from the GNAThub installation, and the
     :command:`Local_Repository` the user can specify in its project file.
 
-    :return: The available repositories details.
+    :return: the available repositories details
     :rtype: dict[str, str]
-
     """
 
     return NotImplemented   # Implemented in Ada
 
 
 def database():
-    """Returns the path to the GNAThub SQLite database.
+    """Returns the path to the GNAThub SQLite database
 
     Usually :file:`<project_object_dir>/gnathub/gnathub.db`.
 
-    :return: The full path to the local serialized SQLite database.
+    :return: the full path to the local serialized SQLite database
     :rtype: str
-
     """
 
     return NotImplemented   # Implemented in Ada
 
 
 class Logger(object):
-    """A logger object. Fully implemented in Ada."""
+    """A logger object. Fully implemented in Ada"""
 
     def __init__(self, name):
-        """Creates a new Ada logger object.
+        """Creates a new Ada logger object
 
-        From :program:`GNAThub` plug-ins, prefer the use of :module:`logging`
+        From :program:`GNAThub` plug-ins, prefer the use of :mod:`logging`
         instead of this logger class. A custom :class:`logging.Handler` is
-        automatically installed to use :module:`logging` as logging front-end
+        automatically installed to use :mod:`logging` as logging front-end
         and :class:`GNAThub.Logger` as logging back-end.
 
-        :param str name: The name of the logger.
-        :return: A new intance of a logger.
-        :rtype: GNAThub.Logger
-
+        :param name: the name of the logger
+        :type name: str
         """
 
         pass    # Implemented in Ada
 
     def info(self, message):
-        """Prints an informative message.
+        """Prints an informative message
 
-        :param str message: The message to log.
-
+        :param message: the message to log
+        :type message: str
         """
 
         pass    # Implemented in Ada
 
     def warn(self, message):
-        """Prints a warning message.
+        """Prints a warning message
 
-        :param str message: The message to log.
-
+        :param message: the message to log
+        :type message: str
         """
 
         pass    # Implemented in Ada
 
     def error(self, message):
-        """Prints an error message.
+        """Prints an error message
 
-        :param str message: The message to log.
-
+        :param message: the message to log
+        :type message: str
         """
 
         pass    # Implemented in Ada
 
     def fatal(self, message):
-        """Prints a fatal message.
+        """Prints a fatal message
 
-        :param str message: The message to log.
-
+        :param message: the message to log
+        :type message: str
         """
 
         pass    # Implemented in Ada
 
     def debug(self, message):
-        """Prints a debug message.
+        """Prints a debug message
 
-        :param str message: The message to log.
-
+        :param message: the message to log
+        :type message: str
         """
 
         pass    # Implemented in Ada
 
 
 class Console(object):
-    """Provides several helper routines implemented in Ada."""
+    """Provides several helper routines implemented in Ada"""
 
     @staticmethod
     def info(message, prefix=None):
-        """Prints an informative message. Activated at default verbosity.
+        """Prints an informative message
 
-        :param str message: The message to display.
-        :param str prefix: Optional prefix to the message.
+        Activated at default verbosity.
 
+        :param message: the message to display
+        :type message: str
+        :param prefix: optional prefix to the message
+        :type prefix: str
         """
 
         pass    # Implemented in Ada
 
     @staticmethod
     def warn(message, prefix=None):
-        """Prints a warning message. Activated at default verbosity output.
+        """Prints a warning message
 
-        :param str message: The message to display.
-        :param str prefix: Optional prefix to the message.
+        Activated at default verbosity output.
 
+        :param message: the message to display
+        :type message: str
+        :param prefix: optional prefix to the message
+        :type prefix: str
         """
 
         pass    # Implemented in Ada
 
     @staticmethod
     def error(message, prefix=None):
-        """Prints an error message. Always activated.
+        """Prints an error message
 
-        :param str message: The message to display.
-        :param str prefix: Optional prefix to the message.
+        Always activated.
 
+        :param message: the message to display
+        :type message: str
+        :param prefix: optional prefix to the message
+        :type prefix: str
         """
 
         pass    # Implemented in Ada
 
     @staticmethod
     def progress(current, total, new_line=False):
-        """Prints a progress message.
+        """Prints a progress message
 
         Activated at default verbosity level. If ``new_line`` is
         :command:`True`, then terminate the line with a :kbd:`\\n` character.
 
-        :param int current: The current value.
-        :param int total: The total value.
-        :param boolean new_line: Whether to terminate with a new line.
-
+        :param current: the current value
+        :type current: int
+        :param total: the total value
+        :type total: int
+        :param new_line: whether to terminate with a new line
+        :type new_line: bool
         """
 
         pass    # Implemented in Ada
 
 
 class Project(object):
-    """A project namespace. Fully implemented in Ada."""
+    """A project namespace, fully implemented in Ada"""
 
     def __init__(self):
-        """Instance constructor. Do not use directly.
+        """Instance constructor
 
-        :return: A new instance of a project.
-        :rtype: GNAThub.Project
-
+        Do not use directly.
         """
 
         raise Error('GNAThub.Project must not be instantiated manually')
 
     @staticmethod
     def name():
-        """Returns the name of the root project.
+        """Returns the name of the root project
 
         :rtype: str
-
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def path():
-        """Returns the full path to the root project.
+        """Returns the full path to the root project
 
         :rtype: str
-
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def object_dir():
-        """Returns the full path to the root project object directory.
+        """Returns the full path to the root project object directory
 
         :rtype: str
-
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def source_dirs():
-        """Returns the list of source directories for each project.
+        """Returns the list of source directories for each project
 
-        :return: The list of all sources directories per project.
+        :return: the list of all sources directories per project
         :rtype: dict[str, list[str]]
-
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def source_file(name):
-        """Creates a new file. This will automatically try to solve
-        ``name`` to an absolute path if it currently is a base name. If
-        ``name`` is an absolute path, it is returned as is. Otherwise,
-        only the base name is used (i.e. we remove any directory information
-        from ``name``).
+        """Creates a new file
 
-        :param str name: The source file basename.
-        :return: The full path to the source file.
+        This will automatically try to solve ``name`` to an absolute path if it
+        currently is a base name. If ``name`` is an absolute path, it is
+        returned as is. Otherwise, only the base name is used (i.e. we remove
+        any directory information from ``name``).
+
+        :param name: the source file basename
+        :type name: str
+        :return: the full path to the source file
         :rtype: str
-
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def source_suffixes(language):
-        """Returns a list of suffixes used by the project manager to find Ada
-        source files, ie. both specifications and implementations.
+        """Returns a list of Ada source file suffixes
 
-        :param str language: The language of the sources.
-        :return: The list of valid Ada source file extensions.
+        The list is used by the project manager to find Ada source files, ie.
+        both specifications and implementations.
+
+        :param language: the language of the sources
+        :type language: str
+        :return: the list of valid Ada source file extensions
         :rtype: list[str]
-
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def property_as_string(key, package=None):
-        """Returns the string representation of the project property from the
+        """Returns a project property
+
+        Returns the string representation of the project property from the
         package GNATdashboard.
 
-        :param str key: The property name.
-        :param str package: The package name. Default to GNATdashboard package.
-        :return: The property value.
+        :param key: the property name
+        :type key: str
+        :param package: the package name (default to GNATdashboard package)
+        :type package: str
+        :return: the property value
         :rtype: str
-
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def property_as_list(key, package=None):
-        """Returns the list of string representation of the project property
-        from the package GNATdashboard.
+        """Returns a project property
 
-        :param str key: The property name.
-        :param str package: The package name. Default to GNATdashboard package.
-        :return: The property value.
+        Returns the list of string representation of the project property from
+        the package GNATdashboard.
+
+        :param key: the property name
+        :type key: str
+        :param package: the package name (default to GNATdashboard package)
+        :type package: str
+        :return: the property value
         :rtype: list[str]
-
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def scenario_switches():
-        """Returns the scenario as a list of switches of the form -Xvar=value.
+        """Returns the scenario as a list of switches of the form -Xvar=value
 
-        :return: The list of scenario switches passed to GNAThub.
+        :return: the list of scenario switches passed to GNAThub
         :rtype: list[str]
-
         """
 
         return NotImplemented   # Implemented in Ada
 
 
-# pylint: disable=too-few-public-methods
 class Tool(object):
-    """A Tool object, mapping to a Tool entry in the database."""
+    """A Tool object, mapping to a Tool entry in the database"""
 
     def __init__(self, name):
-        """Returns the tool of the given name, creating it if necessary.
+        """Returns the tool of the given name, creating it if necessary
 
-        :param str name: The name of the tool to create or retrieve.
-        :return: A new instance of a tool.
-        :rtype: GNAThub.Tool
-
+        :param name: the name of the tool to create or retrieve
+        :type name: str
         """
 
         pass    # Implemented in Ada
 
     @staticmethod
     def list():
-        """Lists all the tools stored in the database.
+        """Lists all the tools stored in the database
 
-        :return: The list of all tools.
+        :return: the list of all tools
         :rtype: list[GNAThub.Tool]
-
         """
 
         return NotImplemented   # Implemented in Ada
 
 
-# pylint: disable=too-few-public-methods
 class Category(object):
     """A Category object, representing a category in the database"""
 
     def __init__(self, label, on_side=False):
-        """Returns the category of the given label and property, creating it
-        if necessary.
+        """Returns the category of the given label and property
 
-        :param str label: The label of the category.
-        :param bool on_side: Whether messages belonging to this category should
+        Creates the category if necessary.
+
+        :param label: the label of the category
+        :type label: str
+        :param on_side: whether messages belonging to this category should
             be displayed on the side of the lines when representing a source
-            file.
-        :return: A new instance of a category.
-        :rtype: GNAThub.Category
-
+            file
+        :type on_side: bool
         """
 
         pass    # Implemented in Ada
 
     @staticmethod
     def list():
-        """Returns all categories stored in the database.
+        """Returns all categories stored in the database
 
-        :return: The list of all categories.
+        :return: the list of all :class:`GNAThub.Category`
         :rtype: list[GNAThub.Category]
-
         """
 
         return NotImplemented   # Implemented in Ada
 
 
-# pylint: disable=too-few-public-methods
 class Rule(object):
     """A Rule object, representing a rule in the database"""
 
     def __init__(self, name, identifier, kind, tool):
-        """Returns the rule of the given properties, creating it if necessary.
+        """Returns the rule of the given properties, creating it if necessary
 
-        :param str name: The name of the rule.
-        :param str identifier: An unique identifier for this rule (typically,
-            the same as name).
-        :param int kind: RULE_KIND to indicate a rule where messages are given
+        :param name: the name of the rule
+        :type name: str
+        :param identifier: an unique identifier for this rule (typically,
+            the same as name)
+        :type identifier: str
+        :param kind: RULE_KIND to indicate a rule where messages are given
             without a numeric value, or METRIC_KIND to indicate a rule where
-            messages correspond to a numeric value.
-        :param GNAThub.Tool tool: The tool that defines this rule.
-        :return: A new instance of a rule.
-        :rtype: GNAThub.Rule
-
+            messages correspond to a numeric value
+        :type kind: int
+        :param tool: the tool that defines this rule
+        :type tool: GNAThub.Tool
         """
 
         pass    # Implemented in Ada
 
     @staticmethod
     def list():
-        """Returns all the rules stored in the database.
+        """Returns all the rules stored in the database
 
-        :return: The list of all rules.
+        :return: the list of all :class:`GNAThub.Rule`
         :rtype: list[GNAThub.Rule]
-
         """
 
         return NotImplemented   # Implemented in Ada
 
 
-# pylint: disable=too-few-public-methods
 class Message(object):
     """A Message object, representing one message in the database"""
 
     def __init__(self, rule, message, category):
-        """Returns the message matching the given properties.
+        """Returns the message matching the given properties
 
-        :param GNAThub.Rule rule: The rule to which this message belongs.
-        :param str message: The data to associate to the message:
-            this should be a numeric value if the rule is of METRIC_KIND.
-        :param GNAThub.Category category: The category to which this message
-            belongs.
-        :return: A new instance of a message.
-        :rtype: GNAThub.Message
-
+        :param rule: the rule to which this message belongs
+        :type rule: GNAThub.Rule
+        :param message: the data to associate to the message: this should be a
+            numeric value if the rule is of METRIC_KIND
+        :type message: str
+        :param category: the category to which this message belongs
+        :type category: GNAThub.Category
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def list():
-        """Returns all messages stored in the database.
+        """Returns all messages stored in the database
 
-        :return: The list of all messages.
+        :return: the list of all :class:`GNAThub.Message`
         :rtype: list[GNAThub.Message]
-
         """
 
         return NotImplemented   # Implemented in Ada
 
 
 class Resource(object):
-    """A Resource object, corresponding to a resource in the database.
+    """A Resource object, corresponding to a resource in the database
 
     A resource represents either a file, a directory, or a project.
-
     """
 
     def __init__(self, name, kind):
-        """Returns a Resource for the given parameters, creating it if
-        necessary.
+        """Returns a Resource, creating it if necessary
 
-        :param str name: The name of the resource. For files and directories,
+        :param name: the name of the resource. For files and directories,
             this should be a normalized full path: the full path with all
             links resolved, and with the original filesystem casing.
-            For a project, this is the cased name of the project.
-        :param int kind: PROJECT_KIND, DIRECTORY_KIND, FILE_KIND for
-            projects, directories, and files, respectively.
-        :return: A new instance of a resource.
-        :rtype: GNAThub.Resource
-
+            For a project, this is the cased name of the project
+        :type name: str
+        :param kind: ``PROJECT_KIND``, ``DIRECTORY_KIND``, ``FILE_KIND`` for
+            projects, directories, and files, respectively
+        :type kind: int
         """
 
         pass    # Implemented in Ada
 
     def add_message(self, message, line=0, col_begin=1, col_end=None):
-        """Adds a message to the given resource.
+        """Adds a message to the given resource
 
-        :param GNAThub.Message message: The Message to add.
-        :param int line: The line to associate the message to, if the
+        :param message: the Message to add
+        :type message: GNAThub.Message
+        :param line: the line to associate the message to, if the
             resource is a file. Use ``0`` to indicate a message which should be
-            associated to the resource but not to a specific line.
-        :param int col_begin: The begin column of the message.
-        :param int col_end: The end column of the message. ``None`` means that
+            associated to the resource but not to a specific line
+        :type line: int
+        :param col_begin: the begin column of the message
+        :type col_begin: int
+        :param col_end: the end column of the message. ``None`` means that
             the end column should be the same as the begin column.
-
+        :type col_end: int
         """
 
         pass    # Implemented in Ada
 
     def add_messages(self, messages):
-        """Adds multiple messages to the given resource.
+        """Adds multiple messages to the given resource
 
         Prefer this function when there are many messages to insert, for
         efficiency. ``messages`` is a list, each entry being a list of the
@@ -533,8 +529,8 @@ class Resource(object):
 
             [message, line, col_begin, col_end]
 
-        ``message`` is the :class:`GNAThub.Message` to add ``line``,
-        ``col_begin``, ``col_end``: int, see :meth:`add_message`.
+        ``message`` is the :class:`GNAThub.Message` to add.
+        ``line``, ``col_begin``, ``col_end``: int, see :meth:`add_message`.
 
         Example::
 
@@ -547,42 +543,41 @@ class Resource(object):
                 [ message, 10005, 1, 1 ],
             ])
 
-        :param list[list] messages: The messages to add.
-
+        :param messages: the messages to add
+        :type messages: list
         """
 
         pass    # implemented in Ada
 
     def list_messages(self):
-        """Lists all messages associated with this resource.
+        """Lists all messages associated with this resource
 
-        :return: A list of messages.
+        :return: a list of :class:`GNAThub.Message`
         :rtype: list[GNAThub.Message]
-
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def get(name):
-        """Returns the :class:`GNAThub.Resource` with the given name, not
-        creating it if it doesn't exist.
+        """Returns the :class:`GNAThub.Resource` with the given name
 
-        :param str name: The name of the resource to get.
-        :return: The resource of that name.
+        Do not create it if it doesn't exist.
+
+        :param name: the name of the resource to get
+        :type name: str
+        :return: the :class:`GNAThub.Resource` of that name
         :rtype: GNAThub.Resource
-
         """
 
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
     def list():
-        """Lists all resources stored in the database.
+        """Lists all resources stored in the database
 
-        :return: The list of all resources.
+        :return: the list of all :class:`GNAThub.Resource`
         :rtype: list[GNAThub.Resource]
-
         """
 
         return NotImplemented   # Implemented in Ada
@@ -595,8 +590,7 @@ class Resource(object):
 import logging
 
 try:
-    # pylint: disable=wildcard-import, import-error
-    from GNAThubCore import *       # NOQA (disable warning from flake8)
+    from GNAThubCore import *
 
 except ImportError:
     logging.warn('Failed to import Ada implementation of the module.\n'
@@ -624,9 +618,8 @@ class Error(Exception):
     pass
 
 
-# pylint: disable=abstract-class-not-used
 class Plugin(object):
-    """GNAThub plugin interface.
+    """GNAThub plugin interface
 
     A plugin is a Python class that describe how to configure, run and collect
     data output by an external tool.
@@ -639,19 +632,11 @@ class Plugin(object):
     All plugins are collected using the inheritance mechanism, i.e. the GNAThub
     driver will automatically find all classes implementing the
     :class:`GNAThub.Plugin` interface. No manual registration needed.
-
     """
 
     __metaclass__ = ABCMeta
 
     def __init__(self):
-        """Instance constructor.
-
-        :return: A new instance of a plug-in.
-        :rtype: GNAThub.Plugin
-
-        """
-
         # A custom instance of a logger. It is implemented in Ada and based on
         # the GNATCOLL.Traces module.
         self.log = logging.getLogger(self.name or self.__class__.__name__)
@@ -663,77 +648,74 @@ class Plugin(object):
 
     @property
     def name(self):
-        """Returns the name of the tool, as specified by the TOOL_NAME class
-        variable.
+        """Returns the name of the tool
 
-        :return: The tool name.
+        Returns the name as specified by the TOOL_NAME class variable.
+
+        :return: the tool name
         :rtype: str
-
         """
 
         return type(self).__name__.lower()
 
     def info(self, message):
-        """Displays an informative message, prefixed with the plug-in name.
+        """Displays an informative message, prefixed with the plug-in name
 
-        :param str message: The message to display.
-
+        :param message: the message to display
+        :type message: str
         """
 
         Console.info(message, prefix=self.name)
 
     def warn(self, message):
-        """Displays a warning message, prefixed with the plug-in name.
+        """Displays a warning message, prefixed with the plug-in name
 
-        :param str message: The message to display.
-
+        :param message: the message to display
+        :type message: str
         """
 
         Console.warn(message, prefix=self.name)
 
     def error(self, message):
-        """Displays an error message, prefixed with the plug-in name.
+        """Displays an error message, prefixed with the plug-in name
 
-        :param str message: The message to display.
-
+        :param message: the message to display
+        :type message: str
         """
 
         Console.error(message, prefix=self.name)
 
     def setup(self):
-        """This method is called prior to a call to :meth:`Plugin.execute`.
+        """This method is called prior to a call to :meth:`Plugin.execute`
 
         This is where environment setup should be done to ensure a correct
         execution of the tool.
-
         """
 
         pass
 
     @abstractmethod
     def execute(self):
-        """Abstract method. Needs custom implementation by derived classes.
+        """Abstract method. Needs custom implementation by derived classes
 
         Execute the external tool. This method is called after :meth:`setup`
         and before :meth:`teardown`.
-
         """
 
         pass
 
     def teardown(self):
-        """This method is called after a call to :meth:`Plugin.execute`.
+        """This method is called after a call to :meth:`Plugin.execute`
 
         This is where environment cleanup should be done to ensure a consistent
         state for a future execution.
-
         """
 
         pass
 
     @property
     def exec_status(self):
-        """Returns the execution status for the tool.
+        """Returns the execution status for the tool
 
         Can be one of the following:
 
@@ -743,16 +725,15 @@ class Plugin(object):
         * :command:`GNAThub.EXEC_SUCCESS`: the plugin execution completed
           successfully
 
-        :return: The exit code.
+        :return: the exit code
         :rtype: int
-
         """
 
         return self._exec_status
 
     @exec_status.setter
     def exec_status(self, status):
-        """Sets the execution status for the tool.
+        """Sets the execution status for the tool
 
         Can be one of the following:
 
@@ -762,8 +743,8 @@ class Plugin(object):
         * :command:`GNAThub.EXEC_SUCCESS`: the plugin execution completed
           successfully
 
-        :param int status: The new execution status.
-
+        :param status: the new execution status
+        :type status: int
         """
 
         if status not in (EXEC_FAILURE, EXEC_SUCCESS, NOT_EXECUTED):
@@ -773,25 +754,25 @@ class Plugin(object):
 
 
 class Run(object):
-    """Class to handle processes."""
+    """Class to handle processes"""
 
-    # pylint: disable=too-many-arguments
     def __init__(self, name, argv, env=None, workdir=None, out=None):
-        """Instance constructor.
+        """Spawns the process
 
-        Spawns the process via subprocess.Popen and returns the process exit
-        code.
+        Use subprocess.Popen to spawn a process and returns its exit code.
 
-        :param str name: the name of the executable.
-        :param list[str] argv: the argument array.
-        :param dict[str, str] env: Dictionary containing the environment to
-            pass through to the process. If None, os.environ is used.
-        :param str workdir: The directory in which to execute the process. If
-            None, use the current directory.
-        :param str out: The log file to use.
-        :return: A new instance of a run process.
-        :rtype: GNAThub.Run
-
+        :param name: the name of the executable
+        :type name: str
+        :param argv: the argument array
+        :type argv: list[str]
+        :param env: Map containing the environment to pass through to the
+            process. If ``None``, ``os.environ`` is used.
+        :type env: dict[str, str]
+        :param workdir: the directory in which to execute the process. If
+            ``None``, use the current directory.
+        :type workdir: str
+        :param out: the log file to use
+        :type out: str
         """
 
         self.name = name
@@ -831,19 +812,19 @@ class Run(object):
             raise
 
     def wait(self):
-        """Waits until process ends and return its status."""
+        """Waits until process ends and return its status"""
 
         self.status = self.internal.wait()
         return self.status
 
     @staticmethod
     def quote(arg):
-        """Returns the quoted version of the given argument.
+        """Returns the quoted version of the given argument
 
-        :param str arg: The argument to quote.
-        :return: The quoted argument.
+        :param arg: the argument to quote
+        :type arg: str
+        :return: the quoted argument
         :rtype: str
-
         """
 
         specials = ('|', '&', ';', '<', '>', '(', ')', '$', '`', '\\', '"',
@@ -858,21 +839,19 @@ class Run(object):
         return arg
 
     def cmdline_image(self):
-        """Returns a string image of the given command.
+        """Returns a string image of the given command
 
-        :return: The command line image.
+        :return: the command line image
         :rtype: str
-
         """
 
         return ' '.join((Run.quote(arg) for arg in self.argv))
 
     def output(self):
-        """Returns the path to the output file.
+        """Returns the path to the output file
 
-        :return: The full path to the file.
+        :return: the full path to the file
         :rtype: str
-
         """
 
         return self.out or os.path.join(logs(), self.name + '.log')

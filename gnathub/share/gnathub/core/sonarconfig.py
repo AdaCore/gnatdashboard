@@ -17,9 +17,9 @@
 #                                                                          #
 ############################################################################
 
-"""GNAThub plug-in for the generation of SonarQube Runner configuration file.
+"""GNAThub plug-in for the generation of SonarQube Runner configuration file
 
-It exports the SonarConfig Python class which implements the GNAThub.Plugin
+It exports the SonarConfig class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
 module and load it as part of the GNAThub default execution.
 """
@@ -30,7 +30,7 @@ from _sonarqube import SonarQube, SonarRunnerProperties
 
 
 class SonarConfig(GNAThub.Plugin):
-    """SonarConfig plugin for GNAThub."""
+    """SonarConfig plugin for GNAThub"""
 
     def setup(self):
         super(SonarConfig, self).setup()
@@ -41,7 +41,7 @@ class SonarConfig(GNAThub.Plugin):
         return 'sonar-config'
 
     def execute(self):
-        """Generates SonarQube Runner configuration file and dumps it."""
+        """Generates SonarQube Runner configuration file and dumps it"""
 
         self.info('generate %s' % SonarQube.CONFIGURATION)
 

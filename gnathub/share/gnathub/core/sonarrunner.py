@@ -17,9 +17,9 @@
 #                                                                          #
 ############################################################################
 
-"""GNAThub plug-in for the SonarQube Runner command-line tool.
+"""GNAThub plug-in for the SonarQube Runner command-line tool
 
-It exports the SonarRunner Python class which implements the GNAThub.Plugin
+It exports the SonarRunner class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
 module and load it as part of the GNAThub default execution.
 """
@@ -32,7 +32,7 @@ from _sonarqube import SonarQube
 
 
 class SonarRunner(GNAThub.Plugin):
-    """GNATmetric plugin for GNAThub."""
+    """GNATmetric plugin for GNAThub"""
 
     def __init__(self):
         super(SonarRunner, self).__init__()
@@ -49,10 +49,10 @@ class SonarRunner(GNAThub.Plugin):
 
     @staticmethod
     def __cmd_line():
-        """Returns command line for sonar runner execution.
+        """Returns command line for sonar runner execution
 
-        :returns: list[str]
-
+        :return: the SonarRunner command line
+        :rtype: list[str]
         """
 
         # Enable verbose and debugging output with -e and -X. This is handy for
@@ -68,25 +68,22 @@ class SonarRunner(GNAThub.Plugin):
                     '-e', '-X']
 
     def execute(self):
-        """Executes the Sonar Runner.
+        """Executes the Sonar Runner
 
         :meth:`postprocess()` is called upon process completion.
-
         """
 
         proc = GNAThub.Run(self.name, SonarRunner.__cmd_line())
         self.postprocess(proc.status)
 
     def postprocess(self, exit_code):
-        """Postprocesses the tool execution: parse the output XML report on
-        success.
+        """Postprocesses the tool execution
 
         Sets the exec_status property according to the successful of the
         analysis:
 
             * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
             * ``GNAThub.EXEC_FAILURE``: on any error
-
         """
 
         if exit_code != 0:

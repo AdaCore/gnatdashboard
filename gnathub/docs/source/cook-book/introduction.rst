@@ -12,7 +12,7 @@ Prerequisites
   * a |GNATPro| installation (the most recent installed on the system), and in
     your :envvar:`$PATH`
 
-  * (optional, and recommended) a |CodePeer| installation, in your
+  * *(optional, and recommended)* a |CodePeer| installation, in your
     :envvar:`$PATH`
 
 |GNATdashboard| setup

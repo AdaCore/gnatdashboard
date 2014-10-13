@@ -17,8 +17,9 @@
 #                                                                          #
 ############################################################################
 
-"""Helper module to factorize shared components between SonarConfig and
-SonarRunner.
+"""Helper module
+
+Factorize shared components between SonarConfig and SonarRunner.
 """
 
 import collections
@@ -31,9 +32,10 @@ from GNAThub import Console
 
 
 class SonarQube(object):
-    """Provides a set of helper static methods used by both the SonarQube
-    Runner plug-in and the SonarConfig plug-in.
+    """SonarQube helper class
 
+    Provides a set of helper static methods used by both the SonarRunner
+    plug-in and the SonarConfig plug-in.
     """
 
     EXEC_DIRECTORY = 'sonar'
@@ -44,71 +46,71 @@ class SonarQube(object):
 
     @staticmethod
     def workdir():
-        """Returns the sonar execution directory located within GNAThub's root
-        directory:
+        """Returns the path to sonar execution directory
 
-            ``<project_object_dir>/gnathub/sonar``
+        Located within GNAThub's root directory:
 
-        :return: The path to the working directory.
+            :file:`<project_object_dir>/gnathub/sonar`
+
+        :return: the path to the working directory
         :rtype: str
-
         """
 
         return os.path.join(GNAThub.root(), SonarQube.EXEC_DIRECTORY)
 
     @staticmethod
     def configuration():
-        """Returns the path to the SonarQube Runner configuration file located
-        in the Sonar-specific directory:
+        """Returns the path to the SonarQube Runner configuration file
 
-            ``<project_object_dir>/gnathub/sonar/sonar-project.properties``
+        Located in the Sonar-specific directory:
 
-        :return: The path to the configuration file.
+            :file:`<project_object_dir>/gnathub/sonar/sonar-project.properties`
+
+        :return: the path to the configuration file
         :rtype: str
-
         """
 
         return os.path.join(SonarQube.workdir(), SonarQube.CONFIGURATION)
 
     @staticmethod
     def src_mapping():
-        """Returns the path to the mapping file associating original sources
-        path with the equivalent source in the local cache:
+        """Returns the path to the mapping file
 
-            ``<project_object_dir>/gnathub/sonar/sources.map``
+        This file associates original sources path with the equivalent source
+        in the local cache:
 
-        :return: The path to the configuration file.
+            :file:`<project_object_dir>/gnathub/sonar/sources.map`
+
+        :return: the path to the configuration file
         :rtype: str
-
         """
 
         return os.path.join(SonarQube.workdir(), SonarQube.SOURCE_MAPPING)
 
     @staticmethod
     def src_cache():
-        """Returns the path to the local source cache containing a copy of all
-        analysed sources:
+        """Returns the path to the local source cache
 
-            ``<project_object_dir>/gnathub/sonar/sources.cache``
+        The source cache contains a copy of all analysed sources:
 
-        :return: The path to the source cache.
+            :file:`<project_object_dir>/gnathub/sonar/sources.cache`
+
+        :return: the path to the source cache
         :rtype: str
-
         """
 
         return os.path.join(SonarQube.workdir(), SonarQube.SOURCE_CACHE)
 
     @staticmethod
     def make_workdir():
-        """Creates the Sonar execution directory if it does not exist."""
+        """Creates the Sonar execution directory if it does not exist"""
 
         if not os.path.exists(SonarQube.workdir()):
             os.makedirs(SonarQube.workdir())
 
 
-# pylint: disable=too-few-public-methods
 class SonarRunnerProperties(object):
-    """Builder object for the sonar-runner configuration file."""
+    """Builder object for the sonar-runner configuration file"""
 
     CONSOLE_NAME = 'sonar-gen-config'
 
@@ -122,58 +124,60 @@ class SonarRunnerProperties(object):
         self._generate()
 
     def info(self, message):
-        """Displays an informative message.
+        """Displays an informative message
 
-        :param str message: The message to display.
-
+        :param message: the message to display
+        :type message: str
         """
 
-        # pylint: disable=no-self-use
         Console.info(message, prefix=SonarRunnerProperties.CONSOLE_NAME)
 
     def error(self, message):
-        """Displays an error message.
+        """Displays an error message
 
-        :param str message: The message to display.
-
+        :param message: the message to display
+        :type message: str
         """
 
-        # pylint: disable=no-self-use
         Console.error(message, prefix=SonarRunnerProperties.CONSOLE_NAME)
 
     @staticmethod
     def _key(key, module=None):
-        """Generates the full key.
+        """Generates the full key
 
-        :param str key: Property key.
-        :param str module: Module to which belongs the key. If ``None``, use
-            the default sonar module.
-        :return: The key.
+        :param key: the property key
+        :type key: str
+        :param module: module to which belongs the key (if ``None``, use the
+            default sonar module)
+        :type module: str | None
+        :return: the key
         :rtype: str
-
         """
 
         return '%s.%s' % ('%s.sonar' % module if module else 'sonar', key)
 
     def _set(self, key, value, module=None):
-        """Adds property in the sonar-runner configuration.
+        """Adds property in the sonar-runner configuration
 
-        :param str key: Property key.
-        :param str value: Property value.
-        :param str module: Module to which belongs the key. If ``None``, use
-            the default sonar module.
-
+        :param key: the property key
+        :type key: str
+        :param value: the property value
+        :type value: str
+        :param module: module to which belongs the key (if ``None``, use the
+            default sonar module)
+        :type module: str | None
         """
 
         self.attributes[SonarRunnerProperties._key(key, module)] = value
 
     def _set_dict(self, attributes, module=None):
-        """Adds properties in the sonar-runner configuration.
+        """Adds properties in the sonar-runner configuration
 
-        :param dict[str, str] attributes: Attributes to set.
-        :param str module: Module to which belongs the key. If ``None``, use
-            the default sonar module.
-
+        :param attributes: collection of attributes to set
+        :type attributes: dict[str, str]
+        :param module: module to which belongs the key (if ``None``, use the
+            default sonar module)
+        :type module: str | None
         """
 
         for key, value in attributes.items():
@@ -181,14 +185,15 @@ class SonarRunnerProperties(object):
             self._set(key, value, module)
 
     def _set_project_customizable_dict(self, attributes, module=None):
-        """Adds properties in the sonar-runner configuration.
+        """Adds properties in the sonar-runner configuration
 
         Those properties can be user-customizable via the project file.
 
-        :param dict[str, (str, str)] attributes: Attributes to set.
-        :param str module: Module to which belongs the key. If ``None``, use
-            the default sonar module.
-
+        :param attributes: collection of attributes to set
+        :type attributes: dict[str, (str, str)]
+        :param module: module to which belongs the key (if ``None``, use the
+            default sonar module)
+        :type module: str | None
         """
 
         for key, value in attributes.items():
@@ -207,23 +212,23 @@ class SonarRunnerProperties(object):
             self._set(key, project_property or value, module)
 
     def _get(self, key, module=None):
-        """Returns the property in the sonar-runner configuration.
+        """Returns the property in the sonar-runner configuration
 
-        :param str key: Property key.
-        :param str module: Module to which belongs the key. If ``None``, use
-            the default sonar module.
-        :return: The value of the property ``key``.
+        :param key: the property key
+        :type key: str
+        :param module: module to which belongs the key (if ``None``, use the
+            default sonar module)
+        :type module: str
+        :return: the value of the property ``key``
         :rtype: str
-
         """
 
         return self.attributes.get(SonarRunnerProperties._key(key, module))
 
     def _generate(self):
-        """Generates the content of the sonar-runner.properties file.
+        """Generates the :file:`sonar-runner.properties` configuration
 
         Do not create the file yet. See :meth:`write` for this.
-
         """
 
         kwargs = {
@@ -233,7 +238,6 @@ class SonarRunnerProperties(object):
                          for s in GNAThub.Project.source_suffixes('Ada')]
         }
 
-        # pylint: disable=star-args
         if len(GNAThub.Project.source_dirs()) == 1:
             self._generate_single_module(**kwargs)
         else:
@@ -241,13 +245,12 @@ class SonarRunnerProperties(object):
 
     @staticmethod
     def _generate_customizable_attr(project_name):
-        """A dictionary of customizable attributes for the
-        :file:`sonar-project.properties`.
+        """Customizable attributes for :file:`sonar-project.properties`
 
-        :param str project_name: The project name.
-        :return: The attributes and their value.
+        :param project_name: the project name
+        :type project_name: str
+        :return: the attributes and their value
         :rtype: collections.OrderedDict
-
         """
 
         return collections.OrderedDict([
@@ -258,14 +261,16 @@ class SonarRunnerProperties(object):
         ])
 
     def _generate_single_module(self, db_path, project_name, suffixes):
-        """Generates the content of the sonar-runner.properties file.
+        """Generates part of the :file:`sonar-runner.properties` configuration
 
         Do not create the file yet. See :meth:`write` for this.
 
-        :param str db_path: Full path to the DB.
-        :param str project_name: Project name.
-        :param list[str] suffixes: List of Ada extensions.
-
+        :param db_path: full path to the DB
+        :type db_path: str
+        :param project_name: project name
+        :type project_name: str
+        :param suffixes: list of Ada extensions
+        :type suffixes: list[str]
         """
 
         source_dirs = GNAThub.Project.source_dirs()[project_name]
@@ -284,14 +289,16 @@ class SonarRunnerProperties(object):
         self._set_dict(non_customizable_attributes)
 
     def _generate_multi_module(self, db_path, project_name, suffixes):
-        """Generates the content of the sonar-runner.properties file.
+        """Generates part of the :file:`sonar-runner.properties` configuration
 
         Do not create the file yet. See :meth:`write` for this.
 
-        :param str db_path: Full path to the DB.
-        :param str project_name: Project name.
-        :param list[str] suffixes: List of Ada extensions.
-
+        :param db_path: full path to the DB
+        :type db_path: str
+        :param project_name: project name
+        :type project_name: str
+        :param suffixes: list of Ada extensions
+        :type suffixes: list[str]
         """
 
         modules = {k: v for k, v in GNAThub.Project.source_dirs().items() if v}
@@ -323,20 +330,20 @@ class SonarRunnerProperties(object):
 
             self._set_dict(module_attributes, module=subproject_name.lower())
 
-    # pylint: disable=too-many-locals
     def _generate_source_dirs(self, modules):
-        """Copy over all sources in a temporary directory before running the
-        Sonar Runner. This is to work around recent version of SonarQube source
+        """Generates the source directories configuration
+
+        Copy over all sources in a temporary directory before running the Sonar
+        Runner. This is to work around recent version of SonarQube source
         importer implementation that looks recursively in source directories
         (which is inconsistent with GPR files semantic).
 
-        :param dict[str,list[str]] modules: Project modules and their
-            associated source directories.
-        :return: The path to the root source directory and a copy of the input
+        :param modules: project modules and their associated source directories
+        :type modules: dict[str,list[str]]
+        :return: the path to the root source directory and a copy of the input
             ``modules`` directory with updated path to source directories
-            (pointing to the local copy).
+            (pointing to the local copy)
         :rtype: (str, dict[str,list[str]])
-
         """
 
         self.log.debug('caching source dirs prior to sonar-runner execution')
@@ -428,31 +435,39 @@ class SonarRunnerProperties(object):
 
         return root_src_dir, new_modules_mapping
 
-    def write(self, properties_fname=SonarQube.configuration()):
-        """Dumps the Sonar Runner configuration files:
+    def write(self, properties_fname=None):
+        """Dumps the Sonar Runner configuration files
+
+        Creates the following configuration file:
 
             * :file:`sonar-project.properties` -> ``properties_fname``
-            * :file:`sources.map` -> ``SonarQube.src_mapping()``
+            * :file:`sources.map` -> :meth:`SonarQube.src_mapping()`
 
-        :param str properties_fname: The configuration file name.
-
+        :param properties_fname: the configuration file name (if ``None``, use
+            :meth:`SonarQube.configuration()`)
+        :type properties_fname: str | None
         """
 
         def _escape(key):
-            """Escapes the given key to comply with java.util.Properties parser
+            """Escapes the input key
+
+            Escapes the given key to comply with java.util.Properties parser
             (see the ``java.util.Properties.load`` method documentation).
 
-            :param str key: The key to escape.
-            :return: The escaped key.
+            :param key: the key to escape
+            :type key: str
+            :return: the escaped key
             :rtype: str
             :see: docs.oracle.com/javase/8/docs/api/java/util/Properties.html
-
             """
 
             escaped = key
             for sym in (':', '=', ' '):
                 escaped = escaped.replace(sym, r'\%s' % sym)
             return escaped
+
+        if not properties_fname:
+            properties_fname = SonarQube.configuration()
 
         self.info('generate %s' % os.path.relpath(properties_fname))
         with open(properties_fname, 'w') as configuration:

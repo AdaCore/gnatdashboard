@@ -5,8 +5,6 @@
 Usage: run-test [options] testcase-directory
 """
 
-# pylint: disable=invalid-name
-
 import os
 import re
 import sys
@@ -25,7 +23,6 @@ class GNAThubTestRunner(TestRunner):
     UNITTEST_PATTERN = 'test*.py'
     DEFAULT, UNITTEST = range(2)
 
-    # pylint: disable=too-many-arguments
     def __init__(self, test, discs, result_dir, temp_dir=Env().tmp_dir,
                  enable_cleanup=True, restricted_discs=None, test_args=None,
                  failed_only=False, default_timeout=780, use_basename=True):

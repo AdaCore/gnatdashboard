@@ -1,7 +1,5 @@
 """Check the integrity of the GNAThub Python module."""
 
-# pylint: disable=invalid-name
-
 import GNAThub
 
 
@@ -9,7 +7,6 @@ import GNAThub
 MY_VARIABLE = False
 
 
-# pylint: disable=no-init, too-few-public-methods
 class MyIncompletePlugin(GNAThub.Plugin):
     """Declare a custom plugin that extends the GNAThub Plugin interface.
 
@@ -19,13 +16,11 @@ class MyIncompletePlugin(GNAThub.Plugin):
     name = 'My Incomplete Plugin'
 
 
-# pylint: disable=no-init, too-few-public-methods
 class MyCustomPlugin(GNAThub.Plugin):
     """Declare a custom plugin that extends the GNAThub Plugin interface."""
 
     name = 'My Custom Plugin'
 
-    # pylint: disable=no-self-use, global-statement
     def execute(self):
         """Overridden."""
         global MY_VARIABLE

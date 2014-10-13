@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 
-"""
-Setup configuration file for GNAThub Python library.
+"""Setup configuration file for GNAThub Python library.
 """
 
 import os

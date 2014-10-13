@@ -71,5 +71,4 @@ def _display(rules, files, stream=sys.stdout):
 
 
 if __name__ == '__main__':
-    # pylint: disable=star-args
     _display(**_fetch())
