@@ -18,7 +18,7 @@
 .. |GNATtracker|    replace:: :program:`GNAT Tracker`
 
 .. |SonarQube|      replace:: :program:`SonarQube`
-.. |SonarRunner|    replace:: :program:`Sonar Runner`
+.. |SonarRunner|    replace:: :program:`SonarQube Runner`
 .. |SonarSource|    replace:: :program:`Sonar Source`
 
 .. |Squoring|       replace:: :program:`Squoring`

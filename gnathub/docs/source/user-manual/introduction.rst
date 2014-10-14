@@ -29,6 +29,8 @@ database.
 * Linux (32-bits and 64-bits)
 * OS X 10.9 (64-bits)
 
+.. _ug-intro-prerequisites:
+
 Prerequisites
 -------------
 
@@ -38,6 +40,12 @@ installed.
 
 In order to visualize results in the |SonarQube| platform, the corresponding
 plug-in must be deployed.
+
+|SonarAdaPlugin| is supported for versions of |SonarQube| and |SonarRunner|
+supported by |SonarSource|:
+
+  * from |SonarQube| 3.7.4 LTS (Long Term Support) to |SonarQube| 4.5 Stable
+  * |SonarRunner| 2.4
 
 Release
 -------

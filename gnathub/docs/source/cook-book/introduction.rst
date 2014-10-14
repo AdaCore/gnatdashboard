@@ -7,7 +7,9 @@ Prerequisites
 -------------
 
   * a |SonarRunner| installation configured for the targeted |SonarQube|
-    instance, and in your :envvar:`$PATH`
+    instance, and in your :envvar:`$PATH` (see :ref:`ug-intro-prerequisites`
+    for more information on supported versions of |SonarQube| and
+    |SonarRunner|).
 
   * a |GNATPro| installation (the most recent installed on the system), and in
     your :envvar:`$PATH`
