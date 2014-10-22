@@ -428,7 +428,7 @@ class SonarRunnerProperties(object):
                     self.log.debug('%s -> %s', entry_path, new_path)
 
                     shutil.copy(entry_path, new_path)
-                    self.src_mapping[entry_path] = new_path
+                    self.src_mapping[entry_path] = os.path.normpath(new_path)
 
                 count = count + 1
                 Console.progress(count, total, count == total)
