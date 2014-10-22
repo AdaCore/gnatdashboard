@@ -4,6 +4,16 @@ GNAThub 0.9 KNOWN PROBLEMS LIST
 
 Copyright (C) 2014, AdaCore
 
+KP-09-NA22-051 Proper support for SonarQube >= 4.2
+
+  Problem:    Analysis as shown by SonarQube >= 4.2 might be missing many
+              metrics and issues because of non-normalized paths in the source
+              mapping file.
+
+  Status:     Fixed in GNAThub 1.0.0 on 2014-10-22
+
+  Workaround: Normalize all paths by hand in source-mapping.properties.
+
 KP-09-N818-014 GNAThub does not display fatal errors
 
   Problem:    Fatal errors are logged, but not displayed on the error output.
