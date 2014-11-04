@@ -31,6 +31,11 @@ import GNAThub
 from GNAThub import Console
 
 
+def _escpath(path):
+    """Escapes the given path to avoid issues on Windows"""
+    return path.replace('\\', '\\\\')
+
+
 class SonarQube(object):
     """SonarQube helper class
 
@@ -232,7 +237,7 @@ class SonarRunnerProperties(object):
         """
 
         kwargs = {
-            'db_path': GNAThub.database().replace('\\', '\\\\'),
+            'db_path': _escpath(GNAThub.database()),
             'project_name': GNAThub.Project.name(),
             'suffixes': [s[1:] if s.startswith('.') else s
                          for s in GNAThub.Project.source_suffixes('Ada')]
@@ -278,7 +283,7 @@ class SonarRunnerProperties(object):
 
         non_customizable_attributes = collections.OrderedDict([
             ('language', 'ada'),
-            ('sources', sources),
+            ('sources', _escpath(sources)),
             ('ada.gnathub.db', db_path),
             ('ada.file.suffixes', ','.join(suffixes))
         ])
@@ -307,7 +312,7 @@ class SonarRunnerProperties(object):
         non_customizable_attributes = collections.OrderedDict([
             ('language', 'ada'),
             ('ada.gnathub.db', db_path),
-            ('ada.gnathub.src_mapping', SonarQube.src_mapping()),
+            ('ada.gnathub.src_mapping', _escpath(SonarQube.src_mapping())),
             ('ada.file.suffixes', ','.join(suffixes)),
             ('modules', ','.join([m.lower() for m in modules.keys()]))
         ])
@@ -324,7 +329,7 @@ class SonarRunnerProperties(object):
             module_attributes = collections.OrderedDict([
                 ('projectName', subproject_name),
                 ('projectKey', '%s::%s' % (project_key, subproject_name)),
-                ('projectBaseDir', SonarQube.src_cache()),
+                ('projectBaseDir', _escpath(SonarQube.src_cache())),
                 ('sources', sources)
             ])
 
@@ -364,7 +369,7 @@ class SonarRunnerProperties(object):
 
         for module_name in modules:
             module_root_src_dir = os.path.join(root_src_dir, module_name)
-            new_modules_mapping[module_name] = module_root_src_dir
+            new_modules_mapping[module_name] = _escpath(module_root_src_dir)
 
             # Add an additional subdirectory.
             # NOTE: SonarQube uses "[root]" as the root directory name, which
@@ -428,7 +433,8 @@ class SonarRunnerProperties(object):
                     self.log.debug('%s -> %s', entry_path, new_path)
 
                     shutil.copy(entry_path, new_path)
-                    self.src_mapping[entry_path] = os.path.normpath(new_path)
+                    self.src_mapping[_escpath(entry_path)] = \
+                        _escpath(os.path.normpath(new_path))
 
                 count = count + 1
                 Console.progress(count, total, count == total)
