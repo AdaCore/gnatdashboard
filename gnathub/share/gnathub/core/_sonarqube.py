@@ -231,7 +231,7 @@ class SonarRunnerProperties(object):
         return self.attributes.get(SonarRunnerProperties._key(key, module))
 
     def _generate(self):
-        """Generates the :file:`sonar-runner.properties` configuration
+        """Generates the :file:`sonar-project.properties` configuration
 
         Do not create the file yet. See :meth:`write` for this.
         """
@@ -266,7 +266,7 @@ class SonarRunnerProperties(object):
         ])
 
     def _generate_single_module(self, db_path, project_name, suffixes):
-        """Generates part of the :file:`sonar-runner.properties` configuration
+        """Generates part of the :file:`sonar-project.properties` configuration
 
         Do not create the file yet. See :meth:`write` for this.
 
@@ -294,7 +294,7 @@ class SonarRunnerProperties(object):
         self._set_dict(non_customizable_attributes)
 
     def _generate_multi_module(self, db_path, project_name, suffixes):
-        """Generates part of the :file:`sonar-runner.properties` configuration
+        """Generates part of the :file:`sonar-project.properties` configuration
 
         Do not create the file yet. See :meth:`write` for this.
 
