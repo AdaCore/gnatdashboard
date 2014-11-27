@@ -84,7 +84,7 @@ class SonarQube(object):
         This file associates original sources path with the equivalent source
         in the local cache:
 
-            :file:`<project_object_dir>/gnathub/sonar/sources.map`
+          :file:`<project_object_dir>/gnathub/sonar/sources-mapping.properties
 
         :return: the path to the configuration file
         :rtype: str
@@ -285,6 +285,7 @@ class SonarRunnerProperties(object):
             ('language', 'ada'),
             ('sources', _escpath(sources)),
             ('ada.gnathub.db', db_path),
+            ('ada.gnathub.src_mapping', _escpath(SonarQube.src_mapping())),
             ('ada.file.suffixes', ','.join(suffixes))
         ])
 
@@ -447,7 +448,8 @@ class SonarRunnerProperties(object):
         Creates the following configuration file:
 
             * :file:`sonar-project.properties` -> ``properties_fname``
-            * :file:`sources.map` -> :meth:`SonarQube.src_mapping()`
+            * :file:`sources-mapping.properties`
+                    -> :meth:`SonarQube.src_mapping()`
 
         :param properties_fname: the configuration file name (if ``None``, use
             :meth:`SonarQube.configuration()`)
