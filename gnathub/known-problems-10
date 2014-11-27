@@ -1,0 +1,16 @@
+===============================
+GNAThub 1.0 KNOWN PROBLEMS LIST
+===============================
+
+Copyright (C) 2014, AdaCore
+
+KP-10-NB27-025 Missing src_mapping property in sonar-project.properties
+
+  Problem:    When generating sonar-project.properties for a single-module
+              project, the resulting file is missing the
+              sonar.ada.gnathub.src_mapping property.
+
+  Status:     Fixed in GNAThub 1.0.1 on 2014-11-27
+
+  Workaround: Run all plugins but sonarrunner, patch the file by hand and
+              re-run gnathub with "-i --plugins sonarrunner".
