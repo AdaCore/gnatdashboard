@@ -3,3 +3,4 @@ host=review.eu.adacore.com
 port=29418
 project=gnatdashboard
 defaultbranch=ide-2014
+defaultremote=origin
