@@ -12,12 +12,13 @@ import os
 # CONSTANTS #
 #############
 
-PRIORITIES = {'default' : 'MAJOR'}
-RESOURCES_PATH='../main/resources'
-RESOURCES_EXTENSION=".xml"
+PRIORITIES = {'default': 'MAJOR'}
+RESOURCES_PATH = '../main/resources'
+RESOURCES_EXTENSION = ".xml"
 
-## Rule #######################################################################
-##
+
+# Rule ########################################################################
+#
 class Rule(object):
     """Represents a Sonar rule."""
 
@@ -38,8 +39,8 @@ class Rule(object):
         self.priority = priority
 
 
-## Rule Repository#############################################################
-##
+# Rule Repository##############################################################
+#
 class RuleRepository(object):
     """Represents a Sonar rule repository"""
     def __init__(self, repository_key, comment):
@@ -54,8 +55,8 @@ class RuleRepository(object):
         self.rules = []
 
 
-## prettify ###################################################################
-##
+# prettify ####################################################################
+#
 # To be changed: according to snoar xml format style.
 def prettify(xml_element):
     """Return a pretty-printed XML string for the Element"""
@@ -64,8 +65,8 @@ def prettify(xml_element):
     return reparsed.toprettyxml(indent="  ")
 
 
-## Rule Repository Exporter ###################################################
-##
+# Rule Repository Exporter ####################################################
+#
 class RuleRepositoryExporter(object):
     """Exporter for Sonar rule repository"""
 
@@ -103,17 +104,24 @@ class RuleRepositoryExporter(object):
                     priority_xml = SubElement(rule_xml, 'priority')
                     priority_xml.text = rule.priority
 
-            #Dumps the xml file
+            # Dumps the xml file
             prettyrules = prettify(rules_xml)
-            with open(os.path.join(os.getcwd(), RESOURCES_PATH, rule_repository.repository_key)  + RESOURCES_EXTENSION, 'w+') as repo_file:
+            xml_file = os.path.join(
+                os.getcwd(),
+                RESOURCES_PATH, rule_repository.repository_key
+            ) + RESOURCES_EXTENSION
+            with open(xml_file, 'w+') as repo_file:
                 repo_file.writelines(prettyrules)
 
         else:
-            print 'Could not export rule repository: argument passed to export function is not an instance of RuleRepository object'
+            print(
+                'Could not export rule repository: argument passed to export'
+                ' function is not an instance of RuleRepository object'
+            )
 
 
-## Profile Exporter ###########################################################
-##
+# Profile Exporter ############################################################
+#
 class ProfileExporter(object):
     """Exporter for default Sonar quality profile """
 
@@ -124,11 +132,12 @@ class ProfileExporter(object):
         rule_repositories -- all the rule repositories that the profile
                              must contains.
         """
-        pro_file = os.path.join(os.getcwd(), RESOURCES_PATH, 'default-profile.xml')
+        pro_file = os.path.join(
+            os.getcwd(), RESOURCES_PATH, 'default-profile.xml')
 
         # Creates the XML tree
         profile = Element('profile')
-        profile.append(Comment('Dafault Ada Profile '))
+        profile.append(Comment('Default Ada Profile '))
 
         name = SubElement(profile, 'name')
         name.text = 'Default Ada Profile'
@@ -155,12 +164,12 @@ class ProfileExporter(object):
                     priority.text = PRIORITIES['default']
 
         pretty_profile = prettify(profile)
-        with open (pro_file, 'w+') as profile_xml:
+        with open(pro_file, 'w+') as profile_xml:
             profile_xml.writelines(pretty_profile)
 
 
-## description_wrapper ###########################################################
-##
+# description_wrapper #########################################################
+#
 def description_wrapper(file_path):
     """Wrap text of 'description' tag with <pre> and CDATA tag """
     content = []
@@ -175,10 +184,9 @@ def description_wrapper(file_path):
             if line.strip() == BEGIN_TAG:
                 line += '<![CDATA[ <div style="white-space: pre;">'
             if line.strip() == END_TAG:
-                line='</div>]]>' + '\n' + line
+                line = '</div>]]>' + '\n' + line
             content.append(line)
 
     # Dumps wrapped content
     with open(file_path, 'w') as resource:
         resource.writelines(content)
-
