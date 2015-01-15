@@ -8754,5 +8754,20 @@
                 MAJOR
             </priority>
         </rule>
+        <rule>
+            <repositoryKey>gnatcoverage</repositoryKey>
+            <key>gnatcov_stmt</key>
+            <priority>MAJOR</priority>
+        </rule>
+        <rule>
+            <repositoryKey>gnatcoverage</repositoryKey>
+            <key>gnatcov_decision</key>
+            <priority>MAJOR</priority>
+        </rule>
+        <rule>
+            <repositoryKey>gnatcoverage</repositoryKey>
+            <key>gnatcov_mcdc</key>
+            <priority>MAJOR</priority>
+        </rule>
     </rules>
 </profile>

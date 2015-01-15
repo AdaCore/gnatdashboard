@@ -35,34 +35,37 @@ public class GcovSensor extends AbstractAdaSensor {
 
   @Override
   public void analyse(Project project, SensorContext context) {
-    log.info("Collecting Gcov measures");
+    log.info("Collecting code coverage measures");
 
     if (!adaContext.isDAOLoaded()) {
-      log.error("GNAThub db not loaded, cannot fetch Gcov measures");
+      log.error("GNAThub db not loaded, cannot fetch code coverage measures");
       return;
     }
 
     File currentFile = null;
     CoverageMeasuresBuilder builder = CoverageMeasuresBuilder.create();
+    final String[] tools = new String[]{"GCov", "GNATcoverage"};
 
     // Retrieve all coverage data ordered by resource
-    for (CoverageRecord data : adaContext.getDao().getCoverageByTool("GCov")) {
-      if (currentFile == null) {
-        currentFile = data.getFile();
-      }
+    for (String tool : tools) {
+      for (CoverageRecord data : adaContext.getDao().getCoverageByTool(tool)) {
+        if (currentFile == null) {
+          currentFile = data.getFile();
+        }
 
-      // When switching file:
-      //   - save measures for current file,
-      //   - create a new builder for measure,
-      //   - set current file to the next file
-      if (!currentFile.equals(data.getFile())) {
-        saveCoverageMeasure(builder, context, currentFile);
-        builder = CoverageMeasuresBuilder.create();
-        currentFile = data.getFile();
-      }
+        // When switching file:
+        //   - save measures for current file,
+        //   - create a new builder for measure,
+        //   - set current file to the next file
+        if (!currentFile.equals(data.getFile())) {
+          saveCoverageMeasure(builder, context, currentFile);
+          builder = CoverageMeasuresBuilder.create();
+          currentFile = data.getFile();
+        }
 
-      // Add hits for line
-      builder.setHits(data.getLine(), data.getHits());
+        // Add hits for line
+        builder.setHits(data.getLine(), data.getHits());
+      }
     }
 
     if (currentFile != null) {

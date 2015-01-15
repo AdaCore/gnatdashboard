@@ -26,6 +26,7 @@ import org.sonar.plugins.ada.codepeer.CodePeerRuleRepository;
 import org.sonar.plugins.ada.codepeer.CodePeerMetrics;
 import org.sonar.plugins.ada.codepeer.CodePeerViolationsDecorator;
 import org.sonar.plugins.ada.gnat.*;
+import org.sonar.plugins.ada.gnatcoverage.GNATcoverageRuleRepository;
 import org.sonar.plugins.ada.gnu.GcovSensor;
 import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.plugins.ada.lang.AdaColorizer;
@@ -102,6 +103,9 @@ public final class AdaPlugin extends SonarPlugin {
 
         // Gcov
         GcovSensor.class,
+
+        // GNATcoverage,
+        GNATcoverageRuleRepository.class,
 
         // GNATprove
         GNATproveRuleRepository.class);
