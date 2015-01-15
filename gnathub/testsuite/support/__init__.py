@@ -126,6 +126,10 @@ class Project(object):
         return Project('simple', dst)
 
     @staticmethod
+    def coverage_exhaustive(dst=os.getcwd()):
+        return Project('coverage_exhaustive', dst)
+
+    @staticmethod
     def disabled(dst=os.getcwd()):
         return Project('disabled', dst)
 

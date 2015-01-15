@@ -1,0 +1,34 @@
+/home/pmderodat/_git/gnatdashboard/gnathub/testsuite/support/resources/testcase-coverage_exhaustive/src/test_decision.adb:
+44% of 9 lines covered
+Coverage level: stmt+mcdc
+   1 .: with Do_Nothing;
+   2 .: 
+   3 .: procedure Test_Decision (Switch_1, Switch_2 : Boolean) is
+   4 .: begin
+   5 .:    --  Test for outcome FALSE never exercised
+   6 !:    if Switch_1 then
+decision "Switch_1" at 6:7 outcome FALSE never exercised
+   7 +:       Do_Nothing;
+   8 .:    end if;
+   9 .: 
+  10 .:    --  Test for outcome TRUE never exercised
+  11 !:    if not Switch_1 then
+decision "Switch_1" at 11:11 outcome TRUE never exercised
+  12 -:       Do_Nothing;
+statement "Do_Nothin..." at 12:7 not executed
+  13 .: 
+  14 .:       --  Test for no outcome exercised
+  15 -:       if Switch_2 then
+statement "if Switch..." at 15:7 not executed
+  16 -:          Do_Nothing;
+statement "Do_Nothin..." at 16:10 not executed
+  17 .:       end if;
+  18 .:    end if;
+  19 .: 
+  20 +:    for I in False .. True loop
+  21 .:       --  Test for both outcome exercised
+  22 +:       if I then
+  23 +:          Do_Nothing;
+  24 .:       end if;
+  25 .:    end loop;
+  26 .: end Test_Decision;

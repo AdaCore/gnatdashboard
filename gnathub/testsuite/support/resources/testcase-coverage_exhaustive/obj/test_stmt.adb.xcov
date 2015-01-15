@@ -1,0 +1,27 @@
+/home/pmderodat/_git/gnatdashboard/gnathub/testsuite/support/resources/testcase-coverage_exhaustive/src/test_stmt.adb:
+50% of 6 lines covered
+Coverage level: stmt+mcdc
+   1 .: with Do_Nothing;
+   2 .: 
+   3 .: procedure Test_Stmt (Length : Natural) is
+   4 .: begin
+   5 .:    --  Test for covered statement
+   6 +:    Do_Nothing;
+   7 .: 
+   8 +:    for I in 1 .. Length loop
+   9 .:       --  Test for uncovered statement
+  10 -:       Do_Nothing;
+statement "Do_Nothin..." at 10:7 not executed
+  11 .:    end loop;
+  12 .: 
+  13 .:    --  Test for both covered and uncovered statement on the same line
+  14 !:    Do_Nothing; for I in 1 .. Length loop Do_Nothing; end loop;
+statement "Do_Nothin..." at 14:42 not executed
+  15 .: 
+  16 .:    --  Test for two uncovered statements on the same line
+  17 +:    for I in 1 .. Length loop
+  18 -:       Do_Nothing; Do_Nothing;
+statement "Do_Nothin..." at 18:7 not executed
+statement "Do_Nothin..." at 18:19 not executed
+  19 .:    end loop;
+  20 .: end Test_Stmt;

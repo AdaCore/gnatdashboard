@@ -1,0 +1,13 @@
+/home/pmderodat/_git/gnatdashboard/gnathub/testsuite/support/resources/testcase-coverage_exhaustive/src/test_mcdc.adb:
+50% of 2 lines covered
+Coverage level: stmt+mcdc
+   1 .: with Do_Nothing;
+   2 .: 
+   3 .: procedure Test_MCDC (Switch_1, Switch_2 : Boolean) is
+   4 .: begin
+   5 .:    --  Test for missing independent influence pair
+   6 !:    if Switch_1 and then Switch_2 then
+condition "Switch_1" at 6:7 has no independent influence pair, MC/DC not achieved
+   7 +:       Do_Nothing;
+   8 .:    end if;
+   9 .: end Test_MCDC;

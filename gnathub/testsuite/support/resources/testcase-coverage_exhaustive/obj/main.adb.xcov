@@ -1,0 +1,14 @@
+/home/pmderodat/_git/gnatdashboard/gnathub/testsuite/support/resources/testcase-coverage_exhaustive/src/main.adb:
+100% of 4 lines covered
+Coverage level: stmt+mcdc
+   1 .: with Test_Stmt;
+   2 .: with Test_Decision;
+   3 .: with Test_MCDC;
+   4 .: 
+   5 .: procedure Main is
+   6 .: begin
+   7 +:    Test_Stmt (0);
+   8 +:    Test_Decision (True, False);
+   9 +:    Test_MCDC (True, False);
+  10 +:    Test_MCDC (True, True);
+  11 .: end Main;

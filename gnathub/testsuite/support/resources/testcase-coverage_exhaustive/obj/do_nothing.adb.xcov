@@ -1,0 +1,7 @@
+/home/pmderodat/_git/gnatdashboard/gnathub/testsuite/support/resources/testcase-coverage_exhaustive/src/do_nothing.adb:
+100% of 1 lines covered
+Coverage level: stmt+mcdc
+   1 .: procedure Do_Nothing is
+   2 .: begin
+   3 +:    null;
+   4 .: end Do_Nothing;
