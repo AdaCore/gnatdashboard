@@ -34,10 +34,12 @@ def collect_data(writer):
             line_messages[message.line].append(message)
 
         for line, messages in line_messages.iteritems():
-            section = '%s %d' % (basename, line)
-            writer.add_section(section)
-
+            columns = set()
             for message in messages:
+                section = '%s %d:%d' % (basename, line, message.col_begin)
+                if message.col_begin not in columns:
+                    columns.add(message.col_begin)
+                    writer.add_section(section)
                 writer.set(section, rules[message.rule_id], message.data)
 
 
