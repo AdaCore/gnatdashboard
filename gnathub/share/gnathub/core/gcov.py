@@ -33,7 +33,7 @@ from GNAThub import Console
 class Gcov(GNAThub.Plugin):
     """Gcov plugin for GNAThub
 
-    Retrieves .gcov generated files from teh project root object directory,
+    Retrieves .gcov generated files from the project root object directory,
     parses them and feeds the database with the data collected from each files.
     """
 
