@@ -124,7 +124,8 @@ class Gcov(GNAThub.Plugin):
 
         try:
             for index, filename in enumerate(files, start=1):
-                # Retrieve source fullname
+                # Retrieve source fullname (`filename` is the *.gcov report
+                # file).
                 base, _ = os.path.splitext(os.path.basename(filename))
                 src = GNAThub.Project.source_file(base)
 
