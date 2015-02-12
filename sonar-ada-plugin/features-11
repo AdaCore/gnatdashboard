@@ -11,3 +11,8 @@ This date shows the implementation date of the feature.
 
 New features in 1.1
 -------------------
+
+NF-11-O115-012 GNATcoverage integration (2015-02-12)
+
+  The Sonar Ada Plugin now integrates coverage data from GNATcoverage reports,
+  including specific message for coverage violations.
