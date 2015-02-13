@@ -98,6 +98,8 @@ package: all
 	-(cd share/doc && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/doc && tar xf -)
 	$(MKDIR) $(PKG_DIR)/share/examples
 	(cd share/examples && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/examples && tar xf -)
+	find $(PKG_DIR)/share/gnathub/core -name '*.pyc' -delete
+	find $(PKG_DIR)/share/gnathub/extras -name '*.pyc' -delete
 
 install: package
 	$(RSYNC) $(PKG_DIR) $(INSTALL_DIR)
