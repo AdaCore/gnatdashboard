@@ -26,12 +26,12 @@ $(GENERATED_DIR)/src/gnathub-version.ads: templates/gnathub-version.ads.in
 gnathub-pylib: python-env
 	@echo ":: Building GNAThub's Python API"
 	-[ -f $(SETUP_PY_MANIFEST) ] && cat $(SETUP_PY_MANIFEST) |xargs rm -rf
-	$(PYTHON) src/lib/setup.py -q build -b "$(BUILD_DIR)" install \
+	$(PYTHON) $(TOP)/src/lib/setup.py -q build -b "$(BUILD_DIR)" install \
 		--record $(SETUP_PY_MANIFEST)
 
 gnathub-plugins:
 	@echo ":: Deploying GNAThub's core plug-ins"
-	(cd share/gnathub && tar cf - core extras sql) | \
+	(cd $(TOP)/share/gnathub && tar cf - core extras sql) | \
 		(cd $(BUILD_DIR)/share/gnathub && tar xf -)
 
 gnathub-api-docs: docs/Makefile
@@ -54,14 +54,14 @@ docs-pdf: gnathub-api-docs
 
 create-db:
 	@echo ":: Generating the GNAThub's database"
-	$(MKDIR) src/orm-gen
-	cd src/orm-gen && gnatcoll_db2ada -dbtype=sqlite -dbname=gnathub.db \
+	$(MKDIR) $(TOP)/src/orm-gen
+	cd $(TOP)/src/orm-gen && gnatcoll_db2ada -dbtype=sqlite -dbname=gnathub.db \
 		-dbmodel=$(TOP)/share/gnathub/sql/db.model -createdb
 
 generate-orm:
 	@echo ":: Generating the GNAThub's database API"
-	$(MKDIR) src/orm-gen
-	cd src/orm-gen && gnatcoll_db2ada -api=Database -orm=ORM \
+	$(MKDIR) $(TOP)/src/orm-gen
+	cd $(TOP)/src/orm-gen && gnatcoll_db2ada -api=Database -orm=ORM \
 		-dbmodel=$(TOP)/share/gnathub/sql/db.model
 
 python-env: $(PYTHON_HOME)
@@ -80,7 +80,7 @@ check-style:
 
 tests: all
 	@echo ":: Running the GNAThub testsuite"
-	$(PY_ENV) testsuite/testsuite.py --colorize --with-diff
+	$(PY_ENV) $(TOP)/testsuite/testsuite.py --colorize --with-diff
 
 tests-coverage:
 	BUILD_MODE=Coverage $(MAKE) all tests analyse-gcov
@@ -95,9 +95,9 @@ package: all
 	(tar cf - COPYING3) | (cd $(PKG_DIR) && tar xf -)
 	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
 	$(MKDIR) $(PKG_DIR)/share/doc
-	-(cd share/doc && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/doc && tar xf -)
+	-(cd $(TOP)/share/doc && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/doc && tar xf -)
 	$(MKDIR) $(PKG_DIR)/share/examples
-	(cd share/examples && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/examples && tar xf -)
+	(cd $(TOP)/share/examples && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/examples && tar xf -)
 	find $(PKG_DIR)/share/gnathub/core -name '*.pyc' -delete
 	find $(PKG_DIR)/share/gnathub/extras -name '*.pyc' -delete
 
@@ -110,7 +110,7 @@ setenv: $(GENERATED_DIR)/src/gnathub-version.ads
 
 clean: gnathub.gpr
 	gprclean -q -P $<
-	find . -name '*.pyc' -exec rm -f {} \;
+	find $(TOP) -name '*.pyc' -delete
 	$(RM) gnathub.gpr
 	$(RM) src/gnathub/gnathub-version.ads
 	$(RMDIR) $(BUILD_DIR)/obj
