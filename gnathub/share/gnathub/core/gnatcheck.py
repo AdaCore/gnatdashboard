@@ -64,7 +64,7 @@ class GNATcheck(GNAThub.Plugin):
         """
 
         return ['gnatcheck', '--show-rule', '-o', self.report,
-                '-P', GNAThub.Project.path(),
+                '-P', GNAThub.Project.path(), '-U',
                 '-j%d' % GNAThub.jobs()] + GNAThub.Project.scenario_switches()
 
     def execute(self):
