@@ -8,6 +8,9 @@ MVN_TEST_OPTS  :=
 build:
 	MAVEN_OPTS="$(MVN_OPTS)" $(MVN) $(MVN_BUILD_OPTS) package
 
+set-version:
+	MAVEN_OPTS="$(MVN_OPTS)" $(MVN) versions:set "-DnewVersion=$(SONAR_ADA_PLUGIN_VERSION)"
+
 test:
 	$(MVN) $(MVN_TEST_OPTS) test
 
