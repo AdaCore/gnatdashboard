@@ -44,6 +44,7 @@
             <groupId>org.codehaus.sonar</groupId>
             <artifactId>sonar-plugin-api</artifactId>
             <version>${sonar.version}</version>
+            <scope>provided</scope>
             <type>jar</type>
         </dependency>
         <!-- Unit Testing -->
@@ -81,7 +82,7 @@
             <plugin>
                 <groupId>org.codehaus.sonar</groupId>
                 <artifactId>sonar-packaging-maven-plugin</artifactId>
-                <version>1.1</version>
+                <version>1.12.1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <pluginClass>${sonar.pluginClass}</pluginClass>
