@@ -8,7 +8,7 @@
     <packaging>sonar-plugin</packaging>
     <version>0.0.0w-unknown</version>
     <name>Ada</name>
-    <description>Ada Plugin for SonarQube 3.7.x</description>
+    <description>Ada Plugin for SonarQube 3.7.4 to 4.5.2 (LTS)</description>
     <inceptionYear>2012</inceptionYear>
     <url>https://docs.adacore.com/gnatdashboard-docs/</url>
 
@@ -29,11 +29,9 @@
     </issueManagement>
 
     <properties>
-        <sonar.version>3.7</sonar.version>
         <jdk.min.version>1.6</jdk.min.version>
+        <sonar.version>3.7</sonar.version>
         <sonar.pluginKey>ada</sonar.pluginKey>
-        <pluginName>Ada Plugin</pluginName>
-        <pluginDescription>Ada Plugin for SonarQube</pluginDescription>
         <sonar.pluginClass>org.sonar.plugins.ada.AdaPlugin</sonar.pluginClass>
         <sonar.artifact.path>target/${project.artifactId}-${project.version}.jar</sonar.artifact.path>
     </properties>
