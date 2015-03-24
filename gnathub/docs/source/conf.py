@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" GNATdashboard documentation build configuration file, created by
+"""GNATdashboard documentation build configuration file, created by
 sphinx-quickstart on Mon Mar 10 17:49:10 2014.
 
 This file is execfile()d with the current directory set to its containing
