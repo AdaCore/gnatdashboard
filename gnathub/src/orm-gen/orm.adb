@@ -255,9 +255,9 @@ package body Orm is
       Op2 : Detached_Resource_Tree)
      return Boolean is
    begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
+      if Op1.Is_Null then
+         return Op2.Is_Null;
+      elsif Op2.Is_Null then
          return False;
       else
          return Integer'(Op1.Id) = Op2.Id;
@@ -279,9 +279,9 @@ package body Orm is
 
    function "=" (Op1 : Detached_Rule; Op2 : Detached_Rule) return Boolean is
    begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
+      if Op1.Is_Null then
+         return Op2.Is_Null;
+      elsif Op2.Is_Null then
          return False;
       else
          return Integer'(Op1.Id) = Op2.Id;
@@ -307,9 +307,9 @@ package body Orm is
       Op2 : Detached_Resource_Message)
      return Boolean is
    begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
+      if Op1.Is_Null then
+         return Op2.Is_Null;
+      elsif Op2.Is_Null then
          return False;
       else
          return Integer'(Op1.Id) = Op2.Id;
@@ -332,9 +332,9 @@ package body Orm is
    function "=" (Op1 : Detached_Message; Op2 : Detached_Message) return Boolean
    is
    begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
+      if Op1.Is_Null then
+         return Op2.Is_Null;
+      elsif Op2.Is_Null then
          return False;
       else
          return Integer'(Op1.Id) = Op2.Id;
@@ -357,9 +357,9 @@ package body Orm is
    function "=" (Op1 : Detached_Entity; Op2 : Detached_Entity) return Boolean
    is
    begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
+      if Op1.Is_Null then
+         return Op2.Is_Null;
+      elsif Op2.Is_Null then
          return False;
       else
          return Integer'(Op1.Id) = Op2.Id;
@@ -384,9 +384,9 @@ package body Orm is
       Op2 : Detached_Category)
      return Boolean is
    begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
+      if Op1.Is_Null then
+         return Op2.Is_Null;
+      elsif Op2.Is_Null then
          return False;
       else
          return Integer'(Op1.Id) = Op2.Id;
@@ -411,9 +411,9 @@ package body Orm is
       Op2 : Detached_Entity_Message)
      return Boolean is
    begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
+      if Op1.Is_Null then
+         return Op2.Is_Null;
+      elsif Op2.Is_Null then
          return False;
       else
          return Integer'(Op1.Id) = Op2.Id;
@@ -435,9 +435,9 @@ package body Orm is
 
    function "=" (Op1 : Detached_Tool; Op2 : Detached_Tool) return Boolean is
    begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
+      if Op1.Is_Null then
+         return Op2.Is_Null;
+      elsif Op2.Is_Null then
          return False;
       else
          return Integer'(Op1.Id) = Op2.Id;
@@ -462,9 +462,9 @@ package body Orm is
       Op2 : Detached_Resource)
      return Boolean is
    begin
-      if Op1.Get = null then
-         return Op2.Get = null;
-      elsif Op2.Get = null then
+      if Op1.Is_Null then
+         return Op2.Is_Null;
+      elsif Op2.Is_Null then
          return False;
       else
          return Integer'(Op1.Id) = Op2.Id;
@@ -486,7 +486,7 @@ package body Orm is
 
    function Category_Id (Self : Detached_Message) return Integer is
    begin
-      return Message_Data (Self.Get).ORM_Category_Id;
+      return Message_Data (Self.Unchecked_Get).ORM_Category_Id;
    end Category_Id;
 
    -----------------
@@ -520,7 +520,7 @@ package body Orm is
 
    function Category_Id (Self : Detached_Message) return Detached_Category'Class
    is
-      D : constant Message_Data := Message_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Unchecked_Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Category_Id = null then
@@ -554,7 +554,7 @@ package body Orm is
 
    function Child_Id (Self : Detached_Resource_Tree) return Integer is
    begin
-      return Resource_Tree_Data (Self.Get).ORM_Child_Id;
+      return Resource_Tree_Data (Self.Unchecked_Get).ORM_Child_Id;
    end Child_Id;
 
    --------------
@@ -590,7 +590,7 @@ package body Orm is
      (Self : Detached_Resource_Tree)
      return Detached_Resource'Class
    is
-      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Get);
+      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Unchecked_Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Child_Id = null then
@@ -624,7 +624,7 @@ package body Orm is
 
    function Col_Begin (Self : Detached_Resource_Message) return Integer is
    begin
-      return Resource_Message_Data (Self.Get).ORM_Col_Begin;
+      return Resource_Message_Data (Self.Unchecked_Get).ORM_Col_Begin;
    end Col_Begin;
 
    ---------------
@@ -642,7 +642,7 @@ package body Orm is
 
    function Col_Begin (Self : Detached_Entity) return Integer is
    begin
-      return Entity_Data (Self.Get).ORM_Col_Begin;
+      return Entity_Data (Self.Unchecked_Get).ORM_Col_Begin;
    end Col_Begin;
 
    -------------
@@ -660,7 +660,7 @@ package body Orm is
 
    function Col_End (Self : Detached_Resource_Message) return Integer is
    begin
-      return Resource_Message_Data (Self.Get).ORM_Col_End;
+      return Resource_Message_Data (Self.Unchecked_Get).ORM_Col_End;
    end Col_End;
 
    -------------
@@ -678,7 +678,7 @@ package body Orm is
 
    function Col_End (Self : Detached_Entity) return Integer is
    begin
-      return Entity_Data (Self.Get).ORM_Col_End;
+      return Entity_Data (Self.Unchecked_Get).ORM_Col_End;
    end Col_End;
 
    ----------
@@ -696,7 +696,7 @@ package body Orm is
 
    function Data (Self : Detached_Message) return String is
    begin
-      return Str_Or_Empty (Message_Data (Self.Get).ORM_Data);
+      return Str_Or_Empty (Message_Data (Self.Unchecked_Get).ORM_Data);
    end Data;
 
    ---------------
@@ -714,7 +714,7 @@ package body Orm is
 
    function Entity_Id (Self : Detached_Entity_Message) return Integer is
    begin
-      return Entity_Message_Data (Self.Get).ORM_Entity_Id;
+      return Entity_Message_Data (Self.Unchecked_Get).ORM_Entity_Id;
    end Entity_Id;
 
    ---------------
@@ -750,7 +750,7 @@ package body Orm is
      (Self : Detached_Entity_Message)
      return Detached_Entity'Class
    is
-      D : constant Entity_Message_Data := Entity_Message_Data (Self.Get);
+      D : constant Entity_Message_Data := Entity_Message_Data (Self.Unchecked_Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Entity_Id = null then
@@ -856,7 +856,7 @@ package body Orm is
 
    function Id (Self : Detached_Resource_Tree) return Integer is
    begin
-      return Resource_Tree_Data (Self.Get).ORM_Id;
+      return Resource_Tree_Data (Self.Unchecked_Get).ORM_Id;
    end Id;
 
    --------
@@ -874,7 +874,7 @@ package body Orm is
 
    function Id (Self : Detached_Rule) return Integer is
    begin
-      return Rule_Data (Self.Get).ORM_Id;
+      return Rule_Data (Self.Unchecked_Get).ORM_Id;
    end Id;
 
    --------
@@ -892,7 +892,7 @@ package body Orm is
 
    function Id (Self : Detached_Resource_Message) return Integer is
    begin
-      return Resource_Message_Data (Self.Get).ORM_Id;
+      return Resource_Message_Data (Self.Unchecked_Get).ORM_Id;
    end Id;
 
    --------
@@ -910,7 +910,7 @@ package body Orm is
 
    function Id (Self : Detached_Message) return Integer is
    begin
-      return Message_Data (Self.Get).ORM_Id;
+      return Message_Data (Self.Unchecked_Get).ORM_Id;
    end Id;
 
    --------
@@ -928,7 +928,7 @@ package body Orm is
 
    function Id (Self : Detached_Entity) return Integer is
    begin
-      return Entity_Data (Self.Get).ORM_Id;
+      return Entity_Data (Self.Unchecked_Get).ORM_Id;
    end Id;
 
    --------
@@ -946,7 +946,7 @@ package body Orm is
 
    function Id (Self : Detached_Category) return Integer is
    begin
-      return Category_Data (Self.Get).ORM_Id;
+      return Category_Data (Self.Unchecked_Get).ORM_Id;
    end Id;
 
    --------
@@ -964,7 +964,7 @@ package body Orm is
 
    function Id (Self : Detached_Entity_Message) return Integer is
    begin
-      return Entity_Message_Data (Self.Get).ORM_Id;
+      return Entity_Message_Data (Self.Unchecked_Get).ORM_Id;
    end Id;
 
    --------
@@ -982,7 +982,7 @@ package body Orm is
 
    function Id (Self : Detached_Tool) return Integer is
    begin
-      return Tool_Data (Self.Get).ORM_Id;
+      return Tool_Data (Self.Unchecked_Get).ORM_Id;
    end Id;
 
    --------
@@ -1000,7 +1000,7 @@ package body Orm is
 
    function Id (Self : Detached_Resource) return Integer is
    begin
-      return Resource_Data (Self.Get).ORM_Id;
+      return Resource_Data (Self.Unchecked_Get).ORM_Id;
    end Id;
 
    ----------------
@@ -1018,7 +1018,7 @@ package body Orm is
 
    function Identifier (Self : Detached_Rule) return String is
    begin
-      return Str_Or_Empty (Rule_Data (Self.Get).ORM_Identifier);
+      return Str_Or_Empty (Rule_Data (Self.Unchecked_Get).ORM_Identifier);
    end Identifier;
 
    ----------
@@ -1036,7 +1036,7 @@ package body Orm is
 
    function Kind (Self : Detached_Rule) return Integer is
    begin
-      return Rule_Data (Self.Get).ORM_Kind;
+      return Rule_Data (Self.Unchecked_Get).ORM_Kind;
    end Kind;
 
    ----------
@@ -1054,7 +1054,7 @@ package body Orm is
 
    function Kind (Self : Detached_Resource) return Integer is
    begin
-      return Resource_Data (Self.Get).ORM_Kind;
+      return Resource_Data (Self.Unchecked_Get).ORM_Kind;
    end Kind;
 
    -----------
@@ -1072,7 +1072,7 @@ package body Orm is
 
    function Label (Self : Detached_Category) return String is
    begin
-      return Str_Or_Empty (Category_Data (Self.Get).ORM_Label);
+      return Str_Or_Empty (Category_Data (Self.Unchecked_Get).ORM_Label);
    end Label;
 
    ----------
@@ -1090,7 +1090,7 @@ package body Orm is
 
    function Line (Self : Detached_Resource_Message) return Integer is
    begin
-      return Resource_Message_Data (Self.Get).ORM_Line;
+      return Resource_Message_Data (Self.Unchecked_Get).ORM_Line;
    end Line;
 
    ----------
@@ -1108,7 +1108,7 @@ package body Orm is
 
    function Line (Self : Detached_Entity) return Integer is
    begin
-      return Entity_Data (Self.Get).ORM_Line;
+      return Entity_Data (Self.Unchecked_Get).ORM_Line;
    end Line;
 
    ----------------
@@ -1126,7 +1126,7 @@ package body Orm is
 
    function Message_Id (Self : Detached_Resource_Message) return Integer is
    begin
-      return Resource_Message_Data (Self.Get).ORM_Message_Id;
+      return Resource_Message_Data (Self.Unchecked_Get).ORM_Message_Id;
    end Message_Id;
 
    ----------------
@@ -1162,7 +1162,7 @@ package body Orm is
      (Self : Detached_Resource_Message)
      return Detached_Message'Class
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Message_Id = null then
@@ -1196,7 +1196,7 @@ package body Orm is
 
    function Message_Id (Self : Detached_Entity_Message) return Integer is
    begin
-      return Entity_Message_Data (Self.Get).ORM_Message_Id;
+      return Entity_Message_Data (Self.Unchecked_Get).ORM_Message_Id;
    end Message_Id;
 
    ----------------
@@ -1232,7 +1232,7 @@ package body Orm is
      (Self : Detached_Entity_Message)
      return Detached_Message'Class
    is
-      D : constant Entity_Message_Data := Entity_Message_Data (Self.Get);
+      D : constant Entity_Message_Data := Entity_Message_Data (Self.Unchecked_Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Message_Id = null then
@@ -1266,7 +1266,7 @@ package body Orm is
 
    function Name (Self : Detached_Rule) return String is
    begin
-      return Str_Or_Empty (Rule_Data (Self.Get).ORM_Name);
+      return Str_Or_Empty (Rule_Data (Self.Unchecked_Get).ORM_Name);
    end Name;
 
    ----------
@@ -1284,7 +1284,7 @@ package body Orm is
 
    function Name (Self : Detached_Entity) return String is
    begin
-      return Str_Or_Empty (Entity_Data (Self.Get).ORM_Name);
+      return Str_Or_Empty (Entity_Data (Self.Unchecked_Get).ORM_Name);
    end Name;
 
    ----------
@@ -1302,7 +1302,7 @@ package body Orm is
 
    function Name (Self : Detached_Tool) return String is
    begin
-      return Str_Or_Empty (Tool_Data (Self.Get).ORM_Name);
+      return Str_Or_Empty (Tool_Data (Self.Unchecked_Get).ORM_Name);
    end Name;
 
    ----------
@@ -1320,7 +1320,7 @@ package body Orm is
 
    function Name (Self : Detached_Resource) return String is
    begin
-      return Str_Or_Empty (Resource_Data (Self.Get).ORM_Name);
+      return Str_Or_Empty (Resource_Data (Self.Unchecked_Get).ORM_Name);
    end Name;
 
    -------------
@@ -1338,7 +1338,7 @@ package body Orm is
 
    function On_Side (Self : Detached_Category) return Boolean is
    begin
-      return Category_Data (Self.Get).ORM_On_Side;
+      return Category_Data (Self.Unchecked_Get).ORM_On_Side;
    end On_Side;
 
    ---------------
@@ -1356,7 +1356,7 @@ package body Orm is
 
    function Parent_Id (Self : Detached_Resource_Tree) return Integer is
    begin
-      return Resource_Tree_Data (Self.Get).ORM_Parent_Id;
+      return Resource_Tree_Data (Self.Unchecked_Get).ORM_Parent_Id;
    end Parent_Id;
 
    ---------------
@@ -1392,7 +1392,7 @@ package body Orm is
      (Self : Detached_Resource_Tree)
      return Detached_Resource'Class
    is
-      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Get);
+      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Unchecked_Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Parent_Id = null then
@@ -1426,7 +1426,7 @@ package body Orm is
 
    function Resource_Id (Self : Detached_Resource_Message) return Integer is
    begin
-      return Resource_Message_Data (Self.Get).ORM_Resource_Id;
+      return Resource_Message_Data (Self.Unchecked_Get).ORM_Resource_Id;
    end Resource_Id;
 
    -----------------
@@ -1462,7 +1462,7 @@ package body Orm is
      (Self : Detached_Resource_Message)
      return Detached_Resource'Class
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Resource_Id = null then
@@ -1496,7 +1496,7 @@ package body Orm is
 
    function Rule_Id (Self : Detached_Message) return Integer is
    begin
-      return Message_Data (Self.Get).ORM_Rule_Id;
+      return Message_Data (Self.Unchecked_Get).ORM_Rule_Id;
    end Rule_Id;
 
    -------------
@@ -1530,7 +1530,7 @@ package body Orm is
 
    function Rule_Id (Self : Detached_Message) return Detached_Rule'Class
    is
-      D : constant Message_Data := Message_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Unchecked_Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Rule_Id = null then
@@ -1577,7 +1577,7 @@ package body Orm is
 
    function Timestamp (Self : Detached_Resource) return Ada.Calendar.Time is
    begin
-      return Resource_Data (Self.Get).ORM_Timestamp;
+      return Resource_Data (Self.Unchecked_Get).ORM_Timestamp;
    end Timestamp;
 
    -------------
@@ -1595,7 +1595,7 @@ package body Orm is
 
    function Tool_Id (Self : Detached_Rule) return Integer is
    begin
-      return Rule_Data (Self.Get).ORM_Tool_Id;
+      return Rule_Data (Self.Unchecked_Get).ORM_Tool_Id;
    end Tool_Id;
 
    -------------
@@ -1629,7 +1629,7 @@ package body Orm is
 
    function Tool_Id (Self : Detached_Rule) return Detached_Tool'Class
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Rule_Data := Rule_Data (Self.Unchecked_Get);
       S : Session_Type;
    begin
       if D.ORM_FK_Tool_Id = null then
@@ -1837,11 +1837,12 @@ package body Orm is
       Result  : Detached_Category'Class := Detached_Category'Class (Session.Factory (Self, Default));
       Tmp     : Category_Data;
    begin
-      Tmp := Category_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Category_DDR;
-         Set (Result, Tmp);
+      if Result.Is_Null then
+         Result.Set (Category_DDR'
+              (Detached_Data with Field_Count => 3, others => <>));
       end if;
+
+      Tmp := Category_Data (Result.Unchecked_Get);
 
       Free (Tmp.ORM_Label);
       Tmp.ORM_Id         := Integer_Value (Self, F_Categories_Id);
@@ -1864,11 +1865,12 @@ package body Orm is
       Result  : Detached_Entity'Class := Detached_Entity'Class (Session.Factory (Self, Default));
       Tmp     : Entity_Data;
    begin
-      Tmp := Entity_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Entity_DDR;
-         Set (Result, Tmp);
+      if Result.Is_Null then
+         Result.Set (Entity_DDR'
+              (Detached_Data with Field_Count => 5, others => <>));
       end if;
+
+      Tmp := Entity_Data (Result.Unchecked_Get);
 
       Free (Tmp.ORM_Name);
       Tmp.ORM_Col_Begin    := Integer_Value (Self, F_Entities_Col_Begin);
@@ -1896,12 +1898,12 @@ package body Orm is
       Lj            : constant Boolean := Self.Data.Follow_LJ;
       Tmp           : Entity_Message_Data;
    begin
-      Tmp := Entity_Message_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Entity_Message_DDR;
-         Set (Result, Tmp);
+      if Result.Is_Null then
+         Result.Set (Entity_Message_DDR'
+              (Detached_Data with Field_Count => 5, others => <>));
       end if;
 
+      Tmp := Entity_Message_Data (Result.Unchecked_Get);
       if Self.Depth > 0 then
          FK_Entity_Id := new Detached_Entity'Class'(
             I_Entities.Internal_Element
@@ -1936,12 +1938,12 @@ package body Orm is
       Lj             : constant Boolean := Self.Data.Follow_LJ;
       Tmp            : Message_Data;
    begin
-      Tmp := Message_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Message_DDR;
-         Set (Result, Tmp);
+      if Result.Is_Null then
+         Result.Set (Message_DDR'
+              (Detached_Data with Field_Count => 6, others => <>));
       end if;
 
+      Tmp := Message_Data (Result.Unchecked_Get);
       if Self.Depth > 0 then
          FK_Rule_Id := new Detached_Rule'Class'(
             I_Rules.Internal_Element
@@ -1981,12 +1983,12 @@ package body Orm is
       Lj           : constant Boolean := Self.Data.Follow_LJ;
       Tmp          : Resource_Tree_Data;
    begin
-      Tmp := Resource_Tree_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Resource_Tree_DDR;
-         Set (Result, Tmp);
+      if Result.Is_Null then
+         Result.Set (Resource_Tree_DDR'
+              (Detached_Data with Field_Count => 5, others => <>));
       end if;
 
+      Tmp := Resource_Tree_Data (Result.Unchecked_Get);
       if Self.Depth > 0 then
          if LJ then
             FK_Child_Id := new Detached_Resource'Class'(
@@ -2024,11 +2026,12 @@ package body Orm is
       Result  : Detached_Resource'Class := Detached_Resource'Class (Session.Factory (Self, Default));
       Tmp     : Resource_Data;
    begin
-      Tmp := Resource_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Resource_DDR;
-         Set (Result, Tmp);
+      if Result.Is_Null then
+         Result.Set (Resource_DDR'
+              (Detached_Data with Field_Count => 4, others => <>));
       end if;
+
+      Tmp := Resource_Data (Result.Unchecked_Get);
 
       Free (Tmp.ORM_Name);
       Tmp.ORM_Id           := Integer_Value (Self, F_Resources_Id);
@@ -2055,12 +2058,12 @@ package body Orm is
       Lj             : constant Boolean := Self.Data.Follow_LJ;
       Tmp            : Resource_Message_Data;
    begin
-      Tmp := Resource_Message_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Resource_Message_DDR;
-         Set (Result, Tmp);
+      if Result.Is_Null then
+         Result.Set (Resource_Message_DDR'
+              (Detached_Data with Field_Count => 8, others => <>));
       end if;
 
+      Tmp := Resource_Message_Data (Result.Unchecked_Get);
       if Self.Depth > 0 then
          FK_Message_Id := new Detached_Message'Class'(
             I_Messages.Internal_Element
@@ -2097,12 +2100,12 @@ package body Orm is
       Lj         : constant Boolean := Self.Data.Follow_LJ;
       Tmp        : Rule_Data;
    begin
-      Tmp := Rule_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Rule_DDR;
-         Set (Result, Tmp);
+      if Result.Is_Null then
+         Result.Set (Rule_DDR'
+              (Detached_Data with Field_Count => 6, others => <>));
       end if;
 
+      Tmp := Rule_Data (Result.Unchecked_Get);
       if Self.Depth > 0 then
          FK_Tool_Id := new Detached_Tool'Class'(
             I_Tools.Internal_Element
@@ -2134,11 +2137,12 @@ package body Orm is
       Result  : Detached_Tool'Class := Detached_Tool'Class (Session.Factory (Self, Default));
       Tmp     : Tool_Data;
    begin
-      Tmp := Tool_Data (Result.Get);
-      if Tmp = null then
-         Tmp := new Tool_DDR;
-         Set (Result, Tmp);
+      if Result.Is_Null then
+         Result.Set (Tool_DDR'
+              (Detached_Data with Field_Count => 2, others => <>));
       end if;
+
+      Tmp := Tool_Data (Result.Unchecked_Get);
 
       Free (Tmp.ORM_Name);
       Tmp.ORM_Id      := Integer_Value (Self, F_Tools_Id);
@@ -3450,7 +3454,7 @@ package body Orm is
       Pk_Modified : in out Boolean;
       Mask        : Dirty_Mask)
    is
-      D          : constant Category_Data := Category_Data (Self.Get);
+      D          : constant Category_Data := Category_Data (Self.Unchecked_Get);
       Q          : SQL_Query;
       A          : Sql_Assignment := No_Assignment;
       Missing_Pk : constant Boolean := D.ORM_Id = -1;
@@ -3484,7 +3488,7 @@ package body Orm is
       Pk_Modified : in out Boolean;
       Mask        : Dirty_Mask)
    is
-      D          : constant Entity_Data := Entity_Data (Self.Get);
+      D          : constant Entity_Data := Entity_Data (Self.Unchecked_Get);
       Q          : SQL_Query;
       A          : Sql_Assignment := No_Assignment;
       Missing_Pk : constant Boolean := D.ORM_Id = -1;
@@ -3524,7 +3528,7 @@ package body Orm is
       Pk_Modified : in out Boolean;
       Mask        : Dirty_Mask)
    is
-      D          : constant Entity_Message_Data := Entity_Message_Data (Self.Get);
+      D          : constant Entity_Message_Data := Entity_Message_Data (Self.Unchecked_Get);
       Q          : SQL_Query;
       A          : Sql_Assignment := No_Assignment;
       Missing_Pk : constant Boolean := D.ORM_Id = -1;
@@ -3537,7 +3541,7 @@ package body Orm is
 
             declare
                D2 : constant Entity_Data :=
-               Entity_data (D.ORM_FK_Entity_Id.Get);
+               Entity_data (D.ORM_FK_Entity_Id.Unchecked_Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -3555,7 +3559,7 @@ package body Orm is
 
             declare
                D2 : constant Message_Data :=
-               Message_data (D.ORM_FK_Message_Id.Get);
+               Message_data (D.ORM_FK_Message_Id.Unchecked_Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -3588,7 +3592,7 @@ package body Orm is
       Pk_Modified : in out Boolean;
       Mask        : Dirty_Mask)
    is
-      D          : constant Message_Data := Message_Data (Self.Get);
+      D          : constant Message_Data := Message_Data (Self.Unchecked_Get);
       Q          : SQL_Query;
       A          : Sql_Assignment := No_Assignment;
       Missing_Pk : constant Boolean := D.ORM_Id = -1;
@@ -3601,7 +3605,7 @@ package body Orm is
 
             declare
                D2 : constant Rule_Data :=
-               Rule_data (D.ORM_FK_Rule_Id.Get);
+               Rule_data (D.ORM_FK_Rule_Id.Unchecked_Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -3622,7 +3626,7 @@ package body Orm is
 
             declare
                D2 : constant Category_Data :=
-               Category_data (D.ORM_FK_Category_Id.Get);
+               Category_data (D.ORM_FK_Category_Id.Unchecked_Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -3655,7 +3659,7 @@ package body Orm is
       Pk_Modified : in out Boolean;
       Mask        : Dirty_Mask)
    is
-      D          : constant Resource_Tree_Data := Resource_Tree_Data (Self.Get);
+      D          : constant Resource_Tree_Data := Resource_Tree_Data (Self.Unchecked_Get);
       Q          : SQL_Query;
       A          : Sql_Assignment := No_Assignment;
       Missing_Pk : constant Boolean := D.ORM_Id = -1;
@@ -3668,7 +3672,7 @@ package body Orm is
 
             declare
                D2 : constant Resource_Data :=
-               Resource_data (D.ORM_FK_Child_Id.Get);
+               Resource_data (D.ORM_FK_Child_Id.Unchecked_Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -3686,7 +3690,7 @@ package body Orm is
 
             declare
                D2 : constant Resource_Data :=
-               Resource_data (D.ORM_FK_Parent_Id.Get);
+               Resource_data (D.ORM_FK_Parent_Id.Unchecked_Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -3719,7 +3723,7 @@ package body Orm is
       Pk_Modified : in out Boolean;
       Mask        : Dirty_Mask)
    is
-      D          : constant Resource_Data := Resource_Data (Self.Get);
+      D          : constant Resource_Data := Resource_Data (Self.Unchecked_Get);
       Q          : SQL_Query;
       A          : Sql_Assignment := No_Assignment;
       Missing_Pk : constant Boolean := D.ORM_Id = -1;
@@ -3756,7 +3760,7 @@ package body Orm is
       Pk_Modified : in out Boolean;
       Mask        : Dirty_Mask)
    is
-      D          : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D          : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
       Q          : SQL_Query;
       A          : Sql_Assignment := No_Assignment;
       Missing_Pk : constant Boolean := D.ORM_Id = -1;
@@ -3769,7 +3773,7 @@ package body Orm is
 
             declare
                D2 : constant Message_Data :=
-               Message_data (D.ORM_FK_Message_Id.Get);
+               Message_data (D.ORM_FK_Message_Id.Unchecked_Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -3787,7 +3791,7 @@ package body Orm is
 
             declare
                D2 : constant Resource_Data :=
-               Resource_data (D.ORM_FK_Resource_Id.Get);
+               Resource_data (D.ORM_FK_Resource_Id.Unchecked_Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -3829,7 +3833,7 @@ package body Orm is
       Pk_Modified : in out Boolean;
       Mask        : Dirty_Mask)
    is
-      D          : constant Rule_Data := Rule_Data (Self.Get);
+      D          : constant Rule_Data := Rule_Data (Self.Unchecked_Get);
       Q          : SQL_Query;
       A          : Sql_Assignment := No_Assignment;
       Missing_Pk : constant Boolean := D.ORM_Id = -1;
@@ -3851,7 +3855,7 @@ package body Orm is
 
             declare
                D2 : constant Tool_Data :=
-               Tool_data (D.ORM_FK_Tool_Id.Get);
+               Tool_data (D.ORM_FK_Tool_Id.Unchecked_Get);
             begin
                if D2.ORM_Id = -1 then
                   Self.Session.Insert_Or_Update
@@ -3884,7 +3888,7 @@ package body Orm is
       Pk_Modified : in out Boolean;
       Mask        : Dirty_Mask)
    is
-      D          : constant Tool_Data := Tool_Data (Self.Get);
+      D          : constant Tool_Data := Tool_Data (Self.Unchecked_Get);
       Q          : SQL_Query;
       A          : Sql_Assignment := No_Assignment;
       Missing_Pk : constant Boolean := D.ORM_Id = -1;
@@ -3912,7 +3916,7 @@ package body Orm is
 
    overriding procedure Internal_Delete (Self : Detached_Category)
    is
-      D : constant Category_Data := Category_Data (Self.Get);
+      D : constant Category_Data := Category_Data (Self.Unchecked_Get);
    begin
       Execute (Self.Session.DB, SQL_Delete (DBA.Categories, DBA.Categories.Id = D.ORM_Id));
    end Internal_Delete;
@@ -3923,7 +3927,7 @@ package body Orm is
 
    overriding procedure Internal_Delete (Self : Detached_Entity)
    is
-      D : constant Entity_Data := Entity_Data (Self.Get);
+      D : constant Entity_Data := Entity_Data (Self.Unchecked_Get);
    begin
       Execute (Self.Session.DB, SQL_Delete (DBA.Entities, DBA.Entities.Id = D.ORM_Id));
    end Internal_Delete;
@@ -3934,7 +3938,7 @@ package body Orm is
 
    overriding procedure Internal_Delete (Self : Detached_Entity_Message)
    is
-      D : constant Entity_Message_Data := Entity_Message_Data (Self.Get);
+      D : constant Entity_Message_Data := Entity_Message_Data (Self.Unchecked_Get);
    begin
       Execute (Self.Session.DB, SQL_Delete (DBA.Entities_Messages, DBA.Entities_Messages.Id = D.ORM_Id));
    end Internal_Delete;
@@ -3945,7 +3949,7 @@ package body Orm is
 
    overriding procedure Internal_Delete (Self : Detached_Message)
    is
-      D : constant Message_Data := Message_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Unchecked_Get);
    begin
       Execute (Self.Session.DB, SQL_Delete (DBA.Messages, DBA.Messages.Id = D.ORM_Id));
    end Internal_Delete;
@@ -3956,7 +3960,7 @@ package body Orm is
 
    overriding procedure Internal_Delete (Self : Detached_Resource_Tree)
    is
-      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Get);
+      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Unchecked_Get);
    begin
       Execute (Self.Session.DB, SQL_Delete (DBA.Resource_Trees, DBA.Resource_Trees.Id = D.ORM_Id));
    end Internal_Delete;
@@ -3967,7 +3971,7 @@ package body Orm is
 
    overriding procedure Internal_Delete (Self : Detached_Resource)
    is
-      D : constant Resource_Data := Resource_Data (Self.Get);
+      D : constant Resource_Data := Resource_Data (Self.Unchecked_Get);
    begin
       Execute (Self.Session.DB, SQL_Delete (DBA.Resources, DBA.Resources.Id = D.ORM_Id));
    end Internal_Delete;
@@ -3978,7 +3982,7 @@ package body Orm is
 
    overriding procedure Internal_Delete (Self : Detached_Resource_Message)
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
    begin
       Execute (Self.Session.DB, SQL_Delete (DBA.Resources_Messages, DBA.Resources_Messages.Id = D.ORM_Id));
    end Internal_Delete;
@@ -3989,7 +3993,7 @@ package body Orm is
 
    overriding procedure Internal_Delete (Self : Detached_Rule)
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Rule_Data := Rule_Data (Self.Unchecked_Get);
    begin
       Execute (Self.Session.DB, SQL_Delete (DBA.Rules, DBA.Rules.Id = D.ORM_Id));
    end Internal_Delete;
@@ -4000,7 +4004,7 @@ package body Orm is
 
    overriding procedure Internal_Delete (Self : Detached_Tool)
    is
-      D : constant Tool_Data := Tool_Data (Self.Get);
+      D : constant Tool_Data := Tool_Data (Self.Unchecked_Get);
    begin
       Execute (Self.Session.DB, SQL_Delete (DBA.Tools, DBA.Tools.Id = D.ORM_Id));
    end Internal_Delete;
@@ -4309,9 +4313,9 @@ package body Orm is
    function New_Category return Detached_Category'Class
    is
       Result : Detached_Category;
-      Data   : constant Category_Data := new Category_DDR;
+      Data   : Category_Ddr;
    begin
-      Set (Result, Data);
+      Result.Set (Data);
       return Result;
    end New_Category;
 
@@ -4322,9 +4326,9 @@ package body Orm is
    function New_Entity return Detached_Entity'Class
    is
       Result : Detached_Entity;
-      Data   : constant Entity_Data := new Entity_DDR;
+      Data   : Entity_Ddr;
    begin
-      Set (Result, Data);
+      Result.Set (Data);
       return Result;
    end New_Entity;
 
@@ -4335,9 +4339,9 @@ package body Orm is
    function New_Entity_Message return Detached_Entity_Message'Class
    is
       Result : Detached_Entity_Message;
-      Data   : constant Entity_Message_Data := new Entity_Message_DDR;
+      Data   : Entity_Message_Ddr;
    begin
-      Set (Result, Data);
+      Result.Set (Data);
       return Result;
    end New_Entity_Message;
 
@@ -4348,9 +4352,9 @@ package body Orm is
    function New_Message return Detached_Message'Class
    is
       Result : Detached_Message;
-      Data   : constant Message_Data := new Message_DDR;
+      Data   : Message_Ddr;
    begin
-      Set (Result, Data);
+      Result.Set (Data);
       return Result;
    end New_Message;
 
@@ -4361,9 +4365,9 @@ package body Orm is
    function New_Resource return Detached_Resource'Class
    is
       Result : Detached_Resource;
-      Data   : constant Resource_Data := new Resource_DDR;
+      Data   : Resource_Ddr;
    begin
-      Set (Result, Data);
+      Result.Set (Data);
       return Result;
    end New_Resource;
 
@@ -4374,9 +4378,9 @@ package body Orm is
    function New_Resource_Message return Detached_Resource_Message'Class
    is
       Result : Detached_Resource_Message;
-      Data   : constant Resource_Message_Data := new Resource_Message_DDR;
+      Data   : Resource_Message_Ddr;
    begin
-      Set (Result, Data);
+      Result.Set (Data);
       return Result;
    end New_Resource_Message;
 
@@ -4387,9 +4391,9 @@ package body Orm is
    function New_Resource_Tree return Detached_Resource_Tree'Class
    is
       Result : Detached_Resource_Tree;
-      Data   : constant Resource_Tree_Data := new Resource_Tree_DDR;
+      Data   : Resource_Tree_Ddr;
    begin
-      Set (Result, Data);
+      Result.Set (Data);
       return Result;
    end New_Resource_Tree;
 
@@ -4400,9 +4404,9 @@ package body Orm is
    function New_Rule return Detached_Rule'Class
    is
       Result : Detached_Rule;
-      Data   : constant Rule_Data := new Rule_DDR;
+      Data   : Rule_Ddr;
    begin
-      Set (Result, Data);
+      Result.Set (Data);
       return Result;
    end New_Rule;
 
@@ -4413,9 +4417,9 @@ package body Orm is
    function New_Tool return Detached_Tool'Class
    is
       Result : Detached_Tool;
-      Data   : constant Tool_Data := new Tool_DDR;
+      Data   : Tool_Ddr;
    begin
-      Set (Result, Data);
+      Result.Set (Data);
       return Result;
    end New_Tool;
 
@@ -4425,7 +4429,7 @@ package body Orm is
 
    overriding procedure On_Persist (Self : Detached_Entity_Message)
    is
-      D : constant Entity_Message_Data := Entity_Message_Data (Self.Get);
+      D : constant Entity_Message_Data := Entity_Message_Data (Self.Unchecked_Get);
    begin
       if Persist_Cascade (Self.Session) then
          if D.ORM_FK_Entity_Id /= null then
@@ -4443,7 +4447,7 @@ package body Orm is
 
    overriding procedure On_Persist (Self : Detached_Message)
    is
-      D : constant Message_Data := Message_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Unchecked_Get);
    begin
       if Persist_Cascade (Self.Session) then
          if D.ORM_FK_Rule_Id /= null then
@@ -4461,7 +4465,7 @@ package body Orm is
 
    overriding procedure On_Persist (Self : Detached_Resource_Tree)
    is
-      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Get);
+      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Unchecked_Get);
    begin
       if Persist_Cascade (Self.Session) then
          if D.ORM_FK_Child_Id /= null then
@@ -4479,7 +4483,7 @@ package body Orm is
 
    overriding procedure On_Persist (Self : Detached_Resource_Message)
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
    begin
       if Persist_Cascade (Self.Session) then
          if D.ORM_FK_Message_Id /= null then
@@ -4497,7 +4501,7 @@ package body Orm is
 
    overriding procedure On_Persist (Self : Detached_Rule)
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Rule_Data := Rule_Data (Self.Unchecked_Get);
    begin
       if Persist_Cascade (Self.Session) then
          if D.ORM_FK_Tool_Id /= null then
@@ -4617,7 +4621,7 @@ package body Orm is
 
    procedure Set_Category_Id (Self : Detached_Message; Value : Integer)
    is
-      D : constant Message_Data := Message_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Category_Id);
       D.ORM_Category_Id := Value;
@@ -4632,7 +4636,7 @@ package body Orm is
      (Self  : Detached_Message;
       Value : Detached_Category'Class)
    is
-      D : constant Message_Data := Message_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Category_Id);
       D.ORM_Category_Id := Value.Id;
@@ -4650,7 +4654,7 @@ package body Orm is
 
    procedure Set_Child_Id (Self : Detached_Resource_Tree; Value : Integer)
    is
-      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Get);
+      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Child_Id);
       D.ORM_Child_Id := Value;
@@ -4665,7 +4669,7 @@ package body Orm is
      (Self  : Detached_Resource_Tree;
       Value : Detached_Resource'Class)
    is
-      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Get);
+      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Child_Id);
       D.ORM_Child_Id := Value.Id;
@@ -4683,7 +4687,7 @@ package body Orm is
 
    procedure Set_Col_Begin (Self : Detached_Resource_Message; Value : Integer)
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
    begin
       D.ORM_Col_Begin := Value;
       Self.Set_Modified (5);
@@ -4695,7 +4699,7 @@ package body Orm is
 
    procedure Set_Col_Begin (Self : Detached_Entity; Value : Integer)
    is
-      D : constant Entity_Data := Entity_Data (Self.Get);
+      D : constant Entity_Data := Entity_Data (Self.Unchecked_Get);
    begin
       D.ORM_Col_Begin := Value;
       Self.Set_Modified (4);
@@ -4707,7 +4711,7 @@ package body Orm is
 
    procedure Set_Col_End (Self : Detached_Resource_Message; Value : Integer)
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
    begin
       D.ORM_Col_End := Value;
       Self.Set_Modified (6);
@@ -4719,7 +4723,7 @@ package body Orm is
 
    procedure Set_Col_End (Self : Detached_Entity; Value : Integer)
    is
-      D : constant Entity_Data := Entity_Data (Self.Get);
+      D : constant Entity_Data := Entity_Data (Self.Unchecked_Get);
    begin
       D.ORM_Col_End := Value;
       Self.Set_Modified (5);
@@ -4731,7 +4735,7 @@ package body Orm is
 
    procedure Set_Data (Self : Detached_Message; Value : String)
    is
-      D : constant Message_Data := Message_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Unchecked_Get);
    begin
       Free (D.ORM_Data);
       D.ORM_Data := new String'(Value);
@@ -4744,7 +4748,7 @@ package body Orm is
 
    procedure Set_Entity_Id (Self : Detached_Entity_Message; Value : Integer)
    is
-      D : constant Entity_Message_Data := Entity_Message_Data (Self.Get);
+      D : constant Entity_Message_Data := Entity_Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Entity_Id);
       D.ORM_Entity_Id := Value;
@@ -4759,7 +4763,7 @@ package body Orm is
      (Self  : Detached_Entity_Message;
       Value : Detached_Entity'Class)
    is
-      D : constant Entity_Message_Data := Entity_Message_Data (Self.Get);
+      D : constant Entity_Message_Data := Entity_Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Entity_Id);
       D.ORM_Entity_Id := Value.Id;
@@ -4777,7 +4781,7 @@ package body Orm is
 
    procedure Set_Identifier (Self : Detached_Rule; Value : String)
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Rule_Data := Rule_Data (Self.Unchecked_Get);
    begin
       Free (D.ORM_Identifier);
       D.ORM_Identifier := new String'(Value);
@@ -4790,7 +4794,7 @@ package body Orm is
 
    procedure Set_Kind (Self : Detached_Rule; Value : Integer)
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Rule_Data := Rule_Data (Self.Unchecked_Get);
    begin
       D.ORM_Kind := Value;
       Self.Set_Modified (4);
@@ -4802,7 +4806,7 @@ package body Orm is
 
    procedure Set_Kind (Self : Detached_Resource; Value : Integer)
    is
-      D : constant Resource_Data := Resource_Data (Self.Get);
+      D : constant Resource_Data := Resource_Data (Self.Unchecked_Get);
    begin
       D.ORM_Kind := Value;
       Self.Set_Modified (3);
@@ -4814,7 +4818,7 @@ package body Orm is
 
    procedure Set_Label (Self : Detached_Category; Value : String)
    is
-      D : constant Category_Data := Category_Data (Self.Get);
+      D : constant Category_Data := Category_Data (Self.Unchecked_Get);
    begin
       Free (D.ORM_Label);
       D.ORM_Label := new String'(Value);
@@ -4827,7 +4831,7 @@ package body Orm is
 
    procedure Set_Line (Self : Detached_Resource_Message; Value : Integer)
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
    begin
       D.ORM_Line := Value;
       Self.Set_Modified (4);
@@ -4839,7 +4843,7 @@ package body Orm is
 
    procedure Set_Line (Self : Detached_Entity; Value : Integer)
    is
-      D : constant Entity_Data := Entity_Data (Self.Get);
+      D : constant Entity_Data := Entity_Data (Self.Unchecked_Get);
    begin
       D.ORM_Line := Value;
       Self.Set_Modified (3);
@@ -4851,7 +4855,7 @@ package body Orm is
 
    procedure Set_Message_Id (Self : Detached_Resource_Message; Value : Integer)
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Message_Id);
       D.ORM_Message_Id := Value;
@@ -4866,7 +4870,7 @@ package body Orm is
      (Self  : Detached_Resource_Message;
       Value : Detached_Message'Class)
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Message_Id);
       D.ORM_Message_Id := Value.Id;
@@ -4884,7 +4888,7 @@ package body Orm is
 
    procedure Set_Message_Id (Self : Detached_Entity_Message; Value : Integer)
    is
-      D : constant Entity_Message_Data := Entity_Message_Data (Self.Get);
+      D : constant Entity_Message_Data := Entity_Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Message_Id);
       D.ORM_Message_Id := Value;
@@ -4899,7 +4903,7 @@ package body Orm is
      (Self  : Detached_Entity_Message;
       Value : Detached_Message'Class)
    is
-      D : constant Entity_Message_Data := Entity_Message_Data (Self.Get);
+      D : constant Entity_Message_Data := Entity_Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Message_Id);
       D.ORM_Message_Id := Value.Id;
@@ -4917,7 +4921,7 @@ package body Orm is
 
    procedure Set_Name (Self : Detached_Rule; Value : String)
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Rule_Data := Rule_Data (Self.Unchecked_Get);
    begin
       Free (D.ORM_Name);
       D.ORM_Name := new String'(Value);
@@ -4930,7 +4934,7 @@ package body Orm is
 
    procedure Set_Name (Self : Detached_Entity; Value : String)
    is
-      D : constant Entity_Data := Entity_Data (Self.Get);
+      D : constant Entity_Data := Entity_Data (Self.Unchecked_Get);
    begin
       Free (D.ORM_Name);
       D.ORM_Name := new String'(Value);
@@ -4943,7 +4947,7 @@ package body Orm is
 
    procedure Set_Name (Self : Detached_Tool; Value : String)
    is
-      D : constant Tool_Data := Tool_Data (Self.Get);
+      D : constant Tool_Data := Tool_Data (Self.Unchecked_Get);
    begin
       Free (D.ORM_Name);
       D.ORM_Name := new String'(Value);
@@ -4956,7 +4960,7 @@ package body Orm is
 
    procedure Set_Name (Self : Detached_Resource; Value : String)
    is
-      D : constant Resource_Data := Resource_Data (Self.Get);
+      D : constant Resource_Data := Resource_Data (Self.Unchecked_Get);
    begin
       Free (D.ORM_Name);
       D.ORM_Name := new String'(Value);
@@ -4969,7 +4973,7 @@ package body Orm is
 
    procedure Set_On_Side (Self : Detached_Category; Value : Boolean)
    is
-      D : constant Category_Data := Category_Data (Self.Get);
+      D : constant Category_Data := Category_Data (Self.Unchecked_Get);
    begin
       D.ORM_On_Side := Value;
       Self.Set_Modified (3);
@@ -4981,7 +4985,7 @@ package body Orm is
 
    procedure Set_Parent_Id (Self : Detached_Resource_Tree; Value : Integer)
    is
-      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Get);
+      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Parent_Id);
       D.ORM_Parent_Id := Value;
@@ -4996,7 +5000,7 @@ package body Orm is
      (Self  : Detached_Resource_Tree;
       Value : Detached_Resource'Class)
    is
-      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Get);
+      D : constant Resource_Tree_Data := Resource_Tree_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Parent_Id);
       D.ORM_Parent_Id := Value.Id;
@@ -5014,7 +5018,7 @@ package body Orm is
 
    procedure Set_Resource_Id (Self : Detached_Resource_Message; Value : Integer)
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Resource_Id);
       D.ORM_Resource_Id := Value;
@@ -5029,7 +5033,7 @@ package body Orm is
      (Self  : Detached_Resource_Message;
       Value : Detached_Resource'Class)
    is
-      D : constant Resource_Message_Data := Resource_Message_Data (Self.Get);
+      D : constant Resource_Message_Data := Resource_Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Resource_Id);
       D.ORM_Resource_Id := Value.Id;
@@ -5047,7 +5051,7 @@ package body Orm is
 
    procedure Set_Rule_Id (Self : Detached_Message; Value : Integer)
    is
-      D : constant Message_Data := Message_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Rule_Id);
       D.ORM_Rule_Id := Value;
@@ -5060,7 +5064,7 @@ package body Orm is
 
    procedure Set_Rule_Id (Self : Detached_Message; Value : Detached_Rule'Class)
    is
-      D : constant Message_Data := Message_Data (Self.Get);
+      D : constant Message_Data := Message_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Rule_Id);
       D.ORM_Rule_Id := Value.Id;
@@ -5078,7 +5082,7 @@ package body Orm is
 
    procedure Set_Timestamp (Self : Detached_Resource; Value : Ada.Calendar.Time)
    is
-      D : constant Resource_Data := Resource_Data (Self.Get);
+      D : constant Resource_Data := Resource_Data (Self.Unchecked_Get);
    begin
       D.ORM_Timestamp := Value;
       Self.Set_Modified (4);
@@ -5090,7 +5094,7 @@ package body Orm is
 
    procedure Set_Tool_Id (Self : Detached_Rule; Value : Integer)
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Rule_Data := Rule_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Tool_Id);
       D.ORM_Tool_Id := Value;
@@ -5103,7 +5107,7 @@ package body Orm is
 
    procedure Set_Tool_Id (Self : Detached_Rule; Value : Detached_Tool'Class)
    is
-      D : constant Rule_Data := Rule_Data (Self.Get);
+      D : constant Rule_Data := Rule_Data (Self.Unchecked_Get);
    begin
       Unchecked_Free (D.ORM_FK_Tool_Id);
       D.ORM_Tool_Id := Value.Id;
