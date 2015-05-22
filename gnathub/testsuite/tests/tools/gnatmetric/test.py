@@ -26,7 +26,7 @@ EXPECTED_METRICS = {
 }
 
 
-class TestSimpleExample(TestCase):
+class TestGNATmetricSupport(TestCase):
     def setUp(self):
         self.longMessage = True
         self.gnathub = GNAThub(Project.simple(), plugins=['gnatmetric'])

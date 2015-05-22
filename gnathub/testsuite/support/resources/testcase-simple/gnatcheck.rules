@@ -7,6 +7,4 @@
 +RLocal_Packages
 
 +RStyle_Checks:e
-+RWarnings:.k
-+RWarnings:h
-+RWarnings:d
++RWarnings:a

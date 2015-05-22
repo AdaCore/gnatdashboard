@@ -46,5 +46,5 @@ class TestSimpleExample(TestCase):
         self.assertTrue(not self.parser.has_option('f.ads', 'coverage'))
 
         self.assertEqual(len(self.getCoverage('simple.adb')), 18)
-        self.assertEqual(len(self.getCoverage('f.adb')), 5)
+        self.assertEqual(len(self.getCoverage('f.adb')), 6)
         self.assertEqual(len(self.getCoverage('f.ads')), 0)
