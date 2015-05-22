@@ -6,6 +6,7 @@
 
 .. |SQLite|         replace:: :program:`SQLite`
 
+.. |GPS|            replace:: :program:`GPS`
 .. |GNAT|           replace:: :program:`GNAT`
 .. |GNATpro|        replace:: :program:`GNAT Pro`
 .. |CodePeer|       replace:: :program:`CodePeer`

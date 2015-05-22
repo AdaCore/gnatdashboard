@@ -23,6 +23,22 @@ perfect fit for storing and organizing the results of the various analysis
 and making them available to a wide range of code quality management
 platforms.
 
+Outputs
+-------
+
+There are two kinds of log file:
+
+  1. tools output
+  2. GNAThub execution log
+
+(1) Files located in :file:`<object_dir>/gnathub/logs` are output of tools, *e.g.*
+:file:`codepeer.log` contains the output of the latest |CodePeer| run (provided
+that it was invoked from |GNAThub|). These files are generated if you invoke the
+tool using the API function :meth:`GNAThub.Run()`.
+
+(2) GNAThub uses the same log mechanism as |GPS|: the output behavior can be
+customized through a configuration file. See the `GNATcoll Traces documentation
+<http://docs.adacore.com/gnatcoll-docs/traces.html>`_ for more information.
 
 Project file attributes
 -----------------------
