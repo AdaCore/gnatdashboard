@@ -108,10 +108,9 @@ setenv: $(GENERATED_DIR)/src/gnathub-version.ads
 	@echo "PYTHONPATH=\"$(TOP)/src/lib:$$PYTHONPATH\""
 	@echo "export PYTHONPATH"
 
-clean: gnathub.gpr
+clean:
 	gprclean -q -P $<
 	find $(TOP) -name '*.pyc' -delete
-	$(RM) gnathub.gpr
 	$(RM) src/gnathub/gnathub-version.ads
 	$(RMDIR) $(BUILD_DIR)/obj
 	$(RMDIR) $(BUILD_DIR)/lib.*
