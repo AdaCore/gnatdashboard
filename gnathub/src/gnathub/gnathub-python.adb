@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2014, AdaCore                     --
+--                     Copyright (C) 2013-2015, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -508,20 +508,13 @@ package body GNAThub.Python is
       elsif Command = Scenario_Switches_Method then
          Set_Return_Value_As_List (Data);
 
-         declare
-            Vars : constant Scenario_Variable_Array := Tree.Scenario_Variables;
-         begin
-            for J in Vars'Range loop
-               declare
-                  Name : constant String := External_Name (Vars (J));
-               begin
-                  if Name /= "" then
-                     Set_Return_Value
-                       (Data, "-X" & Name & "=" & Value (Vars (J)));
-                  end if;
-               end;
-            end loop;
-         end;
+         for Var of Get_Scenario_Variables loop
+            if Name /= "" then
+               Set_Return_Value
+                 (Data,
+                  "-X" & To_String (Var.Key) & "=" & To_String (Var.Value));
+            end if;
+         end loop;
 
       else
          raise Python_Error with "Unknown method GNAThub.Project." & Command;

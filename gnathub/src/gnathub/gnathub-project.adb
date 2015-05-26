@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2014, AdaCore                     --
+--                     Copyright (C) 2013-2015, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -18,7 +18,6 @@
 with Ada.Containers.Hashed_Maps;
 with Ada.Containers;                      use Ada.Containers;
 with Ada.Strings;
-with Ada.Strings.Unbounded;               use Ada.Strings.Unbounded;
 with Ada.Strings.Unbounded.Hash;
 with Ada.Strings.Equal_Case_Insensitive;
 
@@ -35,6 +34,9 @@ package body GNAThub.Project is
    Project_Tree : GNATCOLL.Projects.Project_Tree;
    Project_Env  : Project_Environment_Access;
    --  GNATCOLL.Projects specificities
+
+   Scenario_Variables : Scenario_Variables_Vector.Vector;
+   --  The scenario variables passed on the command line
 
    package Project_Map is new Ada.Containers.Hashed_Maps
      (Key_Type     => Unbounded_String,
@@ -222,6 +224,15 @@ package body GNAThub.Project is
 
    end Load;
 
+   ----------------------------
+   -- Get_Scenario_Variables --
+   ----------------------------
+
+   function Get_Scenario_Variables return Scenario_Variables_Vector.Vector is
+   begin
+      return Scenario_Variables;
+   end Get_Scenario_Variables;
+
    ----------------
    -- Update_Env --
    ----------------
@@ -230,6 +241,10 @@ package body GNAThub.Project is
    begin
       Log.Info (Me, "Update project environment: " & Key & " = " & Value);
       Project_Env.Change_Environment (Key, Value);
+
+      --  Store the scenario variable that was parsed
+      Scenario_Variables.Append
+        ((To_Unbounded_String (Key), To_Unbounded_String (Value)));
    end Update_Env;
 
    ----------

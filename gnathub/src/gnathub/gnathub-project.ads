@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2014, AdaCore                     --
+--                     Copyright (C) 2013-2015, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -16,6 +16,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Containers.Vectors;
+with Ada.Strings.Unbounded;         use Ada.Strings.Unbounded;
 
 with GNAT.OS_Lib;                   use GNAT.OS_Lib;
 
@@ -58,6 +59,18 @@ package GNAThub.Project is
       with Pre => Initialized;
    --  Update the environment. Should be called before any project is loaded.
    --  It will not impact already loaded projects.
+
+   type Scenario_Variable is record
+      Key   : Unbounded_String;
+      Value : Unbounded_String;
+   end record;
+
+   package Scenario_Variables_Vector is new Ada.Containers.Vectors
+     (Positive, Scenario_Variable);
+
+   function Get_Scenario_Variables return Scenario_Variables_Vector.Vector;
+   --  Return the scenario variables that were passed as -X switches on the
+   --  command line.
 
    procedure Save_Project_Tree
      with Pre => Initialized and then Loaded;
