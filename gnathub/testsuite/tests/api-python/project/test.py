@@ -12,5 +12,13 @@ class TestSimpleExample(TestCase):
         self.gnathub = GNAThub(Project.disabled(), plugins=['sonar-config'])
 
     def testDatabaseContent(self):
+        # Dummy scenario variables
+        scenario = {
+            'BUILD_MODE': 'Production',
+            'VERSION': 'test-0.0.0',
+            'BUILD_DIR': '/some/user/workspace/project/build/dir',
+            'PROCESSORS': '2'
+        }
+
         # Extract coverage information from the database
-        self.gnathub.run(script='check-api.py')
+        self.gnathub.run(script='check-api.py', scenario_vars=scenario)

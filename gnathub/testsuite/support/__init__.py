@@ -180,10 +180,10 @@ class GNAThub(object):
         if kwargs.get('verbose', False):
             argv.append('--verbose')
 
-        if kwargs.get('external_refs', None):
-            ext_refs = kwargs['external_refs']
-            assert isinstance(ext_refs, dict), 'invalid "external_refs" arg'
-            argv.extend(['-X%s=%s' % (k, v) for k, v in ext_refs.iteritems()])
+        if kwargs.get('scenario_vars', None):
+            scenario = kwargs['scenario_vars']
+            assert isinstance(scenario, dict), 'invalid "scenario_vars" arg'
+            argv.extend(['-X%s=%s' % (k, v) for k, v in scenario.iteritems()])
 
         if kwargs.get('plugins', None):
             assert isinstance(kwargs['plugins'], list), 'invalid "plugin" arg'

@@ -13,4 +13,4 @@ class TestSimpleExample(TestCase):
 
     def testExternalRefsSwitch(self):
         # Pass a -Xkey=value option to GNAThub
-        self.gnathub.run(external_refs={'key': 'value'})
+        self.gnathub.run(scenario_vars={'key': 'value'})

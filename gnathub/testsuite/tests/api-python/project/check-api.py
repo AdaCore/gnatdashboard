@@ -81,3 +81,18 @@ assert 'gnatmetric' in plugins_off, \
 assert 'gcov' in plugins_off, 'missing "gcov" plugin in Plugins_Off'
 assert 'codepeer' in plugins_off, 'missing "codepeer" plugin in Plugins_Off'
 assert 'gnatprove' in plugins_off, 'missing "gnatprove" plugin in Plugins_Off'
+
+scenario_vars = GNAThub.Project.scenario_switches()
+expected_vars = [
+    '-XBUILD_MODE=Production',
+    '-XVERSION=test-0.0.0',
+    '-XBUILD_DIR=/some/user/workspace/project/build/dir',
+    '-XPROCESSORS=2'
+]
+nb_scenario_vars = len(scenario_vars)
+nb_expected_vars = len(expected_vars)
+assert nb_scenario_vars == nb_expected_vars, \
+    ('unexpected number of Scenario_Switches (%d != %d) (%s != %s)' %
+     (nb_scenario_vars, nb_expected_vars, scenario_vars, expected_vars))
+for var in expected_vars:
+    assert var in scenario_vars, 'missing "%s" scenario switch' % var
