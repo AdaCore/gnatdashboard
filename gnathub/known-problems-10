@@ -4,6 +4,16 @@ GNAThub 1.0 KNOWN PROBLEMS LIST
 
 Copyright (C) 2014-2015, AdaCore
 
+KP-10-O527-029 -X switches passed to gnathub not transferred to plugins
+
+  Problem:    Amongst the -X switches passed to the gnathub driver,
+              only those that correspond to scenario variables are
+              passed on to the tools launched by the gnathub plugins.
+
+  Status:     Fixed in GNAThub 1.1.0 on 2015-05-29
+
+  Workaround: None.
+
 KP-10-NB27-025 Missing src_mapping property in sonar-project.properties
 
   Problem:    When generating sonar-project.properties for a single-module
