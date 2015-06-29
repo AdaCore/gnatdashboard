@@ -1,19 +1,18 @@
-/****************************************************************************
- *                              Sonar Ada Plugin                            *
- *                                                                          *
- *                     Copyright (C) 2013-2014, AdaCore                     *
- *                                                                          *
- * This is free software;  you can redistribute it  and/or modify it  under *
- * terms of the  GNU General Public License as published  by the Free Soft- *
- * ware  Foundation;  either version 3,  or (at your option) any later ver- *
- * sion.  This software is distributed in the hope  that it will be useful, *
- * but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- *
- * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public *
- * License for  more details.  You should have  received  a copy of the GNU *
- * General  Public  License  distributed  with  this  software;   see  file *
- * COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy *
- * of the license.                                                          *
- ****************************************************************************/
+/**
+ * Sonar Ada Plugin (GNATdashboard)
+ * Copyright (C) 2013-2015, AdaCore
+ *
+ * This is free software;  you can redistribute it  and/or modify it  under
+ * terms of the  GNU General Public License as published  by the Free Soft-
+ * ware  Foundation;  either version 3,  or (at your option) any later ver-
+ * sion.  This software is distributed in the hope  that it will be useful,
+ * but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN-
+ * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+ * License for  more details.  You should have  received  a copy of the GNU
+ * General  Public  License  distributed  with  this  software;   see  file
+ * COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
+ * of the license.
+ */
 
 package org.sonar.plugins.ada;
 
@@ -22,19 +21,19 @@ import lombok.ToString;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
-import org.sonar.plugins.ada.codepeer.CodePeerRuleRepository;
-import org.sonar.plugins.ada.codepeer.CodePeerMetrics;
-import org.sonar.plugins.ada.codepeer.CodePeerViolationsDecorator;
+import org.sonar.plugins.ada.codepeer.CodePeerRulesDefinition;
+import org.sonar.plugins.ada.coverage.CoverageSensor;
 import org.sonar.plugins.ada.gnat.*;
-import org.sonar.plugins.ada.gnatcoverage.GNATcoverageRuleRepository;
-import org.sonar.plugins.ada.gnu.GcovSensor;
 import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.plugins.ada.lang.AdaColorizer;
-import org.sonar.plugins.ada.ui.CodePeerViolationsRubyWidget;
-import org.sonar.plugins.ada.ui.GNATcheckViolationsRubyWidget;
 
 import java.util.List;
 
+/**
+ * Entry point to the SonarQube's plug-in.
+ *
+ * Lists all extensions to SonarQube defined and implemented in this plug-in.
+ */
 @ToString
 @Properties({
     @Property(
@@ -65,49 +64,36 @@ public final class AdaPlugin extends SonarPlugin {
   public static final String FILE_SUFFIXES_KEY = "sonar.ada.file.suffixes";
 
   /**
-   * Gets the extensions.
+   * Lists SonarQube extensions for the Ada language.
    *
-   * @return the extensions
+   * @return the sonar-ada-plugin extensions.
    * @see org.sonar.api.SonarPlugin#getExtensions()
    */
   @Override
   public List getExtensions() {
-    return ImmutableList.of(
-        Ada.class,
-        AdaProjectContext.class,
+      return ImmutableList.of(
+              // Declare the Ada language
+              Ada.class,
+              AdaColorizer.class,
+              AdaDefaultProfile.class,
+              AdaProjectContext.class,
 
-        AdaSourceImporter.class,
-        AdaDefaultProfile.class,
-        AdaColorizer.class,
+              // Register custom metrics
+              AdaMetrics.class,
 
-        // Issues
-        AdaIssueSensor.class,
+              // Register tools rules
+              CodePeerRulesDefinition.class,
+              GNATcheckRulesDefinition.class,
+              GNATcoverageRulesDefinition.class,
+              GNATproveRulesDefinition.class,
 
-        // CodeePeer
-        CodePeerRuleRepository.class,
-        CodePeerMetrics.class,
-        CodePeerViolationsRubyWidget.class,
-        CodePeerViolationsDecorator.class,
+              // Collect metrics and issues
+              GNAThubIssueSensor.class,
+              CoverageSensor.class,
+              GNATmetricSensor.class,
 
-        // GNATcheck
-        GNATcheckRuleRepository.class,
-        GNATcheckMetrics.class,
-        GNATcheckViolationsRubyWidget.class,
-        GNATcheckViolationsDecorator.class,
-        GNATcheckViolationsDensityDecorator.class,
-        GNATcheckWeightedViolationsDecorator.class,
-
-        // GNATmetric
-        GNATmetricSensor.class,
-        GNATmetricMetrics.class,
-
-        // Gcov
-        GcovSensor.class,
-
-        // GNATcoverage,
-        GNATcoverageRuleRepository.class,
-
-        // GNATprove
-        GNATproveRuleRepository.class);
+              // Compute higher level metrics
+              AdaCountIssuesDecorator.class
+      );
   }
 }

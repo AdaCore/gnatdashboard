@@ -149,14 +149,11 @@ class GNATprove(GNAThub.Plugin):
 
         # Extract the rule from the message: ('overflow_check')
         match = self.RULE_RE.match(message)
-        rule = match.group('rule')
+        rule_id = match.group('rule')
 
-        # Generates the rule ID
-        rule_id = '%s__%s' % (severity, rule)
+        self.__add_message(src, line, column, rule_id, message, severity)
 
-        self.__add_message(src, line, column, rule_id, message)
-
-    def __add_message(self, src, line, col_begin, rule_id, msg):
+    def __add_message(self, src, line, col_begin, rule_id, msg, category):
         """Registers a new message in the database.
 
         :param src: The source file containing the message.
@@ -169,11 +166,12 @@ class GNATprove(GNAThub.Plugin):
         :type rule_id: str
         :param msg: The message to record.
         :type msg: str
+        :param category: the category of the message
+        :type category: str
         """
 
         rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
-        message = GNAThub.Message(rule, msg)
-
+        message = GNAThub.Message(rule, msg, category)
         resource = GNAThub.Resource.get(src)
 
         if resource:

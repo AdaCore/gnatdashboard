@@ -92,7 +92,6 @@ class GNATcoverage(GNAThub.Plugin):
                 m = self.COV_LINE_RE.match(line)
 
                 column_no = None
-                message = None
 
                 if m:
                     line_no = int(m.group('line_no'))
@@ -150,9 +149,8 @@ class GNATcoverage(GNAThub.Plugin):
         self.coverage_rule = GNAThub.Rule('coverage', 'coverage',
                                           GNAThub.METRIC_KIND, self.tool)
         for cov_level in ('stmt', 'decision', 'mcdc'):
-            name = 'gnatcov_{}'.format(cov_level)
             self.issue_rules[cov_level] = GNAThub.Rule(
-                name, name, GNAThub.RULE_KIND, self.tool
+                cov_level, cov_level, GNAThub.RULE_KIND, self.tool
             )
 
         total = len(files)

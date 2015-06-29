@@ -180,13 +180,13 @@ class CodePeer(GNAThub.Plugin):
                     category = record[7]
                     message = record[8]
 
-                    # See L919-022: duplicated rules for priorities and
-                    # categories in SonarQube Rule Repository.
-                    # ???: Remove this work-around once fixed in SonarQube.
-                    category = '%s__%s' % (severity.upper(), category.upper())
+                    rule_id = ':'.join((
+                        category.lower(),
+                        rule.lower().partition(';')[0].replace(' ', '_')
+                    ))
 
-                    self.__add_message(source, line, column, rule, message,
-                                       category)
+                    self.__add_message(source, line, column, rule_id,
+                                       message, severity)
 
                     Console.progress(index, total, new_line=(index == total))
 

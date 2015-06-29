@@ -168,7 +168,7 @@ class GNATcheck(GNAThub.Plugin):
         line = regex.group('line')
         column = regex.group('column')
         message = regex.group('message')
-        rule = regex.group('rule')
+        rule = regex.group('rule').lower()
 
         self.__add_message(src, line, column, rule, message)
 

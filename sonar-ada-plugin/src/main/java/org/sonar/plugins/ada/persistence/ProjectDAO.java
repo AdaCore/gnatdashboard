@@ -1,19 +1,18 @@
-/****************************************************************************
- *                              Sonar Ada Plugin                            *
- *                                                                          *
- *                        Copyright (C) 2014, AdaCore                       *
- *                                                                          *
- * This is free software;  you can redistribute it  and/or modify it  under *
- * terms of the  GNU General Public License as published  by the Free Soft- *
- * ware  Foundation;  either version 3,  or (at your option) any later ver- *
- * sion.  This software is distributed in the hope  that it will be useful, *
- * but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- *
- * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public *
- * License for  more details.  You should have  received  a copy of the GNU *
- * General  Public  License  distributed  with  this  software;   see  file *
- * COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy *
- * of the license.                                                          *
- ****************************************************************************/
+/**
+ * Sonar Ada Plugin (GNATdashboard)
+ * Copyright (C) 2014-2015, AdaCore
+ *
+ * This is free software;  you can redistribute it  and/or modify it  under
+ * terms of the  GNU General Public License as published  by the Free Soft-
+ * ware  Foundation;  either version 3,  or (at your option) any later ver-
+ * sion.  This software is distributed in the hope  that it will be useful,
+ * but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN-
+ * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+ * License for  more details.  You should have  received  a copy of the GNU
+ * General  Public  License  distributed  with  this  software;   see  file
+ * COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
+ * of the license.
+ */
 
 package org.sonar.plugins.ada.persistence;
 
@@ -22,7 +21,8 @@ import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.File;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rules.Rule;
-import org.sonar.plugins.ada.utils.GNAThubEncoding;
+import org.sonar.plugins.ada.codepeer.CodePeerRulesDefinition;
+import org.sonar.plugins.ada.codepeer.CodePeerSeverity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -143,6 +143,7 @@ public class ProjectDAO {
 
   /**
    * Custom row mapper for issues.
+   * ??? Review this method and remove deprecated code.
    */
   private final RowMapper<IssueRecord> issueRowMapper = new RowMapper<IssueRecord>() {
     @Override
@@ -151,14 +152,12 @@ public class ProjectDAO {
       final int lineNo = resultSet.getInt("line_no");
       final String message = resultSet.getString("message");
       final String toolName = resultSet.getString("tool_name");
-      final String key = GNAThubEncoding.toSonarRuleKey(
-          resultSet.getString("key"), resultSet.getString("category"));
+      final String key = resultSet.getString("key");
+      final String category = resultSet.getString("category");
 
       log.trace(
           "Generate Rule Key from key=\"{}\" and category=\"{}\" -> \"{}\"",
-          new Object[]{
-              resultSet.getString("key"), resultSet.getString("category"), key
-          });
+          resultSet.getString("key"), resultSet.getString("category"), key);
 
       final File file = File.fromIOFile(new java.io.File(path), project);
 
@@ -168,10 +167,14 @@ public class ProjectDAO {
       }
 
       final Rule rule = Rule.create(toolName, key);
-      log.trace("Issue ({}) @ {}:{} -> {}:{}",
-          new Object[]{toolName, path, lineNo, key, message});
+      log.trace("({}) @ {}:{} -> {}:{}", toolName, path, lineNo, key, message);
 
-      return new IssueRecord(file, lineNo, message, rule);
+      String severity = null;
+      if (CodePeerRulesDefinition.REPOSITORY_KEY.equals(toolName)) {
+        severity =CodePeerSeverity.valueOf(
+                category.toUpperCase()).getSonarSeverity();
+      }
+      return new IssueRecord(file, lineNo, message, rule, severity);
     }
   };
 

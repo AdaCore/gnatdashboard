@@ -1,19 +1,18 @@
-/****************************************************************************
- *                              Sonar Ada Plugin                            *
- *                                                                          *
- *                        Copyright (C) 2014, AdaCore                       *
- *                                                                          *
- * This is free software;  you can redistribute it  and/or modify it  under *
- * terms of the  GNU General Public License as published  by the Free Soft- *
- * ware  Foundation;  either version 3,  or (at your option) any later ver- *
- * sion.  This software is distributed in the hope  that it will be useful, *
- * but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- *
- * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public *
- * License for  more details.  You should have  received  a copy of the GNU *
- * General  Public  License  distributed  with  this  software;   see  file *
- * COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy *
- * of the license.                                                          *
- ****************************************************************************/
+/**
+ * Sonar Ada Plugin (GNATdashboard)
+ * Copyright (C) 2014-2015, AdaCore
+ *
+ * This is free software;  you can redistribute it  and/or modify it  under
+ * terms of the  GNU General Public License as published  by the Free Soft-
+ * ware  Foundation;  either version 3,  or (at your option) any later ver-
+ * sion.  This software is distributed in the hope  that it will be useful,
+ * but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN-
+ * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+ * License for  more details.  You should have  received  a copy of the GNU
+ * General  Public  License  distributed  with  this  software;   see  file
+ * COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
+ * of the license.
+ */
 
 package org.sonar.plugins.ada;
 
@@ -30,57 +29,61 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Project context. Contains among other things the configuration (eg. DB path).
+ * Project context.
+ *
+ * This is a class that is automatically provided to Sensors, Decorators,
+ * etc... through dependency injection.
+ * It contains among other things the configuration (eg. DB path) as well as
+ * the source mapping as defined by GNAThub during the sonar-config analysis
+ * step.
  */
 @Slf4j
 public class AdaProjectContext implements BatchExtension {
-  protected final Settings settings;
-  protected final Project project;
+    protected final Settings settings;
+    protected final Project project;
 
-  @Getter protected final Properties srcMapping;
-  @Getter protected final ProjectDAO dao;
+    @Getter protected final Properties srcMapping;
+    @Getter protected final ProjectDAO dao;
 
-  public AdaProjectContext(final Project project, final Settings settings) {
-    this.settings = settings;
-    this.project = project;
+    public AdaProjectContext(final Project project, final Settings settings) {
+        this.settings = settings;
+        this.project = project;
 
-    final String srcMappingUrl =
-        settings.getString(AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
-    this.srcMapping = new Properties();
+        final String srcMappingUrl =
+                settings.getString(AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
+        this.srcMapping = new Properties();
 
-    final String dbUrl = settings.getString(AdaPlugin.GNATHUB_DB_KEY);
-    if (dbUrl == null) {
-      log.warn("{} is not defined in the project properties file",
-          AdaPlugin.GNATHUB_DB_KEY);
+        final String dbUrl = settings.getString(AdaPlugin.GNATHUB_DB_KEY);
+        if (dbUrl == null) {
+            log.warn("{} is not defined in the project properties file",
+                    AdaPlugin.GNATHUB_DB_KEY);
+            this.dao = null;
+            return;
+        }
 
-      // There's no point in creating the DAO if we cannot locate the database
-      this.dao = null;
-      return;
+        try {
+            if (srcMappingUrl == null) {
+                log.warn("{} is not defined in the project properties file",
+                        AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
+                // At this point, this.srcMapping is an empty Property set:
+            } else {
+                this.srcMapping.load(new FileInputStream(srcMappingUrl));
+            }
+
+        } catch (FileNotFoundException why) {
+            log.error("Cannot load source file mapping", why);
+        } catch (IOException why) {
+            log.error("Error reading source file mapping", why);
+        }
+
+        this.dao = new ProjectDAO(project, dbUrl, this.srcMapping);
     }
 
-    try {
-      if (srcMappingUrl == null) {
-        log.warn("{} is not defined in the project properties file",
-            AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
-        // At this point, this.srcMapping is an empty Property set:
-      } else {
-        this.srcMapping.load(new FileInputStream(srcMappingUrl));
-      }
-
-    } catch (FileNotFoundException why) {
-      log.error("Cannot load source file mapping", why);
-    } catch (IOException why) {
-      log.error("Error reading source file mapping", why);
-    }
-
-    this.dao = new ProjectDAO(project, dbUrl, this.srcMapping);
-  }
-
-  /**
-   * @return {@code true} if we successfully loaded the DAO,
-   *    {@code false} otherwise.
-   */
-  public boolean isDAOLoaded() {
-    return this.dao != null;
+    /**
+     * @return {@code true} if we successfully loaded the DAO,
+     * {@code false} otherwise.
+     */
+    public boolean isDAOLoaded() {
+        return this.dao != null;
   }
 }
