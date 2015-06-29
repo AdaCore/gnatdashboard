@@ -1,25 +1,21 @@
-<?xml version="1.0" ?>
+<?xml version='1.0' encoding='UTF-8'?>
 <rules>
     <rule>
-        <key>gnatcov_stmt</key>
-        <configkey>gnatcov_stmt</configkey>
-        <name>GNATcoverage - statement violation</name>
+        <key>stmt</key>
+        <name>statement violation</name>
         <description>Statement has not been executed.</description>
-        <priority>MAJOR</priority>
+        <tag>gnatcoverage</tag>
     </rule>
     <rule>
-        <key>gnatcov_decision</key>
-        <configkey>gnatcov_decision</configkey>
-        <name>GNATcoverage - decision violation</name>
+        <key>decision</key>
+        <name>decision violation</name>
         <description>Some decision outcomes are not exercised.</description>
-        <priority>MAJOR</priority>
+        <tag>gnatcoverage</tag>
     </rule>
     <rule>
-        <key>gnatcov_mcdc</key>
-        <configkey>gnatcov_mcdc</configkey>
-        <name>GNATcoverage - MC/DC violation</name>
-        <description>Some conditions do not have an evaluation pair that proves
-            independent influence.</description>
-        <priority>MAJOR</priority>
+        <key>mcdc</key>
+        <name>MC/DC violation</name>
+        <description>Some conditions do not have an evaluation pair that proves independent influence.</description>
+        <tag>gnatcoverage</tag>
     </rule>
 </rules>
