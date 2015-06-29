@@ -1,0 +1,82 @@
+#! /usr/bin/env python
+
+# Sonar Ada Plugin (GNATdashboard)
+# Copyright (C) 2015, AdaCore
+#
+# This is free software;  you can redistribute it  and/or modify it  under
+# terms of the  GNU General Public License as published  by the Free Soft-
+# ware  Foundation;  either version 3,  or (at your option) any later ver-
+# sion.  This software is distributed in the hope  that it will be useful,
+# but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN-
+# TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+# License for  more details.  You should have  received  a copy of the GNU
+# General  Public  License  distributed  with  this  software;   see  file
+# COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
+# of the license.
+
+"""Generate :file:`default-profile.xml` containing the rules profile for Ada
+
+SonarQube's plugin `sonar-ada-plugin` loads the Ada rules profile by reading
+the XML file in which the rules are listed. This script generates such XML
+file from the various input rules definition XML files.
+"""
+
+import logging
+import os
+import sys
+
+from argparse import ArgumentParser, FileType
+from sonarqube.rule import (
+    RulesDefinition, RulesDefinitionXmlReader, RulesProfileXmlWriter
+)
+
+
+def __load_rules(rules_definition_files):
+    """Parse the input rules definition XML files
+
+    :param rules_definition_files: the files containing rules definitions
+    :type rules_definition_files: list[str]
+    :rtype: tuple[RulesDefinition]
+    """
+    reader = RulesDefinitionXmlReader()
+    rules_definitions = []
+    for filename in rules_definition_files:
+        repository_key, _ = os.path.splitext(os.path.basename(filename))
+        rules_definition = RulesDefinition(repository_key)
+        reader.load(rules_definition, filename)
+        rules_definitions.append(rules_definition)
+    return tuple(rules_definitions)
+
+
+def generate_ada_rules_profile():
+    """Parse the command line and generate the XML file"""
+
+    cmdline = ArgumentParser(description='Ada rules profile generator')
+    cmdline.add_argument('-l', '--language', default='Ada')
+    cmdline.add_argument('-n', '--name', default='Default Ada Profile')
+    cmdline.add_argument(
+        'rules', nargs='+', metavar='rules-definition',
+        help='one or more rules definition file(s)')
+    cmdline.add_argument(
+        '-o', '--output', default=sys.stdout, dest='outfile',
+        type=FileType('w'), help='Output file')
+    params = cmdline.parse_args()
+
+    writer = RulesProfileXmlWriter()
+    writer.write(
+        params.language, params.name, __load_rules(params.rules),
+        stream=params.outfile)
+    return 0
+
+
+if __name__ == '__main__':
+    logging.basicConfig(
+        level=logging.INFO,
+        format='[%(asctime)s] %(levelname)s - %(message)s',
+        handlers=[logging.StreamHandler()]
+    )
+
+    try:
+        sys.exit(generate_ada_rules_profile())
+    except KeyboardInterrupt:
+        sys.exit('Interrupted.')
