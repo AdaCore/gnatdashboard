@@ -95,8 +95,8 @@ def repositories():
     * :command:`global`
     * :command:`local`
 
-    These repositories correspond respectively to the ``[core]`` and ``[extra]``
-    directories from the GNAThub installation, and the
+    These repositories correspond respectively to the ``[core]`` and
+    ``[extra]`` directories from the GNAThub installation, and the
     :command:`Local_Repository` the user can specify in its project file.
 
     :return: the available repositories details
@@ -456,7 +456,7 @@ class Rule(object):
 class Message(object):
     """A Message object, representing one message in the database"""
 
-    def __init__(self, rule, message, category):
+    def __init__(self, rule, message, category=None):
         """Returns the message matching the given properties
 
         :param rule: the rule to which this message belongs
@@ -465,7 +465,7 @@ class Message(object):
             numeric value if the rule is of METRIC_KIND
         :type message: str
         :param category: the category to which this message belongs
-        :type category: GNAThub.Category
+        :type category: GNAThub.Category | None
         """
 
         return NotImplemented   # Implemented in Ada
@@ -603,7 +603,7 @@ except ImportError:
 
 import os
 
-from abc import ABCMeta, abstractmethod, abstractproperty
+from abc import ABCMeta, abstractmethod
 from subprocess import Popen, STDOUT
 
 EXEC_SUCCESS, EXEC_FAILURE, NOT_EXECUTED = range(3)
