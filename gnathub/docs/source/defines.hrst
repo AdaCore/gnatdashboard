@@ -23,3 +23,6 @@
 .. |SonarSource|    replace:: :program:`Sonar Source`
 
 .. |Squoring|       replace:: :program:`Squoring`
+
+.. |SonarQubeLTSVersion|        replace:: 4.5.4
+.. |SonarQubeStableVersion|     replace:: 5.1.x

@@ -9,7 +9,8 @@ extensible with plug-ins to add support for new languages and rules.
 
 The |SonarAdaPlugin| provided with |GNATdashboard| packages supports
 |SonarQube| platform from the LTS (long-term support) version (currently
-*3.7.4*) to the latest stable (currently *4.5.1*).
+|SonarQubeLTSVersion|) to the latest stable (currently
+|SonarQubeStableVersion|).
 
 How |GNAThub| integrates with |SonarQube|
 -----------------------------------------
@@ -43,9 +44,9 @@ analyzed (project name, project key, location of the :file:`gnathub.db` file,
 * the project-specific :file:`sonar-project.properties` file provided through the
   :option:`-Dproject.settings` command line argument of |SonarRunner|
 
-See `Installing and Configuring SonarQube Runner <http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner>`_
-and `Analyzing with SonarQube Runner <http://docs.codehaus.org/display/SONAR/Analyzing+with+SonarQube+Runner>`_
-for more information on |SonarRunner|.
+See `Installing and Configuring SonarQube Runner <http://bit.ly/1IpRwK4>`_
+and `Analyzing with SonarQube Runner <http://bit.ly/1FNkKfD>`_ for more
+information on |SonarRunner|.
 
 By default, |GNAThub| will create the |SonarRunner| configuration file, and
 launch the |SonarRunner| itself.

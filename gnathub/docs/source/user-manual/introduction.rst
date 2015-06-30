@@ -27,7 +27,7 @@ database.
 
 * Windows (32-bits)
 * Linux (32-bits and 64-bits)
-* OS X 10.9 (64-bits)
+* OS X 10.10 (64-bits)
 
 .. _ug-intro-prerequisites:
 
@@ -44,8 +44,20 @@ plug-in must be deployed.
 |SonarAdaPlugin| is supported for versions of |SonarQube| and |SonarRunner|
 supported by |SonarSource|:
 
-  * from |SonarQube| 3.7.4 LTS (Long Term Support) to |SonarQube| 4.5 Stable
+  * from |SonarQube| |SonarQubeLTSVersion| LTS (Long Term Support) to
+    |SonarQube| |SonarQubeStableVersion| stable
   * |SonarRunner| 2.4
+
+Upgrading from GNATdashboard 1.0
+--------------------------------
+
+Various breaking changes to the |SonarAdaPlugin| were mandatory to adapt to the
+new |SonarQube| plug-in API and support the latest versions of |SonarQube| (from
+LTS to stable). Is this regard, the |SonarAdaPlugin| is no longer compatible nor
+supported on versions of |SonarQube| prior to |SonarQubeLTSVersion|.
+
+Note that |GNATdashboard| 1.1.x is required for use with the latest version of
+the |SonarAdaPlugin|.
 
 Release
 -------

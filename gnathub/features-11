@@ -13,6 +13,11 @@ This date shows the implementation date of the feature.
 New features in 1.1
 -------------------
 
+NF-11-O521-005 Support for SonarQube 5.x (2015-06-30)
+
+  Sonar Ada Plugin now supports SonarQube versions from the 4.5.4 (LTS) to the
+  5.1.1 (current stable).
+
 NF-11-O115-012 GNATcoverage integration (2015-02-12)
 
   GNAThub is now able to parse GNATcoverage's reports and to import extracted
