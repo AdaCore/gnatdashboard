@@ -17,6 +17,7 @@
 package org.sonar.plugins.ada;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.sonar.api.batch.Decorator;
 import org.sonar.api.batch.DecoratorBarriers;
@@ -24,12 +25,13 @@ import org.sonar.api.batch.DecoratorContext;
 import org.sonar.api.batch.DependsUpon;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
-import org.sonar.api.issue.ProjectIssues;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
-import org.sonar.api.resources.Scopes;
+import org.sonar.api.resources.ResourceUtils;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.ada.codepeer.CodePeerRulesDefinition;
 import org.sonar.plugins.ada.gnat.GNATcheckRulesDefinition;
@@ -46,8 +48,8 @@ import org.sonar.plugins.ada.lang.Ada;
 @DependsUpon(DecoratorBarriers.ISSUES_TRACKED)
 public class AdaCountIssuesDecorator implements Decorator {
     private final FileSystem fs;
-    private final ProjectIssues issues;
     private final RulesProfile rules;
+    private final ResourcePerspectives perspectives;
 
     @Override
     public boolean shouldExecuteOnProject(final Project project) {
@@ -60,16 +62,18 @@ public class AdaCountIssuesDecorator implements Decorator {
     public void decorate(
             final Resource resource, final DecoratorContext context)
     {
-        if (!resource.getScope().equals(Scopes.PROJECT)) {
-            // This decorator counts the total CodePeer issues on a project.
-            // This is a no-op for any other kind of resource.
+        if (!ResourceUtils.isFile(resource)) {
+            // Only process files
             return;
         }
+
+        @NonNull final Issuable issuable =
+                perspectives.as(Issuable.class, resource);
 
         int codepeerCount = 0;
         int gnatcheckCount = 0;
 
-        for (final Issue issue : issues.issues()) {
+        for (final Issue issue : issuable.issues()) {
             if (isCodePeerRule(issue.ruleKey())) {
                 codepeerCount += 1;
             } else if (isGNATcheckRule(issue.ruleKey())) {

@@ -26,10 +26,15 @@ import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.File;
 import org.sonar.api.resources.Project;
+import org.sonar.api.resources.Resource;
 import org.sonar.plugins.ada.AdaMetrics;
 import org.sonar.plugins.ada.AdaProjectContext;
 import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.plugins.ada.persistence.MeasureRecord;
+import org.sonar.plugins.ada.persistence.ProjectDAO;
+import org.sonar.plugins.ada.utils.ResourceUtils;
+
+import java.util.Collection;
 
 @Slf4j
 @AllArgsConstructor
@@ -55,14 +60,25 @@ public class GNATmetricSensor implements Sensor {
             return;
         }
 
-        for (final MeasureRecord am : adaContext.getDao().getMeasuresByTool(NAME)) {
+        final ProjectDAO dao = adaContext.getDao();
+        final Collection<Resource> scope =
+                ResourceUtils.expandChildren(project, context);
+
+        for (final MeasureRecord am : dao.getMeasuresByTool(NAME)) {
+            // Check that the resource is from the correct project
+            // ??? Augment SQL query to filter out resources per project
             final File file = am.getFile();
+            if (!scope.contains(file)) {
+                log.trace("{}: not from project: {}",
+                        file.getLongName(), project.getName());
+                continue;
+            }
+
             log.debug("({}) {} = {}", file.getName(),
                     am.getMeasure().getMetricKey(), am.getMeasure().getValue());
 
             final Metric metric = AdaMetrics.Mapping.valueOf(
                     am.getMeasure().getMetricKey().toUpperCase()).getMetric();
-
             context.saveMeasure(file,
                 new Measure(metric, am.getMeasure().getValue()));
         }

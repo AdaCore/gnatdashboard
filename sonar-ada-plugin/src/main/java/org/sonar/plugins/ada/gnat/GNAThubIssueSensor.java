@@ -26,12 +26,19 @@ import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
 import org.sonar.api.resources.Project;
+import org.sonar.api.resources.Resource;
+import org.sonar.api.resources.Scopes;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.plugins.ada.AdaProjectContext;
 import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.plugins.ada.persistence.IssueRecord;
+import org.sonar.plugins.ada.utils.ResourceUtils;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Sensor that collect generic issues stored though GNAThub.
@@ -45,7 +52,7 @@ public class GNAThubIssueSensor implements Sensor {
     private final FileSystem fs;
     private final AdaProjectContext adaContext;
     private final RuleFinder ruleFinder;
-    private final ResourcePerspectives resourcePerspectives;
+    private final ResourcePerspectives perspective;
 
     @Override
     public boolean shouldExecuteOnProject(final Project project) {
@@ -63,29 +70,40 @@ public class GNAThubIssueSensor implements Sensor {
             return;
         }
 
+        final Collection<Resource> scope =
+                ResourceUtils.expandChildren(project, context);
+
         for (final IssueRecord ai : adaContext.getDao().getIssues()) {
+            // Check that the resource is from the correct project
+            // ??? Augment SQL query to filter out resources per project
+            final Resource resource = ai.getFile();
+
+            if (!scope.contains(resource)) {
+                log.trace("{}: not from project: {}",
+                        resource.getLongName(), project.getName());
+                continue;
+            }
+
+            final Issuable issuable = perspective.as(Issuable.class, resource);
+            if (issuable == null) {
+                log.warn("{}: no such file", ai.getFile().getLongName());
+                continue;
+            }
+
             // Locate the rule in the given rule repository
-            RuleQuery ruleQuery = RuleQuery.create()
+            final RuleQuery ruleQuery = RuleQuery.create()
                     .withRepositoryKey(ai.getRule().getRepositoryKey())
                     .withKey(ai.getRule().getKey());
-            Rule rule = ruleFinder.find(ruleQuery);
-
+            final Rule rule = ruleFinder.find(ruleQuery);
             if (rule == null) {
                 log.warn("could not find rule \"{}:{}\"",
                         ai.getRule().getRepositoryKey(), ai.getRule().getKey());
                 continue;
             }
+
             log.debug("({}:{}) '{}:{}' rule violation detected",
                 ai.getFile().getName(), ai.getLine(),
                 ai.getRule().getRepositoryKey(), rule.getKey());
-
-            final Issuable issuable =
-                resourcePerspectives.as(Issuable.class, ai.getFile());
-
-            if (issuable == null) {
-                log.warn("{}: no such file", ai.getFile().getLongName());
-                continue;
-            }
 
             final Issue issue = issuable.newIssueBuilder()
                     .ruleKey(rule.ruleKey())
@@ -93,9 +111,20 @@ public class GNAThubIssueSensor implements Sensor {
                     .message(ai.getMessage())
                     .severity(ai.getSeverity())
                     .build();
-
             issuable.addIssue(issue);
         }
+    }
+
+    /**
+     * Find the parent project.
+     *
+     * @param resource The resource.
+     * @return The parent project if any.
+     */
+    private Project resolveParentProject(@Nullable Resource resource) {
+        while (resource != null && !resource.getScope().equals(Scopes.PROJECT))
+            resource = resource.getParent();
+        return (Project) resource;
     }
 
     @Override
