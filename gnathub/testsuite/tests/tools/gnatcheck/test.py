@@ -30,8 +30,8 @@ class TestGNATcheckSupport(TestCase):
         self.assertListEqual(sorted(parser.sections()), SECTIONS)
 
         self.assertTrue(
-            parser.has_option(COMPILER_WARNING, 'Warnings'),
-            'missing "Warnings" entry')
+            parser.has_option(COMPILER_WARNING, 'warnings'),
+            'missing "warnings" entry')
         self.assertTrue(
-            parser.has_option(IMPROPER_RETURNS, "Improper_Returns"),
-            'missing "Improper_Returns" entry')
+            parser.has_option(IMPROPER_RETURNS, 'improper_returns'),
+            'missing "improper_returns" entry')

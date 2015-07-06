@@ -93,7 +93,7 @@ class TestCoverageExhaustiveExample(TestCase):
                         result.append(get_rec(
                             'coverage', content.column, '0'))
                         result.append(get_rec(
-                            'gnatcov_{}'.format(content.level),
+                            content.level,
                             content.column,
                             content.message
                         ))
