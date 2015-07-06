@@ -65,7 +65,6 @@ public class AdaProjectContext implements BatchExtension {
             if (srcMappingUrl == null) {
                 log.warn("{} is not defined in the project properties file",
                         AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
-                // At this point, this.srcMapping is an empty Property set:
             } else {
                 this.srcMapping.load(new FileInputStream(srcMappingUrl));
             }
