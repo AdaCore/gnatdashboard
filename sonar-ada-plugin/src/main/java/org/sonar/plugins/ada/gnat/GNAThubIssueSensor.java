@@ -115,18 +115,6 @@ public class GNAThubIssueSensor implements Sensor {
         }
     }
 
-    /**
-     * Find the parent project.
-     *
-     * @param resource The resource.
-     * @return The parent project if any.
-     */
-    private Project resolveParentProject(@Nullable Resource resource) {
-        while (resource != null && !resource.getScope().equals(Scopes.PROJECT))
-            resource = resource.getParent();
-        return (Project) resource;
-    }
-
     @Override
     public String toString() {
         return getClass().getSimpleName();
