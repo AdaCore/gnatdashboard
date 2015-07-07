@@ -5,6 +5,8 @@ MVN_OPTS       := -Xmx512m $(MAVEN_OPTS)
 MVN_BUILD_OPTS := -Dmaven.test.skip=true
 MVN_TEST_OPTS  :=
 
+.PHONY: build
+
 build:
 	MAVEN_OPTS="$(MVN_OPTS)" $(MVN) $(MVN_BUILD_OPTS) package
 
