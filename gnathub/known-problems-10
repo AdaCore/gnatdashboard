@@ -4,6 +4,15 @@ GNAThub 1.0 KNOWN PROBLEMS LIST
 
 Copyright (C) 2014-2015, AdaCore
 
+KP-10-O715-004 Parsing gnatcheck reports is slow
+
+  Problem:    The insertion of the gnatcheck messages into the gnathub
+              database can be very long.
+
+  Status:     Fixed in GNAThub 1.1.0 on 2015-07-16
+
+  Workaround: None.
+
 KP-10-O527-029 -X switches passed to gnathub not transferred to plugins
 
   Problem:    Amongst the -X switches passed to the gnathub driver,

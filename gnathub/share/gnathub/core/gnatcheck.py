@@ -51,6 +51,15 @@ class GNATcheck(GNAThub.Plugin):
         self.report = os.path.join(GNAThub.Project.object_dir(),
                                    '%s.out' % self.name)
 
+        # Map of rules (couple (name, rule): dict[str,Rule])
+        self.rules = {}
+
+        # Map of messages (couple (rule, message): dict[str,Message])
+        self.messages = {}
+
+        # Map of bulk data (couple (source, message_data): dict[str,list])
+        self.bulk_data = {}
+
     def __cmd_line(self):
         """Creates GNATcheck command line arguments list
 
@@ -134,6 +143,7 @@ class GNATcheck(GNAThub.Plugin):
             self.error(str(why))
 
         else:
+            self.__do_bulk_insert()
             self.exec_status = GNAThub.EXEC_SUCCESS
 
     def __parse_line(self, regex):
@@ -167,24 +177,49 @@ class GNATcheck(GNAThub.Plugin):
 
         self.__add_message(src, line, column, rule, message)
 
-    def __add_message(self, src, line, col_begin, rule_id, msg):
+    def __add_message(self, src, line, column, rule_id, msg):
         """Adds GNATcheck message to current session database
 
         :param src: Message source file.
         :type src: str
         :param line: Message line number.
         :type line: str
-        :param col_begin: Message column number.
-        :type col_begin: str
+        :param column: Message column number.
+        :type column: str
         :param rule_id: Message's rule identifier.
         :type rule_id: str
         :param msg: Description of the message.
         :type msg: str
         """
 
-        rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
-        message = GNAThub.Message(rule, msg)
-        resource = GNAThub.Resource.get(src)
+        # Cache the rules
+        if rule_id in self.rules:
+            rule = self.rules[rule_id]
+        else:
+            rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
+            self.rules[rule_id] = rule
 
-        if resource:
-            resource.add_message(message, int(line), int(col_begin))
+        # Cache the messages
+        if (rule, msg) in self.messages:
+            message = self.messages[(rule, msg)]
+        else:
+            message = GNAThub.Message(rule, msg)
+            self.messages[(rule, msg)] = message
+
+        # Add the message to the given resource
+        if src in self.bulk_data:
+            self.bulk_data[src].append(
+                [message, int(line), int(column), int(column)])
+        else:
+            self.bulk_data[src] = [
+                [message, int(line), int(column), int(column)]]
+
+    def __do_bulk_insert(self):
+        """Insert the gnatcheck messages in bulk on each resource"""
+
+        for src in self.bulk_data:
+            base = GNAThub.Project.source_file(os.path.basename(src))
+            resource = GNAThub.Resource.get(base)
+
+            if resource:
+                resource.add_messages(self.bulk_data[src])
