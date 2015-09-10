@@ -786,11 +786,11 @@ class Run(object):
 
         try:
             with open(self.output(), 'w') as output:
-                self.internal = Popen(argv, env=env, stdin=None, stdout=output,
+                self.inferior = Popen(argv, env=env, stdin=None, stdout=output,
                                       stderr=STDOUT, cwd=workdir)
 
                 Console.info('output redirected to %s' % output.name)
-                self.pid = self.internal.pid
+                self.pid = self.inferior.pid
                 self.wait()
 
         except OSError as why:
@@ -807,9 +807,9 @@ class Run(object):
             raise
 
     def wait(self):
-        """Waits until process ends and return its status"""
+        """Waits until process ends and returns its status"""
 
-        self.status = self.internal.wait()
+        self.status = self.inferior.wait()
         return self.status
 
     @staticmethod
