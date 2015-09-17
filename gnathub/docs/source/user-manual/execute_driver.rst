@@ -148,19 +148,21 @@ development team's workflow.
 
 The following tools are currently supported by the |GNAThub|'s core plugins:
 
-+--------------+-----------------+--------------------------------------------+
-| **Tool**     | **Plugin name** | **Description**                            |
-+--------------+-----------------+--------------------------------------------+
-| |GNATmetric| | gnatmetric      | Execute |GNATmetric| and parse the results |
-+--------------+-----------------+--------------------------------------------+
-| |GNATcheck|  | gnatcheck       | Execute |GNATcheck| and parse the results  |
-+--------------+-----------------+--------------------------------------------+
-| |GNATprove|  | gnatprove       | Execute |GNATprove| and parse the results  |
-+--------------+-----------------+--------------------------------------------+
-| |CodePeer|   | codepeer        | Execute |CodePeer| and parse the results   |
-+--------------+-----------------+--------------------------------------------+
-| |Gcov|       | gcov            | Parse the :file:`.gcov` files              |
-+--------------+-----------------+--------------------------------------------+
++----------------+-----------------+--------------------------------------------+
+| **Tool**       | **Plugin name** | **Description**                            |
++----------------+-----------------+--------------------------------------------+
+| |GNATmetric|   | gnatmetric      | Execute |GNATmetric| and parse the results |
++----------------+-----------------+--------------------------------------------+
+| |GNATcheck|    | gnatcheck       | Execute |GNATcheck| and parse the results  |
++----------------+-----------------+--------------------------------------------+
+| |GNATprove|    | gnatprove       | Execute |GNATprove| and parse the results  |
++----------------+-----------------+--------------------------------------------+
+| |CodePeer|     | codepeer        | Execute |CodePeer| and parse the results   |
++----------------+-----------------+--------------------------------------------+
+| |Gcov|         | gcov            | Parse the :file:`.gcov` files              |
++----------------+-----------------+--------------------------------------------+
+| |GNATcoverage| | gnatcoverage    | Parse the :file:`.xcov` files              |
++----------------+-----------------+--------------------------------------------+
 
 |GNAThub|'s additonal plug-ins
 ------------------------------
