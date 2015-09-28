@@ -69,8 +69,9 @@ project GNAThub is
    package Linker is
       case Build_Mode is
          when "Coverage" =>
-            for Default_Switches ("ada") use
-               Linker'Default_Switches ("ada") & ("--coverage");
+            for Default_Switches ("Ada") use
+               Linker'Default_Switches ("Ada") & ("--coverage");
+         when Others =>
       end case;
    end Linker;
 
