@@ -1,9 +1,7 @@
 """Check that all files have been created."""
 
-import os
-
 from unittest import TestCase
-from support import GNAThub, Project, Script
+from support import GNAThub, Project
 
 
 class TestSimpleExample(TestCase):
@@ -14,5 +12,5 @@ class TestSimpleExample(TestCase):
         self.gnathub = GNAThub(Project.simple(), plugins=['sonar-config'])
 
     def testDatabaseContent(self):
-        # Extract coverage information from the database
+        # Test the Python plug-in API
         self.gnathub.run(script='check-api.py')

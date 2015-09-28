@@ -260,6 +260,26 @@ class Project(object):
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
+    def target():
+        """Returns the target of the root project
+
+        :rtype: str
+        """
+
+        return NotImplemented   # Implemented in Ada
+
+    @staticmethod
+    def runtime():
+        """Returns the runtime of the root project
+
+        This concerns only the runtime for Ada.
+
+        :rtype: str
+        """
+
+        return NotImplemented   # Implemented in Ada
+
+    @staticmethod
     def path():
         """Returns the full path to the root project
 

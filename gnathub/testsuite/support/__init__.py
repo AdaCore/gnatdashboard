@@ -189,6 +189,12 @@ class GNAThub(object):
             assert isinstance(kwargs['plugins'], list), 'invalid "plugin" arg'
             argv.extend(['--plugins', ','.join(kwargs['plugins'])])
 
+        if kwargs.get('target', None):
+            argv.extend(['--target', kwargs['target']])
+
+        if kwargs.get('runtime', None):
+            argv.extend(['--RTS', kwargs['runtime']])
+
         if kwargs.get('script', None):
             argv.append('--exec')
 

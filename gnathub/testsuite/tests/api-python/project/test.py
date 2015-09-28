@@ -20,5 +20,10 @@ class TestSimpleExample(TestCase):
             'PROCESSORS': '2'
         }
 
-        # Extract coverage information from the database
+        # Test the Python API
         self.gnathub.run(script='check-api.py', scenario_vars=scenario)
+
+    def testCrossAttributes(self):
+        self.gnathub.run(script='check-cross-api.py',
+                         target='my-custom-target',
+                         runtime='my-custom-runtime')

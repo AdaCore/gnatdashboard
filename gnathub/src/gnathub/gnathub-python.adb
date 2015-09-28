@@ -65,6 +65,8 @@ package body GNAThub.Python is
 
    Project_Name_Method               : constant String := "name";
    Project_Path_Method               : constant String := "path";
+   Project_Target_Method             : constant String := "target";
+   Project_Runtime_Method            : constant String := "runtime";
    Project_Object_Dir_Method         : constant String := "object_dir";
    Project_Source_File_Method        : constant String := "source_file";
    Project_Source_Dirs_Method        : constant String := "source_dirs";
@@ -228,6 +230,20 @@ package body GNAThub.Python is
 
       Repository.Register_Command
         (Command       => Project_Path_Method,
+         Params        => No_Params,
+         Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Target_Method,
+         Params        => No_Params,
+         Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Runtime_Method,
          Params        => No_Params,
          Handler       => Project_Class_Accessors_Handler'Access,
          Class         => Project_Class,
@@ -483,6 +499,12 @@ package body GNAThub.Python is
 
       elsif Command = Project_Path_Method then
          Set_Return_Value (Data, Path.Display_Full_Name);
+
+      elsif Command = Project_Target_Method then
+         Set_Return_Value (Data, GNAThub.Project.Target);
+
+      elsif Command = Project_Runtime_Method then
+         Set_Return_Value (Data, GNAThub.Project.Runtime);
 
       elsif Command = Project_Object_Dir_Method then
          Set_Return_Value (Data, Object_Dir.Display_Full_Name);

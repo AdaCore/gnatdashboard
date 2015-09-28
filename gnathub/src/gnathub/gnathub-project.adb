@@ -25,6 +25,7 @@ with GNAT.Source_Info;
 
 with GNATCOLL.VFS_Utils;                  use GNATCOLL.VFS_Utils;
 
+with GNAThub.Configuration;
 with GNAThub.Database;                    use GNAThub.Database;
 with Orm;                                 use Orm;
 
@@ -117,6 +118,32 @@ package body GNAThub.Project is
    begin
       return Project_Tree.Root_Project.Project_Path;
    end Path;
+
+   ------------
+   -- Target --
+   ------------
+
+   function Target return String is
+   begin
+      if GNAThub.Configuration.Target /= "" then
+         return GNAThub.Configuration.Target;
+      end if;
+
+      return Project_Tree.Root_Project.Get_Target;
+   end Target;
+
+   -------------
+   -- Runtime --
+   -------------
+
+   function Runtime return String is
+   begin
+      if GNAThub.Configuration.Runtime /= "" then
+         return GNAThub.Configuration.Runtime;
+      end if;
+
+      return Project_Tree.Root_Project.Get_Runtime;
+   end Runtime;
 
    ------------------------
    -- Property_As_String --

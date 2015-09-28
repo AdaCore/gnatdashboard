@@ -91,6 +91,19 @@ package GNAThub.Project is
      with Pre => Initialized and then Loaded;
    --  Return the path of the root project
 
+   function Target return String
+     with Pre => Initialized and then Loaded;
+   --  Return the target configured, if any, otherwise the empty string.
+   --  Target defined on the command line (via --target=) overwrites the target
+   --  configured in the project, if any.
+
+   function Runtime return String
+     with Pre => Initialized and then Loaded;
+   --  Return the runtime configured, if any, otherwise the empty string.
+   --  Runtime defined on the command line (via --runtime=) overwrites the
+   --  runtime configured in the project, if any. This concerns only the
+   --  runtime for Ada.
+
    function Object_Dir return Virtual_File
      with Pre => Initialized and then Loaded;
    --  Return the object directory file

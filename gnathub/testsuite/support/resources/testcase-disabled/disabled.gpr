@@ -12,6 +12,9 @@ project Disabled is
 
    for Main use ("simple.adb");
 
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use "ravenscar-sfp-stm32f4";
+
    package Compiler is
       for Default_Switches ("Ada")
         use ("-ftest-coverage", "-fprofile-arcs", "-gnatws");

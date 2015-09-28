@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2014, AdaCore                     --
+--                     Copyright (C) 2013-2015, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -33,11 +33,13 @@ with GNAThub.Version;
 package body GNAThub.Configuration is
    Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
 
-   Config      : GNAT.Command_Line.Command_Line_Configuration;
+   Config : GNAT.Command_Line.Command_Line_Configuration;
 
    Project_Arg     : aliased GNAT.Strings.String_Access;
    Plugins_Arg     : aliased GNAT.Strings.String_Access;
    Script_Arg      : aliased GNAT.Strings.String_Access;
+   Target_Arg      : aliased GNAT.Strings.String_Access;
+   Runtime_Arg     : aliased GNAT.Strings.String_Access;
    Jobs_Arg        : aliased Integer;
    Version_Arg     : aliased Boolean;
    Quiet_Arg       : aliased Boolean;
@@ -81,6 +83,18 @@ package body GNAThub.Configuration is
          Output      => Script_Arg'Access,
          Long_Switch => "--exec=",
          Help        => "Python script to execute (implies --incremental)");
+
+      Define_Switch
+        (Config      => Config,
+         Output      => Target_Arg'Access,
+         Long_Switch => "--target=",
+         Help        => "Specify a target for cross platforms");
+
+      Define_Switch
+        (Config      => Config,
+         Output      => Runtime_Arg'Access,
+         Long_Switch => "--RTS=",
+         Help        => "Specify a runtime for the language Ada");
 
       Define_Switch
         (Config      => Config,
@@ -338,6 +352,34 @@ package body GNAThub.Configuration is
    begin
       return Script_Arg;
    end Script;
+
+   ------------
+   -- Target --
+   ------------
+
+   function Target return String is
+   begin
+      return Target_Arg.all;
+   end Target;
+
+   function Target return GNAT.Strings.String_Access is
+   begin
+      return Target_Arg;
+   end Target;
+
+   -------------
+   -- Runtime --
+   -------------
+
+   function Runtime return String is
+   begin
+      return Runtime_Arg.all;
+   end Runtime;
+
+   function Runtime return GNAT.Strings.String_Access is
+   begin
+      return Runtime_Arg;
+   end Runtime;
 
    ----------
    -- Jobs --

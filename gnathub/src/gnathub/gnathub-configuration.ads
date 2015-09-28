@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2014, AdaCore                     --
+--                     Copyright (C) 2013-2015, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -26,24 +26,27 @@ package GNAThub.Configuration is
    --  Initialize and parse the command line
 
    function Project return String;
+   function Project return GNAT.Strings.String_Access;
    --  Return the Project name given on the command line
 
-   function Project return GNAT.Strings.String_Access;
-   --  Same as Project but, return an access type
-
    function Plugins return String;
+   function Plugins return GNAT.Strings.String_Access;
    --  Return the list of plugins to execute, as a comma-separated string
 
-   function Plugins return GNAT.Strings.String_Access;
-   --  Same as Plugins, but return an access type
-
    function Script return String;
+   function Script return GNAT.Strings.String_Access;
    --  Return the Script to execute if given on the command line. Return the
    --  empty string otherwise.
 
-   function Script return GNAT.Strings.String_Access;
-   --  Same as Script, but return an access type, and null if not provided on
-   --  the command line.
+   function Target return String;
+   function Target return GNAT.Strings.String_Access;
+   --  Return the Target attribute if given on the command line. Return the
+   --  empty string otherwise.
+
+   function Runtime return String;
+   function Runtime return GNAT.Strings.String_Access;
+   --  Return the Runtime attribute if given on the command line. Return the
+   --  empty string otherwise. This concerns only the runtime for Ada.
 
    function Jobs return Natural;
    --  Return the number of jobs to execute in parallel

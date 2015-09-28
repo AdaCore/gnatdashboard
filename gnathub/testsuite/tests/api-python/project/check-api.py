@@ -28,6 +28,14 @@ assert GNAThub.Project.name() == 'Disabled', \
 assert relpath(GNAThub.Project.path()) == 'disabled.gpr', \
     '%s: unexpected project path' % GNAThub.Project.path()
 
+# GNAThub.Project.target (not overridden)
+assert GNAThub.Project.target() == 'arm-eabi', \
+    'unexpected project target: "%s"' % GNAThub.Project.target()
+
+# GNAThub.Project.runtime (not overridden)
+assert GNAThub.Project.runtime() == 'ravenscar-sfp-stm32f4', \
+    'unexpected project runtime "%s"' % GNAThub.Project.runtime()
+
 # GNAThub.Project.object_dir
 obj = GNAThub.Project.object_dir()
 assert relpath(obj) == 'obj', '%s: unexpected project path' % obj
