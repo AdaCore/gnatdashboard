@@ -226,7 +226,7 @@ class Console(object):
         """Prints a progress message
 
         Activated at default verbosity level. If ``new_line`` is
-        :command:`True`, then terminate the line with a :kbd:`\\n` character.
+        :command:`True`, then terminates the line with a :kbd:`\\n` character.
 
         :param current: the current value
         :type current: int

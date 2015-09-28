@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                       Copyright (C) 2014, AdaCore                        --
+--                     Copyright (C) 2014-2015, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -234,7 +234,7 @@ package body GNAThub.Python.Database is
          begin
             Q := SQL_Select
               (To_List ((0 => +D.Tools.Id, 1 => +D.Tools.Name)),
-               From  => D.Tools);
+               From => D.Tools);
             R.Fetch (DB, Q);
 
             while R.Has_Row loop
