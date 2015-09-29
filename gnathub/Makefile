@@ -2,7 +2,7 @@
 
 include config.mk
 
-.PHONY: docs
+.PHONY: docs $(GENERATED_DIR)/src/gnathub-version.ads
 
 all: gnathub-bin gnathub-pylib gnathub-plugins
 
