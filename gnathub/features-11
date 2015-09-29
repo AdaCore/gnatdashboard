@@ -2,7 +2,7 @@
 GNAThub 1.1 NEW FEATURES LIST
 =============================
 
-Copyright (C) 2014, AdaCore
+Copyright (C) 2014-2015, AdaCore
 
 This file contains a list of new features introduced in GNAThub. A full
 description of all GNAThub features can be found in the GNAThub documentation.
@@ -12,6 +12,12 @@ This date shows the implementation date of the feature.
 
 New features in 1.1
 -------------------
+
+NF-11-O909-050 Support for cross toolchains (2015-09-29)
+
+  GNAThub now supports cross toolchains defined in the project file as well as
+  provides two new command line switches --target and --RTS to specify an
+  alternate toolchain.
 
 NF-11-O521-005 Support for SonarQube 5.x (2015-06-30)
 

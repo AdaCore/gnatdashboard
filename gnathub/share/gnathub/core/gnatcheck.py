@@ -67,9 +67,15 @@ class GNATcheck(GNAThub.Plugin):
         :rtype: list[str]
         """
 
-        return ['gnatcheck', '--show-rule', '-o', self.report,
-                '-P', GNAThub.Project.path(), '-U',
-                '-j%d' % GNAThub.jobs()] + GNAThub.Project.scenario_switches()
+        cmd_line = [
+            'gnatcheck', '--show-rule', '-o', self.report,
+            '-P', GNAThub.Project.path(), '-U', '-j%d' % GNAThub.jobs()
+        ] + GNAThub.Project.scenario_switches()
+        if GNAThub.Project.target():
+            cmd_line[0] = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
+        if GNAThub.Project.runtime():
+            cmd_line.extend(('--RTS', GNAThub.Project.runtime()))
+        return cmd_line
 
     def execute(self):
         """Executes GNATcheck
