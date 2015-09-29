@@ -24,6 +24,8 @@ class TestSimpleExample(TestCase):
         self.gnathub.run(script='check-api.py', scenario_vars=scenario)
 
     def testCrossAttributes(self):
-        self.gnathub.run(script='check-cross-api.py',
-                         target='my-custom-target',
-                         runtime='my-custom-runtime')
+        self.gnathub.run(script='check-cross-api.py')
+        self.gnathub.run(
+            script='check-cross-api-override.py',
+            target='my-custom-target', runtime='my-custom-runtime'
+        )

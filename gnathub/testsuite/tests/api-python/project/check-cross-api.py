@@ -2,11 +2,10 @@
 
 import GNAThub
 
+# GNAThub.Project.target (not overridden)
+assert GNAThub.Project.target() == 'arm-eabi', \
+    'unexpected project target: "%s"' % GNAThub.Project.target()
 
-# GNAThub.Project.target (overridden by switches)
-assert GNAThub.Project.target() == 'my-custom-target', \
-    '%s: unexpected project target' % GNAThub.Project.target()
-
-# GNAThub.Project.runtime (overridden by switches)
-assert GNAThub.Project.runtime() == 'my-custom-runtime', \
-    '%s: unexpected project runtime' % GNAThub.Project.runtime()
+# GNAThub.Project.runtime (not overridden)
+assert GNAThub.Project.runtime() == 'ravenscar-sfp-stm32f4', \
+    'unexpected project runtime "%s"' % GNAThub.Project.runtime()
