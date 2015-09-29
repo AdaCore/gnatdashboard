@@ -1,7 +1,7 @@
 """Check that all files have been created."""
 
 from unittest import TestCase
-from support import GNAThub, Project
+from support.mock import GNAThub, Project
 
 
 class TestSimpleExample(TestCase):

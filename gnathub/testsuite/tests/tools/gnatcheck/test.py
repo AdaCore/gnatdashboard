@@ -5,7 +5,7 @@ import os
 from ConfigParser import SafeConfigParser
 
 from unittest import TestCase
-from support import GNAThub, Project, Script
+from support.mock import GNAThub, Project, Script
 
 
 COMPILER_WARNING = 'f.adb 10:7'

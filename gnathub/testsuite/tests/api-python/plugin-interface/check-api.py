@@ -1,6 +1,7 @@
 """Check the integrity of the GNAThub Python module."""
 
 import GNAThub
+from support.asserts import assertEqual, assertRaises
 
 
 # Global variable supposedly updated by MyCustomPlugin
@@ -28,29 +29,20 @@ class MyCustomPlugin(GNAThub.Plugin):
 
 
 # GNAThub.Plugin interface not implemented
-try:
-    MyIncompletePlugin()
-    assert False, 'MyIncompletePlugin is not expected to be instantiable'
-except TypeError:
+with assertRaises(TypeError):
     # A type error occurs when the EXECUTE method is not overridden
-    pass
-
+    MyIncompletePlugin()
 
 PLUGIN = MyCustomPlugin()
 
 # GNAThub.Plugin.name
-assert PLUGIN.name == 'My Custom Plugin', \
-    'unexpected plugin name "%s"' % PLUGIN.name
+assertEqual(PLUGIN.name, 'My Custom Plugin')
 
 # GNAThub.Plugin.exec_status (getter)
-assert PLUGIN.exec_status == GNAThub.NOT_EXECUTED, \
-    'unexpected plugin execution status "%s"' % repr(PLUGIN.exec_status)
+assertEqual(PLUGIN.exec_status, GNAThub.NOT_EXECUTED)
 
 # GNAThub.Plugin.exec_status (setter)
-try:
+with assertRaises(GNAThub.Error):
     PLUGIN.exec_status = 'invalid value'
-    assert False, 'exec_status affectation should have raised an exception'
-except GNAThub.Error:
-    pass
 
 PLUGIN.exec_status = GNAThub.EXEC_SUCCESS

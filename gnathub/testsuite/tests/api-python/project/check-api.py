@@ -5,94 +5,82 @@ import GNAThub
 import os
 import sys
 
+from support.asserts import assertEqual, assertIn, assertTrue
+
 # The base directory for PATH comparisons
 BASEDIR = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 
 def relpath(path):
-    """Returns the relative path to :param:`path` from BASEDIR.
+    """Return the relative path to :param:`path` from BASEDIR.
 
     :param str path: The full path.
     :returns: str
-
     """
 
     return os.path.relpath(path, BASEDIR)
 
 
 # GNAThub.Project.name
-assert GNAThub.Project.name() == 'Disabled', \
-    '%s: unexpected project name' % GNAThub.Project.name()
+assertEqual(GNAThub.Project.name(), 'Disabled')
 
 # GNAThub.Project.path
-assert relpath(GNAThub.Project.path()) == 'disabled.gpr', \
-    '%s: unexpected project path' % GNAThub.Project.path()
+assertEqual(relpath(GNAThub.Project.path()), 'disabled.gpr')
 
 # GNAThub.Project.object_dir
-obj = GNAThub.Project.object_dir()
-assert relpath(obj) == 'obj', '%s: unexpected project path' % obj
-assert os.path.isdir(obj), '%s: no such directory' % obj
+assertEqual(relpath(GNAThub.Project.object_dir()), 'obj')
+assertTrue(os.path.isdir(GNAThub.Project.object_dir()))
 
+# GNAThub.Project.source_dirs
 source_dirs = GNAThub.Project.source_dirs()
-assert len(source_dirs) == 1, \
-    'unexpected number of projects: expected 1, got %d' % len(source_dirs)
-assert 'Disabled' in source_dirs, 'missing project "Disabled"'
-assert relpath(source_dirs['Disabled'][0]) == 'src', \
-    '$s: unexpected source dirs, expected "src"' % source_dirs['Disabled'][0]
+assertEqual(len(source_dirs), 1)
+assertIn('Disabled', source_dirs)
+assertEqual(relpath(source_dirs['Disabled'][0]), 'src')
 
 # GNAThub.Project.source_file
-source = GNAThub.Project.source_file('simple.adb')
+filename = GNAThub.Project.source_file('simple.adb')
 expected = 'src%ssimple.adb' % os.path.sep
-assert relpath(source) == expected, '%s: unexpected source file' % source
-assert os.path.isfile(source), '%s: no such file' % source
+assertEqual(relpath(filename), expected)
+assertTrue(os.path.isfile(filename))
 
 # GNAThub.Project.property_as_string
 project_name = GNAThub.Project.property_as_string('Project_Name')
-assert project_name == 'My_Disabled_Project', \
-    '%s: unexpected property value for Project_Name' % project_name
+assertEqual(project_name, 'My_Disabled_Project')
 
 project_key = GNAThub.Project.property_as_string('Project_Key')
-assert project_key == 'Disabled :: Core', \
-    '%s: unexpected property value for Project_Key' % project_key
+assertEqual(project_key, 'Disabled :: Core')
 
 project_version = GNAThub.Project.property_as_string('Project_Version')
-assert project_version == '1.2.1b', \
-    '%s: unexpected property value for Project_Version' % project_version
+assertEqual(project_version, '1.2.1b')
 
 encoding = GNAThub.Project.property_as_string('Source_Encoding')
-assert encoding == 'My_Custom_Encoding', \
-    '%s: unexpected property value for Encoding' % project_version
+assertEqual(encoding, 'My_Custom_Encoding')
 
 # GNAThub.Project.property_as_list
 plugins = GNAThub.Project.property_as_list('Plugins')
-assert 'sonar-config' in plugins, 'missing "sonar-config" plugin in Plugins'
+assertIn('sonar-config', plugins)
 
 local_repo = GNAThub.Project.property_as_string('Local_Repository')
-assert relpath(local_repo) == 'local_repo', \
-    '$s: unexpected local repository, expected "local_repo"' % local_repo
+assertEqual(relpath(local_repo), 'local_repo')
 
 main = GNAThub.Project.property_as_string('Main', package='')
-assert main == 'simple.adb'
+assertEqual(main, 'simple.adb')
 
 plugins_off = GNAThub.Project.property_as_list('Plugins_Off')
-assert 'gnatcheck' in plugins_off, 'missing "gnatcheck" plugin in Plugins_Off'
-assert 'gnatmetric' in plugins_off, \
-    'missing "gnatmetric" plugin in Plugins_Off'
-assert 'gcov' in plugins_off, 'missing "gcov" plugin in Plugins_Off'
-assert 'codepeer' in plugins_off, 'missing "codepeer" plugin in Plugins_Off'
-assert 'gnatprove' in plugins_off, 'missing "gnatprove" plugin in Plugins_Off'
+assertIn('gnatcheck', plugins_off)
+assertIn('gnatmetric', plugins_off)
+assertIn('gcov', plugins_off)
+assertIn('codepeer', plugins_off)
+assertIn('gnatprove', plugins_off)
 
+# GNAThub.Project.scenaria_switches
 scenario_vars = GNAThub.Project.scenario_switches()
-expected_vars = [
+expected_vars = (
     '-XBUILD_MODE=Production',
     '-XVERSION=test-0.0.0',
     '-XBUILD_DIR=/some/user/workspace/project/build/dir',
     '-XPROCESSORS=2'
-]
-nb_scenario_vars = len(scenario_vars)
-nb_expected_vars = len(expected_vars)
-assert nb_scenario_vars == nb_expected_vars, \
-    ('unexpected number of Scenario_Switches (%d != %d) (%s != %s)' %
-     (nb_scenario_vars, nb_expected_vars, scenario_vars, expected_vars))
+)
+assertEqual(len(scenario_vars), len(expected_vars))
 for var in expected_vars:
-    assert var in scenario_vars, 'missing "%s" scenario switch' % var
+    assertIn(var, scenario_vars)

@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-"""Run a testcase from the GNATdashboard testsuite
+"""Run a testcase from the GNATdashboard testsuite.
 
 Usage: run-test [options] testcase-directory
 """
@@ -14,10 +14,11 @@ from gnatpython.fileutils import split_file
 from gnatpython.main import Main
 from gnatpython.testdriver import TestRunner, add_run_test_options
 
-from support import TestEncoder
+from support.encoding import TestEncoder
 
 
 class GNAThubTestRunner(TestRunner):
+
     """Test runner for a GNAThub test."""
 
     UNITTEST_PATTERN = 'test*.py'

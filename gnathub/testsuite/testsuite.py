@@ -29,7 +29,7 @@ from pygments.styles import get_style_by_name
 from pygments.token import Token as Token
 
 from support import const
-from support import TestEncoder
+from support.encoding import TestEncoder
 
 
 # Directory from where this script is invoked

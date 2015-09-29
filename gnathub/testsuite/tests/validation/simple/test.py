@@ -3,7 +3,7 @@
 import os
 
 from unittest import TestCase
-from support import GNAThub, Project
+from support.mock import GNAThub, Project
 
 
 DIRS = [
