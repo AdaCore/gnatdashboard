@@ -13,6 +13,11 @@ This date shows the implementation date of the feature.
 New features in 1.1
 -------------------
 
+NF-11-O203-037 Display execution summary (2015-10-13)
+
+  GNAThub now displays a execution summary once all plug-ins have been executed
+  to spot failure more easily.
+
 NF-11-O909-050 Support for cross toolchains (2015-09-29)
 
   GNAThub now supports cross toolchains defined in the project file as well as

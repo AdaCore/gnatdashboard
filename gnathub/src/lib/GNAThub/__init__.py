@@ -600,6 +600,62 @@ class Error(Exception):
     pass
 
 
+def _extend(cls, funcname):
+    def decorator(func):
+        setattr(cls, funcname, staticmethod(func))
+    return decorator
+
+
+@_extend(Console, '_status')
+def _console_status(message, status, columns):
+    """Display a status message.
+
+    Execution step ............................... [status]
+
+    :param message: the message to display
+    :type message: str
+    :param status: the status to display
+    :type status: str
+    :param columns: optional maximum column to use for display
+    :type columns: int
+    """
+    width = columns - len(status) - 4
+    if len(message) < width:
+        Console.info('{} {} [{}]'.format(
+            message, '.' * (width - len(message)), status
+        ))
+    else:
+        Console.info('{} [{}]'.format(message, status))
+
+
+@_extend(Console, 'ok')
+def _console_ok(message, columns=79):
+    """Display an OK message.
+
+    Execution step ............................... [PASSED]
+
+    :param message: the message to display
+    :type message: str
+    :param columns: optional maximum column to use for display (default to 79)
+    :type columns: int
+    """
+    Console._status(message, 'PASSED', columns)
+
+
+@_extend(Console, 'ko')
+def _console_ko(message, columns=79):
+    """Display a KO message.
+
+    Execution step ............................... [FAILED]
+
+    :param message: the message to display
+    :type message: str
+    :param columns: optional maximum column to use for display (default to 79)
+    :type columns: int
+    """
+    Console._status(message, 'FAILED', columns)
+
+
 class Plugin(object):
 
     """GNAThub plugin interface.

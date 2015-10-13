@@ -18,6 +18,7 @@ spawning the main event loop.
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
+import collections
 import inspect
 import logging
 import os
@@ -359,24 +360,36 @@ class PluginRunner(object):
     def mainloop(self):
         """Plugin main loop."""
         LOG.info('load (%d) plugins', len(self.plugins))
+        succeed = collections.OrderedDict()
 
+        # Early exit if no plug-in are scheduled to be run
         if not self.plugins:
             PluginRunner.info('nothing to do')
             return
 
-        for plugin in self.plugins:
-            LOG.info('  + %s', plugin.name)
-
-        for plugin in self.plugins:
+        # Execute each plug-in in order
+        for cls in self.plugins:
             try:
-                PluginRunner.execute(plugin())
+                # Create a new instance
+                plugin = cls()
 
+                # Execute the plug-in
+                succeed[plugin.name] = False
+                PluginRunner.execute(plugin)
+                if plugin.exec_status == GNAThub.EXEC_SUCCESS:
+                    succeed[plugin.name] = True
             except KeyboardInterrupt:
                 Console.info('%sinterrupt caught...' % os.linesep)
-
             except Exception as why:
                 LOG.exception('plug-in execution failed')
                 PluginRunner.error('unexpected error: %s' % why)
+
+        # Display a summary
+        for plugin, success in succeed.items():
+            if success:
+                Console.ok(plugin)
+            else:
+                Console.ko(plugin)
 
 
 # Script entry point
