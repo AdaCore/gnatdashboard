@@ -8,7 +8,10 @@ run: build
 
 gcov: run
 	cd obj && \
-	gcov input instructions screen_output sdc stack tokens values-operations values
+	gcov \
+		input instructions screen_output sdc stack \
+		tokens values-operations values            \
+		> /dev/null
 
 gnathub:
 	gnathub -Psdc
