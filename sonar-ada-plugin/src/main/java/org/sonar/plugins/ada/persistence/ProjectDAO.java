@@ -115,7 +115,7 @@ public class ProjectDAO {
           measure.setValue(value);
           log.trace("Measure @ {}: {} = {}", new Object[]{path, key, value});
 
-          return new MeasureRecord(file, measure);
+          return new MeasureRecord(path, file, measure);
         }
       };
 
@@ -174,7 +174,7 @@ public class ProjectDAO {
         severity =CodePeerSeverity.valueOf(
                 category.toUpperCase()).getSonarSeverity();
       }
-      return new IssueRecord(file, lineNo, message, rule, severity);
+      return new IssueRecord(path, file, lineNo, message, rule, severity);
     }
   };
 

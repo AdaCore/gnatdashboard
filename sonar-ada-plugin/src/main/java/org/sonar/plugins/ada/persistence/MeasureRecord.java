@@ -22,6 +22,7 @@ import org.sonar.api.resources.File;
 
 @Value
 public class MeasureRecord {
-  File file;
-  Measure measure;
+    String path;
+    File file;
+    Measure measure;
 }

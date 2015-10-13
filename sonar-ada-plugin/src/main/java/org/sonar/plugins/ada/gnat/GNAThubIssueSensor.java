@@ -99,7 +99,7 @@ public class GNAThubIssueSensor implements Sensor {
             }
 
             log.debug("({}:{}) '{}:{}' rule violation detected",
-                ai.getFile().getName(), ai.getLine(),
+                ai.getPath(), ai.getLine(),
                 ai.getRule().getRepositoryKey(), rule.getKey());
 
             final Issue issue = issuable.newIssueBuilder()

@@ -22,6 +22,7 @@ import org.sonar.api.rules.Rule;
 
 @Value
 public class IssueRecord {
+    String path;
     File file;
     int line;
     String message;

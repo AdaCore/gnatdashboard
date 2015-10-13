@@ -74,7 +74,7 @@ public class GNATmetricSensor implements Sensor {
                 continue;
             }
 
-            log.debug("({}) {} = {}", file.getName(),
+            log.debug("({}) {} = {}", am.getPath(),
                     am.getMeasure().getMetricKey(), am.getMeasure().getValue());
 
             final Metric metric = AdaMetrics.Mapping.valueOf(
