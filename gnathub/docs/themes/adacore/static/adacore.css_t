@@ -289,7 +289,7 @@ div.note, div.seealso, div.warning, div.admonition-todo, p.deprecated, div.cauti
 }
 
 div.highlight{
-    background-color: white;
+    background-color: transparent;
 }
 
 div.note {
@@ -324,10 +324,9 @@ pre {
     margin-left: 10px;
     background-color: #E6F0E7;
     color: #222;
-    border: 1px solid #ABBF98;
-    border-width: 0 4px;
+    border-left: 4px solid #ABBF98;
     font-size: 1.1em;
-    border-radius: 8px;
+    border-radius: 3px;
 }
 
 tt {
