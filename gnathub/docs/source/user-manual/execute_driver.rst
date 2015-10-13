@@ -15,13 +15,40 @@ provide a |GNAT| project file (:file:`.gpr`)::
     $ gnathub -P my_project.gpr
 
 This executes each |GNAThub| plug-in for the project, collects the results
-of each tool, and stores those results in its local |SQLite| database.
+of each tool, and stores those results in its local, temporary,  |SQLite|
+database.
 
 |SQLite| is a software library implementing a self-contained, serverless,
 zero-configuration, transactional SQL database engine. This makes it a
-perfect fit for storing and organizing the results of the various analysis
-and making them available to a wide range of code quality management
+perfect fit for storing and organizing the results of a single analysis and
+making those results available to a wide range of code quality management
 platforms.
+
+.. note::
+
+  It is best to consider the |SQLite| database a blackbox.
+
+  This local, temporary, database is intented to be manipulated directly by
+  |GNAThub| to store its data, and the recommended way to query data is by using
+  the Python API exposed by the tool.
+
+  |GNAThub| will attempt to **reset** the entire database each time it is
+  executed, unless given the switch :command:`--incremental` that is designed to
+  aggregate the results of different tools into the same database for cases
+  where multiple passes cannot be avoided, *eg.*::
+
+      $ gnathub -P project --plugins gnatmetric
+      $ gnathub -P project --plugins gnatcheck,gnatcoverage --incremental
+      $ gnathub -P project --plugins sonar-config,sonar-runner --incremental
+
+  It is important to note that |GNAThub| assumes the following properties on the
+  |SQLite| database:
+
+    * It must contain at most one set of results per tool;
+    * It must contain results for one and only one project and set of sources;
+    * It must not be used for persistence (dedicated application such as
+      |SonarQube| are intended for this use);
+    * Its schema can change from a version to another.
 
 Outputs
 -------
@@ -31,10 +58,10 @@ There are two kinds of log file:
   1. tools output
   2. GNAThub execution log
 
-(1) Files located in :file:`<object_dir>/gnathub/logs` are output of tools, *e.g.*
-:file:`codepeer.log` contains the output of the latest |CodePeer| run (provided
-that it was invoked from |GNAThub|). These files are generated if you invoke the
-tool using the API function :meth:`GNAThub.Run()`.
+(1) Files located in :file:`<object_dir>/gnathub/logs` are output of tools,
+*e.g.* :file:`codepeer.log` contains the output of the latest |CodePeer| run
+(provided that it was invoked from |GNAThub|). These files are generated if you
+invoke the tool using the API function :meth:`GNAThub.Run()`.
 
 (2) GNAThub uses the same log mechanism as |GPS|: the output behavior can be
 customized through a configuration file. See the `GNATcoll Traces documentation
