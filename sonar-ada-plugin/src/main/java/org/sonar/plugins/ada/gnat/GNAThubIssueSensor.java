@@ -27,7 +27,6 @@ import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
-import org.sonar.api.resources.Scopes;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
@@ -36,8 +35,6 @@ import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.plugins.ada.persistence.IssueRecord;
 import org.sonar.plugins.ada.utils.ResourceUtils;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**

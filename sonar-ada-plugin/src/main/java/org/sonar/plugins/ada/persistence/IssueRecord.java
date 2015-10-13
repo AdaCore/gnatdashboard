@@ -18,7 +18,6 @@ package org.sonar.plugins.ada.persistence;
 
 import lombok.Value;
 import org.sonar.api.resources.File;
-import org.sonar.api.rule.Severity;
 import org.sonar.api.rules.Rule;
 
 @Value
