@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-
-"""GNATdashboard documentation build configuration file, created by
-sphinx-quickstart on Mon Mar 10 17:49:10 2014.
+"""GNATdashboard documentation build configuration file.
 
 This file is execfile()d with the current directory set to its containing
 dir.
@@ -13,6 +10,7 @@ All configuration values have a default; values that are commented out
 serve to show the default.
 """
 
+import datetime
 import os
 import re
 import sys
@@ -62,7 +60,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'GNATdashboard'
-copyright = u'2014, AdaCore'
+copyright = u'2014-{}, AdaCore'.format(datetime.date.today().year)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
