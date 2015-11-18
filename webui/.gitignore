@@ -1,0 +1,7 @@
+/build/
+/dist/
+/typings/
+/node_modules/
+/src/*.js
+/src/*.css
+/src/maps/

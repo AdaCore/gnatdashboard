@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "outDir": "build",
+        "target": "ES5"
+    },
+    "exclude": [
+        "node_modules",
+        ".git"
+    ],
+    "files": [
+        "src/**/*.ts"
+    ]
+}

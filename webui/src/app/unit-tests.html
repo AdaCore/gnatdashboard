@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>GNATdashboard WebUI Unit Tests</title>
+
+    <link rel="shortcut icon" type="image/png" href="jasmine/lib/jasmine-2.0.0/jasmine_favicon.png">
+    <link rel="stylesheet" href="../node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
+
+    <script type="text/javascript" src="../node_modules/systemjs/dist/system.src.js"></script>
+    <script type="text/javascript" src="../node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+    <script type="text/javascript" src="../node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+    <script type="text/javascript" src="../node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
+</head>
+<body>
+    <noscript>What are you doing with JavaScript disabled?!</noscript>
+
+    <!--
+        Hack Jasmine boot sequence to ensure that all tests are completely
+        loaded before executing them.
+    -->
+    <script>
+        // NOTE: Jasmine executes loaded tests via window.onload, however the
+        // async nature of System.import breaks the guarantee that all test
+        // cases are loaded when Jasmine starts. Defer window.onload to prevent
+        // an incomplete tests run.
+        const jasmineStart = window.onload;
+        // The original window.onload is saved and called by Jasmine prior to
+        // tests execution.
+        window.onload = () => {};
+
+        // Configure SystemJS to automatically load .js extensions.
+        System.config({
+            packages: { 'app': { defaultExtension: 'js' } }
+        });
+        // Wrap all test cases into a promise to ensure that all tests are
+        // loaded before running the test suite.
+        Promise.all([
+            System.import('app/tn-utils.spec'),
+            System.import('app/gerrit-utils.spec')
+        ]).then(jasmineStart).catch(console.error.bind(console));
+    </script>
+</body>
+</html>

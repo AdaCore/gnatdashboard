@@ -60,3 +60,6 @@ features-10        no-precommit-check
 features-11        no-precommit-check
 known-problems-09  no-precommit-check
 known-problems-10  no-precommit-check
+# Webui JS files
+webui/gulpfile.js no-precommit-check
+webui/karma.conf.js no-precommit-check

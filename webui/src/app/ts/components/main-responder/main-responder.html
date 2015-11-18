@@ -1,0 +1,16 @@
+<h1>Welcome to GNATdashboard WebUI</h1>
+<header class="top" role="header">
+<div class="container">
+    <a href="#" class="navbar-brand pull-left">GNATdashboard</a>
+    <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="glyphicon glyphicon-align-justify"></span>
+    </button>
+    <nav class="navbar-collapse collapse" role="navigation">
+        <ul class="navbar-nav nav">
+            <li><a [router-link]="['./Home']">Home</a></li>
+            <li><a [router-link]="['./About']">About</a></li>
+        </ul>
+    </nav>
+</div>
+</header>
+<router-outlet></router-outlet>
