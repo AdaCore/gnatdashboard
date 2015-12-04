@@ -1,8 +1,8 @@
-# Makefile for GNAThub
+# Makefile for GNAThub, the GNATdashboard driver.
 
 include config.mk
 
-.PHONY: docs $(GENERATED_DIR)/src/gnathub-version.ads
+.PHONY: $(GENERATED_DIR)/src/gnathub-version.ads
 
 all: gnathub-bin gnathub-pylib gnathub-plugins
 
@@ -35,24 +35,6 @@ gnathub-plugins:
 	@echo ":: Deploying GNAThub's core plug-ins"
 	(cd $(TOP)/share/gnathub && tar cf - core extras sql) | \
 		(cd $(BUILD_DIR)/share/gnathub && tar xf -)
-
-gnathub-api-docs: docs/Makefile
-	$(MAKE) -C docs api-doc
-	$(MAKE) -C docs plugins-doc
-
-# Generate both HTML and PDF documents in BUILD_DIR and install them in DOCS_DIR
-docs: gnathub-api-docs docs-html docs-pdf
-	$(MKDIR) $(DOCS_DIR)/pdf $(DOCS_DIR)/html
-	$(CP) $(BUILD_DIR)/docs/latex/GNATdashboard.pdf $(DOCS_DIR)/pdf
-	$(RSYNC) $(BUILD_DIR)/docs/html $(DOCS_DIR)
-
-# Generate the HTML documentation in BUILD_DIR
-docs-html: gnathub-api-docs
-	$(MAKE) -C docs html
-
-# Generate the PDF documentation in BUILD_DIR
-docs-pdf: gnathub-api-docs
-	$(MAKE) -C docs latexpdf
 
 create-db:
 	@echo ":: Generating the GNAThub's database"
@@ -91,20 +73,13 @@ analyse-gcov:
 	find . -name '*.gcda' > $(BUILD_DIR)/obj/gcov_input.txt
 	cd $(BUILD_DIR)/obj && gcov @gcov_input.txt > gcov_run.log
 
-package: all
-	$(RMDIR) $(PKG_DIR)
+install: all
 	$(MKDIR) $(PKG_DIR)
-	(tar cf - COPYING3) | (cd $(PKG_DIR) && tar xf -)
 	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
-	$(MKDIR) $(PKG_DIR)/share/doc
-	-(cd $(TOP)/share/doc && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/doc && tar xf -)
 	$(MKDIR) $(PKG_DIR)/share/examples
 	(cd $(TOP)/share/examples && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/examples && tar xf -)
 	find $(PKG_DIR)/share/gnathub/core -name '*.pyc' -delete
 	find $(PKG_DIR)/share/gnathub/extras -name '*.pyc' -delete
-
-install: package
-	$(RSYNC) $(PKG_DIR) $(INSTALL_DIR)
 
 setenv: $(GENERATED_DIR)/src/gnathub-version.ads
 	@echo "PYTHONPATH=\"$(TOP)/src/lib:$$PYTHONPATH\""

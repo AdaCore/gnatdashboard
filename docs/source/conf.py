@@ -26,8 +26,8 @@ VERSION_RE = re.compile(VERSION_PATTERN)
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.join(TOP, 'src', 'lib', 'GNAThub'))
-sys.path.insert(1, os.path.join(TOP, 'share', 'gnathub', 'core'))
+sys.path.insert(0, os.path.join(TOP, 'gnathub', 'src', 'lib', 'GNAThub'))
+sys.path.insert(1, os.path.join(TOP, 'gnathub', 'share', 'gnathub', 'core'))
 
 
 # -- General configuration ----------------------------------------------------

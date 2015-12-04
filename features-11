@@ -1,11 +1,12 @@
-=============================
-GNAThub 1.1 NEW FEATURES LIST
-=============================
+===================================
+GNATdashboard 1.1 NEW FEATURES LIST
+===================================
 
 Copyright (C) 2014-2015, AdaCore
 
-This file contains a list of new features introduced in GNAThub. A full
-description of all GNAThub features can be found in the GNAThub documentation.
+This file contains a list of new features introduced in GNATdashboard. A full
+description of all GNATdashboard features can be found in the GNATdashboard
+documentation.
 
 An ISO date (YYYY-MM-DD) appears in parentheses after the description line.
 This date shows the implementation date of the feature.
@@ -32,4 +33,6 @@ NF-11-O521-005 Support for SonarQube 5.x (2015-06-30)
 NF-11-O115-012 GNATcoverage integration (2015-02-12)
 
   GNAThub is now able to parse GNATcoverage's reports and to import extracted
-  violations to its database.
+  violations to its database. The Sonar Ada Plugin now integrates coverage
+  data from GNATcoverage reports, including specific message for coverage
+  violations.

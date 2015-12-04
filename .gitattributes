@@ -55,3 +55,8 @@ sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/utils/CustomMetrics.java no
 sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/utils/GNAThubEncoding.java no-precommit-check
 sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/utils/MaxAggregationFormula.java no-precommit-check
 sonar-ada-plugin/src/test/java/org/sonar/plugins/ada/AreResourcesAvailableTest.java no-precommit-check
+# Old known-problems and features files
+features-10        no-precommit-check
+features-11        no-precommit-check
+known-problems-09  no-precommit-check
+known-problems-10  no-precommit-check

@@ -1,6 +1,6 @@
-===============================
-GNAThub 0.9 KNOWN PROBLEMS LIST
-===============================
+=====================================
+GNATdashboard 0.9 KNOWN PROBLEMS LIST
+=====================================
 
 Copyright (C) 2014, AdaCore
 
@@ -13,6 +13,17 @@ KP-09-NA22-051 Proper support for SonarQube >= 4.2
   Status:     Fixed in GNAThub 1.0.0 on 2014-10-22
 
   Workaround: Normalize all paths by hand in source-mapping.properties.
+
+KP-09-NA10-041 SonarRunner crash when missing project properties
+
+  Problem:    SonarRunner crashes with NPE when the sonar-project.properties
+              file is missing important properties, namely:
+                * sonar.ada.gnathub.db
+                * sonar.ada.gnathub.src_mapping
+
+  Status:     Fixed in SonarAdaPlugin 1.0.0 on 2014-10-10
+
+  Workaround: Generate sonar-project.properties with GNAThub
 
 KP-09-N818-014 GNAThub does not display fatal errors
 

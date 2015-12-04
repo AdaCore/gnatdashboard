@@ -11,7 +11,7 @@ project GNAThub is
    Build_Dir  := External ("BUILD_DIR", "build");
    Processors := External ("PROCESSORS", "0");
 
-   for Languages use ("Ada", "Python", "SQL", "ReST");
+   for Languages use ("Ada", "Python", "SQL");
 
    for Exec_Dir use Build_Dir & "/bin";
    for Object_Dir use Build_Dir & "/obj";
@@ -25,15 +25,13 @@ project GNAThub is
       Build_Dir & "/gnathub-gen/src",      --  Makefile generated files
       "share/gnathub/sql",
       "share/gnathub/core",
-      "share/gnathub/extras",
-      "docs/source/user-manual/");
+      "share/gnathub/extras");
 
    for Main use ("gnathub-main.adb");
 
    package Naming is
       for Body_Suffix ("Python") use ".py";
       for Body_Suffix ("SQL") use ".model";
-      for Body_Suffix ("ReST") use ".rst";
    end Naming;
 
    package Builder is
@@ -44,7 +42,6 @@ project GNAThub is
    package Compiler is
       for Driver ("Python") use "";
       for Driver ("SQL") use "";
-      for Driver ("ReST") use "";
       for Default_Switches ("Ada") use ("-gnat2012");
 
       case Build_Mode is
