@@ -4,14 +4,15 @@
     <meta charset="utf-8">
     <!-- Set the viewport so this responsive site displays correctly on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--build:css css/gnatdashboard-webui.min.css-->
+    <!--build:css static/gnatdashboard-webui.min.css-->
     <link rel="stylesheet" href="../../build/app/gnatdashboard-webui.css">
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <!-- endbuild -->
-    <!--build:js js/gnatdashboard-webui.min.js -->
+    <!--build:js static/gnatdashboard-webui.min.js -->
     <script type="text/javascript" src="../../node_modules/systemjs/dist/system.src.js"></script>
-    <script type="text/javascript" src="../../node_modules/angular2/bundles/angular2.dev.js"></script>
-    <script type="text/javascript" src="../../node_modules/angular2/bundles/router.dev.js"></script>
+    <script type="text/javascript" src="../../node_modules/angular2/bundles/angular2-polyfills.min.js"></script>
+    <script type="text/javascript" src="../../node_modules/angular2/bundles/angular2.min.js"></script>
+    <script type="text/javascript" src="../../node_modules/angular2/bundles/router.min.js"></script>
     <script type="text/javascript" src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- endbuild -->
@@ -21,7 +22,11 @@
     <main-responder>Loading...</main-responder>
     <script>
         System.config({
-            packages: {'app': {defaultExtension: 'js'}}
+            packages: {
+                'angular2': { defaultExtension: 'js' },
+                'app':      { defaultExtension: 'js' },
+                'rxjs':     { defaultExtension: 'js' }
+            }
         });
         System.import('app/bootstrap');
     </script>

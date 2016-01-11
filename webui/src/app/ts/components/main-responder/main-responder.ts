@@ -1,4 +1,4 @@
-import { Component, View } from "angular2/angular2";
+import { Component, View } from "angular2/core";
 import { RouteConfig, RouterLink, RouterOutlet } from "angular2/router";
 
 import { About } from "../about/about";

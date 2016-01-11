@@ -10,22 +10,24 @@
   "scripts": {
     "start": "npm install && tsd install && gulp build",
     "build.dev": "gulp build",
+    "build.dist": "gulp dist --production",
     "build.prod": "gulp build --production",
     "watch.dev": "gulp watch",
     "watch.prod": "gulp watch --production",
-    "serve.dev": "gulp serve",
-    "serve.prod": "gulp serve --production",
+    "serve.temp": "gulp serve",
+    "serve.dist": "gulp serve --dist",
     "tests.run": "karma start --single-run --no-auto-watch",
     "tests.tdd": "karma start --no-single-run --auto-watch",
     "reinstall": "rimraf node_modules && npm cache clean && npm install"
   },
   "dependencies": {
-    "angular2": "2.0.0-alpha.44",
+    "angular2": "2.0.0-beta.1",
     "bootstrap": "^3.3.5",
     "es6-module-loader": "^0.17.8",
     "es6-shim": "^0.33.6",
     "systemjs": "0.19.4",
-    "rxjs": "5.0.0-alpha.14"
+    "reflect-metadata": "0.1.2",
+    "rxjs": "5.0.0-beta.0"
   },
   "devDependencies": {
     "@reactivex/rxjs": "^5.0.0-alpha.6",
@@ -66,7 +68,6 @@
     "karma-typescript-preprocessor2": "^1.1.0",
     "postcss-nested": "^1.0.0",
     "postcss-sorting": "^1.1.0",
-    "reflect-metadata": "^0.1.2",
     "rimraf": "^2.4.4",
     "run-sequence": "^1.1.4",
     "traceur": "0.0.93",

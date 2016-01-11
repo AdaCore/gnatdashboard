@@ -157,7 +157,7 @@ gulp.task(tasks.dist, function(production) {
   if (!production) {
     throw new $.util.PluginError({
       plugin: 'sanity-check',
-      message: 'Building in DEBUG mode; please use --production instead.'
+      message: 'Building in DEBUG mode; please use --production explicitely.'
     });
   }
   runSequence(
@@ -189,9 +189,11 @@ gulp.task(tasks.browserSync, function(production) {
     server: {
       baseDir: production ? build.dist : build.app,
       routes: {
+        '/angular2': 'node_modules/angular2',
         '/app': 'build/app',
         '/build': 'build',
-        '/node_modules': 'node_modules'
+        '/node_modules': 'node_modules',
+        '/rxjs': 'node_modules/rxjs',
       }
     }
   }, function(err, bs) {
@@ -208,12 +210,11 @@ gulp.task(tasks.browserSync, function(production) {
 });
 
 // Watch source files and run local server with auto-reload capabilities
-gulp.task(tasks.serve, [tasks.browserSync], function(production) {
+gulp.task(tasks.serve, [tasks.browserSync], function(dist) {
   gulp.watch([sources.html, sources.templates], [tasks.html]);
 
-  if (production) {
-    gulp.watch([sources.ts], [tasks.genJS, tasks.html]);
-    gulp.watch([sources.css], [tasks.genCSS, tasks.html]);
+  if (dist) {
+    gulp.watch([sources.ts, sources.css], [tasks.dist]);
   } else {
     gulp.watch([sources.ts], [tasks.genJS]);
     gulp.watch([sources.css], [tasks.genCSS]);
