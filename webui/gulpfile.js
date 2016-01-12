@@ -8,7 +8,7 @@ const mqpacker = require('css-mqpacker');       // Pack media queries
 const csswring = require('csswring');           // Minimize CSS with sourcemaps
 const nested = require('postcss-nested');       // Add support for nested rules
 const sorted = require('postcss-sorting');      // Add support for sorted rules
-const autoprefixer = require('autoprefixer');   // Auto add vendor prefixes
+const cssnext = require('postcss-cssnext');     // Use latest CSS features
 
 // Gulp utilities
 const del = require('del');                     // Remove build artifacts
@@ -42,7 +42,6 @@ const tasks = {
 
 // Path to the configuration files
 const config = {
-  autoprefixer: { browsers: 'last 2 versions' },
   karma: __dirname + '/karma.conf.js',
   size: { showFiles: true },
   typescript: 'tsconfig.json'
@@ -94,9 +93,7 @@ gulp.task(tasks.checkTS, function(production) {
 
 // Process CSS files into optimized CSS
 gulp.task(tasks.genCSS, function(production) {
-  const processors = [
-    nested, autoprefixer(config.autoprefixer)
-  ];
+  const processors = [nested, cssnext];
 
   if (production) {
     processors.push(mqpacker);
