@@ -5,10 +5,11 @@ const gulp = $.param(require('gulp'), process.argv);
 
 // PostCSS plugin
 const mqpacker = require('css-mqpacker');       // Pack media queries
-const csswring = require('csswring');           // Minimize CSS with sourcemaps
-const nested = require('postcss-nested');       // Add support for nested rules
-const sorted = require('postcss-sorting');      // Add support for sorted rules
 const cssnext = require('postcss-cssnext');     // Use latest CSS features
+const csswring = require('csswring');           // Minimize CSS with sourcemaps
+const reporter = require('postcss-reporter')    // PostCSS reporter
+const sorting = require('postcss-sorting');     // Add support for sorted rules
+const stylelint = require('stylelint');         // CSS linter
 
 // Gulp utilities
 const del = require('del');                     // Remove build artifacts
@@ -29,6 +30,7 @@ const tasks = {
   bundle: 'bundle',
   browserSync: 'browser-sync',
   check: 'check',
+  checkCSS: 'check-css',
   checkTS: 'check-ts',
   clean: 'clean',
   compress: 'compress',
@@ -91,15 +93,21 @@ gulp.task(tasks.checkTS, function(production) {
     .pipe($.tslint.report('prose', options));
 });
 
+// Run the linter on all CSS files (see stylelint-config-standard)
+gulp.task(tasks.checkCSS, function() {
+  return gulp.src(sources.css)
+    .pipe($.postcss([stylelint, reporter({ clearMessages: true })]));
+});
+
 // Process CSS files into optimized CSS
 gulp.task(tasks.genCSS, function(production) {
-  const processors = [nested, cssnext];
+  const processors = [cssnext];
 
   if (production) {
     processors.push(mqpacker);
     processors.push(csswring);
   } else {
-    processors.push(sorted);
+    processors.push(sorting);
   }
 
   return gulp.src(sources.css)
@@ -168,7 +176,7 @@ gulp.task(tasks.clean, function(callback) {
 });
 
 // Run all linters
-gulp.task(tasks.check, [tasks.checkTS]);
+gulp.task(tasks.check, [tasks.checkTS, tasks.checkCSS]);
 
 // Build for Development or Production mode (use --production on gulp cmdline)
 gulp.task(tasks.build, function() {
@@ -195,10 +203,12 @@ gulp.task(tasks.browserSync, function(production) {
     }
   }, function(err, bs) {
     bs.addMiddleware('', function(req, res, next) {
-      if (req.url === '/api/calendar') {
+      if (req.url === '/api/report/gnatcoverage') {
         return function(req, res) {
           res.setHeader('Content-Type', 'application/json');
-          return res.end(require('fs').readFileSync('mocks/calendar.json'));
+          return res.end(
+            require('fs').readFileSync('mocks/gnatcoverage-report.json')
+          );
         }(req, res);
       }
       next();
