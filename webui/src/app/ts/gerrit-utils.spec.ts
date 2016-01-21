@@ -11,7 +11,7 @@ const INVALID_CHANGE_IDS: string[] = ["I256b85", "I256b"];  // Too short
 
 describe("Change-ID regex", () => {
     VALID_CHANGE_IDS.forEach((cid: string) => {
-        it(`match ${cid}`, () => { expect(CHANGE_ID.test(cid)).toBe(true); });
+        it(`matches ${cid}`, () => { expect(CHANGE_ID.test(cid)).toBe(true); });
     });
 
     INVALID_CHANGE_IDS.forEach((cid: string) => {

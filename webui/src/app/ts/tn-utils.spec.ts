@@ -5,7 +5,7 @@ const INVALID_TNS: string[] = ["1234-567"];
 
 describe("TN regex", () => {
     VALID_TNS.forEach((tn: string) => {
-        it(`match ${tn}`, () => { expect(TN.test(tn)).toBe(true); });
+        it(`matches ${tn}`, () => { expect(TN.test(tn)).toBe(true); });
     });
 
     INVALID_TNS.forEach((tn: string) => {
