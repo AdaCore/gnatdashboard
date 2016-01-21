@@ -2,7 +2,7 @@ import { Component } from "angular2/core";
 import { RouteConfig, RouterLink, RouterOutlet } from "angular2/router";
 
 import { About } from "../about/about";
-import { Summary } from "../summary/summary";
+import { TraceList } from "../trace-list/trace-list";
 
 @Component({
     selector: "main-responder",
@@ -10,9 +10,8 @@ import { Summary } from "../summary/summary";
     directives: [ RouterLink, RouterOutlet ]
 })
 @RouteConfig([
-    { path: "/", as: "Summary", component: Summary },
-    { path: "/traces", as: "Traces", component: Summary },
-    { path: "/traces/:program*", as: "ProgramTraces", component: Summary },
+    { path: "/", as: "TraceList", component: TraceList },
+    { path: "/traces", as: "Traces", component: TraceList },
     { path: "/about", as: "About", component: About }
 ])
 export class MainResponder { }

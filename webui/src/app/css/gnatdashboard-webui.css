@@ -12,7 +12,7 @@ main-responder {
     font-weight: 300;
   }
 
-  & summary,
+  & trace-list,
   & about {
     display: block;
     padding: 10px;

@@ -14,12 +14,12 @@ interface IProgramTrace {
 }
 
 @Component({
-    selector: "summary",
-    templateUrl: "app/components/summary/summary.html",
+    selector: "trace-list",
+    templateUrl: "app/components/trace-list/trace-list.html",
     directives: [ CORE_DIRECTIVES, RouterLink ],
     providers: [ ReportService ]
 })
-export class Summary implements CanReuse, OnReuse {
+export class TraceList implements CanReuse, OnReuse {
     private program: string = null;
     private programs: string[] = null;
     private traces: { [program: string]: IProgramTrace[] } = null;
