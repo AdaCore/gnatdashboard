@@ -115,8 +115,7 @@ gulp.task(tasks.genCSS, function(production) {
     .pipe($.postcss(processors))
     .pipe($.size(config.size))
     .pipe($.sourcemaps.write('maps'))
-    .pipe(gulp.dest(build.app))
-    .pipe(browserSync.stream());
+    .pipe(gulp.dest(build.app));
 });
 
 // Gzip JS and CSS assets
@@ -190,7 +189,8 @@ gulp.task(tasks.watch, function() {
 
 // Serve the application with browser-sync
 gulp.task(tasks.browserSync, function(production) {
-  browserSync({
+  browserSync([(production ? build.dist : build.app) + "/**/*.css"], {
+    injectChanges: true,
     server: {
       baseDir: production ? build.dist : build.app,
       routes: {
@@ -199,6 +199,7 @@ gulp.task(tasks.browserSync, function(production) {
         '/build': 'build',
         '/node_modules': 'node_modules',
         '/rxjs': 'node_modules/rxjs',
+        '/highlight.js': 'node_modules/highlight.js/lib/highlight.js',
       }
     }
   }, function(err, bs) {
@@ -208,6 +209,13 @@ gulp.task(tasks.browserSync, function(production) {
           res.setHeader('Content-Type', 'application/json');
           return res.end(
             require('fs').readFileSync('mocks/gnatcoverage-report.json')
+          );
+        }(req, res);
+      } else if (req.url === '/api/report/source/zip_stream.adb') {
+        return function(req, res) {
+          res.setHeader('Content-Type', 'application/json');
+          return res.end(
+            require('fs').readFileSync('mocks/zip_stream.adb.json')
           );
         }(req, res);
       }
@@ -221,9 +229,9 @@ gulp.task(tasks.serve, [tasks.browserSync], function(dist) {
   gulp.watch([sources.html, sources.templates], [tasks.html]);
 
   if (dist) {
-    gulp.watch([sources.ts, sources.css], [tasks.dist]);
+    gulp.watch([sources.ts, sources.typing, sources.css], [tasks.dist]);
   } else {
-    gulp.watch([sources.ts], [tasks.genJS]);
+    gulp.watch([sources.ts, sources.typings], [tasks.genJS]);
     gulp.watch([sources.css], [tasks.genCSS]);
   }
 });

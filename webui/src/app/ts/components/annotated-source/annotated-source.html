@@ -1,0 +1,47 @@
+<div>
+    <div *ngIf="!source">Loading annotated source...</div>
+    <div *ngIf="source">
+        <h4>Info</h4>
+        <ul>
+            <li>Coverage level: {{ source.coverage_level }}</li>
+            <li>Filename: {{ source.filename }}</li>
+            <li>Hunk filename: {{ source.hunk_filename }}</li>
+            <li>Project: {{ source.project }}</li>
+        </ul>
+        <h4>Stats</h4>
+        <ul>
+            <li *ngIf="source.stats.no_code">
+                No code: {{ source.stats.no_code }} lines
+            </li>
+            <li *ngIf="source.stats.covered">
+                Covered: {{ source.stats.covered }} lines
+            </li>
+            <li *ngIf="source.stats.not_covered">
+                Not covered: {{ source.stats.not_covered }} lines
+            </li>
+            <li *ngIf="source.stats.partially_covered">
+                Partially covered: {{ source.stats.partially_covered }} lines
+            </li>
+            <li *ngIf="source.stats.exempted_no_violation">
+                Exempted, no violation: {{ source.stats.exempted_no_violation }} lines
+            </li>
+            <li *ngIf="source.stats.exempted_with_violation">
+                Exempted, with violation: {{ source.stats.exempted_with_violation }} lines
+            </li>
+        </ul>
+        <div class="editor read-only">
+            <table>
+                <tr class="source-line"
+                    *ngFor="#mapping of source.mappings; #isEven=even"
+                    [ngClass]="{even: isEven}"
+                >
+                    <td class="line-number">{{ mapping.line.number }}</td>
+                    <td class="line-coverage">{{ mapping.coverage }}</td>
+                    <!-- mapping.line.src may contain escaped HTML entities.
+                         Use AngularJS embedded sanitizer to render it.  -->
+                    <td class="line-content" [innerHTML]="highlight(mapping.line.src)"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

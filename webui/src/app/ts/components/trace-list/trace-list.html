@@ -1,4 +1,4 @@
-<div class="trace-list">
+<div>
     <div *ngIf="!report">Loading report...</div>
     <div *ngIf="report">
         <h4>Execution summary</h4>
@@ -17,7 +17,7 @@
 
         <div *ngIf="program">
             <h4>{{ program }}</h4>
-            <table cellpadding=0 cellspacing=0>
+            <table>
                 <thead>
                     <tr>
                         <td>Filename</td>
