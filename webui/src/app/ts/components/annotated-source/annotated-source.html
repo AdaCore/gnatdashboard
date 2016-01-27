@@ -30,13 +30,22 @@
             </li>
         </ul>
         <div class="editor read-only">
+            <div class="file-header">{{ source.filename }}</div>
             <table>
                 <tr class="source-line"
-                    *ngFor="#mapping of source.mappings; #isEven=even"
-                    [ngClass]="{even: isEven}"
+                    *ngFor="#mapping of source.mappings; #isOdd=odd"
+                    [ngClass]="{
+                        odd: isOdd,
+                        no_code: mapping.coverage === '.',
+                        covered: mapping.coverage === '+',
+                        not_covered: mapping.coverage === '-',
+                        partially_covered: mapping.coverage === '!',
+                        exempted_no_violation: mapping.coverage === '#',
+                        exempted_with_violation: mapping.coverage === '*'
+                    }"
                 >
                     <td class="line-number">{{ mapping.line.number }}</td>
-                    <td class="line-coverage">{{ mapping.coverage }}</td>
+                    <td class="line-coverage">{{ mapping.coverage == "." ? "&middot;" : mapping.coverage }}</td>
                     <!-- mapping.line.src may contain escaped HTML entities.
                          Use AngularJS embedded sanitizer to render it.  -->
                     <td class="line-content" [innerHTML]="highlight(mapping.line.src)"></td>

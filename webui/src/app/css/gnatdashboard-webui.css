@@ -22,37 +22,91 @@ main-responder {
 
 annotated-source {
   & .editor {
-    padding: 10px;
-  }
-
-  & table {
+    width: 100%;
+    min-width: 90ch;
+    overflow: hidden;
+    border-radius: 2px;
     border: 1px solid #adb9cc;
   }
 
+  & .file-header {
+    padding: 10px 15px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #d8d8d8;
+  }
+
+  & table {
+    tab-size: 3;
+  }
+
+  & .file-header {
+    color: #666;
+    font-family: "Hack", monospace;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    cursor: default;
+  }
+
   & tr.source-line {
-    &.even { background-color: #f8f8f8; }
+    &.odd { background-color: #f8f8f8; }
+    &:hover {
+      &.no_code td.line-coverage { background-color: #edf2f9; }
+      & td.line-content { background-color: #f4f7fb; }
+    }
+
+    /* Line covered */
+    &.covered td.line-coverage { background-color: #dbffdb; }
+    &:hover.covered td.line-content { background-color: #eaffea; }
+    /* Line not covered */
+    &.not_covered td.line-coverage,
+    &:hover.not_covered td.line-content {
+      background-color: #fdd;
+    }
+    &.not_covered td.line-content { background-color: #ffecec; }
+    /* Line partially covered */
+    &.partially_covered td.line-coverage,
+    &:hover.partially_covered td.line-content {
+      background-color: #fbe597;
+    }
+    &.partially_covered td.line-content { background-color: #faefc8; }
+    /* Line exempted not containing violation(s) */
+    &.exempted_no_violation td.line-coverage,
+    &:hover.exempted_no_violation td.line-content {
+      background-color: #d8e8f5;
+    }
+    &.exempted_no_violation td.line-content { background-color: #e7eff5; }
+    /* Line exempted containing violation(s) */
+    &.exempted_with_violation td.line-coverage,
+    &:hover.exempted_with_violation td.line-content {
+      background-color: #e8def1;
+    }
+    &.exempted_with_violation td.line-content { background-color: #eee8f4; }
+
     & td {
       font-family: "Hack", monospace;
       font-size: 1.2rem;
-      line-height: 1.1rem;
+      line-height: 1.5em;
+      padding: 0 2ch;
       white-space: pre;
       border: 0;
+      vertical-align: middle;
+      cursor: default;
 
       &.line-number,
       &.line-coverage {
-        border-right: 1px solid #adb9cc !important;
+        border-right: 1px solid #d8d8d8;
       }
 
       &.line-number {
-        color: #777;
+        color: #666;
         min-width: 40px;
         text-align: right;
         padding-right: 10px;
-        background-color: #efefef;
+        background-color: #f7f7f7;
       }
 
       &.line-coverage {
-        color: #777;
+        color: #666;
         min-width: 10px;
         text-align: center;
       }
@@ -62,7 +116,6 @@ annotated-source {
 
 table {
   width: 100%;
-  margin: 20px 0 !important;
   border-spacing: 0;
 
   & thead {
