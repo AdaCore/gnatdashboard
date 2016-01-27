@@ -36,7 +36,8 @@ const KEYWORDS: string[] = [
 /**
  * Definition of the Ada language for the highlight.js engine.
  *
- * We should consider contributng this part to highlight.js at some point.
+ * We should consider contributing this part to the highlight.js project at some
+ * point.
  *
  * @param
  * @return A JavaScript object describing the default parsing mode for the
