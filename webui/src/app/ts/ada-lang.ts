@@ -48,7 +48,7 @@ function hljs_ada_language(): hljs.IMode {
     "use strict";
 
     const COMMENT_MODES: hljs.IMode[] = [
-        hljs.COMMENT(/--/, /$/, { relevance: 10 })
+        hljs.COMMENT("--", "$", { relevance: 10 })
     ];
     return {
         case_insensitive: true,
