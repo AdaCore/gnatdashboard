@@ -47,6 +47,12 @@ declare module "gnat/reports" {
         src: string;
     }
 
+    export interface IGNATcoverageHunkMessage {
+        SCO: string;
+        kind: string;
+        message: string;
+    }
+
     export interface IGNATcoverageHunkStatement {
         coverage: CoverageStatus;
         id: string;             // TODO(delay): should be number
@@ -57,6 +63,7 @@ declare module "gnat/reports" {
     export interface IGNATcoverageHunkMapping {
         coverage: CoverageStatus;
         line: IGNATcoverageHunkLine;
+        message?: IGNATcoverageHunkMessage;
         statements?: IGNATcoverageHunkStatement[];
     }
 

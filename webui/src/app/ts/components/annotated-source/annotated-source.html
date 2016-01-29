@@ -32,24 +32,34 @@
         <div class="editor read-only">
             <div class="file-header">{{ source.filename }}</div>
             <table>
-                <tr class="source-line"
-                    *ngFor="#mapping of source.mappings; #isOdd=odd"
-                    [ngClass]="{
-                        odd: isOdd,
-                        no_code: mapping.coverage === '.',
-                        covered: mapping.coverage === '+',
-                        not_covered: mapping.coverage === '-',
-                        partially_covered: mapping.coverage === '!',
-                        exempted_no_violation: mapping.coverage === '#',
-                        exempted_with_violation: mapping.coverage === '*'
-                    }"
-                >
-                    <td class="line-number">{{ mapping.line.number }}</td>
-                    <td class="line-coverage">{{ mapping.coverage == "." ? "&middot;" : mapping.coverage }}</td>
-                    <!-- mapping.line.src may contain escaped HTML entities.
-                         Use AngularJS embedded sanitizer to render it.  -->
-                    <td class="line-content" [innerHTML]="highlight(mapping.line.src)"></td>
-                </tr>
+                <template ngFor #mapping [ngForOf]="source.mappings" #isOdd="odd">
+                    <tr class="blob"
+                        [ngClass]="{
+                            odd: isOdd,
+                            no_code: mapping.coverage === '.',
+                            covered: mapping.coverage === '+',
+                            not_covered: mapping.coverage === '-',
+                            partially_covered: mapping.coverage === '!',
+                            exempted_no_violation: mapping.coverage === '#',
+                            exempted_with_violation: mapping.coverage === '*'
+                        }"
+                    >
+                        <td class="blob-number">{{ mapping.line.number }}</td>
+                        <!-- mapping.line.src may contain escaped HTML entities.
+                             Use AngularJS embedded sanitizer to render it.  -->
+                        <td class="blob-code" [innerHTML]="highlight(mapping.line.src)"></td>
+                    </tr>
+                    <tr *ngIf="mapping.message" class="inline-comment">
+                        <td colspan="2">
+                            <table>
+                                <tr>
+                                    <td class="kind">{{ mapping.message.kind }}</td>
+                                    <td class="message" [innerHTML]="formatMessage(mapping)"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </template>
             </table>
         </div>
     </div>
