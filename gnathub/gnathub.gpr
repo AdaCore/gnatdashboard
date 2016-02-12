@@ -3,7 +3,6 @@ with "gnatcoll_python";
 with "gnatcoll_sqlite";
 
 project GNAThub is
-
    type Mode is ("Debug", "Production", "Coverage");
    Build_Mode : Mode := External ("BUILD_MODE", "Debug");
 
@@ -35,29 +34,29 @@ project GNAThub is
    end Naming;
 
    package Builder is
-      for Default_Switches ("Ada") use ("-m", "-j" & Processors);
+      for Switches ("Ada") use ("-m", "-j" & Processors);
       for Executable ("gnathub-main.adb") use "gnathub";
    end Builder;
 
    package Compiler is
       for Driver ("Python") use "";
       for Driver ("SQL") use "";
-      for Default_Switches ("Ada") use ("-gnat2012");
+      for Switches ("Ada") use ("-gnat2012");
 
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("Ada") use
-              Compiler'Default_Switches ("Ada") &
+            for Switches ("Ada") use
+              Compiler'Switches ("Ada") &
               ("-gnatwa", "-gnatwe", "-gnatyyBdOSux", "-gnata", "-g", "-O0");
 
          when "Production" =>
-            for Default_Switches ("Ada") use
-              Compiler'Default_Switches ("Ada") &
+            for Switches ("Ada") use
+              Compiler'Switches ("Ada") &
               ("-gnatwa", "-gnatwe", "-gnatyyBdOSux", "-gnatn", "-O2");
 
          when "Coverage" =>
-            for Default_Switches ("ada") use
-               Compiler'Default_Switches ("ada") &
+            for Switches ("ada") use
+               Compiler'Switches ("ada") &
                ("-g", "-O0", "-fprofile-arcs", "-ftest-coverage",
                 "-ffunction-sections", "-fdata-sections", "-gnateE");
       end case;
@@ -66,9 +65,7 @@ project GNAThub is
    package Linker is
       case Build_Mode is
          when "Coverage" =>
-            for Default_Switches ("Ada") use
-               Linker'Default_Switches ("Ada") & ("--coverage");
-         when Others =>
+            for Switches ("Ada") use ("--coverage");
       end case;
    end Linker;
 
@@ -78,13 +75,12 @@ project GNAThub is
 
    package Check is
       for Default_Switches ("Ada") use
-        ("-rules", "-from=testsuite/support/resources/etc/gnatcheck.all.rules");
+         ("-rules", "-from=" & Project'Project_Dir &
+                    "testsuite/support/resources/etc/gnatcheck.all.rules");
    end Check;
 
    package Dashboard is
       for Project_Key use "GNATdashboard::GNAThub";
       for Project_Version use Version;
    end Dashboard;
-
-
 end GNAThub;
