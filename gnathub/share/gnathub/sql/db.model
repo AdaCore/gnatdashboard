@@ -14,11 +14,11 @@
 | kind        | INTEGER                       | NOT NULL         | 0 | Whether it is a rule or a metric. 0 for rule, 1 for metric |
 | tool_id     | FK tools(tool_rules)          | NOT NULL         |   | Rules' related tool                                        |
 
-| TABLE       | messages                         | message  |   | Messages from tools' output |
-| id          | AUTOINCREMENT                    | PK       |   | Auto-generated id           |
-| rule_id     | FK rules(rule_messages)          | NOT NULL |   | Messages' associated rule   |
-| data        | TEXT                             |          |   | Categories' label           |
-| category_id | FK categories(category_messages) |          |   | Category of the rule        |
+| TABLE       | messages                         | message  |   | Messages from tools' output                                             |
+| id          | AUTOINCREMENT                    | PK       |   | Auto-generated id                                                       |
+| rule_id     | FK rules(rule_messages)          | NOT NULL |   | Messages' associated rule                                               |
+| data        | TEXT                             |          |   | Value associated with the message, possibly a numeric value for metrics |
+| category_id | FK categories(category_messages) |          |   | Category of the rule                                                    |
 
 | TABLE     | resources     | resource |   | Resource in the project, can be either a project, a directory or a file |
 | id        | AUTOINCREMENT | PK       |   | Auto-generated id                                                       |
