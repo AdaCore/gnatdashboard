@@ -39,7 +39,6 @@ const KEYWORDS: string[] = [
  * We should consider contributing this part to the highlight.js project at some
  * point.
  *
- * @param
  * @return A JavaScript object describing the default parsing mode for the
  *      language.
  * @see https://highlightjs.readthedocs.org/en/stable/reference.html
