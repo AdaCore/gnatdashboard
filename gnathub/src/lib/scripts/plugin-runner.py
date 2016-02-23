@@ -89,7 +89,7 @@ class PluginRunner(object):
     """
 
     PLUGIN_EXT = '.py'
-    SONAR_RUNNER = 'sonar-runner'
+    LATE_EXECUTION_PLUGINS = ('sonar-runner', 'html-report')
 
     def __init__(self):
         """Gather the list of plugins."""
@@ -153,9 +153,9 @@ class PluginRunner(object):
             :return: -1, 0 or 1 depending on the input
             :rtype: int
             """
-            if a().name == PluginRunner.SONAR_RUNNER:
+            if a().name in PluginRunner.LATE_EXECUTION_PLUGINS:
                 return 1
-            if b().name == PluginRunner.SONAR_RUNNER:
+            if b().name in PluginRunner.LATE_EXECUTION_PLUGINS:
                 return -1
             return 0
         return sorted(plugins, plugin_sort_fn)

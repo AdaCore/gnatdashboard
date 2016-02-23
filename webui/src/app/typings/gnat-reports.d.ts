@@ -82,4 +82,39 @@ declare module "gnat/reports" {
         stats: IGNATcoverageFileStats;
     }
 
+    // WIP
+
+    export interface IFileMetrics {
+        // Available on all Ada sources
+        all_lines: number;
+        blank_lines: number;
+        code_lines: number;
+        comment_lines: number;
+        eol_comments: number;
+        comment_percentage: number;
+        // Available on implementations only (body files)
+        cyclomatic_complexity?: number;
+        expression_complexity?: number;
+        statement_complexity?: number;
+        essential_complexity?: number;
+        max_loop_nesting?: number;
+    }
+
+    export interface ISource {
+        filename: string;
+        partname: string;
+        metrics?: IFileMetrics;
+        _associated_resource: boolean;
+    }
+
+    export interface IProjectModule {
+        sources: { [sourceDir: string]: ISource[] };
+        part_dir: string
+    }
+
+    export interface IGNAThubReport {
+        project: string;
+        _database: string;
+        modules: { [moduleName: string]: IProjectModule[] };
+    }
 }

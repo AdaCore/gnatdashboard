@@ -1,0 +1,3221 @@
+{
+  "project": "GNAThub", 
+  "_database": "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnathub/src/build/obj/gnathub/gnathub.db", 
+  "modules": {
+    "GnatColl_Iconv": {
+      "sources": {
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnatcoll_gnathub_stable/install/include/gnatcoll/gnatcoll_iconv.static/": [
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-iconv.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-iconv.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 65.23, 
+              "blank_lines": 24.0, 
+              "comment_lines": 137.0, 
+              "code_lines": 73.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 234.0
+            }, 
+            "partname": "gnatcoll-iconv.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-iconv.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "iconv_support.c.part", 
+            "_associated_resource": false, 
+            "filename": "iconv_support.c"
+          }
+        ]
+      }, 
+      "part_dir": "gnatcoll_iconv-part"
+    }, 
+    "GNAThub": {
+      "sources": {
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnathub/src/src/orm-gen/": [
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 0.0, 
+              "blank_lines": 7.0, 
+              "comment_lines": 0.0, 
+              "code_lines": 32.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 39.0
+            }, 
+            "partname": "src/orm-gen/database.adb.part", 
+            "_associated_resource": true, 
+            "filename": "database.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 21.34, 
+              "blank_lines": 54.0, 
+              "comment_lines": 35.0, 
+              "code_lines": 129.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 218.0
+            }, 
+            "partname": "src/orm-gen/database.ads.part", 
+            "_associated_resource": true, 
+            "filename": "database.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 0.0, 
+              "blank_lines": 1.0, 
+              "comment_lines": 0.0, 
+              "code_lines": 60.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 61.0
+            }, 
+            "partname": "src/orm-gen/database_names.ads.part", 
+            "_associated_resource": true, 
+            "filename": "database_names.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.01, 
+              "expression_complexity": 0.04, 
+              "statement_complexity": 1.97, 
+              "comment_percentage": 19.52, 
+              "blank_lines": 690.0, 
+              "comment_lines": 871.0, 
+              "code_lines": 3591.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.38, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 5152.0
+            }, 
+            "partname": "src/orm-gen/orm.adb.part", 
+            "_associated_resource": true, 
+            "filename": "orm.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 15.56, 
+              "blank_lines": 185.0, 
+              "comment_lines": 149.0, 
+              "code_lines": 866.0, 
+              "eol_comments": 9.0, 
+              "all_lines": 1200.0
+            }, 
+            "partname": "src/orm-gen/orm.ads.part", 
+            "_associated_resource": true, 
+            "filename": "orm.ads"
+          }
+        ], 
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnathub/src/share/gnathub/core/": [
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/_gnat.py.part", 
+            "_associated_resource": true, 
+            "filename": "_gnat.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/_gnat.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "_gnat.pyc"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/_sonarqube.py.part", 
+            "_associated_resource": true, 
+            "filename": "_sonarqube.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/_sonarqube.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "_sonarqube.pyc"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/codepeer.py.part", 
+            "_associated_resource": true, 
+            "filename": "codepeer.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/codepeer.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "codepeer.pyc"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/gcov.py.part", 
+            "_associated_resource": true, 
+            "filename": "gcov.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/gcov.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "gcov.pyc"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/gnatcheck.py.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcheck.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/gnatcheck.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcheck.pyc"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/gnatcoverage.py.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoverage.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/gnatcoverage.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoverage.pyc"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/gnatmetric.py.part", 
+            "_associated_resource": true, 
+            "filename": "gnatmetric.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/gnatmetric.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "gnatmetric.pyc"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/gnatprove.py.part", 
+            "_associated_resource": true, 
+            "filename": "gnatprove.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/gnatprove.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "gnatprove.pyc"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/html-report.py.part", 
+            "_associated_resource": true, 
+            "filename": "html-report.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/sonarconfig.py.part", 
+            "_associated_resource": true, 
+            "filename": "sonarconfig.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/sonarconfig.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "sonarconfig.pyc"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/sonarrunner.py.part", 
+            "_associated_resource": true, 
+            "filename": "sonarrunner.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/core/sonarrunner.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "sonarrunner.pyc"
+          }
+        ], 
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnathub/src/src/lib/GNAThub/": [
+          {
+            "metrics": {}, 
+            "partname": "src/lib/GNAThub/__init__.py.part", 
+            "_associated_resource": true, 
+            "filename": "__init__.py"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "src/lib/GNAThub/__init__.pyc.part", 
+            "_associated_resource": false, 
+            "filename": "__init__.pyc"
+          }
+        ], 
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnathub/src/src/lib/": [
+          {
+            "metrics": {}, 
+            "partname": "src/lib/setup.py.part", 
+            "_associated_resource": true, 
+            "filename": "setup.py"
+          }
+        ], 
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnathub/src/share/gnathub/sql/": [
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/sql/db.model.part", 
+            "_associated_resource": true, 
+            "filename": "db.model"
+          }
+        ], 
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnathub/src/src/gnathub/": [
+          {
+            "metrics": {}, 
+            "partname": "src/gnathub/gnathub-configuration.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-configuration.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 60.78, 
+              "blank_lines": 15.0, 
+              "comment_lines": 31.0, 
+              "code_lines": 20.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 66.0
+            }, 
+            "partname": "src/gnathub/gnathub-configuration.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-configuration.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.08, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.08, 
+              "comment_percentage": 48.24, 
+              "blank_lines": 31.0, 
+              "comment_lines": 55.0, 
+              "code_lines": 59.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 145.0
+            }, 
+            "partname": "src/gnathub/gnathub-constants.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-constants.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 71.42, 
+              "blank_lines": 13.0, 
+              "comment_lines": 30.0, 
+              "code_lines": 12.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 55.0
+            }, 
+            "partname": "src/gnathub/gnathub-constants.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-constants.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 3.33, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 3.33, 
+              "comment_percentage": 25.15, 
+              "blank_lines": 42.0, 
+              "comment_lines": 40.0, 
+              "code_lines": 119.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 2.83, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 201.0
+            }, 
+            "partname": "src/gnathub/gnathub-database.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-database.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 67.85, 
+              "blank_lines": 21.0, 
+              "comment_lines": 57.0, 
+              "code_lines": 27.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 105.0
+            }, 
+            "partname": "src/gnathub/gnathub-database.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-database.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.14, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 2.14, 
+              "comment_percentage": 31.08, 
+              "blank_lines": 54.0, 
+              "comment_lines": 60.0, 
+              "code_lines": 133.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.85, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 247.0
+            }, 
+            "partname": "src/gnathub/gnathub-main.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-main.adb"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.6, 
+              "expression_complexity": 0.08, 
+              "statement_complexity": 1.52, 
+              "comment_percentage": 28.37, 
+              "blank_lines": 98.0, 
+              "comment_lines": 105.0, 
+              "code_lines": 265.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.3, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 468.0
+            }, 
+            "partname": "src/gnathub/gnathub-project.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-project.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 48.57, 
+              "blank_lines": 30.0, 
+              "comment_lines": 51.0, 
+              "code_lines": 54.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 135.0
+            }, 
+            "partname": "src/gnathub/gnathub-project.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-project.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 4.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 4.0, 
+              "comment_percentage": 12.16, 
+              "blank_lines": 149.0, 
+              "comment_lines": 93.0, 
+              "code_lines": 680.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 2.27, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 922.0
+            }, 
+            "partname": "src/gnathub/gnathub-python-database.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-python-database.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 78.26, 
+              "blank_lines": 5.0, 
+              "comment_lines": 18.0, 
+              "code_lines": 5.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 28.0
+            }, 
+            "partname": "src/gnathub/gnathub-python-database.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-python-database.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 3.38, 
+              "expression_complexity": 0.11, 
+              "statement_complexity": 3.27, 
+              "comment_percentage": 17.75, 
+              "blank_lines": 140.0, 
+              "comment_lines": 103.0, 
+              "code_lines": 477.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 2.5, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 720.0
+            }, 
+            "partname": "src/gnathub/gnathub-python.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-python.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 67.64, 
+              "blank_lines": 8.0, 
+              "comment_lines": 23.0, 
+              "code_lines": 11.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 42.0
+            }, 
+            "partname": "src/gnathub/gnathub-python.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub-python.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.36, 
+              "expression_complexity": 0.05, 
+              "statement_complexity": 1.31, 
+              "comment_percentage": 35.74, 
+              "blank_lines": 55.0, 
+              "comment_lines": 84.0, 
+              "code_lines": 151.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 290.0
+            }, 
+            "partname": "src/gnathub/gnathub.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 47.36, 
+              "blank_lines": 26.0, 
+              "comment_lines": 36.0, 
+              "code_lines": 40.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 102.0
+            }, 
+            "partname": "src/gnathub/gnathub.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnathub.ads"
+          }
+        ], 
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnathub/src/src/lib/scripts/": [
+          {
+            "metrics": {}, 
+            "partname": "src/lib/scripts/plugin-runner.py.part", 
+            "_associated_resource": true, 
+            "filename": "plugin-runner.py"
+          }
+        ], 
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnathub/src/share/gnathub/extras/": [
+          {
+            "metrics": {}, 
+            "partname": "share/gnathub/extras/README.part", 
+            "_associated_resource": false, 
+            "filename": "README"
+          }
+        ]
+      }, 
+      "part_dir": "gnathub-part"
+    }, 
+    "GnatColl_Python": {
+      "sources": {
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnatcoll_gnathub_stable/install/include/gnatcoll/gnatcoll_python.static/": [
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-any_types-python.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-any_types-python.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 88.23, 
+              "blank_lines": 5.0, 
+              "comment_lines": 30.0, 
+              "code_lines": 4.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 39.0
+            }, 
+            "partname": "gnatcoll-any_types-python.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-any_types-python.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.19, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.19, 
+              "comment_percentage": 25.14, 
+              "blank_lines": 178.0, 
+              "comment_lines": 254.0, 
+              "code_lines": 760.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 1.07, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 1192.0
+            }, 
+            "partname": "gnatcoll-python.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-python.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 57.08, 
+              "blank_lines": 192.0, 
+              "comment_lines": 575.0, 
+              "code_lines": 441.0, 
+              "eol_comments": 5.0, 
+              "all_lines": 1208.0
+            }, 
+            "partname": "gnatcoll-python.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-python.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-scripts-python.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-scripts-python.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 33.25, 
+              "blank_lines": 38.0, 
+              "comment_lines": 146.0, 
+              "code_lines": 293.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 477.0
+            }, 
+            "partname": "gnatcoll-scripts-python.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-scripts-python.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "python_support.c.part", 
+            "_associated_resource": false, 
+            "filename": "python_support.c"
+          }
+        ]
+      }, 
+      "part_dir": "gnatcoll_python-part"
+    }, 
+    "GnatColl": {
+      "sources": {
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnatcoll_gnathub_stable/install/include/gnatcoll/gnatcoll.static/": [
+          {
+            "metrics": {}, 
+            "partname": "getrss.c.part", 
+            "_associated_resource": false, 
+            "filename": "getrss.c"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-any_types.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-any_types.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 50.79, 
+              "blank_lines": 14.0, 
+              "comment_lines": 32.0, 
+              "code_lines": 31.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 77.0
+            }, 
+            "partname": "gnatcoll-any_types.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-any_types.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-arg_lists.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-arg_lists.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 60.0, 
+              "blank_lines": 31.0, 
+              "comment_lines": 84.0, 
+              "code_lines": 56.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 171.0
+            }, 
+            "partname": "gnatcoll-arg_lists.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-arg_lists.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 66.66, 
+              "blank_lines": 8.0, 
+              "comment_lines": 34.0, 
+              "code_lines": 17.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 59.0
+            }, 
+            "partname": "gnatcoll-atomic.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-atomic.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 43.75, 
+              "blank_lines": 9.0, 
+              "comment_lines": 28.0, 
+              "code_lines": 36.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 73.0
+            }, 
+            "partname": "gnatcoll-atomic__intrinsic.ada.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-atomic__intrinsic.ada"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-boyer_moore.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-boyer_moore.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 65.62, 
+              "blank_lines": 10.0, 
+              "comment_lines": 42.0, 
+              "code_lines": 22.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 74.0
+            }, 
+            "partname": "gnatcoll-boyer_moore.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-boyer_moore.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-config.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-config.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 52.38, 
+              "blank_lines": 47.0, 
+              "comment_lines": 131.0, 
+              "code_lines": 121.0, 
+              "eol_comments": 1.0, 
+              "all_lines": 299.0
+            }, 
+            "partname": "gnatcoll-config.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-config.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-email-mailboxes.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-email-mailboxes.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 53.96, 
+              "blank_lines": 49.0, 
+              "comment_lines": 135.0, 
+              "code_lines": 117.0, 
+              "eol_comments": 1.0, 
+              "all_lines": 301.0
+            }, 
+            "partname": "gnatcoll-email-mailboxes.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-email-mailboxes.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-email-parser.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-email-parser.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 67.53, 
+              "blank_lines": 13.0, 
+              "comment_lines": 52.0, 
+              "code_lines": 25.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 90.0
+            }, 
+            "partname": "gnatcoll-email-parser.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-email-parser.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-email-utils.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-email-utils.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 60.61, 
+              "blank_lines": 43.0, 
+              "comment_lines": 137.0, 
+              "code_lines": 89.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 269.0
+            }, 
+            "partname": "gnatcoll-email-utils.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-email-utils.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 3.97, 
+              "expression_complexity": 0.45, 
+              "statement_complexity": 3.52, 
+              "comment_percentage": 15.9, 
+              "blank_lines": 340.0, 
+              "comment_lines": 286.0, 
+              "code_lines": 1550.0, 
+              "eol_comments": 6.0, 
+              "essential_complexity": 1.74, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 2176.0
+            }, 
+            "partname": "gnatcoll-email.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-email.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 54.51, 
+              "blank_lines": 93.0, 
+              "comment_lines": 320.0, 
+              "code_lines": 267.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 680.0
+            }, 
+            "partname": "gnatcoll-email.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-email.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 3.03, 
+              "expression_complexity": 0.78, 
+              "statement_complexity": 2.25, 
+              "comment_percentage": 29.54, 
+              "blank_lines": 85.0, 
+              "comment_lines": 156.0, 
+              "code_lines": 399.0, 
+              "eol_comments": 8.0, 
+              "essential_complexity": 2.06, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 640.0
+            }, 
+            "partname": "gnatcoll-geometry.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-geometry.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 56.11, 
+              "blank_lines": 30.0, 
+              "comment_lines": 78.0, 
+              "code_lines": 61.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 169.0
+            }, 
+            "partname": "gnatcoll-geometry.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-geometry.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-io-native-codec__unix.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-io-native-codec__unix.adb"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-io-native.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-io-native.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 24.44, 
+              "blank_lines": 18.0, 
+              "comment_lines": 33.0, 
+              "code_lines": 102.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 153.0
+            }, 
+            "partname": "gnatcoll-io-native.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-io-native.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-io-remote-unix.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-io-remote-unix.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 21.81, 
+              "blank_lines": 5.0, 
+              "comment_lines": 24.0, 
+              "code_lines": 86.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 115.0
+            }, 
+            "partname": "gnatcoll-io-remote-unix.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-io-remote-unix.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-io-remote-windows.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-io-remote-windows.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 21.81, 
+              "blank_lines": 5.0, 
+              "comment_lines": 24.0, 
+              "code_lines": 86.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 115.0
+            }, 
+            "partname": "gnatcoll-io-remote-windows.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-io-remote-windows.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-io-remote.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-io-remote.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 23.94, 
+              "blank_lines": 18.0, 
+              "comment_lines": 34.0, 
+              "code_lines": 108.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 160.0
+            }, 
+            "partname": "gnatcoll-io-remote.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-io-remote.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-io.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-io.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 48.95, 
+              "blank_lines": 38.0, 
+              "comment_lines": 94.0, 
+              "code_lines": 98.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 230.0
+            }, 
+            "partname": "gnatcoll-io.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-io.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-json-utility.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-json-utility.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 68.42, 
+              "blank_lines": 6.0, 
+              "comment_lines": 26.0, 
+              "code_lines": 12.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 44.0
+            }, 
+            "partname": "gnatcoll-json-utility.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-json-utility.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.83, 
+              "expression_complexity": 0.21, 
+              "statement_complexity": 2.62, 
+              "comment_percentage": 15.64, 
+              "blank_lines": 246.0, 
+              "comment_lines": 174.0, 
+              "code_lines": 951.0, 
+              "eol_comments": 2.0, 
+              "essential_complexity": 1.63, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 1371.0
+            }, 
+            "partname": "gnatcoll-json.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-json.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 25.83, 
+              "blank_lines": 82.0, 
+              "comment_lines": 85.0, 
+              "code_lines": 244.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 411.0
+            }, 
+            "partname": "gnatcoll-json.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-json.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.27, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 2.27, 
+              "comment_percentage": 22.98, 
+              "blank_lines": 62.0, 
+              "comment_lines": 60.0, 
+              "code_lines": 201.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 323.0
+            }, 
+            "partname": "gnatcoll-memory.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-memory.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 80.82, 
+              "blank_lines": 20.0, 
+              "comment_lines": 177.0, 
+              "code_lines": 42.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 239.0
+            }, 
+            "partname": "gnatcoll-memory.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-memory.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.89, 
+              "expression_complexity": 0.2, 
+              "statement_complexity": 1.7, 
+              "comment_percentage": 29.41, 
+              "blank_lines": 36.0, 
+              "comment_lines": 65.0, 
+              "code_lines": 156.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.5, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 257.0
+            }, 
+            "partname": "gnatcoll-mmap-system__unix.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-mmap-system__unix.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 50.0, 
+              "blank_lines": 19.0, 
+              "comment_lines": 40.0, 
+              "code_lines": 40.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 99.0
+            }, 
+            "partname": "gnatcoll-mmap-system__unix.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-mmap-system__unix.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.22, 
+              "expression_complexity": 0.36, 
+              "statement_complexity": 1.86, 
+              "comment_percentage": 30.85, 
+              "blank_lines": 109.0, 
+              "comment_lines": 132.0, 
+              "code_lines": 299.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 1.36, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 540.0
+            }, 
+            "partname": "gnatcoll-mmap.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-mmap.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 74.34, 
+              "blank_lines": 37.0, 
+              "comment_lines": 171.0, 
+              "code_lines": 59.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 267.0
+            }, 
+            "partname": "gnatcoll-mmap.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-mmap.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-paragraph_filling-badnesses.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-paragraph_filling-badnesses.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 67.16, 
+              "blank_lines": 13.0, 
+              "comment_lines": 45.0, 
+              "code_lines": 22.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 80.0
+            }, 
+            "partname": "gnatcoll-paragraph_filling-badnesses.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-paragraph_filling-badnesses.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 3.0, 
+              "expression_complexity": 0.16, 
+              "statement_complexity": 2.83, 
+              "comment_percentage": 34.26, 
+              "blank_lines": 31.0, 
+              "comment_lines": 48.0, 
+              "code_lines": 95.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 1.16, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 174.0
+            }, 
+            "partname": "gnatcoll-paragraph_filling-words.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-paragraph_filling-words.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 58.57, 
+              "blank_lines": 19.0, 
+              "comment_lines": 41.0, 
+              "code_lines": 29.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 89.0
+            }, 
+            "partname": "gnatcoll-paragraph_filling-words.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-paragraph_filling-words.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-paragraph_filling.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-paragraph_filling.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 73.25, 
+              "blank_lines": 11.0, 
+              "comment_lines": 63.0, 
+              "code_lines": 23.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 97.0
+            }, 
+            "partname": "gnatcoll-paragraph_filling.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-paragraph_filling.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 4.71, 
+              "expression_complexity": 1.0, 
+              "statement_complexity": 3.72, 
+              "comment_percentage": 20.86, 
+              "blank_lines": 95.0, 
+              "comment_lines": 118.0, 
+              "code_lines": 462.0, 
+              "eol_comments": 3.0, 
+              "essential_complexity": 3.2, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 675.0
+            }, 
+            "partname": "gnatcoll-path.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-path.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 49.19, 
+              "blank_lines": 28.0, 
+              "comment_lines": 61.0, 
+              "code_lines": 63.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 152.0
+            }, 
+            "partname": "gnatcoll-path.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-path.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.93, 
+              "expression_complexity": 0.06, 
+              "statement_complexity": 1.86, 
+              "comment_percentage": 34.36, 
+              "blank_lines": 65.0, 
+              "comment_lines": 100.0, 
+              "code_lines": 191.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.26, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 356.0
+            }, 
+            "partname": "gnatcoll-pools.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-pools.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 67.08, 
+              "blank_lines": 28.0, 
+              "comment_lines": 107.0, 
+              "code_lines": 54.0, 
+              "eol_comments": 1.0, 
+              "all_lines": 189.0
+            }, 
+            "partname": "gnatcoll-pools.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-pools.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.39, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.39, 
+              "comment_percentage": 38.94, 
+              "blank_lines": 17.0, 
+              "comment_lines": 37.0, 
+              "code_lines": 58.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.39, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 112.0
+            }, 
+            "partname": "gnatcoll-projects-aux.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-projects-aux.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 72.72, 
+              "blank_lines": 9.0, 
+              "comment_lines": 48.0, 
+              "code_lines": 18.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 75.0
+            }, 
+            "partname": "gnatcoll-projects-aux.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-projects-aux.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-projects-krunch.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-projects-krunch.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 77.41, 
+              "blank_lines": 4.0, 
+              "comment_lines": 24.0, 
+              "code_lines": 7.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 35.0
+            }, 
+            "partname": "gnatcoll-projects-krunch.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-projects-krunch.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-projects-normalize.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-projects-normalize.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 58.98, 
+              "blank_lines": 31.0, 
+              "comment_lines": 174.0, 
+              "code_lines": 121.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 326.0
+            }, 
+            "partname": "gnatcoll-projects-normalize.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-projects-normalize.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 4.04, 
+              "expression_complexity": 0.59, 
+              "statement_complexity": 3.44, 
+              "comment_percentage": 18.3, 
+              "blank_lines": 1540.0, 
+              "comment_lines": 1450.0, 
+              "code_lines": 6588.0, 
+              "eol_comments": 21.0, 
+              "essential_complexity": 2.32, 
+              "max_loop_nesting": 3.0, 
+              "all_lines": 9578.0
+            }, 
+            "partname": "gnatcoll-projects.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-projects.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 56.08, 
+              "blank_lines": 247.0, 
+              "comment_lines": 1035.0, 
+              "code_lines": 814.0, 
+              "eol_comments": 2.0, 
+              "all_lines": 2096.0
+            }, 
+            "partname": "gnatcoll-projects.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-projects.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.2, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 2.2, 
+              "comment_percentage": 37.28, 
+              "blank_lines": 43.0, 
+              "comment_lines": 44.0, 
+              "code_lines": 74.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 161.0
+            }, 
+            "partname": "gnatcoll-ravenscar-multiple_queue_cyclic_server.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-multiple_queue_cyclic_server.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 69.93, 
+              "blank_lines": 30.0, 
+              "comment_lines": 114.0, 
+              "code_lines": 49.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 193.0
+            }, 
+            "partname": "gnatcoll-ravenscar-multiple_queue_cyclic_server.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-multiple_queue_cyclic_server.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.66, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.66, 
+              "comment_percentage": 33.88, 
+              "blank_lines": 38.0, 
+              "comment_lines": 41.0, 
+              "code_lines": 80.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 159.0
+            }, 
+            "partname": "gnatcoll-ravenscar-multiple_queue_sporadic_server.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-multiple_queue_sporadic_server.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 66.23, 
+              "blank_lines": 29.0, 
+              "comment_lines": 102.0, 
+              "code_lines": 52.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 183.0
+            }, 
+            "partname": "gnatcoll-ravenscar-multiple_queue_sporadic_server.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-multiple_queue_sporadic_server.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 70.0, 
+              "blank_lines": 3.0, 
+              "comment_lines": 28.0, 
+              "code_lines": 12.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 43.0
+            }, 
+            "partname": "gnatcoll-ravenscar-simple_cyclic_task.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-simple_cyclic_task.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 79.71, 
+              "blank_lines": 12.0, 
+              "comment_lines": 55.0, 
+              "code_lines": 14.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 81.0
+            }, 
+            "partname": "gnatcoll-ravenscar-simple_cyclic_task.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-simple_cyclic_task.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 45.45, 
+              "blank_lines": 11.0, 
+              "comment_lines": 30.0, 
+              "code_lines": 36.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 77.0
+            }, 
+            "partname": "gnatcoll-ravenscar-simple_sporadic_task.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-simple_sporadic_task.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 75.0, 
+              "blank_lines": 17.0, 
+              "comment_lines": 69.0, 
+              "code_lines": 23.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 109.0
+            }, 
+            "partname": "gnatcoll-ravenscar-simple_sporadic_task.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-simple_sporadic_task.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.79, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.79, 
+              "comment_percentage": 40.62, 
+              "blank_lines": 28.0, 
+              "comment_lines": 39.0, 
+              "code_lines": 57.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 124.0
+            }, 
+            "partname": "gnatcoll-ravenscar-sporadic_server.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-sporadic_server.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 68.62, 
+              "blank_lines": 21.0, 
+              "comment_lines": 70.0, 
+              "code_lines": 32.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 123.0
+            }, 
+            "partname": "gnatcoll-ravenscar-sporadic_server.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-sporadic_server.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 67.39, 
+              "blank_lines": 12.0, 
+              "comment_lines": 31.0, 
+              "code_lines": 15.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 58.0
+            }, 
+            "partname": "gnatcoll-ravenscar-sporadic_server_with_callback.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-sporadic_server_with_callback.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 70.43, 
+              "blank_lines": 19.0, 
+              "comment_lines": 81.0, 
+              "code_lines": 34.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 134.0
+            }, 
+            "partname": "gnatcoll-ravenscar-sporadic_server_with_callback.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-sporadic_server_with_callback.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 54.54, 
+              "blank_lines": 22.0, 
+              "comment_lines": 36.0, 
+              "code_lines": 30.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 88.0
+            }, 
+            "partname": "gnatcoll-ravenscar-timed_out_sporadic_server.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-timed_out_sporadic_server.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 71.65, 
+              "blank_lines": 23.0, 
+              "comment_lines": 91.0, 
+              "code_lines": 36.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 150.0
+            }, 
+            "partname": "gnatcoll-ravenscar-timed_out_sporadic_server.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-timed_out_sporadic_server.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 59.15, 
+              "blank_lines": 14.0, 
+              "comment_lines": 42.0, 
+              "code_lines": 29.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 85.0
+            }, 
+            "partname": "gnatcoll-ravenscar-timers-one_shot_timer.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-timers-one_shot_timer.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 59.32, 
+              "blank_lines": 15.0, 
+              "comment_lines": 35.0, 
+              "code_lines": 24.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 74.0
+            }, 
+            "partname": "gnatcoll-ravenscar-timers-one_shot_timer.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-timers-one_shot_timer.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 90.62, 
+              "blank_lines": 4.0, 
+              "comment_lines": 29.0, 
+              "code_lines": 3.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 36.0
+            }, 
+            "partname": "gnatcoll-ravenscar-timers.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-timers.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-ravenscar-utils.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-ravenscar-utils.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 83.33, 
+              "blank_lines": 3.0, 
+              "comment_lines": 30.0, 
+              "code_lines": 6.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 39.0
+            }, 
+            "partname": "gnatcoll-ravenscar-utils.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar-utils.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 86.48, 
+              "blank_lines": 6.0, 
+              "comment_lines": 32.0, 
+              "code_lines": 5.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 43.0
+            }, 
+            "partname": "gnatcoll-ravenscar.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-ravenscar.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.2, 
+              "expression_complexity": 0.2, 
+              "statement_complexity": 2.0, 
+              "comment_percentage": 44.66, 
+              "blank_lines": 19.0, 
+              "comment_lines": 44.0, 
+              "code_lines": 59.0, 
+              "eol_comments": 2.0, 
+              "essential_complexity": 1.2, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 122.0
+            }, 
+            "partname": "gnatcoll-refcount-weakref.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-refcount-weakref.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 68.18, 
+              "blank_lines": 16.0, 
+              "comment_lines": 89.0, 
+              "code_lines": 43.0, 
+              "eol_comments": 1.0, 
+              "all_lines": 148.0
+            }, 
+            "partname": "gnatcoll-refcount-weakref.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-refcount-weakref.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.95, 
+              "expression_complexity": 0.04, 
+              "statement_complexity": 1.91, 
+              "comment_percentage": 35.12, 
+              "blank_lines": 75.0, 
+              "comment_lines": 119.0, 
+              "code_lines": 234.0, 
+              "eol_comments": 5.0, 
+              "essential_complexity": 1.16, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 428.0
+            }, 
+            "partname": "gnatcoll-refcount.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-refcount.adb"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 69.55, 
+              "blank_lines": 51.0, 
+              "comment_lines": 249.0, 
+              "code_lines": 109.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 409.0
+            }, 
+            "partname": "gnatcoll-refcount.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-refcount.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-remote-db.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-remote-db.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 61.62, 
+              "blank_lines": 19.0, 
+              "comment_lines": 53.0, 
+              "code_lines": 33.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 105.0
+            }, 
+            "partname": "gnatcoll-remote-db.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-remote-db.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 61.19, 
+              "blank_lines": 10.0, 
+              "comment_lines": 41.0, 
+              "code_lines": 26.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 77.0
+            }, 
+            "partname": "gnatcoll-remote.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-remote.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-scripts-files.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-scripts-files.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 56.6, 
+              "blank_lines": 9.0, 
+              "comment_lines": 30.0, 
+              "code_lines": 23.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 62.0
+            }, 
+            "partname": "gnatcoll-scripts-files.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-scripts-files.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-scripts-impl.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-scripts-impl.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 62.26, 
+              "blank_lines": 6.0, 
+              "comment_lines": 33.0, 
+              "code_lines": 20.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 59.0
+            }, 
+            "partname": "gnatcoll-scripts-impl.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-scripts-impl.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-scripts-projects.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-scripts-projects.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 62.0, 
+              "blank_lines": 11.0, 
+              "comment_lines": 31.0, 
+              "code_lines": 19.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 61.0
+            }, 
+            "partname": "gnatcoll-scripts-projects.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-scripts-projects.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-scripts-shell.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-scripts-shell.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 16.66, 
+              "blank_lines": 32.0, 
+              "comment_lines": 64.0, 
+              "code_lines": 320.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 416.0
+            }, 
+            "partname": "gnatcoll-scripts-shell.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-scripts-shell.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-scripts-utils.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-scripts-utils.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 75.0, 
+              "blank_lines": 7.0, 
+              "comment_lines": 42.0, 
+              "code_lines": 14.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 63.0
+            }, 
+            "partname": "gnatcoll-scripts-utils.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-scripts-utils.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-scripts.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-scripts.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 49.61, 
+              "blank_lines": 193.0, 
+              "comment_lines": 704.0, 
+              "code_lines": 717.0, 
+              "eol_comments": 1.0, 
+              "all_lines": 1614.0
+            }, 
+            "partname": "gnatcoll-scripts.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-scripts.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-sql-exec-tasking.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-sql-exec-tasking.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 79.45, 
+              "blank_lines": 9.0, 
+              "comment_lines": 58.0, 
+              "code_lines": 15.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 82.0
+            }, 
+            "partname": "gnatcoll-sql-exec-tasking.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-exec-tasking.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-sql-exec.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-sql-exec.adb"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.0, 
+              "expression_complexity": 1.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 58.43, 
+              "blank_lines": 120.0, 
+              "comment_lines": 559.0, 
+              "code_lines": 401.0, 
+              "eol_comments": 2.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 1080.0
+            }, 
+            "partname": "gnatcoll-sql-exec.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-exec.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-sql-exec_private.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-sql-exec_private.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 46.51, 
+              "blank_lines": 20.0, 
+              "comment_lines": 60.0, 
+              "code_lines": 69.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 149.0
+            }, 
+            "partname": "gnatcoll-sql-exec_private.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-exec_private.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-sql-inspect.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-sql-inspect.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 50.48, 
+              "blank_lines": 84.0, 
+              "comment_lines": 201.0, 
+              "code_lines": 211.0, 
+              "eol_comments": 7.0, 
+              "all_lines": 496.0
+            }, 
+            "partname": "gnatcoll-sql-inspect.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-inspect.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.82, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.82, 
+              "comment_percentage": 23.04, 
+              "blank_lines": 88.0, 
+              "comment_lines": 105.0, 
+              "code_lines": 355.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 1.62, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 548.0
+            }, 
+            "partname": "gnatcoll-sql-orm-impl.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-orm-impl.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 31.03, 
+              "blank_lines": 22.0, 
+              "comment_lines": 50.0, 
+              "code_lines": 124.0, 
+              "eol_comments": 4.0, 
+              "all_lines": 196.0
+            }, 
+            "partname": "gnatcoll-sql-orm-impl.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-orm-impl.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 34.61, 
+              "blank_lines": 22.0, 
+              "comment_lines": 36.0, 
+              "code_lines": 68.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 126.0
+            }, 
+            "partname": "gnatcoll-sql-orm.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-orm.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 74.51, 
+              "blank_lines": 29.0, 
+              "comment_lines": 188.0, 
+              "code_lines": 71.0, 
+              "eol_comments": 5.0, 
+              "all_lines": 288.0
+            }, 
+            "partname": "gnatcoll-sql-orm.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-orm.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.41, 
+              "expression_complexity": 0.1, 
+              "statement_complexity": 2.3, 
+              "comment_percentage": 27.03, 
+              "blank_lines": 160.0, 
+              "comment_lines": 229.0, 
+              "code_lines": 633.0, 
+              "eol_comments": 4.0, 
+              "essential_complexity": 1.3, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 1022.0
+            }, 
+            "partname": "gnatcoll-sql-sessions.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-sessions.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 67.8, 
+              "blank_lines": 76.0, 
+              "comment_lines": 373.0, 
+              "code_lines": 183.0, 
+              "eol_comments": 4.0, 
+              "all_lines": 632.0
+            }, 
+            "partname": "gnatcoll-sql-sessions.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-sessions.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.22, 
+              "expression_complexity": 0.09, 
+              "statement_complexity": 2.13, 
+              "comment_percentage": 19.59, 
+              "blank_lines": 383.0, 
+              "comment_lines": 443.0, 
+              "code_lines": 1864.0, 
+              "eol_comments": 9.0, 
+              "essential_complexity": 1.18, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 2690.0
+            }, 
+            "partname": "gnatcoll-sql.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 40.31, 
+              "blank_lines": 168.0, 
+              "comment_lines": 431.0, 
+              "code_lines": 643.0, 
+              "eol_comments": 2.0, 
+              "all_lines": 1242.0
+            }, 
+            "partname": "gnatcoll-sql.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.66, 
+              "expression_complexity": 0.04, 
+              "statement_complexity": 1.61, 
+              "comment_percentage": 21.56, 
+              "blank_lines": 241.0, 
+              "comment_lines": 301.0, 
+              "code_lines": 1109.0, 
+              "eol_comments": 3.0, 
+              "essential_complexity": 1.29, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 1651.0
+            }, 
+            "partname": "gnatcoll-sql_impl.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql_impl.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 45.42, 
+              "blank_lines": 102.0, 
+              "comment_lines": 266.0, 
+              "code_lines": 324.0, 
+              "eol_comments": 2.0, 
+              "all_lines": 692.0
+            }, 
+            "partname": "gnatcoll-sql_impl.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql_impl.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-storage_pools-alignment.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-storage_pools-alignment.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 56.89, 
+              "blank_lines": 9.0, 
+              "comment_lines": 33.0, 
+              "code_lines": 25.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 67.0
+            }, 
+            "partname": "gnatcoll-storage_pools-alignment.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-storage_pools-alignment.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 40.65, 
+              "blank_lines": 16.0, 
+              "comment_lines": 36.0, 
+              "code_lines": 55.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 107.0
+            }, 
+            "partname": "gnatcoll-storage_pools-headers.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-storage_pools-headers.adb"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.5, 
+              "expression_complexity": 0.5, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 65.46, 
+              "blank_lines": 19.0, 
+              "comment_lines": 91.0, 
+              "code_lines": 48.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 158.0
+            }, 
+            "partname": "gnatcoll-storage_pools-headers.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-storage_pools-headers.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 89.65, 
+              "blank_lines": 2.0, 
+              "comment_lines": 26.0, 
+              "code_lines": 3.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 31.0
+            }, 
+            "partname": "gnatcoll-storage_pools.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-storage_pools.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.0, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 2.0, 
+              "comment_percentage": 29.53, 
+              "blank_lines": 37.0, 
+              "comment_lines": 57.0, 
+              "code_lines": 136.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.5, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 230.0
+            }, 
+            "partname": "gnatcoll-symbols.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-symbols.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 52.32, 
+              "blank_lines": 22.0, 
+              "comment_lines": 45.0, 
+              "code_lines": 41.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 108.0
+            }, 
+            "partname": "gnatcoll-symbols.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-symbols.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-templates.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-templates.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 78.22, 
+              "blank_lines": 13.0, 
+              "comment_lines": 97.0, 
+              "code_lines": 27.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 137.0
+            }, 
+            "partname": "gnatcoll-templates.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-templates.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-terminal.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-terminal.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 51.44, 
+              "blank_lines": 22.0, 
+              "comment_lines": 71.0, 
+              "code_lines": 67.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 160.0
+            }, 
+            "partname": "gnatcoll-terminal.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-terminal.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-traces-syslog.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-traces-syslog.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 88.57, 
+              "blank_lines": 5.0, 
+              "comment_lines": 31.0, 
+              "code_lines": 4.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 40.0
+            }, 
+            "partname": "gnatcoll-traces-syslog.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-traces-syslog.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 5.01, 
+              "expression_complexity": 1.21, 
+              "statement_complexity": 3.8, 
+              "comment_percentage": 19.55, 
+              "blank_lines": 291.0, 
+              "comment_lines": 306.0, 
+              "code_lines": 1274.0, 
+              "eol_comments": 3.0, 
+              "essential_complexity": 1.54, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 1871.0
+            }, 
+            "partname": "gnatcoll-traces.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-traces.adb"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.0, 
+              "expression_complexity": 1.0, 
+              "statement_complexity": 1.0, 
+              "comment_percentage": 73.15, 
+              "blank_lines": 55.0, 
+              "comment_lines": 416.0, 
+              "code_lines": 154.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 625.0
+            }, 
+            "partname": "gnatcoll-traces.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-traces.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.42, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.42, 
+              "comment_percentage": 24.01, 
+              "blank_lines": 40.0, 
+              "comment_lines": 55.0, 
+              "code_lines": 174.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.42, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 269.0
+            }, 
+            "partname": "gnatcoll-tribooleans.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-tribooleans.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 69.79, 
+              "blank_lines": 12.0, 
+              "comment_lines": 67.0, 
+              "code_lines": 29.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 108.0
+            }, 
+            "partname": "gnatcoll-tribooleans.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-tribooleans.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 4.63, 
+              "expression_complexity": 0.91, 
+              "statement_complexity": 3.72, 
+              "comment_percentage": 21.25, 
+              "blank_lines": 172.0, 
+              "comment_lines": 178.0, 
+              "code_lines": 664.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 2.5, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 1014.0
+            }, 
+            "partname": "gnatcoll-utils.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-utils.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 58.49, 
+              "blank_lines": 44.0, 
+              "comment_lines": 124.0, 
+              "code_lines": 88.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 256.0
+            }, 
+            "partname": "gnatcoll-utils.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-utils.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 3.09, 
+              "expression_complexity": 0.29, 
+              "statement_complexity": 2.79, 
+              "comment_percentage": 19.67, 
+              "blank_lines": 366.0, 
+              "comment_lines": 351.0, 
+              "code_lines": 1438.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 2.08, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 2155.0
+            }, 
+            "partname": "gnatcoll-vfs.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-vfs.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 54.8, 
+              "blank_lines": 121.0, 
+              "comment_lines": 291.0, 
+              "code_lines": 240.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 652.0
+            }, 
+            "partname": "gnatcoll-vfs.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-vfs.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 73.33, 
+              "blank_lines": 6.0, 
+              "comment_lines": 22.0, 
+              "code_lines": 8.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 36.0
+            }, 
+            "partname": "gnatcoll-vfs_types.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-vfs_types.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-vfs_utils.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-vfs_utils.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 39.13, 
+              "blank_lines": 34.0, 
+              "comment_lines": 36.0, 
+              "code_lines": 56.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 126.0
+            }, 
+            "partname": "gnatcoll-vfs_utils.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-vfs_utils.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 88.0, 
+              "blank_lines": 1.0, 
+              "comment_lines": 22.0, 
+              "code_lines": 3.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 26.0
+            }, 
+            "partname": "gnatcoll.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll_support.c.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll_support.c"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "link_max.c.part", 
+            "_associated_resource": false, 
+            "filename": "link_max.c"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "objlist_file.c.part", 
+            "_associated_resource": false, 
+            "filename": "objlist_file.c"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "run_path_option.c.part", 
+            "_associated_resource": false, 
+            "filename": "run_path_option.c"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "separate_run_path_option.c.part", 
+            "_associated_resource": false, 
+            "filename": "separate_run_path_option.c"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "set_std_prefix.c.part", 
+            "_associated_resource": false, 
+            "filename": "set_std_prefix.c"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "terminals.c.part", 
+            "_associated_resource": false, 
+            "filename": "terminals.c"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "update_path.c.part", 
+            "_associated_resource": false, 
+            "filename": "update_path.c"
+          }
+        ]
+      }, 
+      "part_dir": "gnatcoll-part"
+    }, 
+    "GnatColl_Sqlite": {
+      "sources": {
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/gnatcoll_gnathub_stable/install/include/gnatcoll/gnatcoll_sqlite.static/": [
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-sql-sqlite-builder.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-sql-sqlite-builder.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 71.73, 
+              "blank_lines": 8.0, 
+              "comment_lines": 33.0, 
+              "code_lines": 13.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 54.0
+            }, 
+            "partname": "gnatcoll-sql-sqlite-builder.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-sqlite-builder.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-sql-sqlite-gnade.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-sql-sqlite-gnade.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 55.76, 
+              "blank_lines": 69.0, 
+              "comment_lines": 254.0, 
+              "code_lines": 266.0, 
+              "eol_comments": 36.0, 
+              "all_lines": 589.0
+            }, 
+            "partname": "gnatcoll-sql-sqlite-gnade.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-sqlite-gnade.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-sql-sqlite.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-sql-sqlite.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 62.92, 
+              "blank_lines": 14.0, 
+              "comment_lines": 56.0, 
+              "code_lines": 33.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 103.0
+            }, 
+            "partname": "gnatcoll-sql-sqlite.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-sql-sqlite.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-xref-database.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-xref-database.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 16.66, 
+              "blank_lines": 51.0, 
+              "comment_lines": 35.0, 
+              "code_lines": 175.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 261.0
+            }, 
+            "partname": "gnatcoll-xref-database.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-xref-database.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 0.0, 
+              "blank_lines": 1.0, 
+              "comment_lines": 0.0, 
+              "code_lines": 110.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 111.0
+            }, 
+            "partname": "gnatcoll-xref-database_names.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-xref-database_names.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gnatcoll-xref.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gnatcoll-xref.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 48.93, 
+              "blank_lines": 131.0, 
+              "comment_lines": 430.0, 
+              "code_lines": 459.0, 
+              "eol_comments": 5.0, 
+              "all_lines": 1020.0
+            }, 
+            "partname": "gnatcoll-xref.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gnatcoll-xref.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "shell.c.part", 
+            "_associated_resource": false, 
+            "filename": "shell.c"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "sqlite3.c.part", 
+            "_associated_resource": false, 
+            "filename": "sqlite3.c"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "sqlite3.h.part", 
+            "_associated_resource": true, 
+            "filename": "sqlite3.h"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "sqlite3ext.h.part", 
+            "_associated_resource": true, 
+            "filename": "sqlite3ext.h"
+          }
+        ]
+      }, 
+      "part_dir": "gnatcoll_sqlite-part"
+    }, 
+    "GPR": {
+      "sources": {
+        "/Users/delay/_work/sandboxes/gcc-49/x86_64-darwin/stable-gnat/install/include/gpr/gpr.static/": [
+          {
+            "metrics": {}, 
+            "partname": "gpr-ali.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-ali.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 66.28, 
+              "blank_lines": 136.0, 
+              "comment_lines": 293.0, 
+              "code_lines": 149.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 578.0
+            }, 
+            "partname": "gpr-ali.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-ali.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-attr-pm.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-attr-pm.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 81.39, 
+              "blank_lines": 7.0, 
+              "comment_lines": 35.0, 
+              "code_lines": 8.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 50.0
+            }, 
+            "partname": "gpr-attr-pm.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-attr-pm.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-attr.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-attr.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 54.29, 
+              "blank_lines": 74.0, 
+              "comment_lines": 158.0, 
+              "code_lines": 133.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 365.0
+            }, 
+            "partname": "gpr-attr.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-attr.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 85.29, 
+              "blank_lines": 6.0, 
+              "comment_lines": 29.0, 
+              "code_lines": 5.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 40.0
+            }, 
+            "partname": "gpr-com.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-com.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-conf.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-conf.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 68.89, 
+              "blank_lines": 16.0, 
+              "comment_lines": 144.0, 
+              "code_lines": 65.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 225.0
+            }, 
+            "partname": "gpr-conf.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-conf.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.42, 
+              "expression_complexity": 0.0, 
+              "statement_complexity": 1.42, 
+              "comment_percentage": 23.42, 
+              "blank_lines": 33.0, 
+              "comment_lines": 52.0, 
+              "code_lines": 170.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.0, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 255.0
+            }, 
+            "partname": "gpr-cset.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-cset.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 67.56, 
+              "blank_lines": 7.0, 
+              "comment_lines": 25.0, 
+              "code_lines": 12.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 44.0
+            }, 
+            "partname": "gpr-cset.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-cset.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-debug.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-debug.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 56.71, 
+              "blank_lines": 7.0, 
+              "comment_lines": 38.0, 
+              "code_lines": 29.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 74.0
+            }, 
+            "partname": "gpr-debug.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-debug.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-dect.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-dect.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 80.0, 
+              "blank_lines": 5.0, 
+              "comment_lines": 44.0, 
+              "code_lines": 11.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 60.0
+            }, 
+            "partname": "gpr-dect.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-dect.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 6.06, 
+              "expression_complexity": 1.18, 
+              "statement_complexity": 4.88, 
+              "comment_percentage": 17.89, 
+              "blank_lines": 493.0, 
+              "comment_lines": 336.0, 
+              "code_lines": 1547.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 2.09, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 2376.0
+            }, 
+            "partname": "gpr-env.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-env.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 54.5, 
+              "blank_lines": 36.0, 
+              "comment_lines": 127.0, 
+              "code_lines": 106.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 269.0
+            }, 
+            "partname": "gpr-env.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-env.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-err-scanner.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-err-scanner.adb"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-err.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-err.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 76.66, 
+              "blank_lines": 17.0, 
+              "comment_lines": 69.0, 
+              "code_lines": 21.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 107.0
+            }, 
+            "partname": "gpr-err.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-err.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-erroutc.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-erroutc.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 70.52, 
+              "blank_lines": 73.0, 
+              "comment_lines": 201.0, 
+              "code_lines": 84.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 358.0
+            }, 
+            "partname": "gpr-erroutc.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-erroutc.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-ext.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-ext.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 52.54, 
+              "blank_lines": 23.0, 
+              "comment_lines": 62.0, 
+              "code_lines": 56.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 141.0
+            }, 
+            "partname": "gpr-ext.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-ext.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.92, 
+              "expression_complexity": 0.15, 
+              "statement_complexity": 1.76, 
+              "comment_percentage": 28.7, 
+              "blank_lines": 151.0, 
+              "comment_lines": 149.0, 
+              "code_lines": 370.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.15, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 670.0
+            }, 
+            "partname": "gpr-names.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-names.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 57.85, 
+              "blank_lines": 32.0, 
+              "comment_lines": 81.0, 
+              "code_lines": 59.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 172.0
+            }, 
+            "partname": "gpr-names.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-names.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-nmsc.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-nmsc.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 74.0, 
+              "blank_lines": 6.0, 
+              "comment_lines": 37.0, 
+              "code_lines": 13.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 56.0
+            }, 
+            "partname": "gpr-nmsc.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-nmsc.ads"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 76.53, 
+              "blank_lines": 52.0, 
+              "comment_lines": 150.0, 
+              "code_lines": 46.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 248.0
+            }, 
+            "partname": "gpr-opt.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-opt.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-osint.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-osint.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 70.21, 
+              "blank_lines": 34.0, 
+              "comment_lines": 125.0, 
+              "code_lines": 63.0, 
+              "eol_comments": 7.0, 
+              "all_lines": 222.0
+            }, 
+            "partname": "gpr-osint.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-osint.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.92, 
+              "expression_complexity": 0.14, 
+              "statement_complexity": 1.78, 
+              "comment_percentage": 44.49, 
+              "blank_lines": 60.0, 
+              "comment_lines": 96.0, 
+              "code_lines": 122.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 1.14, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 278.0
+            }, 
+            "partname": "gpr-output.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-output.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 80.21, 
+              "blank_lines": 16.0, 
+              "comment_lines": 73.0, 
+              "code_lines": 18.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 107.0
+            }, 
+            "partname": "gpr-output.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-output.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-part.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-part.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 73.23, 
+              "blank_lines": 6.0, 
+              "comment_lines": 52.0, 
+              "code_lines": 19.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 77.0
+            }, 
+            "partname": "gpr-part.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-part.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-pp.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-pp.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 70.11, 
+              "blank_lines": 14.0, 
+              "comment_lines": 61.0, 
+              "code_lines": 26.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 101.0
+            }, 
+            "partname": "gpr-pp.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-pp.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-proc.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-proc.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 58.62, 
+              "blank_lines": 9.0, 
+              "comment_lines": 51.0, 
+              "code_lines": 36.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 96.0
+            }, 
+            "partname": "gpr-proc.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-proc.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-scans.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-scans.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 47.87, 
+              "blank_lines": 32.0, 
+              "comment_lines": 91.0, 
+              "code_lines": 168.0, 
+              "eol_comments": 33.0, 
+              "all_lines": 291.0
+            }, 
+            "partname": "gpr-scans.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-scans.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.34, 
+              "expression_complexity": 0.3, 
+              "statement_complexity": 2.03, 
+              "comment_percentage": 28.88, 
+              "blank_lines": 160.0, 
+              "comment_lines": 157.0, 
+              "code_lines": 390.0, 
+              "eol_comments": 1.0, 
+              "essential_complexity": 1.61, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 707.0
+            }, 
+            "partname": "gpr-sinput.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-sinput.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 70.07, 
+              "blank_lines": 62.0, 
+              "comment_lines": 192.0, 
+              "code_lines": 82.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 336.0
+            }, 
+            "partname": "gpr-sinput.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-sinput.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-snames.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-snames.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 7.46, 
+              "blank_lines": 6.0, 
+              "comment_lines": 23.0, 
+              "code_lines": 285.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 314.0
+            }, 
+            "partname": "gpr-snames.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-snames.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 2.0, 
+              "expression_complexity": 0.66, 
+              "statement_complexity": 1.33, 
+              "comment_percentage": 58.06, 
+              "blank_lines": 25.0, 
+              "comment_lines": 54.0, 
+              "code_lines": 39.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.33, 
+              "max_loop_nesting": 0.0, 
+              "all_lines": 118.0
+            }, 
+            "partname": "gpr-stamps.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-stamps.adb"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-strt.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-strt.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 66.33, 
+              "blank_lines": 10.0, 
+              "comment_lines": 67.0, 
+              "code_lines": 34.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 111.0
+            }, 
+            "partname": "gpr-strt.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-strt.ads"
+          }, 
+          {
+            "metrics": {}, 
+            "partname": "gpr-tempdir.adb.part", 
+            "_associated_resource": false, 
+            "filename": "gpr-tempdir.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 86.04, 
+              "blank_lines": 5.0, 
+              "comment_lines": 37.0, 
+              "code_lines": 6.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 48.0
+            }, 
+            "partname": "gpr-tempdir.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-tempdir.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 1.57, 
+              "expression_complexity": 0.1, 
+              "statement_complexity": 1.47, 
+              "comment_percentage": 19.28, 
+              "blank_lines": 479.0, 
+              "comment_lines": 545.0, 
+              "code_lines": 2292.0, 
+              "eol_comments": 2.0, 
+              "essential_complexity": 1.17, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 3316.0
+            }, 
+            "partname": "gpr-tree.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-tree.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 44.74, 
+              "blank_lines": 238.0, 
+              "comment_lines": 583.0, 
+              "code_lines": 720.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 1541.0
+            }, 
+            "partname": "gpr-tree.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-tree.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 5.48, 
+              "expression_complexity": 1.16, 
+              "statement_complexity": 4.32, 
+              "comment_percentage": 14.83, 
+              "blank_lines": 395.0, 
+              "comment_lines": 235.0, 
+              "code_lines": 1363.0, 
+              "eol_comments": 2.0, 
+              "essential_complexity": 2.12, 
+              "max_loop_nesting": 2.0, 
+              "all_lines": 1993.0
+            }, 
+            "partname": "gpr-util.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-util.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 50.0, 
+              "blank_lines": 51.0, 
+              "comment_lines": 151.0, 
+              "code_lines": 151.0, 
+              "eol_comments": 0.0, 
+              "all_lines": 353.0
+            }, 
+            "partname": "gpr-util.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr-util.ads"
+          }, 
+          {
+            "metrics": {
+              "cyclomatic_complexity": 3.17, 
+              "expression_complexity": 0.5, 
+              "statement_complexity": 2.67, 
+              "comment_percentage": 20.92, 
+              "blank_lines": 414.0, 
+              "comment_lines": 359.0, 
+              "code_lines": 1357.0, 
+              "eol_comments": 0.0, 
+              "essential_complexity": 1.53, 
+              "max_loop_nesting": 1.0, 
+              "all_lines": 2130.0
+            }, 
+            "partname": "gpr.adb.part", 
+            "_associated_resource": true, 
+            "filename": "gpr.adb"
+          }, 
+          {
+            "metrics": {
+              "comment_percentage": 46.33, 
+              "blank_lines": 478.0, 
+              "comment_lines": 877.0, 
+              "code_lines": 1033.0, 
+              "eol_comments": 8.0, 
+              "all_lines": 2388.0
+            }, 
+            "partname": "gpr.ads.part", 
+            "_associated_resource": true, 
+            "filename": "gpr.ads"
+          }
+        ]
+      }, 
+      "part_dir": "gpr-part"
+    }
+  }
+}

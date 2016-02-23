@@ -1,6 +1,5 @@
 [gerrit]
-host=review.eu.adacore.com
-port=29418
-project=gnatdashboard
-defaultbranch=master
-defaultremote=origin
+host = git.adacore.com
+project = gnatdashboard
+defaultbranch = topic/P308-014-html-report
+defaultremote = origin
