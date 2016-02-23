@@ -1,6 +1,7 @@
 *~
 *.pyc
 *.sw?
+/auto.cgpr
 /gnathub.gpr
 /src/gnathub/gnathub-version.ads
 /build/
