@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2015, AdaCore
+# Copyright (C) 2013-2016, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -79,7 +79,7 @@ class SonarQube(object):
         This file associates original sources path with the equivalent source
         in the local cache:
 
-          :file:`<project_object_dir>/gnathub/sonar/sources-mapping.properties
+          :file:`<project_object_dir>/gnathub/sonar/sources-mapping.properties`
 
         :return: the path to the configuration file
         :rtype: str
@@ -335,7 +335,7 @@ class SonarRunnerProperties(object):
         """Generates the source directories configuration
 
         Copy over all sources in a temporary directory before running the Sonar
-        Runner. This is to work around recent version of SonarQube source
+        Runner. This is to work around recent versions of SonarQube source
         importer implementation that looks recursively in source directories
         (which is inconsistent with GPR files semantic).
 
@@ -356,8 +356,9 @@ class SonarRunnerProperties(object):
         root_src_dir = SonarQube.src_cache()
 
         self.info('prepare source dirs for sonar-runner scan')
-        self.log.info('copy source files from the project closure to %s' %
-                      os.path.relpath(root_src_dir))
+        self.log.info(
+            'copy source files from the project closure to %s',
+            os.path.relpath(root_src_dir))
 
         # Remove any previous analysis left-over
         shutil.rmtree(root_src_dir, ignore_errors=True)

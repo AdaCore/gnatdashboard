@@ -218,6 +218,13 @@ gulp.task(tasks.browserSync, function(production) {
             require('fs').readFileSync('mocks/zip_stream.adb.json')
           );
         }(req, res);
+      } else if (req.url === '/api/report/gnathub') {
+        return function(req, res) {
+          res.setHeader('Content-Type', 'application/json');
+          return res.end(
+            require('fs').readFileSync('mocks/gnathub-report.json')
+          );
+        }(req, res);
       }
       next();
     }, { override: true });
