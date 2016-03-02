@@ -1,20 +1,24 @@
 {
     "compilerOptions": {
+        "target": "es5",
         "module": "commonjs",
-        "removeComments": true,
-        "preserveConstEnums": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "sourceMap": true,
-        "outDir": "build",
-        "target": "ES5"
+        "sourceMap": true
     },
     "exclude": [
         "node_modules",
-        ".git"
+        "typings/main.d.ts",
+        "typings/main"
     ],
-    "files": [
-        "typings/**/*.ts",
-        "src/**/*.ts"
-    ]
+    "filesGlob": [
+        "./src/**/*.ts",
+        "./test/**/*.ts",
+        "!./node_modules/**/*.ts",
+        "src/gnat-reports.d.ts",
+        "typings/browser.d.ts"
+    ],
+    "compileOnSave": false,
+    "buildOnSave": false,
+    "atom": { "rewriteTsconfig": false }
 }

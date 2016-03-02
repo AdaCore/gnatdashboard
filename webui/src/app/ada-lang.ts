@@ -1,5 +1,4 @@
-/// <reference path="../../../typings/highlightjs/highlightjs.d.ts" />
-import * as hljs from "highlight.js";  // TODO(delay): why do we need the ref?
+import * as hljs from "highlight.js";
 
 /**
  * This file handles the highlighting of Ada source code.

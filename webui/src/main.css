@@ -20,6 +20,27 @@ main-responder {
   }
 }
 
+gnathub-report {
+  display: block;
+  margin: 10px;
+
+  & table {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    & .line-count {
+      /* Both <th> & <td> */
+      text-align: center;
+    }
+    & td.line-count {
+      width: 10%;
+    }
+  }
+}
+
 annotated-source {
   & .editor {
     width: 100%;
@@ -139,6 +160,7 @@ annotated-source {
 
 table {
   width: 100%;
+  font-size: 1.2rem;
   border-spacing: 0;
 
   & thead {
