@@ -11,6 +11,6 @@ import { Pipe, PipeTransform } from "angular2/core";
 @Pipe({ name: 'mapKeys'})
 export class MapKeys implements PipeTransform {
     transform(value: { [key: string]: any }, args: any[] = null): string[] {
-        return Object.keys(value);
+        return value ? Object.keys(value): [];
     }
 }

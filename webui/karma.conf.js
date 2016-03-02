@@ -1,67 +1,69 @@
-'use strict';
+var path = require('path');
 
 module.exports = function(config) {
+  var testWebpackConfig = require('./webpack.test.config.js');
   config.set({
 
-    // Base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: './',
+    // base path that will be used to resolve all patterns (e.g. files, exclude)
+    basePath: '',
 
-    // List of files / patterns to load in the browser
-    files: [
-      'node_modules/zone.js/dist/zone-microtask.js',
-      'node_modules/zone.js/dist/long-stack-trace-zone.js',
-      'node_modules/zone.js/dist/jasmine-patch.js',
-      'node_modules/es6-module-loader/dist/es6-module-loader.js',
-      'node_modules/traceur/bin/traceur-runtime.js', // Required by PhantomJS2, otherwise it shouts ReferenceError: Can't find variable: require
-      'node_modules/traceur/bin/traceur.js',
-      'node_modules/systemjs/dist/system.src.js',
-      'node_modules/reflect-metadata/Reflect.js',
+    // frameworks to use
+    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+    frameworks: ['jasmine'],
 
-      { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
-      { pattern: 'node_modules/@reactivex/rxjs/dist/**/*.js', included: false, watched: false },
-      { pattern: 'node_modules/systemjs/dist/system-polyfills.js', included: false, watched: false }, // PhantomJS2 (and possibly others) might require it
+    // list of files to exclude
+    exclude: [ ],
 
-      // Comment out the following line if duplicate symbols errors are
-      // generated, which happens when using some AngularJS features (because
-      // then the definitions get implicitely included).
-      'typings/tsd.d.ts',
+    // list of files / patterns to load in the browser
+    // we are building the test environment in ./spec-bundle.js
+    files: [ { pattern: 'spec-bundle.js', watched: false } ],
 
-      'src/app/ts/**/*.spec.ts'
-    ],
+    // preprocess matching files before serving them to the browser
+    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+    preprocessors: { 'spec-bundle.js': ['coverage', 'webpack', 'sourcemap'] },
 
-    // List of files to exclude
-    exclude: [
-      'node_modules/angular2/**/*_spec.js',
-    ],
+    // Webpack Config at ./webpack.test.config.js
+    webpack: testWebpackConfig,
 
-    // See: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha'],
-    // See: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS2'],
-    // See: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['browserify', 'jasmine'],
-    plugins: [
-      'karma-browserify',
-      'karma-jasmine',
-      'karma-mocha-reporter',
-      'karma-chrome-launcher',
-      'karma-phantomjs2-launcher',
-      'karma-typescript-preprocessor2'
-    ],
-    // See: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-      '**/*.ts': ['browserify'],
-    },
-    browserify: {
-      debug: true,
-      plugin: ['tsify']
+    coverageReporter: {
+      dir : 'coverage/',
+      reporters: [
+        { type: 'text-summary' },
+        { type: 'json' },
+        { type: 'html' }
+      ]
     },
 
+    // Webpack please don't spam the console when running in karma!
+    webpackServer: { noInfo: true },
+
+    // test results reporter to use
+    // possible values: 'dots', 'progress'
+    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+    reporters: [ 'mocha', 'coverage' ],
+
+    // web server port
     port: 9876,
+
+    // enable / disable colors in the output (reporters and logs)
     colors: true,
-    logLevel: config.LOG_INFO,  // LOG_DISABLE, LOG_ERROR, LOG_WARN, LOG_DEBUG
+
+    // level of logging
+    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+    logLevel: config.LOG_INFO,
+
+    // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
-    singleRun: true,
-    concurrency: Infinity  // How many browser should be started simultanous
+
+    // start these browsers
+    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+    browsers: [
+      // 'Chrome',
+      'PhantomJS'
+    ],
+
+    // Continuous Integration mode
+    // if true, Karma captures browsers, runs the tests and exits
+    singleRun: true
   });
 };

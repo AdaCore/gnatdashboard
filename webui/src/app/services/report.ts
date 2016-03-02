@@ -19,28 +19,17 @@ export class ReportService {
     private annotatedHunk: IGNATcoverageHunk = null;
 
     constructor (http: Http) {
-        this.mainRequest = http.get("api/report/gnathub").map(
-            (res: Response) => res.json()
-        );
-        this.reportRequest = http.get("api/report/gnatcoverage").map(
-            (res: Response) => res.json()
-        );
-        this.hunkRequest = http.get("api/report/source/zip_stream.adb").map(
-            (res: Response) => res.json()
-        );
+        this.mainRequest = http.get("api/gnathub-report.json");
+        this.mainRequest.subscribe(
+            (res: Response) => this.gnathubReport = res.json());
 
-        this.mainRequest.subscribe((report: IGNAThubReport) => {
-            this.gnathubReport = report;
-            this.mainRequest = null;
-        });
-        this.reportRequest.subscribe((report: IGNATcoverageReport) => {
-            this.gnatcovReport = report;
-            this.reportRequest = null;
-        });
-        this.hunkRequest.subscribe((hunk: IGNATcoverageHunk) => {
-            this.annotatedHunk = hunk;
-            this.hunkRequest = null;
-        });
+        this.reportRequest = http.get("api/gnatcoverage-report.json");
+        this.reportRequest.subscribe(
+            (res: Response) => this.gnatcovReport = res.json());
+
+        this.hunkRequest = http.get("api/zip_stream.adb.json");
+        this.hunkRequest.subscribe(
+            (res: Response) => this.annotatedHunk = res.json());
     }
 
     /**
@@ -50,7 +39,7 @@ export class ReportService {
      */
     public GNAThubReport(callback: (report: IGNAThubReport) => void): void
     {
-        if (this.mainRequest) {
+        if (!this.gnathubReport) {
             // The request is still processing. Subscribe to the response
             // |Observable| to get the parsed |events| object.
             this.mainRequest.subscribe(() => callback(this.gnathubReport));
@@ -68,7 +57,7 @@ export class ReportService {
      */
     public GNATcovReport(callback: (report: IGNATcoverageReport) => void): void
     {
-        if (this.reportRequest) {
+        if (!this.gnatcovReport) {
             // The request is still processing. Subscribe to the response
             // |Observable| to get the parsed |events| object.
             this.reportRequest.subscribe(() => callback(this.gnatcovReport));
@@ -85,7 +74,7 @@ export class ReportService {
      * @param callback The callback function to call once the data is ready.
      */
     public AnnotatedSource(callback: (hunk: IGNATcoverageHunk) => void): void {
-        if (this.hunkRequest) {
+        if (!this.annotatedHunk) {
             // The request is still processing. Subscribe to the response
             // |Observable| to get the parsed |events| object.
             this.hunkRequest.subscribe(() => callback(this.annotatedHunk));
