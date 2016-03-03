@@ -7,6 +7,7 @@ describe('Unescape HTML', () => {
         expect(unescapeHTML('&lt;&amp;&gt;')).toEqual('<&>');
         expect(unescapeHTML('&quot;')).toEqual('"');
         expect(unescapeHTML('&apos;')).toEqual('\'');
+        expect(unescapeHTML('')).toEqual('');
     });
 });
 
