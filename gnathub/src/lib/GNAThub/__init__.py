@@ -8,7 +8,7 @@ plug-ins.
 """
 
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2015, AdaCore
+# Copyright (C) 2013-2016, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -44,11 +44,19 @@ def logs():
     return NotImplemented   # Implemented in Ada
 
 
+def dry_run():
+    """Whether to run in "check mode" or not.
+
+    :return: whether the dry-run flag is enabled or not
+    :rtype: bool
+    """
+    return NotImplemented   # Implemented in Ada
+
+
 def quiet():
     """Whether the quiet flag was passed to the GNAThub driver or not.
 
-    :return: whether the verbosity flag is enabled or not
-    :rtype: bool
+    :return: whether the quiet flag is enabled or not
     """
     return NotImplemented   # Implemented in Ada
 

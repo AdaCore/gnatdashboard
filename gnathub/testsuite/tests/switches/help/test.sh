@@ -1,2 +1,2 @@
 gnathub --help | grep "^Usage:"
-gnathub --help | grep "QUALIMETRICS.ERRORS"
+gnathub --help | grep "GNATHUB.ERRORS"

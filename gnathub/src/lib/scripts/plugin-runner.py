@@ -5,7 +5,7 @@ spawning the main event loop.
 """
 
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2015, AdaCore
+# Copyright (C) 2013-2016, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -335,6 +335,11 @@ class PluginRunner(object):
         start = time.time()
         PluginRunner.info('execute plug-in %s' % plugin.name)
 
+        if GNAThub.dry_run():
+            # Early exit if dry-run mode is enabled
+            plugin.exec_status = GNAThub.EXEC_SUCCESS
+            return
+
         LOG.info('%s: setup environment', plugin.name)
         plugin.setup()
 
@@ -384,12 +389,13 @@ class PluginRunner(object):
                 LOG.exception('plug-in execution failed')
                 PluginRunner.error('unexpected error: %s' % why)
 
-        # Display a summary
-        for plugin, success in succeed.items():
-            if success:
-                Console.ok(plugin)
-            else:
-                Console.ko(plugin)
+        if not GNAThub.dry_run() and not GNAThub.quiet():
+            # Display a summary
+            for plugin, success in succeed.items():
+                if success:
+                    Console.ok(plugin)
+                else:
+                    Console.ko(plugin)
 
 
 # Script entry point

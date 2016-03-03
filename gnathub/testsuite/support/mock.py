@@ -102,9 +102,9 @@ class GNAThub(object):
     def run(self, **kwargs):
         """Run GNAThub with the appropriate command line.
 
-        :param bool quiet: The --quiet switch.
-        :param bool verbose: The --verbose switch.
-        :param list[str] plugins: The --plugins PLUGINS switch.
+        :param kwargs: Keyword arguments that translate into command line
+            switches
+        :type kwargs: dict[str,*] | None
         """
 
         argv = ['gnathub', '-P', self.project.name]
@@ -115,13 +115,16 @@ class GNAThub(object):
         if kwargs.get('verbose', False):
             argv.append('--verbose')
 
+        if kwargs.get('dry_run', False):
+            argv.append('--dry-run')
+
         if kwargs.get('scenario_vars', None):
             scenario = kwargs['scenario_vars']
             assert isinstance(scenario, dict), 'invalid "scenario_vars" arg'
             argv.extend(['-X%s=%s' % (k, v) for k, v in scenario.iteritems()])
 
         if kwargs.get('plugins', None):
-            assert isinstance(kwargs['plugins'], list), 'invalid "plugin" arg'
+            assert isinstance(kwargs['plugins'], list), 'invalid "plugins" arg'
             argv.extend(['--plugins', ','.join(kwargs['plugins'])])
 
         if kwargs.get('target', None):

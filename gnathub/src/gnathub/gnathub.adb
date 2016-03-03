@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2015, AdaCore                     --
+--                     Copyright (C) 2013-2016, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -70,10 +70,10 @@ package body GNAThub is
    begin
       if Output_Verbosity >= Availability then
          Put (Output);
-      end if;
 
-      if New_Line then
-         Ada.Text_IO.New_Line;
+         if New_Line then
+            Ada.Text_IO.New_Line;
+         end if;
       end if;
 
       Log.Info (Me, Output);

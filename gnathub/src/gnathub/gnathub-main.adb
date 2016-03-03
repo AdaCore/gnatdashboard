@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2015, AdaCore                     --
+--                     Copyright (C) 2013-2016, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -96,7 +96,10 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       else
          Log.Debug (Me,
            "Create logs directory: " & Logs_Directory.Display_Full_Name);
-         Make_Dir (Logs_Directory, Recursive => True);
+
+         if not GNAThub.Configuration.Dry_Run then
+            Make_Dir (Logs_Directory, Recursive => True);
+         end if;
       end if;
 
    exception
@@ -118,6 +121,9 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       Had_Errors    : Boolean := False;
    begin
       Log.Info (Me, "Plug-ins mainloop: " & Runner_Script);
+
+      --  Let the plugin runner execute and handle --dry-run by itself, if
+      --  specified on the command line.
       GNAThub.Python.Execute_File (Runner_Script, Had_Errors);
 
       if Had_Errors then
@@ -136,7 +142,10 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    begin
       if User_Script /= "" then
          Info ("gnathub.python.execute " & User_Script);
-         GNAThub.Python.Execute_File (User_Script, Had_Errors);
+
+         if not GNAThub.Configuration.Dry_Run then
+            GNAThub.Python.Execute_File (User_Script, Had_Errors);
+         end if;
 
          if Had_Errors then
             raise Fatal_Error with User_Script & ": unexpected errors";
@@ -152,14 +161,18 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    begin
       Log.Debug (Me, "Local database: " & Database_File.Display_Full_Name);
 
-      GNAThub.Database.Initialize
-         (Create_From_Dir
-            (GNAThub.Project.Object_Dir, Database_File.Full_Name),
-          Remove_Previous_Database => Override);
+      if not GNAThub.Configuration.Dry_Run then
+         GNAThub.Database.Initialize
+            (Create_From_Dir
+               (GNAThub.Project.Object_Dir, Database_File.Full_Name),
+            Remove_Previous_Database => Override);
+      end if;
 
       if Override then
          Log.Debug (Me, "Populate database with project information");
-         GNAThub.Project.Save_Project_Tree;
+         if not GNAThub.Configuration.Dry_Run then
+            GNAThub.Project.Save_Project_Tree;
+         end if;
       end if;
 
       Log.Debug (Me, "Local database initialized");
@@ -177,7 +190,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       --  Configure the Python VM that will run the plug-ins and user scripts
       GNAThub.Python.Initialize;
 
-      --  Load the user's project file and store the configuration in memory
+      --  Configure the project loader (env, custom attributes, ...)
       GNAThub.Project.Initialize;
 
       --  Configure GNAThub (through the command line). In particular, set the

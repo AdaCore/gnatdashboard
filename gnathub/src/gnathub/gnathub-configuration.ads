@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2015, AdaCore                     --
+--                     Copyright (C) 2013-2016, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -62,6 +62,10 @@ package GNAThub.Configuration is
 
    function Incremental return Boolean;
    --  Whether the run should be incremental (not removing the DB) or not
+
+   function Dry_Run return Boolean;
+   --  Whether to run GNAThub in dry run mode (--dry-run). In dry run mode,
+   --  GNAThub only list the plugins that it would execute.
 
    procedure Finalize;
    --  Free allocated memory

@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2015, AdaCore                     --
+--                     Copyright (C) 2013-2016, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -41,6 +41,7 @@ package body GNAThub.Configuration is
    Target_Arg      : aliased GNAT.Strings.String_Access;
    Runtime_Arg     : aliased GNAT.Strings.String_Access;
    Jobs_Arg        : aliased Integer;
+   Dry_Run_Arg     : aliased Boolean;
    Version_Arg     : aliased Boolean;
    Quiet_Arg       : aliased Boolean;
    Verbose_Arg     : aliased Boolean;
@@ -109,32 +110,35 @@ package body GNAThub.Configuration is
          Output      => Verbose_Arg'Access,
          Switch      => "-v",
          Long_Switch => "--verbose",
-         Help        => "Toggle verbose mode on",
-         Value       => True);
+         Help        => "Toggle verbose mode on");
 
       Define_Switch
         (Config      => Config,
          Output      => Quiet_Arg'Access,
          Switch      => "-q",
          Long_Switch => "--quiet",
-         Help        => "Toggle quiet mode on",
-         Value       => True);
+         Help        => "Toggle quiet mode on");
+
+      Define_Switch
+        (Config      => Config,
+         Output      => Dry_Run_Arg'Access,
+         Switch      => "-n",
+         Long_Switch => "--dry-run",
+         Help        => "Show plugins without executing them");
 
       Define_Switch
         (Config      => Config,
          Output      => Version_Arg'Access,
          Switch      => "-V",
          Long_Switch => "--version",
-         Help        => "Print the version and exit",
-         Value       => True);
+         Help        => "Print the version and exit");
 
       Define_Switch
         (Config      => Config,
          Output      => Incremental_Arg'Access,
          Switch      => "-i",
          Long_Switch => "--incremental",
-         Help        => "Do not remove database if exists",
-         Value       => True);
+         Help        => "Do not remove database if exists");
 
       --  Usage
 
@@ -425,6 +429,15 @@ package body GNAThub.Configuration is
    begin
       return Interpreter_Mode or else Incremental_Arg;
    end Incremental;
+
+   -------------
+   -- Dry_Run --
+   -------------
+
+   function Dry_Run return Boolean is
+   begin
+      return Dry_Run_Arg;
+   end Dry_Run;
 
    --------------
    -- Finalize --

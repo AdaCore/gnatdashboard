@@ -215,15 +215,6 @@ computed from the project attribute :command:`Plugins`. However, the project
 attribute :command:`Plugins_Off` still applies to that list and removes any
 explicitly disabled plug-ins.
 
-.. _gnathub-switch-incremental:
-
-:command:`--incremental`
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-Takes no argument. Instead of its default behavior, when you specify
-:command:`--incremental`, |GNAThub| retains any previous database (instead of
-clearing it).
-
 .. _gnathub-switch-exec:
 
 :command:`--exec`
@@ -233,8 +224,26 @@ Expects a Python file as argument. Executes the specified Python file. This
 allows for post-processing, possibly on the local database, using the exposed
 Python API. Implies :command:`--incremental` (retains any previous database).
 
-:command:`--jobs`
-^^^^^^^^^^^^^^^^^
+.. _gnathub-switch-incremental:
+
+:command:`--incremental` (short option :command:`-i`)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Takes no argument. Instead of its default behavior, when you specify
+:command:`--incremental`, |GNAThub| retains any previous database (instead of
+clearing it).
+
+:command:`--dry-run` (short option :command:`-n`)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Takes no argument. Instead of its default behavior, when you specify
+:command:`--dry-run`, |GNAThub| will report what changes it would have made and
+what plugins it would have executed rather than making and executing them. Check
+mode is a simulation that can be useful for testing the validity of a command
+line and project configuration without running the actual tools.
+
+:command:`--jobs` (short option :command:`-j`)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Expects the maximum number of processes to be executed concurrently as argument.
 Similar to the :command:`-j` switch passed to :program:`make`. :command:`0` is a

@@ -2,7 +2,7 @@
 GNATdashboard 17 NEW FEATURES LIST
 ==================================
 
-Copyright (C) 2015, AdaCore
+Copyright (C) 2015-2016, AdaCore
 
 This file contains a list of new features introduced in GNATdashboard. A full
 description of all GNATdashboard features can be found in the GNATdashboard
@@ -13,3 +13,12 @@ This date shows the implementation date of the feature.
 
 New features in 17.0
 --------------------
+
+NF-17-P303-043 Support for --dry-run (2016-03-03)
+
+  GNAThub now supports a --dry-run switch that enables dry run mode (also known
+  as "check mode"). When executed with --dry-run, GNAThub will report what
+  changes it would have made and what plugins it would have executed rather
+  than making and executing them. Check mode is a simulation that can be useful
+  for testing the validity of a command line and project configuration without
+  running the actual tools.

@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2015, AdaCore                     --
+--                     Copyright (C) 2013-2016, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -78,6 +78,7 @@ package body GNAThub.Python is
    Root_Function          : aliased constant String := "root";
    Logs_Function          : aliased constant String := "logs";
    Jobs_Function          : aliased constant String := "jobs";
+   Dry_Run_Function       : aliased constant String := "dry_run";
    Quiet_Function         : aliased constant String := "quiet";
    Verbose_Function       : aliased constant String := "verbose";
    Plugins_Function       : aliased constant String := "plugins";
@@ -85,10 +86,11 @@ package body GNAThub.Python is
    Repositories_Function  : aliased constant String := "repositories";
 
    Root_Module_Functions :
-     constant array (1 .. 8) of access constant String :=
+     constant array (1 .. 9) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         Jobs_Function'Access,
+        Dry_Run_Function'Access,
         Quiet_Function'Access,
         Verbose_Function'Access,
         Plugins_Function'Access,
@@ -667,6 +669,9 @@ package body GNAThub.Python is
 
       elsif Command = Jobs_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Jobs);
+
+      elsif Command = Dry_Run_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Dry_Run);
 
       elsif Command = Quiet_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Quiet);
