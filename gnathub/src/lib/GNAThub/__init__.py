@@ -44,6 +44,15 @@ def logs():
     return NotImplemented   # Implemented in Ada
 
 
+def quiet():
+    """Whether the quiet flag was passed to the GNAThub driver or not.
+
+    :return: whether the verbosity flag is enabled or not
+    :rtype: bool
+    """
+    return NotImplemented   # Implemented in Ada
+
+
 def verbose():
     """Whether the verbose flag was passed to the GNAThub driver or not.
 

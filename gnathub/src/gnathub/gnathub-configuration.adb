@@ -399,6 +399,15 @@ package body GNAThub.Configuration is
       return Verbose_Arg;
    end Verbose;
 
+   -----------
+   -- Quiet --
+   -----------
+
+   function Quiet return Boolean is
+   begin
+      return Quiet_Arg;
+   end Quiet;
+
    ----------------------
    -- Interpreter_Mode --
    ----------------------

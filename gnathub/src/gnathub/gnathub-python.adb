@@ -78,16 +78,18 @@ package body GNAThub.Python is
    Root_Function          : aliased constant String := "root";
    Logs_Function          : aliased constant String := "logs";
    Jobs_Function          : aliased constant String := "jobs";
+   Quiet_Function         : aliased constant String := "quiet";
    Verbose_Function       : aliased constant String := "verbose";
    Plugins_Function       : aliased constant String := "plugins";
    Database_Function      : aliased constant String := "database";
    Repositories_Function  : aliased constant String := "repositories";
 
    Root_Module_Functions :
-     constant array (1 .. 7) of access constant String :=
+     constant array (1 .. 8) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         Jobs_Function'Access,
+        Quiet_Function'Access,
         Verbose_Function'Access,
         Plugins_Function'Access,
         Database_Function'Access,
@@ -665,6 +667,9 @@ package body GNAThub.Python is
 
       elsif Command = Jobs_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Jobs);
+
+      elsif Command = Quiet_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Quiet);
 
       elsif Command = Verbose_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Verbose);

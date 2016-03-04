@@ -51,6 +51,9 @@ package GNAThub.Configuration is
    function Jobs return Natural;
    --  Return the number of jobs to execute in parallel
 
+   function Quiet return Boolean;
+   --  Informative messages can be retained in quiet mode
+
    function Verbose return Boolean;
    --  Additional information can be displayed in verbose mode
 

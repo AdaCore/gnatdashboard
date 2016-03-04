@@ -1,0 +1,2 @@
+gnathub: error: --verbose and --quiet are mutually exclusive.
+try "gnathub --help" for more information.

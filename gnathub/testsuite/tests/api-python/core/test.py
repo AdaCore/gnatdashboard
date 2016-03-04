@@ -11,6 +11,6 @@ class TestSimpleExample(TestCase):
         # Run GNAThub with only the sonar-config plugin
         self.gnathub = GNAThub(Project.simple(), plugins=['sonar-config'])
 
-    def testDatabaseContent(self):
+    def testPythonAPIDefined(self):
         # Test the core Python API
         self.gnathub.run(script='check-api.py')

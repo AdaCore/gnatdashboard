@@ -29,6 +29,7 @@ assertEqual(relpath(GNAThub.root()), os.path.join('obj', 'gnathub'))
 assertTrue(os.path.isdir(GNAThub.logs()))
 assertEqual(relpath(GNAThub.logs()), os.path.join('obj', 'gnathub', 'logs'))
 
+assertTrue(GNAThub.quiet())
 assertFalse(GNAThub.verbose())
 
 assertTrue(os.path.isfile(GNAThub.database()))
