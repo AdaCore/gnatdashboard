@@ -6,13 +6,14 @@ import {
 
 import { IGNAThubReport } from "gnat/reports";
 
+import { Loader } from "../loader/loader";
 import { MapKeys } from "../../pipes/object";
 import { ReportService } from "../../services/report";
 
 @Component({
     selector: "gnathub-report",
     templateUrl: "app/components/gnathub-report/gnathub-report.html",
-    directives: [ CORE_DIRECTIVES, RouterLink ],
+    directives: [ CORE_DIRECTIVES, Loader, RouterLink ],
     pipes: [ MapKeys ],
     providers: [ ReportService ]
 })
