@@ -39,6 +39,7 @@ main-responder {
     font-weight: 300;
   }
 
+  & gnathub-blob,
   & annotated-source,
   & trace-list,
   & about {
@@ -68,6 +69,7 @@ gnathub-report {
   }
 }
 
+gnathub-blob,
 annotated-source {
   & .editor {
     width: 100%;

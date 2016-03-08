@@ -6,14 +6,18 @@
         <h1>Project Overview & Report <small>{{ report.project }}</small></h1>
         <div *ngFor="#module of report.modules | mapKeys" class="module">
             <h3>{{ module }}</h3>
-            <table *ngFor="#dir of report.modules[module].sources | mapKeys">
+            <table *ngFor="#dir of report.modules[module] | mapKeys">
                 <thead>
                     <th class="filename">{{ dir }}</th>
                     <th class="line-count">Lines count</th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="#source of report.modules[module].sources[dir]">
-                        <td>{{ source.filename }}</td>
+                    <tr *ngFor="#source of report.modules[module][dir]">
+                        <td>
+                            <a [routerLink]="['../Blob', { filename: source.filename }]">
+                                {{ source.filename }}
+                            </a>
+                        </td>
                         <td class="line-count">{{ source.metrics.all_lines }}</td>
                     </tr>
                 </tbody>

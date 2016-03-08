@@ -71,3 +71,15 @@ export function highlightAda(code: string): string {
     "use strict";
     return hljs.highlight("ada", code).value;
 }
+
+/**
+ * Convert a code snippet of any language into an HTML string with highlighting
+ * markup.
+ *
+ * @param code The code snippet to highlight.
+ * @return The HTML string with highlighting markup.
+ */
+export function highlight(code: string, language: string): string {
+    "use strict";
+    return hljs.highlight(language, code).value;
+}

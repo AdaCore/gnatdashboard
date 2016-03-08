@@ -2,10 +2,10 @@
 
 
 def uniq(array):
-    """Remove all duplicates from `array`.
+    """Remove all duplicates from `array`
 
     :type array: list[*]
-    :param array: the array to uniquify.
+    :param array: the array to uniquify
     :return: a new array without duplicates
     :rtype: list[*]
     """
