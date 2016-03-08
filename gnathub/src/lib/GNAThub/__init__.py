@@ -304,6 +304,15 @@ class Project(object):
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
+    def source_files():
+        """Return the list of source files for each project.
+
+        :return: the list of all sources files per project
+        :rtype: dict[str, list[str]]
+        """
+        return NotImplemented   # Implemented in Ada
+
+    @staticmethod
     def source_file(name):
         """Create a new file.
 

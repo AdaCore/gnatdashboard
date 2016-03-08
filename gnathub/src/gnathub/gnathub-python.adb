@@ -68,8 +68,9 @@ package body GNAThub.Python is
    Project_Target_Method             : constant String := "target";
    Project_Runtime_Method            : constant String := "runtime";
    Project_Object_Dir_Method         : constant String := "object_dir";
-   Project_Source_File_Method        : constant String := "source_file";
    Project_Source_Dirs_Method        : constant String := "source_dirs";
+   Project_Source_File_Method        : constant String := "source_file";
+   Project_Source_Files_Method       : constant String := "source_files";
    Project_Source_Suffixes_Method    : constant String := "source_suffixes";
    Project_Property_As_String_Method : constant String := "property_as_string";
    Project_Property_As_List_Method   : constant String := "property_as_list";
@@ -263,6 +264,13 @@ package body GNAThub.Python is
       Repository.Register_Command
         (Command       => Project_Source_File_Method,
          Params        => (1 .. 1 => Param ("name")),
+         Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Source_Files_Method,
+         Params        => No_Params,
          Handler       => Project_Class_Accessors_Handler'Access,
          Class         => Project_Class,
          Static_Method => True);
@@ -519,6 +527,17 @@ package body GNAThub.Python is
          begin
             Set_Return_Value (Data, File (Name).Display_Full_Name);
          end;
+
+      elsif Command = Project_Source_Files_Method then
+         for Project of GNAThub.Project.All_Projects loop
+            Set_Return_Value_As_List (Data);
+
+            for File of Project.Source_Files (Recursive => False).all loop
+               Set_Return_Value (Data, File.Display_Full_Name);
+            end loop;
+
+            Set_Return_Value_Key (Data, Project.Name);
+         end loop;
 
       elsif Command = Project_Source_Dirs_Method then
          for Project of GNAThub.Project.All_Projects loop

@@ -2,10 +2,11 @@
 
 import GNAThub
 
-import os
+import os.path
 import sys
 
 from support.asserts import assertEqual, assertIn, assertTrue
+from support.helpers import uniq
 
 # The base directory for PATH comparisons
 BASEDIR = os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -36,6 +37,25 @@ source_dirs = GNAThub.Project.source_dirs()
 assertEqual(len(source_dirs), 1)
 assertIn('Disabled', source_dirs)
 assertEqual(relpath(source_dirs['Disabled'][0]), 'src')
+
+# GNAThub.Project.source_files
+source_files = GNAThub.Project.source_files()
+assertEqual(len(source_files), 1)
+assertIn('Disabled', source_files)
+assertEqual(
+    sorted([os.path.basename(sfile) for sfile in source_files['Disabled']]),
+    sorted(['f.adb', 'f.ads', 'simple.adb'])
+)
+
+# Check consistency between GNAThub.Project.source_dirs() and
+# GNAThub.Project.source_files().
+assertEqual(
+    sorted(uniq([
+        os.path.normpath(os.path.dirname(sfile))
+        for sfile in source_files['Disabled']
+    ])),
+    sorted([os.path.normpath(dir) for dir in source_dirs['Disabled']])
+)
 
 # GNAThub.Project.source_file
 filename = GNAThub.Project.source_file('simple.adb')
