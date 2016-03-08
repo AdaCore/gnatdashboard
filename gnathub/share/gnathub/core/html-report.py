@@ -12,9 +12,11 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""???
+"""GNAThub plug-in for the generation of a standalone rich HTML report
 
-???
+It exports the HTMLReport class which implements the :class:`GNAThub.Plugin`
+interface. This allows GNAThub's plug-in scanner to automatically find this
+module and load it as part of the GNAThub default execution.
 """
 
 import GNAThub
@@ -23,9 +25,11 @@ import collections
 import json
 import os
 
+from GNAThub import Console
+
 
 class HTMLReport(GNAThub.Plugin):
-    """SonarConfig plugin for GNAThub"""
+    """HTMLReport plugin for GNAThub"""
 
     """
     A dictionary of :class:`GNAThub.Tool` indexed by tool name (in lowercase)
@@ -54,72 +58,6 @@ class HTMLReport(GNAThub.Plugin):
     @property
     def name(self):
         return 'html-report'
-
-    def _main_as_json(self, modules):
-        """???
-
-        :param modules: project modules and their associated source directories
-        :type modules: dict[str,list[str]]
-        :return: ???
-        :rtype: ???
-        """
-
-        main = {
-            'modules': collections.defaultdict(
-                lambda: collections.defaultdict(
-                    lambda: collections.defaultdict(lambda: []))),
-            'project': GNAThub.Project.name(),
-            '_database': GNAThub.database()
-        }
-
-        for project, source_dirs in modules.iteritems():
-            dirs_commonprefix = os.path.commonprefix(source_dirs)
-            self.log.info('source dirs common prefix: %s', dirs_commonprefix)
-            main['modules'][project]['part_dir'] = '{}-part'.format(
-                project.lower())
-
-            for source_dir in source_dirs:
-                src_dir_relpath = os.path.relpath(source_dir,
-                                                  dirs_commonprefix)
-
-                if not os.path.isdir(source_dir):
-                    self.log.warn('%s: no such directory', source_dir)
-                    continue
-
-                for source in os.listdir(source_dir):
-                    source_path = os.path.join(source_dir, source)
-                    if not os.path.isfile(source_path):
-                        continue
-                    partname = os.path.normpath(
-                        os.path.join(src_dir_relpath, '{}.part'.format(source))
-                    )
-
-                    # Create a dictionary of tools
-                    tools = {tool.id: tool for tool in GNAThub.Tool.list()}
-                    assert len(GNAThub.Tool.list()) == 2, GNAThub.Tool.list()
-
-                    gnatmetric = self._get_tool_by_name('GNATmetric')
-                    assert gnatmetric, 'GNATmetric results not found'
-
-                    # Create a dictionary of rules
-                    rules = {rule.id: rule for rule in GNAThub.Rule.list()}
-
-                    resource = GNAThub.Resource.get(source_path)
-                    metrics = {
-                        rules[msg.rule_id].name: float(msg.data)
-                        for msg in (resource.list_messages()
-                                    if resource else [])
-                        if rules[msg.rule_id].tool_id == gnatmetric.id
-                    }
-
-                    main['modules'][project]['sources'][source_dir].append({
-                        'filename': source,
-                        'partname': partname,
-                        'metrics': metrics,
-                        '_associated_resource': resource is not None
-                    })
-
-        return main
 
     def _get_tool_by_id(self, id):
         """Return the Tool object matching `id` if it was executed.
@@ -151,98 +89,222 @@ class HTMLReport(GNAThub.Plugin):
             }
         return self._tools_by_name.get(name.lower())
 
-    def _generate_sources_as_json(self, modules):
-        """Generate the JSON-encoded reports
+    @property
+    def output_dir(self):
+        """Return the path to the directory where to generate the HTML report
 
-        :param modules: project modules and their associated source directories
-        :type modules: dict[str,list[str]]
-        :return: the path to the root source directory and a copy of the input
-            ``modules`` directory with updated path to source directories
-            (pointing to the local copy)
-        :rtype: (str, dict[str,list[str]])
+        :return: the full path to the output directory
+        :rtype: str
         """
 
-        # Compute the total dirs count to copy to display progress
-        count = 0
-        total = sum([len(dirs) for dirs in modules.itervalues()])
+        return os.path.join(GNAThub.root(), self.name)
 
-        root_src_dir = SonarQube.src_cache()
+    def _json_dump(self, output, obj, indent=None):
+        """Dump a JSON-encoded representation of `obj` into `output`
 
-        self.info('generate JSON report for HTML output')
-        self.log.info(
-            'generating JSON reports from the project closure to %s',
-            os.path.relpath(root_src_dir))
+        :param output: path to the output file
+        :type output: str
+        :param obj: object to serialize and save into `output`
+        :type obj: dict | list | str | int
+        :raise: IOError
+        """
 
-        # Remove any previous analysis left-over
-        shutil.rmtree(root_src_dir, ignore_errors=True)
-        new_modules_mapping = collections.OrderedDict()
+        self.log.debug('generating %s', output)
+        with open(output, 'w') as outfile:
+            outfile.write(json.dumps(obj, indent=indent))
 
-        for module_name in modules:
-            module_root_src_dir = os.path.join(root_src_dir, module_name)
-            new_modules_mapping[module_name] = _escpath(module_root_src_dir)
+    def _generate_source_tree(self, transform=None):
+        """Generate the initial project structure
 
-            module_root_src_dir = os.path.join(module_root_src_dir,
-                                               module_name.lower() + '-report')
+        {
+            "project_name_1": {
+                "source_dir_path_1": [
+                    "source_filename_1", "source_filename_2"
+                ],
+                ...
+            },
+            ...
+        }
 
-            if not os.path.exists(module_root_src_dir):
-                os.makedirs(module_root_src_dir)
+        This structure will then be populated with relevant metrics.
 
-            module_src_dirs = modules[module_name]
-            dirs_commonprefix = os.path.commonprefix(module_src_dirs)
-            self.log.info('source dirs common prefix: %s', dirs_commonprefix)
+        :param transform: optional routine that takes 3 parameters as input
+            (the project name, the source directory full path, and the source
+            filename) and returns any structure. This callback is used to
+            populate the lists at the bottom of the above structure.  Defaults
+            to returning the source filename.
+        :type transform: Function | None
+        :return: a dictionary listing the project sources
+        :rtype: dict[str,dict[str,list[str]]]
+        """
 
-            self.info('prepare files from module: %s' % module_name)
-            for src_dir in modules[module_name]:
-                src_dir_relpath = os.path.relpath(src_dir, dirs_commonprefix)
-                src_dir_path = os.path.join(module_root_src_dir,
-                                            src_dir_relpath)
-                self.log.info(' + %s' % src_dir_path)
+        def reduce_source_dirs(sources):
+            """Compute the list of source directories from source files
 
-                if not os.path.exists(src_dir_path):
-                    os.makedirs(src_dir_path)
+            :param sources: the list of source files' absolute path
+            :type sources: list[str]
+            :return: the list of unique source directories' absolute path
+            :rtype: list[str]
+            """
 
-                # Generate JSON-encoded reports
-                for entry in os.listdir(src_dir):
-                    entry_path = os.path.join(src_dir, entry)
+            set = {}
+            map(set.__setitem__, [
+                os.path.normpath(os.path.dirname(f)) for f in sources
+            ], [])
+            return set.keys()
 
-                    if not os.path.isfile(entry_path):
-                        continue
+        transform = transform or (
+            # Default to returning the filename if |transform| is not provided
+            lambda project_name, source_dir, filename: filename
+        )
 
-                    new_path = os.path.join(src_dir_path, entry)
-                    self.log.debug('%s -> %s', entry_path, new_path)
+        # TODO(charly): it might be worth considering exporting this function
+        # or a more generic version of it from the GNAThub module.
+        return {
+            project: {
+                directory: [
+                    transform(project, directory, os.path.basename(path))
+                    for path in sources
+                    if os.path.normpath(os.path.dirname(path)) == directory
+                ] for directory in reduce_source_dirs(sources)
+            }
+            for project, sources in GNAThub.Project.source_files().items()
+            if sources
+        }
 
-                    # TODO(delay): generate JSON report
+    def _generate_report_src_hunk(self, source_file):
+        """Generate the JSON-encoded representation of `source_file`
 
-                    self.src_mapping[_escpath(entry_path)] = \
-                        _escpath(os.path.normpath(new_path))
+        :param source_file: the full path to the source file
+        :type source_file: str
+        :return: the JSON-encoded representation of `source_file`
+        :rtype: dict[str,*]
+        :raise: IOError
+        """
 
-                count = count + 1
-                Console.progress(count, total, count == total)
+        assert os.path.isfile(source_file), '{}: not such file ({})'.format(
+            os.path.basename(source_file), source_file
+        )
 
-        return root_src_dir, new_modules_mapping
+        with open(source_file, 'r') as infile:
+            return {
+                'filename': os.path.basename(source_file),
+                'lines': [{
+                    'number': no,
+                    'content': line
+                } for no, line in enumerate(infile, start=1)]
+            }
+
+    def _generate_report_index(self):
+        """Generate the report index
+
+        The index contains top-level information such as project name, database
+        location, ... as well as the list of sub-project and their source
+        directories and source files, along with some important metrics.
+
+        :return: the
+        :rtype: dict[str,*]
+        """
+
+        # Get the GNATmetric tool definition
+        GNATMETRIC = self._get_tool_by_name('GNATmetric')
+
+        # Generate the dictionary of rules
+        RULES = {rule.id: rule for rule in GNAThub.Rule.list()}
+
+        def _aggregate_metrics(project, source_dir, filename):
+            """Collect metrics about the given source file
+
+            :param project: the name of the project the source belongs to
+            :type project: str
+            :param source_dir: the full path to the source directory containing
+                the source file
+            :type source_dir: str
+            :param filename: the basename of the source file
+            :type filename: str
+            :return: the dictionary containing metrics for `filename`
+            :rtype: dict[str,*]
+            """
+
+            resource = GNAThub.Resource.get(os.path.join(source_dir, filename))
+            metrics = {
+                RULES[msg.rule_id].name: float(msg.data)
+                for msg in (
+                    resource.list_messages() if resource else []
+                ) if RULES[msg.rule_id].tool_id == GNATMETRIC.id
+            } if GNATMETRIC else None
+
+            return {
+                'filename': filename,
+                'partname': '{}.json'.format(filename),
+                'metrics': metrics,
+                '_associated_resource': resource is not None
+            }
+
+        return {
+            'modules': self._generate_source_tree(_aggregate_metrics),
+            'project': GNAThub.Project.name(),
+            '_database': GNAThub.database()
+        }
 
     def execute(self):
         """Generates JSON-encoded representation of the data collected"""
 
-        self.info('generate JSON-encoded reports')
-
-        # source_dirs = GNAThub.Project.source_dirs()[project_name]
-        modules = {k: v for k, v in GNAThub.Project.source_dirs().items() if v}
+        self.info('generate JSON-encoded report')
 
         try:
-            print json.dumps(self._main_as_json(modules), indent=2)
-            self.exec_status = GNAThub.EXEC_SUCCESS
-            return
-            with open('main.json', 'w') as outfile:
-                outfile.write(
-                    json.dumps(self._main_as_json(modules), indent=2))
+            if not os.path.exists(self.output_dir):
+                os.makedirs(self.output_dir)
+            else:
+                self.log.warn('%s: already exists', self.output_dir)
+                self.log.warn('existing report may be overriden')
 
-            for source in self._sources_as_json(modules):
-                output_path = '{}.json'.format(
-                    os.path.join(os.path.basename(source['path'])))
-                self.log.debug('Generating %s', output_path)
-                with open(output_path, 'w') as outfile:
-                    outfile.write(json.dumps(source, indent=2))
+            # Generate the report index
+            index = self._generate_report_index()
+
+            # Compute the total source file count to display execution progress
+            # Note: this is a more efficient version of:
+            #
+            #   count, total = 0, 1
+            #   for source_dirs in index['modules'].values():
+            #       for source_hunks in source_dirs.values():
+            #           total += len(source_hunks)
+            #
+            # Using generators and the built-in sum function, the following
+            # code ensures the smaller memory footprint and the best
+            # opportunities for the Python VM to optimize the count
+            # computation.
+            count, total = 0, sum((sum((
+                len(source_hunks) for source_hunks in source_dirs.itervalues()
+            )) for source_dirs in index['modules'].itervalues())) + 1
+
+            # Serialize each source of the project
+            for _, source_dirs in index['modules'].iteritems():
+                for source_dir, source_hunks in source_dirs.iteritems():
+                    for source in source_hunks:
+                        output_hunk_path = os.path.join(
+                            self.output_dir, source['partname']
+                        )
+                        self._json_dump(
+                            output_hunk_path,
+                            self._generate_report_src_hunk(
+                                os.path.join(source_dir, source['filename'])
+                            )
+                        )
+                        count = count + 1
+                        assert count != total, 'internal error'
+                        Console.progress(count, total, False)
+                        self.log.debug('hunk written to %s', output_hunk_path)
+
+            # Serialize the index
+            output_index_path = os.path.join(
+                self.output_dir,
+                '{}.report.json'.format(GNAThub.Project.name().lower())
+            )
+            self._json_dump(output_index_path, index)
+            assert count + 1 == total, 'internal error'
+            Console.progress(count + 1, total, True)
+            self.info('report written to %s' % output_index_path)
 
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE

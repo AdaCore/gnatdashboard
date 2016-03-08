@@ -108,13 +108,22 @@ declare module "gnat/reports" {
     }
 
     export interface IProjectModule {
-        sources: { [sourceDir: string]: ISource[] };
-        part_dir: string
+        [sourceDir: string]: ISource[];
     }
 
     export interface IGNAThubReport {
         project: string;
         _database: string;
         modules: { [moduleName: string]: IProjectModule[] };
+    }
+
+    export interface IGNAThubBlobLine {
+        no: number;
+        content: string;
+    }
+
+    export interface IGNAThubBlob {
+        filename: string;
+        lines: IGNAThubBlobLine[];
     }
 }
