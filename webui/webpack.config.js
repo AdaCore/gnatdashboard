@@ -3,6 +3,7 @@ var helpers = require('./helpers');
 
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 
 var ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 var HMR = helpers.hasProcessFlag('hot');
@@ -21,12 +22,17 @@ var metadata = {
 module.exports = {
   // static data for index.html
   metadata: metadata,
-  devtool: 'source-map',
+  devtool: 'cheap-module-eval-source-map',
+  // cache: true,
   debug: true,
   // devtool: 'eval' // for faster builds use 'eval'
 
   // our angular app
-  entry: { 'polyfills': './src/polyfills.ts', 'main': './src/main.ts' },
+  entry: {
+    'polyfills': './src/polyfills.ts',
+    'vendor': './src/vendor.ts',
+    'app': './src/main.ts'
+  },
 
   resolve: {
     extensions: ['', '.ts', '.js']
@@ -48,16 +54,17 @@ module.exports = {
     ],
     loaders: [
       // Support for .ts files.
-      { test: /\.ts$/, loader: 'ts-loader', exclude: [ /\.(spec|e2e)\.ts$/, helpers.root('node_modules') ] },
+      // TODO(charly): `{ test: /\.ts$/, loader: 'ts-loader', exclude: [ /\.(spec|e2e)\.ts$/ ] },` | while awesome-typescript-loader gets fixed
+      { test: /\.ts$/, loader: 'ts-loader', exclude: [ /\.(spec|e2e)\.ts$/ ] },
 
       // Support for *.json files.
-      { test: /\.json$/,  loader: 'json-loader', exclude: [ helpers.root('node_modules') ] },
+      { test: /\.json$/,  loader: 'json-loader' },
 
       // Support for *.css files
-      { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader', exclude: [ helpers.root('node_modules') ] },
+      { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader' },
 
       // support for .html as raw text
-      { test: /\.html$/,  loader: 'raw-loader', exclude: [ helpers.root('src/index.html'), helpers.root('node_modules') ] },
+      { test: /\.html$/,  loader: 'raw-loader', exclude: [ helpers.root('src/index.html') ] }
 
     ]
   },
@@ -73,22 +80,20 @@ module.exports = {
   },
 
   plugins: [
+    new ForkCheckerPlugin(),
     new webpack.optimize.OccurenceOrderPlugin(true),
-    new webpack.optimize.CommonsChunkPlugin({ name: 'polyfills', filename: 'polyfills.bundle.js', minChunks: Infinity }),
+    new webpack.optimize.CommonsChunkPlugin({ name: ['app', 'vendor', 'polyfills'], minChunks: Infinity }),
     // static assets
     new CopyWebpackPlugin([
       { from: 'src/assets', to: 'assets' },
       { from: 'src/mocks', to: 'api' }
     ]),
     // generating html
-    new HtmlWebpackPlugin({ template: 'src/index.html' }),
-    // replace
+    new HtmlWebpackPlugin({ template: 'src/index.html', chunksSortMode: 'none' }),
+    // Environment helpers (when adding more properties make sure you include them in custom-typings.d.ts)
     new webpack.DefinePlugin({
-      'process.env': {
-        'ENV': JSON.stringify(metadata.ENV),
-        'NODE_ENV': JSON.stringify(metadata.ENV),
-        'HMR': HMR
-      }
+      'ENV': JSON.stringify(metadata.ENV),
+      'HMR': HMR
     })
   ],
 
@@ -100,24 +105,21 @@ module.exports = {
     failOnHint: false,
     resourcePath: 'src',
   },
-
   devServer: {
     port: metadata.port,
     host: metadata.host,
-    // contentBase: 'src/',
     historyApiFallback: true,
     watchOptions: {
       aggregateTimeout: 300,
       poll: 1000
     }
   },
-  // we need this due to problems with es6-shim
   node: {
     global: 'window',
-    progress: false,
+    process: true,
     crypto: 'empty',
     module: false,
     clearImmediate: false,
     setImmediate: false
-  },
+  }
 };

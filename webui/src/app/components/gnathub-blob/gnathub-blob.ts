@@ -2,7 +2,7 @@ import { Component } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { RouteParams, RouterLink } from "angular2/router";
 
-import { IGNAThubBlob } from "gnat/reports";
+import { IGNAThubBlob } from "gnat";
 
 import { highlight, highlightAda } from "../../ada-lang";
 import { unescapeHTML } from "../../html-utils";
