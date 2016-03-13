@@ -16,6 +16,7 @@ var CompressionPlugin = require('compression-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var WebpackMd5Hash    = require('webpack-md5-hash');
+var ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 var ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 var HOST = process.env.HOST || 'localhost';
 var PORT = process.env.PORT || 8080;
@@ -39,8 +40,9 @@ module.exports = {
   debug: false,
 
   entry: {
-    'polyfills':'./src/polyfills.ts',
-    'main':'./src/main.ts' // our angular app
+    'polyfills': './src/polyfills.ts',
+    'vendor': './src/vendor.ts',
+    'app': './src/main.ts'
   },
 
   // Config for our build files
@@ -77,7 +79,7 @@ module.exports = {
       // Support for .ts files.
       {
         test: /\.ts$/,
-        loader: 'ts-loader',
+        loader: 'awesome-typescript-loader',
         query: {
           // remove TypeScript helpers to be injected below by DefinePlugin
           'compilerOptions': {
@@ -86,7 +88,6 @@ module.exports = {
         },
         exclude: [
           /\.(spec|e2e)\.ts$/,
-          helpers.root('node_modules')
         ]
       },
 
@@ -94,14 +95,12 @@ module.exports = {
       {
         test: /\.json$/,
         loader: 'json-loader',
-        exclude: [ helpers.root('node_modules') ]
       },
 
       // Support for CSS as raw text
       {
         test: /\.css$/,
         loader: 'raw-loader',
-        exclude: [ helpers.root('node_modules') ]
       },
 
       // support for .html as raw text
@@ -122,13 +121,14 @@ module.exports = {
   },
 
   plugins: [
+    new ForkCheckerPlugin(),
     new WebpackMd5Hash(),
     new DedupePlugin(),
     new OccurenceOrderPlugin(true),
     new CommonsChunkPlugin({
-      name: 'polyfills',
-      filename: 'polyfills.[chunkhash].bundle.js',
-      chunks: Infinity
+      name: ['app', 'vendor', 'polyfills'],
+      filename: '[name].bundle.js',
+      minChunks: Infinity
     }),
     // static assets
     new CopyWebpackPlugin([
@@ -138,13 +138,10 @@ module.exports = {
       }
     ]),
     // generating html
-    new HtmlWebpackPlugin({ template: 'src/index.html' }),
+    new HtmlWebpackPlugin({ template: 'src/index.html', chunksSortMode: 'none' }),
     new DefinePlugin({
-      // Environment helpers
-      'process.env': {
-        'ENV': JSON.stringify(metadata.ENV),
-        'NODE_ENV': JSON.stringify(metadata.ENV)
-      }
+      'ENV': JSON.stringify(metadata.ENV),
+      'HMR': false
     }),
     new UglifyJsPlugin({
       // to debug prod builds uncomment //debug lines and comment //prod lines
@@ -163,9 +160,57 @@ module.exports = {
       // mangle: { screw_ie8 : true },//prod
       mangle: {
         screw_ie8 : true,
-        except: ['RouterLink', 'NgFor', 'NgModel'] // needed for uglify RouterLink problem
+        except: [
+          'App',
+          'About',
+          'Contact',
+          'Home',
+          'Menu',
+          'Footer',
+          'XLarge',
+          'RouterActive',
+          'RouterLink',
+          'RouterOutlet',
+          'NgFor',
+          'NgIf',
+          'NgClass',
+          'NgSwitch',
+          'NgStyle',
+          'NgSwitchDefault',
+          'NgControl',
+          'NgControlName',
+          'NgControlGroup',
+          'NgFormControl',
+          'NgModel',
+          'NgFormModel',
+          'NgForm',
+          'NgSelectOption',
+          'DefaultValueAccessor',
+          'NumberValueAccessor',
+          'CheckboxControlValueAccessor',
+          'SelectControlValueAccessor',
+          'RadioControlValueAccessor',
+          'NgControlStatus',
+          'RequiredValidator',
+          'MinLengthValidator',
+          'MaxLengthValidator',
+          'PatternValidator',
+          'AsyncPipe',
+          'DatePipe',
+          'JsonPipe',
+          'NumberPipe',
+          'DecimalPipe',
+          'PercentPipe',
+          'CurrencyPipe',
+          'LowerCasePipe',
+          'UpperCasePipe',
+          'SlicePipe',
+          'ReplacePipe',
+          'I18nPluralPipe',
+          'I18nSelectPipe'
+        ] // needed for uglify RouterLink problem
       },// prod
-      compress : { screw_ie8 : true },//prod
+      compress: { screw_ie8: true },//prod
       comments: false//prod
 
     }),

@@ -1,4 +1,4 @@
-declare module "gnat/reports" {
+declare module 'gnat' {
 
     type GNATcoverageLevel = string;
     type CoverageStatus = string;

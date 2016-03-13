@@ -4,7 +4,7 @@ import { Observable } from "rxjs/Observable";
 
 import {
     IGNATcoverageHunk, IGNATcoverageReport, IGNAThubReport, IGNAThubBlob
-} from "gnat/reports";
+} from "gnat";
 
 import "rxjs/add/operator/map";
 

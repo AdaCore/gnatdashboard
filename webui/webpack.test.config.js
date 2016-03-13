@@ -34,17 +34,17 @@ module.exports = {
     loaders: [
       {
         test: /\.ts$/,
-        loader: 'ts-loader',
+        loader: 'awesome-typescript-loader',
         query: {
           "compilerOptions": {
             "removeComments": true,
           }
         },
-        exclude: [ /\.e2e\.ts$/, helpers.root('node_modules') ]
+        exclude: [ /\.e2e\.ts$/ ]
       },
-      { test: /\.json$/, loader: 'json-loader', exclude: [ helpers.root('src/index.html'), helpers.root('node_modules') ] }
-      { test: /\.html$/, loader: 'raw-loader', exclude: [ helpers.root('src/index.html'), helpers.root('node_modules') ] }
-      { test: /\.css$/,  loader: 'raw-loader', exclude: [ helpers.root('src/index.html'), helpers.root('node_modules') ] }
+      { test: /\.json$/, loader: 'json-loader', exclude: [ helpers.root('src/index.html') ] },
+      { test: /\.html$/, loader: 'raw-loader', exclude: [ helpers.root('src/index.html') ] },
+      { test: /\.css$/,  loader: 'raw-loader', exclude: [ helpers.root('src/index.html') ] }
     ],
     postLoaders: [
       // instrument only testing sources with Istanbul
@@ -60,12 +60,10 @@ module.exports = {
     ]
   },
   plugins: [
+    // Environment helpers
     new DefinePlugin({
-      // Environment helpers
-      'process.env': {
-        'ENV': JSON.stringify(ENV),
-        'NODE_ENV': JSON.stringify(ENV)
-      }
+      'ENV': JSON.stringify(ENV),
+      'HMR': false
     })
   ],
   node: {
@@ -82,4 +80,3 @@ module.exports = {
     resourcePath: 'src',
   }
 };
-

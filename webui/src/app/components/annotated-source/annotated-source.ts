@@ -4,7 +4,7 @@ import { RouteParams, RouterLink } from "angular2/router";
 
 import {
     IGNATcoverageHunk, IGNATcoverageHunkMapping, IGNATcoverageHunkStatement
-} from "gnat/reports";
+} from "gnat";
 
 import { highlightAda } from "../../ada-lang";
 import { unescapeHTML } from "../../html-utils";

@@ -4,7 +4,7 @@ import {
     CanReuse, ComponentInstruction, OnReuse, RouteParams, RouterLink
 } from "angular2/router";
 
-import { IGNAThubReport } from "gnat/reports";
+import { IGNAThubReport } from "gnat";
 
 import { Loader } from "../loader/loader";
 import { MapKeys } from "../../pipes/object";

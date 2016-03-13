@@ -4,7 +4,7 @@ import {
     CanReuse, ComponentInstruction, OnReuse, RouteParams, RouterLink
 } from "angular2/router";
 
-import { IGNATcoverageReport } from "gnat/reports";
+import { IGNATcoverageReport } from "gnat";
 
 import { PathEncoder } from "../../path-encoder";
 import { ReportService } from "../../services/report";
