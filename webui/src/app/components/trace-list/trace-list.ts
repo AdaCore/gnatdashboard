@@ -1,13 +1,13 @@
-import { Component } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
+import { Component } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import {
     CanReuse, ComponentInstruction, OnReuse, RouteParams, RouterLink
-} from "angular2/router";
+} from 'angular2/router';
 
-import { IGNATcoverageReport } from "gnat";
+import { IGNATcoverageReport } from 'gnat';
 
-import { PathEncoder } from "../../path-encoder";
-import { ReportService } from "../../services/report";
+import { PathEncoder } from '../../path-encoder';
+import { ReportService } from '../../services/report';
 
 interface IProgramTrace {
     filename: string;
@@ -16,8 +16,8 @@ interface IProgramTrace {
 }
 
 @Component({
-    selector: "trace-list",
-    templateUrl: "app/components/trace-list/trace-list.html",
+    selector: 'trace-list',
+    template: require('./trace-list.html'),
     directives: [ CORE_DIRECTIVES, RouterLink ],
     providers: [ ReportService ]
 })
@@ -63,11 +63,11 @@ export class TraceList extends PathEncoder implements CanReuse, OnReuse {
             const traces: { [program: string]: IProgramTrace[] } = {};
 
             for (const trace of report.traces) {
-                const program: string = trace["program"];
+                const program: string = trace['program'];
                 const record: IProgramTrace = {
-                    filename: trace["filename"],
-                    gen_date: new Date(trace["date"]),
-                    tag: trace["tag"]
+                    filename: trace['filename'],
+                    gen_date: new Date(trace['date']),
+                    tag: trace['tag']
                 };
 
                 if (traces.hasOwnProperty(program)) {
@@ -113,7 +113,7 @@ export class TraceList extends PathEncoder implements CanReuse, OnReuse {
      * @param params An immutable map of parameters.
      */
     private readRouteParameters(params: { [key: string]: string }): void {
-        this.program = params.hasOwnProperty("program") ?
-            this.decodePath(params["program"]) : null;
+        this.program = params.hasOwnProperty('program') ?
+            this.decodePath(params['program']) : null;
     }
 }
