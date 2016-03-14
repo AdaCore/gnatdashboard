@@ -5,21 +5,25 @@
     <div *ngIf="report">
         <h1>Project Overview & Report <small>{{ report.project }}</small></h1>
         <div *ngFor="#module of report.modules | mapKeys" class="module">
-            <h3>{{ module }}</h3>
-            <table *ngFor="#dir of report.modules[module] | mapKeys">
+            <table>
                 <thead>
-                    <th class="filename">{{ dir }}</th>
-                    <th class="line-count">Lines count</th>
+                    <th class="module-name">{{ module }}</th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="#source of report.modules[module][dir]">
-                        <td>
-                            <a [routerLink]="['../Blob', { filename: source.filename }]">
-                                {{ source.filename }}
-                            </a>
-                        </td>
-                        <td class="line-count">{{ source.metrics.all_lines }}</td>
-                    </tr>
+                    <template ngFor #dir [ngForOf]="report.modules[module] | mapKeys">
+                        <tr class="source-directory">
+                            <td>{{ dir }}</td>
+                        </tr>
+                        <template ngFor #source [ngForOf]="report.modules[module][dir]">
+                            <tr class="source-file">
+                                <td>
+                                    <a [routerLink]="['../Blob', { filename: source.filename }]">
+                                        {{ source.filename }}
+                                    </a>
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
                 </tbody>
             </table>
         </div>
