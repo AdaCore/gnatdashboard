@@ -1,17 +1,17 @@
-import { Component } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { RouteParams, RouterLink } from "angular2/router";
+import { Component } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
+import { RouteParams, RouterLink } from 'angular2/router';
 
 import { IGNAThubBlob } from "gnat";
 
-import { highlight, highlightAda } from "../../ada-lang";
-import { unescapeHTML } from "../../html-utils";
-import { PathEncoder } from "../../path-encoder";
-import { ReportService } from "../../services/report";
+import { highlight, highlightAda } from '../../ada-lang';
+import { unescapeHTML } from '../../html-utils';
+import { PathEncoder } from '../../path-encoder';
+import { ReportService } from '../../services/report';
 
 @Component({
-    selector: "gnathub-blob",
-    templateUrl: "app/components/gnathub-blob/gnathub-blob.html",
+    selector: 'gnathub-blob',
+    template: require('./gnathub-blob.html'),
     directives: [ CORE_DIRECTIVES, RouterLink ],
     providers: [ ReportService ]
 })
@@ -47,14 +47,14 @@ export class GNAThubBlob extends PathEncoder {
     public highlight(code: string): string {
         // TODO(delay): avoid having to deal with encoded HTML entities at this
         // point (ie. remove the call to |unescapeHTML|).
-        if (this.filename.endsWith(".ads") || this.filename.endsWith(".adb")) {
+        if (this.filename.endsWith('.ads') || this.filename.endsWith('.adb')) {
             return highlightAda(unescapeHTML(code));
         }
-        if (this.filename.endsWith(".py")) {
-            return highlight(unescapeHTML(code), "python");
+        if (this.filename.endsWith('.py')) {
+            return highlight(unescapeHTML(code), 'python');
         }
-        if (this.filename.endsWith(".c") || this.filename.endsWith(".h")) {
-            return highlight(unescapeHTML(code), "C");
+        if (this.filename.endsWith('.c') || this.filename.endsWith('.h')) {
+            return highlight(unescapeHTML(code), 'C');
         }
         return unescapeHTML(code);
     }
@@ -65,7 +65,7 @@ export class GNAThubBlob extends PathEncoder {
      * @param params An immutable map of parameters.
      */
     private readRouteParameters(params: { [key: string]: string }): void {
-        this.filename = params.hasOwnProperty("filename") ?
-            this.decodePath(params["filename"]) : null;
+        this.filename = params.hasOwnProperty('filename') ?
+            this.decodePath(params['filename']) : null;
     }
 }

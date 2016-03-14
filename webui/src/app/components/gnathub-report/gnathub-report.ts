@@ -1,18 +1,19 @@
-import { Component } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
+import { Component } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import {
     CanReuse, ComponentInstruction, OnReuse, RouteParams, RouterLink
-} from "angular2/router";
+} from 'angular2/router';
 
-import { IGNAThubReport } from "gnat";
+import { IGNAThubReport } from 'gnat';
 
-import { Loader } from "../loader/loader";
-import { MapKeys } from "../../pipes/object";
-import { ReportService } from "../../services/report";
+import { Loader } from '../loader/loader';
+import { MapKeys } from '../../pipes/object';
+import { ReportService } from '../../services/report';
 
 @Component({
-    selector: "gnathub-report",
-    templateUrl: "app/components/gnathub-report/gnathub-report.html",
+    selector: 'gnathub-report',
+    template: require('./gnathub-report.html'),
+    styles: [ require('./gnathub-report.css').toString() ],
     directives: [ CORE_DIRECTIVES, Loader, RouterLink ],
     pipes: [ MapKeys ],
     providers: [ ReportService ]

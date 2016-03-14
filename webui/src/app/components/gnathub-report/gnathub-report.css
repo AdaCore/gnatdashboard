@@ -1,0 +1,16 @@
+gnathub-report {
+  display: block;
+  margin: 10px;
+
+  & .module {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  & .source-directory {
+    background: #f5f5f5;
+  }
+}

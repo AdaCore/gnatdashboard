@@ -1,19 +1,19 @@
-import { Component } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { RouteParams, RouterLink } from "angular2/router";
+import { Component } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
+import { RouteParams, RouterLink } from 'angular2/router';
 
 import {
     IGNATcoverageHunk, IGNATcoverageHunkMapping, IGNATcoverageHunkStatement
-} from "gnat";
+} from 'gnat';
 
-import { highlightAda } from "../../ada-lang";
-import { unescapeHTML } from "../../html-utils";
-import { PathEncoder } from "../../path-encoder";
-import { ReportService } from "../../services/report";
+import { highlightAda } from '../../ada-lang';
+import { unescapeHTML } from '../../html-utils';
+import { PathEncoder } from '../../path-encoder';
+import { ReportService } from '../../services/report';
 
 @Component({
-    selector: "annotated-source",
-    templateUrl: "app/components/annotated-source/annotated-source.html",
+    selector: 'annotated-source',
+    template: require('./annotated-source.html'),
     directives: [ CORE_DIRECTIVES, RouterLink ],
     providers: [ ReportService ]
 })
@@ -92,7 +92,7 @@ export class AnnotatedSource extends PathEncoder {
      * @param params An immutable map of parameters.
      */
     private readRouteParameters(params: { [key: string]: string }): void {
-        this.filename = params.hasOwnProperty("filename") ?
-            this.decodePath(params["filename"]) : null;
+        this.filename = params.hasOwnProperty('filename') ?
+            this.decodePath(params['filename']) : null;
     }
 }
