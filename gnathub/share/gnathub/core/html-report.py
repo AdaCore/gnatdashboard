@@ -147,11 +147,9 @@ class HTMLReport(GNAThub.Plugin):
             :rtype: list[str]
             """
 
-            set = {}
-            map(set.__setitem__, [
+            return list(set((
                 os.path.normpath(os.path.dirname(f)) for f in sources
-            ], [])
-            return set.keys()
+            )))
 
         transform = transform or (
             # Default to returning the filename if |transform| is not provided

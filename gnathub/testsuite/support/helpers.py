@@ -9,6 +9,4 @@ def uniq(array):
     :return: a new array without duplicates
     :rtype: list[*]
     """
-    set = {}
-    map(set.__setitem__, array, [])
-    return set.keys()
+    return list(set(array))
