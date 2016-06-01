@@ -63,6 +63,9 @@ class GNATprove(GNAThub.Plugin):
         :meth:`postprocess()` is called upon process completion.
         """
 
+        self.log.info('clear tool references in the database')
+        GNAThub.Tool.clear_references(self.name)
+
         proc = GNAThub.Run(self.name, GNATprove.__cmd_line())
         self.postprocess(proc.status, proc.output())
 

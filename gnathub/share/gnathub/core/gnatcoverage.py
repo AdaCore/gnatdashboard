@@ -174,4 +174,7 @@ class GNATcoverage(GNAThub.Plugin):
 
     def execute(self):
         """Finds the GNATcoverage output files and parses them"""
+        self.log.info('clear tool references in the database')
+        GNAThub.Tool.clear_references(self.name)
+
         self.__parse_gnatcov_report()
