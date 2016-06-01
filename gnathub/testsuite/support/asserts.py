@@ -49,6 +49,20 @@ def assertFalse(expr):
     raise AssertionError('%s is not False' % expr)
 
 
+def assertEmpty(container):
+    """Test that `container` is empty."""
+    if len(container) == 0:
+        return
+    raise AssertionError('%s is not empty' % (container,))
+
+
+def assertNotEmpty(container):
+    """Test that `container` is not empty."""
+    if len(container) != 0:
+        return
+    raise AssertionError('%s is empty' % (container,))
+
+
 def assertIs(first, second):
     """Test that `first` and `second` evaluate to the same object."""
     if first is second:
