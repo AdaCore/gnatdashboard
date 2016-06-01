@@ -405,6 +405,15 @@ class Tool(object):
         """
         return NotImplemented   # Implemented in Ada
 
+    @staticmethod
+    def clear_references(tool):
+        """Clear all references to a tool in the database.
+
+        :param tool: the name of the tool
+        :type tool: str
+        """
+        return NotImplemented   # Implemented in Ada
+
 
 class Category(object):
 

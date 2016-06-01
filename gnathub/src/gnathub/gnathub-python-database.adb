@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2014-2015, AdaCore                     --
+--                     Copyright (C) 2014-2016, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -36,6 +36,9 @@ package body GNAThub.Python.Database is
    Line_Cst      : aliased constant String := "line";
    Message_Cst   : aliased constant String := "message";
    List_Cst      : aliased constant String := "list";
+
+   Me : constant Trace_Handle := Create ("GNATHUB.PYTHON.DATABASE");
+   --  The handle to use to log messages
 
    -------------------------
    -- Prepared statements --
@@ -172,6 +175,19 @@ package body GNAThub.Python.Database is
       Kind          : Integer);
    --  Set the fields describing a Resource in Resource_Inst
 
+   -------------
+   -- Helpers --
+   -------------
+
+   procedure Clear_Tool_References (Tool_Name : String);
+   --  Remove references of Tool_Name in the database, ie. delete:
+   --
+   --  * messages where rule_id matches the ID of a rule created for Tool_Name
+   --  * rules created for Tool_Name
+   --  * the tool from the Tools table
+   --
+   --  Return immediately if Tool_Name does not exist.
+
    ---------------------
    -- Set_Tool_Fields --
    ---------------------
@@ -245,10 +261,94 @@ package body GNAThub.Python.Database is
                R.Next;
             end loop;
          end;
+
+      elsif Command = "clear_references" then
+         Clear_Tool_References (Nth_Arg (Data, 1));
+
       else
          raise Python_Error with "Unknown method GNAThub.Tool." & Command;
       end if;
    end Tool_Command_Handler;
+
+   ---------------------------
+   -- Clear_Tool_References --
+   ---------------------------
+
+   procedure Clear_Tool_References (Tool_Name : String)
+   is
+      Results  : Direct_Cursor;
+      Iterator : Forward_Cursor;
+      Tool_Id  : Integer;
+      Rule_Id  : Integer;
+   begin
+      Fetch
+        (Results, DB, SQL_Select
+          (To_List ((0 => +D.Tools.Id)),
+           From  => D.Tools,
+           Where => D.Tools.Name = Tool_Name));
+
+      if not Results.Has_Row then
+         --  No tool with that name has been found, nothing to do
+         return;
+      end if;
+
+      Assert (Me, Results.Rows_Count = 1, "Tool_Id expected to be unique");
+      Tool_Id := Results.Integer_Value (0);
+
+      --  Iterate over the tool's rules
+      Fetch
+        (Iterator, DB, SQL_Select
+           (To_List ((0 => +D.Rules.Id)),
+            From  => D.Rules,
+            Where => D.Rules.Tool_Id = Tool_Id));
+
+      while Iterator.Has_Row loop
+         Rule_Id := Iterator.Integer_Value (0);
+
+         --  Delete message entries in join tables (resources_messages &
+         --  entities_messages).
+         declare
+            Iterator   : Forward_Cursor;
+            Message_Id : Integer;
+         begin
+            Fetch
+              (Iterator, DB, SQL_Select
+                 (To_List ((0 => +D.Messages.Id)),
+                  From  => D.Messages,
+                  Where => D.Messages.Rule_Id = Rule_Id));
+
+            while Iterator.Has_Row loop
+               Message_Id := Iterator.Integer_Value (0);
+               DB.Execute
+                 (SQL_Delete
+                    (From  => D.Resources_Messages,
+                     Where => D.Resources_Messages.Message_Id = Message_Id));
+               DB.Execute
+                 (SQL_Delete
+                    (From  => D.Entities_Messages,
+                     Where => D.Entities_Messages.Message_Id = Message_Id));
+               Iterator.Next;
+            end loop;
+         end;
+
+         --  Delete the entries in the messages table
+         DB.Execute
+           (SQL_Delete
+              (From  => D.Messages,
+               Where => D.Messages.Rule_Id = Rule_Id));
+         --  Delete the entry in the rules table
+         DB.Execute
+           (SQL_Delete
+              (From  => D.Rules,
+               Where => D.Rules.Id = Rule_Id));
+         Iterator.Next;
+      end loop;
+
+      --  Delete the entry in the tools table
+      DB.Execute
+        (SQL_Delete (From => D.Tools, Where => D.Tools.Name = Tool_Name));
+      DB.Commit;
+   end Clear_Tool_References;
 
    -------------------------
    -- Set_Category_Fields --
@@ -851,6 +951,10 @@ package body GNAThub.Python.Database is
 
       Repository.Register_Command
         ("list", 0, 0,
+         Tool_Command_Handler'Access, Tool_Class, True);
+
+      Repository.Register_Command
+        ("clear_references", 1, 1,
          Tool_Command_Handler'Access, Tool_Class, True);
 
       --  Categories
