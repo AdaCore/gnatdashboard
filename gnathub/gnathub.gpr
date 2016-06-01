@@ -66,6 +66,7 @@ project GNAThub is
       case Build_Mode is
          when "Coverage" =>
             for Switches ("Ada") use ("--coverage");
+         when others => null;
       end case;
    end Linker;
 
