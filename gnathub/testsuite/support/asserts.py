@@ -6,9 +6,8 @@ def assertEqual(first, second):
 
     If the values do not compare equal, the test will fail.
     """
-    if first == second:
-        return
-    raise AssertionError('%s != %s' % (first, second))
+    if first != second:
+        raise AssertionError('%s != %s' % (first, second))
 
 
 def assertNotEqual(first, second):
@@ -16,9 +15,8 @@ def assertNotEqual(first, second):
 
     If the values do compare equal, the test will fail.
     """
-    if first != second:
-        return
-    raise AssertionError('%s == %s' % (first, second))
+    if first == second:
+        raise AssertionError('%s == %s' % (first, second))
 
 
 def assertTrue(expr):
@@ -30,9 +28,8 @@ def assertTrue(expr):
     `assertEqual(a, b)` instead of `assertTrue(a == b)`), because they provide
     a better error message in case of failure.
     """
-    if bool(expr) is True:
-        return
-    raise AssertionError('%s is not True' % expr)
+    if bool(expr) is False:
+        raise AssertionError('%s is not True' % expr)
 
 
 def assertFalse(expr):
@@ -44,65 +41,56 @@ def assertFalse(expr):
     `assertEqual(a, b)` instead of `assertTrue(a != b)`), because they provide
     a better error message in case of failure.
     """
-    if bool(expr) is False:
-        return
-    raise AssertionError('%s is not False' % expr)
+    if bool(expr) is True:
+        raise AssertionError('%s is not False' % expr)
 
 
 def assertEmpty(container):
     """Test that `container` is empty."""
-    if len(container) == 0:
-        return
-    raise AssertionError('%s is not empty' % (container,))
+    if len(container) != 0:
+        raise AssertionError('%s is not empty' % (container,))
 
 
 def assertNotEmpty(container):
     """Test that `container` is not empty."""
-    if len(container) != 0:
-        return
-    raise AssertionError('%s is empty' % (container,))
+    if len(container) == 0:
+        raise AssertionError('%s is empty' % (container,))
 
 
 def assertIs(first, second):
     """Test that `first` and `second` evaluate to the same object."""
-    if first is second:
-        return
-    raise AssertionError('%s is not %s' % (first, second))
+    if first is not second:
+        raise AssertionError('%s is not %s' % (first, second))
 
 
 def assertIsNot(first, second):
     """Test that `first` and `second` don't evaluate to the same object."""
-    if first is not second:
-        return
-    raise AssertionError('%s is %s' % (first, second))
+    if first is second:
+        raise AssertionError('%s is %s' % (first, second))
 
 
 def assertIsNone(expr):
     """Test that `expr` is None."""
-    if expr is None:
-        return
-    raise AssertionError('%s is not None' % expr)
+    if expr is not None:
+        raise AssertionError('%s is not None' % expr)
 
 
 def assertIsNotNone(expr):
     """Test that `expr` is not None."""
-    if expr is not None:
-        return
-    raise AssertionError('%s is None' % expr)
+    if expr is None:
+        raise AssertionError('%s is None' % expr)
 
 
 def assertIn(first, second):
     """Test that `first` is in `second`."""
-    if first in second:
-        return
-    raise AssertionError('%s is not in %s' % (first, second))
+    if first not in second:
+        raise AssertionError('%s is not in %s' % (first, second))
 
 
 def assertNotIn(first, second):
     """Test that `first` is not in `second`."""
-    if first not in second:
-        return
-    raise AssertionError('%s is in %s' % (first, second))
+    if first in second:
+        raise AssertionError('%s is in %s' % (first, second))
 
 
 def assertIsInstance(obj, cls):
@@ -111,18 +99,16 @@ def assertIsInstance(obj, cls):
 
     To check for the exact type, use `assertIs(type(obj), cls)`.
     """
-    if isinstance(obj, cls):
-        return
-    raise AssertionError('%s is not an instance of %s' % (obj, cls))
+    if not isinstance(obj, cls):
+        raise AssertionError('%s is not an instance of %s' % (obj, cls))
 
 
 def assertNotIsInstance(obj, cls):
     """Test that `obj` is not an instance of `cls` (which can be a class or a
     tuple of classes, as supported by isinstance()).
     """
-    if not isinstance(obj, cls):
-        return
-    raise AssertionError('%s is an instance of %s' % (obj, cls))
+    if isinstance(obj, cls):
+        raise AssertionError('%s is an instance of %s' % (obj, cls))
 
 
 class _AssertRaisesContext(object):
