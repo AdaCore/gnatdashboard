@@ -31,12 +31,6 @@ package body GNAThub.Python.Database is
      renames GNAThub.Database.DB;
    package D renames Standard.Database;
 
-   Col_Begin_Cst : aliased constant String := "col_begin";
-   Col_End_Cst   : aliased constant String := "col_end";
-   Line_Cst      : aliased constant String := "line";
-   Message_Cst   : aliased constant String := "message";
-   List_Cst      : aliased constant String := "list";
-
    Me : constant Trace_Handle := Create ("GNATHUB.PYTHON.DATABASE");
    --  The handle to use to log messages
 
@@ -808,10 +802,6 @@ package body GNAThub.Python.Database is
          end;
 
       elsif Command = "add_messages" then
-         Name_Parameters
-           (Data,
-            (1 => List_Cst'Access));
-
          declare
             --  Required parameters
             Resource    : constant Class_Instance := Nth_Arg (Data, 1);
@@ -848,13 +838,6 @@ package body GNAThub.Python.Database is
          end;
 
       elsif Command = "add_message" then
-         Name_Parameters
-           (Data,
-            (1 => Message_Cst'Access,
-             2 => Line_Cst'Access,
-             3 => Col_Begin_Cst'Access,
-             4 => Col_End_Cst'Access));
-
          declare
             --  Required parameters
             Resource    : constant Class_Instance := Nth_Arg (Data, 1);
@@ -901,8 +884,7 @@ package body GNAThub.Python.Database is
                    3 => +D.Messages.Category_Id,
                    4 => +D.Resources_Messages.Line,
                    5 => +D.Resources_Messages.Col_Begin,
-                   6 => +D.Resources_Messages.Col_End
-                  )),
+                   6 => +D.Resources_Messages.Col_End)),
 
                From  => D.Messages & D.Resources_Messages,
 
@@ -946,81 +928,132 @@ package body GNAThub.Python.Database is
       Tool_Class := Repository.New_Class (Tool_Class_Name);
 
       Repository.Register_Command
-        (Constructor_Method, 1, 1,
-         Tool_Command_Handler'Access, Tool_Class, False);
+        (Command => Constructor_Method,
+         Params  => (1 .. 1 => Param ("name")),
+         Handler => Tool_Command_Handler'Access,
+         Class   => Tool_Class);
 
       Repository.Register_Command
-        ("list", 0, 0,
-         Tool_Command_Handler'Access, Tool_Class, True);
+        (Command       => "list",
+         Params        => No_Params,
+         Handler       => Tool_Command_Handler'Access,
+         Class         => Tool_Class,
+         Static_Method => True);
 
       Repository.Register_Command
-        ("clear_references", 1, 1,
-         Tool_Command_Handler'Access, Tool_Class, True);
+        (Command       => "clear_references",
+         Params        => (1 .. 1 => Param ("tool")),
+         Handler       => Tool_Command_Handler'Access,
+         Class         => Tool_Class,
+         Static_Method => True);
 
       --  Categories
 
       Category_Class := Repository.New_Class (Category_Class_Name);
 
       Repository.Register_Command
-        (Constructor_Method, 1, 2,
-         Category_Command_Handler'Access, Category_Class, False);
+        (Command => Constructor_Method,
+         Params  =>
+           (Param ("label"),
+            Param ("on_side", Optional => True)),
+         Handler => Category_Command_Handler'Access,
+         Class   => Category_Class);
 
       Repository.Register_Command
-        ("list", 0, 0,
-         Category_Command_Handler'Access, Category_Class, True);
+        (Command       => "list",
+         Params        => No_Params,
+         Handler       => Category_Command_Handler'Access,
+         Class         => Category_Class,
+         Static_Method => True);
 
       --  Rules
 
       Rule_Class := Repository.New_Class (Rule_Class_Name);
 
       Repository.Register_Command
-        (Constructor_Method, 4, 4,
-         Rule_Command_Handler'Access, Rule_Class, False);
+        (Command => Constructor_Method,
+         Params  =>
+           (Param ("name"),
+            Param ("identifier"),
+            Param ("kind"),
+            Param ("tool")),
+         Handler => Rule_Command_Handler'Access,
+         Class   => Rule_Class);
 
       Repository.Register_Command
-        ("list", 0, 0,
-         Rule_Command_Handler'Access, Rule_Class, True);
+        (Command       => "list",
+         Params        => No_Params,
+         Handler       => Rule_Command_Handler'Access,
+         Class         => Rule_Class,
+         Static_Method => True);
 
       --  Messages
 
       Message_Class := Repository.New_Class (Message_Class_Name);
 
       Repository.Register_Command
-        (Constructor_Method, 2, 3,
-         Message_Command_Handler'Access, Message_Class, False);
+        (Command => Constructor_Method,
+         Params  =>
+           (Param ("rule"),
+            Param ("message"),
+            Param ("category", Optional => True)),
+         Handler => Message_Command_Handler'Access,
+         Class   => Message_Class);
 
       Repository.Register_Command
-        ("list", 0, 0,
-         Message_Command_Handler'Access, Message_Class, True);
+        (Command       => "list",
+         Params        => No_Params,
+         Handler       => Message_Command_Handler'Access,
+         Class         => Message_Class,
+         Static_Method => True);
 
       --  Resources
 
       Resource_Class := Repository.New_Class (Resource_Class_Name);
 
       Repository.Register_Command
-        (Constructor_Method, 2, 2,
-         Resource_Command_Handler'Access, Resource_Class, False);
+        (Command => Constructor_Method,
+         Params  =>
+           (Param ("name"),
+            Param ("kind")),
+         Handler => Resource_Command_Handler'Access,
+         Class   => Resource_Class);
 
       Repository.Register_Command
-        ("get", 1, 1,
-         Resource_Command_Handler'Access, Resource_Class, True);
+        (Command       => "get",
+         Params        => (1 .. 1 => Param ("name")),
+         Handler       => Resource_Command_Handler'Access,
+         Class         => Resource_Class,
+         Static_Method => True);
 
       Repository.Register_Command
-        ("list", 0, 0,
-         Resource_Command_Handler'Access, Resource_Class, True);
+        (Command       => "list",
+         Params        => No_Params,
+         Handler       => Resource_Command_Handler'Access,
+         Class         => Resource_Class,
+         Static_Method => True);
 
       Repository.Register_Command
-        ("add_message", 1, 5,
-         Resource_Command_Handler'Access, Resource_Class, False);
+        (Command   => "add_message",
+         Params    =>
+           (Param ("message"),
+            Param ("line",      Optional => True),
+            Param ("col_begin", Optional => True),
+            Param ("col_end",   Optional => True)),
+         Handler   => Resource_Command_Handler'Access,
+         Class     => Resource_Class);
 
       Repository.Register_Command
-        ("add_messages", 1, 1,
-         Resource_Command_Handler'Access, Resource_Class, False);
+        (Command => "add_messages",
+         Params  => (1 .. 1 => Param ("messages")),
+         Handler => Resource_Command_Handler'Access,
+         Class   => Resource_Class);
 
       Repository.Register_Command
-        ("list_messages", 0, 0,
-         Resource_Command_Handler'Access, Resource_Class, False);
-
+        (Command => "list_messages",
+         Params  => No_Params,
+         Handler => Resource_Command_Handler'Access,
+         Class   => Resource_Class);
    end Register_Database_Interaction_API;
 
 end GNAThub.Python.Database;

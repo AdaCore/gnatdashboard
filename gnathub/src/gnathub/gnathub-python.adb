@@ -213,10 +213,10 @@ package body GNAThub.Python is
 
       for Command of Logger_Class_Instance_Methods loop
          Repository.Register_Command
-           (Command       => Command.all,
-            Params        => (1 .. 1 => Param ("message")),
-            Handler       => Logger_Instance_Method_Handler'Access,
-            Class         => Logger_Class);
+           (Command => Command.all,
+            Params  => (1 .. 1 => Param ("message")),
+            Handler => Logger_Instance_Method_Handler'Access,
+            Class   => Logger_Class);
       end loop;
    end Register_Logger_Class;
 
