@@ -15,6 +15,8 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Strings.Unbounded;
+
 with GNATCOLL.SQL;                  use GNATCOLL.SQL;
 with GNATCOLL.SQL.Exec;             use GNATCOLL.SQL.Exec;
 with GNATCOLL.Scripts;              use GNATCOLL.Scripts;
@@ -270,10 +272,13 @@ package body GNAThub.Python.Database is
 
    procedure Clear_Tool_References (Tool_Name : String)
    is
+      use Ada.Strings.Unbounded;
+
       Results  : Direct_Cursor;
       Iterator : Forward_Cursor;
       Tool_Id  : Integer;
       Rule_Id  : Integer;
+      Rule_Ids : Unbounded_String;
    begin
       Fetch
         (Results, DB, SQL_Select
@@ -299,11 +304,18 @@ package body GNAThub.Python.Database is
       while Iterator.Has_Row loop
          Rule_Id := Iterator.Integer_Value (0);
 
+         if Iterator.Processed_Rows = 0 then
+            Rule_Ids := To_Unbounded_String (Rule_Id'Img);
+         else
+            Append (Rule_Ids, "," & Rule_Id'Img);
+         end if;
+
          --  Delete message entries in join tables (resources_messages &
          --  entities_messages).
          declare
             Iterator   : Forward_Cursor;
             Message_Id : Integer;
+            Ids        : Unbounded_String;
          begin
             Fetch
               (Iterator, DB, SQL_Select
@@ -313,31 +325,36 @@ package body GNAThub.Python.Database is
 
             while Iterator.Has_Row loop
                Message_Id := Iterator.Integer_Value (0);
-               DB.Execute
-                 (SQL_Delete
-                    (From  => D.Resources_Messages,
-                     Where => D.Resources_Messages.Message_Id = Message_Id));
-               DB.Execute
-                 (SQL_Delete
-                    (From  => D.Entities_Messages,
-                     Where => D.Entities_Messages.Message_Id = Message_Id));
+
+               if Iterator.Processed_Rows = 0 then
+                  Ids := To_Unbounded_String (Message_Id'Img);
+               else
+                  Append (Ids, "," & Message_Id'Img);
+               end if;
+
                Iterator.Next;
             end loop;
+
+            DB.Execute
+              (SQL_Delete
+                 (From  => D.Resources_Messages,
+                  Where =>
+                    SQL_In (D.Entities_Messages.Message_Id, To_String (Ids))));
          end;
 
-         --  Delete the entries in the messages table
-         DB.Execute
-           (SQL_Delete
-              (From  => D.Messages,
-               Where => D.Messages.Rule_Id = Rule_Id));
-         --  Delete the entry in the rules table
-         DB.Execute
-           (SQL_Delete
-              (From  => D.Rules,
-               Where => D.Rules.Id = Rule_Id));
          Iterator.Next;
       end loop;
 
+      --  Delete the entries in the messages table
+      DB.Execute
+        (SQL_Delete
+           (From  => D.Messages,
+            Where => SQL_In (D.Messages.Rule_Id, To_String (Rule_Ids))));
+      --  Delete the entrise in the rules table
+      DB.Execute
+        (SQL_Delete
+           (From  => D.Rules,
+            Where => SQL_In (D.Rules.Id, To_String (Rule_Ids))));
       --  Delete the entry in the tools table
       DB.Execute
         (SQL_Delete (From => D.Tools, Where => D.Tools.Name = Tool_Name));
