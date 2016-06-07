@@ -6,5 +6,6 @@
 /src/*.js
 /src/*.css
 /src/maps/
+/src/mocks/html-report/
 
 npm-debug.log
