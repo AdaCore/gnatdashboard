@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2015, AdaCore                     --
+--                     Copyright (C) 2013-2016, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -15,7 +15,7 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-with Orm;               use Orm;
+with Database.Orm;               use Database.Orm;
 
 with GNATCOLL.VFS;
 with GNATCOLL.SQL.Exec;
@@ -24,41 +24,21 @@ with GNATCOLL.SQL.Exec;
 
 package GNAThub.Database is
 
-   --------------------
-   -- Object Factory --
-   --------------------
-
+   ----------------
    --  Rule Kind --
+   ----------------
 
    type Rule_Kind is (Kind_Rule, Kind_Metric);
    --  Correspond to the value of "kind" field in "Rule" table DB.
    --  Defined as follow: 0 -> Rule, 1 -> Metric
 
-   type Abstract_Detached_Rule is abstract new Orm.Detached_Rule
-     with null record;
-   --  ???
-
-   type My_Detached_Rule is new Abstract_Detached_Rule with null record;
-   --  ???
-   type Detached_Metric is new Abstract_Detached_Rule with null record;
-   --  ???
-
+   ---------------------
    --  Resource Kind  --
+   ---------------------
 
    type Resource_Kind is (Kind_Project, Kind_Directory, Kind_File);
    --  Corresponds to the value of "kind" field in "Resource" table DB.
    --  Defined as follow: 0 -> Project, 1 -> Directory, 2 -> File
-
-   type Abstract_Detached_Resource is abstract new Orm.Detached_Resource
-     with null record;
-   --  ???
-
-   type Detached_Project is new Abstract_Detached_Resource with null record;
-   --  ???
-   type Detached_Directory is new Abstract_Detached_Resource with null record;
-   --  ???
-   type Detached_File is new Abstract_Detached_Resource with null record;
-   --  ???
 
    ---------------------
    --  DB Management  --

@@ -17,13 +17,13 @@
 
 with Ada.Strings.Unbounded;
 
+with Database;                      use Database;
+
 with GNATCOLL.SQL;                  use GNATCOLL.SQL;
 with GNATCOLL.SQL.Exec;             use GNATCOLL.SQL.Exec;
 with GNATCOLL.Scripts;              use GNATCOLL.Scripts;
 
 with GNAThub.Database;
-
-with Database;                      use Database;
 
 package body GNAThub.Python.Database is
 

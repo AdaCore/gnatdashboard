@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2015, AdaCore                     --
+--                     Copyright (C) 2013-2016, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -21,13 +21,14 @@ with Ada.Strings;
 with Ada.Strings.Unbounded.Hash;
 with Ada.Strings.Equal_Case_Insensitive;
 
+with Database.Orm;                        use Database.Orm;
+
 with GNAT.Source_Info;
 
 with GNATCOLL.VFS_Utils;                  use GNATCOLL.VFS_Utils;
 
 with GNAThub.Configuration;
 with GNAThub.Database;                    use GNAThub.Database;
-with Orm;                                 use Orm;
 
 package body GNAThub.Project is
    Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);

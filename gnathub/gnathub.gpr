@@ -6,9 +6,10 @@ project GNAThub is
    type Mode is ("Debug", "Production", "Coverage");
    Build_Mode : Mode := External ("BUILD_MODE", "Debug");
 
-   Version    := External ("VERSION", "unknown");
-   Build_Dir  := External ("BUILD_DIR", "build");
-   Processors := External ("PROCESSORS", "0");
+   Version     := External ("VERSION", "0.0.0w");
+   Build_Dir   := External ("BUILD_DIR", "build");
+   Gen_Src_Dir := External ("GEN_SRC_DIR", Build_Dir & "/gen-src");
+   Processors  := External ("PROCESSORS", "0");
 
    for Languages use ("Ada", "Python", "SQL");
 
@@ -20,8 +21,7 @@ project GNAThub is
       "src/lib/GNAThub/",
       "src/lib/scripts/",
       "src/gnathub",
-      "src/orm-gen",                       --  automatically generated files
-      Build_Dir & "/gnathub-gen/src",      --  Makefile generated files
+      Gen_Src_Dir,
       "share/gnathub/sql",
       "share/gnathub/core",
       "share/gnathub/extras");
@@ -41,24 +41,22 @@ project GNAThub is
    package Compiler is
       for Driver ("Python") use "";
       for Driver ("SQL") use "";
-      for Switches ("Ada") use ("-gnat2012");
+      for Switches ("Ada") use ("-gnat2012", "-g", "-gnatwa", "-gnatyy");
 
       case Build_Mode is
          when "Debug" =>
             for Switches ("Ada") use
-              Compiler'Switches ("Ada") &
-              ("-gnatwa", "-gnatwe", "-gnatyyBdOSux", "-gnata", "-g", "-O0");
+              Compiler'Switches ("Ada") & ("-gnata", "-O0");
 
          when "Production" =>
             for Switches ("Ada") use
-              Compiler'Switches ("Ada") &
-              ("-gnatwa", "-gnatwe", "-gnatyyBdOSux", "-gnatn", "-O2");
+              Compiler'Switches ("Ada") & ("-gnatwe", "-gnatn", "-O2");
 
          when "Coverage" =>
-            for Switches ("ada") use
-               Compiler'Switches ("ada") &
-               ("-g", "-O0", "-fprofile-arcs", "-ftest-coverage",
-                "-ffunction-sections", "-fdata-sections", "-gnateE");
+            for Switches ("Ada") use
+               Compiler'Switches ("Ada") &
+               ("-gnateE", "-O0", "-fprofile-arcs", "-ftest-coverage",
+                "-ffunction-sections", "-fdata-sections");
       end case;
    end Compiler;
 

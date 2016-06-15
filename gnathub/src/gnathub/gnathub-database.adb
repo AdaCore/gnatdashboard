@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2015, AdaCore                     --
+--                     Copyright (C) 2013-2016, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -29,6 +29,19 @@ with GNAThub.Constants;       use GNAThub.Constants;
 
 package body GNAThub.Database is
    Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
+
+   type Abstract_Detached_Rule is
+      abstract new Standard.Database.Orm.Detached_Rule with null record;
+
+   type My_Detached_Rule is new Abstract_Detached_Rule with null record;
+   type Detached_Metric is new Abstract_Detached_Rule with null record;
+
+   type Abstract_Detached_Resource is
+      abstract new Standard.Database.Orm.Detached_Resource with null record;
+
+   type Detached_Project is new Abstract_Detached_Resource with null record;
+   type Detached_Directory is new Abstract_Detached_Resource with null record;
+   type Detached_File is new Abstract_Detached_Resource with null record;
 
    Max_Sessions : constant Natural := 2;
    Schema_IO    : DB_Schema_IO;

@@ -15,7 +15,7 @@ if ROOT_DIR != '':
 # Run the setup tools
 setup(
     name='GNAThub',
-    version=open(os.path.join('..', '..', 'VERSION')).read(),
+    version=os.environ.get('VERSION', '0.0.0w'),
     author='AdaCore',
     author_email='report@adacore.com',
     license='GPLv3',

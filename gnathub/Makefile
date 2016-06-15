@@ -1,98 +1,160 @@
-# Makefile for GNAThub, the GNATdashboard driver.
+# Makefile for GNAThub - the GNATdashboard driver.
 
-include config.mk
+# Guess the architecture (requires GNAT)
+gcc_triplet := $(shell gcc -dumpmachine)
+machine := $(subst -, , $(gcc_triplet))
 
-.PHONY: $(GENERATED_DIR)/src/gnathub-version.ads
+target := unknown
+arch := $(word 1, $(machine))
 
-all: gnathub-bin gnathub-pylib gnathub-plugins
-
-gnathub-bin: $(GENERATED_DIR)/src/gnathub-version.ads
-	@echo ":: Building GNAThub driver"
-	gprbuild -p -P gnathub.gpr \
-		-XBUILD_DIR="$(BUILD_DIR)" -XVERSION="$(VERSION)" \
-		-XBUILD_MODE="$(BUILD_MODE)"
-ifeq ($(target),x86-windows)
-	$(MKDIR) $(BUILD_DIR)/bin
-	cp $(PYTHON_HOME)/python27.dll $(BUILD_DIR)/bin/.
-	chmod +x $(BUILD_DIR)/bin/python27.dll
+ifeq ($(words $(machine)), 2)
+  osys := $(word 2, $(machine))
+else
+  osys := $(word 3, $(machine))
 endif
 
-$(GENERATED_DIR)/src/gnathub-version.ads: templates/gnathub-version.ads.in
-	$(MKDIR) $(GENERATED_DIR)/src
+ifeq ($(filter-out mingw%, $(osys)),)
+  target := x86-windows
+endif
+
+ifeq ($(filter-out darwin%, $(osys)),)
+  target := x86_64-darwin
+endif
+
+ifeq ($(filter-out linux%, $(osys)),)
+  ifeq ($(filter-out x86_64, $(arch)),)
+    target := x86_64-linux
+  else
+    target := x86-linux
+  endif
+endif
+
+# Build variables
+DATE := $(shell date '+%Y%m%d')
+YEAR := $(shell date '+%Y')
+VERSION = 0.0.0w
+BUILD_MODE = Production
+
+# Command variables
+CP = cp
+RM = rm
+RMDIR = rm -r
+MKDIR = install -d
+CHMOD = chmod
+INSTALL = install
+INSTALL_PROGRAM = $(INSTALL)
+INSTALL_DATA = ${INSTALL} -m 644
+GPRBUILD = gprbuild
+PYTHON = python
+DB2ADA = gnatcoll_db2ada
+PYTHON_PREFIX = $(shell $(PYTHON) \
+		 -c "from distutils.sysconfig import PREFIX; print PREFIX")
+GNATHUB_LIB_MANIFEST = GNAThub.MANIFEST
+
+# General conventions for Makefiles
+SHELL = /bin/sh
+
+.SUFFIXES:
+
+# Common prefix for installation directories.
+# NOTE: This directory must exist when you start the install.
+prefix = /usr/local
+exec_prefix = $(prefix)
+bindir = $(exec_prefix)/bin
+libdir = $(exec_prefix)/lib
+libexecdir = $(exec_prefix)/libexec
+datarootdir = $(prefix)/share
+datadir = $(datarootdir)
+
+mkfile := $(abspath $(lastword $(MAKEFILE_LIST)))
+rootdir := $(patsubst %/,%,$(dir $(mkfile)))
+srcdir = $(rootdir)/src
+builddir = $(rootdir)/build
+gensrcdir = $(builddir)/gen-src
+
+GENERATED_FILENAMES := gnathub-version.ads \
+	database.ads \
+	database.adb \
+	database_names.adb \
+	database-orm.ads \
+	database-orm.adb
+GENERATED_SOURCES := $(foreach src,$(GENERATED_FILENAMES),$(gensrcdir)/$(src))
+
+.PHONY: $(gensrcdir)/gnathub-version.ads $(builddir)/$(GNATHUB_LIB_MANIFEST)
+
+# Standard targets for users
+all: $(builddir)/bin/gnathub
+
+install: $(DESTDIR)$(datadir)/gnathub/python all installdirs \
+		$(builddir)/$(GNATHUB_LIB_MANIFEST)
+	$(INSTALL_PROGRAM) $(builddir)/bin/gnathub $(DESTDIR)$(bindir)
+	(cd $(rootdir)/share && tar cf - gnathub) | \
+		(cd $(DESTDIR)$(datadir) && tar xf -)
+	find $(DESTDIR)$(datadir)/gnathub/core -name '*.pyc' -delete
+	find $(DESTDIR)$(datadir)/gnathub/extras -name '*.pyc' -delete
+	(cd $(rootdir)/share/examples && tar cf - gnatdashboard) | \
+		(cd $(DESTDIR)$(datadir)/examples && tar xf -)
+	$(INSTALL_DATA) $(builddir)/$(GNATHUB_LIB_MANIFEST) \
+		$(DESTDIR)$(datadir)/gnathub
+ifeq ($(target),x86-windows)
+	$(MAKE) PYTHON="$</python.exe" install-python-lib
+else
+	$(MAKE) PYTHON="$</bin/python" install-python-lib
+endif
+
+install-strip:
+	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
+
+clean: $(rootdir)/gnathub.gpr
+	gprclean -P $<
+	$(RMDIR) $(gensrcdir)
+	$(RMDIR) $(builddir)
+
+distclean: clean
+	find $(rootdir) -name '*.pyc' -delete
+	$(RMDIR) $(rootdir)/testsuite/out
+
+installdirs:
+	$(MKDIR) $(DESTDIR)$(bindir)
+	$(MKDIR) $(DESTDIR)$(datadir)/gnathub
+	$(MKDIR) $(DESTDIR)$(datadir)/examples
+
+# Custom targets for this project
+$(builddir)/bin/gnathub: $(rootdir)/gnathub.gpr $(GENERATED_SOURCES)
+	$(GPRBUILD) -p -P $< \
+		-XBUILD_DIR="$(builddir)" -XVERSION="$(VERSION)" \
+		-XBUILD_MODE="$(BUILD_MODE)" -XGEN_SRC_DIR="$(gensrcdir)"
+ifeq ($(target),x86-windows)
+	$(MKDIR) $(builddir)/bin
+	$(INSTALL) $(PYTHON_PREFIX)/python27.dll $(builddir)/bin
+endif
+
+$(gensrcdir)/gnathub-version.ads: $(rootdir)/templates/gnathub-version.ads.in
+	$(MKDIR) $(gensrcdir)
 	cat $< |sed \
 		-e 's/@DATE@/$(DATE)/g' \
 		-e 's/@YEAR@/$(YEAR)/g' \
 		-e 's/@VERSION@/$(VERSION)/g' \
 		> $@
 
-gnathub-pylib: python-env
-	@echo ":: Building GNAThub's Python API"
-	-[ -f $(SETUP_PY_MANIFEST) ] && cat $(SETUP_PY_MANIFEST) |xargs rm -rf
-	$(PYTHON) $(TOP)/src/lib/setup.py -q build -b "$(BUILD_DIR)" install \
-		--record $(SETUP_PY_MANIFEST)
+$(gensrcdir)/database%: $(rootdir)/share/gnathub/sql/db.model
+	$(MAKE) gen-db-bindings
 
-gnathub-plugins:
-	@echo ":: Deploying GNAThub's core plug-ins"
-	(cd $(TOP)/share/gnathub && tar cf - core extras sql) | \
-		(cd $(BUILD_DIR)/share/gnathub && tar xf -)
+gen-db-bindings: $(rootdir)/share/gnathub/sql/db.model
+	$(MKDIR) $(gensrcdir)
+	(cd $(gensrcdir) && \
+		$(DB2ADA) -api=Database -orm=Database.ORM -dbmodel=$<)
 
-create-db:
-	@echo ":: Generating the GNAThub's database"
-	$(MKDIR) $(TOP)/src/orm-gen
-	cd $(TOP)/src/orm-gen && gnatcoll_db2ada -dbtype=sqlite -dbname=gnathub.db \
-		-dbmodel=$(TOP)/share/gnathub/sql/db.model -createdb
+install-python-lib: $(builddir)/$(GNATHUB_LIB_MANIFEST)
 
-generate-orm:
-	@echo ":: Generating the GNAThub's database API"
-	$(MKDIR) $(TOP)/src/orm-gen
-	cd $(TOP)/src/orm-gen && gnatcoll_db2ada -api=Database -orm=ORM \
-		-dbmodel=$(TOP)/share/gnathub/sql/db.model
+$(builddir)/$(GNATHUB_LIB_MANIFEST): $(srcdir)/lib/setup.py
+	$(PYTHON) $< build -b "$(builddir)" install --record $@
 
-python-env: $(PYTHON_HOME)
+install-python-distrib: $(DESTDIR)$(datadir)/gnathub/python
 
-$(PYTHON_HOME):
-	@echo "Error: no Python distribution installed at:"
-	@echo ""
-	@echo "  $(PYTHON_HOME)"
-	@echo ""
-	@echo "Please refer to the README file for the build procedure"
-
-check-style:
-	@echo ":: Style-checking GNAThub's Python API"
-	$(PY_ENV) flake8 src/lib/GNAThub
-	$(PY_ENV) flake8 share/gnathub/{core,extras,sql}
-
-tests: all
-	@echo ":: Running the GNAThub testsuite"
-	$(PY_ENV) $(TOP)/testsuite/testsuite.py --colorize --with-diff
-
-tests-coverage:
-	BUILD_MODE=Coverage $(MAKE) all tests analyse-gcov
-
-analyse-gcov:
-	find . -name '*.gcda' > $(BUILD_DIR)/obj/gcov_input.txt
-	cd $(BUILD_DIR)/obj && gcov @gcov_input.txt > gcov_run.log
-
-install: all
-	$(MKDIR) $(PKG_DIR)
-	(cd $(BUILD_DIR) && tar cf - bin share) | (cd $(PKG_DIR) && tar xf -)
-	$(MKDIR) $(PKG_DIR)/share/examples
-	(cd $(TOP)/share/examples && tar cf - gnatdashboard) | (cd $(PKG_DIR)/share/examples && tar xf -)
-	find $(PKG_DIR)/share/gnathub/core -name '*.pyc' -delete
-	find $(PKG_DIR)/share/gnathub/extras -name '*.pyc' -delete
-
-setenv: $(GENERATED_DIR)/src/gnathub-version.ads
-	@echo "PYTHONPATH=\"$(TOP)/src/lib:$$PYTHONPATH\""
-	@echo "export PYTHONPATH"
-
-clean:
-	gprclean -q -P $<
-	find $(TOP) -name '*.pyc' -delete
-	$(RM) src/gnathub/gnathub-version.ads
-	$(RMDIR) $(BUILD_DIR)/obj
-	$(RMDIR) $(BUILD_DIR)/lib.*
-	$(RMDIR) $(BUILD_DIR)/docs
-
-distclean: clean
-	$(RMDIR) $(BUILD_DIR)
-	$(RMDIR) testsuite/out
+$(DESTDIR)$(datadir)/gnathub/python:
+	if test ! -d "$@"; then \
+		$(MKDIR) $@; \
+		(cd $(PYTHON_PREFIX)/.. && tar cf - $(notdir $(PYTHON_PREFIX))) | \
+			(cd $@ && tar xf - --strip-component 1) \
+	fi
