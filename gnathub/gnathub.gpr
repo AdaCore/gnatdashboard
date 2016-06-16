@@ -76,8 +76,7 @@ project GNAThub is
 
    package Check is
       for Default_Switches ("Ada") use
-         ("-rules", "-from=" & Project'Project_Dir &
-                    "testsuite/support/resources/etc/gnatcheck.all.rules");
+         ("-rules", "-from=" & Project'Project_Dir & "gnatcheck.rules");
    end Check;
 
    package Dashboard is
