@@ -1,5 +1,7 @@
 # Makefile for GNAThub - the GNATdashboard driver.
 
+include version.mk
+
 # Guess the architecture (requires GNAT)
 gcc_triplet := $(shell gcc -dumpmachine)
 machine := $(subst -, , $(gcc_triplet))
@@ -32,7 +34,6 @@ endif
 # Build variables
 DATE := $(shell date '+%Y%m%d')
 YEAR := $(shell date '+%Y')
-VERSION = 0.0.0w
 BUILD_MODE = Production
 
 # Command variables

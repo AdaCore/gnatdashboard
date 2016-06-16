@@ -1,32 +1,54 @@
 # Makefile for GNATdashboard
 
-include common.mk
+# Command variables
+CP = cp
+MKDIR = install -d
 
-.PHONY: docs
+# General conventions for Makefiles
+SHELL = /bin/sh
 
-all: docs
+.SUFFIXES:
+
+# Common prefix for installation directories.
+# NOTE: This directory must exist when you start the install.
+prefix = /usr/local
+datarootdir = $(prefix)/share
+docdir = $(datarootdir)/doc/gnatdashboard
+pdfdir = $(docdir)/pdf
+htmldir = $(docdir)/html
+
+mkfile := $(abspath $(lastword $(MAKEFILE_LIST)))
+rootdir := $(patsubst %/,%,$(dir $(mkfile)))
+builddir = $(rootdir)/build
+gnathubdir = $(rootdir)/gnathub
+
+MAKE_DOC = $(MAKE) -C docs builddir=$(builddir) GNATHUBDIR=$(gnathubdir)
+
+# Generate both HTML and PDF documents
+all: gnathub-api-docs docs-html docs-pdf
 
 gnathub-api-docs: docs/Makefile
-	$(MAKE) -C docs api-doc
-	$(MAKE) -C docs plugins-doc
+	$(MAKE_DOC) api-doc
+	$(MAKE_DOC) plugins-doc
 
-# Generate both HTML and PDF documents in BUILD_DIR and install them in DOCS_DIR
-docs: gnathub-api-docs docs-html docs-pdf
-	$(MKDIR) $(DOCS_DIR)/pdf $(DOCS_DIR)/html
-	$(CP) $(BUILD_DIR)/docs/latex/GNATdashboard.pdf $(DOCS_DIR)/pdf
-	$(RSYNC) $(BUILD_DIR)/docs/html $(DOCS_DIR)
-
-# Generate the HTML documentation in BUILD_DIR
+# Generate the HTML documentation
 docs-html: gnathub-api-docs
-	$(MAKE) -C docs html
+	$(MAKE_DOC) html
 
-# Generate the PDF documentation in BUILD_DIR
+# Generate the PDF documentation
 docs-pdf: gnathub-api-docs
-	$(MAKE) -C docs latexpdf
+	$(MAKE_DOC) latexpdf
 
-install: all
-	$(MKDIR) $(PKG_DIR)
-	(tar cf - COPYING3) | (cd $(PKG_DIR) && tar xf -)
-	$(MKDIR) $(PKG_DIR)/share/doc
-	(cd `dirname $(DOCS_DIR)` && tar cf - `basename $(DOCS_DIR)`) \
-		| (cd $(PKG_DIR)/share/doc && tar xf -)
+installdirs:
+	$(MKDIR) $(docdir)
+	$(MKDIR) $(pdfdir)
+	$(MKDIR) $(htmldir)
+
+install-html: docs-html installdirs
+	(cd $(builddir)/docs && tar cf - html) | \
+		(cd $(htmldir) && tar xf - --strip-components 1)
+
+install-pdf: docs-pdf installdirs
+	$(CP) $(builddir)/docs/latex/GNATdashboard.pdf $(pdfdir)
+
+install: install-html install-pdf

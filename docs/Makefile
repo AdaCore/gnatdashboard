@@ -1,20 +1,20 @@
 # Makefile for Sphinx documentation
 
-include ../common.mk
-
-GNATHUB = $(TOP)/gnathub
+mkfile := $(abspath $(lastword $(MAKEFILE_LIST)))
+rootdir := $(dir $(patsubst %/,%,$(dir $(mkfile))))
+GNATHUBDIR = $(rootdir)/gnathub
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = PYTHONPATH=$(GNATHUB)/src/lib sphinx-build -n
+SPHINXBUILD   = PYTHONPATH=$(GNATHUBDIR)/src/lib sphinx-build -n
 SPHINXAPIDOC  = sphinx-apidoc -f
 PAPER         =
-BUILDDIR      = $(BUILD_DIR)/docs
+BUILDDIR      = $(builddir)/docs
 APIDOC        = source/api-doc
 PLUGINSDOC    = source/plugins-doc
 
-PY_API_SOURCES = $(shell find $(GNATHUB)/src/lib/GNAThub -name '*.py')
-PY_PLUGINS_SOURCES = $(shell find $(GNATHUB)/share/gnathub/core -name '*.py')
+PY_API_SOURCES = $(shell find $(GNATHUBDIR)/src/lib/GNAThub -name '*.py')
+PY_PLUGINS_SOURCES = $(shell find $(GNATHUBDIR)/share/gnathub/core -name '*.py')
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -52,10 +52,10 @@ clean:
 	-rm -rf $(BUILDDIR)/*
 
 api-doc: $(PY_API_SOURCES)
-	$(SPHINXAPIDOC) -o $(APIDOC) $(GNATHUB)/src/lib/GNAThub
+	$(SPHINXAPIDOC) -o $(APIDOC) $(GNATHUBDIR)/src/lib/GNAThub
 
 plugins-doc: $(PY_PLUGINS_SOURCES)
-	$(SPHINXAPIDOC) -o $(PLUGINSDOC) $(GNATHUB)/share/gnathub/core
+	$(SPHINXAPIDOC) -o $(PLUGINSDOC) $(GNATHUBDIR)/share/gnathub/core
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
