@@ -45,7 +45,7 @@ CHMOD = chmod
 INSTALL = install
 INSTALL_PROGRAM = $(INSTALL)
 INSTALL_DATA = ${INSTALL} -m 644
-GPRBUILD = gprbuild
+GPRBUILD = gprbuild -p -j0
 PYTHON = python
 DB2ADA = gnatcoll_db2ada
 PYTHON_PREFIX = $(shell $(PYTHON) \
@@ -73,12 +73,14 @@ srcdir = $(rootdir)/src
 builddir = $(rootdir)/build
 gensrcdir = $(builddir)/gen-src
 
-GENERATED_FILENAMES := gnathub-version.ads \
-	database.ads \
-	database.adb \
-	database_names.adb \
-	database-orm.ads \
-	database-orm.adb
+# Target "gen-db-bindings" generates the following sources at once but Make only
+# needs to be aware of one, otherwise parallel processing might fail (eg. -j0):
+#   * database.ads
+#   * database.adb
+#   * database_names.adb
+#   * database-orm.ads
+#   * database-orm.adb
+GENERATED_FILENAMES := gnathub-version.ads database.ads
 GENERATED_SOURCES := $(foreach src,$(GENERATED_FILENAMES),$(gensrcdir)/$(src))
 
 .PHONY: $(gensrcdir)/gnathub-version.ads $(builddir)/$(GNATHUB_LIB_MANIFEST)
@@ -122,7 +124,7 @@ installdirs:
 
 # Custom targets for this project
 $(builddir)/bin/gnathub: $(rootdir)/gnathub.gpr $(GENERATED_SOURCES)
-	$(GPRBUILD) -p -P $< \
+	$(GPRBUILD) -P $< \
 		-XBUILD_DIR="$(builddir)" -XVERSION="$(VERSION)" \
 		-XBUILD_MODE="$(BUILD_MODE)" -XGEN_SRC_DIR="$(gensrcdir)"
 ifeq ($(target),x86-windows)
