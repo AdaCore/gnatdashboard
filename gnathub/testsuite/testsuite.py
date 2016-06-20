@@ -185,6 +185,7 @@ class Testsuite(object):
 
         assert self.formatter is not None, 'Internal error'
         print >> stream, pygments.format(tokens, self.formatter)
+        stream.flush()
 
     def collect_result(self, name, process, job_info):
         """Custom collect_result function."""
