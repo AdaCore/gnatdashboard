@@ -21,6 +21,7 @@ with Ada.Text_IO;
 
 with GNAT.Command_Line;       use GNAT.Command_Line;
 with GNAT.Source_Info;
+with GNAT.Strings;
 
 with GNATCOLL.Projects;       use GNATCOLL.Projects;
 with GNATCOLL.Utils;          use GNATCOLL.Utils;
@@ -324,11 +325,6 @@ package body GNAThub.Configuration is
       return Project_Arg.all;
    end Project;
 
-   function Project return GNAT.Strings.String_Access is
-   begin
-      return Project_Arg;
-   end Project;
-
    -------------
    -- Plugins --
    -------------
@@ -336,11 +332,6 @@ package body GNAThub.Configuration is
    function Plugins return String is
    begin
       return Plugins_Arg.all;
-   end Plugins;
-
-   function Plugins return GNAT.Strings.String_Access is
-   begin
-      return Plugins_Arg;
    end Plugins;
 
    ------------
@@ -352,11 +343,6 @@ package body GNAThub.Configuration is
       return Script_Arg.all;
    end Script;
 
-   function Script return GNAT.Strings.String_Access is
-   begin
-      return Script_Arg;
-   end Script;
-
    ------------
    -- Target --
    ------------
@@ -366,11 +352,6 @@ package body GNAThub.Configuration is
       return Target_Arg.all;
    end Target;
 
-   function Target return GNAT.Strings.String_Access is
-   begin
-      return Target_Arg;
-   end Target;
-
    -------------
    -- Runtime --
    -------------
@@ -378,11 +359,6 @@ package body GNAThub.Configuration is
    function Runtime return String is
    begin
       return Runtime_Arg.all;
-   end Runtime;
-
-   function Runtime return GNAT.Strings.String_Access is
-   begin
-      return Runtime_Arg;
    end Runtime;
 
    ----------

@@ -15,8 +15,6 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-with GNAT.Strings;
-
 package GNAThub.Configuration is
 
    Command_Line_Error : exception;
@@ -26,25 +24,20 @@ package GNAThub.Configuration is
    --  Initialize and parse the command line
 
    function Project return String;
-   function Project return GNAT.Strings.String_Access;
    --  Return the Project name given on the command line
 
    function Plugins return String;
-   function Plugins return GNAT.Strings.String_Access;
    --  Return the list of plugins to execute, as a comma-separated string
 
    function Script return String;
-   function Script return GNAT.Strings.String_Access;
    --  Return the Script to execute if given on the command line. Return the
    --  empty string otherwise.
 
    function Target return String;
-   function Target return GNAT.Strings.String_Access;
    --  Return the Target attribute if given on the command line. Return the
    --  empty string otherwise.
 
    function Runtime return String;
-   function Runtime return GNAT.Strings.String_Access;
    --  Return the Runtime attribute if given on the command line. Return the
    --  empty string otherwise. This concerns only the runtime for Ada.
 
