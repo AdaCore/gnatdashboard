@@ -45,12 +45,12 @@ package GNAThub.Database is
    ---------------------
 
    procedure Initialize
-     (Database_File            : GNATCOLL.VFS.Virtual_File;
-      Remove_Previous_Database : Boolean);
+     (Database_File : GNATCOLL.VFS.Virtual_File;
+      Overwrite     : Boolean);
    --  Connect to the gnathub database.
    --
-   --  If Remove_Previous_Database, remove any existing gnathub database,
-   --  and initialize a new one with the gnathub schema.
+   --  If Overwrite, remove any existing gnathub database, and initialize a new
+   --  one with the gnathub schema.
    --
    --  Session pool is setup by this function.
 

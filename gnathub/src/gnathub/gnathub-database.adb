@@ -99,50 +99,56 @@ package body GNAThub.Database is
    ----------------
 
    procedure Initialize
-     (Database_File            : GNATCOLL.VFS.Virtual_File;
-      Remove_Previous_Database : Boolean)
+     (Database_File : GNATCOLL.VFS.Virtual_File;
+      Overwrite     : Boolean)
    is
-      Descr          : Database_Description;
-      Schema         : DB_Schema;
-      Delete_Succeed : Boolean;
-
+      SQLite : Database_Description;
    begin
-      if Remove_Previous_Database then
-         --  Check existence of a database, delete it before creating a new one
+      if Is_Regular_File (Database_File) then
+         if Overwrite then
+            declare
+               Delete_Succeed : Boolean;
+            begin
+               --  Delete existing DB if any before creating a new one
+               Log.Info (Me, "Delete existing copy of the database");
+               Delete (Database_File, Delete_Succeed);
 
-         if Is_Regular_File (Database_File) then
-            Log.Info (Me, "Removing existing copy of the database");
-            Delete (Database_File, Delete_Succeed);
-
-            if not Delete_Succeed then
-               raise Fatal_Error with "Failed to delete existing database";
-            end if;
+               if not Delete_Succeed then
+                  raise Fatal_Error with "Failed to delete existing database";
+               end if;
+            end;
+         else
+            Log.Info (Me, "Use existing copy of the database");
          end if;
-
-         --  Retrieve schema from text file
-         Log.Debug (Me,
-           "Read database schema: " & Database_Model_File.Display_Full_Name);
-
-         Schema := New_Schema_IO (Database_Model_File).Read_Schema;
       else
-         Log.Info (Me, "Keeping existing copy of the database");
+         Log.Info (Me, "No previous copy of the database found");
       end if;
 
-      Descr := GNATCOLL.SQL.Sqlite.Setup (Database_File.Display_Full_Name);
-      Schema_IO.DB := Descr.Build_Connection;
+      SQLite := GNATCOLL.SQL.Sqlite.Setup (Database_File.Display_Full_Name);
+      Schema_IO.DB := SQLite.Build_Connection;
 
-      if Remove_Previous_Database then
-         Log.Debug (Me, "Write the schema to the database (reset database)");
-         Write_Schema (Schema_IO, Schema);
+      if Overwrite then
+         declare
+            Schema : DB_Schema;
+         begin
+            --  Retrieve schema from text file
+            Log.Debug (Me,
+               "Load DB schema: " & Database_Model_File.Display_Full_Name);
+            Schema := New_Schema_IO (Database_Model_File).Read_Schema;
+
+            --  And write it to the database (ie. create table if necessary)
+            Log.Debug (Me, "Write database schema (create tables)");
+            Write_Schema (Schema_IO, Schema);
+         end;
       end if;
-
-      --  Initialize session pool
-      GNATCOLL.SQL.Sessions.Setup (Descr, Max_Sessions);
-      Set_Default_Factory (Kind_Factory'Access);
 
       if not Schema_IO.DB.Success then
          raise Fatal_Error with "Unable to initialize the database";
       end if;
+
+      --  Initialize session pool
+      GNATCOLL.SQL.Sessions.Setup (SQLite, Max_Sessions);
+      Set_Default_Factory (Kind_Factory'Access);
    end Initialize;
 
    ------------------------------

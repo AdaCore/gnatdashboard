@@ -38,9 +38,12 @@ with GNAThub.Python;
 function GNAThub.Main return Ada.Command_Line.Exit_Status is
    Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
 
-   procedure Init_Local_Database (Override : Boolean := True);
+   function Database_Full_Path return Virtual_File;
+   --  Return the full path to the database
+
+   procedure Init_Local_Database (Overwrite : Boolean := True);
    --  Creates the GNAThub database and initializes it with the project
-   --  information. Overrides any existing database if OVERRIDE is True.
+   --  information. Overrides any existing database if Overwrite is True.
 
    procedure Execute_Plugin_Runner;
    --  Loads the plugin runner that executes every GNAThub plugin (both core
@@ -64,6 +67,16 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
    procedure Finalize_Application;
    --  Dispose of every allocated object.
+
+   ------------------------
+   -- Database_Full_Path --
+   ------------------------
+
+   function Database_Full_Path return Virtual_File is
+   begin
+      return Create_From_Dir
+         (GNAThub.Project.Object_Dir, Database_File.Full_Name);
+   end Database_Full_Path;
 
    ----------------------------------
    -- Create_Project_Directory_Env --
@@ -157,18 +170,16 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    -- Init_Local_Database --
    -------------------------
 
-   procedure Init_Local_Database (Override : Boolean := True) is
+   procedure Init_Local_Database (Overwrite : Boolean := True) is
    begin
       Log.Debug (Me, "Local database: " & Database_File.Display_Full_Name);
 
       if not GNAThub.Configuration.Dry_Run then
          GNAThub.Database.Initialize
-            (Create_From_Dir
-               (GNAThub.Project.Object_Dir, Database_File.Full_Name),
-            Remove_Previous_Database => Override);
+            (Database_Full_Path, Overwrite => Overwrite);
       end if;
 
-      if Override then
+      if Overwrite then
          Log.Debug (Me, "Populate database with project information");
          if not GNAThub.Configuration.Dry_Run then
             GNAThub.Project.Save_Project_Tree;
@@ -222,8 +233,14 @@ begin
    Log.Info (Me, "Setup execution environment");
    Create_Project_Directory_Env;
 
+   if GNAThub.Configuration.Incremental
+      and then not Is_Regular_File (Database_Full_Path)
+   then
+      Warn ("database does not exist but --incremental or --exec used");
+   end if;
+
    Log.Info (Me, "Initialize local database");
-   Init_Local_Database (Override => not GNAThub.Configuration.Incremental);
+   Init_Local_Database (Overwrite => not GNAThub.Configuration.Incremental);
 
    if GNAThub.Configuration.Interpreter_Mode then
       Log.Info (Me, "Execute user script: " & Script);

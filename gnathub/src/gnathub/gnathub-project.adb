@@ -449,7 +449,6 @@ package body GNAThub.Project is
 
          Next (Iterator);
       end loop;
-
    end Save_Project_Tree;
 
    --------------
