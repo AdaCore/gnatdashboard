@@ -14,6 +14,12 @@ This date shows the implementation date of the feature.
 New features in 17.0
 --------------------
 
+NF-17-P615-020 Support multiple --plugins (2016-06-20)
+
+  GNAThub now supports multiple --plugins switches on its command line.
+  "--plugins gnatcheck,gnatmetric --plugins codepeer" is the equivalent of
+  "--plugins gnatcheck,gnatmetric,codepeer".
+
 NF-17-P303-043 Support for --dry-run (2016-03-03)
 
   GNAThub now supports a --dry-run switch that enables dry run mode (also known

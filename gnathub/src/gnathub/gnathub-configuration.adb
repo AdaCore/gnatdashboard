@@ -17,6 +17,7 @@
 
 with Ada.Strings;
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
 with Ada.Text_IO;
 
 with GNAT.Command_Line;       use GNAT.Command_Line;
@@ -37,7 +38,6 @@ package body GNAThub.Configuration is
    Config : GNAT.Command_Line.Command_Line_Configuration;
 
    Project_Arg     : aliased GNAT.Strings.String_Access;
-   Plugins_Arg     : aliased GNAT.Strings.String_Access;
    Script_Arg      : aliased GNAT.Strings.String_Access;
    Target_Arg      : aliased GNAT.Strings.String_Access;
    Runtime_Arg     : aliased GNAT.Strings.String_Access;
@@ -47,6 +47,9 @@ package body GNAThub.Configuration is
    Quiet_Arg       : aliased Boolean;
    Verbose_Arg     : aliased Boolean;
    Incremental_Arg : aliased Boolean;
+
+   All_Plugins : Unbounded_String := Null_Unbounded_String;
+   --  Stores all plugins provided with --plugins
 
    procedure Parse_Command_Line;
    --  Parse the command line and handle -X switches
@@ -76,7 +79,6 @@ package body GNAThub.Configuration is
 
       Define_Switch
         (Config      => Config,
-         Output      => Plugins_Arg'Access,
          Long_Switch => "--plugins=",
          Help        => "Comma separated list of plugins to execute");
 
@@ -186,6 +188,13 @@ package body GNAThub.Configuration is
                Warn ("Unexpected argument for -X:");
                Warn ("Expected ""key:value"", got " & Param);
             end if;
+
+         elsif Switch = "--plugins" then
+            if All_Plugins = Null_Unbounded_String then
+               All_Plugins := To_Unbounded_String (Param);
+            else
+               Append (All_Plugins, "," & Param);
+            end if;
          end if;
       end Local_Parse_Command_Line;
 
@@ -236,7 +245,6 @@ package body GNAThub.Configuration is
 
       --  Sanity checks
       Assert (Me, Project_Arg /= null, "unexpected null project");
-      Assert (Me, Plugins_Arg /= null, "unexpected null plugins list");
       Assert (Me, Script_Arg /= null, "unexpected null script argument");
 
       --  Print the version and exit if --version is supplied
@@ -264,7 +272,9 @@ package body GNAThub.Configuration is
       end if;
 
       --  Ensure consistency of use for --plugins and --exec
-      if Plugins_Arg.all /= "" and then Script_Arg.all /= "" then
+      if All_Plugins /= Null_Unbounded_String
+         and then Script_Arg.all /= ""
+      then
          raise Command_Line_Error
            with "--plugins and --exec are mutually exclusive.";
       end if;
@@ -331,7 +341,7 @@ package body GNAThub.Configuration is
 
    function Plugins return String is
    begin
-      return Plugins_Arg.all;
+      return To_String (All_Plugins);
    end Plugins;
 
    ------------
