@@ -2,12 +2,8 @@
 
 include version.mk
 
-# Guess the architecture (requires GNAT)
-gcc_triplet := $(shell gcc -dumpmachine)
-machine := $(subst -, , $(gcc_triplet))
-
-target := unknown
-arch := $(word 1, $(machine))
+# Check if building on Windows (requires GNAT)
+machine := $(subst -, , $(shell gcc -dumpmachine))
 
 ifeq ($(words $(machine)), 2)
   osys := $(word 2, $(machine))
@@ -16,19 +12,7 @@ else
 endif
 
 ifeq ($(filter-out mingw%, $(osys)),)
-  target := x86-windows
-endif
-
-ifeq ($(filter-out darwin%, $(osys)),)
-  target := x86_64-darwin
-endif
-
-ifeq ($(filter-out linux%, $(osys)),)
-  ifeq ($(filter-out x86_64, $(arch)),)
-    target := x86_64-linux
-  else
-    target := x86-linux
-  endif
+  IS_WINDOWS := yes
 endif
 
 # Build variables
@@ -99,7 +83,7 @@ install: $(DESTDIR)$(datadir)/gnathub/python all installdirs \
 		(cd $(DESTDIR)$(datadir)/examples && tar xf -)
 	$(INSTALL_DATA) $(builddir)/$(GNATHUB_LIB_MANIFEST) \
 		$(DESTDIR)$(datadir)/gnathub
-ifeq ($(target),x86-windows)
+ifdef IS_WINDOWS
 	$(MAKE) PYTHON="$</python.exe" install-python-lib
 else
 	$(MAKE) PYTHON="$</bin/python" install-python-lib
@@ -127,7 +111,7 @@ $(builddir)/bin/gnathub: $(rootdir)/gnathub.gpr $(GENERATED_SOURCES)
 	$(GPRBUILD) -P $< \
 		-XBUILD_DIR="$(builddir)" -XVERSION="$(VERSION)" \
 		-XBUILD_MODE="$(BUILD_MODE)" -XGEN_SRC_DIR="$(gensrcdir)"
-ifeq ($(target),x86-windows)
+ifdef IS_WINDOWS
 	$(MKDIR) $(builddir)/bin
 	$(INSTALL) $(PYTHON_PREFIX)/python27.dll $(builddir)/bin
 endif
@@ -158,6 +142,6 @@ install-python-distrib: $(DESTDIR)$(datadir)/gnathub/python
 $(DESTDIR)$(datadir)/gnathub/python:
 	if test ! -d "$@"; then \
 		$(MKDIR) $@; \
-		(cd $(PYTHON_PREFIX)/.. && tar cf - $(notdir $(PYTHON_PREFIX))) | \
+		(cd $(dir $(PYTHON_PREFIX)) && tar cf - $(notdir $(PYTHON_PREFIX))) | \
 			(cd $@ && tar xf - --strip-component 1) \
 	fi
