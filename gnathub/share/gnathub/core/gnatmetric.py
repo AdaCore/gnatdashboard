@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""GNAThub plug-in for the GNATmetric command-line tool
+"""GNAThub plug-in for the GNATmetric and LALmetric command-line tool
 
 It exports the GNATmetric class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
@@ -29,7 +29,7 @@ from xml.etree.ElementTree import ParseError
 
 
 class GNATmetric(GNAThub.Plugin):
-    """GNATmetric plugin for GNAThub"""
+    """GNATmetric & LALmetric plugin for GNAThub"""
 
     # GNATmetric exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
@@ -40,6 +40,19 @@ class GNATmetric(GNAThub.Plugin):
         self.tool = None
         self.report = os.path.join(GNAThub.Project.object_dir(), 'metrix.xml')
 
+    @property
+    def name(self):
+        return 'lalmetric' if self._use_libadalang_tools else 'gnatmetric'
+
+    @property
+    def _use_libadalang_tools(self):
+        """Whether to use GNATmetric or LALmetric
+
+        :return: `True` if we should use LALmetric, `False` for GNATmetric
+        :rtype: boolean
+        """
+        return 'USE_LIBADALANG_TOOLS' in os.environ
+
     def __cmd_line(self):
         """Creates GNATmetric command line arguments list
 
@@ -48,8 +61,7 @@ class GNATmetric(GNAThub.Plugin):
         """
 
         cmd_line = [
-            'gnatmetric', '-ox', self.report, '-P', GNAThub.Project.path(),
-            '-U'
+            self.name, '-ox', self.report, '-P', GNAThub.Project.path(), '-U'
         ] + GNAThub.Project.scenario_switches()
         if GNAThub.Project.target():
             cmd_line[0] = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
@@ -160,7 +172,7 @@ class GNATmetric(GNAThub.Plugin):
 
         except ParseError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('failed to parse GNATcheck XML report')
+            self.log.exception('failed to parse XML report')
             self.error('%s (%s:%s)' % (why, why.filename, why.lineno))
 
         else:
