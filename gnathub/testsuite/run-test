@@ -93,12 +93,12 @@ class GNAThubTestRunner(TestRunner):
         xfail = self.opt_results['XFAIL']
 
         if not isinstance(xfail, bool) and xfail:
-            if result['result'] in ('DIFF', 'CRASH'):
+            if self.result['result'] in ('DIFF', 'CRASH'):
                 # Override the result file (remove visual clutter)
                 open(self.output, 'w').close()
                 self.result.update({'result': 'XFAIL', 'msg': xfail})
 
-            elif result['result'] == 'OK':
+            elif self.result['result'] == 'OK':
                 self.result.update({'result': 'UOK', 'msg': xfail})
 
 
