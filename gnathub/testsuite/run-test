@@ -118,16 +118,22 @@ def run_single_testcase():
         driver.options.restricted_discs = \
             driver.options.restricted_discs.split(',')
 
+    platform_qualifier = Env().build.os.name
+    if driver.options.discs is None:
+        driver_options_discs = platform_qualifier
+    else:
+        driver_options_discs = ','.join(
+            [driver.options.discs, platform_qualifier])
+
     runner = GNAThubTestRunner(
         driver.args[0],
-        driver.options.discs,
+        driver_options_discs,
         driver.options.output_dir,
         driver.options.tmp,
         driver.options.enable_cleanup,
         driver.options.restricted_discs,
         len(driver.args) > 1 and driver.args[1:] or None,
         driver.options.failed_only)
-
     runner.execute()
 
 
