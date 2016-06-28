@@ -148,7 +148,7 @@ class GNATcheck(GNAThub.Plugin):
 
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('failed to parse GNATcheck report')
+            self.log.exception('failed to parse report')
             self.error(str(why))
 
         else:

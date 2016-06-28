@@ -133,7 +133,7 @@ class Gcov(GNAThub.Plugin):
 
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('failed to parse GCov reports')
+            self.log.exception('failed to parse reports')
             self.error(str(why))
 
         else:

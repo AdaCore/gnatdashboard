@@ -111,7 +111,7 @@ class GNATprove(GNAThub.Plugin):
 
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('failed to parse GNATprove output')
+            self.log.exception('failed to parse output')
             self.error(str(why))
 
         else:

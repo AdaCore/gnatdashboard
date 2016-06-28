@@ -190,7 +190,7 @@ class CodePeer(GNAThub.Plugin):
 
             except csv.Error as why:
                 self.exec_status = GNAThub.EXEC_FAILURE
-                self.log.exception('failed to parse CodePeer CSV report')
+                self.log.exception('failed to parse CSV report')
 
                 self.error('%s (%s:%d)' %
                            (why, os.path.basename(self.csv_report), total))

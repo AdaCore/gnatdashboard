@@ -166,7 +166,7 @@ class GNATcoverage(GNAThub.Plugin):
 
         except (IOError, ValueError) as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('failed to parse GNATcoverage reports')
+            self.log.exception('failed to parse reports')
             self.error(str(why))
 
         else:
