@@ -7,7 +7,7 @@ package body F is
    ---------
 
    procedure Foo (First_Path : Boolean := False) is
-      Uninitialized : Integer;
+      uninitialized : Integer;
    begin
       if First_Path then
          Put_Line ("First path taken");
@@ -15,7 +15,7 @@ package body F is
          Put_Line ("Second path taken");
       end if;
 
-      Put_Line (Integer'Image (Uninitialized));
+      Put_Line (Integer'Image (uninitialized));
    end Foo;
 
 end F;

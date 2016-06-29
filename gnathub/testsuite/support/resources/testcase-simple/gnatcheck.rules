@@ -1,10 +1,14 @@
-+RAbstract_Type_Declarations
-+RAnonymous_Arrays
-+REXIT_Statements_With_No_Loop_Name
-+RFloat_Equality_Checks
-+RGOTO_Statements
-+RImproper_Returns
-+RLocal_Packages
++R Abstract_Type_Declarations
++R Anonymous_Arrays
++R EXIT_Statements_With_No_Loop_Name
++R Float_Equality_Checks
++R GOTO_Statements
++R Improper_Returns
++R Local_Packages
 
-+RStyle_Checks:e
-+RWarnings:a
++R Style_Checks : e
++R Warnings     : a
+
++R Identifier_Casing    : Others            = mixed
++R Identifier_Suffixes  : Constant_Suffix   = _Cst
++R Identifier_Prefixes  : Constant          = C_

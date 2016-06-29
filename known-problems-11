@@ -2,7 +2,7 @@
 GNATdashboard 1.1 KNOWN PROBLEMS LIST
 =====================================
 
-Copyright (C) 2015, AdaCore
+Copyright (C) 2015-2016, AdaCore
 
 The following is a listing of known problems in GNATdashboard 1.1.x.
 Each entry contains a status line stating when the problem was fixed, and on
@@ -16,3 +16,13 @@ in this document.
 
 Known problems fixed in GNATdashboard 17.0
 ------------------------------------------
+
+KP-11-P418-035 GNATcheck rules with parameters ignored
+
+  Problem:    GNATcheck rules specialized with a parameters are ignored by
+              GNAThub when processing the results. As a result they are not
+              recorded in the database nor by the Sonar Ada Plugin.
+
+  Status:     Fixed in GNAThub 1.1.2 on 2016-06-29
+
+  Workaround: None.

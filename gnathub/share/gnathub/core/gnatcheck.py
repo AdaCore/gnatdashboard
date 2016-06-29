@@ -35,7 +35,7 @@ class GNATcheck(GNAThub.Plugin):
     """
 
     # Regex to identify lines that contain messages
-    _RULE_PATTERN = r'(?P<message>.+)\s\[(?P<rule>[A-Za-z_]+)\]$'
+    _RULE_PATTERN = r'(?P<message>.+)\s\[(?P<rule>[A-Za-z_:]+)\]$'
 
     # Regular expression to match GNATcheck output and extract all relevant
     # information stored in it.

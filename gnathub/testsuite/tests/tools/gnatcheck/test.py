@@ -8,10 +8,13 @@ from unittest import TestCase
 from support.mock import GNAThub, Project, Script
 
 
-COMPILER_WARNING = 'f.adb 10:7'
-IMPROPER_RETURNS = 'simple.adb 33:17'
-SECTIONS = sorted(['simple.adb', 'f.adb', 'f.ads',
-                   COMPILER_WARNING, IMPROPER_RETURNS])
+F_ADB_10_7 = 'f.adb 10:7'
+SIMPLE_ADB_33_17 = 'simple.adb 33:17'
+SIMPLE_ADB_43_4 = 'simple.adb 43:4'
+SECTIONS = sorted([
+    'simple.adb', 'f.adb', 'f.ads', F_ADB_10_7, SIMPLE_ADB_33_17,
+    SIMPLE_ADB_43_4
+])
 
 
 class TestGNATcheckSupport(TestCase):
@@ -30,8 +33,17 @@ class TestGNATcheckSupport(TestCase):
         self.assertListEqual(sorted(parser.sections()), SECTIONS)
 
         self.assertTrue(
-            parser.has_option(COMPILER_WARNING, 'warnings'),
+            parser.has_option(F_ADB_10_7, 'warnings'),
             'missing "warnings" entry')
         self.assertTrue(
-            parser.has_option(IMPROPER_RETURNS, 'improper_returns'),
+            parser.has_option(SIMPLE_ADB_33_17, 'improper_returns'),
             'missing "improper_returns" entry')
+        self.assertTrue(
+            parser.has_option(F_ADB_10_7, 'identifier_casing'),
+            'missing "identifier_casing" entry')
+        self.assertTrue(
+            parser.has_option(SIMPLE_ADB_43_4, 'identifier_suffixes'),
+            'missing "identifier_suffixes" entry')
+        self.assertTrue(
+            parser.has_option(SIMPLE_ADB_43_4, 'identifier_prefixes'),
+            'missing "identifier_prefixes" entry')
