@@ -20,7 +20,7 @@ export function commonprefix(paths: string[]): string {
     let i = 0;
     let a1 = A[0];
     let a2 = A[A.length - 1];
-    for(; i < a1.length && a1.charAt(i) === a2.charAt(i); i++)
+    for (; i < a1.length && a1.charAt(i) === a2.charAt(i); i++)
         ;
     return a1.substring(0, i);
 }

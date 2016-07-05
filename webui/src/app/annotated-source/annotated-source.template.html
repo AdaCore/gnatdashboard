@@ -1,0 +1,66 @@
+<div>
+    <div *ngIf="!source">Loading annotated source...</div>
+    <div *ngIf="source">
+        <h4>Info</h4>
+        <ul>
+            <li>Coverage level: {{ source.coverage_level }}</li>
+            <li>Filename: {{ source.filename }}</li>
+            <li>Hunk filename: {{ source.hunk_filename }}</li>
+            <li>Project: {{ source.project }}</li>
+        </ul>
+        <h4>Stats</h4>
+        <ul>
+            <li *ngIf="source.stats.no_code">
+                No code: {{ source.stats.no_code }} lines
+            </li>
+            <li *ngIf="source.stats.covered">
+                Covered: {{ source.stats.covered }} lines
+            </li>
+            <li *ngIf="source.stats.not_covered">
+                Not covered: {{ source.stats.not_covered }} lines
+            </li>
+            <li *ngIf="source.stats.partially_covered">
+                Partially covered: {{ source.stats.partially_covered }} lines
+            </li>
+            <li *ngIf="source.stats.exempted_no_violation">
+                Exempted, no violation: {{ source.stats.exempted_no_violation }} lines
+            </li>
+            <li *ngIf="source.stats.exempted_with_violation">
+                Exempted, with violation: {{ source.stats.exempted_with_violation }} lines
+            </li>
+        </ul>
+        <div class="editor read-only">
+            <div class="file-header">{{ source.filename }}</div>
+            <table>
+                <template ngFor let-mapping [ngForOf]="source.mappings" let-isOdd="odd">
+                    <tr class="blob"
+                        [ngClass]="{
+                            odd: isOdd,
+                            no_code: mapping.coverage === '.',
+                            covered: mapping.coverage === '+',
+                            not_covered: mapping.coverage === '-',
+                            partially_covered: mapping.coverage === '!',
+                            exempted_no_violation: mapping.coverage === '#',
+                            exempted_with_violation: mapping.coverage === '*'
+                        }"
+                    >
+                        <td class="blob-number">{{ mapping.line.number }}</td>
+                        <!-- mapping.line.src may contain escaped HTML entities.
+                             Use AngularJS embedded sanitizer to render it.  -->
+                        <td class="blob-code" [innerHTML]="highlight(mapping.line.src)"></td>
+                    </tr>
+                    <tr *ngIf="mapping.message" class="inline-comment">
+                        <td colspan="2">
+                            <table>
+                                <tr>
+                                    <td class="kind">{{ mapping.message.kind }}</td>
+                                    <td class="message" [innerHTML]="formatMessage(mapping)"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </template>
+            </table>
+        </div>
+    </div>
+</div>

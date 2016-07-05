@@ -7,7 +7,7 @@ const COMMON_PREFIXES: CommonPrefixTestCase[] = [
         expected: 'inters'
     },
     {
-        input: ['interspec','intfoo', 'interspace'],
+        input: ['interspec', 'intfoo', 'interspace'],
         expected: 'int'
     },
     {
@@ -34,9 +34,9 @@ const COMMON_PREFIXES: CommonPrefixTestCase[] = [
 
 describe('path.commonprefix', () => {
     COMMON_PREFIXES.forEach((tc: CommonPrefixTestCase) => {
-        const human_friendly_expected =
+        const humanFriendlyExpected =
             tc.expected ? `"${tc.expected}"` : 'the empty string';
-        it(`returns ${human_friendly_expected}`, () => {
+        it(`returns ${humanFriendlyExpected}`, () => {
             expect(commonprefix(tc.input)).toEqual(tc.expected);
         });
     });

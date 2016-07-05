@@ -1,0 +1,17 @@
+main-responder {
+  display: block;
+
+  & h1 {
+    font-family: "Open Sans", "Helvetica Neue", "Helvetica", sans-serif;
+    font-weight: 300;
+  }
+
+  & about,
+  & annotated-source,
+  & gnathub-blob,
+  & gnathub-report,
+  & trace-list {
+    display: block;
+    padding: 10px;
+  }
+}

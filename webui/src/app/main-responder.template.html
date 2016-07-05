@@ -1,0 +1,17 @@
+<header class="top" role="header">
+    <div class="container-fluid navbar-default">
+        <a href="#" class="navbar-brand pull-left">GNATdashboard Report</a>
+        <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="glyphicon glyphicon-align-justify"></span>
+        </button>
+        <nav class="navbar-collapse collapse" role="navigation">
+            <ul class="navbar-nav nav">
+                <li><a [routerLink]="['./report']">Report</a></li>
+                <li><a [routerLink]="['./traces']">Traces</a></li>
+                <li><a [routerLink]="['./source']">Source</a></li>
+                <li><a [routerLink]="['./about']">About</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<router-outlet></router-outlet>
