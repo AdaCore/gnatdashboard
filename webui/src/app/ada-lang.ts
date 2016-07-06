@@ -1,4 +1,4 @@
-import * as hljs from "highlight.js";
+import * as hljs from 'highlight.js';
 
 /**
  * This file handles the highlighting of Ada source code.

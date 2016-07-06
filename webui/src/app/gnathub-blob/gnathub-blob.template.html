@@ -13,12 +13,12 @@
         <div class="editor read-only">
             <div class="file-header">{{ blob.filename }}</div>
             <table>
-                <template ngFor let-line [ngForOf]="blob.lines" let-isOdd="odd">
+                <template ngFor let-line [ngForOf]="highlightedLines()" let-isOdd="odd">
                     <tr class="blob" [ngClass]="{ odd: isOdd }">
                         <td class="blob-number">{{ line.number }}</td>
                         <!-- line.content may contain escaped HTML entities.
                              Use AngularJS embedded sanitizer to render it.  -->
-                        <td class="blob-code" [innerHTML]="highlight(line.content)"></td>
+                        <td class="blob-code" [innerHTML]="line.content"></td>
                     </tr>
                 </template>
             </table>
