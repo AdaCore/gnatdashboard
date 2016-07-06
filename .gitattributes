@@ -67,3 +67,14 @@ webui/karma.conf.js no-precommit-check
 webui/webpack.config.js no-precommit-check
 webui/webpack.prod.config.js no-precommit-check
 webui/webpack.test.config.js no-precommit-check
+webui/config/head-config.common.js no-precommit-check
+webui/config/helpers.js no-precommit-check
+webui/config/html-elements-plugin/index.js no-precommit-check
+webui/config/karma.conf.js no-precommit-check
+webui/config/modules/angular2-hmr-prod.js no-precommit-check
+webui/config/protractor.conf.js no-precommit-check
+webui/config/spec-bundle.js no-precommit-check
+webui/config/webpack.common.js no-precommit-check
+webui/config/webpack.dev.js no-precommit-check
+webui/config/webpack.prod.js no-precommit-check
+webui/config/webpack.test.js no-precommit-check
