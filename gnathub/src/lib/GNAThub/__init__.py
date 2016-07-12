@@ -388,6 +388,8 @@ class Tool(object):
 
     """A Tool object, mapping to a Tool entry in the database."""
 
+    __slots__ = ('id', 'name')
+
     def __init__(self, name):
         """Return the tool of the given name, creating it if necessary.
 
@@ -419,6 +421,8 @@ class Category(object):
 
     """A Category object, representing a category in the database."""
 
+    __slots__ = ('id', 'label', 'on_side')
+
     def __init__(self, label, on_side=False):
         """Return the category of the given label and property.
 
@@ -446,6 +450,8 @@ class Category(object):
 class Rule(object):
 
     """A Rule object, representing a rule in the database."""
+
+    __slots__ = ('id', 'name', 'identifier', 'kind', 'tool_id')
 
     def __init__(self, name, identifier, kind, tool):
         """Return the rule of the given properties, creating it if necessary.
@@ -478,6 +484,10 @@ class Message(object):
 
     """A Message object, representing one message in the database."""
 
+    __slots__ = (
+        'id', 'rule_id', 'data', 'category_id', 'line', 'col_begin', 'col_end'
+    )
+
     def __init__(self, rule, message, category=None):
         """Return the message matching the given properties.
 
@@ -507,6 +517,8 @@ class Resource(object):
 
     A resource represents either a file, a directory, or a project.
     """
+
+    __slots__ = ('id', 'name', 'kind')
 
     def __init__(self, name, kind):
         """Return a Resource, creating it if necessary.
