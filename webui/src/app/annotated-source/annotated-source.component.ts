@@ -14,6 +14,7 @@ import { ReportService } from '../report.service';
 @Component({
     selector: 'annotated-source',
     templateUrl: './annotated-source.template.html',
+    styleUrls: [ './annotated-source.style.css' ],
     directives: [ CORE_DIRECTIVES ],
     providers: [ ReportService ]
 })

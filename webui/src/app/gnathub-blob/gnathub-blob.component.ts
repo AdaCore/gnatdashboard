@@ -1,22 +1,23 @@
 import { CORE_DIRECTIVES } from '@angular/common';
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { DomSanitizationService, SafeHtml } from '@angular/platform-browser';
 import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 
-import { IGNAThubBlob, IGNAThubBlobLine } from 'gnat';
+import { IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage } from 'gnat';
 import { highlightAuto } from 'highlight.js';
 import { Subscription } from 'rxjs/Subscription';
 
 import { highlightAda } from '../ada-lang';
 import { unescapeHTML } from '../html-utils';
+import { Loader } from '../loader/loader.component';
 import { PathEncoder } from '../path-encoder';
 import { ReportService } from '../report.service';
 
 @Component({
     selector: 'gnathub-blob',
-    encapsulation: ViewEncapsulation.None,
     templateUrl: './gnathub-blob.template.html',
-    directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ],
+    styleUrls: [ './gnathub-blob.style.css' ],
+    directives: [ CORE_DIRECTIVES, Loader, ROUTER_DIRECTIVES ],
     providers: [ ReportService ]
 })
 export class GNAThubBlob extends PathEncoder {
@@ -65,6 +66,7 @@ export class GNAThubBlob extends PathEncoder {
     /** @override */
     ngOnDestroy() {
         this.sub.unsubscribe();
+        this.sub = null;
     }
 
     /**
@@ -83,19 +85,31 @@ export class GNAThubBlob extends PathEncoder {
      * @return An array of HTML string with highlighting markup, or |null| if
      *      the blob is not loaded.
      */
-    public highlightedLines(): { number: number, content: SafeHtml }[] {
+    highlightedLines(): { number: number, content: SafeHtml }[] {
         if (!this.blob || !this.blob.lines) {
             return [];
         }
         if (!this.htmlLines || this.htmlLinesOfBlob !== this.blob) {
+            // Decorate the code with HTML markup for highlighting.
+            // Pass all lines to |this.highlight| as a single string to provide
+            // the highlight engine with as much context as possible (for
+            // markups that span on several lines, eg. Python docstrings).
+            // NOTE: The |string.replace| method is used to remove the extra
+            // line otherwise introduced by the |string.split| method:
+            //
+            //      > 'line 1\nline 2\nline 3\n'.split(/\r\n|\r|\n/g)
+            //      [ 'line 1', 'line 2', 'line 3', '' ]
+            //
+            // This ensures this method returns a consistent line count (so that
+            // we don't need to check the line exists in |this.messages|.
             let i = 0;
             this.htmlLines = this.highlight(
                 this.blob.lines.map(l => l.content).join('')
-            ).split(/\r\n|\r|\n/g).map(
+            ).replace(/(\r\n|\r|\n)$/, '').split(/\r\n|\r|\n/g).map(
                 (content: string) => {
                     return {
                         number: ++i,
-                        content: this.bypassSanitizer(`${content}\n`)
+                        content: this.bypassSanitizer(content)
                     };
                 });
             this.htmlLinesOfBlob = this.blob;
@@ -104,12 +118,38 @@ export class GNAThubBlob extends PathEncoder {
     }
 
     /**
+     * Return the list of messages attached to the given line.
+     *
+     * @param line The line for which to list messages.
+     * @return The list of messages.
+     */
+    messages(line: number): IGNAThubMessage[] {
+        if (!this.blob || !this.blob.lines) {
+            return [];
+        }
+        return this.blob.lines[line - 1].messages;
+    }
+
+    /**
+     * Return the coverage value for for the given line.
+     *
+     * @param line The line for which to get coverage information.
+     * @return The coverage value.
+     */
+    coverage(line: number): string {
+        if (!this.blob || !this.blob.lines) {
+            return '';
+        }
+        return this.blob.lines[line - 1].coverage;
+    }
+
+    /**
      * Syntax highlight a code snippet.
      *
      * @param code The source code to highlight.
      * @return The HTML string with highlighting markup.
      */
-    public highlight(code: string): string {
+    highlight(code: string): string {
         // TODO(delay): avoid having to deal with encoded HTML entities at this
         // point (ie. remove the call to |unescapeHTML|).
         if (this.filename.endsWith('.ads') || this.filename.endsWith('.adb')) {

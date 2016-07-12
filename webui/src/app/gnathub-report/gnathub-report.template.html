@@ -1,6 +1,7 @@
 <div>
     <div *ngIf="!report">
         <loader></loader>
+        <center>Loading report...</center>
     </div>
     <div *ngIf="report">
         <h1>Project Overview & Report <small>{{ report.project }}</small></h1>

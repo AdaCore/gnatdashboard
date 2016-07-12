@@ -10,7 +10,6 @@ import { ReportService } from '../report.service';
 
 @Component({
     selector: 'gnathub-report',
-    encapsulation: ViewEncapsulation.None,
     templateUrl: './gnathub-report.template.html',
     styleUrls: [ './gnathub-report.style.css' ],
     directives: [ CORE_DIRECTIVES, Loader, ROUTER_DIRECTIVES ],

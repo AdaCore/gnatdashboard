@@ -17,7 +17,6 @@ interface IProgramTrace {
 
 @Component({
     selector: 'trace-list',
-    encapsulation: ViewEncapsulation.None,
     templateUrl: './trace-list.template.html',
     styleUrls: [ './trace-list.style.css' ],
     directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ],

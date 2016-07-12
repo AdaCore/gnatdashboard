@@ -1,5 +1,8 @@
 <div>
-    <div *ngIf="!blob">Loading annotated source...</div>
+    <div *ngIf="!blob" class="loader">
+        <loader></loader>
+        <center>Loading annotated source...</center>
+    </div>
     <div *ngIf="blob">
         <h4>Info</h4>
         <ul>
@@ -7,18 +10,34 @@
             <li>Project: {{ blob.project }}</li>
         </ul>
         <h4>Metrics</h4>
-        <p>
-            <em>No metrics to display for now</em>
-        </p>
+        <div *ngIf="!blob.metrics.length">
+            <p class="no-metrics"><em>No metrics to display</em></p>
+        </div>
+        <div *ngIf="blob.metrics">
+            <ul>
+                <li *ngFor="let metric of blob.metrics">
+                    {{ metric.rule.name }}: {{metric.message }}
+                </li>
+            </ul>
+        </div>
         <div class="editor read-only">
             <div class="file-header">{{ blob.filename }}</div>
             <table>
                 <template ngFor let-line [ngForOf]="highlightedLines()" let-isOdd="odd">
-                    <tr class="blob" [ngClass]="{ odd: isOdd }">
+                    <tr class="blob" [ngClass]="{
+                            odd: isOdd,
+                            covered: coverage(line.number) == 'COVERED',
+                            not_covered: coverage(line.number) == 'NOT_COVERED'
+                        }">
                         <td class="blob-number">{{ line.number }}</td>
                         <!-- line.content may contain escaped HTML entities.
                              Use AngularJS embedded sanitizer to render it.  -->
                         <td class="blob-code" [innerHTML]="line.content"></td>
+                    </tr>
+                    <tr class="inline-comment" *ngFor="let message of messages(line.number)">
+                        <td colspan=2>
+                            <b>{{ message.rule.tool }}</b>: {{ message.message }}
+                        </td>
                     </tr>
                 </template>
             </table>

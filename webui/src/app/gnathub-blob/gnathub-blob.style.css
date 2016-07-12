@@ -1,0 +1,77 @@
+div.loader { margin-top: 16px; }
+p.no-metrics { margin: 16px; }
+
+.editor {
+  width: 100%;
+  min-width: 90ch;
+  overflow: hidden;
+  border-radius: 2px;
+  border: 1px solid #adb9cc;
+}
+
+/* TODO(delay): should only be the case for Ada sources */
+table { tab-size: 3; }
+
+.file-header {
+  padding: 10px 15px;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #d8d8d8;
+  color: #333;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 1.2rem;
+  line-height: 1.5em;
+  white-space: nowrap;
+  cursor: default;
+}
+
+tr.blob {
+  &.odd { background-color: #f8f8f8; }
+  &:hover {
+    &.no_code td.blob-number { background-color: #edf2f9; }
+    & td.blob-code { background-color: #f4f7fb; }
+  }
+
+  /* Line covered */
+  &.covered td.blob-number { background-color: #dbffdb; }
+  &:hover.covered td.blob-code { background-color: #eaffea; }
+
+  /* Line not covered */
+  &.not_covered td.blob-number,
+  &:hover.not_covered td.blob-code {
+    background-color: #fdd;
+  }
+  &.not_covered td.blob-code { background-color: #ffecec; }
+
+  /* Line partially covered */
+  &.partially_covered td.blob-number,
+  &:hover.partially_covered td.blob-code {
+    background-color: #fbe597;
+  }
+  &.partially_covered td.blob-code { background-color: #faefc8; }
+
+  & td {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 1.2rem;
+    line-height: 1.5em;
+    padding: 0 2ch;
+    white-space: pre;
+    border: 0;
+    vertical-align: middle;
+    cursor: default;
+
+    &.blob-number {
+      color: color(black alpha(-70%));
+      width: 1%;
+      min-width: 50px;
+      white-space: nowrap;
+      text-align: right;
+      vertical-align: top;
+      padding-left: 10px;
+      padding-right: 10px;
+      background-color: #f7f7f7;
+      border-right: 1px solid #d8d8d8;
+    }
+  }
+}
+
+tr.inline-comment td { border-left: 0; }

@@ -120,10 +120,28 @@ declare module 'gnat' {
     export interface IGNAThubBlobLine {
         no: number;
         content: string;
+        coverage: string;
+        messages: IGNAThubMessage[];
+    }
+
+    export interface IGNAThubRule {
+        identifier: string;
+        name: string;
+        kind: number;
+        tool: string;
+    }
+
+    export interface IGNAThubMessage {
+        begin: number;
+        end: number;
+        rule: IGNAThubRule;
+        message: string;
     }
 
     export interface IGNAThubBlob {
+        project: string;
         filename: string;
         lines: IGNAThubBlobLine[];
+        metrics: IGNAThubMessage[];
     }
 }
