@@ -52,9 +52,6 @@ class HTMLReport(GNAThub.Plugin):
     """
     _tools_by_id = None
 
-    def setup(self):
-        super(HTMLReport, self).setup()
-
     @property
     def name(self):
         return 'html-report'
@@ -170,9 +167,11 @@ class HTMLReport(GNAThub.Plugin):
             if sources
         }
 
-    def _generate_report_src_hunk(self, source_file):
+    def _generate_report_src_hunk(self, project_name, source_file):
         """Generate the JSON-encoded representation of `source_file`
 
+        :param project_name: the name of the project the source if from
+        :type project_name: str
         :param source_file: the full path to the source file
         :type source_file: str
         :return: the JSON-encoded representation of `source_file`
@@ -184,12 +183,43 @@ class HTMLReport(GNAThub.Plugin):
             os.path.basename(source_file), source_file
         )
 
+        # Generate the dictionary of rules
+        RULES = {rule.id: rule for rule in GNAThub.Rule.list()}
+
+        messages = collections.defaultdict(list)
+        coverage = collections.defaultdict(str)
+        for msg in GNAThub.Resource.get(source_file).list_messages():
+            rule = RULES[msg.rule_id]
+            tool = self._get_tool_by_id(rule.tool_id)
+            if rule.identifier != 'coverage':
+                messages[msg.line].append({
+                    'begin': msg.col_begin,
+                    'end': msg.col_end,
+                    'rule': {
+                        'identifier': rule.identifier,
+                        'name': rule.name,
+                        'kind': rule.kind,
+                        'tool': tool.name,
+                    },
+                    'message': msg.data
+                })
+            elif tool.name == 'gcov':
+                coverage[msg.line] = (
+                    'COVERED' if int(msg.data) else 'NOT_COVERED'
+                )
+            else:
+                pass  # TODO(delay): add support for GNATcoverage
+
         with open(source_file, 'r') as infile:
             return {
+                'project': project_name,
                 'filename': os.path.basename(source_file),
+                'metrics': messages[0],
                 'lines': [{
                     'number': no,
-                    'content': line
+                    'content': line,
+                    'coverage': coverage[no],
+                    'messages': messages[no]
                 } for no, line in enumerate(infile, start=1)]
             }
 
@@ -200,7 +230,7 @@ class HTMLReport(GNAThub.Plugin):
         location, ... as well as the list of sub-project and their source
         directories and source files, along with some important metrics.
 
-        :return: the
+        :return: the JSON-encoded index
         :rtype: dict[str,*]
         """
 
@@ -277,7 +307,7 @@ class HTMLReport(GNAThub.Plugin):
             )) for source_dirs in index['modules'].itervalues())) + 1
 
             # Serialize each source of the project
-            for _, source_dirs in index['modules'].iteritems():
+            for project_name, source_dirs in index['modules'].iteritems():
                 for source_dir, source_hunks in source_dirs.iteritems():
                     for source in source_hunks:
                         output_hunk_path = os.path.join(
@@ -286,6 +316,7 @@ class HTMLReport(GNAThub.Plugin):
                         self._json_dump(
                             output_hunk_path,
                             self._generate_report_src_hunk(
+                                project_name,
                                 os.path.join(source_dir, source['filename'])
                             )
                         )
