@@ -7,8 +7,6 @@ import { IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage } from 'gnat';
 import { highlightAuto } from 'highlight.js';
 import { Subscription } from 'rxjs/Subscription';
 
-import { highlightAda } from '../ada-lang';
-import { unescapeHTML } from '../html-utils';
 import { Loader } from '../loader/loader.component';
 import { PathEncoder } from '../path-encoder';
 import { ReportService } from '../report.service';
@@ -150,11 +148,6 @@ export class GNAThubBlob extends PathEncoder {
      * @return The HTML string with highlighting markup.
      */
     highlight(code: string): string {
-        // TODO(delay): avoid having to deal with encoded HTML entities at this
-        // point (ie. remove the call to |unescapeHTML|).
-        if (this.filename.endsWith('.ads') || this.filename.endsWith('.adb')) {
-            return highlightAda(code);
-        }
         return highlightAuto(code).value;
     }
 }

@@ -15,7 +15,7 @@ export class ReportService {
 
     private gnathubReport: IGNAThubReport = null;
 
-    constructor (private http: Http) {
+    constructor(private http: Http) {
         this.mainRequest = http.get('api/html-report/gnathub.report.json');
         this.mainRequest.subscribe(
             (res: Response) => this.gnathubReport = res.json());

@@ -20,16 +20,16 @@ import * as hljs from 'highlight.js';
  */
 
 const KEYWORDS: string[] = [
-    "abort", "else", "new", "return", "abs", "elsif", "not", "reverse",
-    "abstract", "end", "null", "accept", "entry", "select", "access",
-    "exception", "of", "separate", "aliased", "exit", "or", "some", "all",
-    "others", "subtype", "and", "for", "out", "synchronized", "array",
-    "function", "overriding", "at", "tagged", "generic", "package", "task",
-    "begin", "goto", "pragma", "terminate", "body", "private", "then", "if",
-    "procedure", "type", "case", "in", "protected", "constant", "interface",
-    "until", "is", "raise", "use", "declare", "range", "delay", "limited",
-    "record", "when", "delta", "loop", "rem", "while", "digits", "renames",
-    "with", "do", "mod", "requeue", "xor"
+    'abort', 'else', 'new', 'return', 'abs', 'elsif', 'not', 'reverse',
+    'abstract', 'end', 'null', 'accept', 'entry', 'select', 'access',
+    'exception', 'of', 'separate', 'aliased', 'exit', 'or', 'some', 'all',
+    'others', 'subtype', 'and', 'for', 'out', 'synchronized', 'array',
+    'function', 'overriding', 'at', 'tagged', 'generic', 'package', 'task',
+    'begin', 'goto', 'pragma', 'terminate', 'body', 'private', 'then', 'if',
+    'procedure', 'type', 'case', 'in', 'protected', 'constant', 'interface',
+    'until', 'is', 'raise', 'use', 'declare', 'range', 'delay', 'limited',
+    'record', 'when', 'delta', 'loop', 'rem', 'while', 'digits', 'renames',
+    'with', 'do', 'mod', 'requeue', 'xor'
 ];
 
 /**
@@ -44,14 +44,14 @@ const KEYWORDS: string[] = [
  * @see https://github.com/isagalaev/highlight.js/blob/master/src/languages/
  */
 function hljs_ada_language(): hljs.IMode {
-    "use strict";
+    'use strict';
 
     const COMMENT_MODES: hljs.IMode[] = [
-        hljs.COMMENT("--", "$", { relevance: 10 })
+        hljs.COMMENT('--', '$', { relevance: 10 })
     ];
     return {
         case_insensitive: true,
-        keywords: KEYWORDS.join(" "),
+        keywords: KEYWORDS.join(' '),
         contains: [
             hljs.QUOTE_STRING_MODE, hljs.NUMBER_MODE
         ].concat(COMMENT_MODES)
@@ -59,18 +59,7 @@ function hljs_ada_language(): hljs.IMode {
 }
 
 // Register the Ada language to the highlight.js engine.
-hljs.registerLanguage("ada", hljs_ada_language);
-
-/**
- * Convert an Ada snippet into an HTML string with highlighting markup.
- *
- * @param code The Ada code snippet to highlight.
- * @return The HTML string with highlighting markup.
- */
-export function highlightAda(code: string): string {
-    "use strict";
-    return hljs.highlight("ada", code).value;
-}
+hljs.registerLanguage('ada', hljs_ada_language);
 
 /**
  * Convert a code snippet of any language into an HTML string with highlighting
@@ -80,6 +69,6 @@ export function highlightAda(code: string): string {
  * @return The HTML string with highlighting markup.
  */
 export function highlight(code: string, language: string): string {
-    "use strict";
+    'use strict';
     return hljs.highlight(language, code).value;
 }
