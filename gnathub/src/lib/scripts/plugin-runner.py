@@ -373,21 +373,24 @@ class PluginRunner(object):
             return
 
         # Execute each plug-in in order
-        for cls in self.plugins:
-            try:
-                # Create a new instance
-                plugin = cls()
+        try:
+            for cls in self.plugins:
+                try:
+                    # Create a new instance
+                    plugin = cls()
 
-                # Execute the plug-in
-                succeed[plugin.name] = False
-                PluginRunner.execute(plugin)
-                if plugin.exec_status == GNAThub.EXEC_SUCCESS:
-                    succeed[plugin.name] = True
-            except KeyboardInterrupt:
-                Console.info('%sinterrupt caught...' % os.linesep)
-            except Exception as why:
-                LOG.exception('plug-in execution failed')
-                PluginRunner.error('unexpected error: %s' % why)
+                    # Execute the plug-in
+                    succeed[plugin.name] = False
+                    PluginRunner.execute(plugin)
+                    if plugin.exec_status == GNAThub.EXEC_SUCCESS:
+                        succeed[plugin.name] = True
+                except KeyboardInterrupt:
+                    raise
+                except Exception as why:
+                    LOG.exception('plug-in execution failed')
+                    PluginRunner.error('unexpected error: %s' % why)
+        except KeyboardInterrupt:
+            Console.info('%sinterrupt caught...' % os.linesep)
 
         if not GNAThub.dry_run() and not GNAThub.quiet():
             # Display a summary
