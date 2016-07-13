@@ -31,60 +31,24 @@ from GNAThub import Console
 class HTMLReport(GNAThub.Plugin):
     """HTMLReport plugin for GNAThub"""
 
-    """
-    A dictionary of :class:`GNAThub.Tool` indexed by tool name (in lowercase)
-    and used for constant access.
-
-    This dictionnary is lazily computed by the :meth:`_get_tool_by_name`
-    method.
-
-    :type: dict[str,GNAThub.Tool] | None
-    """
-    _tools_by_name = None
-
-    """
-    A dictionary of :class:`GNAThub.Tool` indexed by tool ID and used for
-    constant access.
-
-    This dictionnary is lazily computed by the :meth:`_get_tool_by_id` method.
-
-    :type: dict[number,GNAThub.Tool] | None
-    """
-    _tools_by_id = None
+    def __init__(self):
+        super(HTMLReport, self).__init__()
+        self._rules = None
+        self._tools_by_id = None
+        self._tools_by_name = None
 
     @property
     def name(self):
         return 'html-report'
 
-    def _get_tool_by_id(self, id):
-        """Return the Tool object matching `id` if it was executed.
-
-        Returns `None` if the tool was not executed.
-
-        :param name: the ID of the tool
-        :type name: number
-        :rtype: GNAThub.Tool | None
-        """
-        if self._tools_by_id is None:
-            # Cache the list of tools for future lookups
-            self._tools_by_id = {tool.id: tool for tool in GNAThub.Tool.list()}
-        return self._tools_by_id.get(id)
-
-    def _get_tool_by_name(self, name):
-        """Return the Tool object matching `name` if it was executed.
-
-        Returns `None` if the tool was not executed.
-
-        :param name: the name of the tool
-        :type name: str
-        :rtype: GNAThub.Tool | None
-        """
-        if self._tools_by_name is None:
-            # Cache the list of tools for future lookups
-            self._tools_by_name = {
-                tool.name.lower(): tool for tool in GNAThub.Tool.list()
-            }
-        return self._tools_by_name.get(name.lower())
+    def setup(self):
+        """Inherited."""
+        super(HTMLReport, self).setup()
+        rules = GNAThub.Rule.list()
+        tools = GNAThub.Tool.list()
+        self._rules = {rule.id: rule for rule in GNAThub.Rule.list()}
+        self._tools_by_id = {tool.id: tool for tool in tools}
+        self._tools_by_name = {tool.name.lower(): tool for tool in tools}
 
     @property
     def output_dir(self):
@@ -96,19 +60,51 @@ class HTMLReport(GNAThub.Plugin):
 
         return os.path.join(GNAThub.root(), self.name)
 
-    def _json_dump(self, output, obj, indent=None):
+    def _write_json(self, output, obj, **kwargs):
         """Dump a JSON-encoded representation of `obj` into `output`
 
         :param output: path to the output file
         :type output: str
         :param obj: object to serialize and save into `output`
         :type obj: dict | list | str | int
+        :param kwargs: the parameters to pass to the underlying
+            :func:`json.dumps` function; see :func:`json.dumps` documentation
+            for more information
+        :type kwargs: dict
         :raise: IOError
+        :see: :func:`json.dumps`
         """
 
         self.log.debug('generating %s', output)
         with open(output, 'w') as outfile:
-            outfile.write(json.dumps(obj, indent=indent))
+            outfile.write(json.dumps(obj, **kwargs))
+
+    def _write_js(self, output, obj, js_wrapper_name, **kwargs):
+        """Generate a JavaScript file wrapping `obj` in `js_wrapper_name`
+
+        `obj` is JSON-encoded and used as argument of `js_wrapper_name`. This
+        function must be provided by the web application and used to load the
+        data.
+
+        :param output: path to the output file
+        :type output: str
+        :param obj: object to serialize and save into `output`
+        :type obj: dict | list | str | int
+        :param js_wrapper_name: the name of the JavaScript function to call
+            with `obj` as parameter
+        :type js_wrapper_name: str
+        :param kwargs: the parameters to pass to the underlying
+            :func:`json.dumps` function; see :func:`json.dumps` documentation
+            for more information
+        :type kwargs: dict
+        :raise: IOError
+        :see: :func:`json.dumps`
+        """
+
+        self.log.debug('generating %s', output)
+        with open(output, 'w') as outfile:
+            outfile.write('{}({});'.format(
+                js_wrapper_name, json.dumps(obj, **kwargs)))
 
     def _generate_source_tree(self, transform=None):
         """Generate the initial project structure
@@ -183,14 +179,11 @@ class HTMLReport(GNAThub.Plugin):
             os.path.basename(source_file), source_file
         )
 
-        # Generate the dictionary of rules
-        RULES = {rule.id: rule for rule in GNAThub.Rule.list()}
-
         messages = collections.defaultdict(list)
         coverage = collections.defaultdict(str)
         for msg in GNAThub.Resource.get(source_file).list_messages():
-            rule = RULES[msg.rule_id]
-            tool = self._get_tool_by_id(rule.tool_id)
+            rule = self._rules[msg.rule_id]
+            tool = self._tools_by_id[rule.tool_id]
             if rule.identifier != 'coverage':
                 messages[msg.line].append({
                     'begin': msg.col_begin,
@@ -235,10 +228,7 @@ class HTMLReport(GNAThub.Plugin):
         """
 
         # Get the GNATmetric tool definition
-        GNATMETRIC = self._get_tool_by_name('GNATmetric')
-
-        # Generate the dictionary of rules
-        RULES = {rule.id: rule for rule in GNAThub.Rule.list()}
+        gnatmetric = self._tools_by_name.get('GNATmetric')
 
         def _aggregate_metrics(project, source_dir, filename):
             """Collect metrics about the given source file
@@ -255,17 +245,14 @@ class HTMLReport(GNAThub.Plugin):
             """
 
             resource = GNAThub.Resource.get(os.path.join(source_dir, filename))
-            metrics = {
-                RULES[msg.rule_id].name: float(msg.data)
-                for msg in (
-                    resource.list_messages() if resource else []
-                ) if RULES[msg.rule_id].tool_id == GNATMETRIC.id
-            } if GNATMETRIC else None
-
             return {
                 'filename': filename,
-                'partname': '{}.json'.format(filename),
-                'metrics': metrics,
+                'metrics':  {
+                    self._rules[msg.rule_id].name: float(msg.data)
+                    for msg in (
+                        resource.list_messages() if resource else []
+                    ) if self._rules[msg.rule_id].tool_id == gnatmetric.id
+                } if gnatmetric else None,
                 '_associated_resource': resource is not None
             }
 
@@ -278,9 +265,47 @@ class HTMLReport(GNAThub.Plugin):
     def execute(self):
         """Generates JSON-encoded representation of the data collected"""
 
-        self.info('generate JSON-encoded report')
+        def _write_report_src_hunk(project, source_dir, source):
+            """Write a report source hunk to disk
+
+            :param project: the name of the project
+            :type project: str
+            :param source_dir: the source directory in which to find the source
+            :type source_dir: str
+            :param source: the source metadata (as generated by the method
+                :meth:`_generate_report_index`)
+            :type source: dict[str,*]
+            """
+
+            def _fname(ext):
+                return '{}.{}'.format(
+                    os.path.join(self.output_dir, source['filename']), ext)
+
+            src_hunk = self._generate_report_src_hunk(
+                project, os.path.join(source_dir, source['filename']))
+            self._write_json(_fname('json'), src_hunk, indent=2)
+            self.log.debug('src hunk written to %s', _fname('json'))
+            self._write_js(_fname('js'), src_hunk, 'load_src_hunk')
+            self.log.debug('src hunk written to %s', _fname('js'))
+
+        def _write_report_index(project_name, index):
+            """Write the report index to disk
+
+            :param project_name: the name of the project
+            :type project_name: str
+            """
+
+            def _fname(ext):
+                return '{}.report.{}'.format(
+                    os.path.join(self.output_dir, project_name.lower()), ext)
+
+            self._write_json(_fname('json'), index, indent=2)
+            self.log.debug('report index written to %s', _fname('json'))
+            self._write_js(_fname('js'), index, 'load_index')
+            self.log.debug('report index written to %s', _fname('js'))
 
         try:
+            self.info('generate JSON-encoded report')
             if not os.path.exists(self.output_dir):
                 os.makedirs(self.output_dir)
             else:
@@ -288,13 +313,13 @@ class HTMLReport(GNAThub.Plugin):
                 self.log.warn('existing report may be overriden')
 
             # Generate the report index
-            index = self._generate_report_index()
+            report_index = self._generate_report_index()
 
             # Compute the total source file count to display execution progress
             # Note: this is a more efficient version of:
             #
             #   count, total = 0, 1
-            #   for source_dirs in index['modules'].values():
+            #   for source_dirs in report_index['modules'].values():
             #       for source_hunks in source_dirs.values():
             #           total += len(source_hunks)
             #
@@ -304,40 +329,26 @@ class HTMLReport(GNAThub.Plugin):
             # computation.
             count, total = 0, sum((sum((
                 len(source_hunks) for source_hunks in source_dirs.itervalues()
-            )) for source_dirs in index['modules'].itervalues())) + 1
+            )) for source_dirs in report_index['modules'].itervalues())) + 1
 
             # Serialize each source of the project
-            for project_name, source_dirs in index['modules'].iteritems():
+            for project, source_dirs in report_index['modules'].iteritems():
                 for source_dir, source_hunks in source_dirs.iteritems():
-                    for source in source_hunks:
-                        output_hunk_path = os.path.join(
-                            self.output_dir, source['partname']
-                        )
-                        self._json_dump(
-                            output_hunk_path,
-                            self._generate_report_src_hunk(
-                                project_name,
-                                os.path.join(source_dir, source['filename'])
-                            )
-                        )
+                    for src_hunk in source_hunks:
+                        _write_report_src_hunk(project, source_dir, src_hunk)
                         count = count + 1
                         assert count != total, 'internal error'
                         Console.progress(count, total, False)
-                        self.log.debug('hunk written to %s', output_hunk_path)
 
             # Serialize the index
-            output_index_path = os.path.join(
-                self.output_dir,
-                '{}.report.json'.format(GNAThub.Project.name().lower())
-            )
-            self._json_dump(output_index_path, index)
+            _write_report_index(GNAThub.Project.name(), report_index)
             assert count + 1 == total, 'internal error'
             Console.progress(count + 1, total, True)
-            self.info('report written to %s' % output_index_path)
+            self.info('report written to {}'.format(self.output_dir))
 
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('failed to generate JSON files')
+            self.log.exception('failed to generate the HTML report')
             self.error(str(why))
 
         else:
