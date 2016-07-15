@@ -1,10 +1,12 @@
 """Check that all files have been created."""
 
 import os
+import unittest
 
 from ConfigParser import SafeConfigParser
 
 from unittest import TestCase
+from support import const
 from support.mock import GNAThub, Project, Script
 
 
@@ -32,6 +34,7 @@ class TestLALmetricSupport(TestCase):
         os.environ['USE_LIBADALANG_TOOLS'] = '1'
         self.gnathub = GNAThub(Project.simple(), plugins=['gnatmetric'])
 
+    @unittest.skipIf(const.skipLALToolsTests, 'requires LAL tools')
     def testDatabaseContent(self):
         script_output_file = os.path.abspath('script.out')
         self.gnathub.run(script='check-run.py')

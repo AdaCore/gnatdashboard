@@ -70,11 +70,12 @@ class GNAThubTestRunner(TestRunner):
                 'msg': 'failed to parse test results'
             }
 
-        if re.match('^\.*$', summary):
+        if re.match('^[\.s]*$', summary):
             return {'result': 'OK', 'is_failure': False, 'msg': ''}
 
         return {
-            'msg': '%d assertions raised' % len(summary.replace('.', '')),
+            'msg': '%d assertions raised' % len(
+                summary.replace('.', '').replace('s', '')),
             'result': 'DIFF', 'is_failure': True
         }
 

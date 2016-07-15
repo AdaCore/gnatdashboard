@@ -12,3 +12,6 @@ const.resourcedir = os.path.join(const.basedir, 'resources')
 
 # The directory containing the GNAThub scripts
 const.scriptdir = os.path.join(const.resourcedir, 'scripts')
+
+# Whether we should run LAL tools tests or not
+const.skipLALToolsTests = 'WITH_LIBADALANG_TOOLS' not in os.environ
