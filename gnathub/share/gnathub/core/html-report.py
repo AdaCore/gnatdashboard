@@ -203,18 +203,27 @@ class HTMLReport(GNAThub.Plugin):
             else:
                 pass  # TODO(delay): add support for GNATcoverage
 
-        with open(source_file, 'r') as infile:
-            return {
-                'project': project_name,
-                'filename': os.path.basename(source_file),
-                'metrics': messages[0],
-                'lines': [{
+        src_hunk = {
+            'project': project_name,
+            'filename': os.path.basename(source_file),
+            'metrics': messages[0],
+            'lines': None
+        }
+
+        try:
+            with open(source_file, 'r') as infile:
+                src_hunk['lines'] = [{
                     'number': no,
                     'content': line,
                     'coverage': coverage[no],
                     'messages': messages[no]
                 } for no, line in enumerate(infile, start=1)]
-            }
+        except IOError:
+            self.log.exception('failed to read source file: %s', source_file)
+            self.warn('failed to read source file: {}'.format(source_file))
+            self.warn('report might be incomplete')
+        finally:
+            return src_hunk
 
     def _generate_report_index(self):
         """Generate the report index
