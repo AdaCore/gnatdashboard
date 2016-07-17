@@ -220,7 +220,7 @@ class HTMLReport(GNAThub.Plugin):
                 } for no, line in enumerate(infile, start=1)]
         except IOError:
             self.log.exception('failed to read source file: %s', source_file)
-            self.warn('failed to read source file: {}'.format(source_file))
+            self.warn('failed to read source file: %s', source_file)
             self.warn('report might be incomplete')
         finally:
             return src_hunk
@@ -353,7 +353,7 @@ class HTMLReport(GNAThub.Plugin):
             _write_report_index(GNAThub.Project.name(), report_index)
             assert count + 1 == total, 'internal error'
             Console.progress(count + 1, total, True)
-            self.info('report written to {}'.format(self.output_dir))
+            self.info('report written to %s', self.output_dir)
 
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE

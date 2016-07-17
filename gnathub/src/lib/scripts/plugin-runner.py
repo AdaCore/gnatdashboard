@@ -97,31 +97,37 @@ class PluginRunner(object):
         self.plugins = PluginRunner.auto_discover_plugins()
 
     @staticmethod
-    def info(message):
+    def info(message, *args):
         """Display an informative message, prefixed with the plug-in name.
 
         :param message: the message to log
         :type message: str
+        :param args: arguments of the `message` format string
+        :type args: list[*]
         """
-        Console.info(message, prefix=MODULE)
+        Console.info(message % args, prefix=MODULE)
 
     @staticmethod
-    def warn(message):
+    def warn(message, *args):
         """Display a warning message, prefixed with the plug-in name.
 
         :param message: the message to log
         :type message: str
+        :param args: arguments of the `message` format string
+        :type args: list[*]
         """
-        Console.warn(message, prefix=MODULE)
+        Console.warn(message % args, prefix=MODULE)
 
     @staticmethod
-    def error(message):
+    def error(message, *args):
         """Display an error message, prefixed with the plug-in name.
 
         :param message: the message to log
         :type message: str
+        :param args: arguments of the `message` format string
+        :type args: list[*]
         """
-        Console.error(message, prefix=MODULE)
+        Console.error(message % args, prefix=MODULE)
 
     @staticmethod
     def schedule(plugins):
@@ -190,7 +196,7 @@ class PluginRunner(object):
         :type script: str
         """
         if not os.path.isfile(script):
-            PluginRunner.warn('%s: not a valid script' % script)
+            PluginRunner.warn('%s: not a valid script', script)
             return
 
         namespace = {}
@@ -201,7 +207,7 @@ class PluginRunner(object):
 
         except Exception as why:
             LOG.exception('failed to load script: %s', script)
-            PluginRunner.warn('%s: failed to load: %s' % (script, str(why)))
+            PluginRunner.warn('%s: failed to load: %s', script, str(why))
 
         for obj in namespace.values():
             if inspect.isclass(obj) and obj.__base__ is GNAThub.Plugin:
@@ -333,7 +339,7 @@ class PluginRunner(object):
         :type plugin: GNAThub.Plugin
         """
         start = time.time()
-        PluginRunner.info('execute plug-in %s' % plugin.name)
+        PluginRunner.info('execute plug-in %s',  plugin.name)
 
         if GNAThub.dry_run():
             # Early exit if dry-run mode is enabled
@@ -388,9 +394,10 @@ class PluginRunner(object):
                     raise
                 except Exception as why:
                     LOG.exception('plug-in execution failed')
-                    PluginRunner.error('unexpected error: %s' % why)
+                    PluginRunner.error(
+                        '%s: unexpected error: %s', plugin.name, why)
         except KeyboardInterrupt:
-            Console.info('%sinterrupt caught...' % os.linesep)
+            Console.info(os.linesep + 'Interrupt caught...')
 
         if not GNAThub.dry_run() and not GNAThub.quiet():
             # Display a summary

@@ -742,29 +742,35 @@ class Plugin(object):
         """
         return type(self).__name__.lower()
 
-    def info(self, message):
+    def info(self, message, *args):
         """Display an informative message, prefixed with the plug-in name.
 
         :param message: the message to display
         :type message: str
+        :param args: arguments of the `message` format string
+        :type args: list[*]
         """
-        Console.info(message, prefix=self.name)
+        Console.info(message % args, prefix=self.name)
 
-    def warn(self, message):
+    def warn(self, message, *args):
         """Display a warning message, prefixed with the plug-in name.
 
         :param message: the message to display
         :type message: str
+        :param args: arguments of the `message` format string
+        :type args: list[*]
         """
-        Console.warn(message, prefix=self.name)
+        Console.warn(message % args, prefix=self.name)
 
-    def error(self, message):
+    def error(self, message, *args):
         """Display an error message, prefixed with the plug-in name.
 
         :param message: the message to display
         :type message: str
+        :param args: arguments of the `message` format string
+        :type args: list[*]
         """
-        Console.error(message, prefix=self.name)
+        Console.error(message % args, prefix=self.name)
 
     def setup(self):
         """Called prior to a call to :meth:`Plugin.execute`.
