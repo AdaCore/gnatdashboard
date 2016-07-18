@@ -118,11 +118,11 @@ endif
 
 $(gensrcdir)/gnathub-version.ads: $(rootdir)/templates/gnathub-version.ads.in
 	$(MKDIR) $(gensrcdir)
-	cat $< |sed \
+	sed \
 		-e 's/@DATE@/$(DATE)/g' \
 		-e 's/@YEAR@/$(YEAR)/g' \
 		-e 's/@VERSION@/$(VERSION)/g' \
-		> $@
+		> $@ < $<
 
 $(gensrcdir)/database%: $(rootdir)/share/gnathub/sql/db.model
 	$(MAKE) gen-db-bindings
