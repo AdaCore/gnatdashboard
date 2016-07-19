@@ -23,9 +23,11 @@ import GNAThub
 
 import collections
 import json
+import inspect
 import os
 
 from GNAThub import Console
+from shutil import copy2, copytree, rmtree
 
 
 class HTMLReport(GNAThub.Plugin):
@@ -40,6 +42,17 @@ class HTMLReport(GNAThub.Plugin):
     @property
     def name(self):
         return 'html-report'
+
+    @property
+    def webapp_dir(self):
+        """Return the path to the webapp directory.
+
+        This directory contains the generic parts of the web application.
+
+        :rtype: str
+        """
+        this = inspect.getfile(inspect.currentframe())
+        return os.path.join(os.path.dirname(os.path.dirname(this)), 'webui')
 
     def setup(self):
         """Inherited."""
@@ -274,6 +287,10 @@ class HTMLReport(GNAThub.Plugin):
     def execute(self):
         """Generates JSON-encoded representation of the data collected"""
 
+        # The output directory for the JSON-encoded report data
+        data_output_dir = os.path.join(self.output_dir, 'data')
+        data_src_output_dir = os.path.join(data_output_dir, 'src')
+
         def _write_report_src_hunk(project, source_dir, source):
             """Write a report source hunk to disk
 
@@ -287,8 +304,8 @@ class HTMLReport(GNAThub.Plugin):
             """
 
             def _fname(ext):
-                return '{}.{}'.format(
-                    os.path.join(self.output_dir, source['filename']), ext)
+                return '{}.{}'.format(os.path.join(
+                    data_src_output_dir, source['filename']), ext)
 
             src_hunk = self._generate_report_src_hunk(
                 project, os.path.join(source_dir, source['filename']))
@@ -306,7 +323,7 @@ class HTMLReport(GNAThub.Plugin):
 
             def _fname(ext):
                 return '{}.report.{}'.format(
-                    os.path.join(self.output_dir, project_name.lower()), ext)
+                    os.path.join(data_output_dir, project_name.lower()), ext)
 
             self._write_json(_fname('json'), index, indent=2)
             self.log.debug('report index written to %s', _fname('json'))
@@ -315,11 +332,29 @@ class HTMLReport(GNAThub.Plugin):
 
         try:
             self.info('generate JSON-encoded report')
+
+            # Create directory structure if needed
             if not os.path.exists(self.output_dir):
                 os.makedirs(self.output_dir)
             else:
                 self.log.warn('%s: already exists', self.output_dir)
                 self.log.warn('existing report may be overriden')
+
+            # Copy the generic web application files
+            for entry in os.listdir(self.webapp_dir):
+                path = os.path.join(self.webapp_dir, entry)
+                dest = os.path.join(self.output_dir, entry)
+                if os.path.isdir(path):
+                    if os.path.isdir(dest):
+                        rmtree(dest)
+                    copytree(path, dest)
+                else:
+                    copy2(path, dest)
+
+            # Create the JSON-encoded report output directory
+            for directory in (data_output_dir, data_src_output_dir):
+                if not os.path.exists(directory):
+                    os.makedirs(directory)
 
             # Generate the report index
             report_index = self._generate_report_index()

@@ -16,7 +16,7 @@ export class ReportService {
     private gnathubReport: IGNAThubReport = null;
 
     constructor(private http: Http) {
-        this.mainRequest = http.get('api/html-report/gnathub.report.json');
+        this.mainRequest = http.get('data/gnathub.report.json');
         this.mainRequest.subscribe(
             (res: Response) => this.gnathubReport = res.json());
     }
@@ -58,7 +58,7 @@ export class ReportService {
             // The request as not yet been initialized. Execute it and save the
             // Observable to handle multiple requests to the same resource.
             this.blobRequests[filename] =
-                this.http.get(`api/html-report/${filename}.json`);
+                this.http.get(`data/src/${filename}.json`);
             this.blobRequests[filename].subscribe((res: Response) => {
                 // TODO(charly): assert |this.blobs.hasOwnProperty(filename)|
                 // evaluate to |false|.
