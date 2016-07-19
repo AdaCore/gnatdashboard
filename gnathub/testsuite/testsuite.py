@@ -231,14 +231,22 @@ class Testsuite(object):
             sys.stderr if status in Testsuite.ERRORS else sys.stdout)
 
         # Display the testcase diff if requested
+        out_file = resource('out')
         diff_file = resource('diff')
 
-        if (status in Testsuite.ERRORS and os.path.isfile(diff_file) and
-                self.main.options.with_diff):
-
-            with open(diff_file, 'r') as diff:
-                self.log(Testsuite.format_testcase_diff(diff.read().strip()),
-                         stream=sys.stderr)
+        if status in Testsuite.ERRORS and self.main.options.with_diff:
+            if os.path.isfile(diff_file):
+                with open(diff_file, 'r') as diff:
+                    self.log(
+                        Testsuite.format_testcase_diff(diff.read().strip()),
+                        stream=sys.stderr)
+            elif os.path.isfile(out_file):
+                with open(out_file, 'r') as out:
+                    self.log(
+                        Testsuite.format_testcase_diff(''.join([
+                            '+{}\n'.format(line)
+                            for line in out.read().strip().splitlines()
+                        ])), stream=sys.stderr)
 
     @staticmethod
     def status_token(status):
