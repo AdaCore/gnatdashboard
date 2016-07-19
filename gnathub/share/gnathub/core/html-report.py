@@ -92,33 +92,6 @@ class HTMLReport(GNAThub.Plugin):
         with open(output, 'w') as outfile:
             outfile.write(json.dumps(obj, **kwargs))
 
-    def _write_js(self, output, obj, js_wrapper_name, **kwargs):
-        """Generate a JavaScript file wrapping `obj` in `js_wrapper_name`
-
-        `obj` is JSON-encoded and used as argument of `js_wrapper_name`. This
-        function must be provided by the web application and used to load the
-        data.
-
-        :param output: path to the output file
-        :type output: str
-        :param obj: object to serialize and save into `output`
-        :type obj: dict | list | str | int
-        :param js_wrapper_name: the name of the JavaScript function to call
-            with `obj` as parameter
-        :type js_wrapper_name: str
-        :param kwargs: the parameters to pass to the underlying
-            :func:`json.dumps` function; see :func:`json.dumps` documentation
-            for more information
-        :type kwargs: dict
-        :raise: IOError
-        :see: :func:`json.dumps`
-        """
-
-        self.log.debug('generating %s', output)
-        with open(output, 'w') as outfile:
-            outfile.write('{}({});'.format(
-                js_wrapper_name, json.dumps(obj, **kwargs)))
-
     def _generate_source_tree(self, transform=None):
         """Generate the initial project structure
 
@@ -311,8 +284,6 @@ class HTMLReport(GNAThub.Plugin):
                 project, os.path.join(source_dir, source['filename']))
             self._write_json(_fname('json'), src_hunk, indent=2)
             self.log.debug('src hunk written to %s', _fname('json'))
-            self._write_js(_fname('js'), src_hunk, 'load_src_hunk')
-            self.log.debug('src hunk written to %s', _fname('js'))
 
         def _write_report_index(project_name, index):
             """Write the report index to disk
@@ -327,8 +298,6 @@ class HTMLReport(GNAThub.Plugin):
 
             self._write_json(_fname('json'), index, indent=2)
             self.log.debug('report index written to %s', _fname('json'))
-            self._write_js(_fname('js'), index, 'load_index')
-            self.log.debug('report index written to %s', _fname('js'))
 
         try:
             self.info('generate JSON-encoded report')
