@@ -140,40 +140,8 @@ class Logger(object):
         """
         pass    # Implemented in Ada
 
-    def info(self, message):
-        """Print an informative message.
-
-        :param message: the message to log
-        :type message: str
-        """
-        pass    # Implemented in Ada
-
-    def warn(self, message):
-        """Print a warning message.
-
-        :param message: the message to log
-        :type message: str
-        """
-        pass    # Implemented in Ada
-
-    def error(self, message):
-        """Print an error message.
-
-        :param message: the message to log
-        :type message: str
-        """
-        pass    # Implemented in Ada
-
-    def fatal(self, message):
-        """Print a fatal message.
-
-        :param message: the message to log
-        :type message: str
-        """
-        pass    # Implemented in Ada
-
-    def debug(self, message):
-        """Print a debug message.
+    def log(self, message):
+        """Log a message.
 
         :param message: the message to log
         :type message: str

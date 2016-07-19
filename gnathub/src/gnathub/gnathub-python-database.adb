@@ -22,6 +22,7 @@ with Database;                      use Database;
 with GNATCOLL.SQL;                  use GNATCOLL.SQL;
 with GNATCOLL.SQL.Exec;             use GNATCOLL.SQL.Exec;
 with GNATCOLL.Scripts;              use GNATCOLL.Scripts;
+with GNATCOLL.Traces;               use GNATCOLL.Traces;
 
 with GNAThub.Database;
 

@@ -38,14 +38,6 @@ class GNAThubLoggingHandler(logging.Handler):
 
     """Custom logging handler that uses :class:`GNAThub.Logger` as back-end."""
 
-    LOGGING_FUNCTIONS = {
-        'DEBUG': GNAThub.Logger.debug,
-        'INFO': GNAThub.Logger.info,
-        'WARNING': GNAThub.Logger.warn,
-        'ERROR': GNAThub.Logger.error,
-        'CRITICAL': GNAThub.Logger.fatal
-    }
-
     def __init__(self):
         """Initialize handler properties."""
         super(GNAThubLoggingHandler, self).__init__()
@@ -64,13 +56,9 @@ class GNAThubLoggingHandler(logging.Handler):
 
         try:
             message = self.format(record)
-
-            method = GNAThubLoggingHandler.LOGGING_FUNCTIONS[record.levelname]
-            method.__get__(logger)(message)
-
-        except (KeyboardInterrupt, SystemExit):
+            logger.log(message)
+        except KeyboardInterrupt, SystemExit:
             raise
-
         except:
             self.handleError(record)
             return

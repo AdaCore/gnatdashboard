@@ -23,6 +23,7 @@ with GNATCOLL.SQL.Inspect;    use GNATCOLL.SQL.Inspect;
 with GNATCOLL.SQL.Sessions;   use GNATCOLL.SQL.Sessions;
 with GNATCOLL.SQL.Sqlite;     use GNATCOLL.SQL.Sqlite;
 
+with GNATCOLL.Traces;         use GNATCOLL.Traces;
 with GNATCOLL.VFS;            use GNATCOLL.VFS;
 
 with GNAThub.Constants;       use GNAThub.Constants;
@@ -110,7 +111,7 @@ package body GNAThub.Database is
                Delete_Succeed : Boolean;
             begin
                --  Delete existing DB if any before creating a new one
-               Log.Info (Me, "Delete existing copy of the database");
+               Trace (Me, "Delete existing copy of the database");
                Delete (Database_File, Delete_Succeed);
 
                if not Delete_Succeed then
@@ -118,10 +119,10 @@ package body GNAThub.Database is
                end if;
             end;
          else
-            Log.Info (Me, "Use existing copy of the database");
+            Trace (Me, "Use existing copy of the database");
          end if;
       else
-         Log.Info (Me, "No previous copy of the database found");
+         Trace (Me, "No previous copy of the database found");
       end if;
 
       SQLite := GNATCOLL.SQL.Sqlite.Setup (Database_File.Display_Full_Name);
@@ -132,12 +133,11 @@ package body GNAThub.Database is
             Schema : DB_Schema;
          begin
             --  Retrieve schema from text file
-            Log.Debug (Me,
-               "Load DB schema: " & Database_Model_File.Display_Full_Name);
+            Trace (Me, "Schema: " & Database_Model_File.Display_Full_Name);
             Schema := New_Schema_IO (Database_Model_File).Read_Schema;
 
             --  And write it to the database (ie. create table if necessary)
-            Log.Debug (Me, "Write database schema (create tables)");
+            Trace (Me, "Write to database (create tables)");
             Write_Schema (Schema_IO, Schema);
          end;
       end if;
@@ -162,7 +162,7 @@ package body GNAThub.Database is
       Session  : constant Session_Type := Get_New_Session;
       Resource : constant Detached_Resource'Class := New_Resource;
    begin
-      Log.Debug (Me, "Create resource """ & Name & """");
+      Trace (Me, "Create resource """ & Name & """");
 
       Resource.Set_Name (Name);
       Resource.Set_Kind (Resource_Kind'Pos (Kind));
@@ -170,7 +170,7 @@ package body GNAThub.Database is
       Session.Persist (Resource);
       Session.Commit;
 
-      Log.Debug (Me, "Resource """ & Name & """ saved to database");
+      Trace (Me, "Resource """ & Name & """ saved to database");
 
       return Detached_Resource (Resource);
    end Create_And_Save_Resource;

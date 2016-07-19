@@ -25,6 +25,7 @@ with Database.Orm;                        use Database.Orm;
 
 with GNAT.Source_Info;
 
+with GNATCOLL.Traces;                     use GNATCOLL.Traces;
 with GNATCOLL.VFS_Utils;                  use GNATCOLL.VFS_Utils;
 
 with GNAThub.Configuration;
@@ -195,7 +196,7 @@ package body GNAThub.Project is
               "Failed to register custom attribute " & Key;
          end if;
 
-         Log.Debug (Me, "  + " & Key);
+         Trace (Me, "  + " & Key);
       end Internal_Register;
 
    begin
@@ -217,10 +218,10 @@ package body GNAThub.Project is
 
    procedure Initialize is
    begin
-      Log.Info (Me, "Initialize project loader");
+      Trace (Me, "Initialize project loader");
       GNATCOLL.Projects.Initialize (Project_Env);
 
-      Log.Info (Me, "Register custom GNATdashboard package attributes");
+      Trace (Me, "Register custom GNATdashboard package attributes");
       Register_Custom_Attributes;
 
       Is_Initialized := True;
@@ -234,7 +235,7 @@ package body GNAThub.Project is
    is
       Project_File : constant Virtual_File := GNATCOLL.VFS.Create (+Path);
    begin
-      Log.Info (Me, "Load project file " & Path);
+      Trace (Me, "Load project file " & Path);
 
       Project_Tree.Load
         (Root_Project_Path => Project_File,
@@ -243,7 +244,7 @@ package body GNAThub.Project is
 
       Is_Project_Loaded := True;
 
-      Log.Info (Me, "Project """ & Name & """ loaded");
+      Trace (Me, "Project """ & Name & """ loaded");
 
    exception
       when Invalid_Project =>
@@ -267,7 +268,7 @@ package body GNAThub.Project is
 
    procedure Update_Env (Key, Value : String) is
    begin
-      Log.Info (Me, "Update project environment: " & Key & " = " & Value);
+      Trace (Me, "Update project environment: " & Key & " = " & Value);
       Project_Env.Change_Environment (Key, Value);
 
       --  Store the scenario variable that was parsed
@@ -333,7 +334,7 @@ package body GNAThub.Project is
       Files         : File_Array_Access;
 
    begin
-      Log.Info (Me, "Save project sources: " & Project.Name);
+      Trace (Me, "Save project sources: " & Project.Name);
 
       --  Initialisation
       Files := Project.Source_Files;
@@ -353,8 +354,7 @@ package body GNAThub.Project is
                Kind => Kind_Directory);
             Save_Resource_Tree (Directory_Orm, Project_Orm);
 
-            Log.Debug (Me,
-              "New source directory: " & Files (F).Display_Dir_Name);
+            Trace (Me, "New source directory: " & Files (F).Display_Dir_Name);
          end if;
 
          --  Save source file, and source tree
@@ -363,7 +363,7 @@ package body GNAThub.Project is
             Kind => Kind_File);
          Save_Resource_Tree (File_Orm, Directory_Orm);
 
-         Log.Debug (Me, "New source file: " & Files (F).Display_Full_Name);
+         Trace (Me, "New source file: " & Files (F).Display_Full_Name);
       end loop;
    end Save_Project_Sources;
 

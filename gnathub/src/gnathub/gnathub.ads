@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2015, AdaCore                     --
+--                     Copyright (C) 2013-2016, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -16,8 +16,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Exceptions;
-
-with GNATCOLL.Traces;               use GNATCOLL.Traces;
 
 package GNAThub is
 
@@ -63,40 +61,5 @@ package GNAThub is
    --  Print a progess message. Activated at default verbosity level.
    --  If New_Line is True, then terminate the line with a ASCII.LF
    --  character. Defaults to False.
-
-   procedure Elapsed;
-   --  Print the elapsed time since the beginning of the application
-   --  execution.
-
-   package Log is
-
-      type Log_Level is
-        (Log_None, Log_Fatal, Log_Error, Log_Warn, Log_Info, Log_Debug,
-         Log_All);
-
-      procedure Set_Log_Level (Level : Log_Level);
-      --  Set the logger verbosity
-
-      procedure Info (Handle : Trace_Handle; Message : String);
-      --  Log an informative message. Activated at default verbosity output
-
-      procedure Warn (Handle : Trace_Handle; Message : String);
-      --  Log a warning message. Activated at default verbosity output
-
-      procedure Error (Handle : Trace_Handle; Message : String);
-      --  Log an error message. Always activated
-
-      procedure Fatal (Handle : Trace_Handle; Message : String);
-      --  Log a fatal message. Always activated
-
-      procedure Debug (Handle : Trace_Handle; Message : String);
-      --  Log a debug message. Activated at higher verbosity level
-
-      procedure Exception_Raised
-        (Handle : Trace_Handle;
-         E      : Ada.Exceptions.Exception_Occurrence);
-      --  Log a debug message. Activated at higher verbosity level
-
-   end Log;
 
 end GNAThub;

@@ -25,6 +25,7 @@ with GNAT.Source_Info;
 with GNAT.Strings;
 
 with GNATCOLL.Projects;       use GNATCOLL.Projects;
+with GNATCOLL.Traces;         use GNATCOLL.Traces;
 with GNATCOLL.Utils;          use GNATCOLL.Utils;
 with GNATCOLL.VFS;            use GNATCOLL.VFS;
 with GNATCOLL.VFS_Utils;      use GNATCOLL.VFS_Utils;
@@ -211,7 +212,7 @@ package body GNAThub.Configuration is
             Arg : constant String := Get_Argument;
          begin
             if Arg /= "" then
-               Log.Debug (Me, "Project file supplied with implicit -P");
+               Trace (Me, "Project file supplied with implicit -P");
                Project_Arg := new String'(Arg);
             end if;
          end;
@@ -305,7 +306,7 @@ package body GNAThub.Configuration is
          end if;
       end;
 
-      Log.Info (Me, "Use project file " & Project_Arg.all);
+      Trace (Me, "Use project file " & Project_Arg.all);
 
       if Script_Arg.all /= "" and then Incremental_Arg then
          Warn ("--incremental implied by --exec");

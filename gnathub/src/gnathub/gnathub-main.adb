@@ -16,19 +16,20 @@
 ------------------------------------------------------------------------------
 
 with Ada.Command_Line;
-with Ada.Exceptions;             use Ada.Exceptions;
+with Ada.Exceptions;                use Ada.Exceptions;
 
 with GNAT.Command_Line;
-with GNAT.Directory_Operations;  use GNAT.Directory_Operations;
+with GNAT.Directory_Operations;     use GNAT.Directory_Operations;
 with GNAT.Source_Info;
 
-with GNATCOLL.Projects;          use GNATCOLL.Projects;
-with GNATCOLL.VFS;               use GNATCOLL.VFS;
+with GNATCOLL.Projects;             use GNATCOLL.Projects;
+with GNATCOLL.Traces;               use GNATCOLL.Traces;
+with GNATCOLL.VFS;                  use GNATCOLL.VFS;
 
-with GNAThub.Constants;          use GNAThub.Constants;
+with GNAThub.Constants;             use GNAThub.Constants;
 with GNAThub.Database;
 with GNAThub.Project;
-with GNAThub.Configuration;      use GNAThub.Configuration;
+with GNAThub.Configuration;         use GNAThub.Configuration;
 with GNAThub.Python;
 
    -------------
@@ -107,7 +108,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
               with Logs_Directory.Display_Full_Name & " must be a directory";
          end if;
       else
-         Log.Debug (Me,
+         Trace (Me,
            "Create logs directory: " & Logs_Directory.Display_Full_Name);
 
          if not GNAThub.Configuration.Dry_Run then
@@ -133,7 +134,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       Runner_Script : constant String := Plugin_Runner.Display_Full_Name;
       Had_Errors    : Boolean := False;
    begin
-      Log.Info (Me, "Plug-ins mainloop: " & Runner_Script);
+      Trace (Me, "Plug-ins mainloop: " & Runner_Script);
 
       --  Let the plugin runner execute and handle --dry-run by itself, if
       --  specified on the command line.
@@ -172,7 +173,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
    procedure Init_Local_Database (Overwrite : Boolean := True) is
    begin
-      Log.Debug (Me, "Local database: " & Database_File.Display_Full_Name);
+      Trace (Me, "Local database: " & Database_File.Display_Full_Name);
 
       if not GNAThub.Configuration.Dry_Run then
          GNAThub.Database.Initialize
@@ -180,13 +181,13 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       end if;
 
       if Overwrite then
-         Log.Debug (Me, "Populate database with project information");
+         Trace (Me, "Populate database with project information");
          if not GNAThub.Configuration.Dry_Run then
             GNAThub.Project.Save_Project_Tree;
          end if;
       end if;
 
-      Log.Debug (Me, "Local database initialized");
+      Trace (Me, "Local database initialized");
    end Init_Local_Database;
 
    ----------------------------
@@ -227,10 +228,10 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 begin
    Initialize_Application;
 
-   Log.Info (Me, "Load project " & GNAThub.Configuration.Project);
+   Trace (Me, "Load project " & GNAThub.Configuration.Project);
    GNAThub.Project.Load (GNAThub.Configuration.Project);
 
-   Log.Info (Me, "Setup execution environment");
+   Trace (Me, "Setup execution environment");
    Create_Project_Directory_Env;
 
    if GNAThub.Configuration.Incremental
@@ -239,18 +240,18 @@ begin
       Warn ("database does not exist but --incremental or --exec used");
    end if;
 
-   Log.Info (Me, "Initialize local database");
+   Trace (Me, "Initialize local database");
    Init_Local_Database (Overwrite => not GNAThub.Configuration.Incremental);
 
    if GNAThub.Configuration.Interpreter_Mode then
-      Log.Info (Me, "Execute user script: " & Script);
+      Trace (Me, "Execute user script: " & Script);
       Execute_User_Script;
    else
-      Log.Info (Me, "Execute plugin-runner");
+      Trace (Me, "Execute plugin-runner");
       Execute_Plugin_Runner;
    end if;
 
-   Log.Info (Me, "Execution completed");
+   Trace (Me, "Execution completed");
    Finalize_Application;
 
    return Ada.Command_Line.Success;

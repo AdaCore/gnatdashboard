@@ -15,17 +15,14 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Calendar;                  use Ada.Calendar;
-with Ada.Calendar.Formatting;
 with Ada.Text_IO;                   use Ada.Text_IO;
+
+with GNATCOLL.Traces;               use GNATCOLL.Traces;
 
 package body GNAThub is
    Me : constant Trace_Handle := Create ("GNATHUB.OUTPUT");
    --  The handle to use to log messages displayed with Info, Warn, Error and
    --  Fail procedures.
-
-   Application_Start_Time : constant Time := Clock;
-   --  The start time of the application, used by Ellapsed
 
    Output_Verbosity : Verbosity_Level := Default;
    --  Verbosity of the program
@@ -76,7 +73,7 @@ package body GNAThub is
          end if;
       end if;
 
-      Log.Info (Me, Output);
+      Trace (Me, Output);
    end Info;
 
    ----------
@@ -89,7 +86,7 @@ package body GNAThub is
                                     ("warning: " & Message, Prefix);
    begin
       Put_Line (Standard_Error, Output);
-      Log.Warn (Me, Output);
+      Trace (Me, Output);
    end Warn;
 
    -----------
@@ -101,7 +98,7 @@ package body GNAThub is
       Output : constant String := Format_Message ("error: " & Message, Prefix);
    begin
       Put_Line (Standard_Error, Output);
-      Log.Error (Me, Output);
+      Trace (Me, Output);
    end Error;
 
    -----------
@@ -113,7 +110,7 @@ package body GNAThub is
       Prefix : String := Console_Prefix) is
    begin
       Error (Ada.Exceptions.Exception_Message (E), Prefix);
-      Log.Exception_Raised (Me, E);
+      Trace (Me, E);
    end Error;
 
    ----------
@@ -125,7 +122,7 @@ package body GNAThub is
       Output : constant String := Format_Message ("fatal: " & Message, Prefix);
    begin
       Put_Line (Standard_Error, Output);
-      Log.Fatal (Me, Output);
+      Trace (Me, Output);
 
       raise Silent_Error;
    end Fail;
@@ -137,8 +134,7 @@ package body GNAThub is
    procedure Set_Verbosity (Verbosity : Verbosity_Level) is
    begin
       Output_Verbosity := Verbosity;
-      Log.Info (Me,
-         "Output_Verbosity set to " & Verbosity_Level'Image (Verbosity));
+      Trace (Me, "Output_Verbosity = " & Verbosity_Level'Image (Verbosity));
    end Set_Verbosity;
 
    --------------
@@ -175,116 +171,7 @@ package body GNAThub is
          end if;
       end if;
 
-      Log.Info (Me, Message);
+      Trace (Me, Message);
    end Progress;
-
-   -------------
-   -- Elapsed --
-   -------------
-
-   procedure Elapsed is
-      Total : constant Duration := Clock - Application_Start_Time;
-   begin
-      Info ("Elapsed time: " & Ada.Calendar.Formatting.Image (Total));
-   end Elapsed;
-
-   -----------------
-   -- Package Log --
-   -----------------
-
-   package body Log is
-      Log_Verbosity : Log_Level := Log_All;
-      --  Verbosity of the trace engine
-
-      procedure Log_If_At_Least
-        (Handle  : Trace_Handle;
-         Message : String;
-         Level   : Log_Level := Log_Info);
-      --  Log the message if Output_Verbosity matches at least Level
-
-      ---------------------
-      -- Log_If_At_Least --
-      ---------------------
-
-      procedure Log_If_At_Least
-        (Handle  : Trace_Handle;
-         Message : String;
-         Level   : Log_Level := Log_Info)
-      is
-      begin
-         if Log_Verbosity >= Level then
-            Trace (Handle, Message);
-         end if;
-      end Log_If_At_Least;
-
-      -------------------
-      -- Set_Log_Level --
-      -------------------
-
-      procedure Set_Log_Level (Level : Log_Level) is
-      begin
-         Log_Verbosity := Level;
-         Log.Info (Me, "Log_Level set to " & Log_Level'Image (Level));
-      end Set_Log_Level;
-
-      -----------
-      -- Debug --
-      -----------
-
-      procedure Debug (Handle : Trace_Handle; Message : String) is
-      begin
-         Log_If_At_Least (Handle, Message, Log_Debug);
-      end Debug;
-
-      ----------
-      -- Info --
-      ----------
-
-      procedure Info (Handle : Trace_Handle; Message : String) is
-      begin
-         Log_If_At_Least (Handle, Message, Log_Info);
-      end Info;
-
-      ----------
-      -- Warn --
-      ----------
-
-      procedure Warn (Handle : Trace_Handle; Message : String) is
-      begin
-         Log_If_At_Least (Handle, Message, Log_Warn);
-      end Warn;
-
-      -----------
-      -- Error --
-      -----------
-
-      procedure Error (Handle : Trace_Handle; Message : String) is
-      begin
-         Log_If_At_Least (Handle, Message, Log_Error);
-      end Error;
-
-      -----------
-      -- Fatal --
-      -----------
-
-      procedure Fatal (Handle : Trace_Handle; Message : String) is
-      begin
-         Log_If_At_Least (Handle, Message, Log_Fatal);
-      end Fatal;
-
-      ----------------------
-      -- Exception_Raised --
-      ----------------------
-
-      procedure Exception_Raised
-        (Handle : Trace_Handle;
-         E      : Ada.Exceptions.Exception_Occurrence) is
-      begin
-         if Log_Verbosity > Log_None then
-            Trace (Handle, E);
-         end if;
-      end Exception_Raised;
-
-   end Log;
 
 end GNAThub;

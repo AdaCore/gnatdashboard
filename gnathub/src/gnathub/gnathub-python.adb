@@ -24,6 +24,7 @@ with GNATCOLL.Projects;             use GNATCOLL.Projects;
 with GNATCOLL.SQL;                  use GNATCOLL.SQL;
 with GNATCOLL.Scripts;              use GNATCOLL.Scripts;
 with GNATCOLL.Scripts.Python;       use GNATCOLL.Scripts.Python;
+with GNATCOLL.Traces;               use GNATCOLL.Traces;
 with GNATCOLL.VFS;                  use GNATCOLL.VFS;
 
 with GNAThub.Constants;
@@ -37,20 +38,7 @@ package body GNAThub.Python is
    Repository : Scripts_Repository := null;
    Python     : Python_Scripting   := null;
 
-   Logger_Info_Method      : aliased constant String := "info";
-   Logger_Warn_Method      : aliased constant String := "warn";
-   Logger_Error_Method     : aliased constant String := "error";
-   Logger_Fatal_Method     : aliased constant String := "fatal";
-   Logger_Debug_Method     : aliased constant String := "debug";
-   --  Logger_Exception_Method : aliased String := "exception";
-
-   Logger_Class_Instance_Methods :
-     constant array (1 .. 5) of access constant String :=
-       (Logger_Info_Method'Access,
-        Logger_Warn_Method'Access,
-        Logger_Error_Method'Access,
-        Logger_Fatal_Method'Access,
-        Logger_Debug_Method'Access);
+   Logger_Log_Method : constant String := "log";
 
    Console_Info_Method     : aliased constant String := "info";
    Console_Warn_Method     : aliased constant String := "warn";
@@ -211,13 +199,11 @@ package body GNAThub.Python is
          Handler => Logger_Instance_Method_Handler'Access,
          Class   => Logger_Class);
 
-      for Command of Logger_Class_Instance_Methods loop
-         Repository.Register_Command
-           (Command => Command.all,
-            Params  => (1 .. 1 => Param ("message")),
-            Handler => Logger_Instance_Method_Handler'Access,
-            Class   => Logger_Class);
-      end loop;
+      Repository.Register_Command
+         (Command => Logger_Log_Method,
+          Params  => (1 .. 1 => Param ("message")),
+          Handler => Logger_Instance_Method_Handler'Access,
+          Class   => Logger_Class);
    end Register_Logger_Class;
 
    ----------------------------
@@ -327,7 +313,7 @@ package body GNAThub.Python is
    begin
       --  Modules
 
-      Log.Debug (Me, "  + GNAThub");
+      Trace (Me, "  + GNAThub");
 
       for Command of Root_Module_Functions loop
          Repository.Register_Command
@@ -338,13 +324,13 @@ package body GNAThub.Python is
 
       --  Classes
 
-      Log.Debug (Me, "  + GNAThub.Console");
+      Trace (Me, "  + GNAThub.Console");
       Register_Console_Class (Console_Class);
 
-      Log.Debug (Me, "  + GNAThub.Logger");
+      Trace (Me, "  + GNAThub.Logger");
       Register_Logger_Class (Logger_Class);
 
-      Log.Debug (Me, "  + GNAThub.Project");
+      Trace (Me, "  + GNAThub.Project");
       Register_Project_Class (Project_Class);
    end Register_Core_Modules;
 
@@ -365,11 +351,11 @@ package body GNAThub.Python is
       use GNAThub.Constants;
    begin
       if Repository /= null then
-         Log.Warn (Me, "Python VM already initialized");
+         Trace (Me, "Python VM already initialized");
          return;
       end if;
 
-      Log.Info (Me, "Initialize Python VM: " & Python_Home.Display_Full_Name);
+      Trace (Me, "Initialize Python VM: " & Python_Home.Display_Full_Name);
 
       Repository := new Scripts_Repository_Record;
 
@@ -382,10 +368,10 @@ package body GNAThub.Python is
                   (GNATCOLL.Scripts.Lookup_Scripting_Language
                     (Repository, Python_Name));
 
-      Log.Info (Me, "Register Python modules");
+      Trace (Me, "Register Python modules");
       Register_Core_Modules;
 
-      Log.Debug (Me, "  + GNAThub.Database_API");
+      Trace (Me, "  + GNAThub.Database_API");
       Register_Database_Interaction_API (Repository);
    end Initialize;
 
@@ -473,23 +459,8 @@ package body GNAThub.Python is
       if Command = Constructor_Method then
          Set_Handle (Inst, Name => Data.Nth_Arg (2));
 
-      elsif Command = Logger_Info_Method then
-         Log.Info (Get_Handle (Inst), Data.Nth_Arg (2));
-
-      elsif Command = Logger_Warn_Method then
-         Log.Warn (Get_Handle (Inst), Data.Nth_Arg (2));
-
-      elsif Command = Logger_Error_Method then
-         Log.Error (Get_Handle (Inst), Data.Nth_Arg (2));
-
-      elsif Command = Logger_Fatal_Method then
-         Log.Fatal (Get_Handle (Inst), Data.Nth_Arg (2));
-
-      elsif Command = Logger_Debug_Method then
-         Log.Debug (Get_Handle (Inst), Data.Nth_Arg (2));
-
-      --  elsif Command = Logger_Exception_Method then
-      --     null;
+      elsif Command = Logger_Log_Method then
+         Trace (Get_Handle (Inst), Data.Nth_Arg (2));
 
       else
          raise Python_Error with "Unknown method GNAThub.Logger." & Command;
