@@ -44,19 +44,19 @@ project GNAThub is
       for Switches ("Ada") use ("-gnat2012", "-g", "-gnatwa", "-gnatyy");
 
       case Build_Mode is
-         when "Debug" =>
-            for Switches ("Ada") use
-              Compiler'Switches ("Ada") & ("-gnata", "-O0");
-
          when "Production" =>
             for Switches ("Ada") use
               Compiler'Switches ("Ada") & ("-gnatwe", "-gnatn", "-O2");
 
+         when "Debug" =>
+            for Switches ("Ada") use
+              Compiler'Switches ("Ada") & ("-gnata", "-O0");
+
          when "Coverage" =>
             for Switches ("Ada") use
                Compiler'Switches ("Ada") &
-                 ("-gnateE", "-O0", "-fprofile-arcs", "-ftest-coverage",
-                  "-ffunction-sections", "-fdata-sections");
+                 ("-gnateE", "-gnata", "-O0", "-fprofile-arcs",
+                  "-ftest-coverage", "-ffunction-sections", "-fdata-sections");
       end case;
    end Compiler;
 
