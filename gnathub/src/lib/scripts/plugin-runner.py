@@ -20,6 +20,7 @@ spawning the main event loop.
 
 import collections
 import inspect
+import json
 import logging
 import os
 import sys
@@ -327,7 +328,7 @@ class PluginRunner(object):
         :type plugin: GNAThub.Plugin
         """
         start = time.time()
-        PluginRunner.info('execute plug-in %s',  plugin.name)
+        PluginRunner.info('execute plug-in %s', plugin.name)
 
         if GNAThub.dry_run():
             # Early exit if dry-run mode is enabled
@@ -385,7 +386,16 @@ class PluginRunner(object):
                     PluginRunner.error(
                         '%s: unexpected error: %s', plugin.name, why)
         except KeyboardInterrupt:
-            Console.info(os.linesep + 'Interrupt caught...')
+            PluginRunner.info(os.linesep + 'Interrupt caught...')
+
+        # Write results to file
+        fname = os.path.join(GNAThub.root(), 'gnathub.results')
+        try:
+            with open(fname, 'w') as results:
+                results.write(json.dumps(succeed))
+        except IOError as why:
+            LOG.exception('could not write result file %s', fname)
+            PluginRunner.error('%s: unexpected error: %s', fname, why)
 
         if not GNAThub.dry_run() and not GNAThub.quiet():
             # Display a summary
