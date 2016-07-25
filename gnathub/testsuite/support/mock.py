@@ -1,5 +1,6 @@
 """Provide mock objects for the GNAThub testsuite."""
 
+import json
 import os
 
 from gnatpython.ex import Run, PIPE, STDOUT
@@ -94,6 +95,10 @@ class Script(object):
         return Script('db2cfg', dst)
 
 
+class GNAThubExecutionFailed(Exception):
+    pass
+
+
 class GNAThub(object):
     def __init__(self, project, **kwargs):
         self.project = project
@@ -153,4 +158,15 @@ class GNAThub(object):
         }
 
         p = Run(argv, cwd=self.project.install_dir, **run_kwargs)
-        assert not p.status, 'gnathub execution failed: %s' % p.out
+        if p.status != 0:
+            raise GNAThubExecutionFailed(p.out)
+        if kwargs.get('dry_run', False):
+            # In dry-run mode, the gnathub.results file is not created
+            return
+        fname = os.path.join(
+            self.project.install_dir, 'obj', 'gnathub', 'gnathub.results')
+        with open(fname, 'r') as results:
+            plugins = json.loads(results.read())
+        failed = [name for name, succeed in plugins.iteritems() if not succeed]
+        if failed:
+            raise GNAThubExecutionFailed('plugin(s) failure: {}'.format(failed))
