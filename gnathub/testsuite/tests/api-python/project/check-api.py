@@ -91,7 +91,6 @@ assertIn('gnatcheck', plugins_off)
 assertIn('gnatmetric', plugins_off)
 assertIn('gcov', plugins_off)
 assertIn('codepeer', plugins_off)
-assertIn('gnatprove', plugins_off)
 
 # GNAThub.Project.scenaria_switches
 scenario_vars = GNAThub.Project.scenario_switches()

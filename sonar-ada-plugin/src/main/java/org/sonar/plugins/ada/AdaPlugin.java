@@ -85,7 +85,6 @@ public final class AdaPlugin extends SonarPlugin {
               CodePeerRulesDefinition.class,
               GNATcheckRulesDefinition.class,
               GNATcoverageRulesDefinition.class,
-              GNATproveRulesDefinition.class,
 
               // Collect metrics and issues
               GNAThubIssueSensor.class,

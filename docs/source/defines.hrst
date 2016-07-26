@@ -13,7 +13,6 @@
 .. |GNATcheck|      replace:: :program:`GNAT Check`
 .. |GNATcoverage|   replace:: :program:`GNAT Coverage`
 .. |GNATmetric|     replace:: :program:`GNAT Metric`
-.. |GNATprove|      replace:: :program:`GNAT Prove`
 .. |Gcov|           replace:: :program:`Gcov`
 
 .. |GNATtracker|    replace:: :program:`GNAT Tracker`

@@ -4,7 +4,6 @@
 /obj/metrix.xml
 /obj/codepeer/
 /obj/codepeer.csv
-/obj/gnatprove/
 /obj/gnathub/
 /obj/auto.cgpr
 /projects/*.metrix

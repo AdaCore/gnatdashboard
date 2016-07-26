@@ -19,7 +19,6 @@ package org.sonar.plugins.ada;
 import org.junit.Test;
 import org.sonar.plugins.ada.codepeer.CodePeerRulesDefinition;
 import org.sonar.plugins.ada.gnat.GNATcheckRulesDefinition;
-import org.sonar.plugins.ada.gnat.GNATproveRulesDefinition;
 import org.sonar.plugins.ada.gnat.GNATcoverageRulesDefinition;
 import org.sonar.plugins.ada.utils.AdaToolRulesDefinition;
 
@@ -53,11 +52,6 @@ public class AreResourcesAvailableTest {
     @Test
     public void existsGNATcovXMLRulesDefinition() throws URISyntaxException {
         existsResource(GNATcoverageRulesDefinition.RULES_DEFINITION_FILE);
-    }
-
-    @Test
-    public void existsGNATproveXMLRulesDefinition() throws URISyntaxException {
-        existsResource(GNATproveRulesDefinition.RULES_DEFINITION_FILE);
     }
 
     @Test

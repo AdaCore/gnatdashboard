@@ -35,8 +35,7 @@ project Disabled is
       for Source_Encoding use "My_Custom_Encoding";
       for Local_Repository use "local_repo";
       for Plugins use ("sonar-config");
-      for Plugins_Off use ("gnatcheck", "gnatmetric", "gcov", "codepeer",
-                           "gnatprove");
+      for Plugins_Off use ("gnatcheck", "gnatmetric", "gcov", "codepeer");
    end Dashboard;
 
 end Disabled;

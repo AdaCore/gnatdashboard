@@ -19,7 +19,6 @@ These XML files are located in `<sonar-ada-plugin-root>/src/main/resources`:
   * codepeer.xml
   * gnatcheck.xml
   * gnatcoverage.xml
-  * gnatprove.xml
 
 These files define new rules to register to SonarQube. They are not activated by
 default. The sonar-ada-plugin provides a Quality Profile that lists rules to be
@@ -48,10 +47,6 @@ pending the transition of the documentation to the reST format.
 
 GNATcoverage rules definition file is manually maintained given the little
 number of rules it defines.
-
-### gnatprove.xml
-
-For the moment the GNATprove rules definition file is manually maintained.
 
 ### default-profile.xml
 

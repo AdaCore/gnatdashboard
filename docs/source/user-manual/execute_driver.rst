@@ -156,8 +156,8 @@ An example is worth a thousand words::
         for Source_Encoding use "UTF-8";
         --  Translate to SonarRunner property: sonar.sourceEncoding
 
-        for Plugins_Off use ("CodePeer", "GNATprove");
-        --  Disable CodePeer and GNATprove plug-ins
+        for Plugins_Off use ("CodePeer");
+        --  Disable CodePeer plug-in
 
         for Local_Repository use "extra/gnatdashboard_plugins";
         --  Declare a local repository where GNAThub will look for additional
@@ -181,8 +181,6 @@ The following tools are currently supported by the |GNAThub|'s core plugins:
 | |GNATmetric|   | gnatmetric      | Execute |GNATmetric| and parse the results |
 +----------------+-----------------+--------------------------------------------+
 | |GNATcheck|    | gnatcheck       | Execute |GNATcheck| and parse the results  |
-+----------------+-----------------+--------------------------------------------+
-| |GNATprove|    | gnatprove       | Execute |GNATprove| and parse the results  |
 +----------------+-----------------+--------------------------------------------+
 | |CodePeer|     | codepeer        | Execute |CodePeer| and parse the results   |
 +----------------+-----------------+--------------------------------------------+

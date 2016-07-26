@@ -36,7 +36,6 @@ sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/gnat/GNATcheckRulesDefiniti
 sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/gnat/GNATcoverageRulesDefinition.java no-precommit-check
 sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/gnat/GNAThubIssueSensor.java no-precommit-check
 sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/gnat/GNATmetricSensor.java no-precommit-check
-sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/gnat/GNATproveRulesDefinition.java no-precommit-check
 sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/lang/Ada.java no-precommit-check
 sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/lang/AdaColorizer.java no-precommit-check
 sonar-ada-plugin/src/main/java/org/sonar/plugins/ada/lang/AdaCommentTokenizer.java no-precommit-check

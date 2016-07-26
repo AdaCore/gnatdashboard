@@ -9,6 +9,5 @@ core
    gnatcheck
    gnatcoverage
    gnatmetric
-   gnatprove
    sonarconfig
    sonarrunner
