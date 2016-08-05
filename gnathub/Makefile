@@ -2,16 +2,7 @@
 
 include version.mk
 
-# Check if building on Windows (requires GNAT)
-machine := $(subst -, , $(shell gcc -dumpmachine))
-
-ifeq ($(words $(machine)), 2)
-  osys := $(word 2, $(machine))
-else
-  osys := $(word 3, $(machine))
-endif
-
-ifeq ($(filter-out mingw%, $(osys)),)
+ifeq ($(OS),Windows_NT)
   IS_WINDOWS := yes
 endif
 
