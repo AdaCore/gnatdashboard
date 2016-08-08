@@ -21,6 +21,7 @@ import { ReportService } from '../report.service';
 export class GNAThubBlob extends PathEncoder {
     private filename: string = null;
     private blob: IGNAThubBlob = null;
+    private isBlobFetchError: boolean = false;
     private htmlLines: { number: number, content: SafeHtml }[] = null;
     private htmlLinesOfBlob: IGNAThubBlob = null;
     private sub: Subscription = null;
@@ -56,6 +57,7 @@ export class GNAThubBlob extends PathEncoder {
                             if (this.blob !== blob) {
                                 this.blob = blob;
                             }
+                            this.isBlobFetchError = blob === null;
                         });
                 }
             });

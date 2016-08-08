@@ -18,6 +18,7 @@ import { ReportService } from '../report.service';
 })
 export class GNAThubReport {
     private report: IGNAThubReport = null;
+    private isReportFetchError: boolean = false;
 
     /**
      * @param reportService Custom service to retrieve reports data.
@@ -31,7 +32,9 @@ export class GNAThubReport {
      * @override
      */
     public ngOnInit(): void {
-        this.reportService.GNAThubReport(
-            (report: IGNAThubReport) => this.report = report);
+        this.reportService.GNAThubReport((report: IGNAThubReport) => {
+            this.report = report;
+            this.isReportFetchError = report === null;
+        });
     }
 }

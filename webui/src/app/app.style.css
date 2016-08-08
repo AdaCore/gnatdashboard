@@ -45,3 +45,15 @@ table th {
 table td {
   border: 1px solid #adb9cc;
 }
+
+div.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+span.verbatim {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 1.2rem;
+  line-height: 1.5em;
+  white-space: nowrap;
+}

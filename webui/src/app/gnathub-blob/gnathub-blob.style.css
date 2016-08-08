@@ -1,4 +1,15 @@
 div.loader { margin-top: 16px; }
+
+div.center {
+  width: 60%;
+  max-width: 800px;
+  margin-top: 2em;
+
+  & .filename { margin-left: 2em; }
+  & .error { font-weight: bold; }
+  & .help { color: #777; }
+}
+
 p.no-metrics { margin: 16px; }
 
 .editor {
