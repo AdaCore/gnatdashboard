@@ -178,7 +178,10 @@ class HTMLReport(GNAThub.Plugin):
                         'identifier': rule.identifier,
                         'name': rule.name,
                         'kind': rule.kind,
-                        'tool': tool.name,
+                        'tool': {
+                            'id': tool.id,
+                            'name': tool.name
+                        }
                     },
                     'message': msg.data
                 })
@@ -242,7 +245,7 @@ class HTMLReport(GNAThub.Plugin):
             resource = GNAThub.Resource.get(os.path.join(source_dir, filename))
             return {
                 'filename': filename,
-                'metrics':  {
+                'metrics': {
                     self._rules[msg.rule_id].name: float(msg.data)
                     for msg in (
                         resource.list_messages() if resource else []
@@ -254,6 +257,10 @@ class HTMLReport(GNAThub.Plugin):
         return {
             'modules': self._generate_source_tree(_aggregate_metrics),
             'project': GNAThub.Project.name(),
+            'tools': [{
+                'id': id,
+                'name': tool.name
+            } for id, tool in self._tools_by_id.iteritems()],
             '_database': GNAThub.database()
         }
 

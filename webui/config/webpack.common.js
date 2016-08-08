@@ -236,7 +236,7 @@ module.exports = {
       { from: 'node_modules/bootstrap/dist/css', to: 'assets/bootstrap/css' },
       { from: 'node_modules/bootstrap/dist/fonts', to: 'assets/bootstrap/fonts' },
       { from: 'src/assets', to: 'assets' },
-      { from: 'src/mocks', to: 'api' }
+      { from: 'src/mocks', to: 'data' }
     ]),
 
     /*
