@@ -831,9 +831,9 @@ class Run(object):
         self.out = out
         self.log = logging.getLogger(self.__class__.__name__)
 
-        self.log.debug('Run: cd %s; %s',
-                       workdir if workdir is not None else os.getcwd(),
-                       self.cmdline_image())
+        self.log.debug(
+            'cd %s; %s', workdir if workdir is not None else os.getcwd(),
+            self.cmdline_image())
 
         if verbose():
             Console.info(self.cmdline_image())

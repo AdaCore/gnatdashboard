@@ -31,7 +31,8 @@ from GNAThub import Console
 
 
 # Create this script logger
-MODULE = 'plugin-runner'
+__file__ = inspect.getfile(inspect.currentframe())
+MODULE, _ = os.path.splitext(os.path.basename(__file__))
 LOG = logging.getLogger(MODULE)
 
 
@@ -263,7 +264,7 @@ class PluginRunner(object):
         # Generate the final list of plugin classes. Inspect Python scripts to
         # extract class definition and filter out those that will not be used.
 
-        LOG.info('load %d scripts', len(scripts))
+        LOG.info('located %d scripts', len(scripts))
         plugins = sum([list(PluginRunner.inspect(s)) for s in scripts], [])
 
         def is_plugin(clazz, name):
@@ -359,7 +360,7 @@ class PluginRunner(object):
 
     def mainloop(self):
         """Plugin main loop."""
-        LOG.info('load (%d) plugins', len(self.plugins))
+        LOG.info('registered %d plugins', len(self.plugins))
         succeed = collections.OrderedDict()
 
         # Early exit if no plug-in are scheduled to be run
@@ -408,12 +409,8 @@ class PluginRunner(object):
 
 # Script entry point
 if __name__ == '__main__':
-    formatter = logging.Formatter(
-        fmt='[%(asctime)s.%(msecs)03d %(name)s] %(message)s',
-        datefmt='%H:%M:%S')
-
     handler = GNAThubLoggingHandler()
-    handler.setFormatter(formatter)
+    handler.setFormatter(logging.Formatter(fmt='%(message)s'))
 
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
