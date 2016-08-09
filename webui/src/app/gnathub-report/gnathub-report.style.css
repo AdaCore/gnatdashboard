@@ -1,20 +1,5 @@
-.module {
+.projects {
   margin-bottom: 10px;
 
   &:last-child { margin-bottom: 0; }
-}
-
-.source-directory {
-  color: #333;
-  background: #f5f5f5;
-}
-
-div.center {
-  width: 60%;
-  max-width: 800px;
-  margin-top: 2em;
-
-  & .filename { margin-left: 2em; }
-  & .error { font-weight: bold; }
-  & .help { color: #777; }
 }

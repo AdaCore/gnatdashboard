@@ -34,10 +34,16 @@ declare module 'gnat' {
         [sourceDir: string]: ISource[];
     }
 
+    export interface IGNAThubTool {
+        [id: number]: string;
+    }
+
     export interface IGNAThubReport {
+        modules: { [moduleName: string]: IProjectModule };
         project: string;
+        creation_time: number;
+        tools: { [id: number]: string }[];
         _database: string;
-        modules: { [moduleName: string]: IProjectModule[] };
     }
 
     export interface IGNAThubBlobLine {

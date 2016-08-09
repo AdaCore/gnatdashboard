@@ -1,23 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { CORE_DIRECTIVES } from '@angular/common';
+import { ROUTER_DIRECTIVES } from '@angular/router';
 
 import { IGNAThubReport } from 'gnat';
 
-import { Count } from '../count.pipe';
 import { Loader } from '../loader/loader.component';
+import { MapKeys } from '../object.pipe';
 import { ReportService } from '../report.service';
 
-import '../array-utils';
-
 @Component({
-    selector: 'about',
-    templateUrl: './about.template.html',
-    styleUrls: [ './about.style.css' ],
-    directives: [ CORE_DIRECTIVES, Loader ],
-    pipes: [ Count ],
+    selector: 'source-list',
+    templateUrl: './source-list.template.html',
+    styleUrls: [ './source-list.style.css' ],
+    directives: [ CORE_DIRECTIVES, Loader, ROUTER_DIRECTIVES ],
+    pipes: [ MapKeys ],
     providers: [ ReportService ]
 })
-export class About {
+export class SourceList {
     private report: IGNAThubReport = null;
     private isReportFetchError: boolean = false;
 
@@ -36,14 +35,5 @@ export class About {
             this.report = report;
             this.isReportFetchError = report === null;
         });
-    }
-
-    sourceCount(): number {
-        if (!this.report) {
-            return 0;
-        }
-        return Object.keys(this.report.modules)
-            .sum((mod) => Object.keys(this.report.modules[mod])
-                .sum((dir) => this.report.modules[mod][dir].length));
     }
 }

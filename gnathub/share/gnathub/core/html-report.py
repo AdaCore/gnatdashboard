@@ -25,6 +25,7 @@ import collections
 import json
 import inspect
 import os
+import time
 
 from GNAThub import Console
 from shutil import copy2, copytree, rmtree
@@ -257,6 +258,7 @@ class HTMLReport(GNAThub.Plugin):
         return {
             'modules': self._generate_source_tree(_aggregate_metrics),
             'project': GNAThub.Project.name(),
+            'creation_time': int(time.time()),
             'tools': [{
                 'id': id,
                 'name': tool.name

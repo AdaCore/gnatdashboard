@@ -15,28 +15,15 @@
     <!-- Report display -->
     <div *ngIf="report">
         <h1>Project Overview & Report <small>{{ report.project }}</small></h1>
-        <div *ngFor="let module of report.modules | mapKeys" class="module">
-            <table>
-                <thead>
-                    <th class="module-name">{{ module }}</th>
-                </thead>
-                <tbody>
-                    <template ngFor let-dir [ngForOf]="report.modules[module] | mapKeys">
-                        <tr class="source-directory">
-                            <td>{{ dir }}</td>
-                        </tr>
-                        <template ngFor let-source [ngForOf]="report.modules[module][dir]">
-                            <tr class="source-file">
-                                <td>
-                                    <a [routerLink]="['../blob']" [queryParams]="{ filename: source.filename }">
-                                        {{ source.filename }}
-                                    </a>
-                                </td>
-                            </tr>
-                        </template>
-                    </template>
-                </tbody>
-            </table>
-        </div>
+        <table class="projects">
+            <thead>
+                <th>Project</th>
+            </thead>
+            <tbody>
+                <tr class="module-name" *ngFor="let module of report.modules | mapKeys">
+                    <td>{{ module }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
