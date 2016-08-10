@@ -9,14 +9,14 @@ import { MapKeys } from '../object.pipe';
 import { GNAThubService } from '../gnathub.service';
 
 @Component({
-    selector: 'gnathub-report',
-    templateUrl: './gnathub-report.template.html',
-    styleUrls: [ './gnathub-report.style.css' ],
+    selector: 'report',
+    templateUrl: './report.template.html',
+    styleUrls: [ './report.style.css' ],
     directives: [ CORE_DIRECTIVES, Loader, ROUTER_DIRECTIVES ],
     pipes: [ MapKeys ],
     providers: [ GNAThubService ]
 })
-export class GNAThubReport {
+export class Report {
     private report: IGNAThubReport = null;
     private isReportFetchError: boolean = false;
 
