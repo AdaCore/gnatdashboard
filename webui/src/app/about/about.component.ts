@@ -4,7 +4,7 @@ import { CORE_DIRECTIVES } from '@angular/common';
 import { IGNAThubReport } from 'gnat';
 
 import { Count } from '../count.pipe';
-import { Loader } from '../loader/loader.component';
+import { Loader } from '../loader';
 import { ReportService } from '../report.service';
 
 import '../array-utils';

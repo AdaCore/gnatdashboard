@@ -7,7 +7,7 @@ import { IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage } from 'gnat';
 import { highlightAuto } from 'highlight.js';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Loader } from '../loader/loader.component';
+import { Loader } from '../loader';
 import { ReportService } from '../report.service';
 
 @Component({

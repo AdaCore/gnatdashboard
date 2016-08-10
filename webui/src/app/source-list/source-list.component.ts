@@ -4,7 +4,7 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 
 import { IGNAThubReport } from 'gnat';
 
-import { Loader } from '../loader/loader.component';
+import { Loader } from '../loader';
 import { MapKeys } from '../object.pipe';
 import { ReportService } from '../report.service';
 
