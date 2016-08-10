@@ -6,7 +6,7 @@ import { IGNAThubReport } from 'gnat';
 
 import { Loader } from '../loader';
 import { MapKeys } from '../object.pipe';
-import { ReportService } from '../report.service';
+import { GNAThubService } from '../gnathub.service';
 
 @Component({
     selector: 'gnathub-report',
@@ -14,16 +14,16 @@ import { ReportService } from '../report.service';
     styleUrls: [ './gnathub-report.style.css' ],
     directives: [ CORE_DIRECTIVES, Loader, ROUTER_DIRECTIVES ],
     pipes: [ MapKeys ],
-    providers: [ ReportService ]
+    providers: [ GNAThubService ]
 })
 export class GNAThubReport {
     private report: IGNAThubReport = null;
     private isReportFetchError: boolean = false;
 
-    constructor(private reportService: ReportService) {}
+    constructor(private gnathub: GNAThubService) {}
 
     ngOnInit(): void {
-        this.reportService.getReport().subscribe(
+        this.gnathub.getReport().subscribe(
             report => this.report = report,
             error => this.isReportFetchError = !!error);
     }

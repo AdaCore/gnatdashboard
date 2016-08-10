@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
-export class ReportService {
+export class GNAThubService {
     constructor(private http: Http) {}
 
     getReport(): Observable<IGNAThubReport> {

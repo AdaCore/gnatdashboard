@@ -5,7 +5,7 @@ import { IGNAThubReport } from 'gnat';
 
 import { Count } from '../count.pipe';
 import { Loader } from '../loader';
-import { ReportService } from '../report.service';
+import { GNAThubService } from '../gnathub.service';
 
 import '../array-utils';
 
@@ -15,16 +15,16 @@ import '../array-utils';
     styleUrls: [ './about.style.css' ],
     directives: [ CORE_DIRECTIVES, Loader ],
     pipes: [ Count ],
-    providers: [ ReportService ]
+    providers: [ GNAThubService ]
 })
 export class About {
     private report: IGNAThubReport = null;
     private isReportFetchError: boolean = false;
 
-    constructor(private reportService: ReportService) {}
+    constructor(private gnathub: GNAThubService) {}
 
     ngOnInit(): void {
-        this.reportService.getReport().subscribe(
+        this.gnathub.getReport().subscribe(
             report => this.report = report,
             error => this.isReportFetchError = !!error);
     }

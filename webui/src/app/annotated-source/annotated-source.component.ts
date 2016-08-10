@@ -8,14 +8,14 @@ import { highlightAuto } from 'highlight.js';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Loader } from '../loader';
-import { ReportService } from '../report.service';
+import { GNAThubService } from '../gnathub.service';
 
 @Component({
     selector: 'annotated-source',
     templateUrl: './annotated-source.template.html',
     styleUrls: [ './annotated-source.style.css' ],
     directives: [ CORE_DIRECTIVES, Loader, ROUTER_DIRECTIVES ],
-    providers: [ ReportService ]
+    providers: [ GNAThubService ]
 })
 export class AnnotatedSource {
     private filename: string = null;
@@ -26,14 +26,14 @@ export class AnnotatedSource {
     private sub: Subscription = null;
 
     constructor(
+        private gnathub: GNAThubService,
         private route: ActivatedRoute,
-        private reportService: ReportService,
         private sanitizer: DomSanitizationService) {}
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
             this.filename = params['filename'];
-            this.reportService.getSource(this.filename).subscribe(
+            this.gnathub.getSource(this.filename).subscribe(
                 blob => this.blob = blob,
                 error => this.isBlobFetchError = !!error);
         });
