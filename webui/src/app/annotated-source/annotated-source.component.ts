@@ -11,13 +11,13 @@ import { Loader } from '../loader/loader.component';
 import { ReportService } from '../report.service';
 
 @Component({
-    selector: 'gnathub-blob',
-    templateUrl: './gnathub-blob.template.html',
-    styleUrls: [ './gnathub-blob.style.css' ],
+    selector: 'annotated-source',
+    templateUrl: './annotated-source.template.html',
+    styleUrls: [ './annotated-source.style.css' ],
     directives: [ CORE_DIRECTIVES, Loader, ROUTER_DIRECTIVES ],
     providers: [ ReportService ]
 })
-export class GNAThubBlob {
+export class AnnotatedSource {
     private filename: string = null;
     private blob: IGNAThubBlob = null;
     private isBlobFetchError: boolean = false;
