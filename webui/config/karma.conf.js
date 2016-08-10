@@ -5,7 +5,7 @@
 module.exports = function(config) {
   var testWebpackConfig = require('./webpack.test.js');
 
-  config.set({
+  var configuration = {
 
     // base path that will be used to resolve all patterns (e.g. files, exclude)
     basePath: '',
@@ -85,6 +85,7 @@ module.exports = function(config) {
      * if true, Karma captures browsers, runs the tests and exits
      */
     singleRun: true
-  });
+  };
 
+  config.set(configuration);
 };
