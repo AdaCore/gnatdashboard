@@ -28,7 +28,7 @@
                         <template ngFor let-source [ngForOf]="report.modules[module][dir]">
                             <tr class="source-file">
                                 <td>
-                                    <a [routerLink]="['../blob']" [queryParams]="{ filename: source.filename }">
+                                    <a [routerLink]="['../source', source.filename]">
                                         {{ source.filename }}
                                     </a>
                                 </td>

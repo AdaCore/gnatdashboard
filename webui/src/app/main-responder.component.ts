@@ -8,4 +8,4 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
     styleUrls: [ './app.style.css', './main-responder.style.css' ],
     directives: [ ROUTER_DIRECTIVES ]
 })
-export class MainResponder { }
+export class MainResponder {}

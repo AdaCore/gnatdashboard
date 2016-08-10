@@ -1,14 +1,13 @@
 import { CORE_DIRECTIVES } from '@angular/common';
 import { Component } from '@angular/core';
 import { DomSanitizationService, SafeHtml } from '@angular/platform-browser';
-import { ROUTER_DIRECTIVES, Router } from '@angular/router';
+import { ActivatedRoute, ROUTER_DIRECTIVES, Router } from '@angular/router';
 
 import { IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage } from 'gnat';
 import { highlightAuto } from 'highlight.js';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Loader } from '../loader/loader.component';
-import { PathEncoder } from '../path-encoder';
 import { ReportService } from '../report.service';
 
 @Component({
@@ -18,7 +17,7 @@ import { ReportService } from '../report.service';
     directives: [ CORE_DIRECTIVES, Loader, ROUTER_DIRECTIVES ],
     providers: [ ReportService ]
 })
-export class GNAThubBlob extends PathEncoder {
+export class GNAThubBlob {
     private filename: string = null;
     private blob: IGNAThubBlob = null;
     private isBlobFetchError: boolean = false;
@@ -26,47 +25,22 @@ export class GNAThubBlob extends PathEncoder {
     private htmlLinesOfBlob: IGNAThubBlob = null;
     private sub: Subscription = null;
 
-    /**
-     * @param reportService Custom service to retrieve reports data.
-     * @param routeParam The router service.
-     */
     constructor(
+        private route: ActivatedRoute,
         private reportService: ReportService,
-        private router: Router,
-        private sanitizer: DomSanitizationService)
-    {
-        super();
+        private sanitizer: DomSanitizationService) {}
+
+    ngOnInit(): void {
+        this.sub = this.route.params.subscribe(params => {
+            this.filename = params['filename'];
+            this.reportService.getSource(this.filename).subscribe(
+                blob => this.blob = blob,
+                error => this.isBlobFetchError = !!error);
+        });
     }
 
-    /**
-     * Query the annotated source data and store a reference to it.
-     *
-     * @override
-     */
-    public ngOnInit(): void {
-        this.sub = this.router
-            .routerState
-            .queryParams
-            .subscribe(params => {
-                this.filename = params.hasOwnProperty('filename') ?
-                    this.decodePath(params['filename']) : null;
-                if (this.filename) {
-                    this.reportService.GNAThubBlob(
-                        this.filename,
-                        (blob: IGNAThubBlob) => {
-                            if (this.blob !== blob) {
-                                this.blob = blob;
-                            }
-                            this.isBlobFetchError = blob === null;
-                        });
-                }
-            });
-    }
-
-    /** @override */
     ngOnDestroy() {
         this.sub.unsubscribe();
-        this.sub = null;
     }
 
     /**
@@ -106,12 +80,10 @@ export class GNAThubBlob extends PathEncoder {
             this.htmlLines = this.highlight(
                 this.blob.lines.map(l => l.content).join('')
             ).replace(/(\r\n|\r|\n)$/, '').split(/\r\n|\r|\n/g).map(
-                (content: string) => {
-                    return {
-                        number: ++i,
-                        content: this.bypassSanitizer(content)
-                    };
-                });
+                content => Object({
+                    number: ++i,
+                    content: this.bypassSanitizer(content)
+                }));
             this.htmlLinesOfBlob = this.blob;
         }
         return this.htmlLines;

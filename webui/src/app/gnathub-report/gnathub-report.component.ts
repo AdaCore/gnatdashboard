@@ -20,21 +20,11 @@ export class GNAThubReport {
     private report: IGNAThubReport = null;
     private isReportFetchError: boolean = false;
 
-    /**
-     * @param reportService Custom service to retrieve reports data.
-     * @param routeParam The router service.
-     */
-    constructor(private reportService: ReportService) { }
+    constructor(private reportService: ReportService) {}
 
-    /**
-     * Query the annotated source data and store a reference to it.
-     *
-     * @override
-     */
-    public ngOnInit(): void {
-        this.reportService.GNAThubReport((report: IGNAThubReport) => {
-            this.report = report;
-            this.isReportFetchError = report === null;
-        });
+    ngOnInit(): void {
+        this.reportService.getReport().subscribe(
+            report => this.report = report,
+            error => this.isReportFetchError = !!error);
     }
 }

@@ -6,9 +6,9 @@ import { GNAThubReport } from './gnathub-report/gnathub-report.component';
 import { SourceList } from './source-list/source-list.component';
 
 export const routes: RouterConfig = [
-    { path: '',        component: GNAThubReport },
-    { path: 'report',  component: GNAThubReport },
-    { path: 'sources', component: SourceList },
-    { path: 'blob',    component: GNAThubBlob },
-    { path: 'about',   component: About }
+    { path: '',                 component: GNAThubReport },
+    { path: 'report',           component: GNAThubReport },
+    { path: 'sources',          component: SourceList },
+    { path: 'source/:filename', component: GNAThubBlob },
+    { path: 'about',            component: About }
 ];

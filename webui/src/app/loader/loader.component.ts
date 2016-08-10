@@ -6,4 +6,4 @@ import { CORE_DIRECTIVES } from '@angular/common';
     template: '<div class="loader">Loading...</div>',
     styleUrls: [ './loader.style.css' ]
 })
-export class Loader { }
+export class Loader {}
