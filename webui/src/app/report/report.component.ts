@@ -1,18 +1,18 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { CORE_DIRECTIVES } from '@angular/common';
-import { ROUTER_DIRECTIVES } from '@angular/router';
 
+import { GNAThubService } from '../gnathub.service';
 import { IGNAThubReport } from 'gnat';
 
 import { Loader } from '../loader';
 import { MapKeys } from '../object.pipe';
-import { GNAThubService } from '../gnathub.service';
+import { MissingReportError } from '../missing-report-error';
 
 @Component({
     selector: 'report',
     templateUrl: './report.template.html',
     styleUrls: [ './report.style.css' ],
-    directives: [ CORE_DIRECTIVES, Loader, ROUTER_DIRECTIVES ],
+    directives: [ CORE_DIRECTIVES, Loader, MissingReportError ],
     pipes: [ MapKeys ],
     providers: [ GNAThubService ]
 })

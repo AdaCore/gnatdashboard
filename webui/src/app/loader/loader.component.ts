@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { CORE_DIRECTIVES } from '@angular/common';
 
 @Component({

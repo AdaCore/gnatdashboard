@@ -5,13 +5,7 @@
         <center>Loading report...</center>
     </div>
     <!-- Error handling -->
-    <div *ngIf="isReportFetchError" class="center">
-        <p class="error">Could not load report</p>
-        <p class="help">Please check that:</p>
-        <ul class="help">
-            <li>The report was not altered and data files were not deleted</li>
-        </ul>
-    </div>
+    <missing-report-error *ngIf="isReportFetchError"></missing-report-error>
     <!-- Report display -->
     <div *ngIf="report">
         <h1>Project Overview & Report <small>{{ report.project }}</small></h1>
