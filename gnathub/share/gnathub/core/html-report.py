@@ -150,6 +150,33 @@ class HTMLReport(GNAThub.Plugin):
             if sources
         }
 
+    def _format_message(self, msg, rule, tool):
+        """Format a message.
+
+        :param msg:
+        :type msg: GNAThub.Message
+        :param rule:
+        :type rule: GNAThub.Rule
+        :param tool:
+        :type tool: GNAThub.Tool
+        :rtype: dict[str,*]
+        """
+
+        return {
+            'begin': msg.col_begin,
+            'end': msg.col_end,
+            'rule': {
+                'identifier': rule.identifier,
+                'name': rule.name,
+                'kind': rule.kind,
+                'tool': {
+                    'id': tool.id,
+                    'name': tool.name
+                }
+            },
+            'message': msg.data
+        }
+
     def _generate_report_src_hunk(self, project_name, source_file):
         """Generate the JSON-encoded representation of `source_file`
 
@@ -172,20 +199,9 @@ class HTMLReport(GNAThub.Plugin):
             rule = self._rules[msg.rule_id]
             tool = self._tools_by_id[rule.tool_id]
             if rule.identifier != 'coverage':
-                messages[msg.line].append({
-                    'begin': msg.col_begin,
-                    'end': msg.col_end,
-                    'rule': {
-                        'identifier': rule.identifier,
-                        'name': rule.name,
-                        'kind': rule.kind,
-                        'tool': {
-                            'id': tool.id,
-                            'name': tool.name
-                        }
-                    },
-                    'message': msg.data
-                })
+                messages[msg.line].append(
+                    self._format_message(msg, rule, tool)
+                )
             elif tool.name == 'gcov':
                 coverage[msg.line] = (
                     'COVERED' if int(msg.data) else 'NOT_COVERED'
@@ -226,9 +242,6 @@ class HTMLReport(GNAThub.Plugin):
         :rtype: dict[str,*]
         """
 
-        # Get the GNATmetric tool definition
-        gnatmetric = self._tools_by_name.get('GNATmetric')
-
         def _aggregate_metrics(project, source_dir, filename):
             """Collect metrics about the given source file
 
@@ -243,15 +256,22 @@ class HTMLReport(GNAThub.Plugin):
             :rtype: dict[str,*]
             """
 
+            # Computes file-level metrics
             resource = GNAThub.Resource.get(os.path.join(source_dir, filename))
+            metrics = []
+            if resource:
+                for msg in resource.list_messages():
+                    rule = self._rules[msg.rule_id]
+                    tool = self._tools_by_id[rule.tool_id]
+                    # Note: the DB schema is currently designed so that metrics
+                    # are stored has messages, and file metrics are attached to
+                    # line 0.
+                    if msg.line == 0:
+                        metrics.append(self._format_message(msg, rule, tool))
+
             return {
                 'filename': filename,
-                'metrics': {
-                    self._rules[msg.rule_id].name: float(msg.data)
-                    for msg in (
-                        resource.list_messages() if resource else []
-                    ) if self._rules[msg.rule_id].tool_id == gnatmetric.id
-                } if gnatmetric else None,
+                'metrics': metrics or None,
                 '_associated_resource': resource is not None
             }
 
