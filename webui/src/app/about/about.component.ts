@@ -6,7 +6,7 @@ import { IGNAThubReport } from 'gnat';
 
 import { Count } from '../count.pipe';
 import { Loader } from '../loader';
-import { MissingReportError } from '../missing-report-error';
+import { MissingReportError } from '../errors';
 
 import '../array-utils';
 

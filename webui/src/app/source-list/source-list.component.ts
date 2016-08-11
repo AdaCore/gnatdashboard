@@ -7,7 +7,7 @@ import { IGNAThubReport } from 'gnat';
 
 import { Loader } from '../loader';
 import { MapKeys } from '../object.pipe';
-import { MissingReportError } from '../missing-report-error';
+import { MissingReportError } from '../errors';
 
 @Component({
     selector: 'source-list',

@@ -10,7 +10,7 @@ import { highlightAuto } from 'highlight.js';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Loader } from '../loader';
-import { MissingSourceError } from '../missing-source-error';
+import { MissingSourceError } from '../errors';
 
 @Component({
     selector: 'annotated-source',
