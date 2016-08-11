@@ -40,7 +40,7 @@
                     </tr>
                     <tr class="inline-comment" *ngFor="let message of messages(line.number)">
                         <td colspan=2>
-                            <b>{{ message.rule.tool }}</b>: {{ message.message }}
+                            <b>{{ message.rule.tool.name }}</b>: {{ message.message }}
                         </td>
                     </tr>
                 </template>
