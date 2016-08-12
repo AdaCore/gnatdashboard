@@ -4,7 +4,6 @@ import { DomSanitizationService, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { highlightAuto } from 'highlight.js';
-import { Subscription } from 'rxjs/Subscription';
 
 import { GNAThubService } from '../gnathub.service';
 import { IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage } from 'gnat';
@@ -25,7 +24,6 @@ export class AnnotatedSource {
     private isBlobFetchError: boolean = false;
     private htmlLines: { number: number, content: SafeHtml }[] = null;
     private htmlLinesOfBlob: IGNAThubBlob = null;
-    private sub: Subscription = null;
 
     constructor(
         private gnathub: GNAThubService,
@@ -33,16 +31,10 @@ export class AnnotatedSource {
         private sanitizer: DomSanitizationService) {}
 
     ngOnInit(): void {
-        this.sub = this.route.params.subscribe(params => {
-            this.filename = params['filename'];
-            this.gnathub.getSource(this.filename).subscribe(
-                blob => this.blob = blob,
-                error => this.isBlobFetchError = !!error);
-        });
-    }
-
-    ngOnDestroy() {
-        this.sub.unsubscribe();
+        this.filename = this.route.snapshot.params['filename'];
+        this.gnathub.getSource(this.filename).subscribe(
+            blob => this.blob = blob,
+            error => this.isBlobFetchError = !!error);
     }
 
     /**

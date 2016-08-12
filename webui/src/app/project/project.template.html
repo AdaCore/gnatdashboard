@@ -1,13 +1,13 @@
 <div>
     <!-- Loader animation -->
-    <div *ngIf="(!report || !project) && !isReportFetchError">
+    <div *ngIf="!report && !isReportFetchError">
         <loader></loader>
         <center>Loading report...</center>
     </div>
     <!-- Error handling -->
     <missing-report-error *ngIf="isReportFetchError"></missing-report-error>
-    <div *ngIf="report && project">
     <!-- Project display -->
+    <div *ngIf="report">
         <h1>Project <small>{{ project }}</small></h1>
         <table class="source-dirs">
             <thead>
