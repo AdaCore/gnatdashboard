@@ -5,7 +5,7 @@
         <center>Loading annotated source...</center>
     </div>
     <!-- Error handling -->
-    <missing-source-error *ngIf="isBlobFetchError" filename="filename"></missing-source-error>
+    <missing-source-error *ngIf="isBlobFetchError" [filename]="filename"></missing-source-error>
     <!-- Blob display -->
     <div *ngIf="blob">
         <h4>Info</h4>
