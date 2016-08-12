@@ -8,7 +8,19 @@
     <missing-report-error *ngIf="isReportFetchError"></missing-report-error>
     <!-- Report display -->
     <div *ngIf="report">
-        <h1>Project Overview & Report <small>{{ report.project }}</small></h1>
+        <h1>GNATdashboard Report <small>{{ report.project }}</small></h1>
+        <h2>Tools executed</h2>
+        <table class="tools">
+            <thead>
+                <th>Tool</th>
+            </thead>
+            <tbody>
+                <tr class="tool-name" *ngFor="let tool of report.tools">
+                    <td>{{ tool.name }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>Analyzed projects</h2>
         <table class="projects">
             <thead>
                 <th>Project</th>
