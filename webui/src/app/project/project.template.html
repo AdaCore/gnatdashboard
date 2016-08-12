@@ -1,0 +1,25 @@
+<div>
+    <!-- Loader animation -->
+    <div *ngIf="(!report || !project) && !isReportFetchError">
+        <loader></loader>
+        <center>Loading report...</center>
+    </div>
+    <!-- Error handling -->
+    <missing-report-error *ngIf="isReportFetchError"></missing-report-error>
+    <div *ngIf="report && project">
+    <!-- Project display -->
+        <h1>Project <small>{{ project }}</small></h1>
+        <table class="source-dirs">
+            <thead>
+                <th>Source directories</th>
+                <th>Source count</th>
+            </thead>
+            <tbody>
+                <tr class="source-dir" *ngFor="let directory of report.modules[project] | mapKeys">
+                    <td>{{ directory }}</td>
+                    <td>{{ report.modules[project][directory] | count }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
