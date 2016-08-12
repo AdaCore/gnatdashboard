@@ -16,10 +16,23 @@
             </thead>
             <tbody>
                 <tr class="source-dir" *ngFor="let directory of report.modules[project] | mapKeys">
-                    <td>{{ directory }}</td>
+                    <td>
+                        <a [routerLink]="['.']" [queryParams]="{directory: directory}">{{ directory }}</a></td>
                     <td>{{ report.modules[project][directory] | count }}</td>
                 </tr>
             </tbody>
         </table>
+        <div *ngIf="directory">
+            <table class="sources">
+                <thead>
+                    <th>{{ directory }}</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let source of report.modules[project][directory]">
+                        <td><a [routerLink]="['/source', source.filename]">{{ source.filename }}</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
