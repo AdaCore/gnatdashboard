@@ -26,8 +26,9 @@
                 <th>Project</th>
             </thead>
             <tbody>
-                <tr class="module-name" *ngFor="let module of report.modules | mapKeys">
-                    <td>{{ module }}</td>
+                <tr class="module-name"
+                    *ngFor="let module of report.modules | mapKeys">
+                    <td><a [routerLink]="['../project', module]">{{ module }}</a></td>
                 </tr>
             </tbody>
         </table>

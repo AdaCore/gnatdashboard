@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CORE_DIRECTIVES } from '@angular/common';
+import { ROUTER_DIRECTIVES } from '@angular/router';
 
 import { GNAThubService } from '../gnathub.service';
 import { IGNAThubReport } from 'gnat';
@@ -12,7 +13,9 @@ import { MissingReportError } from '../errors';
     selector: 'report',
     templateUrl: './report.template.html',
     styleUrls: [ './report.style.css' ],
-    directives: [ CORE_DIRECTIVES, Loader, MissingReportError ],
+    directives: [
+        CORE_DIRECTIVES, Loader, MissingReportError, ROUTER_DIRECTIVES
+    ],
     pipes: [ MapKeys ],
     providers: [ GNAThubService ]
 })
