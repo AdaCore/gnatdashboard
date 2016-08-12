@@ -8,7 +8,6 @@ import { SourceList } from './source-list';
 
 export const routes: RouterConfig = [
     { path: '',                 component: Report },
-    { path: 'report',           component: Report },
     { path: 'sources',          component: SourceList },
     { path: 'source/:filename', component: AnnotatedSource },
     { path: 'about',            component: About },
