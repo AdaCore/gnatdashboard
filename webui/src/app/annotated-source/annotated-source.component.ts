@@ -1,13 +1,13 @@
 import { CORE_DIRECTIVES } from '@angular/common';
 import { Component } from '@angular/core';
 import { DomSanitizationService, SafeHtml } from '@angular/platform-browser';
-import { ActivatedRoute, ROUTER_DIRECTIVES, Router } from '@angular/router';
-
-import { GNAThubService } from '../gnathub.service';
-import { IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage } from 'gnat';
+import { ActivatedRoute } from '@angular/router';
 
 import { highlightAuto } from 'highlight.js';
 import { Subscription } from 'rxjs/Subscription';
+
+import { GNAThubService } from '../gnathub.service';
+import { IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage } from 'gnat';
 
 import { Loader } from '../loader';
 import { MissingSourceError } from '../errors';
@@ -16,9 +16,7 @@ import { MissingSourceError } from '../errors';
     selector: 'annotated-source',
     templateUrl: './annotated-source.template.html',
     styleUrls: [ './annotated-source.style.css' ],
-    directives: [
-        CORE_DIRECTIVES, Loader, MissingSourceError, ROUTER_DIRECTIVES
-    ],
+    directives: [ CORE_DIRECTIVES, Loader, MissingSourceError ],
     providers: [ GNAThubService ]
 })
 export class AnnotatedSource {
