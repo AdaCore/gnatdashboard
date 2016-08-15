@@ -280,7 +280,7 @@ class HTMLReport(GNAThub.Plugin):
 
             # Computes file-level metrics
             resource = GNAThub.Resource.get(os.path.join(source_dir, filename))
-            metrics = []
+            metrics, msg_count = [], 0
             if resource:
                 for msg in resource.list_messages():
                     rule = self._rules_by_id[msg.rule_id]
@@ -290,10 +290,13 @@ class HTMLReport(GNAThub.Plugin):
                     # line 0.
                     if msg.line == 0:
                         metrics.append(self._encode_message(msg, rule, tool))
+                    elif rule.identifier != 'coverage':
+                        msg_count += 1
 
             return {
                 'filename': filename,
                 'metrics': metrics or None,
+                'message_count': msg_count,
                 '_associated_resource': resource is not None
             }
 
