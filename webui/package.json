@@ -31,7 +31,7 @@
          "prebuild:dev": "npm run clean:dist",
        "build:dev": "webpack --config config/webpack.dev.js --progress --profile --colors --display-error-details --display-cached",
          "prebuild:prod": "npm run clean:dist",
-       "build:prod": "webpack --config config/webpack.prod.js  --progress --profile --colors --display-error-details --display-cached --bail",
+       "build:prod": "webpack --config config/webpack.prod.js --profile --display-error-details --display-cached --bail",
 
      "server": "npm run server:dev",
        "server:dev": "webpack-dev-server --config config/webpack.dev.js --progress --profile --colors --watch --display-error-details --display-cached --content-base src/",
