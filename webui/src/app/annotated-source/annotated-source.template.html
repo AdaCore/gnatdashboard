@@ -8,21 +8,25 @@
     <missing-source-error *ngIf="isBlobFetchError" [filename]="filename"></missing-source-error>
     <!-- Blob display -->
     <div *ngIf="blob">
-        <h4>Info</h4>
-        <ul>
-            <li>Filename: {{ blob.filename }}</li>
-            <li>Project: {{ blob.project }}</li>
-        </ul>
+        <h4>Source file details</h4>
+        <dl class="dl-horizontal">
+            <dt>Filename</dt>
+            <dd><span class="filename">{{ blob.filename }}</span></dd>
+
+            <dt>Project</dt>
+            <dd>{{ blob.project }}</dd>
+        </dl>
         <h4>Metrics</h4>
         <div *ngIf="!blob.metrics.length">
             <p class="no-metrics"><em>No metrics to display</em></p>
         </div>
         <div *ngIf="blob.metrics">
-            <ul>
-                <li *ngFor="let metric of blob.metrics">
-                    {{ metric.rule.name }}: {{metric.message }}
-                </li>
-            </ul>
+            <dl class="dl-horizontal">
+                <template ngFor let-metric [ngForOf]="blob.metrics">
+                    <dt class="metric-label">{{ metric.rule.name }}</dt>
+                    <dd><span class="metric-value">{{ metric.message }}</span></dd>
+                </template>
+            </dl>
         </div>
         <div class="editor read-only">
             <div class="file-header">{{ blob.filename }}</div>

@@ -75,4 +75,11 @@ tr.blob {
   }
 }
 
+.metric-label {}
+
+.filename,
+.metric-value {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
 tr.inline-comment td { border-left: 0; }
