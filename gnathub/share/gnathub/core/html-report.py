@@ -150,14 +150,44 @@ class HTMLReport(GNAThub.Plugin):
             if sources
         }
 
-    def _format_message(self, msg, rule, tool):
-        """Format a message.
+    def _encode_tool(self, tool):
+        """JSON-encode a tool
 
-        :param msg:
-        :type msg: GNAThub.Message
-        :param rule:
+        :param tool: the tool to encode
+        :type tool: GNAThub.Tool
+        :rtype: dict[str,*]
+        """
+
+        return {
+            'id': tool.id,
+            'name': tool.name
+        }
+
+    def _encode_rule(self, rule, tool):
+        """JSON-encode a rule
+
+        :param rule: the rule to encode
         :type rule: GNAThub.Rule
-        :param tool:
+        :param tool: the tool associated with the rule
+        :type tool: GNAThub.Tool
+        :rtype: dict[str,*]
+        """
+
+        return {
+            'identifier': rule.identifier,
+            'name': rule.name,
+            'kind': rule.kind,
+            'tool': self._encode_tool(tool)
+        }
+
+    def _encode_message(self, msg, rule, tool):
+        """JSON-encode a message
+
+        :param msg: the message to encode
+        :type msg: GNAThub.Message
+        :param rule: the rule associated with the message
+        :type rule: GNAThub.Rule
+        :param tool: the tool associated with the rule
         :type tool: GNAThub.Tool
         :rtype: dict[str,*]
         """
@@ -165,15 +195,7 @@ class HTMLReport(GNAThub.Plugin):
         return {
             'begin': msg.col_begin,
             'end': msg.col_end,
-            'rule': {
-                'identifier': rule.identifier,
-                'name': rule.name,
-                'kind': rule.kind,
-                'tool': {
-                    'id': tool.id,
-                    'name': tool.name
-                }
-            },
+            'rule': self._encode_rule(rule, tool),
             'message': msg.data
         }
 
@@ -200,7 +222,7 @@ class HTMLReport(GNAThub.Plugin):
             tool = self._tools_by_id[rule.tool_id]
             if rule.identifier != 'coverage':
                 messages[msg.line].append(
-                    self._format_message(msg, rule, tool)
+                    self._encode_message(msg, rule, tool)
                 )
             elif tool.name == 'gcov':
                 coverage[msg.line] = (
@@ -267,7 +289,7 @@ class HTMLReport(GNAThub.Plugin):
                     # are stored has messages, and file metrics are attached to
                     # line 0.
                     if msg.line == 0:
-                        metrics.append(self._format_message(msg, rule, tool))
+                        metrics.append(self._encode_message(msg, rule, tool))
 
             return {
                 'filename': filename,
@@ -279,10 +301,10 @@ class HTMLReport(GNAThub.Plugin):
             'modules': self._generate_source_tree(_aggregate_metrics),
             'project': GNAThub.Project.name(),
             'creation_time': int(time.time()),
-            'tools': [{
-                'id': id,
-                'name': tool.name
-            } for id, tool in self._tools_by_id.iteritems()],
+            'tools': [
+                self._encode_tool(tool)
+                for tool in self._tools_by_id.itervalues()
+            ],
             '_database': GNAThub.database()
         }
 
