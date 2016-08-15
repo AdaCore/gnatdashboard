@@ -36,7 +36,7 @@ class HTMLReport(GNAThub.Plugin):
 
     def __init__(self):
         super(HTMLReport, self).__init__()
-        self._rules = None
+        self._rules_by_id = None
         self._tools_by_id = None
         self._tools_by_name = None
 
@@ -60,7 +60,7 @@ class HTMLReport(GNAThub.Plugin):
         super(HTMLReport, self).setup()
         rules = GNAThub.Rule.list()
         tools = GNAThub.Tool.list()
-        self._rules = {rule.id: rule for rule in GNAThub.Rule.list()}
+        self._rules_by_id = {rule.id: rule for rule in GNAThub.Rule.list()}
         self._tools_by_id = {tool.id: tool for tool in tools}
         self._tools_by_name = {tool.name.lower(): tool for tool in tools}
 
@@ -218,7 +218,7 @@ class HTMLReport(GNAThub.Plugin):
         messages = collections.defaultdict(list)
         coverage = collections.defaultdict(str)
         for msg in GNAThub.Resource.get(source_file).list_messages():
-            rule = self._rules[msg.rule_id]
+            rule = self._rules_by_id[msg.rule_id]
             tool = self._tools_by_id[rule.tool_id]
             if rule.identifier != 'coverage':
                 messages[msg.line].append(
@@ -283,7 +283,7 @@ class HTMLReport(GNAThub.Plugin):
             metrics = []
             if resource:
                 for msg in resource.list_messages():
-                    rule = self._rules[msg.rule_id]
+                    rule = self._rules_by_id[msg.rule_id]
                     tool = self._tools_by_id[rule.tool_id]
                     # Note: the DB schema is currently designed so that metrics
                     # are stored has messages, and file metrics are attached to
@@ -304,6 +304,10 @@ class HTMLReport(GNAThub.Plugin):
             'tools': [
                 self._encode_tool(tool)
                 for tool in self._tools_by_id.itervalues()
+            ],
+            'rules': [
+                self._encode_rule(rule, self._tools_by_id[rule.tool_id])
+                for rule in self._rules_by_id.itervalues()
             ],
             '_database': GNAThub.database()
         }
