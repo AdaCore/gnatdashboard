@@ -151,57 +151,58 @@ class HTMLReport(GNAThub.Plugin):
         }
 
     @classmethod
-    def _decorate_dict(cls, obj, **kwargs):
+    def _decorate_dict(cls, obj, extra=None):
         """Decorate a Python dictionary with additional properties
 
         :param obj: the Python dictionary to decorate
         :type obj: dict[str,*]
-        :param kwargs: extra fields to decorate the encoded object with
-        :type kwargs: dict | None
+        :param extra: extra fields to decorate the encoded object with
+        :type extra: dict | None
         :rtype: dict[str,*]
         """
-        if kwargs:
-            obj.update(kwargs)
+        if extra:
+            obj.update(extra)
         return obj
 
     @classmethod
-    def _encode_tool(cls, tool, **kwargs):
+    def _encode_tool(cls, tool, extra=None):
         """JSON-encode a tool
 
         :param tool: the tool to encode
         :type tool: GNAThub.Tool
-        :param kwargs: extra fields to decorate the encoded object with
-        :type kwargs: dict | None
+        :param extra: extra fields to decorate the encoded object with
+        :type extra: dict | None
         :rtype: dict[str,*]
         """
 
         return cls._decorate_dict({
             'id': tool.id,
             'name': tool.name
-        }, **kwargs)
+        }, extra)
 
     @classmethod
-    def _encode_rule(cls, rule, tool, **kwargs):
+    def _encode_rule(cls, rule, tool, extra=None):
         """JSON-encode a rule
 
         :param rule: the rule to encode
         :type rule: GNAThub.Rule
         :param tool: the tool associated with the rule
         :type tool: GNAThub.Tool
-        :param kwargs: extra fields to decorate the encoded object with
-        :type kwargs: dict | None
+        :param extra: extra fields to decorate the encoded object with
+        :type extra: dict | None
         :rtype: dict[str,*]
         """
 
         return cls._decorate_dict({
+            'id': rule.id,
             'identifier': rule.identifier,
             'name': rule.name,
             'kind': rule.kind,
             'tool': cls._encode_tool(tool)
-        }, **kwargs)
+        }, extra)
 
     @classmethod
-    def _encode_message(cls, msg, rule, tool, **kwargs):
+    def _encode_message(cls, msg, rule, tool, extra=None):
         """JSON-encode a message
 
         :param msg: the message to encode
@@ -210,8 +211,8 @@ class HTMLReport(GNAThub.Plugin):
         :type rule: GNAThub.Rule
         :param tool: the tool associated with the rule
         :type tool: GNAThub.Tool
-        :param kwargs: extra fields to decorate the encoded object with
-        :type kwargs: dict | None
+        :param extra: extra fields to decorate the encoded object with
+        :type extra: dict | None
         :rtype: dict[str,*]
         """
 
@@ -220,7 +221,7 @@ class HTMLReport(GNAThub.Plugin):
             'end': msg.col_end,
             'rule': cls._encode_rule(rule, tool),
             'message': msg.data
-        }, **kwargs)
+        }, extra)
 
     def _generate_report_src_hunk(self, project_name, source_file):
         """Generate the JSON-encoded representation of `source_file`
@@ -261,12 +262,14 @@ class HTMLReport(GNAThub.Plugin):
             'filename': os.path.basename(source_file),
             'metrics': messages[0],
             'tools': {
-                tool.id: self._encode_tool(tool, message_count=len([
-                    msg for msg in messages_from_db if (
-                        self._rules_by_id[msg.rule_id].tool_id == tool.id and
-                        msg.line != 0
-                    )
-                ])) for tool in self._tools_by_id.itervalues()
+                tool.id: self._encode_tool(tool, {
+                    'message_count': len([
+                        msg for msg in messages_from_db if (
+                            self._rules_by_id[msg.rule_id].tool_id == tool.id
+                            and msg.line != 0
+                        )
+                    ])
+                }) for tool in self._tools_by_id.itervalues()
             },
             'lines': None
         }
