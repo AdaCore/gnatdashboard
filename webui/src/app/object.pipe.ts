@@ -10,7 +10,22 @@ import { Pipe, PipeTransform } from '@angular/core';
  */
 @Pipe({ name: 'mapKeys'})
 export class MapKeys implements PipeTransform {
-    transform(value: { [key: string]: any }, args: any[] = null): string[] {
-        return value ? Object.keys(value): [];
+    transform(obj: { [key: string]: any }, args: any[] = null): string[] {
+        return obj ? Object.keys(obj): [];
+    }
+}
+
+/**
+ * Extract the list of properties out of a JavaScript object.
+ *
+ * Use with NgFor directive.
+ *
+ * Example:
+ *     <li *ngFor="#value of obj | mapValues">{{ value }}</li>
+ */
+@Pipe({ name: 'mapValues'})
+export class MapValues implements PipeTransform {
+    transform(obj: { [key: string]: any }, args: any[] = null): string[] {
+        return obj ? Object.keys(obj).map(key => obj[key]): [];
     }
 }
