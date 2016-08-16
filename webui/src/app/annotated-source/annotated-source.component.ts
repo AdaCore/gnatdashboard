@@ -9,6 +9,7 @@ import { GNAThubService } from '../gnathub.service';
 import { IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage } from 'gnat';
 
 import { Loader } from '../loader';
+import { MapValues } from '../object.pipe';
 import { MissingSourceError } from '../errors';
 
 @Component({
@@ -16,6 +17,7 @@ import { MissingSourceError } from '../errors';
     templateUrl: './annotated-source.template.html',
     styleUrls: [ './annotated-source.style.css' ],
     directives: [ CORE_DIRECTIVES, Loader, MissingSourceError ],
+    pipes: [ MapValues ],
     providers: [ GNAThubService ]
 })
 export class AnnotatedSource {
@@ -33,7 +35,13 @@ export class AnnotatedSource {
     ngOnInit(): void {
         this.filename = this.route.snapshot.params['filename'];
         this.gnathub.getSource(this.filename).subscribe(
-            blob => this.blob = blob,
+            blob => {
+                for (let tool_id in blob.tools) {
+                    // Show all messages by default
+                    blob.tools[tool_id]['ui_selected'] = true;
+                }
+                this.blob = blob;
+            },
             error => this.isBlobFetchError = !!error);
     }
 

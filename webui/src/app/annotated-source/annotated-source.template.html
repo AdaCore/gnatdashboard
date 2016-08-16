@@ -28,6 +28,13 @@
                 </template>
             </dl>
         </div>
+        <h4>Tools</h4>
+        <div class="tool-selector">
+            <template ngFor let-tool [ngForOf]="blob.tools | mapValues">
+                <input type="checkbox" [(ngModel)]="tool.ui_selected" />
+                <label class="tool-label">{{ tool.name }} ({{ tool.message_count }})</label>
+            </template>
+        </div>
         <div class="editor read-only">
             <div class="file-header">{{ blob.filename }}</div>
             <table>
@@ -42,11 +49,13 @@
                              Use AngularJS embedded sanitizer to render it.  -->
                         <td class="blob-code" [innerHTML]="line.content"></td>
                     </tr>
-                    <tr class="inline-comment" *ngFor="let message of messages(line.number)">
-                        <td colspan=2>
-                            <b>{{ message.rule.tool.name }}</b>: {{ message.message }}
-                        </td>
-                    </tr>
+                    <template ngFor let-message [ngForOf]="messages(line.number)">
+                        <tr class="inline-comment" *ngIf="blob.tools[message.rule.tool.id].ui_selected">
+                            <td colspan=2>
+                                <b>{{ message.rule.tool.name }}</b>: {{ message.message }}
+                            </td>
+                        </tr>
+                    </template>
                 </template>
             </table>
         </div>
