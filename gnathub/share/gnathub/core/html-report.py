@@ -241,11 +241,29 @@ class HTMLReport(GNAThub.Plugin):
 
         messages_from_db = GNAThub.Resource.get(source_file).list_messages()
 
+        tools, rules = {}, {}
         messages = collections.defaultdict(list)
         coverage = collections.defaultdict(str)
+
         for msg in messages_from_db:
             rule = self._rules_by_id[msg.rule_id]
             tool = self._tools_by_id[rule.tool_id]
+
+            if msg.line != 0:
+                # Increment the count of inline messages
+                if tool.id not in tools:
+                    tools[tool.id] = self._encode_tool(tool, {
+                        'message_count': 1
+                    })
+                else:
+                    tools[tool.id]['message_count'] += 1
+                if rule.id not in rules:
+                    rules[rule.id] = self._encode_rule(rule, tool, {
+                        'message_count': 1
+                    })
+                else:
+                    rules[rule.id]['message_count'] += 1
+
             if rule.identifier != 'coverage':
                 messages[msg.line].append(
                     self._encode_message(msg, rule, tool)
@@ -261,16 +279,8 @@ class HTMLReport(GNAThub.Plugin):
             'project': project_name,
             'filename': os.path.basename(source_file),
             'metrics': messages[0],
-            'tools': {
-                tool.id: self._encode_tool(tool, {
-                    'message_count': len([
-                        msg for msg in messages_from_db if (
-                            self._rules_by_id[msg.rule_id].tool_id == tool.id
-                            and msg.line != 0
-                        )
-                    ])
-                }) for tool in self._tools_by_id.itervalues()
-            },
+            'tools': tools,
+            'rules': rules,
             'lines': None
         }
 

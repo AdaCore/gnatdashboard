@@ -12,6 +12,8 @@ import { Loader } from '../loader';
 import { MapValues } from '../object.pipe';
 import { MissingSourceError } from '../errors';
 
+import '../array-utils';
+
 @Component({
     selector: 'annotated-source',
     templateUrl: './annotated-source.template.html',
@@ -37,12 +39,32 @@ export class AnnotatedSource {
         this.gnathub.getSource(this.filename).subscribe(
             blob => {
                 for (let tool_id in blob.tools) {
-                    // Show all messages by default
+                    // Show messages triggered by all tools by default
                     blob.tools[tool_id]['ui_selected'] = true;
+                }
+                for (let rule_id in blob.rules) {
+                    // Show messages triggered by all rules by default
+                    blob.rules[rule_id]['ui_selected'] = true;
                 }
                 this.blob = blob;
             },
             error => this.isBlobFetchError = !!error);
+    }
+
+    /**
+     * @return The total number of displayed messages.
+     */
+    getMessageDisplayedCount():number {
+        if (!this.blob) {
+            return 0;
+        }
+        return Object.keys(this.blob.rules).sum(id => {
+            const rule = this.blob.rules[id];
+            if (rule.ui_selected && this.blob.tools[rule.tool.id].ui_selected) {
+                return rule.message_count;
+            }
+            return 0;
+        });
     }
 
     /**

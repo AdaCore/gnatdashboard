@@ -17,13 +17,36 @@ table { tab-size: 3; }
   padding: 10px 15px;
   background-color: #f7f7f7;
   border-bottom: 1px solid #d8d8d8;
+  border-top: 1px solid transparent;  /* to balance the 1px border-bottom */
+
   color: #333;
-  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  font-size: 1.2rem;
-  line-height: 1.5em;
-  white-space: nowrap;
   cursor: default;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  & > div {
+    flex-grow: 1;
+
+    font-size: 1.2rem;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    white-space: nowrap;
+
+    &.message-count {
+      text-align: right;
+
+      & span {
+        border-radius: 2px;
+        padding: 6px 8px 4px 8px;
+        background-color: #f7f7f7;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12),
+                    0 1px 2px rgba(0, 0, 0, 0.24);
+      }
+    }
+  }
 }
+
 
 tr.blob {
   &.odd { background-color: #f8f8f8; }

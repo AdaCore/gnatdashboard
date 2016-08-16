@@ -31,12 +31,28 @@
         <h4>Tools</h4>
         <div class="tool-selector">
             <template ngFor let-tool [ngForOf]="blob.tools | mapValues">
-                <input type="checkbox" [(ngModel)]="tool.ui_selected" />
-                <label class="tool-label">{{ tool.name }} ({{ tool.message_count }})</label>
+                <div class="tool">
+                    <input type="checkbox" [(ngModel)]="tool.ui_selected" />
+                    <label class="tool-label">{{ tool.name }} ({{ tool.message_count }})</label>
+                </div>
+            </template>
+        </div>
+        <h4>Rules</h4>
+        <div class="rule-selector">
+            <template ngFor let-rule [ngForOf]="blob.rules | mapValues">
+                <div class="rule" *ngIf="blob.tools[rule.tool.id].ui_selected">
+                    <input type="checkbox" [(ngModel)]="rule.ui_selected" />
+                    <label class="rule-label">{{ rule.name }} ({{ rule.message_count }})</label>
+                </div>
             </template>
         </div>
         <div class="editor read-only">
-            <div class="file-header">{{ blob.filename }}</div>
+            <div class="file-header">
+                <div class="filename">{{ blob.filename }}</div>
+                <div class="message-count">
+                    <span>Displayed message count: {{ getMessageDisplayedCount() }}</span>
+                </div>
+            </div>
             <table>
                 <template ngFor let-line [ngForOf]="highlightedLines()" let-isOdd="odd">
                     <tr class="blob" [ngClass]="{
@@ -50,9 +66,11 @@
                         <td class="blob-code" [innerHTML]="line.content"></td>
                     </tr>
                     <template ngFor let-message [ngForOf]="messages(line.number)">
-                        <tr class="inline-comment" *ngIf="blob.tools[message.rule.tool.id].ui_selected">
+                        <tr class="inline-comment"
+                            *ngIf="blob.tools[message.rule.tool.id].ui_selected && blob.rules[message.rule.id].ui_selected"
+                        >
                             <td colspan=2>
-                                <b>{{ message.rule.tool.name }}</b>: {{ message.message }}
+                                <b>{{ message.rule.tool.name }}</b>: {{ message.message }} ({{ message.rule.identifier }})
                             </td>
                         </tr>
                     </template>

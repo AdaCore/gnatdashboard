@@ -34,13 +34,6 @@ declare module 'gnat' {
         [sourceDir: string]: ISource[];
     }
 
-    export interface IGNAThubTool {
-        id: number;
-        name: string;
-        message_count?: number;
-        ui_selected?: boolean;
-    }
-
     export interface IGNAThubReport {
         modules: { [moduleName: string]: IProjectModule };
         project: string;
@@ -49,18 +42,21 @@ declare module 'gnat' {
         _database: string;
     }
 
-    export interface IGNAThubBlobLine {
-        no: number;
-        content: string;
-        coverage: CoverageStatus;
-        messages: IGNAThubMessage[];
+    export interface IGNAThubTool {
+        id: number;
+        name: string;
+        message_count?: number;
+        ui_selected?: boolean;
     }
 
     export interface IGNAThubRule {
+        id: number;
         identifier: string;
         name: string;
         kind: number;
-        tool: string;
+        tool: IGNAThubTool;
+        message_count?: number;
+        ui_selected?: boolean;
     }
 
     export interface IGNAThubMessage {
@@ -70,11 +66,19 @@ declare module 'gnat' {
         message: string;
     }
 
+    export interface IGNAThubBlobLine {
+        no: number;
+        content: string;
+        coverage: CoverageStatus;
+        messages: IGNAThubMessage[];
+    }
+
     export interface IGNAThubBlob {
         project: string;
         filename: string;
         lines: IGNAThubBlobLine[];
         tools: { [id: number]: IGNAThubTool };
+        rules: { [id: number]: IGNAThubRule };
         metrics: IGNAThubMessage[];
     }
 }
