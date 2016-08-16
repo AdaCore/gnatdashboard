@@ -150,37 +150,58 @@ class HTMLReport(GNAThub.Plugin):
             if sources
         }
 
-    def _encode_tool(self, tool):
+    @classmethod
+    def _decorate_dict(cls, obj, **kwargs):
+        """Decorate a Python dictionary with additional properties
+
+        :param obj: the Python dictionary to decorate
+        :type obj: dict[str,*]
+        :param kwargs: extra fields to decorate the encoded object with
+        :type kwargs: dict | None
+        :rtype: dict[str,*]
+        """
+        if kwargs:
+            obj.update(kwargs)
+        return obj
+
+    @classmethod
+    def _encode_tool(cls, tool, **kwargs):
         """JSON-encode a tool
 
         :param tool: the tool to encode
         :type tool: GNAThub.Tool
+        :param kwargs: extra fields to decorate the encoded object with
+        :type kwargs: dict | None
         :rtype: dict[str,*]
         """
 
-        return {
+        return cls._decorate_dict({
             'id': tool.id,
             'name': tool.name
-        }
+        }, **kwargs)
 
-    def _encode_rule(self, rule, tool):
+    @classmethod
+    def _encode_rule(cls, rule, tool, **kwargs):
         """JSON-encode a rule
 
         :param rule: the rule to encode
         :type rule: GNAThub.Rule
         :param tool: the tool associated with the rule
         :type tool: GNAThub.Tool
+        :param kwargs: extra fields to decorate the encoded object with
+        :type kwargs: dict | None
         :rtype: dict[str,*]
         """
 
-        return {
+        return cls._decorate_dict({
             'identifier': rule.identifier,
             'name': rule.name,
             'kind': rule.kind,
-            'tool': self._encode_tool(tool)
-        }
+            'tool': cls._encode_tool(tool)
+        }, **kwargs)
 
-    def _encode_message(self, msg, rule, tool):
+    @classmethod
+    def _encode_message(cls, msg, rule, tool, **kwargs):
         """JSON-encode a message
 
         :param msg: the message to encode
@@ -189,15 +210,17 @@ class HTMLReport(GNAThub.Plugin):
         :type rule: GNAThub.Rule
         :param tool: the tool associated with the rule
         :type tool: GNAThub.Tool
+        :param kwargs: extra fields to decorate the encoded object with
+        :type kwargs: dict | None
         :rtype: dict[str,*]
         """
 
-        return {
+        return cls._decorate_dict({
             'begin': msg.col_begin,
             'end': msg.col_end,
-            'rule': self._encode_rule(rule, tool),
+            'rule': cls._encode_rule(rule, tool),
             'message': msg.data
-        }
+        }, **kwargs)
 
     def _generate_report_src_hunk(self, project_name, source_file):
         """Generate the JSON-encoded representation of `source_file`
@@ -215,9 +238,11 @@ class HTMLReport(GNAThub.Plugin):
             os.path.basename(source_file), source_file
         )
 
+        messages_from_db = GNAThub.Resource.get(source_file).list_messages()
+
         messages = collections.defaultdict(list)
         coverage = collections.defaultdict(str)
-        for msg in GNAThub.Resource.get(source_file).list_messages():
+        for msg in messages_from_db:
             rule = self._rules_by_id[msg.rule_id]
             tool = self._tools_by_id[rule.tool_id]
             if rule.identifier != 'coverage':
@@ -235,6 +260,14 @@ class HTMLReport(GNAThub.Plugin):
             'project': project_name,
             'filename': os.path.basename(source_file),
             'metrics': messages[0],
+            'tools': {
+                tool.id: self._encode_tool(tool, message_count=len([
+                    msg for msg in messages_from_db if (
+                        self._rules_by_id[msg.rule_id].tool_id == tool.id and
+                        msg.line != 0
+                    )
+                ])) for tool in self._tools_by_id.itervalues()
+            },
             'lines': None
         }
 

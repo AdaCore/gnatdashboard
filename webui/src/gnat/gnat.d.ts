@@ -35,7 +35,10 @@ declare module 'gnat' {
     }
 
     export interface IGNAThubTool {
-        [id: number]: string;
+        id: number;
+        name: string;
+        message_count?: number;
+        ui_selected?: boolean;
     }
 
     export interface IGNAThubReport {
@@ -71,6 +74,7 @@ declare module 'gnat' {
         project: string;
         filename: string;
         lines: IGNAThubBlobLine[];
+        tools: { [id: number]: IGNAThubTool };
         metrics: IGNAThubMessage[];
     }
 }
