@@ -44,8 +44,8 @@ analyzed (project name, project key, location of the :file:`gnathub.db` file,
 * the project-specific :file:`sonar-project.properties` file provided through the
   :option:`-Dproject.settings` command line argument of |SonarRunner|
 
-See `Installing and Configuring SonarQube Runner <http://bit.ly/1IpRwK4>`_
-and `Analyzing with SonarQube Runner <http://bit.ly/1FNkKfD>`_ for more
+See `Installing and Configuring SonarQube Runner <http://bit.ly/2bxzRE4>`_
+and `Analyzing with SonarQube Runner <http://bit.ly/2aVoOYh>`_ for more
 information on |SonarRunner|.
 
 By default, |GNAThub| will create the |SonarRunner| configuration file, and
