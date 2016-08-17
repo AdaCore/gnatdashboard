@@ -19,6 +19,12 @@ function root(args) {
   return path.join.apply(path, [ROOT].concat(args));
 }
 
+function build(args) {
+  args = Array.prototype.slice.call(arguments, 0);
+  return path.join.apply(path, [
+    process.env.BUILD_DIR ? process.env.BUILD_DIR : ROOT].concat(args));
+}
+
 function checkNodeImport(context, request, cb) {
   if (!path.isAbsolute(request) && request.charAt(0) !== '.') {
     cb(null, 'commonjs ' + request); return;
@@ -29,4 +35,5 @@ function checkNodeImport(context, request, cb) {
 exports.hasProcessFlag = hasProcessFlag;
 exports.isWebpackDevServer = isWebpackDevServer;
 exports.root = root;
+exports.build = build;
 exports.checkNodeImport = checkNodeImport;
