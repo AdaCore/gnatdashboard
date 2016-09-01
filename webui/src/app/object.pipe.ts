@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  * Use with NgFor directive.
  *
  * Example:
- *     <li *ngFor="#key of obj | mapKeys">{{ key }}</li>
+ *     <li *ngFor="let key of obj | mapKeys">{{ key }}</li>
  */
 @Pipe({ name: 'mapKeys'})
 export class MapKeys implements PipeTransform {
@@ -21,7 +21,7 @@ export class MapKeys implements PipeTransform {
  * Use with NgFor directive.
  *
  * Example:
- *     <li *ngFor="#value of obj | mapValues">{{ value }}</li>
+ *     <li *ngFor="let value of obj | mapValues">{{ value }}</li>
  */
 @Pipe({ name: 'mapValues'})
 export class MapValues implements PipeTransform {
