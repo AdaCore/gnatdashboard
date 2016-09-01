@@ -12,5 +12,7 @@ class TestSimpleExample(TestCase):
         self.gnathub = GNAThub(Project.simple(), plugins=['gnatmetric'])
 
     def testClearToolReference(self):
-        # Test the core Python API
         self.gnathub.run(script='clear-gnatmetric-references.py')
+
+    def testCreateMessageWithProperty(self):
+        self.gnathub.run(script='create-message-with-property.py')

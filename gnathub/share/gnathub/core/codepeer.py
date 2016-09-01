@@ -38,12 +38,12 @@ class CodePeer(GNAThub.Plugin):
 
         self.tool = None
 
-        output = '%s.csv' % GNAThub.Project.name().lower()
-        self.csv_report = os.path.join(GNAThub.Project.object_dir(),
-                                       'codepeer', output)
+        self.csv_report = os.path.join(
+            GNAThub.Project.object_dir(), 'codepeer',
+            '{}.csv'.format(GNAThub.Project.name().lower()))
 
-        self.report = os.path.join(GNAThub.Project.object_dir(),
-                                   '%s.out' % self.name)
+        self.report = os.path.join(
+            GNAThub.Project.object_dir(), '{}.out'.format(self.name))
 
         # Map of rules (couple (name, rule): dict[str,Rule])
         self.rules = {}
@@ -64,9 +64,10 @@ class CodePeer(GNAThub.Plugin):
         :return: the CodePeer command line
         :rtype: list[str]
         """
-        return ['codepeer', '-update-scil',
-                '-P', GNAThub.Project.path(), '-jobs', str(GNAThub.jobs())
-                ] + GNAThub.Project.scenario_switches()
+        return [
+            'codepeer', '-update-scil', '-P', GNAThub.Project.path(),
+            '-jobs', str(GNAThub.jobs())
+        ] + GNAThub.Project.scenario_switches()
 
     @staticmethod
     def __msg_reader_cmd_line():
@@ -76,10 +77,10 @@ class CodePeer(GNAThub.Plugin):
         :rtype: list[str]
         """
 
-        msg_dir = os.path.join(GNAThub.Project.object_dir(), 'codepeer',
-                               '%s.output' % GNAThub.Project.name().lower())
-
-        return ['codepeer_msg_reader', '-csv', msg_dir]
+        return ['codepeer_msg_reader', '-csv', os.path.join(
+            GNAThub.Project.object_dir(), 'codepeer',
+            '{}.output'.format(GNAThub.Project.name().lower())
+        )]
 
     def execute(self):
         """Executes CodePeer
@@ -90,11 +91,8 @@ class CodePeer(GNAThub.Plugin):
         self.log.info('clear tool references in the database')
         GNAThub.Tool.clear_references(self.name)
 
-        proc = GNAThub.Run(self.name, CodePeer.__cmd_line())
-
-        if proc.status:
+        if GNAThub.Run(self.name, CodePeer.__cmd_line()).status:
             return
-
         self.execute_msg_reader()
 
     def execute_msg_reader(self):
@@ -104,13 +102,13 @@ class CodePeer(GNAThub.Plugin):
         """
 
         self.info('collect results with msg_reader')
-        proc = GNAThub.Run('msg_reader', CodePeer.__msg_reader_cmd_line(),
-                           out=self.csv_report)
-
+        proc = GNAThub.Run(
+            'msg_reader', CodePeer.__msg_reader_cmd_line(), out=self.csv_report
+        )
         self.postprocess(proc.status)
 
     def postprocess(self, exit_code):
-        """Parse the output report if CodePeer completed successfully
+        """Parses the output report if CodePeer completed successfully
 
         Sets the exec_status property according to the success of the
         analysis:
@@ -122,7 +120,6 @@ class CodePeer(GNAThub.Plugin):
         if exit_code != 0:
             self.exec_status = GNAThub.EXEC_FAILURE
             return
-
         self.__parse_csv_report()
 
     def __parse_csv_report(self):
@@ -153,6 +150,9 @@ class CodePeer(GNAThub.Plugin):
             # Reset the read cursor to the first byte
             report.seek(0)
 
+            # Create the tag "New" for new CodePeer messages
+            new_tag = GNAThub.Property('codepeer:is-new', 'New')
+
             try:
                 # Parse the file and drop the first line (containing the
                 # columns name).
@@ -167,24 +167,23 @@ class CodePeer(GNAThub.Plugin):
                     self.log.debug('parse record: %r', record)
 
                     # Each row is a list of strings:
-                    # [File, Line, Column, Category, New?, Review?, Ranking,
-                    #  Kind, Message, Classification, CWE]
-
-                    source = record[0]
-                    line = record[1]
-                    column = record[2]
-                    rule = record[3]
-                    severity = record[6]
-                    category = record[7]
-                    message = record[8]
+                    #
+                    #   File, Line, Column, Category, New?, Review?, Ranking,
+                    #   Kind, Message, Classification, CWE
+                    (
+                        source, line, column, rule, is_new, _, severity,
+                        category, message
+                    ) = record[:9]
 
                     rule_id = ':'.join((
                         category.lower(),
                         rule.lower().partition(';')[0].replace(' ', '_')
                     ))
 
-                    self.__add_message(source, line, column, rule_id,
-                                       message, severity)
+                    self.__add_message(
+                        source, line, column, rule_id, message, severity,
+                        [new_tag] if is_new == 'TRUE' else None
+                    )
 
                     Console.progress(index, total, new_line=(index == total))
 
@@ -199,7 +198,8 @@ class CodePeer(GNAThub.Plugin):
                 self.__do_bulk_insert()
                 self.exec_status = GNAThub.EXEC_SUCCESS
 
-    def __add_message(self, src, line, column, rule_id, msg, category):
+    def __add_message(self, src, line, column, rule_id, msg, category,
+                      properties):
         """Adds CodePeer message to current session database.
 
         :param src: message source file
@@ -214,6 +214,8 @@ class CodePeer(GNAThub.Plugin):
         :type msg: str
         :param category: the category of the message
         :type category: str
+        :param properties: the message properties
+        :type properties: list[GNAThub.Property] | None
         """
 
         # Cache the rules
@@ -234,7 +236,7 @@ class CodePeer(GNAThub.Plugin):
         if (rule, msg, cat) in self.messages:
             message = self.messages[(rule, msg, cat)]
         else:
-            message = GNAThub.Message(rule, msg, cat)
+            message = GNAThub.Message(rule, msg, cat, properties)
             self.messages[(rule, msg, cat)] = message
 
         # Add the message to the given resource

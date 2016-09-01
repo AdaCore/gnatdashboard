@@ -70,7 +70,10 @@
                             *ngIf="blob.tools[message.rule.tool.id].ui_selected && blob.rules[message.rule.id].ui_selected"
                         >
                             <td colspan=2>
-                                <b>{{ message.rule.tool.name }}</b>: {{ message.message }} ({{ message.rule.identifier }})
+                                <div class="message-properties" *ngIf="message.properties">
+                                    <span class="message-property" *ngFor="let property of message.properties">{{ property.name }}</span>
+                                </div>
+                                <div class="message"><b>{{ message.rule.tool.name }}</b>: {{ message.message }} (<span class="rule-identifier">{{ message.rule.identifier }}</span>)</div>
                             </td>
                         </tr>
                     </template>

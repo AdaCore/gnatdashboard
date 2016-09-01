@@ -202,6 +202,24 @@ class HTMLReport(GNAThub.Plugin):
         }, extra)
 
     @classmethod
+    def _encode_message_property(cls, msg, prop, extra=None):
+        """JSON-encode a message property
+
+        :param msg: the message
+        :type msg: GNAThub.Message
+        :param prop: the property associated with the message
+        :type prop: GNAThub.Property
+        :param extra: extra fields to decorate the encoded object with
+        :type extra: dict | None
+        :rtype: dict[str,*]
+        """
+        return cls._decorate_dict({
+            'id': prop.id,
+            'identifier': prop.identifier,
+            'name': prop.name
+        }, extra)
+
+    @classmethod
     def _encode_message(cls, msg, rule, tool, extra=None):
         """JSON-encode a message
 
@@ -220,6 +238,10 @@ class HTMLReport(GNAThub.Plugin):
             'begin': msg.col_begin,
             'end': msg.col_end,
             'rule': cls._encode_rule(rule, tool),
+            'properties': [
+                cls._encode_message_property(msg, prop)
+                for prop in msg.get_properties()
+            ],
             'message': msg.data
         }, extra)
 

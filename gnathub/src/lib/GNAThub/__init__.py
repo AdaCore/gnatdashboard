@@ -448,6 +448,32 @@ class Rule(object):
         return NotImplemented   # Implemented in Ada
 
 
+class Property(object):
+
+    """A Property object, corresponding to a message property."""
+
+    __slots__ = ('id', 'identifier', 'name')
+
+    def __init__(self, identifier, name):
+        """Return a Property, creating it if necessary.
+
+        :param identifier: the unique identifier of the property
+        :type identifier: str
+        :param name: the display name of the property
+        :type name: str
+        """
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def list():
+        """Return all properties stored in the database.
+
+        :return: the list of all :class:`GNAThub.Property`
+        :rtype: list[GNAThub.Property]
+        """
+        return NotImplemented   # Implemented in Ada
+
+
 class Message(object):
 
     """A Message object, representing one message in the database."""
@@ -456,7 +482,7 @@ class Message(object):
         'id', 'rule_id', 'data', 'category_id', 'line', 'col_begin', 'col_end'
     )
 
-    def __init__(self, rule, message, category=None):
+    def __init__(self, rule, message, category=None, properties=None):
         """Return the message matching the given properties.
 
         :param rule: the rule to which this message belongs
@@ -466,6 +492,8 @@ class Message(object):
         :type message: str
         :param category: the category to which this message belongs
         :type category: GNAThub.Category | None
+        :param properties: one or more properties
+        :type properties: list[GNAThub.Property] | None
         """
         return NotImplemented   # Implemented in Ada
 
