@@ -1,9 +1,9 @@
 <div>
     <!-- Loader animation -->
-    <div *ngIf="!blob && !isBlobFetchError" class="loader">
-        <loader></loader>
-        <center>Loading annotated source...</center>
-    </div>
+    <loader
+        *ngIf="!blob && !isBlobFetchError"
+        caption="Loading annotated source...">
+    </loader>
     <!-- Error handling -->
     <missing-source-error *ngIf="isBlobFetchError" [filename]="filename"></missing-source-error>
     <!-- Blob display -->

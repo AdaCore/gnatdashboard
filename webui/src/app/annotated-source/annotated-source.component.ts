@@ -1,6 +1,5 @@
-import { CORE_DIRECTIVES } from '@angular/common';
 import { Component } from '@angular/core';
-import { DomSanitizationService, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { highlightAuto } from 'highlight.js';
@@ -11,18 +10,12 @@ import {
     IGNAThubRule, IGNAThubTool
 } from 'gnat';
 
-import { Loader } from '../loader';
-import { MapValues } from '../object.pipe';
-import { MissingSourceError } from '../errors';
-
 import '../array-utils';
 
 @Component({
     selector: 'annotated-source',
     templateUrl: './annotated-source.template.html',
     styleUrls: [ './annotated-source.style.css' ],
-    directives: [ CORE_DIRECTIVES, Loader, MissingSourceError ],
-    pipes: [ MapValues ],
     providers: [ GNAThubService ]
 })
 export class AnnotatedSource {
@@ -35,7 +28,7 @@ export class AnnotatedSource {
     constructor(
         private gnathub: GNAThubService,
         private route: ActivatedRoute,
-        private sanitizer: DomSanitizationService) {}
+        private sanitizer: DomSanitizer) {}
 
     ngOnInit(): void {
         this.filename = this.route.snapshot.params['filename'];

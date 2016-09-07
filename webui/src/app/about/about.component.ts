@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
 
 import { GNAThubService } from '../gnathub.service';
 import { IGNAThubReport } from 'gnat';
-
-import { Count } from '../count.pipe';
-import { Loader } from '../loader';
-import { MissingReportError } from '../errors';
 
 import '../array-utils';
 
@@ -14,8 +9,6 @@ import '../array-utils';
     selector: 'about',
     templateUrl: './about.template.html',
     styleUrls: [ './about.style.css' ],
-    directives: [ CORE_DIRECTIVES, Loader, MissingReportError ],
-    pipes: [ Count ],
     providers: [ GNAThubService ]
 })
 export class About {

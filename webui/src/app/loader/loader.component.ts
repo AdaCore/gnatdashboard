@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'loader',
-    template: '<div class="loader">Loading...</div>',
+    templateUrl: './loader.template.html',
     styleUrls: [ './loader.style.css' ]
 })
-export class Loader {}
+export class Loader {
+    @Input() caption:string = null;
+}

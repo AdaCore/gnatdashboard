@@ -1,1 +1,1 @@
-export * from './main-responder.component.ts';
+export * from './main-responder.module.ts';

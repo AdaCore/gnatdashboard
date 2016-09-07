@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -7,17 +6,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { GNAThubService } from '../gnathub.service';
 import { IGNAThubReport } from 'gnat';
 
-import { Count } from '../count.pipe';
-import { Loader } from '../loader';
-import { MapKeys } from '../object.pipe';
-import { MissingReportError } from '../errors';
-
 @Component({
     selector: 'project',
     templateUrl: './project.template.html',
     styleUrls: [ './project.style.css' ],
-    directives: [ CORE_DIRECTIVES, Loader, MissingReportError ],
-    pipes: [ Count, MapKeys ],
     providers: [ GNAThubService ]
 })
 export class Project {
@@ -34,7 +26,7 @@ export class Project {
 
     ngOnInit(): void {
         this.project = this.route.snapshot.params['name'];
-        this.sub = this.router.routerState.queryParams.subscribe(params => {
+        this.sub = this.route.queryParams.subscribe(params => {
             this.directory = params['directory'];
         });
         this.gnathub.getReport().subscribe(

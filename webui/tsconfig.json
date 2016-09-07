@@ -5,6 +5,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "noEmitHelpers": true,
     "strictNullChecks": false,
@@ -16,7 +17,6 @@
       "es6"
     ],
     "types": [
-      "core-js",
       "hammerjs",
       "highlight.js",
       "jasmine",
