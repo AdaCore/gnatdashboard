@@ -59,15 +59,24 @@ declare module 'gnat' {
         ui_selected?: boolean;
     }
 
+    export interface IGNAThubProperty {
+        id: number;
+        identifier: string;
+        name: string;
+        message_count?: number;
+        ui_selected?: boolean;
+    }
+
     export interface IGNAThubMessage {
         begin: number;
         end: number;
         rule: IGNAThubRule;
+        properties: IGNAThubProperty[];
         message: string;
     }
 
     export interface IGNAThubBlobLine {
-        no: number;
+        number: number;
         content: string;
         coverage: CoverageStatus;
         messages: IGNAThubMessage[];
@@ -79,6 +88,7 @@ declare module 'gnat' {
         lines: IGNAThubBlobLine[];
         tools: { [id: number]: IGNAThubTool };
         rules: { [id: number]: IGNAThubRule };
+        properties: { [id: number]: IGNAThubProperty };
         metrics: IGNAThubMessage[];
     }
 }

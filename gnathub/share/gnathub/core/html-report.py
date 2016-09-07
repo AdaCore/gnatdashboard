@@ -202,11 +202,9 @@ class HTMLReport(GNAThub.Plugin):
         }, extra)
 
     @classmethod
-    def _encode_message_property(cls, msg, prop, extra=None):
+    def _encode_message_property(cls, prop, extra=None):
         """JSON-encode a message property
 
-        :param msg: the message
-        :type msg: GNAThub.Message
         :param prop: the property associated with the message
         :type prop: GNAThub.Property
         :param extra: extra fields to decorate the encoded object with
@@ -239,7 +237,7 @@ class HTMLReport(GNAThub.Plugin):
             'end': msg.col_end,
             'rule': cls._encode_rule(rule, tool),
             'properties': [
-                cls._encode_message_property(msg, prop)
+                cls._encode_message_property(prop)
                 for prop in msg.get_properties()
             ],
             'message': msg.data
@@ -263,13 +261,21 @@ class HTMLReport(GNAThub.Plugin):
 
         messages_from_db = GNAThub.Resource.get(source_file).list_messages()
 
-        tools, rules = {}, {}
+        tools, rules, properties = {}, {}, {}
         messages = collections.defaultdict(list)
         coverage = collections.defaultdict(str)
 
         for msg in messages_from_db:
             rule = self._rules_by_id[msg.rule_id]
             tool = self._tools_by_id[rule.tool_id]
+
+            for prop in msg.get_properties():
+                if prop.id not in properties:
+                    properties[prop.id] = self._encode_message_property(prop, {
+                        'message_count': 1
+                    })
+                else:
+                    properties[prop.id]['message_count'] += 1
 
             if msg.line != 0:
                 # Increment the count of inline messages
@@ -301,6 +307,7 @@ class HTMLReport(GNAThub.Plugin):
             'project': project_name,
             'filename': os.path.basename(source_file),
             'metrics': messages[0],
+            'properties': properties,
             'tools': tools,
             'rules': rules,
             'lines': None
@@ -379,6 +386,10 @@ class HTMLReport(GNAThub.Plugin):
             'rules': [
                 self._encode_rule(rule, self._tools_by_id[rule.tool_id])
                 for rule in self._rules_by_id.itervalues()
+            ],
+            'properties': [
+                self._encode_message_property(prop)
+                for prop in GNAThub.Property.list()
             ],
             '_database': GNAThub.database()
         }

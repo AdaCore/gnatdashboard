@@ -16,6 +16,7 @@
             <dt>Project</dt>
             <dd>{{ blob.project }}</dd>
         </dl>
+        <!-- File metrics -->
         <h4>Metrics</h4>
         <div *ngIf="!blob.metrics.length">
             <p class="no-metrics"><em>No metrics to display</em></p>
@@ -28,24 +29,37 @@
                 </template>
             </dl>
         </div>
+        <!-- Tool selector -->
         <h4>Tools</h4>
         <div class="tool-selector">
             <template ngFor let-tool [ngForOf]="blob.tools | mapValues">
                 <div class="tool">
                     <input type="checkbox" [(ngModel)]="tool.ui_selected" />
-                    <label class="tool-label">{{ tool.name }} ({{ tool.message_count }})</label>
+                    <label class="tool-label">{{ tool.name }} ({{ getToolMessageCount(tool) }})</label>
                 </div>
             </template>
         </div>
+        <!-- Rule selector -->
         <h4>Rules</h4>
         <div class="rule-selector">
             <template ngFor let-rule [ngForOf]="blob.rules | mapValues">
-                <div class="rule" *ngIf="blob.tools[rule.tool.id].ui_selected">
+                <div class="rule">
                     <input type="checkbox" [(ngModel)]="rule.ui_selected" />
-                    <label class="rule-label">{{ rule.name }} ({{ rule.message_count }})</label>
+                    <label class="rule-label">{{ rule.name }} ({{ getRuleMessageCount(rule) }})</label>
                 </div>
             </template>
         </div>
+        <!-- Property selector -->
+        <h4>Properties</h4>
+        <div class="property-selector">
+            <template ngFor let-property [ngForOf]="blob.properties | mapValues">
+                <div class="property">
+                    <input type="checkbox" [(ngModel)]="property.ui_selected" />
+                    <label class="property-label">{{ property.name }} ({{ getPropertyMessageCount(property) }})</label>
+                </div>
+            </template>
+        </div>
+        <!-- Annotated source -->
         <div class="editor read-only">
             <div class="file-header">
                 <div class="filename">{{ blob.filename }}</div>
@@ -66,14 +80,14 @@
                         <td class="blob-code" [innerHTML]="line.content"></td>
                     </tr>
                     <template ngFor let-message [ngForOf]="messages(line.number)">
-                        <tr class="inline-comment"
-                            *ngIf="blob.tools[message.rule.tool.id].ui_selected && blob.rules[message.rule.id].ui_selected"
-                        >
+                        <tr class="inline-comment" *ngIf="shouldDisplayMessage(message)">
                             <td colspan=2>
                                 <div class="message-properties" *ngIf="message.properties">
                                     <span class="message-property" *ngFor="let property of message.properties">{{ property.name }}</span>
                                 </div>
-                                <div class="message"><b>{{ message.rule.tool.name }}</b>: {{ message.message }} (<span class="rule-identifier">{{ message.rule.identifier }}</span>)</div>
+                                <div class="message">
+                                    <b>{{ message.rule.tool.name }}</b>: {{ message.message }} (<span class="rule-identifier">{{ message.rule.identifier }}</span>)
+                                </div>
                             </td>
                         </tr>
                     </template>

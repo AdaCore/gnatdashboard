@@ -6,7 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 import { highlightAuto } from 'highlight.js';
 
 import { GNAThubService } from '../gnathub.service';
-import { IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage } from 'gnat';
+import {
+    IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage, IGNAThubProperty,
+    IGNAThubRule, IGNAThubTool
+} from 'gnat';
 
 import { Loader } from '../loader';
 import { MapValues } from '../object.pipe';
@@ -40,11 +43,15 @@ export class AnnotatedSource {
             blob => {
                 for (let tool_id in blob.tools) {
                     // Show messages triggered by all tools by default
-                    blob.tools[tool_id]['ui_selected'] = true;
+                    blob.tools[tool_id].ui_selected = true;
                 }
                 for (let rule_id in blob.rules) {
                     // Show messages triggered by all rules by default
-                    blob.rules[rule_id]['ui_selected'] = true;
+                    blob.rules[rule_id].ui_selected = true;
+                }
+                for (let property_id in blob.properties) {
+                    // Show all messages with properties by default
+                    blob.properties[property_id].ui_selected = true;
                 }
                 this.blob = blob;
             },
@@ -52,19 +59,94 @@ export class AnnotatedSource {
     }
 
     /**
-     * @return The total number of displayed messages.
+     * Short-hand reduce operation on all messages of the file.
+     *
+     * @param callback Function to invoke on each message of the file.
+     * @param initialValue Optional. Value to use as the first argument to the
+     *      first call of the |callback|. Defaults to |0|.
+     * @return The value that results from the reduction.
      */
-    getMessageDisplayedCount():number {
+    private reduceMessages(
+        callback: (count: number, line: IGNAThubMessage) => number,
+        initialValue: number = 0): number
+    {
         if (!this.blob) {
             return 0;
         }
-        return Object.keys(this.blob.rules).sum(id => {
-            const rule = this.blob.rules[id];
-            if (rule.ui_selected && this.blob.tools[rule.tool.id].ui_selected) {
-                return rule.message_count;
-            }
-            return 0;
+        return this.blob.lines.reduce((count, line) => {
+            return count +
+                this.messages(line.number).reduce(callback, initialValue);
+        }, 0 /* initialValue */);
+    }
+
+    /**
+     * @return The total number of displayed messages.
+     */
+    getMessageDisplayedCount(): number {
+        return this.reduceMessages((count, message) => {
+            return count + (this.shouldDisplayMessage(message) ? 1 : 0);
         });
+    }
+
+    /**
+     * @param tool The tool which messages this function counts.
+     * @return The total number of messages displayed for a given tool.
+     */
+    getToolMessageCount(tool: IGNAThubTool): number {
+        return this.reduceMessages((count, message) => {
+            if (tool.id == message.rule.tool.id &&
+                this.blob.tools[message.rule.tool.id].ui_selected &&
+                this.shouldDisplayMessage(message))
+            {
+                return count + 1;
+            }
+            return count;
+        });
+    }
+
+    /**
+     * @param rule The rule which messages this function counts.
+     * @return The total number of messages displayed for a given rule.
+     */
+    getRuleMessageCount(rule: IGNAThubRule): number {
+        return this.reduceMessages((count, message) => {
+            if (rule.id == message.rule.id &&
+                this.blob.rules[message.rule.id].ui_selected &&
+                this.shouldDisplayMessage(message))
+            {
+                return count + 1;
+            }
+            return count;
+        });
+    }
+
+    /**
+     * @param property The property which messages this function counts.
+     * @return The total number of messages displayed for a given property.
+     */
+    getPropertyMessageCount(property: IGNAThubProperty): number {
+        return this.reduceMessages((count, message) => {
+            if (message.properties.some(p => p.id == property.id) &&
+                this.blob.properties[property.id].ui_selected &&
+                this.shouldDisplayMessage(message))
+            {
+                return count + 1;
+            }
+            return count;
+        });
+    }
+
+    /**
+     * @param message The message to display or not.
+     * @return Whether we should display the message given the current selection
+     *      of tools/rules/properties.
+     */
+    shouldDisplayMessage(message: IGNAThubMessage): boolean {
+        return this.blob.tools[message.rule.tool.id].ui_selected &&
+            this.blob.rules[message.rule.id].ui_selected &&
+            (!message.properties.length || message.properties.some(property => {
+                return this.blob.properties[property.id].ui_selected;
+            }));
     }
 
     /**
@@ -79,6 +161,10 @@ export class AnnotatedSource {
 
     /**
      * Highlight the whole file and return an array of lines.
+     *
+     * TODO(delay): highlight sources when generating the JSON files rather than
+     * on the client end. It makes no sense to re-compute the highlighting of
+     * entire files that never change over time.
      *
      * @return An array of HTML string with highlighting markup, or |null| if
      *      the blob is not loaded.
