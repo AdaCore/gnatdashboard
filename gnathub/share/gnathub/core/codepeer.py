@@ -152,6 +152,7 @@ class CodePeer(GNAThub.Plugin):
 
             # Create the tag "New" for new CodePeer messages
             new_tag = GNAThub.Property('codepeer:is-new', 'New')
+            unchanged_tag = GNAThub.Property('codepeer:unchanged', 'Unchanged')
 
             try:
                 # Parse the file and drop the first line (containing the
@@ -182,7 +183,7 @@ class CodePeer(GNAThub.Plugin):
 
                     self.__add_message(
                         source, line, column, rule_id, message, severity,
-                        [new_tag] if is_new == 'TRUE' else None
+                        [new_tag if is_new == 'TRUE' else unchanged_tag]
                     )
 
                     Console.progress(index, total, new_line=(index == total))
