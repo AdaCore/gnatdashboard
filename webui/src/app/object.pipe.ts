@@ -11,7 +11,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({ name: 'mapKeys'})
 export class MapKeys implements PipeTransform {
     transform(obj: { [key: string]: any }, args: any[] = null): string[] {
-        return obj ? Object.keys(obj): [];
+        return obj ? Object.keys(obj) : [];
     }
 }
 
@@ -26,6 +26,6 @@ export class MapKeys implements PipeTransform {
 @Pipe({ name: 'mapValues'})
 export class MapValues implements PipeTransform {
     transform(obj: { [key: string]: any }, args: any[] = null): string[] {
-        return obj ? Object.keys(obj).map(key => obj[key]): [];
+        return obj ? Object.keys(obj).map(key => obj[key]) : [];
     }
 }

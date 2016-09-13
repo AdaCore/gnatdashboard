@@ -36,17 +36,17 @@ export class AnnotatedSource {
         this.filename = this.route.snapshot.params['filename'];
         this.gnathub.getSource(this.filename).subscribe(
             blob => {
-                for (let tool_id in blob.tools) {
+                for (let toolId of Object.keys(blob.tools)) {
                     // Show messages triggered by all tools by default
-                    blob.tools[tool_id].ui_selected = true;
+                    blob.tools[toolId].ui_selected = true;
                 }
-                for (let rule_id in blob.rules) {
+                for (let ruleId of Object.keys(blob.rules)) {
                     // Show messages triggered by all rules by default
-                    blob.rules[rule_id].ui_selected = true;
+                    blob.rules[ruleId].ui_selected = true;
                 }
-                for (let property_id in blob.properties) {
+                for (let propertyId of Object.keys(blob.properties)) {
                     // Show all messages with properties by default
-                    blob.properties[property_id].ui_selected = true;
+                    blob.properties[propertyId].ui_selected = true;
                 }
                 this.blob = blob;
             },
@@ -77,7 +77,7 @@ export class AnnotatedSource {
     /**
      * @return The total number of displayed messages.
      */
-    getMessageDisplayedCount(): number {
+    private getMessageDisplayedCount(): number {
         return this.reduceMessages((count, message) => {
             return count + (this.shouldDisplayMessage(message) ? 1 : 0);
         });
@@ -87,9 +87,9 @@ export class AnnotatedSource {
      * @param tool The tool which messages this function counts.
      * @return The total number of messages displayed for a given tool.
      */
-    toolMessageCount = (tool: IGNAThubTool): number => {
+    private toolMessageCount = (tool: IGNAThubTool): number => {
         return this.reduceMessages((count, message) => {
-            if (tool.id == message.rule.tool.id &&
+            if (tool.id === message.rule.tool.id &&
                 this.blob.tools[message.rule.tool.id].ui_selected &&
                 this.shouldDisplayMessage(message))
             {
@@ -103,9 +103,9 @@ export class AnnotatedSource {
      * @param rule The rule which messages this function counts.
      * @return The total number of messages displayed for a given rule.
      */
-    ruleMessageCount = (rule: IGNAThubRule): number => {
+    private ruleMessageCount = (rule: IGNAThubRule): number => {
         return this.reduceMessages((count, message) => {
-            if (rule.id == message.rule.id &&
+            if (rule.id === message.rule.id &&
                 this.blob.rules[message.rule.id].ui_selected &&
                 this.shouldDisplayMessage(message))
             {
@@ -119,9 +119,9 @@ export class AnnotatedSource {
      * @param property The property which messages this function counts.
      * @return The total number of messages displayed for a given property.
      */
-    propertyMessageCount = (property: IGNAThubProperty): number => {
+    private propertyMessageCount = (property: IGNAThubProperty): number => {
         return this.reduceMessages((count, message) => {
-            if (message.properties.some(p => p.id == property.id) &&
+            if (message.properties.some(p => p.id === property.id) &&
                 this.blob.properties[property.id].ui_selected &&
                 this.shouldDisplayMessage(message))
             {
@@ -136,7 +136,7 @@ export class AnnotatedSource {
      * @return Whether we should display the message given the current selection
      *      of tools/rules/properties.
      */
-    shouldDisplayMessage(message: IGNAThubMessage): boolean {
+    private shouldDisplayMessage(message: IGNAThubMessage): boolean {
         return this.blob.tools[message.rule.tool.id].ui_selected &&
             this.blob.rules[message.rule.id].ui_selected &&
             (!message.properties.length || message.properties.some(property => {
@@ -151,7 +151,7 @@ export class AnnotatedSource {
      * @return The safe HTML.
      */
     private bypassSanitizer(value: string): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(value)
+        return this.sanitizer.bypassSecurityTrustHtml(value);
     }
 
     /**
@@ -164,7 +164,7 @@ export class AnnotatedSource {
      * @return An array of HTML string with highlighting markup, or |null| if
      *      the blob is not loaded.
      */
-    highlightedLines(): { number: number, content: SafeHtml }[] {
+    private highlightedLines(): { number: number, content: SafeHtml }[] {
         if (!this.blob || !this.blob.lines) {
             return [];
         }
@@ -200,7 +200,7 @@ export class AnnotatedSource {
      * @param line The line for which to list messages.
      * @return The list of messages.
      */
-    messages(line: number): IGNAThubMessage[] {
+    private messages(line: number): IGNAThubMessage[] {
         if (!this.blob || !this.blob.lines) {
             return [];
         }
@@ -213,7 +213,7 @@ export class AnnotatedSource {
      * @param line The line for which to get coverage information.
      * @return The coverage value.
      */
-    coverage(line: number): string {
+    private coverage(line: number): string {
         if (!this.blob || !this.blob.lines) {
             return '';
         }
@@ -226,7 +226,7 @@ export class AnnotatedSource {
      * @param code The source code to highlight.
      * @return The HTML string with highlighting markup.
      */
-    highlight(code: string): string {
+    private highlight(code: string): string {
         return highlightAuto(code).value;
     }
 }

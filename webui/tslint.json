@@ -107,7 +107,6 @@
     "no-constructor-vars": false,
     "one-line": [
       true,
-      "check-open-brace",
       "check-catch",
       "check-else",
       "check-finally",

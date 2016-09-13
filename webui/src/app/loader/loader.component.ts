@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
     styleUrls: [ './loader.style.css' ]
 })
 export class Loader {
-    @Input() caption:string = null;
+    @Input() caption: string = null;
 }
