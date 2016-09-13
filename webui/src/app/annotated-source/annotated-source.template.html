@@ -29,35 +29,19 @@
                 </template>
             </dl>
         </div>
-        <!-- Tool selector -->
-        <h4>Tools</h4>
-        <div class="tool-selector">
-            <template ngFor let-tool [ngForOf]="blob.tools | mapValues">
-                <div class="tool">
-                    <input type="checkbox" [(ngModel)]="tool.ui_selected" />
-                    <label class="tool-label">{{ tool.name }} ({{ getToolMessageCount(tool) }})</label>
-                </div>
-            </template>
-        </div>
-        <!-- Rule selector -->
-        <h4>Rules</h4>
-        <div class="rule-selector">
-            <template ngFor let-rule [ngForOf]="blob.rules | mapValues">
-                <div class="rule">
-                    <input type="checkbox" [(ngModel)]="rule.ui_selected" />
-                    <label class="rule-label">{{ rule.name }} ({{ getRuleMessageCount(rule) }})</label>
-                </div>
-            </template>
-        </div>
-        <!-- Property selector -->
-        <h4>Properties</h4>
-        <div class="property-selector">
-            <template ngFor let-property [ngForOf]="blob.properties | mapValues">
-                <div class="property">
-                    <input type="checkbox" [(ngModel)]="property.ui_selected" />
-                    <label class="property-label">{{ property.name }} ({{ getPropertyMessageCount(property) }})</label>
-                </div>
-            </template>
+        <div class="option-selectors">
+            <!-- Tool selector -->
+            <option-selector class="tool-selector" title="Tools"
+                [options]="blob.tools | mapValues" [optionCount]="toolMessageCount">
+            </option-selector>
+            <!-- Rule selector -->
+            <option-selector class="rule-selector" title="Rules"
+                [options]="blob.rules | mapValues" [optionCount]="ruleMessageCount">
+            </option-selector>
+            <!-- Property selector -->
+            <option-selector class="property-selector" title="Properties"
+                [options]="blob.properties | mapValues" [optionCount]="propertyMessageCount">
+            </option-selector>
         </div>
         <!-- Annotated source -->
         <div class="editor read-only">

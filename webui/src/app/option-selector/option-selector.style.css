@@ -1,0 +1,32 @@
+.option-selector {
+  display: inline-block;
+  width: 100%;
+  min-width: 400px;
+
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+
+  & .option {
+    display: flex;
+
+    &.even { background-color: #f7f7f7; }
+
+    & input[type="checkbox"] {
+      margin-right: 16px;
+    }
+
+    & label.option-label {
+      flex-grow: 1;
+      padding: 5px;
+      padding-left: 16px;
+      margin-bottom: 0;  /* LABEL tags have a "margin-bottom: 5px" default */
+
+      font-weight: normal;
+    }
+
+    & .option-count {
+      color: #777;
+      padding: 5px 16px;
+    }
+  }
+}

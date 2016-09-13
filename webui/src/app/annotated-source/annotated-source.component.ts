@@ -25,6 +25,8 @@ export class AnnotatedSource {
     private htmlLines: { number: number, content: SafeHtml }[] = null;
     private htmlLinesOfBlob: IGNAThubBlob = null;
 
+    private filters: any = null;
+
     constructor(
         private gnathub: GNAThubService,
         private route: ActivatedRoute,
@@ -85,7 +87,7 @@ export class AnnotatedSource {
      * @param tool The tool which messages this function counts.
      * @return The total number of messages displayed for a given tool.
      */
-    getToolMessageCount(tool: IGNAThubTool): number {
+    toolMessageCount = (tool: IGNAThubTool): number => {
         return this.reduceMessages((count, message) => {
             if (tool.id == message.rule.tool.id &&
                 this.blob.tools[message.rule.tool.id].ui_selected &&
@@ -101,7 +103,7 @@ export class AnnotatedSource {
      * @param rule The rule which messages this function counts.
      * @return The total number of messages displayed for a given rule.
      */
-    getRuleMessageCount(rule: IGNAThubRule): number {
+    ruleMessageCount = (rule: IGNAThubRule): number => {
         return this.reduceMessages((count, message) => {
             if (rule.id == message.rule.id &&
                 this.blob.rules[message.rule.id].ui_selected &&
@@ -117,7 +119,7 @@ export class AnnotatedSource {
      * @param property The property which messages this function counts.
      * @return The total number of messages displayed for a given property.
      */
-    getPropertyMessageCount(property: IGNAThubProperty): number {
+    propertyMessageCount = (property: IGNAThubProperty): number => {
         return this.reduceMessages((count, message) => {
             if (message.properties.some(p => p.id == property.id) &&
                 this.blob.properties[property.id].ui_selected &&

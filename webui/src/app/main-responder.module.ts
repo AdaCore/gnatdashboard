@@ -22,6 +22,7 @@ import { Loader } from './loader';
 import { MapKeys, MapValues } from './object.pipe';
 import { MissingSourceError, MissingReportError } from './errors';
 import { NoContent } from './no-content';
+import { OptionSelector } from './option-selector';
 import { Project } from './project';
 import { Report } from './report';
 import { SourceList } from './source-list';
@@ -53,6 +54,7 @@ type StoreType = {
     MissingReportError,
     MissingSourceError,
     NoContent,
+    OptionSelector,
     Project,
     Report,
     SourceList

@@ -1,0 +1,12 @@
+<h4>{{ title }}</h4>
+<div class="option-selector tool-selector">
+    <template ngFor let-option [ngForOf]="options" let-isEven="even">
+        <div class="option tool" [ngClass]="{even: isEven}">
+            <label class="option-label tool-label">
+                <input type="checkbox" [(ngModel)]="option.ui_selected" />
+                {{ option.name }}
+            </label>
+            <span class="option-count">{{ optionCount(option) }}</span>
+        </div>
+    </template>
+</div>

@@ -7,7 +7,7 @@ p.no-metrics { margin: 16px; }
   min-width: 90ch;
   overflow: hidden;
   border-radius: 2px;
-  border: 1px solid #adb9cc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 /* TODO(delay): should only be the case for Ada sources */
@@ -122,3 +122,18 @@ tr.blob {
 }
 
 tr.inline-comment td { border-left: 0; }
+
+div.option-selectors {
+  display: flex;
+  flex-flow: row wrap;
+
+  & option-selector { flex-grow: 1; }
+
+  /*
+   * Set distance between flexbox items. Distance = abs(-8px) + abs(8px) = 16px
+   */
+  margin: 0 -8px;
+  & option-selector { padding: 0 8px; }
+
+  margin-bottom: 16px;
+}
