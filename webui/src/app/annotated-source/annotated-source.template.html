@@ -32,14 +32,17 @@
         <div class="option-selectors">
             <!-- Tool selector -->
             <option-selector class="tool-selector" title="Tools"
+                *ngIf="blob.tools | notEmpty"
                 [options]="blob.tools | mapValues" [optionCount]="toolMessageCount">
             </option-selector>
             <!-- Rule selector -->
             <option-selector class="rule-selector" title="Rules"
+                *ngIf="blob.rules | notEmpty"
                 [options]="blob.rules | mapValues" [optionCount]="ruleMessageCount">
             </option-selector>
             <!-- Property selector -->
             <option-selector class="property-selector" title="Properties"
+                *ngIf="blob.properties | notEmpty"
                 [options]="blob.properties | mapValues" [optionCount]="propertyMessageCount">
             </option-selector>
         </div>

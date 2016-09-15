@@ -19,7 +19,7 @@ import { About } from './about';
 import { AnnotatedSource } from './annotated-source';
 import { Count } from './count.pipe';
 import { Loader } from './loader';
-import { MapKeys, MapValues } from './object.pipe';
+import { MapKeys, MapValues, NotEmpty } from './object.pipe';
 import { MissingSourceError, MissingReportError } from './errors';
 import { NoContent } from './no-content';
 import { OptionSelector } from './option-selector';
@@ -54,6 +54,7 @@ type StoreType = {
     MissingReportError,
     MissingSourceError,
     NoContent,
+    NotEmpty,
     OptionSelector,
     Project,
     Report,

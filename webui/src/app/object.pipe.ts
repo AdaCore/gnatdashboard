@@ -29,3 +29,15 @@ export class MapValues implements PipeTransform {
         return obj ? Object.keys(obj).map(key => obj[key]) : [];
     }
 }
+
+/**
+ * Pipe to check whether object is object or not.
+ *
+ * An object is empty iff it has 0 keys.
+ */
+@Pipe({ name: 'notEmpty'})
+export class NotEmpty implements PipeTransform {
+    transform(obj: { [key: string]: any }, args: any[] = null): boolean {
+        return Object.keys(obj).length !== 0;
+    }
+}
