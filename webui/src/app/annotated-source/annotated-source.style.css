@@ -1,13 +1,56 @@
-div.loader { margin-top: 16px; }
+h3.source-head {
+  font-size: 18px;
+  font-weight: normal;
 
-p.no-metrics { margin: 16px; }
+  line-height: 26px;
+  color: #666;
 
-.editor {
-  width: 100%;
-  min-width: 90ch;
-  overflow: hidden;
+  & span.path-divider { margin: 0 0.25em; }
+  & strong {
+    color: #444;
+    font-weight: 500;
+  }
+}
+
+.file-header,
+.metric-value {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+div.option-selectors {
+  display: flex;
+  flex-flow: row wrap;
+  & option-selector { flex-grow: 1; }
+
+  /*
+   * Set distance between flexbox items. Distance = abs(-8px) + abs(8px) = 16px
+   */
+  margin: 0 -8px;
+  & option-selector { padding: 0 8px; }
+
+  margin-bottom: 16px;
+}
+
+.missing-file-content {
+  & h4 {
+    color: #ce4844;
+    font-size: 18px;
+
+    margin-top: 0;
+    margin-bottom: 5px;
+  }
+
+  & p { margin-bottom: 0; }
+
   border-radius: 2px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-left-color: #ce4844;
+
+  padding: 20px;
+  margin-top: 20px;
+
+  font-size: 14px;
 }
 
 .file {

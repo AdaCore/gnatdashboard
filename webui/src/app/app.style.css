@@ -4,6 +4,7 @@ body {
   font-feature-settings: "kern", "liga", "clig", "calt";
 
   font-family: -apple-system, "Helvetica Neue", "Helvetica", sans-serif;
+  font-size: 13px;
 }
 
 h1,

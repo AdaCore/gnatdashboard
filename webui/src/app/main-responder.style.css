@@ -1,4 +1,14 @@
 section {
   display: block;
-  padding: 10px;
+  padding: 0 20px;
 }
+
+header { border-bottom: 1px solid #e5e5e5; }
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav > li > a       {
+            color: #333333;
+  &:hover { color: #4078c0; }
+}
+
+.navbar-default .navbar-nav > li > a { font-weight: bold; }

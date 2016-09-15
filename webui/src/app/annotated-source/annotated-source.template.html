@@ -8,19 +8,14 @@
     <missing-source-error *ngIf="isBlobFetchError" [filename]="filename"></missing-source-error>
     <!-- Blob display -->
     <div *ngIf="blob">
-        <h4>Source file details</h4>
-        <dl class="dl-horizontal">
-            <dt>Filename</dt>
-            <dd><span class="filename">{{ blob.filename }}</span></dd>
-
-            <dt>Project</dt>
-            <dd>{{ blob.project }}</dd>
-        </dl>
+        <h3 class="source-head">
+            <span class="project">
+                <a [routerLink]="['/project', blob.project]">{{ blob.project }}</a>
+            </span>
+            <span class="path-divider">/</span>
+            <strong>{{ blob.filename }}</strong>
+        </h3>
         <!-- File metrics -->
-        <h4>Metrics</h4>
-        <div *ngIf="!blob.metrics.length">
-            <p class="no-metrics"><em>No metrics to display</em></p>
-        </div>
         <div *ngIf="blob.metrics">
             <dl class="dl-horizontal">
                 <template ngFor let-metric [ngForOf]="blob.metrics">

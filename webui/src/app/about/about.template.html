@@ -28,13 +28,6 @@
 
             <dt>Total plugins executed</dt>
             <dd>{{ report.tools | count }}</dd>
-
-            <dt>Plugins executed</dt>
-            <dd>
-                <ul>
-                    <li *ngFor="let tool of report.tools">{{ tool.name }}</li>
-                </ul>
-            </dd>
         </dl>
     </div>
 </div>
