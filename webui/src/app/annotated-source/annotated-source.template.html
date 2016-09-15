@@ -61,7 +61,7 @@
                         <td class="blob-number">{{ line.number }}</td>
                         <!-- line.content may contain escaped HTML entities.
                              Use AngularJS embedded sanitizer to render it.  -->
-                        <td class="blob-code" [innerHTML]="line.content"></td>
+                        <td class="blob-code" [innerHTML]="bypassSanitizer(line.html_content)"></td>
                     </tr>
                     <template ngFor let-message [ngForOf]="messages(line.number)">
                         <tr class="inline-comment" *ngIf="shouldDisplayMessage(message)">

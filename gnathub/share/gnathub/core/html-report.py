@@ -28,7 +28,20 @@ import os
 import time
 
 from GNAThub import Console
+
+from pygments import highlight
+from pygments.lexers import guess_lexer_for_filename
+from pygments.formatters import HtmlFormatter
+
 from shutil import copy2, copytree, rmtree
+
+
+class _HtmlFormatter(HtmlFormatter):
+    """Custom implementation of the HTML formatter."""
+
+    def wrap(self, source, _):
+        # The default wrap() implementation adds a <div> and a <pre> tag.
+        return source
 
 
 class HTMLReport(GNAThub.Plugin):
@@ -313,14 +326,23 @@ class HTMLReport(GNAThub.Plugin):
             'lines': None
         }
 
+        # Custom HTML formatter outputting an array of HTMLified line of code.
+        formatter = _HtmlFormatter()
+
         try:
             with open(source_file, 'r') as infile:
-                src_hunk['lines'] = [{
-                    'number': no,
-                    'content': line,
-                    'coverage': coverage[no],
-                    'messages': messages[no]
-                } for no, line in enumerate(infile, start=1)]
+                content = infile.read()
+
+            lexer = guess_lexer_for_filename(source_file, content)
+            highlighted = highlight(content, lexer, formatter).splitlines()
+
+            src_hunk['lines'] = [{
+                'number': no,
+                'content': line,
+                'html_content': highlighted[no - 1],
+                'coverage': coverage[no],
+                'messages': messages[no]
+            } for no, line in enumerate(content.splitlines(), start=1)]
         except IOError:
             self.log.exception('failed to read source file: %s', source_file)
             self.warn('failed to read source file: %s', source_file)
@@ -417,6 +439,7 @@ class HTMLReport(GNAThub.Plugin):
                 return '{}.{}'.format(os.path.join(
                     data_src_output_dir, source['filename']), ext)
 
+            self.log.debug('processing %s', source['filename'])
             src_hunk = self._generate_report_src_hunk(
                 project, os.path.join(source_dir, source['filename']))
             self._write_json(_fname('json'), src_hunk, indent=2)

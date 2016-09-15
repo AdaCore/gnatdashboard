@@ -4,6 +4,10 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'main-responder',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './main-responder.template.html',
-    styleUrls: [ './app.style.css', './main-responder.style.css' ]
+    styleUrls: [
+        './app.style.css',
+        './main-responder.style.css',
+        './pygments-github.style.css'
+    ]
 })
 export class MainResponder {}

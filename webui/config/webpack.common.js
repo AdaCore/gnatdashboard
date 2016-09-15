@@ -211,7 +211,6 @@ module.exports = {
      * See: https://www.npmjs.com/package/copy-webpack-plugin
      */
     new CopyWebpackPlugin([
-      { from: 'node_modules/highlight.js/styles', to: 'assets/highlight.js/styles' },
       { from: 'node_modules/bootstrap/dist/css', to: 'assets/bootstrap/css' },
       { from: 'node_modules/bootstrap/dist/fonts', to: 'assets/bootstrap/fonts' },
       { from: 'src/assets', to: 'assets' },

@@ -78,6 +78,7 @@ declare module 'gnat' {
     export interface IGNAThubBlobLine {
         number: number;
         content: string;
+        html_content: string;
         coverage: CoverageStatus;
         messages: IGNAThubMessage[];
     }

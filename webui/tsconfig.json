@@ -18,7 +18,6 @@
     ],
     "types": [
       "hammerjs",
-      "highlight.js",
       "jasmine",
       "node",
       "protractor",
