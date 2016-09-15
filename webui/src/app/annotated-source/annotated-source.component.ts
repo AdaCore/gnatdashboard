@@ -50,6 +50,32 @@ export class AnnotatedSource {
     }
 
     /**
+     * @param metricId The identifier of the metric to look for.
+     * @return Whether such a metric has been computed for this file.
+     */
+    private hasMetric(metricId: string): boolean {
+        for (let metric of this.blob.metrics) {
+            if (metric.rule.identifier === metricId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param metricId The identifier of the metric to look for.
+     * @return The value of the metric if found, |null| otherwise.
+     */
+    private getMetricValue(metricId: string): string {
+        for (let metric of this.blob.metrics) {
+            if (metric.rule.identifier === metricId) {
+                return metric.message;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Short-hand reduce operation on all messages of the file.
      *
      * @param callback Function to invoke on each message of the file.
@@ -148,6 +174,19 @@ export class AnnotatedSource {
      */
     private bypassSanitizer(value: string): SafeHtml {
         return this.sanitizer.bypassSecurityTrustHtml(value);
+    }
+
+    /**
+     *
+     * @param line The line for which to check messages.
+     * @return Whether some messages should be displayed.
+     */
+    private hasDisplayableMessage(line: number): boolean {
+        if (!this.blob || !this.blob.lines) {
+            return false;
+        }
+        return this.blob.lines[line - 1].messages.some(
+            message => this.shouldDisplayMessage(message))
     }
 
     /**

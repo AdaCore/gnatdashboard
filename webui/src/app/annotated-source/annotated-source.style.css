@@ -10,11 +10,14 @@ p.no-metrics { margin: 16px; }
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-/* TODO(delay): should only be the case for Ada sources */
-table { tab-size: 3; }
+.file {
+  font-size: 12px;
+  border-radius: 2px;
+  border: 1px solid #dddddd;
+}
 
 .file-header {
-  padding: 10px 15px;
+  padding: 5px 15px;
   background-color: #f7f7f7;
   border-bottom: 1px solid #d8d8d8;
   border-top: 1px solid transparent;  /* to balance the 1px border-bottom */
@@ -22,117 +25,91 @@ table { tab-size: 3; }
   color: #333;
   cursor: default;
 
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  & .file-info {
+    font-size: 12px;
+    line-height: 32px;
 
-  & > div {
-    flex-grow: 1;
+    &-divider {
+      width: 1px;
+      display: inline-block;
+      height: 18px;
+      margin-left: 3px;
+      margin-right: 3px;
+      vertical-align: middle;
+      background-color: #dddddd;
+    }
+  }
+}
 
-    font-size: 1.2rem;
-    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    white-space: nowrap;
+.blob-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
 
-    &.message-count {
-      text-align: right;
+  & table.file-line-container {
+    tab-size: 3;  /* TODO(delay): should only be the case for Ada sources */
 
-      & span {
-        border-radius: 2px;
-        padding: 6px 8px 4px 8px;
-        background-color: #f7f7f7;
-        box-shadow:
-          0 1px 3px rgba(0, 0, 0, 0.12),
-          0 1px 2px rgba(0, 0, 0, 0.24);
+    & tr {
+      &:hover {
+        &.no_code td.blob-num { background-color: #edf2f9; }
+        & td.blob-code { background-color: #f4f7fb; }
+      }
+
+      /* Line covered */
+      &.covered td.blob-num { background-color: #dbffdb; }
+      &:hover.covered td.blob-code { background-color: #eaffea; }
+
+      /* Line not covered */
+      &.not_covered td.blob-num,
+      &:hover.not_covered td.blob-code {
+        background-color: #fdd;
+      }
+      &.not_covered td.blob-code { background-color: #ffecec; }
+
+      /* Line partially covered */
+      &.partially_covered td.blob-num,
+      &:hover.partially_covered td.blob-code {
+        background-color: #fbe597;
+      }
+      &.partially_covered td.blob-code { background-color: #faefc8; }
+
+      &.inline-comments td {
+        padding: 8px;
+        border-left: 0;
+        border-color: #eeeeee;
+      }
+
+      & .blob-num,
+      & .blob-code {
+        font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        font-size: 1.2rem;
+        line-height: 1.5em;
+        padding: 0 2ch;
+        white-space: pre;
+        border: 0;
+        vertical-align: middle;
+        cursor: default;
+      }
+
+      & .blob-num {
+        color: color(black alpha(-70%));
+        width: 1%;
+        min-width: 50px;
+        white-space: nowrap;
+        text-align: right;
+        vertical-align: top;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-right: 1px solid #eeeeee;
       }
     }
   }
 }
 
-tr.blob {
-  &.odd { background-color: #f8f8f8; }
-  &:hover {
-    &.no_code td.blob-number { background-color: #edf2f9; }
-    & td.blob-code { background-color: #f4f7fb; }
-  }
+inline-comment {
+  display: block;
 
-  /* Line covered */
-  &.covered td.blob-number { background-color: #dbffdb; }
-  &:hover.covered td.blob-code { background-color: #eaffea; }
-
-  /* Line not covered */
-  &.not_covered td.blob-number,
-  &:hover.not_covered td.blob-code {
-    background-color: #fdd;
-  }
-  &.not_covered td.blob-code { background-color: #ffecec; }
-
-  /* Line partially covered */
-  &.partially_covered td.blob-number,
-  &:hover.partially_covered td.blob-code {
-    background-color: #fbe597;
-  }
-  &.partially_covered td.blob-code { background-color: #faefc8; }
-
-  & td {
-    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    font-size: 1.2rem;
-    line-height: 1.5em;
-    padding: 0 2ch;
-    white-space: pre;
-    border: 0;
-    vertical-align: middle;
-    cursor: default;
-
-    &.blob-number {
-      color: color(black alpha(-70%));
-      width: 1%;
-      min-width: 50px;
-      white-space: nowrap;
-      text-align: right;
-      vertical-align: top;
-      padding-left: 10px;
-      padding-right: 10px;
-      background-color: #f7f7f7;
-      border-right: 1px solid #d8d8d8;
-    }
-  }
-}
-
-.filename,
-.metric-value,
-.rule-identifier {
-  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-}
-
-.message-property {
-  color: #db4437;
-  border-radius: 2px;
-  padding: 6px 8px 4px 8px;
-  margin-right: 8px;
-  background-color: #f7f7f7;
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.12),
-    0 1px 2px rgba(0, 0, 0, 0.24);
-}
-
-.message,
-.message-properties {
-  display: inline-block;
-}
-
-tr.inline-comment td { border-left: 0; }
-
-div.option-selectors {
-  display: flex;
-  flex-flow: row wrap;
-
-  & option-selector { flex-grow: 1; }
-
-  /*
-   * Set distance between flexbox items. Distance = abs(-8px) + abs(8px) = 16px
-   */
-  margin: 0 -8px;
-  & option-selector { padding: 0 8px; }
-
-  margin-bottom: 16px;
+  &            { margin-bottom: 8px; }
+  &:last-child { margin-bottom: 0; }
 }

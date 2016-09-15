@@ -1,0 +1,39 @@
+.rule-identifier {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.message-container {
+  border-radius: 2px;
+  border: 1px solid #dddddd;
+}
+
+.message-header {
+  padding: 5px 15px;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #d8d8d8;
+  border-top: 1px solid transparent;  /* to balance the 1px border-bottom */
+
+  color: #333;
+  cursor: default;
+
+  & .message-info {
+    font-size: 12px;
+    line-height: 24px;
+
+    &-divider {
+      width: 1px;
+      display: inline-block;
+      height: 18px;
+      margin-left: 3px;
+      margin-right: 3px;
+      vertical-align: middle;
+      background-color: #dddddd;
+    }
+  }
+}
+
+.message-text {
+  padding: 5px 15px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}

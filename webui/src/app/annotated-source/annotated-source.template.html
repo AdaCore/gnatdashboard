@@ -47,39 +47,44 @@
             </option-selector>
         </div>
         <!-- Annotated source -->
-        <div class="editor read-only">
+        <div class="file" *ngIf="blob.lines">
             <div class="file-header">
-                <div class="filename">{{ blob.filename }}</div>
-                <div class="message-count">
-                    <span>Displayed message count: {{ getMessageDisplayedCount() }}</span>
+                <div class="file-info">
+                    {{ blob.lines.length }} lines
+                    <template [ngIf]="hasMetric('code_lines')">
+                        ({{ getMetricValue('code_lines') }} sloc)
+                    </template>
+                    <div class="file-info-divider"></div>
+                    {{ getMessageDisplayedCount() }} messages displayed
                 </div>
             </div>
-            <table>
-                <template ngFor let-line [ngForOf]="highlightedLines()" let-isOdd="odd">
-                    <tr class="blob" [ngClass]="{
-                            odd: isOdd,
-                            covered: coverage(line.number) == 'COVERED',
-                            not_covered: coverage(line.number) == 'NOT_COVERED'
-                        }">
-                        <td class="blob-number">{{ line.number }}</td>
-                        <!-- line.content may contain escaped HTML entities.
-                             Use AngularJS embedded sanitizer to render it.  -->
-                        <td class="blob-code" [innerHTML]="bypassSanitizer(line.html_content)"></td>
-                    </tr>
-                    <template ngFor let-message [ngForOf]="messages(line.number)">
-                        <tr class="inline-comment" *ngIf="shouldDisplayMessage(message)">
-                            <td colspan=2>
-                                <div class="message-properties" *ngIf="message.properties">
-                                    <span class="message-property" *ngFor="let property of message.properties">{{ property.name }}</span>
-                                </div>
-                                <div class="message">
-                                    <b>{{ message.rule.tool.name }}</b>: {{ message.message }} (<span class="rule-identifier">{{ message.rule.identifier }}</span>)
-                                </div>
-                            </td>
+            <div class="blob-wrapper">
+                <table class="file-line-container">
+                    <template ngFor let-line [ngForOf]="blob.lines">
+                        <tr [ngClass]="{
+                                covered: coverage(line.number) == 'COVERED',
+                                not_covered: coverage(line.number) == 'NOT_COVERED'
+                            }">
+                            <td class="blob-num">{{ line.number }}</td>
+                            <!-- line.content may contain escaped HTML entities.
+                                Use AngularJS embedded sanitizer to render it.  -->
+                            <td class="blob-code" [innerHTML]="bypassSanitizer(line.html_content)"></td>
                         </tr>
+                        <template [ngIf]="hasDisplayableMessage(line.number)">
+                            <tr class="inline-comments">
+                                <td colspan=2>
+                                    <template ngFor let-message [ngForOf]="messages(line.number)">
+                                        <inline-comment
+                                            *ngIf="shouldDisplayMessage(message)"
+                                            [message]="message">
+                                        </inline-comment>
+                                    </template>
+                                </td>
+                            </tr>
+                        </template>
                     </template>
-                </template>
-            </table>
+                </table>
+            </div>
         </div>
     </div>
 </div>

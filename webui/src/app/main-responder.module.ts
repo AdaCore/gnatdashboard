@@ -18,6 +18,7 @@ import { AppState, InteralStateType } from './main-responder.service';
 import { About } from './about';
 import { AnnotatedSource } from './annotated-source';
 import { Count } from './count.pipe';
+import { InlineComment } from './inline-comment';
 import { Loader } from './loader';
 import { MapKeys, MapValues, NotEmpty } from './object.pipe';
 import { MissingSourceError, MissingReportError } from './errors';
@@ -48,6 +49,7 @@ type StoreType = {
     About,
     AnnotatedSource,
     Count,
+    InlineComment,
     Loader,
     MapKeys,
     MapValues,

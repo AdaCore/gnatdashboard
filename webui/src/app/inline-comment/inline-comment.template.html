@@ -1,0 +1,14 @@
+<div class="message-container">
+    <div class="message-header">
+        <div class="message-info">
+            {{ message.rule.tool.name }}
+            <div class="message-info-divider"></div>
+            <span class="rule-identifier">{{ message.rule.identifier }}</span>
+            <template ngFor let-property [ngForOf]="message.properties">
+                <div class="message-info-divider"></div>
+                {{ property.name }}
+            </template>
+        </div>
+    </div>
+    <div class="message-text">{{ message.message }}</div>
+</div>
