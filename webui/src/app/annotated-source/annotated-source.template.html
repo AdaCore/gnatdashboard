@@ -47,6 +47,13 @@
             </option-selector>
         </div>
         <!-- Annotated source -->
+        <div class="missing-file-content" *ngIf="!blob.lines">
+            <h4>Missing file content</h4>
+            <p>
+                This is most likely due to an error during the HTML report
+                generation.
+            </p>
+        </div>
         <div class="file" *ngIf="blob.lines">
             <div class="file-header">
                 <div class="file-info">

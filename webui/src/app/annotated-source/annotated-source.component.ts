@@ -87,7 +87,7 @@ export class AnnotatedSource {
         callback: (count: number, line: IGNAThubMessage) => number,
         initialValue: number = 0): number
     {
-        if (!this.blob) {
+        if (!this.blob || !this.blob.lines) {
             return 0;
         }
         return this.blob.lines.reduce((count, line) => {
