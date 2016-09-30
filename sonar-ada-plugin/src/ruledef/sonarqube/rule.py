@@ -145,18 +145,19 @@ class RulesDefinition(set):
         """
         return self.__repository_key
 
-    def add(self, rule):
-        """Add a new rule
+    def update(self, rules):
+        """Update rules in the set
 
         Return the object to allow methods chaining.
 
-        :param rule: the rule to add to the repository
-        :type rule: Rule
+        :param rules: the list of rules to add to the repository
+        :type rule: list[Rule]
         :rtype: RulesDefinition
         """
-        if rule in self:
-            raise KeyError('rule already exists: {}'.format(rule))
-        super(RulesDefinition, self).add(rule)
+        for rule in rules:
+            if rule in self:
+                raise KeyError('rule already exists: {}'.format(rule))
+            super(RulesDefinition, self).add(rule)
         return self
 
 
@@ -219,7 +220,7 @@ class RulesDefinitionXmlReader(object):
         """
         dom = lxml.etree.parse(filename)
         for node in dom.findall('rule'):
-            rules.add(self.__load_rule(node, dom))
+            rules.add([self.__load_rule(node, dom)])
 
     def __load_rule(self, node, dom):
         """Load a rule from an XML node

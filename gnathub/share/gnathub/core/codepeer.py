@@ -176,6 +176,11 @@ class CodePeer(GNAThub.Plugin):
                         category, message
                     ) = record[:9]
 
+                    if not severity or severity == 'suppressed':
+                        # Some versions of codepeer report an empty severity
+                        # for suppressed messages: map this to 'info'.
+                        severity = 'info'
+
                     rule_id = ':'.join((
                         category.lower(),
                         rule.lower().partition(';')[0].replace(' ', '_')

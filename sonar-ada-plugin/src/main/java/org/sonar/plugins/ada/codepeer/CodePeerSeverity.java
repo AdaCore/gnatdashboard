@@ -28,7 +28,8 @@ import org.sonar.api.rule.Severity;
  */
 @AllArgsConstructor
 public enum CodePeerSeverity {
-    HIGH(Severity.CRITICAL), MEDIUM(Severity.MAJOR), LOW(Severity.MINOR);
+    HIGH(Severity.CRITICAL), MEDIUM(Severity.MAJOR), LOW(Severity.MINOR),
+    INFO(Severity.INFO);
 
     @Getter private final String sonarSeverity;
 }

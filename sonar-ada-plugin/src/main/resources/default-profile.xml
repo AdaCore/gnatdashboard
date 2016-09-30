@@ -4,11 +4,35 @@
   <language>ada</language>
   <rules>
     <rule>
+      <key>suppressed:subp_never_returns</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
       <key>race_condition:mismatched_protected_access</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>race_condition:unprotected_shared_access</key>
+      <key>suppressed:loop_does_not_complete_normally</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:unassigned_parameter</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>check:range_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:assertion</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:access_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>check:assertion</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
@@ -20,15 +44,75 @@
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>check:user_precondition</key>
+      <key>suppressed:unprotected_shared_access</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>check:floating_point_underflow</key>
+      <key>warning:unused_assignment</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>check:validity_check</key>
+      <key>suppressed:dead_code</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>race_condition:unprotected_shared_access</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:test_always_false</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:postcondition</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:unused_assignment_to_global</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:subp_not_analyzed</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:discriminant_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:test_always_true</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>check:discriminant_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:tag_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:unused_out_parameter</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:useless_self_assignment</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:module_analyzed</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:conditional_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:aliasing_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>warning:subp_always_fails</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
@@ -36,7 +120,15 @@
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
+      <key>suppressed:unused_assignment</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
       <key>informational:subp_not_available</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:precondition</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
@@ -52,11 +144,19 @@
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>warning:unused_assignment_to_global</key>
+      <key>suppressed:user_precondition</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>warning:unused_assignment</key>
+      <key>check:access_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:subp_not_available</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:overflow_check</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
@@ -64,15 +164,15 @@
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
+      <key>suppressed:condition_predetermined</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>check:user_precondition</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
       <key>warning:suspicious_input</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>informational:subp_not_analyzed</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>check:assertion</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
@@ -84,11 +184,11 @@
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>check:access_check</key>
+      <key>warning:unused_assignment_to_global</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>warning:dead_code</key>
+      <key>suppressed:divide_by_zero</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
@@ -96,7 +196,15 @@
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
+      <key>warning:dead_code</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
       <key>warning:loop_does_not_complete_normally</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:validity_check</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
@@ -108,11 +216,31 @@
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
+      <key>suppressed:unprotected_access</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>informational:subp_not_analyzed</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>warning:test_always_false</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
       <key>warning:subp_never_returns</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>check:range_check</key>
+      <key>suppressed:unread_parameter</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>check:validity_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:module_not_analyzed</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
@@ -128,19 +256,43 @@
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>warning:test_always_false</key>
+      <key>warning:unread_parameter</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>warning:unassigned_parameter</key>
+      <key>suppressed:mismatched_protected_access</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>check:discriminant_check</key>
+      <key>suppressed:test_predetermined</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:suspicious_input</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:subp_always_fails</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:call_too_complex</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
       <key>check:array_index_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:array_index_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:suspicious_precondition</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
+      <key>suppressed:raise_exception</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
@@ -152,15 +304,19 @@
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
+      <key>suppressed:range_check</key>
+      <repositoryKey>codepeer</repositoryKey>
+    </rule>
+    <rule>
       <key>check:precondition</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>warning:subp_always_fails</key>
+      <key>warning:unassigned_parameter</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>
-      <key>warning:unread_parameter</key>
+      <key>suppressed:suspicious_constant_operation</key>
       <repositoryKey>codepeer</repositoryKey>
     </rule>
     <rule>

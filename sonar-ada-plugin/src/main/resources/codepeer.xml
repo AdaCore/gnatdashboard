@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rules>
   <rule>
+    <key>suppressed:subp_never_returns</key>
+    <name>subp never returns</name>
+    <description>The subprogram will never return, presumably because of an infinite loop. There will typically be an additional message in the subprogram body (e.g. test always false) explaining why the subprogram never returns.</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
     <key>check:conditional_check</key>
     <name>conditional check</name>
     <description>An exception could be raised depending on the outcome of a conditional test in user code.</description>
@@ -8,18 +15,39 @@
     <tag>check</tag>
   </rule>
   <rule>
-    <key>informational:subp_not_available</key>
-    <name>subp not available; call not analyzed</name>
-    <description>Indicates that CodePeer cannot analyze the call because the called subprogram is not available. There are two possible reasons for this: the .scil file for the called subprogram is not supplied in the library file, or the called subprogram is analyzed in a different partition. CodePeer will report any presumptions it makes about the results/effects of the otherwise unanalyzed call. These should be reviewed to be sure they are appropriate.</description>
+    <key>suppressed:test_always_false</key>
+    <name>test always false</name>
+    <description>Same as above, with an additional indication that the test always evaluates to false (CWE 561).</description>
     <tag>codepeer</tag>
-    <tag>informational</tag>
+    <tag>warning</tag>
   </rule>
   <rule>
-    <key>warning:unassigned_parameter</key>
+    <key>suppressed:loop_does_not_complete_normally</key>
+    <name>loop does not complete normally</name>
+    <description>Indicates loops that either run forever or fail to terminate normally (CWE 835).</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:unassigned_parameter</key>
     <name>unassigned parameter</name>
     <description>A parameter of a scalar type of mode in out is never assigned, and so could be declared with mode in.</description>
     <tag>codepeer</tag>
     <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:assertion</key>
+    <name>assertion</name>
+    <description>A user assertion (using e.g. pragma Assert or precondition) could fail. The precondition may be written as a pragma Precondition, or as a Pre aspect in Ada 2012 syntax.</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
+  </rule>
+  <rule>
+    <key>check:divide_by_zero</key>
+    <name>divide by zero</name>
+    <description>Second operand of a divide, mod or rem operation could be zero (CWE 189).</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
   </rule>
   <rule>
     <key>check:postcondition</key>
@@ -36,11 +64,25 @@
     <tag>warning</tag>
   </rule>
   <rule>
-    <key>informational:subp_not_analyzed</key>
-    <name>subp not analyzed</name>
-    <description>Indicates that Codepeer encountered a problem while analyzing this subprogram and skipped its analysis as well as its nested subprograms.</description>
+    <key>informational:call_too_complex</key>
+    <name>call too complex; analysis skipped</name>
+    <description>Indicates that CodePeer skipped analyzing the subprogram call to avoid exhausting resources needed for analyzing the remainder of the system. CodePeer will report any presumptions it makes about the results/effects of the otherwise unanalyzed call. These should be reviewed to be sure they are appropriate.</description>
     <tag>codepeer</tag>
     <tag>informational</tag>
+  </rule>
+  <rule>
+    <key>suppressed:unprotected_shared_access</key>
+    <name>unprotected shared access</name>
+    <description>A task accesses a potentially shared object without holding a lock and this object is also referenced by some other task. The message is associated with places where the object is referenced in the absence of any lock, or with non-overlapping lock configuration (CWE 362, 366-367, 374, 820).</description>
+    <tag>codepeer</tag>
+    <tag>race-condition</tag>
+  </rule>
+  <rule>
+    <key>suppressed:dead_code</key>
+    <name>dead code</name>
+    <description>Indicates logical errors as the programmer assumed the unreachable code could be executed (CWE 561).</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
   </rule>
   <rule>
     <key>race_condition:unprotected_shared_access</key>
@@ -50,11 +92,67 @@
     <tag>race-condition</tag>
   </rule>
   <rule>
-    <key>check:array_index_check</key>
-    <name>array index check</name>
-    <description>Index value could be outside the array bounds (CWE 124, 125-127, 129, 130, 131, 135, 170, 193). This is also known as buffer overflow.</description>
+    <key>suppressed:range_check</key>
+    <name>range check</name>
+    <description>A calculation may generate a value outside the bounds of an Ada type or subtype and generate an invalid value (CWE 118).</description>
     <tag>codepeer</tag>
     <tag>check</tag>
+  </rule>
+  <rule>
+    <key>suppressed:postcondition</key>
+    <name>postcondition</name>
+    <description>The subprogram's body may violate its specified postcondition. This specification may be written as a pragma Postcondition, or as a Post aspect in Ada 2012 syntax.</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
+  </rule>
+  <rule>
+    <key>suppressed:unused_assignment_to_global</key>
+    <name>unused assignment to global</name>
+    <description>Indicates that a subprogram call modifies a global variable, which is then overwritten following the call without any uses between the assignments. Note that the redundant assignment may occur inside another subprogram call invoked by the current subprogram (CWE 563).</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:subp_not_analyzed</key>
+    <name>subp not analyzed</name>
+    <description>Indicates that Codepeer encountered a problem while analyzing this subprogram and skipped its analysis as well as its nested subprograms.</description>
+    <tag>codepeer</tag>
+    <tag>informational</tag>
+  </rule>
+  <rule>
+    <key>suppressed:discriminant_check</key>
+    <name>discriminant check</name>
+    <description>A field for the wrong variant/discriminant is accessed (CWE 136, 137).</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
+  </rule>
+  <rule>
+    <key>suppressed:test_always_true</key>
+    <name>test always true</name>
+    <description>Same as above, with an additional indication that the test always evaluates to true (CWE 561).</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:module_analyzed</key>
+    <name>module analyzed</name>
+    <description>Indicates that Codepeer completed analysis of this module</description>
+    <tag>codepeer</tag>
+    <tag>informational</tag>
+  </rule>
+  <rule>
+    <key>suppressed:unused_out_parameter</key>
+    <name>unused out parameter</name>
+    <description>Indicates that an actual parameter of a call is ignored (either never used or overwritten) (CWE 563).</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:useless_self_assignment</key>
+    <name>useless self assignment</name>
+    <description>Indicates when an assignment does not modify the value stored in the variable being assigned (CWE 563).</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
   </rule>
   <rule>
     <key>check:validity_check</key>
@@ -64,18 +162,39 @@
     <tag>check</tag>
   </rule>
   <rule>
-    <key>check:divide_by_zero</key>
-    <name>divide by zero</name>
-    <description>Second operand of a divide, mod or rem operation could be zero (CWE 189).</description>
+    <key>suppressed:aliasing_check</key>
+    <name>aliasing check</name>
+    <description>A parameter that can be passed by reference is aliased with another parameter or a global object and a subprogram call might violate the associated precondition by writing to one of the aliased objects and reading the other aliased object, possibly resulting in undesired behavior.</description>
     <tag>codepeer</tag>
     <tag>check</tag>
   </rule>
   <rule>
-    <key>warning:subp_never_returns</key>
-    <name>subp never returns</name>
-    <description>The subprogram will never return, presumably because of an infinite loop. There will typically be an additional message in the subprogram body (e.g. test always false) explaining why the subprogram never returns.</description>
+    <key>suppressed:access_check</key>
+    <name>access check</name>
+    <description>Attempting to dereference a reference that could be null (CWE 252-253, 476).</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
+  </rule>
+  <rule>
+    <key>suppressed:unused_assignment</key>
+    <name>unused assignment</name>
+    <description>Indicates redundant assignment. This may be an indication of unintentional loss of result or unexpected flow of control (CWE 563). Note that CodePeer recognizes special variable patterns as temporary variables that will be ignored by this check: ignore, unused, discard, dummy, tmp, temp. This can be tuned via the MessagePatterns.xml file if needed. An object marked as unreferenced via an Unreferenced pragma is similarly ignored (see the Implementation Defined Pragmas section of the Gnat Pro Reference Manual for information about this pragma).</description>
     <tag>codepeer</tag>
     <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>warning:unread_parameter</key>
+    <name>unread parameter</name>
+    <description>A parameter of an elementary type of mode in out is assigned on all paths through the subprogram before any reads, and so could be declared with mode out.</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:precondition</key>
+    <name>precondition</name>
+    <description>A subprogram call that might violate the subprogram's preconditions. NOTE: in the details associated with the message, the precondition being checked is expressed in terms of the variables of the called subprogram, rather than the calling one. On the HTML output, you can click on the link provided to view the preconditions and local parameter names of the called subprogram, and then click the Back button ("&lt;&lt;"), before trying to understand in what way the caller might be violating the precondition. In GPS, you can use the Goto body of xxx capability instead. A run-time check as listed above (e.g. range check) may add a precondition on a subprogram, which is then checked at all call sites and will generate a precondition message in case a failure of this precondition may occur. See :ref:`Description_of_Annotations` and :ref:`Preconditions_And_Run-Time_Errors` for more information on preconditions. (Same CWE values as all messages above). Messages and Annotations:116: (INFO/1) No role entry for "ref" in module "docutils.parsers.rst.languages.en". Trying "ref" as canonical role name. Messages and Annotations:116: (ERROR/3) Unknown interpreted text role "ref". Messages and Annotations:116: (INFO/1) No role entry for "ref" in module "docutils.parsers.rst.languages.en". Trying "ref" as canonical role name. Messages and Annotations:116: (ERROR/3) Unknown interpreted text role "ref".</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
   </rule>
   <rule>
     <key>warning:test_predetermined</key>
@@ -99,11 +218,32 @@
     <tag>informational</tag>
   </rule>
   <rule>
+    <key>suppressed:user_precondition</key>
+    <name>user precondition</name>
+    <description>A call might violate a subprogram's specified precondition. This specification may be written as a pragma Precondition, or as a Pre aspect in Ada 2012 syntax. The message will only show up in certain complex cases where CodePeer is unable to propagate the precondition (for example, when the condition is a quantified expression). The message is issued on the precondition expression.</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
+  </rule>
+  <rule>
     <key>check:access_check</key>
     <name>access check</name>
     <description>Attempting to dereference a reference that could be null (CWE 252-253, 476).</description>
     <tag>codepeer</tag>
     <tag>check</tag>
+  </rule>
+  <rule>
+    <key>suppressed:subp_not_available</key>
+    <name>subp not available; call not analyzed</name>
+    <description>Indicates that CodePeer cannot analyze the call because the called subprogram is not available. There are two possible reasons for this: the .scil file for the called subprogram is not supplied in the library file, or the called subprogram is analyzed in a different partition. CodePeer will report any presumptions it makes about the results/effects of the otherwise unanalyzed call. These should be reviewed to be sure they are appropriate.</description>
+    <tag>codepeer</tag>
+    <tag>informational</tag>
+  </rule>
+  <rule>
+    <key>warning:subp_never_returns</key>
+    <name>subp never returns</name>
+    <description>The subprogram will never return, presumably because of an infinite loop. There will typically be an additional message in the subprogram body (e.g. test always false) explaining why the subprogram never returns.</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
   </rule>
   <rule>
     <key>race_condition:mismatched_protected_access</key>
@@ -113,6 +253,20 @@
     <tag>race-condition</tag>
   </rule>
   <rule>
+    <key>suppressed:overflow_check</key>
+    <name>overflow check</name>
+    <description>A calculation may overflow the bounds of a numeric type and wrap around. The likelihood this will affect operation of the program depends on how narrow is the range of the numeric value (CWE 128, 190-192, 197).</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
+  </rule>
+  <rule>
+    <key>informational:subp_not_available</key>
+    <name>subp not available; call not analyzed</name>
+    <description>Indicates that CodePeer cannot analyze the call because the called subprogram is not available. There are two possible reasons for this: the .scil file for the called subprogram is not supplied in the library file, or the called subprogram is analyzed in a different partition. CodePeer will report any presumptions it makes about the results/effects of the otherwise unanalyzed call. These should be reviewed to be sure they are appropriate.</description>
+    <tag>codepeer</tag>
+    <tag>informational</tag>
+  </rule>
+  <rule>
     <key>check:tag_check</key>
     <name>tag check</name>
     <description>A tag check (incorrect tag value on a tagged object) may fail (CWE 136, 137).</description>
@@ -120,9 +274,9 @@
     <tag>check</tag>
   </rule>
   <rule>
-    <key>warning:suspicious_input</key>
-    <name>suspicious input</name>
-    <description>Inputs mention a value reachable through an out-parameter of the suprogram before this parameter is assigned. Although the value may sometimes be initialized as the Ada standard allows, it generally uncovers a bug where the subprogram reads an uninitialized value or a value that the programmer did not mean to pass to the subprogram as an input value.</description>
+    <key>suppressed:condition_predetermined</key>
+    <name>condition predetermined</name>
+    <description>Indicates redundant condition inside a conditional, like the left or right operand of a boolean operator which is always true or false (CWE 561).</description>
     <tag>codepeer</tag>
     <tag>warning</tag>
   </rule>
@@ -134,9 +288,23 @@
     <tag>check</tag>
   </rule>
   <rule>
+    <key>suppressed:subp_always_fails</key>
+    <name>subp always fails</name>
+    <description>Indicates that a run-time problem is likely to occur on every execution of the subprogram. There will typically be an additional message in the subprogram body explaining why the subprogram always fails.</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
     <key>warning:suspicious_constant_operation</key>
     <name>suspicious constant operation</name>
     <description>An operation computes a constant value from non-constant operands. This is characteristic of a typographical mistake, where a variable is used instead of another one, or a missing part in the operation, like the lack of conversion to a floating-point or fixed-point type before division.</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>warning:suspicious_input</key>
+    <name>suspicious input</name>
+    <description>Inputs mention a value reachable through an out-parameter of the suprogram before this parameter is assigned. Although the value may sometimes be initialized as the Ada standard allows, it generally uncovers a bug where the subprogram reads an uninitialized value or a value that the programmer did not mean to pass to the subprogram as an input value.</description>
     <tag>codepeer</tag>
     <tag>warning</tag>
   </rule>
@@ -155,11 +323,11 @@
     <tag>warning</tag>
   </rule>
   <rule>
-    <key>warning:dead_code</key>
-    <name>dead code</name>
-    <description>Indicates logical errors as the programmer assumed the unreachable code could be executed (CWE 561).</description>
+    <key>informational:module_not_analyzed</key>
+    <name>module not analyzed</name>
+    <description>Indicates that Codepeer could not analyze any of the subprograms in this module.</description>
     <tag>codepeer</tag>
-    <tag>warning</tag>
+    <tag>informational</tag>
   </rule>
   <rule>
     <key>check:raise_exception</key>
@@ -169,6 +337,13 @@
     <tag>check</tag>
   </rule>
   <rule>
+    <key>warning:dead_code</key>
+    <name>dead code</name>
+    <description>Indicates logical errors as the programmer assumed the unreachable code could be executed (CWE 561).</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
     <key>warning:loop_does_not_complete_normally</key>
     <name>loop does not complete normally</name>
     <description>Indicates loops that either run forever or fail to terminate normally (CWE 835).</description>
@@ -176,9 +351,23 @@
     <tag>warning</tag>
   </rule>
   <rule>
+    <key>suppressed:validity_check</key>
+    <name>validity check</name>
+    <description>The code may be reading an uninitialized or invalid value (e.g. corrupted data) (CWE 232, 236, 475).</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
+  </rule>
+  <rule>
     <key>warning:suspicious_precondition</key>
     <name>suspicious precondition</name>
     <description>The precondition has a form that indicates there might be a problem with the algorithm. If the allowable value set of a given input expression is not contiguous, that is, there are certain values of the expression that might cause a run-time problem inside the subprogram in between values that are safe, then this might be an indication that certain cases are not being properly handled by the code. In other situations, this might simply reflect the inherent nature of the algorithm involved.</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:suspicious_input</key>
+    <name>suspicious input</name>
+    <description>Inputs mention a value reachable through an out-parameter of the suprogram before this parameter is assigned. Although the value may sometimes be initialized as the Ada standard allows, it generally uncovers a bug where the subprogram reads an uninitialized value or a value that the programmer did not mean to pass to the subprogram as an input value.</description>
     <tag>codepeer</tag>
     <tag>warning</tag>
   </rule>
@@ -190,16 +379,44 @@
     <tag>warning</tag>
   </rule>
   <rule>
+    <key>suppressed:unprotected_access</key>
+    <name>unprotected access</name>
+    <description>A reentrant task (e.g. task type) reads or writes a potentially shared object without holding a lock. The message is associated with places where the object is accessed in the absence of any lock, or with non-overlapping lock configuration (CWE 362, 366-367, 374, 820).</description>
+    <tag>codepeer</tag>
+    <tag>race-condition</tag>
+  </rule>
+  <rule>
+    <key>informational:subp_not_analyzed</key>
+    <name>subp not analyzed</name>
+    <description>Indicates that Codepeer encountered a problem while analyzing this subprogram and skipped its analysis as well as its nested subprograms.</description>
+    <tag>codepeer</tag>
+    <tag>informational</tag>
+  </rule>
+  <rule>
     <key>warning:unused_assignment</key>
     <name>unused assignment</name>
-    <description>Indicates redundant assignment. This may be an indication of unintentional loss of result or unexpected flow of control (CWE 563). Note that CodePeer recognizes special variable patterns as temporary variables that will be ignored by this check: ignore, unuse, discard, dummy, tmp, temp. This can be tuned via the MessagePatterns.xml file if needed. An object marked as unreferenced via an Unreferenced pragma is similarly ignored (see the Implementation Defined Pragmas section of the Gnat Pro Reference Manual for information about this pragma).</description>
+    <description>Indicates redundant assignment. This may be an indication of unintentional loss of result or unexpected flow of control (CWE 563). Note that CodePeer recognizes special variable patterns as temporary variables that will be ignored by this check: ignore, unused, discard, dummy, tmp, temp. This can be tuned via the MessagePatterns.xml file if needed. An object marked as unreferenced via an Unreferenced pragma is similarly ignored (see the Implementation Defined Pragmas section of the Gnat Pro Reference Manual for information about this pragma).</description>
     <tag>codepeer</tag>
     <tag>warning</tag>
   </rule>
   <rule>
-    <key>informational:call_too_complex</key>
-    <name>call too complex; analysis skipped</name>
-    <description>Indicates that CodePeer skipped analyzing the subprogram call to avoid exhausting resources needed for analyzing the remainder of the system. CodePeer will report any presumptions it makes about the results/effects of the otherwise unanalyzed call. These should be reviewed to be sure they are appropriate.</description>
+    <key>suppressed:unread_parameter</key>
+    <name>unread parameter</name>
+    <description>A parameter of an elementary type of mode in out is assigned on all paths through the subprogram before any reads, and so could be declared with mode out.</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:mismatched_protected_access</key>
+    <name>mismatched protected access</name>
+    <description>A task references a potentially shared object while holding a lock, and this object is also referenced by another task without holding the same lock. Messages are associated with the second task's references (CWE 362, 366-367, 374, 821).</description>
+    <tag>codepeer</tag>
+    <tag>race-condition</tag>
+  </rule>
+  <rule>
+    <key>suppressed:module_not_analyzed</key>
+    <name>module not analyzed</name>
+    <description>Indicates that Codepeer could not analyze any of the subprograms in this module.</description>
     <tag>codepeer</tag>
     <tag>informational</tag>
   </rule>
@@ -232,11 +449,25 @@
     <tag>warning</tag>
   </rule>
   <rule>
-    <key>warning:unread_parameter</key>
-    <name>unread parameter</name>
-    <description>A parameter of an elementary type of mode in out is assigned on all paths through the subprogram before any reads, and so could be declared with mode out.</description>
+    <key>suppressed:suspicious_precondition</key>
+    <name>suspicious precondition</name>
+    <description>The precondition has a form that indicates there might be a problem with the algorithm. If the allowable value set of a given input expression is not contiguous, that is, there are certain values of the expression that might cause a run-time problem inside the subprogram in between values that are safe, then this might be an indication that certain cases are not being properly handled by the code. In other situations, this might simply reflect the inherent nature of the algorithm involved.</description>
     <tag>codepeer</tag>
     <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:test_predetermined</key>
+    <name>test predetermined</name>
+    <description>Indicates redundant conditionals, which could flag logical errors (CWE 561).</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:divide_by_zero</key>
+    <name>divide by zero</name>
+    <description>Second operand of a divide, mod or rem operation could be zero (CWE 189).</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
   </rule>
   <rule>
     <key>check:discriminant_check</key>
@@ -246,9 +477,37 @@
     <tag>check</tag>
   </rule>
   <rule>
-    <key>check:floating_point_underflow</key>
-    <name>floating point underflow</name>
-    <description>A floating point arithmetic operation (or type conversion) with a non-zero exact mathematical result may yield zero due to rounding. A floating point arithmetic operation (or type conversion) with no subnormal operands may yield a subnormal result. Unlike the other checks listed here, this does not correspond to a language defined run-time check. This check is only enabled when using -level max or -messages max</description>
+    <key>suppressed:call_too_complex</key>
+    <name>call too complex; analysis skipped</name>
+    <description>Indicates that CodePeer skipped analyzing the subprogram call to avoid exhausting resources needed for analyzing the remainder of the system. CodePeer will report any presumptions it makes about the results/effects of the otherwise unanalyzed call. These should be reviewed to be sure they are appropriate.</description>
+    <tag>codepeer</tag>
+    <tag>informational</tag>
+  </rule>
+  <rule>
+    <key>check:array_index_check</key>
+    <name>array index check</name>
+    <description>Index value could be outside the array bounds (CWE 124, 125-127, 129, 130, 131, 135, 170, 193). This is also known as buffer overflow.</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
+  </rule>
+  <rule>
+    <key>suppressed:array_index_check</key>
+    <name>array index check</name>
+    <description>Index value could be outside the array bounds (CWE 124, 125-127, 129, 130, 131, 135, 170, 193). This is also known as buffer overflow.</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
+  </rule>
+  <rule>
+    <key>suppressed:conditional_check</key>
+    <name>conditional check</name>
+    <description>An exception could be raised depending on the outcome of a conditional test in user code.</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
+  </rule>
+  <rule>
+    <key>suppressed:raise_exception</key>
+    <name>raise exception</name>
+    <description>An exception is being raised on a reachable path.</description>
     <tag>codepeer</tag>
     <tag>check</tag>
   </rule>
@@ -260,16 +519,23 @@
     <tag>check</tag>
   </rule>
   <rule>
-    <key>informational:module_not_analyzed</key>
-    <name>module not analyzed</name>
-    <description>Indicates that Codepeer could not analyze any of the subprograms in this module.</description>
+    <key>warning:unassigned_parameter</key>
+    <name>unassigned parameter</name>
+    <description>A parameter of a scalar type of mode in out is never assigned, and so could be declared with mode in.</description>
     <tag>codepeer</tag>
-    <tag>informational</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:tag_check</key>
+    <name>tag check</name>
+    <description>A tag check (incorrect tag value on a tagged object) may fail (CWE 136, 137).</description>
+    <tag>codepeer</tag>
+    <tag>check</tag>
   </rule>
   <rule>
     <key>check:precondition</key>
     <name>precondition</name>
-    <description>A subprogram call that might violate the subprogram's preconditions. NOTE: in the details associated with the message, the precondition being checked is expressed in terms of the variables of the called subprogram, rather than the calling one. On the HTML output, you can click on the link provided to view the preconditions and local parameter names of the called subprogram, and then click the Back button ("&lt;&lt;"), before trying to understand in what way the caller might be violating the precondition. In GPS, you can use the Goto body of xxx capability instead. A run-time check as listed above (e.g. range check) may add a precondition on a subprogram, which is then checked at all call sites and will generate a precondition message in case a failure of this precondition may occur. See :ref:`Description_of_Annotations` and :ref:`Preconditions_And_Run-Time_Errors` for more information on preconditions. (Same CWE values as all messages above). Messages and Annotations:126: (INFO/1) No role entry for "ref" in module "docutils.parsers.rst.languages.en". Trying "ref" as canonical role name. Messages and Annotations:126: (ERROR/3) Unknown interpreted text role "ref". Messages and Annotations:126: (INFO/1) No role entry for "ref" in module "docutils.parsers.rst.languages.en". Trying "ref" as canonical role name. Messages and Annotations:126: (ERROR/3) Unknown interpreted text role "ref".</description>
+    <description>A subprogram call that might violate the subprogram's preconditions. NOTE: in the details associated with the message, the precondition being checked is expressed in terms of the variables of the called subprogram, rather than the calling one. On the HTML output, you can click on the link provided to view the preconditions and local parameter names of the called subprogram, and then click the Back button ("&lt;&lt;"), before trying to understand in what way the caller might be violating the precondition. In GPS, you can use the Goto body of xxx capability instead. A run-time check as listed above (e.g. range check) may add a precondition on a subprogram, which is then checked at all call sites and will generate a precondition message in case a failure of this precondition may occur. See :ref:`Description_of_Annotations` and :ref:`Preconditions_And_Run-Time_Errors` for more information on preconditions. (Same CWE values as all messages above). Messages and Annotations:116: (INFO/1) No role entry for "ref" in module "docutils.parsers.rst.languages.en". Trying "ref" as canonical role name. Messages and Annotations:116: (ERROR/3) Unknown interpreted text role "ref". Messages and Annotations:116: (INFO/1) No role entry for "ref" in module "docutils.parsers.rst.languages.en". Trying "ref" as canonical role name. Messages and Annotations:116: (ERROR/3) Unknown interpreted text role "ref".</description>
     <tag>codepeer</tag>
     <tag>check</tag>
   </rule>
@@ -277,6 +543,13 @@
     <key>warning:subp_always_fails</key>
     <name>subp always fails</name>
     <description>Indicates that a run-time problem is likely to occur on every execution of the subprogram. There will typically be an additional message in the subprogram body explaining why the subprogram always fails.</description>
+    <tag>codepeer</tag>
+    <tag>warning</tag>
+  </rule>
+  <rule>
+    <key>suppressed:suspicious_constant_operation</key>
+    <name>suspicious constant operation</name>
+    <description>An operation computes a constant value from non-constant operands. This is characteristic of a typographical mistake, where a variable is used instead of another one, or a missing part in the operation, like the lack of conversion to a floating-point or fixed-point type before division.</description>
     <tag>codepeer</tag>
     <tag>warning</tag>
   </rule>
