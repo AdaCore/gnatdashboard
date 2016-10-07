@@ -8,8 +8,8 @@ import { IGNAThubReport } from 'gnat';
 
 @Component({
     selector: 'project',
-    templateUrl: './project.template.html',
-    styleUrls: [ './project.style.css' ],
+    templateUrl: './project.component.html',
+    styleUrls: [ './project.component.css' ],
     providers: [ GNAThubService ]
 })
 export class Project {

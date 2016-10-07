@@ -3,8 +3,8 @@ import { IGNAThubMessage } from 'gnat';
 
 @Component({
     selector: 'inline-comment',
-    templateUrl: './inline-comment.template.html',
-    styleUrls: [ './inline-comment.style.css' ]
+    templateUrl: './inline-comment.component.html',
+    styleUrls: [ './inline-comment.component.css' ]
 })
 export class InlineComment {
     // TODO(delay): @Input() message: IGNAThubMessage = null;

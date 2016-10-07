@@ -3,11 +3,11 @@ import { Component, ViewEncapsulation } from '@angular/core';
 @Component({
     selector: 'main-responder',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './main-responder.template.html',
+    templateUrl: './main-responder.component.html',
     styleUrls: [
-        './app.style.css',
-        './main-responder.style.css',
-        './pygments-github.style.css'
+        './app.css',
+        './main-responder.component.css',
+        './pygments-github.css'
     ]
 })
 export class MainResponder {}

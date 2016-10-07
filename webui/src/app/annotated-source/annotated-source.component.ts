@@ -12,8 +12,8 @@ import '../array-utils';
 
 @Component({
     selector: 'annotated-source',
-    templateUrl: './annotated-source.template.html',
-    styleUrls: [ './annotated-source.style.css' ],
+    templateUrl: './annotated-source.component.html',
+    styleUrls: [ './annotated-source.component.css' ],
     providers: [ GNAThubService ]
 })
 export class AnnotatedSource {

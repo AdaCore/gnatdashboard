@@ -5,8 +5,8 @@ import { IGNAThubReport } from 'gnat';
 
 @Component({
     selector: 'source-list',
-    templateUrl: './source-list.template.html',
-    styleUrls: [ './source-list.style.css' ],
+    templateUrl: './source-list.component.html',
+    styleUrls: [ './source-list.component.css' ],
     providers: [ GNAThubService ]
 })
 export class SourceList {

@@ -7,8 +7,8 @@ import '../array-utils';
 
 @Component({
     selector: 'about',
-    templateUrl: './about.template.html',
-    styleUrls: [ './about.style.css' ],
+    templateUrl: './about.component.html',
+    styleUrls: [ './about.component.css' ],
     providers: [ GNAThubService ]
 })
 export class About {

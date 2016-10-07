@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'loader',
-    templateUrl: './loader.template.html',
-    styleUrls: [ './loader.style.css' ]
+    templateUrl: './loader.component.html',
+    styleUrls: [ './loader.component.css' ]
 })
 export class Loader {
     @Input() caption: string = null;

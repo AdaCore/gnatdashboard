@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'option-selector',
-    templateUrl: './option-selector.template.html',
-    styleUrls: [ './option-selector.style.css' ]
+    templateUrl: './option-selector.component.html',
+    styleUrls: [ './option-selector.component.css' ]
 })
 export class OptionSelector {
     @Input() title: string = null;
