@@ -11,5 +11,5 @@ lalmetric_rules = [
 ]
 assertNotEmpty(lalmetric_rules)
 assertNotEmpty(
-    [msg for msg in GNAThub.Message.list() if msg.rule_id in rules]
+    [msg for msg in GNAThub.Message.list() if msg.rule_id in lalmetric_rules]
 )
