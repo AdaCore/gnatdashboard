@@ -57,7 +57,7 @@
                         ({{ getMetricValue('code_lines') }} sloc)
                     </template>
                     <div class="file-info-divider"></div>
-                    {{ getMessageDisplayedCount() }} messages displayed
+                    {{ getMessageDisplayedCount() }} annotations displayed
                 </div>
             </div>
             <div class="blob-wrapper">
@@ -70,7 +70,8 @@
                             <td class="blob-num">{{ line.number }}</td>
                             <!-- line.content may contain escaped HTML entities.
                                 Use AngularJS embedded sanitizer to render it.  -->
-                            <td class="blob-code" [innerHTML]="bypassSanitizer(line.html_content)"></td>
+                            <td id="L{{ line.number }}" class="blob-code"
+                                [innerHTML]="bypassSanitizer(line.html_content)"></td>
                         </tr>
                         <template [ngIf]="hasDisplayableMessage(line.number)">
                             <tr class="inline-comments">
@@ -84,6 +85,24 @@
                                 </td>
                             </tr>
                         </template>
+                    </template>
+                </table>
+            </div>
+        </div>
+        <div md-whiteframe="24" class="location-view">
+            <div class="location-view-header">Annotations ({{ getMessageDisplayedCount() }})</div>
+            <div class="location-view-list">
+                <table class="file-line-container">
+                    <template ngFor let-annotation [ngForOf]="annotations" let-isEven="even" >
+                        <tr class="annotation" [ngClass]="{ even: isEven }"
+                            *ngIf="shouldDisplayMessage(annotation.msg)">
+                            <td class="line-num">l.{{ annotation.line.number }}</td>
+                            <td class="line-annotation">
+                                <a auto-scroll smooth="true" href="#L{{ annotation.line.number }}">
+                                    {{ annotation.msg.message }} ({{ annotation.msg.rule.tool.name }})
+                                </a>
+                            </td>
+                        </tr>
                     </template>
                 </table>
             </div>

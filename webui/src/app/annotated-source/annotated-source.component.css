@@ -156,3 +156,80 @@ inline-comment {
   &            { margin-bottom: 8px; }
   &:last-child { margin-bottom: 0; }
 }
+
+.location-view {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 300px;
+
+  background-color: white;
+  box-shadow:
+    0 1px 5px 0 rgba(0, 0, 0, 0.2),
+    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.12);
+
+  &-header {
+    padding: 5px 15px;
+    background-color: #f7f7f7;
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #e5e5e5;
+
+    color: #333;
+    cursor: default;
+    font-size: 12px;
+    line-height: 24px;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  }
+
+  &-list {
+    overflow-y: auto;
+    position: absolute;
+    top: 36px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  & table tr.annotation {
+    & td {
+      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 1.2rem;
+      line-height: 1.5em;
+      padding: 0 2ch;
+      border: 0;
+      vertical-align: middle;
+      cursor: default;
+
+      &.line-num {
+        color: color(black alpha(-70%));
+        width: 1%;
+        min-width: 50px;
+        white-space: nowrap;
+        text-align: right;
+        vertical-align: top;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-right: 1px solid #eeeeee;
+      }
+
+      &.line-annotation {
+        line-height: 1.5em;
+
+        & a {
+          color: #555;
+          display: block;
+        }
+        &:hover {
+          & a { color: #4078c0; }
+          background-color: #f4f7fb;
+        }
+      }
+    }
+  }
+}
+
+.file {
+  margin-bottom: 210px;
+}

@@ -10,6 +10,8 @@ import {
 
 import '../array-utils';
 
+type Annotation = { line: IGNAThubBlobLine; msg: IGNAThubMessage };
+
 @Component({
     selector: 'annotated-source',
     templateUrl: './annotated-source.component.html',
@@ -20,6 +22,7 @@ export class AnnotatedSource {
     private filename: string = null;
     private blob: IGNAThubBlob = null;
     private isBlobFetchError: boolean = false;
+    private annotations: Annotation[] = null;
 
     private filters: any = null;
 
@@ -44,7 +47,12 @@ export class AnnotatedSource {
                     // Show all messages with properties by default
                     blob.properties[propertyId].ui_selected = true;
                 }
+                let annotations: Annotation[] = [];
+                blob.lines.forEach(line => line.messages.forEach(msg => {
+                    annotations.push({ line: line, msg: msg });
+                }));
                 this.blob = blob;
+                this.annotations = annotations;
             },
             error => this.isBlobFetchError = !!error);
     }
