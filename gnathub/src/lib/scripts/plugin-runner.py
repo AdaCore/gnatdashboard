@@ -18,7 +18,6 @@ spawning the main event loop.
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-import collections
 import inspect
 import json
 import logging
@@ -327,41 +326,38 @@ class PluginRunner(object):
 
         :param plugin: instance of the plugin to execute
         :type plugin: GNAThub.Plugin
+        :return: the execution time in seconds
+        :rtype: int
         """
-        start = time.time()
         PluginRunner.info('execute plug-in %s', plugin.name)
-
         if GNAThub.dry_run():
             # Early exit if dry-run mode is enabled
             plugin.exec_status = GNAThub.EXEC_SUCCESS
-            return
+            return 0
 
-        LOG.info('%s: setup environment', plugin.name)
+        start = time.time()
+        LOG.info('%s: set up environment', plugin.name)
         plugin.setup()
-
         plugin.execute()
-
         LOG.info('%s: post execution', plugin.name)
         plugin.teardown()
-
         elapsed = time.time() - start
 
         if plugin.exec_status == GNAThub.EXEC_SUCCESS:
             plugin.info('completed (in %d seconds)' % elapsed)
-
         elif plugin.exec_status == GNAThub.EXEC_FAILURE:
             plugin.error('execution failed')
-
         elif plugin.exec_status != GNAThub.NOT_EXECUTED:
-            plugin.error('unknown plug-in execution code: %d' %
-                         plugin.exec_status)
+            plugin.error(
+                'unknown plug-in execution code: %d' % plugin.exec_status)
         else:
             plugin.info('not executed')
+        return elapsed
 
     def mainloop(self):
         """Plugin main loop."""
         LOG.info('registered %d plugins', len(self.plugins))
-        succeed = collections.OrderedDict()
+        backlog = []
 
         # Early exit if no plug-in are scheduled to be run
         if not self.plugins:
@@ -373,35 +369,37 @@ class PluginRunner(object):
             for cls in self.plugins:
                 try:
                     # Create a new instance
-                    plugin = cls()
+                    plugin, elapsed = cls(), None
 
                     # Execute the plug-in
-                    succeed[plugin.name] = False
-                    PluginRunner.execute(plugin)
-                    if plugin.exec_status == GNAThub.EXEC_SUCCESS:
-                        succeed[plugin.name] = True
+                    elapsed = PluginRunner.execute(plugin)
                 except KeyboardInterrupt:
                     raise
                 except Exception as why:
                     LOG.exception('plug-in execution failed')
                     PluginRunner.error(
                         '%s: unexpected error: %s', plugin.name, why)
+                finally:
+                    backlog.append((plugin.name, {
+                        'time': elapsed or 0,
+                        'success': plugin.exec_status == GNAThub.EXEC_SUCCESS
+                    }))
         except KeyboardInterrupt:
             PluginRunner.info(os.linesep + 'Interrupt caught...')
 
         # Write results to file
-        fname = os.path.join(GNAThub.root(), 'gnathub.results')
+        fname = os.path.join(GNAThub.root(), 'gnathub.backlog')
         try:
-            with open(fname, 'w') as results:
-                results.write(json.dumps(succeed))
+            with open(fname, 'w') as fd:
+                fd.write(json.dumps(backlog))
         except IOError as why:
             LOG.exception('could not write result file %s', fname)
             PluginRunner.error('%s: unexpected error: %s', fname, why)
 
         if not GNAThub.dry_run() and not GNAThub.quiet():
             # Display a summary
-            for plugin, success in succeed.items():
-                if success:
+            for plugin, results in backlog:
+                if results['success']:
                     Console.ok(plugin)
                 else:
                     Console.ko(plugin)

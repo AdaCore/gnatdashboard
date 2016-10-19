@@ -161,12 +161,12 @@ class GNAThub(object):
         if p.status != 0:
             raise GNAThubExecutionFailed(p.out)
         if kwargs.get('dry_run', False):
-            # In dry-run mode, the gnathub.results file is not created
+            # In dry-run mode, the gnathub.backlog file is not created
             return
-        fname = os.path.join(
-            self.project.install_dir, 'obj', 'gnathub', 'gnathub.results')
-        with open(fname, 'r') as results:
-            plugins = json.loads(results.read())
-        failed = [name for name, succeed in plugins.iteritems() if not succeed]
+        backlog = os.path.join(
+            self.project.install_dir, 'obj', 'gnathub', 'gnathub.backlog')
+        with open(backlog, 'r') as fd:
+            plugins = json.loads(fd.read())
+        failed = [name for name, results in plugins if not results['success']]
         if failed:
             raise GNAThubExecutionFailed('plugin(s) failure: {}'.format(failed))
