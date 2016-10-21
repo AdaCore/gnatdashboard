@@ -1,9 +1,9 @@
 <div>
-    <!-- Loader animation -->
-    <loader
+    <!-- Spinner animation -->
+    <spinner
         *ngIf="!blob && !isBlobFetchError"
         caption="Loading annotated source...">
-    </loader>
+    </spinner>
     <!-- Error handling -->
     <missing-source-error *ngIf="isBlobFetchError" [filename]="filename"></missing-source-error>
     <!-- Blob display -->
@@ -64,8 +64,10 @@
                 <table class="file-line-container">
                     <template ngFor let-line [ngForOf]="blob.lines">
                         <tr [ngClass]="{
-                                covered: coverage(line.number) == 'COVERED',
-                                not_covered: coverage(line.number) == 'NOT_COVERED'
+                                no_code: coverage(line.number).status.toLowerCase() == 'no_code',
+                                covered: coverage(line.number).status.toLowerCase() == 'covered',
+                                not_covered: coverage(line.number).status.toLowerCase() == 'not_covered',
+                                partially_covered: coverage(line.number).status.toLowerCase() == 'partially_covered'
                             }">
                             <td class="blob-num">{{ line.number }}</td>
                             <!-- line.content may contain escaped HTML entities.
@@ -89,8 +91,8 @@
                 </table>
             </div>
         </div>
-        <div md-whiteframe="24" class="location-view">
-            <div class="location-view-header">Annotations ({{ getMessageDisplayedCount() }})</div>
+        <div md-whiteframe="24" class="location-view" *ngIf="blob.lines">
+            <div class="location-view-header">Messages ({{ getMessageDisplayedCount() }})</div>
             <div class="location-view-list">
                 <table class="file-line-container">
                     <template ngFor let-annotation [ngForOf]="annotations" let-isEven="even" >

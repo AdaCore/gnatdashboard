@@ -172,14 +172,15 @@ class HTMLReport(GNAThub.Plugin):
             # opportunities for the Python VM to optimize the count
             # computation.
             count, total = 0, sum((sum((
-                len(source_hunks) for source_hunks in source_dirs.itervalues()
-            )) for source_dirs in report_index['modules'].itervalues())) + 1
+                len(source_dir['sources'])
+                for source_dir in module['source_dirs'].itervalues()
+            )) for module in report_index['modules'].itervalues())) + 1
 
             # Serialize each source of the project
-            for project, source_dirs in report_index['modules'].iteritems():
-                for source_dir, source_hunks in source_dirs.iteritems():
-                    for src_hunk in source_hunks:
-                        _write_report_src_hunk(project, source_dir, src_hunk)
+            for project, module in report_index['modules'].iteritems():
+                for dirname, source_dir in module['source_dirs'].iteritems():
+                    for src_hunk in source_dir['sources']:
+                        _write_report_src_hunk(project, dirname, src_hunk)
                         count = count + 1
                         assert count != total, 'internal error'
                         Console.progress(count, total, False)

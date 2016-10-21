@@ -1,36 +1,71 @@
 <div>
-    <!-- Loader animation -->
-    <loader
+    <!-- Spinner animation -->
+    <spinner
         *ngIf="!report && !isReportFetchError"
         caption="Loading report...">
-    </loader>
+    </spinner>
     <!-- Error handling -->
     <missing-report-error *ngIf="isReportFetchError"></missing-report-error>
     <!-- Report display -->
     <div *ngIf="report">
         <h1>GNATdashboard Report <small>{{ report.project }}</small></h1>
-        <h2>Tools executed</h2>
-        <table class="tools">
-            <thead>
-                <th>Tool</th>
-            </thead>
-            <tbody>
-                <tr class="tool-name" *ngFor="let tool of report.tools">
-                    <td>{{ tool.name }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <h2>Analyzed projects</h2>
-        <table class="projects">
-            <thead>
-                <th>Project</th>
-            </thead>
-            <tbody>
-                <tr class="module-name"
-                    *ngFor="let module of report.modules | mapKeys">
-                    <td><a [routerLink]="['/project', module]">{{ module }}</a></td>
-                </tr>
-            </tbody>
-        </table>
+        <dl class="dl-horizontal">
+            <template ngFor let-tool_id [ngForOf]="report.message_count | mapKeys">
+                <dt>{{ report.tools[tool_id].name }} messages</dt>
+                <dd>{{ report.message_count[tool_id] }}</dd>
+            </template>
+        </dl>
+        <div *ngFor="let module of report.modules | mapKeys | naturalSort">
+            <div class="node-project node">
+                <button (click)="report.modules[module]._ui_expanded = !report.modules[module]._ui_expanded">
+                    <md-icon
+                        class="node-arrow"
+                        [ngClass]="{ 'node-arrow-expanded': report.modules[module]._ui_expanded }"
+                    >arrow_drop_down</md-icon>
+                </button>
+                <md-icon class="project">layers</md-icon>
+                <a class="node-label "[routerLink]="['/project', module]">{{ module }}</a>
+                <div class="counts">
+                    <div class="count" *ngFor="let tool_id of report.modules[module].message_count | mapKeys">
+                        <div class="count-label">{{ report.tools[tool_id].name }}:</div>
+                        <div class="count-value">{{ report.modules[module].message_count[tool_id] }}</div>
+                    </div>
+                </div>
+            </div>
+            <template [ngIf]="report.modules[module]._ui_expanded">
+                <div class="node-project" *ngFor="let sourceDir of report.modules[module].source_dirs | mapKeys | naturalSort">
+                    <div class="node-source-dir node">
+                        <button (click)="report.modules[module].source_dirs[sourceDir]._ui_expanded = !report.modules[module].source_dirs[sourceDir]._ui_expanded">
+                            <md-icon
+                                class="node-arrow"
+                                [ngClass]="{ 'node-arrow-expanded': report.modules[module].source_dirs[sourceDir]._ui_expanded }"
+                            >arrow_drop_down</md-icon>
+                        </button>
+                        <md-icon class="source-dir">folder_open</md-icon>
+                        <div class="node-label-prefix" [md-tooltip]="report.modules[module]._source_dirs_common_prefix" tooltip-position="after">…</div>
+                        <div class="node-label">{{ sourceDir.slice(report.modules[module]._source_dirs_common_prefix.length) }}</div>
+                        <div class="counts">
+                            <div class="count" *ngFor="let tool_id of report.modules[module].source_dirs[sourceDir].message_count | mapKeys">
+                                <div class="count-label">{{ report.tools[tool_id].name }}:</div>
+                                <div class="count-value">{{ report.modules[module].source_dirs[sourceDir].message_count[tool_id] }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="node-source-dir" *ngIf="report.modules[module].source_dirs[sourceDir]._ui_expanded">
+                        <div class="node-source-file node"
+                             *ngFor="let source of report.modules[module].source_dirs[sourceDir].sources">
+                            <md-icon class="source-file">insert_drive_file</md-icon>
+                            <a class="node-label" [routerLink]="['/source', source.filename]">{{ source.filename }}</a>
+                            <div class="counts">
+                                <div class="count" *ngFor="let tool_id of source.message_count | mapKeys">
+                                    <div class="count-label">{{ report.tools[tool_id].name }}:</div>
+                                    <div class="count-value">{{ source.message_count[tool_id] }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
     </div>
 </div>

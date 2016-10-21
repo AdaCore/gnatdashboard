@@ -9,6 +9,7 @@ import { SourceList } from './source-list';
 
 export const ROUTES: Routes = [
     { path: '',                 component: Report },
+    { path: 'report',           component: Report },
     { path: 'project/:name',    component: Project },
     { path: 'sources',          component: SourceList },
     { path: 'source/:filename', component: AnnotatedSource },

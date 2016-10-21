@@ -6,16 +6,16 @@
   border: 1px solid #dddddd;
   border-radius: 2px;
 
-  & .option {
+  .option {
     display: flex;
 
     &.even { background-color: #f7f7f7; }
 
-    & input[type="checkbox"] {
+    input[type="checkbox"] {
       margin-right: 16px;
     }
 
-    & label.option-label {
+    label.option-label {
       flex-grow: 1;
       padding: 5px;
       padding-left: 16px;
@@ -24,7 +24,7 @@
       font-weight: normal;
     }
 
-    & .option-count {
+    .option-count {
       color: #777;
       padding: 5px 16px;
     }

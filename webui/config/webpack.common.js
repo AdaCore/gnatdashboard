@@ -117,20 +117,15 @@ module.exports = function(options) {
         },
 
         /*
-         * to string and css loader support for *.css files
-         * Returns file content as string
-         *
+         * Spinner to support *.scss files.
          */
         {
-          test: /\.css$/,
-          loaders: [
-            'to-string-loader',
-            'css-loader?importLoaders=1',
-            'postcss-loader',
-          ]
+          test: /\.scss$/,
+          loaders: ['to-string', 'css', 'postcss', 'sass']
         },
 
-        /* Raw loader support for *.html
+        /*
+         * Raw loader support for *.html
          * Returns file content as string
          *
          * See: https://github.com/webpack/raw-loader

@@ -1,9 +1,9 @@
 <div>
-    <!-- Loader animation -->
-    <loader
+    <!-- Spinner animation -->
+    <spinner
         *ngIf="!report && !isReportFetchError"
         caption="Loading report...">
-    </loader>
+    </spinner>
     <!-- Error handling -->
     <missing-report-error *ngIf="isReportFetchError"></missing-report-error>
     <!-- Report display -->
@@ -15,11 +15,11 @@
                     <th class="module-name">{{ module }}</th>
                 </thead>
                 <tbody>
-                    <template ngFor let-dir [ngForOf]="report.modules[module] | mapKeys">
+                    <template ngFor let-dir [ngForOf]="report.modules[module].source_dirs | mapKeys">
                         <tr class="source-directory">
                             <td>{{ dir }}</td>
                         </tr>
-                        <template ngFor let-source [ngForOf]="report.modules[module][dir]">
+                        <template ngFor let-source [ngForOf]="report.modules[module].source_dirs[dir].sources">
                             <tr class="source-file">
                                 <td>
                                     <a [routerLink]="['/source', source.filename]">

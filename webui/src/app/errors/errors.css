@@ -1,9 +1,0 @@
-div.center {
-  width: 60%;
-  max-width: 800px;
-  margin-top: 2em;
-
-  & .filename { margin-left: 2em; }
-  & .error { font-weight: bold; }
-  & .help { color: #777; }
-}

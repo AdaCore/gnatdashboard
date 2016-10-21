@@ -5,8 +5,8 @@ h3.source-head {
   line-height: 26px;
   color: #666;
 
-  & span.path-divider { margin: 0 0.25em; }
-  & strong {
+  span.path-divider { margin: 0 0.25em; }
+  strong {
     color: #444;
     font-weight: 500;
   }
@@ -20,19 +20,19 @@ h3.source-head {
 div.option-selectors {
   display: flex;
   flex-flow: row wrap;
-  & option-selector { flex-grow: 1; }
+  option-selector { flex-grow: 1; }
 
   /*
    * Set distance between flexbox items. Distance = abs(-8px) + abs(8px) = 16px
    */
   margin: 0 -8px;
-  & option-selector { padding: 0 8px; }
+  option-selector { padding: 0 8px; }
 
   margin-bottom: 16px;
 }
 
 .missing-file-content {
-  & h4 {
+  h4 {
     color: #ce4844;
     font-size: 18px;
 
@@ -40,12 +40,11 @@ div.option-selectors {
     margin-bottom: 5px;
   }
 
-  & p { margin-bottom: 0; }
+  p { margin-bottom: 0; }
 
   border-radius: 2px;
   border: 1px solid #eee;
-  border-left-width: 5px;
-  border-left-color: #ce4844;
+  border-left: 2px solid #ce4844;
 
   padding: 20px;
   margin-top: 20px;
@@ -68,7 +67,7 @@ div.option-selectors {
   color: #333;
   cursor: default;
 
-  & .file-info {
+  .file-info {
     font-size: 12px;
     line-height: 32px;
 
@@ -90,13 +89,15 @@ div.option-selectors {
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
 
-  & table.file-line-container {
+  table.file-line-container {
     tab-size: 3;  /* TODO(delay): should only be the case for Ada sources */
 
-    & tr {
+    .empty-file { font-style: italic; }
+
+    tr {
       &:hover {
         &.no_code td.blob-num { background-color: #edf2f9; }
-        & td.blob-code { background-color: #f4f7fb; }
+        td.blob-code { background-color: #f4f7fb; }
       }
 
       /* Line covered */
@@ -123,8 +124,8 @@ div.option-selectors {
         border-color: #eeeeee;
       }
 
-      & .blob-num,
-      & .blob-code {
+      .blob-num,
+      .blob-code {
         font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
         font-size: 1.2rem;
         line-height: 1.5em;
@@ -135,8 +136,8 @@ div.option-selectors {
         cursor: default;
       }
 
-      & .blob-num {
-        color: color(black alpha(-70%));
+      .blob-num {
+        color: lighten(black, 70%);
         width: 1%;
         min-width: 50px;
         white-space: nowrap;
@@ -152,8 +153,8 @@ div.option-selectors {
 
 inline-comment {
   display: block;
+  margin-bottom: 8px;
 
-  &            { margin-bottom: 8px; }
   &:last-child { margin-bottom: 0; }
 }
 
@@ -192,8 +193,8 @@ inline-comment {
     bottom: 0;
   }
 
-  & table tr.annotation {
-    & td {
+  table tr.annotation {
+    td {
       font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
       font-size: 1.2rem;
       line-height: 1.5em;
@@ -203,7 +204,7 @@ inline-comment {
       cursor: default;
 
       &.line-num {
-        color: color(black alpha(-70%));
+        color: lighten(black, 70%);
         width: 1%;
         min-width: 50px;
         white-space: nowrap;
@@ -217,12 +218,12 @@ inline-comment {
       &.line-annotation {
         line-height: 1.5em;
 
-        & a {
+        a {
           color: #555;
           display: block;
         }
         &:hover {
-          & a { color: #4078c0; }
+          a { color: #4078c0; }
           background-color: #f4f7fb;
         }
       }

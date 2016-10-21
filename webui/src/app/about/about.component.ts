@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 import { GNAThubService } from '../gnathub.service';
 import { IGNAThubReport } from 'gnat';
 
-import '../array-utils';
+import '../array/operator/sum';
 
 @Component({
     selector: 'about',
     templateUrl: './about.component.html',
-    styleUrls: [ './about.component.css' ],
+    styleUrls: [ 'about.component.scss' ],
     providers: [ GNAThubService ]
 })
 export class About {
@@ -31,7 +31,8 @@ export class About {
             return 0;
         }
         return Object.keys(this.report.modules)
-            .sum(mod => Object.keys(this.report.modules[mod])
-                .sum(dir => this.report.modules[mod][dir].length));
+            .sum(mod => Object.keys(this.report.modules[mod].source_dirs)
+                .sum(dir =>
+                    this.report.modules[mod].source_dirs[dir].sources.length));
     }
 }

@@ -24,9 +24,23 @@ import collections
 import os
 import time
 
+from enum import Enum
+
 from pygments import highlight
 from pygments.lexers import guess_lexer_for_filename
 from pygments.formatters import HtmlFormatter
+
+
+class CoverageStatus(Enum):
+    """Coverage status enumeration"""
+
+    NO_CODE, COVERED, NOT_COVERED, PARTIALLY_COVERED = range(4)
+
+
+class MessageRanking(Enum):
+    """Ranking values for messages collected and reported by GNAThub"""
+
+    INFO, MINOR, MAJOR, CRITICAL, BLOCKER = range(5)
 
 
 class _HtmlFormatter(HtmlFormatter):
@@ -65,11 +79,11 @@ class ReportBuilder(object):
         :param transform: optional routine that takes 3 parameters as input
             (the project name, the source directory full path, and the source
             filename) and returns any structure. This callback is used to
-            populate the lists at the bottom of the above structure.  Defaults
-            to returning the source filename.
+            populate the leaves of the above tree. Defaults to returning the
+            source filename.
         :type transform: Function | None
         :return: a dictionary listing the project sources
-        :rtype: dict[str,dict[str,list[str]]]
+        :rtype: dict[str,dict[str,list[*]]]
         """
 
         def reduce_source_dirs(sources):
@@ -100,7 +114,7 @@ class ReportBuilder(object):
                     if os.path.normpath(os.path.dirname(path)) == directory
                 ] for directory in reduce_source_dirs(sources)
             }
-            for project, sources in GNAThub.Project.source_files().items()
+            for project, sources in GNAThub.Project.source_files().iteritems()
             if sources
         }
 
@@ -114,6 +128,7 @@ class ReportBuilder(object):
         :type extra: dict | None
         :rtype: dict[str,*]
         """
+
         if extra:
             obj.update(extra)
         return obj
@@ -165,6 +180,7 @@ class ReportBuilder(object):
         :type extra: dict | None
         :rtype: dict[str,*]
         """
+
         return cls._decorate_dict({
             'id': prop.id,
             'identifier': prop.identifier,
@@ -195,6 +211,28 @@ class ReportBuilder(object):
                 for prop in msg.get_properties()
             ],
             'message': msg.data
+        }, extra)
+
+    def _encode_coverage(cls, msg, tool, extra=None):
+        """JSON-encode coverage information
+
+        :param msg: the message to encode
+        :type msg: GNAThub.Message
+        :param tool: the coverage tool that generated this message
+        :type tool: GNAThub.Tool
+        :param extra: extra fields to decorate the encoded object with
+        :type extra: dict | None
+        :rtype: dict[str,*]
+        """
+
+        hits, status = -1, CoverageStatus.NO_CODE
+        if tool.name == 'gcov':
+            hits = int(msg.data)
+            status = (
+                CoverageStatus.COVERED if hits else CoverageStatus.NOT_COVERED)
+        return cls._decorate_dict({
+            'status': status.name,
+            'hits': hits
         }, extra)
 
     def generate_src_hunk(self, project_name, source_file):
@@ -248,14 +286,11 @@ class ReportBuilder(object):
 
             if rule.identifier != 'coverage':
                 messages[msg.line].append(
-                    self._encode_message(msg, rule, tool)
-                )
-            elif tool.name == 'gcov':
-                coverage[msg.line] = (
-                    'COVERED' if int(msg.data) else 'NOT_COVERED'
-                )
+                    self._encode_message(msg, rule, tool))
             else:
-                pass  # TODO(delay): add support for GNATcoverage
+                # Only one coverage tool shall be used. The last entry
+                # overwrites previous ones.
+                coverage[msg.line] = self._encode_coverage(msg, tool)
 
         src_hunk = {
             'project': project_name,
@@ -267,7 +302,7 @@ class ReportBuilder(object):
             'lines': None
         }
 
-        # Custom HTML formatter outputting an array of HTMLified line of code.
+        # Custom HTML formatter outputting the decorated source code as a DOM.
         formatter = _HtmlFormatter()
 
         try:
@@ -302,6 +337,12 @@ class ReportBuilder(object):
         :rtype: dict[str,*]
         """
 
+        """Map tool ID to number of message generated project-wide
+
+        :type: dict[int,int]
+        """
+        project_msg_count = collections.defaultdict(int)
+
         def _aggregate_metrics(project, source_dir, filename):
             """Collect metrics about the given source file
 
@@ -316,43 +357,88 @@ class ReportBuilder(object):
             :rtype: dict[str,*]
             """
 
-            # Computes file-level metrics
+            # Computes file-level metrics.
             resource = GNAThub.Resource.get(os.path.join(source_dir, filename))
-            metrics, msg_count = [], 0
+            metrics, msg_count = [], collections.defaultdict(int)
             if resource:
                 for msg in resource.list_messages():
                     rule = self._rules_by_id[msg.rule_id]
-                    tool = self._tools_by_id[rule.tool_id]
                     # Note: the DB schema is currently designed so that metrics
                     # are stored has messages, and file metrics are attached to
                     # line 0.
                     if msg.line == 0:
-                        metrics.append(self._encode_message(msg, rule, tool))
+                        metrics.append(self._encode_message(
+                            msg, rule, self._tools_by_id[rule.tool_id]))
                     elif rule.identifier != 'coverage':
-                        msg_count += 1
+                        msg_count[rule.tool_id] += 1
+
+            # Report sums at the project level.
+            for tool_id in msg_count.iterkeys():
+                project_msg_count[tool_id] += msg_count[tool_id]
 
             return {
                 'filename': filename,
                 'metrics': metrics or None,
-                'message_count': msg_count,
+                'message_count': msg_count or None,
                 '_associated_resource': resource is not None
             }
 
+        def _restructure_module(name, module):
+            """Transform the module tree
+
+            :param name: the name of the module
+            :type name: str
+            :param module: the module dictionary to transform
+            :type module: dict[str,list[*]]
+            :return: the newly restructured module
+            :rtype: dict[str,*]
+            """
+
+            source_dirs, module_msg_count = {}, collections.defaultdict(int)
+
+            for source_dir, sources in module.iteritems():
+                source_dir_msg_count = collections.defaultdict(int)
+                for source in sources:
+                    if source['message_count']:
+                        for tool_id, count in (
+                            source.get('message_count', {}).iteritems()
+                        ):
+                            source_dir_msg_count[tool_id] += count
+                            module_msg_count[tool_id] += count
+                source_dirs[source_dir] = {
+                    'name': source_dir,
+                    'sources': sources,
+                    'message_count': source_dir_msg_count or None
+                }
+
+            return {
+                'name': name,
+                'source_dirs': source_dirs,
+                'message_count': module_msg_count or None,
+                '_source_dirs_common_prefix': os.path.commonprefix([
+                    source_dir for source_dir in module.iterkeys()
+                ])
+            }
+
         return {
-            'modules': self._generate_source_tree(_aggregate_metrics),
+            'modules': {
+                name: _restructure_module(name, module) for name, module
+                in self._generate_source_tree(_aggregate_metrics).iteritems()
+            },
             'project': GNAThub.Project.name(),
             'creation_time': int(time.time()),
-            'tools': [
-                self._encode_tool(tool)
-                for tool in self._tools_by_id.itervalues()
-            ],
-            'rules': [
-                self._encode_rule(rule, self._tools_by_id[rule.tool_id])
-                for rule in self._rules_by_id.itervalues()
-            ],
+            'tools': {
+                id: self._encode_tool(tool)
+                for id, tool in self._tools_by_id.iteritems()
+            },
+            'rules': {
+                id: self._encode_rule(rule, self._tools_by_id[rule.tool_id])
+                for id, rule in self._rules_by_id.iteritems()
+            },
             'properties': [
                 self._encode_message_property(prop)
                 for prop in GNAThub.Property.list()
             ],
+            'message_count': project_msg_count,
             '_database': GNAThub.database()
         }

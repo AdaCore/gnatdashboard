@@ -1,0 +1,7 @@
+$dl-width: 200px;
+
+.dl-horizontal {
+  dt { width: $dl-width; }
+  dd { margin-left: calc(#{$dl-width} + 20px); }
+  ul { padding-left: 18px; }
+}

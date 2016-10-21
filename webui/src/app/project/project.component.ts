@@ -9,7 +9,7 @@ import { IGNAThubReport } from 'gnat';
 @Component({
     selector: 'project',
     templateUrl: './project.component.html',
-    styleUrls: [ './project.component.css' ],
+    styleUrls: [ 'project.component.scss' ],
     providers: [ GNAThubService ]
 })
 export class Project {

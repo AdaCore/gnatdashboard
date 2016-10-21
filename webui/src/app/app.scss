@@ -1,6 +1,22 @@
+@import '~@angular/material/core/theming/all-theme';
+
+/* Include the base styles for Angular Material core. */
+@include md-core();
+
+$wesh-app-primary: md-palette($md-blue);
+$wesh-app-accent:  md-palette($md-red);
+$wesh-app-warn:    md-palette($md-deep-orange);
+
+/* Create the theme object (a Sass map containing all of the palettes). */
+$wesh-app-theme:   md-light-theme(
+                $wesh-app-primary, $wesh-app-accent, $wesh-app-warn);
+
+/* Include theme styles for core and each component used in your app. */
+@include angular-material-theme($wesh-app-theme);
+
 body {
   font-kerning: normal;
-  font-variant-ligatures: common-ligatures, contextual;
+  font-variant-ligatures: common-ligatures;
   font-feature-settings: "kern", "liga", "clig", "calt";
 
   font-family: -apple-system, "Helvetica Neue", "Helvetica", sans-serif;
@@ -18,11 +34,11 @@ table {
   font-size: 1.2rem;
   border-spacing: 0;
 
-  & thead {
+  thead {
     color: white;
     background-color: #639add;
 
-    & th {
+    th {
       border: 1px solid #5193fb;
       padding: 4px;
     }

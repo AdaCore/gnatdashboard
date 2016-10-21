@@ -1,9 +1,9 @@
 <div>
-    <!-- Loader animation -->
-    <loader
+    <!-- Spinner animation -->
+    <spinner
         *ngIf="!report && !isReportFetchError"
         caption="Loading report...">
-    </loader>
+    </spinner>
     <!-- Error handling -->
     <missing-report-error *ngIf="isReportFetchError"></missing-report-error>
     <!-- About display -->

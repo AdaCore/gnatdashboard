@@ -36,6 +36,16 @@
 
     sonar-ada-plugin/index
 
+|GNATdashboard| Developer's Manual
+==================================
+
+.. toctree::
+    :numbered:
+    :maxdepth: 3
+
+    devel-manual/introduction
+    devel-manual/json_entities
+
 |GNAThub| API Reference
 =======================
 

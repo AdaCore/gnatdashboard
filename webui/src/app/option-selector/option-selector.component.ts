@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
     selector: 'option-selector',
     templateUrl: './option-selector.component.html',
-    styleUrls: [ './option-selector.component.css' ]
+    styleUrls: [ 'option-selector.component.scss' ]
 })
 export class OptionSelector {
     @Input() title: string = null;

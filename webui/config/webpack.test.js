@@ -27,7 +27,7 @@ module.exports = function(options) {
   return {
 
     /**
-     * Source map for Karma from the help of karma-sourcemap-loader &  karma-webpack
+     * Source map for Karma from the help of karma-sourcemap-spinner &  karma-webpack
      *
      * Do not change, leave as is or it wont work.
      * See: https://github.com/webpack/karma-webpack#source-maps
@@ -65,19 +65,19 @@ module.exports = function(options) {
       rules: [
 
         /**
-         * Tslint loader support for *.ts files
+         * Tslint spinner support for *.ts files
          *
          * See: https://github.com/wbuchwalter/tslint-loader
          */
         {
           enforce: 'pre',
           test: /\.ts$/,
-          loader: 'tslint-loader',
+          loader: 'tslint-spinner',
           exclude: [helpers.root('node_modules')]
         },
 
         /**
-         * Source map loader support for *.js files
+         * Source map spinner support for *.js files
          * Extracts SourceMaps for source files that as added as sourceMappingURL comment.
          *
          * See: https://github.com/webpack/source-map-loader
@@ -85,7 +85,7 @@ module.exports = function(options) {
         {
           enforce: 'pre',
           test: /\.js$/,
-          loader: 'source-map-loader',
+          loader: 'source-map-spinner',
           exclude: [
             // these packages have problems with their sourcemaps
             helpers.root('node_modules/rxjs'),
@@ -94,7 +94,7 @@ module.exports = function(options) {
         },
 
         /**
-         * Typescript loader support for .ts and Angular 2 async routes via .async.ts
+         * Typescript spinner support for .ts and Angular 2 async routes via .async.ts
          *
          * See: https://github.com/s-panferov/awesome-typescript-loader
          */
@@ -117,37 +117,37 @@ module.exports = function(options) {
         },
 
         /**
-         * Json loader support for *.json files.
+         * Json spinner support for *.json files.
          *
          * See: https://github.com/webpack/json-loader
          */
         {
           test: /\.json$/,
-          loader: 'json-loader',
+          loader: 'json-spinner',
           exclude: [helpers.root('src/index.html')]
         },
 
         /**
-         * Raw loader support for *.css files
+         * Raw spinner support for *.css files
          * Returns file content as string
          *
          * See: https://github.com/webpack/raw-loader
          */
         {
           test: /\.css$/,
-          loaders: ['to-string-loader', 'css-loader'],
+          loaders: ['to-string-spinner', 'css-spinner'],
           exclude: [helpers.root('src/index.html')]
         },
 
         /**
-         * Raw loader support for *.html
+         * Raw spinner support for *.html
          * Returns file content as string
          *
          * See: https://github.com/webpack/raw-loader
          */
         {
           test: /\.html$/,
-          loader: 'raw-loader',
+          loader: 'raw-spinner',
           exclude: [helpers.root('src/index.html')]
         },
 
@@ -160,7 +160,7 @@ module.exports = function(options) {
         {
           enforce: 'post',
           test: /\.(js|ts)$/,
-          loader: 'istanbul-instrumenter-loader',
+          loader: 'istanbul-instrumenter-spinner',
           include: helpers.root('src'),
           exclude: [
             /\.(e2e|spec)\.ts$/,

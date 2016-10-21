@@ -43,6 +43,14 @@ import * as _ from 'lodash'
  *
  */
 
+// Typings for https://github.com/studio-b12/natural-sort
+declare module "natural-sort" {
+  type SortOptions = { caseSensitive: boolean }
+  function naturalSort(options?: SortOptions): <T>(a: T, b: T) => number;
+  namespace naturalSort {}
+  export = naturalSort;
+}
+
 // support NodeJS modules without type definitions
 declare module '*';
 

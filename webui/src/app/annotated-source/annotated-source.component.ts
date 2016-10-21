@@ -4,18 +4,18 @@ import { ActivatedRoute } from '@angular/router';
 
 import { GNAThubService } from '../gnathub.service';
 import {
-    IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage, IGNAThubProperty,
-    IGNAThubRule, IGNAThubTool
+    CoverageStatus, IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage,
+    IGNAThubProperty, IGNAThubRule, IGNAThubTool
 } from 'gnat';
 
-import '../array-utils';
+import '../array/operator/sum';
 
 type Annotation = { line: IGNAThubBlobLine; msg: IGNAThubMessage };
 
 @Component({
     selector: 'annotated-source',
     templateUrl: './annotated-source.component.html',
-    styleUrls: [ './annotated-source.component.css' ],
+    styleUrls: [ 'annotated-source.component.scss' ],
     providers: [ GNAThubService ]
 })
 export class AnnotatedSource {
@@ -48,9 +48,11 @@ export class AnnotatedSource {
                     blob.properties[propertyId].ui_selected = true;
                 }
                 let annotations: Annotation[] = [];
-                blob.lines.forEach(line => line.messages.forEach(msg => {
-                    annotations.push({ line: line, msg: msg });
-                }));
+                if (blob.lines) {
+                    blob.lines.forEach(line => line.messages.forEach(msg => {
+                        annotations.push({ line: line, msg: msg });
+                    }));
+                }
                 this.blob = blob;
                 this.annotations = annotations;
             },
@@ -216,10 +218,10 @@ export class AnnotatedSource {
      * @param line The line for which to get coverage information.
      * @return The coverage value.
      */
-    private coverage(line: number): string {
+    private coverage(line: number): { status: CoverageStatus; hits: number } {
         if (!this.blob || !this.blob.lines) {
-            return '';
+            return null;
         }
-        return this.blob.lines[line - 1].coverage;
+        return this.blob.lines[line - 1].coverage || { status: '', hits: 0 };
     }
 }

@@ -5,9 +5,10 @@ import { Component, ViewEncapsulation } from '@angular/core';
     encapsulation: ViewEncapsulation.None,
     templateUrl: './main-responder.component.html',
     styleUrls: [
-        './app.css',
-        './main-responder.component.css',
-        './pygments-github.css'
+        'app.scss',
+        'main-responder.component.scss',
+        'material-icons.scss',
+        'pygments-github.scss'
     ]
 })
 export class MainResponder {}

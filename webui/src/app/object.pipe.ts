@@ -9,7 +9,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  *     <li *ngFor="let key of obj | mapKeys">{{ key }}</li>
  */
 @Pipe({ name: 'mapKeys'})
-export class MapKeys implements PipeTransform {
+export class MapKeysPipe implements PipeTransform {
     transform(obj: { [key: string]: any }, args: any[] = null): string[] {
         return obj ? Object.keys(obj) : [];
     }
@@ -24,7 +24,7 @@ export class MapKeys implements PipeTransform {
  *     <li *ngFor="let value of obj | mapValues">{{ value }}</li>
  */
 @Pipe({ name: 'mapValues'})
-export class MapValues implements PipeTransform {
+export class MapValuesPipe implements PipeTransform {
     transform(obj: { [key: string]: any }, args: any[] = null): string[] {
         return obj ? Object.keys(obj).map(key => obj[key]) : [];
     }
@@ -36,7 +36,7 @@ export class MapValues implements PipeTransform {
  * An object is empty iff it has 0 keys.
  */
 @Pipe({ name: 'notEmpty'})
-export class NotEmpty implements PipeTransform {
+export class NotEmptyPipe implements PipeTransform {
     transform(obj: { [key: string]: any }, args: any[] = null): boolean {
         return Object.keys(obj).length !== 0;
     }
