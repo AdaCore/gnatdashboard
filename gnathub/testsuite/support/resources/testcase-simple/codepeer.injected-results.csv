@@ -1,0 +1,4 @@
+File,Line,Column,Category,New?,Review?,Ranking,Kind,Message,Classification,CWE,Checks,Primary_Checks,Subp,Timestamp,Approved By,Comment
+/gnatdashboard/gnathub/testsuite/support/resources/testcase-simple/src/f.adb,18,32,validity check,FALSE,FALSE,high,check,"validity check: uninitialized is uninitialized here",unclassified,"232,236,475","","",f.foo,,,
+/gnatdashboard/gnathub/testsuite/support/resources/testcase-simple/src/simple.adb,30,24,test always true,FALSE,FALSE,medium,warning,"test always true because J <= (42) - 38",unclassified,"561","","",test_case.bar,,,
+/gnatdashboard/gnathub/testsuite/support/resources/testcase-simple/src/simple.adb,37,8,dead code,FALSE,FALSE,medium,warning,"dead code because (1) = (42) - 41",unclassified,"561","","",test_case.bar,,,

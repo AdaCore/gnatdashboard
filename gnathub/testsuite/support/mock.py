@@ -3,8 +3,9 @@
 import json
 import os
 
+from gnatpython.env import BaseEnv
 from gnatpython.ex import Run, PIPE, STDOUT
-from gnatpython.fileutils import cp, sync_tree
+from gnatpython.fileutils import cp, chmod, mkdir, sync_tree
 
 from support import const
 
@@ -30,9 +31,8 @@ class Project(object):
         :returns: gnatpython.ex.Run
         """
 
-        make = Run(['make', target], cwd=self.install_dir, output=PIPE,
-                   error=STDOUT)
-        return make
+        return Run(
+            ['make', target], cwd=self.install_dir, output=PIPE, error=STDOUT)
 
     def build(self):
         """Build the Ada project using the Makefile `build` rule.
@@ -70,6 +70,62 @@ class Project(object):
         return Project('disabled', dst)
 
 
+class MockedExecutable(object):
+
+    """Mocked executable."""
+
+    def __init__(self, name, project, ecode=0):
+        self.name = name
+        self.ecode = ecode
+        self.project = project
+
+    def _generate_code(self):
+        return '#! /bin/bash\n\nexit %d' % self.ecode
+
+    def create(self, output_dir):
+        mkdir(output_dir)
+        executable = os.path.join(output_dir, self.name)
+        with open(executable, 'w') as fd:
+            fd.write(self._generate_code() % {
+                'project_name': self.project.name,
+                'project_root': self.project.install_dir
+            })
+            fd.write('\n')
+        chmod('+x', executable)
+
+
+class CodePeerExecutable(MockedExecutable):
+
+    """Mock the codepeer executable."""
+
+    def __init__(self, *args, **kwargs):
+        super(CodePeerExecutable, self).__init__('codepeer', *args, **kwargs)
+
+    def _generate_code(self):
+        return '\n'.join([
+            '#! /bin/bash',
+            '',
+            'mkdir -p obj/codepeer',
+            'exit 0'
+        ])
+
+
+class CodePeerMsgReaderExecutable(MockedExecutable):
+
+    """Mock the codepeer_msg_reader executable."""
+
+    def __init__(self, *args, **kwargs):
+        super(CodePeerMsgReaderExecutable, self).__init__(
+            'codepeer_msg_reader', *args, **kwargs)
+
+    def _generate_code(self):
+        return '\n'.join([
+            '#! /bin/bash',
+            '',
+            'exec cat %(project_root)s/codepeer.injected-results.csv'
+        ])
+
+
 class Script(object):
 
     """Script resource accessor."""
@@ -100,9 +156,28 @@ class GNAThubExecutionFailed(Exception):
 
 
 class GNAThub(object):
-    def __init__(self, project, **kwargs):
+    def __init__(self, project, mocks=None, **kwargs):
+        """Run GNAThub on the given project.
+
+        :param project: the project on which to run GNAThub
+        :type project: Project
+        :param mocks: optional list of executables to mock and the expected
+            exit code they should return
+        :type mocks: list[MockedExecutable]
+        """
         self.project = project
+        self._bin = os.path.join(self.project.install_dir, 'bin')
+        for mock in mocks or []:
+            self.mock_executable(mock(self.project))
         self.run(**kwargs)
+
+    def mock_executable(self, mock):
+        """Create the mock script.
+
+        :param mock: the mock class
+        :type mock: MockedExecutable
+        """
+        mock.create(self._bin)
 
     def run(self, **kwargs):
         """Run GNAThub with the appropriate command line.
@@ -150,6 +225,9 @@ class GNAThub(object):
             else:
                 raise TypeError('expected str or support.Script')
 
+        # Add the local bin directory to the path to use mocks if any
+        BaseEnv().add_path(self._bin)
+
         run_kwargs = {
             'output': kwargs.get('output', PIPE),
             'error': kwargs.get('error', STDOUT),
@@ -169,4 +247,5 @@ class GNAThub(object):
             plugins = json.loads(fd.read())
         failed = [name for name, results in plugins if not results['success']]
         if failed:
-            raise GNAThubExecutionFailed('plugin(s) failure: {}'.format(failed))
+            raise GNAThubExecutionFailed(
+                'plugin(s) failure: {}: {}'.format(failed, p.out))
