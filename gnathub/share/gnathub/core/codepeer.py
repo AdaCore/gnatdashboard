@@ -102,10 +102,9 @@ class CodePeer(GNAThub.Plugin):
         """
 
         self.info('collect results with msg_reader')
-        proc = GNAThub.Run(
+        self.postprocess(GNAThub.Run(
             'msg_reader', CodePeer.__msg_reader_cmd_line(), out=self.csv_report
-        )
-        self.postprocess(proc.status)
+        ).status)
 
     def postprocess(self, exit_code):
         """Parses the output report if CodePeer completed successfully
