@@ -11,11 +11,13 @@ const helpers = require('./helpers');
 // problem with copy-webpack-plugin
 const AssetsPlugin = require('assets-webpack-plugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
+const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 const HtmlElementsPlugin = require('./html-elements-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 /*
  * Webpack Constants
@@ -179,7 +181,7 @@ module.exports = function(options) {
        * See: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
        * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
        */
-      new webpack.optimize.CommonsChunkPlugin({
+      new CommonsChunkPlugin({
         name: ['polyfills', 'vendor'].reverse()
       }),
 
@@ -233,11 +235,23 @@ module.exports = function(options) {
         template: 'src/index.html',
         title: METADATA.title,
         chunksSortMode: 'dependency',
-        metadata: METADATA
+        metadata: METADATA,
+        inject: 'head'
       }),
 
       /*
-       * Plugin: HtmlHeadConfigPlugin
+       * Plugin: ScriptExtHtmlWebpackPlugin
+       * Description: Enhances html-webpack-plugin functionality
+       * with different deployment options for your scripts including:
+       *
+       * See: https://github.com/numical/script-ext-html-webpack-plugin
+       */
+      new ScriptExtHtmlWebpackPlugin({
+        defaultAttribute: 'defer'
+      }),
+
+      /*
+       * Plugin: HtmlElementsPlugin
        * Description: Generate html tags based on javascript maps.
        *
        * If a publicPath is set in the webpack output configuration, it will be automatically added to
