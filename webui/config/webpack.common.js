@@ -9,12 +9,13 @@ const helpers = require('./helpers');
  * Webpack Plugins
  */
 // problem with copy-webpack-plugin
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
-const HtmlElementsPlugin = require('./html-elements-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
+const HtmlElementsPlugin = require('./html-elements-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
 /*
  * Webpack Constants
@@ -36,13 +37,6 @@ module.exports = function(options) {
   return {
 
     /*
-     * Static metadata for index.html
-     *
-     * See: (custom attribute)
-     */
-    metadata: METADATA,
-
-    /*
      * Cache generated modules and chunks to improve performance for multiple incremental builds.
      * This is enabled by default in watch mode.
      * You can pass false to disable it.
@@ -60,8 +54,8 @@ module.exports = function(options) {
     entry: {
 
       'polyfills': './src/polyfills.browser.ts',
-      'vendor':    './src/vendor.browser.ts',
-      'main':      './src/main.browser.ts'
+      'vendor': './src/vendor.browser.ts',
+      'main': './src/main.browser.ts'
 
     },
 
@@ -77,7 +71,7 @@ module.exports = function(options) {
        *
        * See: http://webpack.github.io/docs/configuration.html#resolve-extensions
        */
-      extensions: ['', '.ts', '.js', '.json'],
+      extensions: ['.ts', '.js', '.json'],
 
       // An array of directory names to be resolved to the current directory
       modules: [helpers.root('src'), 'node_modules'],
@@ -91,24 +85,7 @@ module.exports = function(options) {
      */
     module: {
 
-      /*
-       * An array of applied pre and post loaders.
-       *
-       * See: http://webpack.github.io/docs/configuration.html#module-preloaders-module-postloaders
-       */
-      preLoaders: [
-
-      ],
-
-      /*
-       * An array of automatically applied loaders.
-       *
-       * IMPORTANT: The loaders here are resolved relative to the resource which they are applied to.
-       * This means they are not resolved relative to the configuration file.
-       *
-       * See: http://webpack.github.io/docs/configuration.html#module-loaders
-       */
-      loaders: [
+      rules: [
 
         /*
          * Typescript loader support for .ts and Angular 2 async routes via .async.ts
@@ -144,7 +121,11 @@ module.exports = function(options) {
          */
         {
           test: /\.css$/,
-          loaders: ['to-string-loader', 'css-loader', 'postcss-loader']
+          loaders: [
+            'to-string-loader',
+            'css-loader?importLoaders=1',
+            'postcss-loader',
+          ]
         },
 
         /* Raw loader support for *.html
@@ -164,28 +145,11 @@ module.exports = function(options) {
         {
           test: /\.(jpg|png|gif)$/,
           loader: 'file'
-        }
+        },
+
       ]
 
     },
-
-    postcss: [
-      require('postcss-mixins'),
-      require('postcss-simple-vars'),
-      require('postcss-cssnext')
-    ],
-
-    postLoaders: [
-      {
-        test: /\.js$/,
-        loader: 'string-replace-loader',
-        query: {
-          search: 'var sourceMappingUrl = extractSourceMappingUrl\\(cssText\\);',
-          replace: 'var sourceMappingUrl = "";',
-          flags: 'g'
-        }
-      }
-    ],
 
     /*
      * Add additional plugins to the compiler.
@@ -267,7 +231,9 @@ module.exports = function(options) {
        */
       new HtmlWebpackPlugin({
         template: 'src/index.html',
-        chunksSortMode: 'dependency'
+        title: METADATA.title,
+        chunksSortMode: 'dependency',
+        metadata: METADATA
       }),
 
       /*
@@ -296,6 +262,13 @@ module.exports = function(options) {
         headTags: require('./head-config.common')
       }),
 
+      /*
+       * Plugin LoaderOptionsPlugin (experimental)
+       *
+       * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+       */
+      new LoaderOptionsPlugin({}),
+
     ],
 
     /*
@@ -305,7 +278,7 @@ module.exports = function(options) {
      * See: https://webpack.github.io/docs/configuration.html#node
      */
     node: {
-      global: 'window',
+      global: true,
       crypto: 'empty',
       process: true,
       module: false,

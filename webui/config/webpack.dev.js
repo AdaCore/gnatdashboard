@@ -11,6 +11,7 @@ const commonConfig = require('./webpack.common.js'); // the settings that are co
  */
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
+const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
 /**
  * Webpack Constants
@@ -33,20 +34,6 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
  */
 module.exports = function(options) {
   return webpackMerge(commonConfig({env: ENV}), {
-
-    /**
-     * Merged metadata from webpack.common.js for index.html
-     *
-     * See: (custom attribute)
-     */
-    metadata: METADATA,
-
-    /**
-     * Switch loaders to debug mode.
-     *
-     * See: http://webpack.github.io/docs/configuration.html#debug
-     */
-    debug: true,
 
     /**
      * Developer tool to enhance debugging
@@ -127,19 +114,31 @@ module.exports = function(options) {
        */
       new NamedModulesPlugin(),
 
-    ],
+      /**
+       * Plugin LoaderOptionsPlugin (experimental)
+       *
+       * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+       */
+      new LoaderOptionsPlugin({
+        debug: true,
+        options: {
 
-    /**
-     * Static analysis linter for TypeScript advanced options configuration
-     * Description: An extensible linter for the TypeScript language.
-     *
-     * See: https://github.com/wbuchwalter/tslint-loader
-     */
-    tslint: {
-      emitErrors: false,
-      failOnHint: false,
-      resourcePath: 'src'
-    },
+          /**
+           * Static analysis linter for TypeScript advanced options configuration
+           * Description: An extensible linter for the TypeScript language.
+           *
+           * See: https://github.com/wbuchwalter/tslint-loader
+           */
+          tslint: {
+            emitErrors: false,
+            failOnHint: false,
+            resourcePath: 'src'
+          },
+
+        }
+      }),
+
+    ],
 
     /**
      * Webpack Development Server configuration
@@ -167,7 +166,7 @@ module.exports = function(options) {
      * See: https://webpack.github.io/docs/configuration.html#node
      */
     node: {
-      global: 'window',
+      global: true,
       crypto: 'empty',
       process: true,
       module: false,

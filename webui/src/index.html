@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="">
 <head>
-    <title><%= webpackConfig.metadata.title %></title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="<%= webpackConfig.metadata.title %>">
+    <meta name="description" content="<%= htmlWebpackPlugin.options.title %>">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
@@ -17,14 +17,14 @@
     <% } %>
 
     <!-- Base URL -->
-    <!-- <base href="<%= webpackConfig.metadata.baseUrl %>"> -->
+    <!-- <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>"> -->
 </head>
 <body>
     <main-responder>
         Loading...
     </main-responder>
 
-    <% if (webpackConfig.metadata.isDevServer) { %>
+    <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
     <!-- Webpack Dev Server reload -->
     <script src="/webpack-dev-server.js"></script>
     <% } %>
