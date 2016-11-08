@@ -3,7 +3,7 @@
 import json
 import os
 
-from gnatpython.env import BaseEnv
+from gnatpython.env import BaseEnv, Env
 from gnatpython.ex import Run, PIPE, STDOUT
 from gnatpython.fileutils import cp, chmod, mkdir, sync_tree
 
@@ -85,6 +85,9 @@ class MockedExecutable(object):
     def create(self, output_dir):
         mkdir(output_dir)
         executable = os.path.join(output_dir, self.name)
+        if Env().build.os.name == 'windows':
+            # On Windows, suffixes executables by .exe
+            executable += '.exe'
         with open(executable, 'w') as fd:
             fd.write(self._generate_code() % {
                 'project_name': self.project.name,
