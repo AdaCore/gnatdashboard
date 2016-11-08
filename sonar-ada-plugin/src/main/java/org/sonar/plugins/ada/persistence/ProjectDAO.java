@@ -123,23 +123,23 @@ public class ProjectDAO {
    * Custom row mapper for coverage.
    */
   private final RowMapper<CoverageRecord> coverageRowMapper =
-      new RowMapper<CoverageRecord>() {
-        @Override
-        public CoverageRecord mapRow(ResultSet resultSet) throws SQLException {
-          final String path = getPath(resultSet.getString("path"));
-          final Integer lineNo = resultSet.getInt("line_no");
-          final Integer hits = resultSet.getInt("hits");
-          final File file = File.fromIOFile(new java.io.File(path), project);
+    new RowMapper<CoverageRecord>() {
+      @Override
+      public CoverageRecord mapRow(ResultSet resultSet) throws SQLException {
+        final String path = getPath(resultSet.getString("path"));
+        final Integer lineNo = resultSet.getInt("line_no");
+        final Integer hits = resultSet.getInt("hits");
+        final File file = File.fromIOFile(new java.io.File(path), project);
 
-          if (file == null) {
-            log.trace("File excluded from analysis closure: {}", path);
-            return null;
-          }
-
-          log.trace("Coverage @ {}:{} -> {}", new Object[]{path, lineNo, hits});
-          return new CoverageRecord(file, lineNo, hits);
+        if (file == null) {
+          log.trace("File excluded from analysis closure: {}", path);
+          return null;
         }
-      };
+
+        log.trace("Coverage @ {}:{} -> {}", new Object[]{path, lineNo, hits});
+        return new CoverageRecord(file, lineNo, hits);
+      }
+    };
 
   /**
    * Custom row mapper for issues.
@@ -148,38 +148,38 @@ public class ProjectDAO {
   private final RowMapper<IssueRecord> issueRowMapper = new RowMapper<IssueRecord>() {
     @Override
     public IssueRecord mapRow(ResultSet resultSet) throws SQLException {
-      final String path = getPath(resultSet.getString("path"));
-      final int lineNo = resultSet.getInt("line_no");
-      final String message = resultSet.getString("message");
-      final String toolName = resultSet.getString("tool_name");
-      final String key = resultSet.getString("key");
-      final String category = resultSet.getString("category");
+    final String path = getPath(resultSet.getString("path"));
+    final int lineNo = resultSet.getInt("line_no");
+    final String message = resultSet.getString("message");
+    final String toolName = resultSet.getString("tool_name");
+    final String key = resultSet.getString("key");
+    final String category = resultSet.getString("category");
 
-      log.trace(
-          "Generate Rule Key from key=\"{}\" and category=\"{}\" -> \"{}\"",
-          resultSet.getString("key"), resultSet.getString("category"), key);
+    log.trace(
+        "Generate Rule Key from key=\"{}\" and category=\"{}\" -> \"{}\"",
+        resultSet.getString("key"), resultSet.getString("category"), key);
 
-      final File file = File.fromIOFile(new java.io.File(path), project);
+    final File file = File.fromIOFile(new java.io.File(path), project);
 
-      if (file == null) {
-        log.trace("File excluded from analysis closure: {}", path);
+    if (file == null) {
+      log.trace("File excluded from analysis closure: {}", path);
+      return null;
+    }
+
+    final Rule rule = Rule.create(toolName, key);
+    log.trace("({}) @ {}:{} -> {}:{}", toolName, path, lineNo, key, message);
+
+    String severity = null;
+    if (CodePeerRulesDefinition.REPOSITORY_KEY.equals(toolName)) {
+      try {
+        severity = CodePeerSeverity.valueOf(
+                category.toUpperCase()).getSonarSeverity();
+      } catch (final IllegalArgumentException why) {
+        log.warn("Unsupported CodePeer severity \"{}\"", category, why);
         return null;
       }
-
-      final Rule rule = Rule.create(toolName, key);
-      log.trace("({}) @ {}:{} -> {}:{}", toolName, path, lineNo, key, message);
-
-      String severity = null;
-      if (CodePeerRulesDefinition.REPOSITORY_KEY.equals(toolName)) {
-        try {
-          severity = CodePeerSeverity.valueOf(
-                  category.toUpperCase()).getSonarSeverity();
-        } catch (final IllegalArgumentException why) {
-          log.warn("Unsupported CodePeer severity \"{}\"", category, why);
-          return null;
-        }
-      }
-      return new IssueRecord(path, file, lineNo, message, rule, severity);
+    }
+    return new IssueRecord(path, file, lineNo, message, rule, severity);
     }
   };
 
