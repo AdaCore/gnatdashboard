@@ -171,8 +171,13 @@ public class ProjectDAO {
 
       String severity = null;
       if (CodePeerRulesDefinition.REPOSITORY_KEY.equals(toolName)) {
-        severity =CodePeerSeverity.valueOf(
-                category.toUpperCase()).getSonarSeverity();
+        try {
+          severity = CodePeerSeverity.valueOf(
+                  category.toUpperCase()).getSonarSeverity();
+        } catch (final IllegalArgumentException why) {
+          log.warn("Unsupported CodePeer severity \"{}\"", category, why);
+          return null;
+        }
       }
       return new IssueRecord(path, file, lineNo, message, rule, severity);
     }
