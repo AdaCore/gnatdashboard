@@ -175,7 +175,7 @@ public class ProjectDAO {
         severity = CodePeerSeverity.valueOf(
                 category.toUpperCase()).getSonarSeverity();
       } catch (final IllegalArgumentException why) {
-        log.warn("Unsupported CodePeer severity \"{}\"", category, why);
+        log.warn("Unsupported CodePeer severity \"{}\"", category);
         return null;
       }
     }
