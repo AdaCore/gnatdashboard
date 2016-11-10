@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -33,36 +33,36 @@ import java.io.InputStreamReader;
 @Slf4j
 @AllArgsConstructor
 public abstract class AdaToolRulesDefinition implements RulesDefinition {
-    private final RulesDefinitionXmlLoader xmlLoader;
+  private final RulesDefinitionXmlLoader xmlLoader;
 
-    /**
-     * @return The repository key.
-     */
-    public abstract String getRepositoryKey();
+  /**
+   * @return The repository key.
+   */
+  public abstract String getRepositoryKey();
 
-    /**
-     * @return The name of the tool (eg. "GNATcheck").
-     */
-    public abstract String getToolName();
+  /**
+   * @return The name of the tool (eg. "GNATcheck").
+   */
+  public abstract String getToolName();
 
-    /**
-     * @return The path to the XML file containing the rules definition.
-     */
-    public abstract String getRulesDefinitionXMLFile();
+  /**
+   * @return The path to the XML file containing the rules definition.
+   */
+  public abstract String getRulesDefinitionXMLFile();
 
-    @Override
-    public void define(Context context) {
-        final NewRepository repository = context
-                .createRepository(getRepositoryKey(), Ada.KEY)
-                .setName(String.format("{} rules", getToolName()));
+  @Override
+  public void define(Context context) {
+    final NewRepository repository = context
+        .createRepository(getRepositoryKey(), Ada.KEY)
+        .setName(String.format("{} rules", getToolName()));
 
-        final String definitions = getRulesDefinitionXMLFile();
+    final String definitions = getRulesDefinitionXMLFile();
 
-        log.debug("Loading XML definition file: {}", definitions);
-        final InputStreamReader reader = new InputStreamReader(
-                AdaToolRulesDefinition.class.getResourceAsStream(definitions));
+    log.debug("Loading XML definition file: {}", definitions);
+    final InputStreamReader reader = new InputStreamReader(
+        AdaToolRulesDefinition.class.getResourceAsStream(definitions));
 
-        xmlLoader.load(repository, reader);
-        repository.done();
-    }
+    xmlLoader.load(repository, reader);
+    repository.done();
+  }
 }

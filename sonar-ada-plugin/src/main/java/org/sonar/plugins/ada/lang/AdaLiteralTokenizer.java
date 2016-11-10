@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2013-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -30,56 +30,56 @@ import org.sonar.colorizer.Tokenizer;
 @AllArgsConstructor
 public class AdaLiteralTokenizer extends Tokenizer {
 
-    private final String tagBefore;
-    private final String tagAfter;
+  private final String tagBefore;
+  private final String tagAfter;
 
-    public AdaLiteralTokenizer() {
-        this("", "");
+  public AdaLiteralTokenizer() {
+    this("", "");
+  }
+
+  @Override
+  public boolean consume(CodeReader code, HtmlCodeBuilder codeBuilder) {
+    if (code.peek() == '\"') {
+      codeBuilder.appendWithoutTransforming(tagBefore);
+      int firstChar = code.peek();
+      code.popTo(
+          new AdaLiteralTokenizer.EndCommentMatcher(firstChar, code),
+          codeBuilder);
+      codeBuilder.appendWithoutTransforming(tagAfter);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private static class EndCommentMatcher implements EndMatcher {
+    private final int firstChar;
+    private final CodeReader code;
+    private StringBuilder literalValue;
+
+    public EndCommentMatcher(int firstChar, CodeReader code) {
+      this.firstChar = firstChar;
+      this.code = code;
+      literalValue = new StringBuilder();
     }
 
-    @Override
-    public boolean consume(CodeReader code, HtmlCodeBuilder codeBuilder) {
-        if (code.peek() == '\"') {
-            codeBuilder.appendWithoutTransforming(tagBefore);
-            int firstChar = code.peek();
-            code.popTo(
-                    new AdaLiteralTokenizer.EndCommentMatcher(firstChar, code),
-                    codeBuilder);
-            codeBuilder.appendWithoutTransforming(tagAfter);
-            return true;
+    public boolean match(int endFlag) {
+      literalValue.append((char) endFlag);
+      return code.lastChar() == firstChar &&
+          evenNumberOfBackSlashBeforeDelimiter() &&
+          literalValue.length() > 1;
+    }
+
+    private boolean evenNumberOfBackSlashBeforeDelimiter() {
+      int numberOfBackSlashChar = 0;
+      for (int index = literalValue.length() - 3; index >= 0; --index) {
+        if (literalValue.charAt(index) == '\\') {
+          numberOfBackSlashChar++;
         } else {
-            return false;
+          break;
         }
+      }
+      return numberOfBackSlashChar % 2 == 0;
     }
-
-    private static class EndCommentMatcher implements EndMatcher {
-        private final int firstChar;
-        private final CodeReader code;
-        private StringBuilder literalValue;
-
-        public EndCommentMatcher(int firstChar, CodeReader code) {
-            this.firstChar = firstChar;
-            this.code = code;
-            literalValue = new StringBuilder();
-        }
-
-        public boolean match(int endFlag) {
-            literalValue.append((char) endFlag);
-            return code.lastChar() == firstChar &&
-                evenNumberOfBackSlashBeforeDelimiter() &&
-                literalValue.length() > 1;
-        }
-
-        private boolean evenNumberOfBackSlashBeforeDelimiter() {
-            int numberOfBackSlashChar = 0;
-            for (int index = literalValue.length() - 3; index >= 0; --index) {
-                if (literalValue.charAt(index) == '\\') {
-                    numberOfBackSlashChar++;
-                } else {
-                    break;
-                }
-            }
-            return numberOfBackSlashChar % 2 == 0;
-        }
-    }
+  }
 }

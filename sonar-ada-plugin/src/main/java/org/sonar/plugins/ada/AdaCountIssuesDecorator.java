@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2013-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -47,67 +47,66 @@ import org.sonar.plugins.ada.lang.Ada;
 @AllArgsConstructor
 @DependsUpon(DecoratorBarriers.ISSUES_TRACKED)
 public class AdaCountIssuesDecorator implements Decorator {
-    private final FileSystem fs;
-    private final RulesProfile rules;
-    private final ResourcePerspectives perspectives;
+  private final FileSystem fs;
+  private final RulesProfile rules;
+  private final ResourcePerspectives perspectives;
 
-    @Override
-    public boolean shouldExecuteOnProject(final Project project) {
-        return fs.hasFiles(fs.predicates().and(
-                fs.predicates().hasType(InputFile.Type.MAIN),
-                fs.predicates().hasLanguage(Ada.KEY)));
+  @Override
+  public boolean shouldExecuteOnProject(final Project project) {
+    return fs.hasFiles(fs.predicates().and(
+        fs.predicates().hasType(InputFile.Type.MAIN),
+        fs.predicates().hasLanguage(Ada.KEY)));
+  }
+
+  @Override
+  public void decorate(
+      final Resource resource, final DecoratorContext context) {
+    if (!ResourceUtils.isFile(resource)) {
+      // Only process files
+      return;
     }
 
-    @Override
-    public void decorate(
-            final Resource resource, final DecoratorContext context)
-    {
-        if (!ResourceUtils.isFile(resource)) {
-            // Only process files
-            return;
-        }
+    @NonNull final Issuable issuable =
+        perspectives.as(Issuable.class, resource);
 
-        @NonNull final Issuable issuable =
-                perspectives.as(Issuable.class, resource);
+    int codepeerCount = 0;
+    int gnatcheckCount = 0;
 
-        int codepeerCount = 0;
-        int gnatcheckCount = 0;
-
-        for (final Issue issue : issuable.issues()) {
-            if (isCodePeerRule(issue.ruleKey())) {
-                codepeerCount += 1;
-            } else if (isGNATcheckRule(issue.ruleKey())) {
-                gnatcheckCount += 1;
-            }
-        }
-
-        context.saveMeasure(AdaMetrics.CODEPEER, (double) codepeerCount);
-        log.debug("{}: saved {} CodePeer issues", resource, codepeerCount);
-
-        context.saveMeasure(AdaMetrics.GNATCHECK, (double) gnatcheckCount);
-        log.debug("{}: saved {} GNATcheck issues", resource, gnatcheckCount);
+    for (final Issue issue : issuable.issues()) {
+      if (isCodePeerRule(issue.ruleKey())) {
+        codepeerCount += 1;
+      } else if (isGNATcheckRule(issue.ruleKey())) {
+        gnatcheckCount += 1;
+      }
     }
 
-    /**
-     * Predicate indicating a CodePeer rule.
-     *
-     * @param rule The rule to analyse.
-     * @return {@code True} if {@code rule} is a CodePeer rule, {@code false}
-     *      otherwise.
-     */
-    private static boolean isCodePeerRule(final RuleKey rule) {
-        return CodePeerRulesDefinition.REPOSITORY_KEY.equals(rule.repository());
-    }
+    context.saveMeasure(AdaMetrics.CODEPEER, (double) codepeerCount);
+    log.debug("{}: saved {} CodePeer issues", resource, codepeerCount);
 
-    /**
-     * Predicate indicating a GNATcheck rule.
-     *
-     * @param rule The rule to analyse.
-     * @return {@code True} if {@code rule} is a GNATcheck rule, {@code false}
-     *      otherwise.
-     */
-    private static boolean isGNATcheckRule(final RuleKey rule) {
-        return GNATcheckRulesDefinition.REPOSITORY_KEY.equals(
-                rule.repository());
-    }
+    context.saveMeasure(AdaMetrics.GNATCHECK, (double) gnatcheckCount);
+    log.debug("{}: saved {} GNATcheck issues", resource, gnatcheckCount);
+  }
+
+  /**
+   * Predicate indicating a CodePeer rule.
+   *
+   * @param rule The rule to analyse.
+   * @return {@code True} if {@code rule} is a CodePeer rule, {@code false}
+   * otherwise.
+   */
+  private static boolean isCodePeerRule(final RuleKey rule) {
+    return CodePeerRulesDefinition.REPOSITORY_KEY.equals(rule.repository());
+  }
+
+  /**
+   * Predicate indicating a GNATcheck rule.
+   *
+   * @param rule The rule to analyse.
+   * @return {@code True} if {@code rule} is a GNATcheck rule, {@code false}
+   * otherwise.
+   */
+  private static boolean isGNATcheckRule(final RuleKey rule) {
+    return GNATcheckRulesDefinition.REPOSITORY_KEY.equals(
+        rule.repository());
+  }
 }

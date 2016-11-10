@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""GNAThub plug-in for the generation of SonarQube Runner configuration file
+"""GNAThub plug-in for the generation of SonarQube Scanner configuration file
 
 It exports the SonarConfig class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
@@ -21,7 +21,7 @@ module and load it as part of the GNAThub default execution.
 
 import GNAThub
 
-from _sonarqube import SonarQube, SonarRunnerProperties
+from _sonarqube import SonarQube, SonarScannerProperties
 
 
 class SonarConfig(GNAThub.Plugin):
@@ -36,13 +36,14 @@ class SonarConfig(GNAThub.Plugin):
         return 'sonar-config'
 
     def execute(self):
-        """Generate SonarQube Runner configuration file and dumps it"""
+        """Generate SonarQube Scanner configuration file"""
         self.info('generate %s' % SonarQube.CONFIGURATION)
         try:
-            SonarRunnerProperties(self.log).write(SonarQube.configuration())
+            SonarScannerProperties(self.log).write(SonarQube.configuration())
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
-            self.log.exception('failed to generate SonarRunner configuration')
+            self.log.exception(
+                'SonarQube Scanner configuration generation failed')
             self.error(str(why))
         else:
             self.exec_status = GNAThub.EXEC_SUCCESS

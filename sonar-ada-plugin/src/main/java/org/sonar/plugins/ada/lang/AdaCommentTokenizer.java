@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2013-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -24,7 +24,7 @@ import org.sonar.colorizer.InlineDocTokenizer;
  * ??? Review this class and remove deprecated code.
  */
 public class AdaCommentTokenizer extends InlineDocTokenizer {
-    public AdaCommentTokenizer(String tagBefore, String tagAfter) {
-        super("--", tagBefore, tagAfter);
-    }
+  public AdaCommentTokenizer(String tagBefore, String tagAfter) {
+    super("--", tagBefore, tagAfter);
+  }
 }

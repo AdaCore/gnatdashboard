@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2013-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -28,8 +28,8 @@ import org.sonar.api.rule.Severity;
  */
 @AllArgsConstructor
 public enum CodePeerSeverity {
-    HIGH(Severity.CRITICAL), MEDIUM(Severity.MAJOR), LOW(Severity.MINOR),
-    INFO(Severity.INFO);
+  HIGH(Severity.CRITICAL), MEDIUM(Severity.MAJOR), LOW(Severity.MINOR), INFO(Severity.INFO);
 
-    @Getter private final String sonarSeverity;
+  @Getter
+  private final String sonarSeverity;
 }

@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2013-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -26,25 +26,25 @@ import org.sonar.plugins.ada.utils.AdaToolRulesDefinition;
  * SonarQube as part of a new rule repository.
  */
 public class CodePeerRulesDefinition extends AdaToolRulesDefinition {
-    public CodePeerRulesDefinition(RulesDefinitionXmlLoader xmlLoader) {
-        super(xmlLoader);
-    }
+  public CodePeerRulesDefinition(RulesDefinitionXmlLoader xmlLoader) {
+    super(xmlLoader);
+  }
 
-    public static final String REPOSITORY_KEY = "codepeer";
-    public static final String RULES_DEFINITION_FILE = "/codepeer.xml";
+  public static final String REPOSITORY_KEY = "codepeer";
+  public static final String RULES_DEFINITION_FILE = "/codepeer.xml";
 
-    @Override
-    public String getRepositoryKey() {
-        return REPOSITORY_KEY;
-    }
+  @Override
+  public String getRepositoryKey() {
+    return REPOSITORY_KEY;
+  }
 
-    @Override
-    public String getToolName() {
-        return "CodePeer";
-    }
+  @Override
+  public String getToolName() {
+    return "CodePeer";
+  }
 
-    @Override
-    public String getRulesDefinitionXMLFile() {
-        return RULES_DEFINITION_FILE;
-    }
+  @Override
+  public String getRulesDefinitionXMLFile() {
+    return RULES_DEFINITION_FILE;
+  }
 }

@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2014-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -39,50 +39,48 @@ import java.util.Properties;
  */
 @Slf4j
 public class AdaProjectContext implements BatchExtension {
-    protected final Settings settings;
-    protected final Project project;
+  protected final Settings settings;
+  protected final Project project;
 
-    @Getter protected final Properties srcMapping;
-    @Getter protected final ProjectDAO dao;
+  @Getter protected final Properties srcMapping;
+  @Getter protected final ProjectDAO dao;
 
-    public AdaProjectContext(final Project project, final Settings settings) {
-        this.settings = settings;
-        this.project = project;
+  public AdaProjectContext(final Project project, final Settings settings) {
+    this.settings = settings;
+    this.project = project;
 
-        final String srcMappingUrl =
-                settings.getString(AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
-        this.srcMapping = new Properties();
+    final String srcMappingUrl = settings.getString(AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
+    this.srcMapping = new Properties();
 
-        final String dbUrl = settings.getString(AdaPlugin.GNATHUB_DB_KEY);
-        if (dbUrl == null) {
-            log.warn("{} is not defined in the project properties file",
-                    AdaPlugin.GNATHUB_DB_KEY);
-            this.dao = null;
-            return;
-        }
-
-        try {
-            if (srcMappingUrl == null) {
-                log.warn("{} is not defined in the project properties file",
-                        AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
-            } else {
-                this.srcMapping.load(new FileInputStream(srcMappingUrl));
-            }
-
-        } catch (FileNotFoundException why) {
-            log.error("Cannot load source file mapping", why);
-        } catch (IOException why) {
-            log.error("Error reading source file mapping", why);
-        }
-
-        this.dao = new ProjectDAO(project, dbUrl, this.srcMapping);
+    final String dbUrl = settings.getString(AdaPlugin.GNATHUB_DB_KEY);
+    if (dbUrl == null) {
+      log.warn("{} is not defined in the project properties file", AdaPlugin.GNATHUB_DB_KEY);
+      this.dao = null;
+      return;
     }
 
-    /**
-     * @return {@code true} if we successfully loaded the DAO,
-     * {@code false} otherwise.
-     */
-    public boolean isDAOLoaded() {
-        return this.dao != null;
+    try {
+      if (srcMappingUrl == null) {
+        log.warn("{} is not defined in the project properties file",
+            AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
+      } else {
+        this.srcMapping.load(new FileInputStream(srcMappingUrl));
+      }
+
+    } catch (FileNotFoundException why) {
+      log.error("Cannot load source file mapping", why);
+    } catch (IOException why) {
+      log.error("Error reading source file mapping", why);
+    }
+
+    this.dao = new ProjectDAO(project, dbUrl, this.srcMapping);
+  }
+
+  /**
+   * @return {@code true} if we successfully loaded the DAO,
+   * {@code false} otherwise.
+   */
+  public boolean isDAOLoaded() {
+    return this.dao != null;
   }
 }

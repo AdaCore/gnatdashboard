@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2014-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 public enum ResourceKind {
-  PROJECT (0), DIRECTORY (1), FILE (2);
+  PROJECT(0), DIRECTORY(1), FILE(2);
 
   public final int img;
 }

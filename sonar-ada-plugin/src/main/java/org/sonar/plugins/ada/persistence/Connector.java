@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2014-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -46,7 +46,7 @@ public class Connector {
   /**
    * Executes a query on the database, map the results and returns them.
    *
-   * @param sql The SQL query to perform.
+   * @param sql    The SQL query to perform.
    * @param mapper The row mapper to use to map the result of the query.
    * @return The list of results.
    */
@@ -75,7 +75,7 @@ public class Connector {
 
   /**
    * Opens a new connection to the database.
-   *
+   * <p>
    * It is the user responsibility to close the connection to database using the
    * {@code #closeConnection()} method.
    *
@@ -89,7 +89,7 @@ public class Connector {
       return DriverManager.getConnection(dbUrl());
 
     } catch (SQLException why) {
-      log.error("GNAThub database connection failed: {}",  dbUrl(), why);
+      log.error("GNAThub database connection failed: {}", dbUrl(), why);
     } catch (ClassNotFoundException why) {
       log.error("JDBC driver not found: {}", JDBC.class.getName(), why);
     }

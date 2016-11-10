@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2013-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -35,19 +35,19 @@ import java.io.InputStreamReader;
 @Slf4j
 @AllArgsConstructor
 public class AdaDefaultProfile extends ProfileDefinition {
-    private final XMLProfileParser xmlLoader;
+  private final XMLProfileParser xmlLoader;
 
-    public static final String RULES_PROFILE_FILE = "/default-profile.xml";
+  public static final String RULES_PROFILE_FILE = "/default-profile.xml";
 
-    @Override
-    public RulesProfile createProfile(final ValidationMessages messages) {
-        log.debug("Loading XML profile file: {}", RULES_PROFILE_FILE);
-        final InputStreamReader reader = new InputStreamReader(
-            AdaDefaultProfile.class.getResourceAsStream(RULES_PROFILE_FILE));
+  @Override
+  public RulesProfile createProfile(final ValidationMessages messages) {
+    log.debug("Loading XML profile file: {}", RULES_PROFILE_FILE);
+    final InputStreamReader reader = new InputStreamReader(
+        AdaDefaultProfile.class.getResourceAsStream(RULES_PROFILE_FILE));
 
-        final RulesProfile adaProfile = xmlLoader.parse(reader, messages);
-        adaProfile.setDefaultProfile(true);
+    final RulesProfile adaProfile = xmlLoader.parse(reader, messages);
+    adaProfile.setDefaultProfile(true);
 
-        return adaProfile;
-    }
+    return adaProfile;
+  }
 }

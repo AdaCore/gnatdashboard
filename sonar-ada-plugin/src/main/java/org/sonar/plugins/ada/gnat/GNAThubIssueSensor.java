@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2013-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -17,11 +17,13 @@
 package org.sonar.plugins.ada.gnat;
 
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.rule.Severity;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
@@ -44,76 +46,73 @@ import java.util.Collection;
  * other tools, it can read issues from CodePeer and GNATcheck.
  */
 @Slf4j
+@ToString
 @AllArgsConstructor
 public class GNAThubIssueSensor implements Sensor {
-    private final FileSystem fs;
-    private final AdaProjectContext adaContext;
-    private final RuleFinder ruleFinder;
-    private final ResourcePerspectives perspective;
+  private final FileSystem fs;
+  private final AdaProjectContext adaContext;
+  private final RuleFinder ruleFinder;
+  private final ResourcePerspectives perspective;
 
-    @Override
-    public boolean shouldExecuteOnProject(final Project project) {
-        return fs.hasFiles(fs.predicates().and(
-                fs.predicates().hasType(InputFile.Type.MAIN),
-                fs.predicates().hasLanguage(Ada.KEY)));
+  @Override
+  public boolean shouldExecuteOnProject(final Project project) {
+    return fs.hasFiles(fs.predicates().and(
+        fs.predicates().hasType(InputFile.Type.MAIN),
+        fs.predicates().hasLanguage(Ada.KEY)));
+  }
+
+  @Override
+  public void analyse(final Project project, final SensorContext context) {
+    log.info("Loading issues from GNAThub (provided by GNAT tools)");
+
+    if (!adaContext.isDAOLoaded()) {
+      log.error("GNAThub db not loaded, cannot list project Issues");
+      return;
     }
 
-    @Override
-    public void analyse(final Project project, final SensorContext context) {
-        log.info("Loading issues from GNAThub (provided by GNAT tools)");
+    final Collection<Resource> scope =
+        ResourceUtils.expandChildren(project, context);
 
-        if (!adaContext.isDAOLoaded()) {
-            log.error("GNAThub db not loaded, cannot list project Issues");
-            return;
-        }
+    for (final IssueRecord ai : adaContext.getDao().getIssues()) {
+      // Check that the resource is from the correct project
+      // ??? Augment SQL query to filter out resources per project
+      final Resource resource = ai.getFile();
 
-        final Collection<Resource> scope =
-                ResourceUtils.expandChildren(project, context);
+      if (!scope.contains(resource)) {
+        log.trace("{}: not from project: {}",
+            resource.getLongName(), project.getName());
+        continue;
+      }
 
-        for (final IssueRecord ai : adaContext.getDao().getIssues()) {
-            // Check that the resource is from the correct project
-            // ??? Augment SQL query to filter out resources per project
-            final Resource resource = ai.getFile();
+      final Issuable issuable = perspective.as(Issuable.class, resource);
+      if (issuable == null) {
+        log.warn("{}: no such file", ai.getFile().getLongName());
+        continue;
+      }
 
-            if (!scope.contains(resource)) {
-                log.trace("{}: not from project: {}",
-                        resource.getLongName(), project.getName());
-                continue;
-            }
+      // Locate the rule in the given rule repository
+      final RuleQuery ruleQuery = RuleQuery.create()
+          .withRepositoryKey(ai.getRule().getRepositoryKey())
+          .withKey(ai.getRule().getKey());
+      final Rule rule = ruleFinder.find(ruleQuery);
+      if (rule == null) {
+        log.warn("could not find rule \"{}:{}\"",
+            ai.getRule().getRepositoryKey(), ai.getRule().getKey());
+        continue;
+      }
 
-            final Issuable issuable = perspective.as(Issuable.class, resource);
-            if (issuable == null) {
-                log.warn("{}: no such file", ai.getFile().getLongName());
-                continue;
-            }
+      log.debug("({}:{}) '{}:{}' rule violation detected", new Object[]{
+          ai.getPath(), ai.getLine(), ai.getRule().getRepositoryKey(),
+          rule.getKey()
+      });
 
-            // Locate the rule in the given rule repository
-            final RuleQuery ruleQuery = RuleQuery.create()
-                    .withRepositoryKey(ai.getRule().getRepositoryKey())
-                    .withKey(ai.getRule().getKey());
-            final Rule rule = ruleFinder.find(ruleQuery);
-            if (rule == null) {
-                log.warn("could not find rule \"{}:{}\"",
-                        ai.getRule().getRepositoryKey(), ai.getRule().getKey());
-                continue;
-            }
-
-            log.debug("({}:{}) '{}:{}' rule violation detected",
-                ai.getPath(), ai.getLine(),
-                ai.getRule().getRepositoryKey(), rule.getKey());
-
-            final Issue issue = issuable.newIssueBuilder()
-                    .ruleKey(rule.ruleKey())
-                    .line(ai.getLine())
-                    .message(ai.getMessage())
-                    .severity(ai.getSeverity())
-                    .build();
-            issuable.addIssue(issue);
-        }
+      final Issue issue = issuable.newIssueBuilder()
+          .ruleKey(rule.ruleKey())
+          .line(ai.getLine())
+          .message(ai.getMessage())
+          .severity(ai.getSeverity() != null ? ai.getSeverity() : Severity.MAJOR.toString())
+          .build();
+      issuable.addIssue(issue);
     }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
+  }
 }

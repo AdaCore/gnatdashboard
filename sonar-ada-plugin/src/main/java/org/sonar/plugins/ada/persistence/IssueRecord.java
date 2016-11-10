@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2014-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -22,10 +22,10 @@ import org.sonar.api.rules.Rule;
 
 @Value
 public class IssueRecord {
-    String path;
-    File file;
-    int line;
-    String message;
-    Rule rule;
-    String severity;
+  String path;
+  File file;
+  int line;
+  String message;
+  Rule rule;
+  String severity;
 }

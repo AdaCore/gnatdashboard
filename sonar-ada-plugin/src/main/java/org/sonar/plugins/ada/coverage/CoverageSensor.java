@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2013-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -41,77 +41,76 @@ import org.sonar.plugins.ada.persistence.ProjectDAO;
 @Slf4j
 @AllArgsConstructor
 public class CoverageSensor implements Sensor {
-    private final FileSystem fs;
-    private final AdaProjectContext adaContext;
+  private final FileSystem fs;
+  private final AdaProjectContext adaContext;
 
-    @Override
-    public boolean shouldExecuteOnProject(final Project project) {
-        return fs.hasFiles(fs.predicates().and(
-                fs.predicates().hasType(InputFile.Type.MAIN),
-                fs.predicates().hasLanguage(Ada.KEY)));
+  @Override
+  public boolean shouldExecuteOnProject(final Project project) {
+    return fs.hasFiles(fs.predicates().and(
+        fs.predicates().hasType(InputFile.Type.MAIN),
+        fs.predicates().hasLanguage(Ada.KEY)));
+  }
+
+  @Override
+  public void analyse(Project project, SensorContext context) {
+    log.info("Computing code coverage");
+
+    if (!adaContext.isDAOLoaded()) {
+      log.error("GNAThub db not loaded, cannot load code coverage");
+      return;
     }
 
-    @Override
-    public void analyse(Project project, SensorContext context) {
-        log.info("Computing code coverage");
+    File currentFile = null;
+    CoverageMeasuresBuilder builder = CoverageMeasuresBuilder.create();
+    final ProjectDAO dao = adaContext.getDao();
+    final String[] tools = new String[]{"GCov", "GNATcoverage"};
 
-        if (!adaContext.isDAOLoaded()) {
-            log.error("GNAThub db not loaded, cannot load code coverage");
-            return;
+    // Retrieve all coverage data ordered by resource
+    for (final String tool : tools) {
+      for (final CoverageRecord data : dao.getCoverageByTool(tool)) {
+        if (currentFile == null) {
+          currentFile = data.getFile();
         }
 
-        File currentFile = null;
-        CoverageMeasuresBuilder builder = CoverageMeasuresBuilder.create();
-        final ProjectDAO dao = adaContext.getDao();
-        final String[] tools = new String[]{"GCov", "GNATcoverage"};
-
-        // Retrieve all coverage data ordered by resource
-        for (final String tool : tools) {
-            for (final CoverageRecord data : dao.getCoverageByTool(tool)) {
-                if (currentFile == null) {
-                    currentFile = data.getFile();
-                }
-
-                // When switching file:
-                //   - save measures for current file,
-                //   - create a new builder for measure,
-                //   - set current file to the next file
-                if (!currentFile.equals(data.getFile())) {
-                    saveCoverageMeasureForFile(builder, context, currentFile);
-                    builder = CoverageMeasuresBuilder.create();
-                    currentFile = data.getFile();
-                }
-
-                // Add hits for line
-                builder.setHits(data.getLine(), data.getHits());
-            }
+        // When switching file:
+        //   - save measures for current file,
+        //   - create a new builder for measure,
+        //   - set current file to the next file
+        if (!currentFile.equals(data.getFile())) {
+          saveCoverageMeasureForFile(builder, context, currentFile);
+          builder = CoverageMeasuresBuilder.create();
+          currentFile = data.getFile();
         }
 
-        if (currentFile != null) {
-            // For the last resource
-            saveCoverageMeasureForFile(builder, context, currentFile);
-        }
+        // Add hits for line
+        builder.setHits(data.getLine(), data.getHits());
+      }
     }
 
-    /**
-     * Saves the coverage measures associated with a given file.
-     *
-     * @param builder The measure builder.
-     * @param context The context to save each measure.
-     * @param resource The resource file to save measure for.
-     */
-    private void saveCoverageMeasureForFile(
-            final CoverageMeasuresBuilder builder,
-            final SensorContext context,
-            final File resource)
-    {
-        for (final Measure coverage : builder.createMeasures()) {
-            context.saveMeasure(resource, coverage);
-        }
+    if (currentFile != null) {
+      // For the last resource
+      saveCoverageMeasureForFile(builder, context, currentFile);
     }
+  }
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
+  /**
+   * Saves the coverage measures associated with a given file.
+   *
+   * @param builder  The measure builder.
+   * @param context  The context to save each measure.
+   * @param resource The resource file to save measure for.
+   */
+  private void saveCoverageMeasureForFile(
+      final CoverageMeasuresBuilder builder,
+      final SensorContext context,
+      final File resource) {
+    for (final Measure coverage : builder.createMeasures()) {
+      context.saveMeasure(resource, coverage);
     }
+  }
+
+  @Override
+  public String toString() {
+    return getClass().getSimpleName();
+  }
 }

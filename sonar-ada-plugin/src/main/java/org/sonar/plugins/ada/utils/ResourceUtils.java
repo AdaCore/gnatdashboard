@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -24,30 +24,29 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class ResourceUtils {
-    /**
-     * Expand the list of child resources.
-     *
-     * If resource is a {@code File}, the result is list containing a single
-     * {@code file}. If resource is a {@code Directory} or a {@code Project},
-     * the result is the list of child files, fetched recursively.
-     *
-     * @param resource The resource to expand.
-     * @param context The sensor context.
-     * @return The list of {@code File}s.
-     */
-    public static Collection<Resource> expandChildren(
-            final Resource resource, final SensorContext context)
-    {
-        Collection<Resource> files = new ArrayList<Resource>();
-        if (resource.getScope().equals(Scopes.FILE)) {
-            files.add(resource);
-        } else {
-            assert resource.getScope().equals(Scopes.DIRECTORY) ||
-                    resource.getScope().equals(Scopes.PROJECT);
-            for (final Resource child : context.getChildren(resource)) {
-                files.addAll(expandChildren(child, context));
-            }
-        }
-        return files;
+  /**
+   * Expand the list of child resources.
+   *
+   * If resource is a {@code File}, the result is list containing a single
+   * {@code file}. If resource is a {@code Directory} or a {@code Project},
+   * the result is the list of child files, fetched recursively.
+   *
+   * @param resource The resource to expand.
+   * @param context  The sensor context.
+   * @return The list of {@code File}s.
+   */
+  public static Collection<Resource> expandChildren(
+      final Resource resource, final SensorContext context) {
+    Collection<Resource> files = new ArrayList<Resource>();
+    if (resource.getScope().equals(Scopes.FILE)) {
+      files.add(resource);
+    } else {
+      assert resource.getScope().equals(Scopes.DIRECTORY) ||
+          resource.getScope().equals(Scopes.PROJECT);
+      for (final Resource child : context.getChildren(resource)) {
+        files.addAll(expandChildren(child, context));
+      }
     }
+    return files;
+  }
 }

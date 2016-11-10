@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2013-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -16,83 +16,85 @@
 
 package org.sonar.plugins.ada;
 
-import com.google.common.collect.ImmutableList;
-import lombok.ToString;
-import org.sonar.api.Properties;
-import org.sonar.api.Property;
-import org.sonar.api.SonarPlugin;
+import org.sonar.api.Plugin;
+import org.sonar.api.config.PropertyDefinition;
+import org.sonar.api.resources.Qualifiers;
 import org.sonar.plugins.ada.codepeer.CodePeerRulesDefinition;
 import org.sonar.plugins.ada.coverage.CoverageSensor;
-import org.sonar.plugins.ada.gnat.*;
+import org.sonar.plugins.ada.gnat.GNATcheckRulesDefinition;
+import org.sonar.plugins.ada.gnat.GNATcoverageRulesDefinition;
+import org.sonar.plugins.ada.gnat.GNAThubIssueSensor;
+import org.sonar.plugins.ada.gnat.GNATmetricSensor;
 import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.plugins.ada.lang.AdaColorizer;
-
-import java.util.List;
 
 /**
  * Entry point to the SonarQube's plug-in.
  *
  * Lists all extensions to SonarQube defined and implemented in this plug-in.
  */
-@ToString
-@Properties({
-    @Property(
-        key = AdaPlugin.FILE_SUFFIXES_KEY,
-        defaultValue = Ada.DEFAULT_FILE_SUFFIXES,
-        name = "File Suffixes",
-        description = "Comma-separated list of suffixes of Ada files to analyze.",
-        global = true,
-        project = true),
-    @Property(
-        key = AdaPlugin.GNATHUB_DB_KEY,
-        name = "Path to GNAThub database",
-        description = "GNAThub DB full path",
-        global = false,
-        project = true),
-    @Property(
-        key = AdaPlugin.GNATHUB_SRC_MAPPING_KEY,
-        name = "Path to GNAThub source mapping file",
-        description = "GNAThub source mapping file full path",
-        global = false,
-        project = true)
-})
-public final class AdaPlugin extends SonarPlugin {
+public final class AdaPlugin implements Plugin {
 
-  public static final String GNATHUB_DB_KEY = "sonar.ada.gnathub.db";
-  public static final String GNATHUB_SRC_MAPPING_KEY =
-      "sonar.ada.gnathub.src_mapping";
+  static final String GNATHUB_DB_KEY = "sonar.ada.gnathub.db";
+  static final String GNATHUB_SRC_MAPPING_KEY = "sonar.ada.gnathub.src_mapping";
   public static final String FILE_SUFFIXES_KEY = "sonar.ada.file.suffixes";
 
+  private static final String ADA_CATEGORY = "Ada";
+  private static final String GENERAL_CATEGORY = "General";
+  private static final String GNATHUB_CATEGORY = "GNAThub";
+
   /**
-   * Lists SonarQube extensions for the Ada language.
-   *
-   * @return the sonar-ada-plugin extensions.
-   * @see org.sonar.api.SonarPlugin#getExtensions()
+   * Initialize SonarQube plugin for the Ada language.
    */
   @Override
-  public List getExtensions() {
-      return ImmutableList.of(
-              // Declare the Ada language
-              Ada.class,
-              AdaColorizer.class,
-              AdaDefaultProfile.class,
-              AdaProjectContext.class,
+  public void define(final Context context) {
+    context.addExtensions(
+        // Declare the Ada language
+        Ada.class,
+        AdaColorizer.class,
+        AdaDefaultProfile.class,
+        AdaProjectContext.class,
 
-              // Register custom metrics
-              AdaMetrics.class,
+        // Register custom metrics
+        AdaMetrics.class,
 
-              // Register tools rules
-              CodePeerRulesDefinition.class,
-              GNATcheckRulesDefinition.class,
-              GNATcoverageRulesDefinition.class,
+        // Register tools rules
+        CodePeerRulesDefinition.class,
+        GNATcheckRulesDefinition.class,
+        GNATcoverageRulesDefinition.class,
 
-              // Collect metrics and issues
-              GNAThubIssueSensor.class,
-              CoverageSensor.class,
-              GNATmetricSensor.class,
+        // Collect metrics and issues
+        GNAThubIssueSensor.class,
+        CoverageSensor.class,
+        GNATmetricSensor.class,
 
-              // Compute higher level metrics
-              AdaCountIssuesDecorator.class
-      );
+        // Compute higher level metrics
+        AdaCountIssuesDecorator.class,
+
+        PropertyDefinition.builder(FILE_SUFFIXES_KEY)
+            .defaultValue(Ada.DEFAULT_FILE_SUFFIXES)
+            .name("File Suffixes")
+            .description("Comma-separated list of suffixes of Ada files")
+            .onQualifiers(Qualifiers.MODULE, Qualifiers.PROJECT)
+            .category(ADA_CATEGORY)
+            .subCategory(GENERAL_CATEGORY)
+            .build(),
+
+        PropertyDefinition.builder(GNATHUB_DB_KEY)
+            .name("Path to GNAThub database")
+            .description("GNAThub DB full path")
+            .onQualifiers(Qualifiers.MODULE, Qualifiers.PROJECT)
+            .category(ADA_CATEGORY)
+            .subCategory(GNATHUB_CATEGORY)
+            .build(),
+
+        PropertyDefinition.builder(GNATHUB_SRC_MAPPING_KEY)
+            .name("Path to GNAThub source mapping file")
+            .description("GNAThub source mapping file full path")
+            .onQualifiers(Qualifiers.MODULE, Qualifiers.PROJECT)
+            .category(ADA_CATEGORY)
+            .subCategory(GNATHUB_CATEGORY)
+            .build()
+    );
   }
 }

@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2014-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -46,8 +46,7 @@ public class ProjectDAO {
    * @param dbUrl The URL pointing to the SQLite database to connect to.
    * @param srcMapping Source file mapping.
    */
-  public ProjectDAO(final Project project, final String dbUrl,
-                    final Properties srcMapping) {
+  public ProjectDAO(final Project project, final String dbUrl, final Properties srcMapping) {
     this.dbUrl = dbUrl;
     this.project = project;
     this.connector = new Connector(this.dbUrl);
@@ -68,8 +67,7 @@ public class ProjectDAO {
 
     if (path.equals(original)) {
       log.warn("No source mapping found for: {}", path);
-      // Do not return so that we fallback using the original file if
-      // available.
+      // Do not return so that we fallback using the original file if available.
     }
 
     return path;
@@ -97,8 +95,7 @@ public class ProjectDAO {
   /**
    * Custom row mapper for pairs file/measure.
    */
-  private final RowMapper<MeasureRecord> measureRowMapper =
-      new RowMapper<MeasureRecord>() {
+  private final RowMapper<MeasureRecord> measureRowMapper = new RowMapper<MeasureRecord>() {
         @Override
         public MeasureRecord mapRow(ResultSet resultSet) throws SQLException {
           final String path = getPath(resultSet.getString("path"));
@@ -122,24 +119,23 @@ public class ProjectDAO {
   /**
    * Custom row mapper for coverage.
    */
-  private final RowMapper<CoverageRecord> coverageRowMapper =
-    new RowMapper<CoverageRecord>() {
-      @Override
-      public CoverageRecord mapRow(ResultSet resultSet) throws SQLException {
-        final String path = getPath(resultSet.getString("path"));
-        final Integer lineNo = resultSet.getInt("line_no");
-        final Integer hits = resultSet.getInt("hits");
-        final File file = File.fromIOFile(new java.io.File(path), project);
+  private final RowMapper<CoverageRecord> coverageRowMapper = new RowMapper<CoverageRecord>() {
+        @Override
+        public CoverageRecord mapRow(ResultSet resultSet) throws SQLException {
+          final String path = getPath(resultSet.getString("path"));
+          final Integer lineNo = resultSet.getInt("line_no");
+          final Integer hits = resultSet.getInt("hits");
+          final File file = File.fromIOFile(new java.io.File(path), project);
 
-        if (file == null) {
-          log.trace("File excluded from analysis closure: {}", path);
-          return null;
+          if (file == null) {
+            log.trace("File excluded from analysis closure: {}", path);
+            return null;
+          }
+
+          log.trace("Coverage @ {}:{} -> {}", new Object[]{path, lineNo, hits});
+          return new CoverageRecord(file, lineNo, hits);
         }
-
-        log.trace("Coverage @ {}:{} -> {}", new Object[]{path, lineNo, hits});
-        return new CoverageRecord(file, lineNo, hits);
-      }
-    };
+      };
 
   /**
    * Custom row mapper for issues.
@@ -148,38 +144,46 @@ public class ProjectDAO {
   private final RowMapper<IssueRecord> issueRowMapper = new RowMapper<IssueRecord>() {
     @Override
     public IssueRecord mapRow(ResultSet resultSet) throws SQLException {
-    final String path = getPath(resultSet.getString("path"));
-    final int lineNo = resultSet.getInt("line_no");
-    final String message = resultSet.getString("message");
-    final String toolName = resultSet.getString("tool_name");
-    final String key = resultSet.getString("key");
-    final String category = resultSet.getString("category");
+      final String path = getPath(resultSet.getString("path"));
+      final int lineNo = resultSet.getInt("line_no");
+      final String message = resultSet.getString("message");
+      final String toolName = resultSet.getString("tool_name");
+      final String key = resultSet.getString("key");
+      final String category = resultSet.getString("category");
 
-    log.trace(
-        "Generate Rule Key from key=\"{}\" and category=\"{}\" -> \"{}\"",
-        resultSet.getString("key"), resultSet.getString("category"), key);
+      log.trace(
+          "Generate Rule Key from key=\"{}\" and category=\"{}\" -> \"{}\"",
+          new Object[]{
+              resultSet.getString("key"),
+              resultSet.getString("category"),
+              key
+          });
 
-    final File file = File.fromIOFile(new java.io.File(path), project);
+      final File file = File.fromIOFile(new java.io.File(path), project);
 
-    if (file == null) {
-      log.trace("File excluded from analysis closure: {}", path);
-      return null;
-    }
-
-    final Rule rule = Rule.create(toolName, key);
-    log.trace("({}) @ {}:{} -> {}:{}", toolName, path, lineNo, key, message);
-
-    String severity = null;
-    if (CodePeerRulesDefinition.REPOSITORY_KEY.equals(toolName)) {
-      try {
-        severity = CodePeerSeverity.valueOf(
-                category.toUpperCase()).getSonarSeverity();
-      } catch (final IllegalArgumentException why) {
-        log.warn("Unsupported CodePeer severity \"{}\"", category);
+      if (file == null) {
+        log.trace("File excluded from analysis closure: {}", path);
         return null;
       }
-    }
-    return new IssueRecord(path, file, lineNo, message, rule, severity);
+
+      final Rule rule = Rule.create(toolName, key);
+      log.trace("({}) @ {}:{} -> {}:{}", new Object[]{toolName, path, lineNo, key, message});
+
+      if ("annotation".equalsIgnoreCase(category)) {
+        // Ignore CodePeer annotations (while working on proper support)
+        return null;
+      }
+
+      String severity = null;
+      if (CodePeerRulesDefinition.REPOSITORY_KEY.equals(toolName)) {
+        try {
+          severity = CodePeerSeverity.valueOf(category.toUpperCase()).getSonarSeverity();
+        } catch (final IllegalArgumentException why) {
+          log.warn("Unsupported CodePeer severity \"{}\"", category);
+          return null;
+        }
+      }
+      return new IssueRecord(path, file, lineNo, message, rule, severity);
     }
   };
 
@@ -197,8 +201,7 @@ public class ProjectDAO {
    * @return The file associated with that resource ID.
    */
   public final File getFileById(final Integer resourceId) {
-    final List<File> files = connector.query(
-        SQLQueries.resourceById(resourceId), fileRowMapper);
+    final List<File> files = connector.query(SQLQueries.resourceById(resourceId), fileRowMapper);
 
     if (files.size() > 1) {
       log.error("Found {} resources for ID = {} (expected 1)",
@@ -215,8 +218,7 @@ public class ProjectDAO {
    * @return The list of measures generated by that tool.
    */
   public final List<MeasureRecord> getMeasuresByTool(String toolName) {
-    return connector.query(
-        SQLQueries.measuresByTool(toolName), measureRowMapper);
+    return connector.query(SQLQueries.measuresByTool(toolName), measureRowMapper);
   }
 
   /**
@@ -226,8 +228,7 @@ public class ProjectDAO {
    * @return The list of coverage records generated by that tool.
    */
   public final List<CoverageRecord> getCoverageByTool(String toolName) {
-    return connector.query(
-        SQLQueries.coverageByTool(toolName), coverageRowMapper);
+    return connector.query(SQLQueries.coverageByTool(toolName), coverageRowMapper);
   }
 
   /**

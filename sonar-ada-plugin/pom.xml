@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Sonar Ada Plugin (GNATdashboard)
+  ~ Copyright (C) 2016, AdaCore
+  ~
+  ~ This is free software;  you can redistribute it  and/or modify it  under
+  ~ terms of the  GNU General Public License as published  by the Free Soft-
+  ~ ware  Foundation;  either version 3,  or (at your option) any later ver-
+  ~ sion.  This software is distributed in the hope  that it will be useful,
+  ~ but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN-
+  ~ TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+  ~ License for  more details.  You should have  received  a copy of the GNU
+  ~ General  Public  License  distributed  with  this  software;   see  file
+  ~ COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
+  ~ of the license.
+  -->
+
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.codehaus.sonar.plugins</groupId>
+    <groupId>com.adacore.sonar</groupId>
     <artifactId>sonar-ada-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>0.0.0w-unknown</version>
+    <version>18.0w-SNAPSHOT</version>
+
     <name>Ada</name>
-    <description>Ada Plugin for SonarQube 4.5.4 to 5.x.y</description>
-    <inceptionYear>2012</inceptionYear>
+    <description>Ada Plugin for SonarQube 5.6.3 to 6.x.y</description>
     <url>https://docs.adacore.com/gnatdashboard-docs/</url>
+    <inceptionYear>2012</inceptionYear>
 
     <licenses>
         <license>
@@ -19,31 +36,70 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
     <organization>
         <name>AdaCore</name>
         <url>https://www.adacore.com/</url>
     </organization>
+
+    <scm>
+        <connection>scm:git:git@github.com:AdaCore/gnatdashboard.git</connection>
+        <developerConnection>scm:git:git@github.com:AdaCore/gnatdashboard.git</developerConnection>
+        <url>https://github.com/AdaCore/gnatdashboard</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <issueManagement>
         <system>GNAT Tracker</system>
         <url>https://www.adacore.com/support</url>
     </issueManagement>
 
     <properties>
-        <jdk.min.version>1.6</jdk.min.version>
-        <sonar.version>4.5.4</sonar.version>
+        <jdk.min.version>1.8</jdk.min.version>
+        <version.commons-lang>2.6</version.commons-lang>
+        <version.fest-assert>1.4</version.fest-assert>
+        <version.lombok>1.16.10</version.lombok>
+        <version.guava>20.0</version.guava>
+        <version.slf4j>1.6.2</version.slf4j>
+        <version.sonar>5.6.3</version.sonar>
         <sonar.pluginKey>ada</sonar.pluginKey>
         <sonar.pluginClass>org.sonar.plugins.ada.AdaPlugin</sonar.pluginClass>
-        <sonar.artifact.path>target/${project.artifactId}-${project.version}.jar</sonar.artifact.path>
     </properties>
 
     <dependencies>
         <!-- Sonar Plugin -->
         <dependency>
-            <groupId>org.codehaus.sonar</groupId>
+            <groupId>org.sonarsource.sonarqube</groupId>
             <artifactId>sonar-plugin-api</artifactId>
-            <version>${sonar.version}</version>
+            <version>${version.sonar}</version>
             <scope>provided</scope>
-            <type>jar</type>
+        </dependency>
+        <!-- Sonar Ada Plugin Dependencies -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${version.commons-lang}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${version.guava}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${version.lombok}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j}</version>
+            <scope>provided</scope>
         </dependency>
         <!-- Unit Testing -->
         <dependency>
@@ -51,42 +107,27 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
-            <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.sonar</groupId>
+            <groupId>org.sonarsource.sonarqube</groupId>
             <artifactId>sonar-testing-harness</artifactId>
-            <version>${sonar.version}</version>
+            <version>${version.sonar}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.easytesting</groupId>
             <artifactId>fest-assert</artifactId>
-            <version>1.4</version>
+            <version>${version.fest-assert}</version>
             <scope>test</scope>
-        </dependency>
-        <!-- Sonar Ada Plugin Dependencies -->
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.7.2</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.12.6</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.sonar</groupId>
+                <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
                 <artifactId>sonar-packaging-maven-plugin</artifactId>
-                <version>1.12.1</version>
+                <version>1.17</version>
                 <extensions>true</extensions>
                 <configuration>
                     <pluginClass>${sonar.pluginClass}</pluginClass>
@@ -95,7 +136,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.6.0</version>
                 <configuration>
                     <source>${jdk.min.version}</source>
                     <target>${jdk.min.version}</target>

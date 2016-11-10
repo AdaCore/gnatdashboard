@@ -1,6 +1,6 @@
-/**
+/*
  * Sonar Ada Plugin (GNATdashboard)
- * Copyright (C) 2013-2015, AdaCore
+ * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -16,6 +16,7 @@
 
 package org.sonar.plugins.ada.lang;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -32,56 +33,67 @@ import java.util.List;
  */
 @Slf4j
 public class Ada extends AbstractLanguage {
-    public static final String NAME = "Ada";
-    public static final String KEY = "ada";
+  public static final String NAME = "Ada";
+  public static final String KEY = "ada";
 
-    public static final String DEFAULT_FILE_SUFFIXES = "adb,ads";
+  public static final String DEFAULT_FILE_SUFFIXES = "adb,ads,ada";
 
-    private final Settings settings;
+  private final Settings settings;
 
-    /**
-     * Default constructor
-     */
-    public Ada(Settings settings) {
-        super(KEY, NAME);
-        this.settings = settings;
+  /**
+   * Default constructor
+   */
+  public Ada(Settings settings) {
+    super(KEY, NAME);
+    this.settings = settings;
+  }
+
+  /**
+   * Only for testing purposes
+   */
+  @VisibleForTesting
+  public Ada() {
+    this(new Settings());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String[] getFileSuffixes() {
+    String[] suffixes = filterEmptyStrings(
+        settings.getStringArray(AdaPlugin.FILE_SUFFIXES_KEY));
+
+    if (suffixes.length == 0) {
+      suffixes = StringUtils.split(Ada.DEFAULT_FILE_SUFFIXES, ",");
     }
 
-    @Override
-    public String[] getFileSuffixes() {
-        String[] suffixes = filterEmptyStrings(
-                settings.getStringArray(AdaPlugin.FILE_SUFFIXES_KEY));
-
-        if (suffixes.length == 0) {
-            suffixes = StringUtils.split(Ada.DEFAULT_FILE_SUFFIXES, ",");
-        }
-
-        log.debug("Ada file suffixes:");
-        for (final String suffix : suffixes) {
-            log.debug(" + {}", suffix);
-        }
-
-        return suffixes;
+    log.debug("Ada file suffixes:");
+    for (final String suffix : suffixes) {
+      log.debug(" + {}", suffix);
     }
 
-    /**
-     * Removes empty strings from the array.
-     *
-     * @param stringArray The original array of string.
-     * @return A new array list containing the only non-blank element of the
-     * input array.
-     */
-    private String[] filterEmptyStrings(String[] stringArray) {
-        final List<String> nonEmptyStrings = Lists.newArrayList();
+    return suffixes;
+  }
 
-        for (final String string : stringArray) {
-            final String trimmed = string.trim();
+  /**
+   * Removes empty strings from the array.
+   *
+   * @param stringArray The original array of string.
+   * @return A new array list containing the only non-blank element of the
+   * input array.
+   */
+  private String[] filterEmptyStrings(String[] stringArray) {
+    final List<String> nonEmptyStrings = Lists.newArrayList();
 
-            if (StringUtils.isNotBlank(trimmed)) {
-                nonEmptyStrings.add(trimmed);
-            }
-        }
+    for (final String string : stringArray) {
+      final String trimmed = string.trim();
 
-        return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
+      if (StringUtils.isNotBlank(trimmed)) {
+        nonEmptyStrings.add(trimmed);
+      }
     }
+
+    return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
+  }
 }
