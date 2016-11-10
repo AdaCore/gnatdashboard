@@ -1,4 +1,4 @@
-"""Execute GNAThub-specific plug-ins.
+"""Execute GNAThub-specific plug-ins
 
 Scans for GNAThub-specific plug-ins and registers their execution before
 spawning the main event loop.
@@ -37,10 +37,10 @@ LOG = logging.getLogger(MODULE)
 
 class GNAThubLoggingHandler(logging.Handler):
 
-    """Custom logging handler that uses :class:`GNAThub.Logger` as back-end."""
+    """Custom logging handler that uses :class:`GNAThub.Logger` as back-end"""
 
     def __init__(self):
-        """Initialize handler properties."""
+        """Initialize handler properties"""
         super(GNAThubLoggingHandler, self).__init__()
 
         # Instances of GNAThub.Logger
@@ -48,7 +48,7 @@ class GNAThubLoggingHandler(logging.Handler):
         self.loggers = {}
 
     def emit(self, record):
-        """Inherited."""
+        """Inherited"""
         if record.name in self.loggers:
             logger = self.loggers[record.name]
         else:
@@ -66,8 +66,7 @@ class GNAThubLoggingHandler(logging.Handler):
 
 
 class PluginRunner(object):
-
-    """Class that loads python plugins.
+    """Class that loads python plugins
 
     Retrieve all plugins: core and user
 
@@ -78,16 +77,16 @@ class PluginRunner(object):
     """
 
     PLUGIN_EXT = '.py'
-    LATE_EXECUTION_PLUGINS = ('sonar-runner', 'html-report')
+    POST_PHASE_PLUGINS = ('sonar-scanner', 'html-report')
 
     def __init__(self):
-        """Gather the list of plugins."""
+        """Gather the list of plugins"""
         # The list of plugins to be sequentially executed
         self.plugins = PluginRunner.auto_discover_plugins()
 
     @staticmethod
     def info(message, *args):
-        """Display an informative message, prefixed with the plug-in name.
+        """Display an informative message, prefixed with the plug-in name
 
         :param message: the message to log
         :type message: str
@@ -98,7 +97,7 @@ class PluginRunner(object):
 
     @staticmethod
     def warn(message, *args):
-        """Display a warning message, prefixed with the plug-in name.
+        """Display a warning message, prefixed with the plug-in name
 
         :param message: the message to log
         :type message: str
@@ -109,7 +108,7 @@ class PluginRunner(object):
 
     @staticmethod
     def error(message, *args):
-        """Display an error message, prefixed with the plug-in name.
+        """Display an error message, prefixed with the plug-in name
 
         :param message: the message to log
         :type message: str
@@ -120,7 +119,7 @@ class PluginRunner(object):
 
     @staticmethod
     def schedule(plugins):
-        """Schedule the plugins execution order.
+        """Schedule the plugins execution order
 
         Some system plugins might need to be executed in a specific order, or
         for example, for the Sonar Runner plugin, last. This routine takes care
@@ -132,7 +131,7 @@ class PluginRunner(object):
         :rtype: list[GNAThub.Plugin]
         """
         def plugin_sort_fn(a, b):
-            """Sort the plugins.
+            """Sort the plugins
 
             All plugins are equals, apart from the Sonar Runner which should be
             executed last.
@@ -148,16 +147,16 @@ class PluginRunner(object):
             :return: -1, 0 or 1 depending on the input
             :rtype: int
             """
-            if a().name in PluginRunner.LATE_EXECUTION_PLUGINS:
+            if a().name in PluginRunner.POST_PHASE_PLUGINS:
                 return 1
-            if b().name in PluginRunner.LATE_EXECUTION_PLUGINS:
+            if b().name in PluginRunner.POST_PHASE_PLUGINS:
                 return -1
             return 0
         return sorted(plugins, plugin_sort_fn)
 
     @staticmethod
     def walk_repository(repository):
-        """Walk a script repository, and gathers the scripts is contains.
+        """Walk a script repository, and gathers the scripts is contains
 
         Lists all Python scripts that are located at the root of the
         repository. If the basename of a script starts with an underscore
@@ -176,7 +175,7 @@ class PluginRunner(object):
 
     @staticmethod
     def inspect(script):
-        """Inspect a Python script for :class:`GNAThub.Plugin` it declares.
+        """Inspect a Python script for :class:`GNAThub.Plugin` it declares
 
         This method should be used as a generator. It will yield on new every
         new plugin it will find during its inspection of the script.
@@ -204,7 +203,7 @@ class PluginRunner(object):
 
     @staticmethod
     def auto_discover_plugins():
-        """Retrieve all plugins for GNAThub.
+        """Retrieve all plugins for GNAThub
 
         This routine first lists all available scripts for this run of GNAThub.
         It then tries to load each one of them and collect any Plugin declared
@@ -267,7 +266,7 @@ class PluginRunner(object):
         plugins = sum([list(PluginRunner.inspect(s)) for s in scripts], [])
 
         def is_plugin(clazz, name):
-            """Check whether this plugin name is ``name``.
+            """Check whether this plugin name is ``name``
 
             :param clazz: the plugin type object
             :type clazz: type
@@ -282,7 +281,7 @@ class PluginRunner(object):
             )
 
         def contains_plugin_name(clazz, names):
-            """Check whether the plugin name is in ``names``.
+            """Check whether the plugin name is in ``names``
 
             :param clazz: the plugin type object
             :type clazz: type
@@ -320,7 +319,7 @@ class PluginRunner(object):
 
     @staticmethod
     def execute(plugin):
-        """Execute the plugin.
+        """Execute the plugin
 
         Call methods setup, execute and teardown for a plugin instance.
 
@@ -355,7 +354,7 @@ class PluginRunner(object):
         return elapsed
 
     def mainloop(self):
-        """Plugin main loop."""
+        """Plugin main loop"""
         LOG.info('registered %d plugins', len(self.plugins))
         backlog = []
 

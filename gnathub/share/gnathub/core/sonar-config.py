@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2015, AdaCore
+# Copyright (C) 2013-2016, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -36,17 +36,13 @@ class SonarConfig(GNAThub.Plugin):
         return 'sonar-config'
 
     def execute(self):
-        """Generates SonarQube Runner configuration file and dumps it"""
-
+        """Generate SonarQube Runner configuration file and dumps it"""
         self.info('generate %s' % SonarQube.CONFIGURATION)
-
         try:
             SonarRunnerProperties(self.log).write(SonarQube.configuration())
-
         except IOError as why:
             self.exec_status = GNAThub.EXEC_FAILURE
             self.log.exception('failed to generate SonarRunner configuration')
             self.error(str(why))
-
         else:
             self.exec_status = GNAThub.EXEC_SUCCESS

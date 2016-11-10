@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2015, AdaCore
+# Copyright (C) 2016, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -12,10 +12,10 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""GNAThub plug-in for the SonarQube Runner command-line tool
+"""GNAThub plug-in for the SonarQube Scanner command-line tool
 
-It exports the SonarRunner class which implements the :class:`GNAThub.Plugin`
-interface. This allows GNAThub's plug-in scanner to automatically find this
+It exports the SonarScanner class which implements the :class:`GNAThub.Plugin`
+interface. This allows GNAThub's plug-in runner to automatically find this
 module and load it as part of the GNAThub default execution.
 """
 
@@ -26,53 +26,40 @@ import GNAThub
 from _sonarqube import SonarQube
 
 
-class SonarRunner(GNAThub.Plugin):
-    """GNATmetric plugin for GNAThub"""
+class SonarScanner(GNAThub.Plugin):
+    """SonarQube Scanner plugin for GNAThub"""
 
     def __init__(self):
-        super(SonarRunner, self).__init__()
+        super(SonarScanner, self).__init__()
 
     @property
     def name(self):
-        return 'sonar-runner'
+        return 'sonar-scanner'
 
     def setup(self):
         # Do not call the super method: we do not need a database session to be
         # opened.
-
         SonarQube.make_workdir()
 
     @staticmethod
     def __cmd_line():
-        """Returns command line for sonar runner execution
+        """Return command line for sonar scanner execution
 
-        :return: the SonarRunner command line
+        :return: the SonarQube Scanner command line
         :rtype: list[str]
         """
-
         # Enable verbose and debugging output with -e and -X. This is handy for
-        # debugging in case of issue in the SonarRunner step.
-
+        # debugging in case of issue in the SonarScanner step.
+        cmdline = [
+            'sonar-scanner', '-e', '-X',
+            '-Dproject.settings={}'.format(SonarQube.configuration())
+        ]
         if platform.system() == 'Windows':
-            return ['cmd', '/c',
-                    'sonar-runner -Dproject.settings=%s -e -X'
-                    % SonarQube.configuration()]
-        else:
-            return ['sonar-runner',
-                    '-Dproject.settings=%s' % SonarQube.configuration(),
-                    '-e', '-X']
+            return ['cmd', '/c', ' '.join(cmdline)]
+        return cmdline
 
     def execute(self):
-        """Executes the Sonar Runner
-
-        :meth:`postprocess()` is called upon process completion.
-        """
-
-        proc = GNAThub.Run(self.name, SonarRunner.__cmd_line())
-        self.postprocess(proc.status)
-
-    def postprocess(self, exit_code):
-        """Postprocesses the tool execution
+        """Execute the SonarQube Scanner
 
         Sets the exec_status property according to the successful of the
         analysis:
@@ -80,8 +67,7 @@ class SonarRunner(GNAThub.Plugin):
             * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
-
-        if exit_code != 0:
+        if GNAThub.Run(self.name, SonarScanner.__cmd_line()).status != 0:
             self.exec_status = GNAThub.EXEC_FAILURE
         else:
             self.exec_status = GNAThub.EXEC_SUCCESS
