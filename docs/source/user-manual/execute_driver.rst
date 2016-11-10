@@ -39,7 +39,7 @@ platforms.
 
       $ gnathub -P project --plugins gnatmetric
       $ gnathub -P project --plugins gnatcheck,gnatcoverage --incremental
-      $ gnathub -P project --plugins sonar-config,sonar-runner --incremental
+      $ gnathub -P project --plugins sonar-config,sonar-scanner --incremental
 
   It is important to note that |GNAThub| assumes the following properties on the
   |SQLite| database:
@@ -145,16 +145,16 @@ An example is worth a thousand words::
 
      package Dashboard is
         for Project_Name use "My_Custom_Project_Name";
-        --  Translate to SonarRunner property: sonar.projectName
+        --  Translate to SonarQube Scanner property: sonar.projectName
 
         for Project_Key use "Custom_Key_For_SonarQube";
-        --  Translate to SonarRunner property: sonar.projectKey
+        --  Translate to SonarQube Scanner property: sonar.projectKey
 
         for Project_Version use "1.9.0";
-        --  Translate to SonarRunner property: sonar.projectVersion
+        --  Translate to SonarQube Scanner property: sonar.projectVersion
 
         for Source_Encoding use "UTF-8";
-        --  Translate to SonarRunner property: sonar.sourceEncoding
+        --  Translate to SonarQube Scanner property: sonar.sourceEncoding
 
         for Plugins_Off use ("CodePeer");
         --  Disable CodePeer plug-in

@@ -41,12 +41,12 @@ installed.
 In order to visualize results in the |SonarQube| platform, the corresponding
 plug-in must be deployed.
 
-|SonarAdaPlugin| is supported for versions of |SonarQube| and |SonarRunner|
+|SonarAdaPlugin| is supported for versions of |SonarQube| and |SonarScanner|
 supported by |SonarSource|:
 
   * from |SonarQube| |SonarQubeLTSVersion| LTS (Long Term Support) to
     |SonarQube| |SonarQubeStableVersion| stable
-  * |SonarRunner| 2.4
+  * |SonarScanner| 2.4
 
 Upgrading from GNATdashboard 1.0
 --------------------------------

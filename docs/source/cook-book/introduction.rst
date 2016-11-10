@@ -6,10 +6,10 @@ Getting Started with |GNATdashboard|
 Prerequisites
 -------------
 
-  * a |SonarRunner| installation configured for the targeted |SonarQube|
+  * a |SonarScanner| installation configured for the targeted |SonarQube|
     instance, and in your :envvar:`$PATH` (see :ref:`ug-intro-prerequisites`
     for more information on supported versions of |SonarQube| and
-    |SonarRunner|).
+    |SonarScanner|).
 
   * a |GNATPro| installation (the most recent installed on the system), and in
     your :envvar:`$PATH`
@@ -38,12 +38,12 @@ The 5-lines manual to |GNATdashboard|
   * executes all |GNAT| tools and stores the results in a database
 
   * creates a configuration file for your project ready to use by
-    :program:`sonar-runner` (:file:`sonar-project.properties`)
+    :program:`sonar-scanner` (:file:`sonar-project.properties`)
 
-  * launches the :program:`sonar-runner`
+  * launches the :program:`sonar-scanner`
 
 
-The |SonarRunner| is reading the results from the database created by the
+The |SonarScanner| is reading the results from the database created by the
 driver |GNAThub|.
 
 For more information, the full manual is available at:

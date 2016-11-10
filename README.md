@@ -3,11 +3,11 @@
 GNATdashboard contains a driver program, GNAThub, which:
 
 * executes all GNAT tools and stores the results in a database
-* creates a configuration file for your project ready to use by sonar-runner
+* creates a configuration file for your project ready to use by sonar-scanner
   (`sonar-project.properties`)
-* launches the sonar-runner
+* launches the sonar-scanner
 
-The SonarQube Runner is reading the results from the database created by the
+The SonarQube Scanner is reading the results from the database created by the
 driver GNAThub.
 
 For more information, the full manual is available at:

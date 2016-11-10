@@ -1,7 +1,7 @@
-sonarrunner module
+html-report module
 ==================
 
-.. automodule:: sonarrunner
+.. automodule:: html-report
     :members:
     :undoc-members:
     :show-inheritance:
