@@ -503,7 +503,9 @@ package body GNAThub.Python is
          for Project of GNAThub.Project.All_Projects loop
             Set_Return_Value_As_List (Data);
 
-            for File of Project.Source_Files (Recursive => False).all loop
+            for File of File_Array_Access'
+              (Project.Source_Files (Recursive => False)).all
+            loop
                Set_Return_Value (Data, File.Display_Full_Name);
             end loop;
 
