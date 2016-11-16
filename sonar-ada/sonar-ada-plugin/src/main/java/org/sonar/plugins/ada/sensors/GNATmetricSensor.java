@@ -1,5 +1,5 @@
 /*
- * Sonar Ada Plugin (GNATdashboard)
+ * GNAThub API (GNATdashboard)
  * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
@@ -14,7 +14,7 @@
  * of the license.
  */
 
-package org.sonar.plugins.ada.gnat;
+package org.sonar.plugins.ada.sensors;
 
 import com.adacore.gnatdashboard.gnathub.api.orm.MeasureRecord;
 import com.adacore.gnatdashboard.gnathub.api.orm.ProjectDAO;

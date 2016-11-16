@@ -14,7 +14,7 @@
  * of the license.
  */
 
-package org.sonar.plugins.ada.gnat;
+package org.sonar.plugins.ada.rules;
 
 import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
 import org.sonar.plugins.ada.utils.AdaToolRulesDefinition;

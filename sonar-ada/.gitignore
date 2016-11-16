@@ -1,5 +1,4 @@
-/build/
-/target/
+target/
 .idea/
 *.iml
 *.pyc

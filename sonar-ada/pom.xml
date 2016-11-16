@@ -61,10 +61,12 @@
     <properties>
         <jdk.min.version>1.8</jdk.min.version>
         <version.commons-lang>2.6</version.commons-lang>
+        <version.commons-io>2.5</version.commons-io>
         <version.fest-assert>1.4</version.fest-assert>
         <version.lombok>1.16.10</version.lombok>
         <version.guava>20.0</version.guava>
         <version.slf4j>1.6.2</version.slf4j>
+        <version.sslr-squid-bridge>2.6.1</version.sslr-squid-bridge>
         <version.sonar>5.6.3</version.sonar>
         <version.sonar-packaging-maven-plugin>1.17</version.sonar-packaging-maven-plugin>
     </properties>
@@ -103,6 +105,42 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${version.slf4j}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.sonarsource.sslr-squid-bridge</groupId>
+                <artifactId>sslr-squid-bridge</artifactId>
+                <version>${version.sslr-squid-bridge}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.codehaus.sonar.sslr</groupId>
+                        <artifactId>sslr-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.codehaus.sonar.sslr</groupId>
+                        <artifactId>sslr-xpath</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.codehaus.sonar</groupId>
+                        <artifactId>sonar-plugin-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.picocontainer</groupId>
+                        <artifactId>picocontainer</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>jcl-over-slf4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${version.commons-io}</version>
             </dependency>
             <!-- Unit Testing -->
             <dependency>

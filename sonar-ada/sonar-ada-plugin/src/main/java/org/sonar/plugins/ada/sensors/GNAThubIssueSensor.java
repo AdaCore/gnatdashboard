@@ -14,7 +14,7 @@
  * of the license.
  */
 
-package org.sonar.plugins.ada.gnat;
+package org.sonar.plugins.ada.sensors;
 
 import com.adacore.gnatdashboard.gnathub.api.orm.IssueRecord;
 import lombok.AllArgsConstructor;

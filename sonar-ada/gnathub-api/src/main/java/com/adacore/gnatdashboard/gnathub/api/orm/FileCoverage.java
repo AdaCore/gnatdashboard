@@ -16,12 +16,13 @@
 
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
-import lombok.Value;
-import org.sonar.api.resources.File;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Value
-public class CoverageRecord {
-  File file;
-  Integer line;
-  Integer hits;
+import java.util.List;
+
+@AllArgsConstructor
+public class FileCoverage {
+  @Getter private String path;
+  @Getter private List<LineHits> hits;
 }

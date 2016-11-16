@@ -29,8 +29,7 @@ import java.io.InputStreamReader;
  * Load the default quality profile for the Ada language.
  *
  * The quality profile is defined in an XML file shipped with this plug-in.
- * It activates all known rules by default. See /default-profile.xml for more
- * details.
+ * It activates all known rules by default. See /default-profile.xml for more details.
  */
 @Slf4j
 @AllArgsConstructor

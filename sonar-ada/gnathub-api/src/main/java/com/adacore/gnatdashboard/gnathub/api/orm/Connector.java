@@ -16,11 +16,13 @@
 
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
+import com.google.common.annotations.VisibleForTesting;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.sqlite.JDBC;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,11 @@ import java.util.List;
 public class Connector {
   private final String dbPath;
 
+  @VisibleForTesting
+  public Connector(final File db) {
+    this(db.getAbsolutePath());
+  }
+
   /**
    * @return The full URL to connect to the DB.
    */
@@ -46,54 +53,53 @@ public class Connector {
   /**
    * Executes a query on the database, map the results and returns them.
    *
-   * @param sql    The SQL query to perform.
+   * @param sql The SQL query to perform.
    * @param mapper The row mapper to use to map the result of the query.
    * @return The list of results.
    */
-  public <T> List<T> query(final String sql, RowMapper<T> mapper) {
+  public <T> List<T> query(final String sql, RowMapper<T> mapper) throws SQLException {
     log.debug("Executing SQL query: {}", sql);
 
     final List<T> rows = new ArrayList<T>();
 
-    try {
-      @Cleanup final Connection conn = createConnection();
-      @Cleanup final PreparedStatement ps = conn.prepareStatement(sql);
-      final ResultSet resultSet = ps.executeQuery();
+    @Cleanup final Connection conn = createConnection();
+    @Cleanup final PreparedStatement ps = conn.prepareStatement(sql);
+    final ResultSet resultSet = ps.executeQuery();
 
-      while (resultSet.next()) {
-        final T row = mapper.mapRow(resultSet);
-        if (row != null) {
-          rows.add(row);
-        }
+    while (resultSet.next()) {
+      final T row = mapper.mapRow(resultSet);
+      if (row != null) {
+        rows.add(row);
       }
-    } catch (SQLException why) {
-      log.error("SQL query error: {}", why.getMessage(), why);
     }
 
     return rows;
   }
 
   /**
+   * Ensures that the sqlite-JDBC driver be loaded.
+   */
+  @VisibleForTesting
+  public static void loadJDBCDriver() {
+    try {
+      // Load the sqlite-JDBC driver using the current class loader
+      Class.forName(JDBC.class.getName());
+    } catch (final ClassNotFoundException why) {
+      log.error("Could not load JDBC driver", why);
+    }
+  }
+
+  /**
    * Opens a new connection to the database.
-   * <p>
+   *
    * It is the user responsibility to close the connection to database using the
    * {@code #closeConnection()} method.
    *
    * @return The new connection object used to interact with the database.
    */
-  private Connection createConnection() {
-    try {
-      Class.forName(JDBC.class.getName());
-
-      log.debug("Opening new connection to {}", dbUrl());
-      return DriverManager.getConnection(dbUrl());
-
-    } catch (SQLException why) {
-      log.error("GNAThub database connection failed: {}", dbUrl(), why);
-    } catch (ClassNotFoundException why) {
-      log.error("JDBC driver not found: {}", JDBC.class.getName(), why);
-    }
-
-    return null;
+  private Connection createConnection() throws SQLException {
+    loadJDBCDriver();
+    log.debug("Opening new connection to {}", dbUrl());
+    return DriverManager.getConnection(dbUrl());
   }
 }

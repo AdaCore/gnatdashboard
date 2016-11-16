@@ -33,8 +33,8 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.resources.ResourceUtils;
 import org.sonar.api.rule.RuleKey;
-import org.sonar.plugins.ada.codepeer.CodePeerRulesDefinition;
-import org.sonar.plugins.ada.gnat.GNATcheckRulesDefinition;
+import org.sonar.plugins.ada.rules.CodePeerRulesDefinition;
+import org.sonar.plugins.ada.rules.GNATcheckRulesDefinition;
 import org.sonar.plugins.ada.lang.Ada;
 
 /**

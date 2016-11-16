@@ -19,12 +19,12 @@ package org.sonar.plugins.ada;
 import org.sonar.api.Plugin;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
-import org.sonar.plugins.ada.codepeer.CodePeerRulesDefinition;
-import org.sonar.plugins.ada.coverage.CoverageSensor;
-import org.sonar.plugins.ada.gnat.GNATcheckRulesDefinition;
-import org.sonar.plugins.ada.gnat.GNATcoverageRulesDefinition;
-import org.sonar.plugins.ada.gnat.GNAThubIssueSensor;
-import org.sonar.plugins.ada.gnat.GNATmetricSensor;
+import org.sonar.plugins.ada.rules.CodePeerRulesDefinition;
+import org.sonar.plugins.ada.rules.GNATcheckRulesDefinition;
+import org.sonar.plugins.ada.rules.GNATcoverageRulesDefinition;
+import org.sonar.plugins.ada.sensors.GNAThubIssueSensor;
+import org.sonar.plugins.ada.sensors.GNATmetricSensor;
+import org.sonar.plugins.ada.sensors.GNAThubCoverageSensor;
 import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.plugins.ada.lang.AdaColorizer;
 
@@ -65,7 +65,7 @@ public final class AdaPlugin implements Plugin {
 
         // Collect metrics and issues
         GNAThubIssueSensor.class,
-        CoverageSensor.class,
+        GNAThubCoverageSensor.class,
         GNATmetricSensor.class,
 
         // Compute higher level metrics

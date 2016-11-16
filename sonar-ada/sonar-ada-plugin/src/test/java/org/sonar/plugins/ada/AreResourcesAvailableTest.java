@@ -17,9 +17,9 @@
 package org.sonar.plugins.ada;
 
 import org.junit.Test;
-import org.sonar.plugins.ada.codepeer.CodePeerRulesDefinition;
-import org.sonar.plugins.ada.gnat.GNATcheckRulesDefinition;
-import org.sonar.plugins.ada.gnat.GNATcoverageRulesDefinition;
+import org.sonar.plugins.ada.rules.CodePeerRulesDefinition;
+import org.sonar.plugins.ada.rules.GNATcheckRulesDefinition;
+import org.sonar.plugins.ada.rules.GNATcoverageRulesDefinition;
 import org.sonar.plugins.ada.utils.AdaToolRulesDefinition;
 
 import java.io.File;

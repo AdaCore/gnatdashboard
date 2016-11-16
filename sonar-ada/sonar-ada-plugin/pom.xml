@@ -67,6 +67,10 @@
             <artifactId>slf4j-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.sonarsource.sslr-squid-bridge</groupId>
+            <artifactId>sslr-squid-bridge</artifactId>
+        </dependency>
         <!-- Unit Testing -->
         <dependency>
             <groupId>junit</groupId>
