@@ -27,6 +27,15 @@
     user-manual/writing_plugins
     user-manual/workflow_integration
 
+|GNATdashboard| Sonar Ada Plugin
+================================
+
+.. toctree::
+    :numbered:
+    :maxdepth: 3
+
+    sonar-ada-plugin/index
+
 |GNAThub| API Reference
 =======================
 

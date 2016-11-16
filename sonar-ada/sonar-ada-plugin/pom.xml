@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Sonar Ada Plugin (GNATdashboard)
+  ~ Copyright (C) 2016, AdaCore
+  ~
+  ~ This is free software;  you can redistribute it  and/or modify it  under
+  ~ terms of the  GNU General Public License as published  by the Free Soft-
+  ~ ware  Foundation;  either version 3,  or (at your option) any later ver-
+  ~ sion.  This software is distributed in the hope  that it will be useful,
+  ~ but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN-
+  ~ TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+  ~ License for  more details.  You should have  received  a copy of the GNU
+  ~ General  Public  License  distributed  with  this  software;   see  file
+  ~ COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
+  ~ of the license.
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.adacore.gnatdashboard</groupId>
+        <artifactId>parent</artifactId>
+        <version>18.0w-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>sonar-ada-plugin</artifactId>
+    <packaging>sonar-plugin</packaging>
+
+    <name>GNATdashboard :: Sonar Ada Plugin</name>
+    <description>Ada Plugin for SonarQube 5.6.3 to 6.x.y</description>
+    <inceptionYear>2012</inceptionYear>
+
+    <properties>
+        <sonar.pluginName>Ada</sonar.pluginName>
+        <sonar.pluginClass>org.sonar.plugins.ada.AdaPlugin</sonar.pluginClass>
+    </properties>
+
+    <dependencies>
+        <!-- Sonar Plugin -->
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-plugin-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Sonar Ada Plugin Dependencies -->
+        <dependency>
+            <groupId>com.adacore.gnatdashboard</groupId>
+            <artifactId>gnathub-api</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Unit Testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-testing-harness</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
+                <artifactId>sonar-packaging-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <pluginName>${sonar.pluginName}</pluginName>
+                    <pluginClass>${sonar.pluginClass}</pluginClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
