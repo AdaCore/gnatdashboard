@@ -1,5 +1,5 @@
 /*
- * Sonar Ada Plugin (GNATdashboard)
+ * GNATdashboard
  * Copyright (C) 2016, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
