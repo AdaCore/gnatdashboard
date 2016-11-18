@@ -24,9 +24,8 @@ import org.sonar.colorizer.Tokenizer;
 
 /**
  * Ada source code comment tokenizer.
- *
- * ??? Review this class and remove deprecated code.
  */
+@Deprecated
 @AllArgsConstructor
 public class AdaLiteralTokenizer extends Tokenizer {
 

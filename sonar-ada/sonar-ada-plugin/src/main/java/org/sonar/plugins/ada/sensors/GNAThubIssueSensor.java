@@ -47,6 +47,7 @@ import java.util.Collection;
  */
 @Slf4j
 @ToString
+@Deprecated
 @AllArgsConstructor
 public class GNAThubIssueSensor implements Sensor {
   private final FileSystem fs;

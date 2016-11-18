@@ -44,6 +44,7 @@ import org.sonar.plugins.ada.lang.Ada;
  * issues raised or the total GNATcheck violations detected.
  */
 @Slf4j
+@Deprecated
 @AllArgsConstructor
 @DependsUpon(DecoratorBarriers.ISSUES_TRACKED)
 public class AdaCountIssuesDecorator implements Decorator {

@@ -20,9 +20,8 @@ import org.sonar.colorizer.InlineDocTokenizer;
 
 /**
  * Ada source code comment tokenizer.
- *
- * ??? Review this class and remove deprecated code.
  */
+@Deprecated
 public class AdaCommentTokenizer extends InlineDocTokenizer {
   public AdaCommentTokenizer(String tagBefore, String tagAfter) {
     super("--", tagBefore, tagAfter);

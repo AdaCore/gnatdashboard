@@ -23,6 +23,7 @@ import org.sonar.api.resources.Scopes;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Deprecated
 public class ResourceUtils {
   /**
    * Expand the list of child resources.

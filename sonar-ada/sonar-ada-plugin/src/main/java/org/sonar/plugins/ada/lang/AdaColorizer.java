@@ -25,9 +25,8 @@ import java.util.List;
 
 /**
  * Ada source code colorizer.
- *
- * ??? Review this class and remove deprecated code.
  */
+@Deprecated
 public class AdaColorizer extends CodeColorizerFormat {
   /**
    * Ada reserved key word, used for syntax highlighting

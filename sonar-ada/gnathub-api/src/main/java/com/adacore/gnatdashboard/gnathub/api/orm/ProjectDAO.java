@@ -32,6 +32,7 @@ import java.util.Properties;
  * Data Access Object for the content of the project database.
  */
 @Slf4j
+@Deprecated
 public class ProjectDAO {
   private final String dbUrl;
   private final Project project;

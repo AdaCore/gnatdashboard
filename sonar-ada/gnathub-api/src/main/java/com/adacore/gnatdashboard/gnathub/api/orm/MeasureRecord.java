@@ -21,6 +21,7 @@ import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.File;
 
 @Value
+@Deprecated
 public class MeasureRecord {
   String path;
   File file;

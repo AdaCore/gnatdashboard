@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@Deprecated
 public class MaxAggregationFormula implements Formula {
   @Override
   public List<Metric> dependsUponMetrics() {

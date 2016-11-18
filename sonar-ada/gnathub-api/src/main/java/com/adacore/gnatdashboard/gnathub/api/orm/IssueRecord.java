@@ -21,6 +21,7 @@ import org.sonar.api.resources.File;
 import org.sonar.api.rules.Rule;
 
 @Value
+@Deprecated
 public class IssueRecord {
   String path;
   File file;

@@ -39,6 +39,7 @@ import java.util.Properties;
  */
 @Slf4j
 @BatchSide
+@Deprecated
 public class AdaProjectContext {
   protected final Settings settings;
   protected final Project project;

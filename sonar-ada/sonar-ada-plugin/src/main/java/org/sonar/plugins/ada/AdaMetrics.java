@@ -34,6 +34,7 @@ import java.util.List;
  *
  * Once defined, these metrics can be assigned values during an analysis.
  */
+@Deprecated
 public class AdaMetrics implements Metrics {
   public static final String DOMAIN_CODING_STANDARD = "Coding standard";
   public static final String DOMAIN_STATIC_ANALYSIS = "Static analysis";

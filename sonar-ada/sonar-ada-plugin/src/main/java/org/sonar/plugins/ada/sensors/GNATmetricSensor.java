@@ -39,6 +39,7 @@ import java.util.Collection;
 
 @Slf4j
 @ToString
+@Deprecated
 @AllArgsConstructor
 public class GNATmetricSensor implements Sensor {
   private static final String NAME = "GNATmetric";
