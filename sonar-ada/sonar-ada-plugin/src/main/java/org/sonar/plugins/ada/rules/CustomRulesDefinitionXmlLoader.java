@@ -14,7 +14,7 @@
  * of the license.
  */
 
-package org.sonar.plugins.ada.utils;
+package org.sonar.plugins.ada.rules;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ import java.io.InputStreamReader;
  */
 @Slf4j
 @AllArgsConstructor
-public abstract class AdaToolRulesDefinition implements RulesDefinition {
+public abstract class CustomRulesDefinitionXmlLoader implements RulesDefinition {
   private final RulesDefinitionXmlLoader xmlLoader;
 
   /**
@@ -60,7 +60,7 @@ public abstract class AdaToolRulesDefinition implements RulesDefinition {
 
     log.debug("Loading XML definition file: {}", definitions);
     final InputStreamReader reader = new InputStreamReader(
-        AdaToolRulesDefinition.class.getResourceAsStream(definitions));
+        CustomRulesDefinitionXmlLoader.class.getResourceAsStream(definitions));
 
     xmlLoader.load(repository, reader);
     repository.done();

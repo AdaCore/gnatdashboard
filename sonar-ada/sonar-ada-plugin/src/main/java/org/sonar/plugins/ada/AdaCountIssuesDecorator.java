@@ -33,8 +33,8 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.resources.ResourceUtils;
 import org.sonar.api.rule.RuleKey;
-import org.sonar.plugins.ada.rules.CodePeerRulesDefinition;
-import org.sonar.plugins.ada.rules.GNATcheckRulesDefinition;
+import org.sonar.plugins.ada.rules.CodePeerRulesDefinitionXmlLoader;
+import org.sonar.plugins.ada.rules.GNATcheckRulesDefinitionXmlLoader;
 import org.sonar.plugins.ada.lang.Ada;
 
 /**
@@ -95,7 +95,7 @@ public class AdaCountIssuesDecorator implements Decorator {
    * otherwise.
    */
   private static boolean isCodePeerRule(final RuleKey rule) {
-    return CodePeerRulesDefinition.REPOSITORY_KEY.equals(rule.repository());
+    return CodePeerRulesDefinitionXmlLoader.REPOSITORY_KEY.equals(rule.repository());
   }
 
   /**
@@ -106,7 +106,7 @@ public class AdaCountIssuesDecorator implements Decorator {
    * otherwise.
    */
   private static boolean isGNATcheckRule(final RuleKey rule) {
-    return GNATcheckRulesDefinition.REPOSITORY_KEY.equals(
+    return GNATcheckRulesDefinitionXmlLoader.REPOSITORY_KEY.equals(
         rule.repository());
   }
 }

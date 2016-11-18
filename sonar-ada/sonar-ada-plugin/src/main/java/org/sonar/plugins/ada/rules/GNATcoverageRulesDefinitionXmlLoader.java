@@ -17,7 +17,6 @@
 package org.sonar.plugins.ada.rules;
 
 import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
-import org.sonar.plugins.ada.utils.AdaToolRulesDefinition;
 
 /**
  * GNATcoverage rules definition.
@@ -25,8 +24,8 @@ import org.sonar.plugins.ada.utils.AdaToolRulesDefinition;
  * Loads the XML file containing each rule definition and register them in
  * SonarQube as part of a new rule repository.
  */
-public class GNATcoverageRulesDefinition extends AdaToolRulesDefinition {
-  public GNATcoverageRulesDefinition(RulesDefinitionXmlLoader xmlLoader) {
+public class GNATcoverageRulesDefinitionXmlLoader extends CustomRulesDefinitionXmlLoader {
+  public GNATcoverageRulesDefinitionXmlLoader(final RulesDefinitionXmlLoader xmlLoader) {
     super(xmlLoader);
   }
 

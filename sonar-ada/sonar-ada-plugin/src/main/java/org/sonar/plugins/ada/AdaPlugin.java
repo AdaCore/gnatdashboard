@@ -19,9 +19,9 @@ package org.sonar.plugins.ada;
 import org.sonar.api.Plugin;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
-import org.sonar.plugins.ada.rules.CodePeerRulesDefinition;
-import org.sonar.plugins.ada.rules.GNATcheckRulesDefinition;
-import org.sonar.plugins.ada.rules.GNATcoverageRulesDefinition;
+import org.sonar.plugins.ada.rules.CodePeerRulesDefinitionXmlLoader;
+import org.sonar.plugins.ada.rules.GNATcheckRulesDefinitionXmlLoader;
+import org.sonar.plugins.ada.rules.GNATcoverageRulesDefinitionXmlLoader;
 import org.sonar.plugins.ada.sensors.GNAThubIssueSensor;
 import org.sonar.plugins.ada.sensors.GNATmetricSensor;
 import org.sonar.plugins.ada.sensors.GNAThubCoverageSensor;
@@ -59,9 +59,9 @@ public final class AdaPlugin implements Plugin {
         AdaMetrics.class,
 
         // Register tools rules
-        CodePeerRulesDefinition.class,
-        GNATcheckRulesDefinition.class,
-        GNATcoverageRulesDefinition.class,
+        CodePeerRulesDefinitionXmlLoader.class,
+        GNATcheckRulesDefinitionXmlLoader.class,
+        GNATcoverageRulesDefinitionXmlLoader.class,
 
         // Collect metrics and issues
         GNAThubIssueSensor.class,

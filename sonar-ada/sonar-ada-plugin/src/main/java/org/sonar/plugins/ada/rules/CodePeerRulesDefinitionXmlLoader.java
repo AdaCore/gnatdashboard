@@ -17,21 +17,20 @@
 package org.sonar.plugins.ada.rules;
 
 import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
-import org.sonar.plugins.ada.utils.AdaToolRulesDefinition;
 
 /**
- * GNATcheck rules definition.
+ * CodePeer rules definition.
  *
  * Loads the XML file containing each rule definition and register them in
  * SonarQube as part of a new rule repository.
  */
-public class GNATcheckRulesDefinition extends AdaToolRulesDefinition {
-  public GNATcheckRulesDefinition(RulesDefinitionXmlLoader xmlLoader) {
+public class CodePeerRulesDefinitionXmlLoader extends CustomRulesDefinitionXmlLoader {
+  public CodePeerRulesDefinitionXmlLoader(final RulesDefinitionXmlLoader xmlLoader) {
     super(xmlLoader);
   }
 
-  public static final String REPOSITORY_KEY = "gnatcheck";
-  public static final String RULES_DEFINITION_FILE = "/gnatcheck.xml";
+  public static final String REPOSITORY_KEY = "codepeer";
+  public static final String RULES_DEFINITION_FILE = "/codepeer.xml";
 
   @Override
   public String getRepositoryKey() {
@@ -40,7 +39,7 @@ public class GNATcheckRulesDefinition extends AdaToolRulesDefinition {
 
   @Override
   public String getToolName() {
-    return "GNATcheck";
+    return "CodePeer";
   }
 
   @Override

@@ -17,10 +17,10 @@
 package org.sonar.plugins.ada;
 
 import org.junit.Test;
-import org.sonar.plugins.ada.rules.CodePeerRulesDefinition;
-import org.sonar.plugins.ada.rules.GNATcheckRulesDefinition;
-import org.sonar.plugins.ada.rules.GNATcoverageRulesDefinition;
-import org.sonar.plugins.ada.utils.AdaToolRulesDefinition;
+import org.sonar.plugins.ada.rules.CodePeerRulesDefinitionXmlLoader;
+import org.sonar.plugins.ada.rules.GNATcheckRulesDefinitionXmlLoader;
+import org.sonar.plugins.ada.rules.GNATcoverageRulesDefinitionXmlLoader;
+import org.sonar.plugins.ada.rules.CustomRulesDefinitionXmlLoader;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -36,7 +36,7 @@ public class AreResourcesAvailableTest {
      * @return {@code true} if the resource exists, {@code false} otherwise.
      */
     private void existsResource(final String name) throws URISyntaxException {
-        final URL resource = AdaToolRulesDefinition.class.getResource(name);
+        final URL resource = CustomRulesDefinitionXmlLoader.class.getResource(name);
         assertThat(resource).isNotNull();
 
         final File resourceFile = new File(resource.toURI());
@@ -46,17 +46,17 @@ public class AreResourcesAvailableTest {
 
     @Test
     public void existsGNATcheckXMLRulesDefinition() throws URISyntaxException {
-        existsResource(GNATcheckRulesDefinition.RULES_DEFINITION_FILE);
+        existsResource(GNATcheckRulesDefinitionXmlLoader.RULES_DEFINITION_FILE);
     }
 
     @Test
     public void existsGNATcovXMLRulesDefinition() throws URISyntaxException {
-        existsResource(GNATcoverageRulesDefinition.RULES_DEFINITION_FILE);
+        existsResource(GNATcoverageRulesDefinitionXmlLoader.RULES_DEFINITION_FILE);
     }
 
     @Test
     public void existsCodePeerXMLRulesDefinition() throws URISyntaxException {
-        existsResource(CodePeerRulesDefinition.RULES_DEFINITION_FILE);
+        existsResource(CodePeerRulesDefinitionXmlLoader.RULES_DEFINITION_FILE);
     }
 
     @Test
