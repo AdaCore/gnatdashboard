@@ -14,7 +14,7 @@
  * of the license.
  */
 
-package com.adacore.gnatdashboard.gnathub.api.orm;
+package com.adacore.gnatdashboard.gnathub.api.orm.constant;
 
 import lombok.AllArgsConstructor;
 
@@ -22,8 +22,8 @@ import lombok.AllArgsConstructor;
  * Enumeration of resource kind.
  */
 @AllArgsConstructor
-public enum ResourceKind {
-  PROJECT(0), DIRECTORY(1), FILE(2);
+public enum RuleKind {
+  ISSUE(0), MEASURE(1);
 
   public final int img;
 }

@@ -17,6 +17,7 @@
 package org.sonar.plugins.ada;
 
 import com.adacore.gnatdashboard.gnathub.api.Coverage;
+import com.adacore.gnatdashboard.gnathub.api.Measures;
 import com.adacore.gnatdashboard.gnathub.api.SourceMapper;
 import com.adacore.gnatdashboard.gnathub.api.orm.Connector;
 import lombok.Getter;
@@ -34,6 +35,7 @@ public class GNAThub {
   private final Connector connector;
   private final SourceMapper srcMapper;
   @Getter private final Coverage coverage;
+  @Getter private final Measures measures;
 
   public GNAThub(final Settings settings) {
     final String dbUri = settings.getString(AdaPlugin.GNATHUB_DB_KEY);
@@ -61,5 +63,6 @@ public class GNAThub {
     this.connector = new Connector(dbUri);
     this.srcMapper = new SourceMapper(mapping);
     this.coverage = new Coverage(connector, srcMapper);
+    this.measures = new Measures(connector, srcMapper);
   }
 }

@@ -19,28 +19,18 @@ package com.adacore.gnatdashboard.gnathub.api.orm;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 public class CoverageDAOTest {
-  private final String GNATHUB_TEST_DB = "gnathub-2016-11-17T200502Z.db";
-  private final String GNATHUB_SOURCE_DIR =
-      "/Users/delay/_work/sandboxes/wave/x86_64-darwin/gnathub-cov/src/gnathub/src/";
-  private final String GNATHUB_MAIN = GNATHUB_SOURCE_DIR + "gnathub/gnathub.adb";
-
-  private File getGNAThubTestDB() throws FileNotFoundException {
-    return new File(getClass().getClassLoader().getResource(GNATHUB_TEST_DB).getFile());
-  }
-
   @Test
   public void getCoverageForFile() throws Exception {
-    final File db = getGNAThubTestDB();
+    final File db = GNAThubDBMock.getGNAThubTestDB();
     assertThat(db.exists()).isTrue();
     final CoverageDAO coverageDAO = new CoverageDAO(new Connector(db));
-    final FileCoverage coverage = coverageDAO.getCoverageForFile(GNATHUB_MAIN);
+    final FileCoverage coverage = coverageDAO.getCoverageForFile(GNAThubDBMock.GNATHUB_MAIN);
     assertThat(coverage).isNotNull();
-    assertThat(coverage.getPath()).isEqualTo(GNATHUB_MAIN);
+    assertThat(coverage.getPath()).isEqualTo(GNAThubDBMock.GNATHUB_MAIN);
     assertThat(coverage.getHits()).isNotEmpty();
     assertThat(coverage.getHits().size()).isEqualTo(59);
     assertThat(coverage.getHits().get(0).getLine()).isEqualTo(22);

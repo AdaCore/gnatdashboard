@@ -16,57 +16,32 @@
 
 package org.sonar.plugins.ada.sensors;
 
-import com.google.common.collect.Lists;
-import org.sonar.api.batch.fs.FilePredicate;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.batch.sensor.coverage.CoverageType;
 import org.sonar.api.batch.sensor.coverage.NewCoverage;
 import org.sonar.plugins.ada.GNAThub;
-import org.sonar.plugins.ada.lang.Ada;
-import org.sonar.squidbridge.ProgressReport;
 
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Save coverage information from GNAThub into SonarQube.
  */
-public class GNAThubCoverageSensor implements Sensor {
+public class GNAThubCoverageSensor extends MainFilesSensor {
   @Override
-  public void describe(final SensorDescriptor descriptor) {
-    descriptor.name("GNAThub Coverage Sensor")
-        .onlyOnLanguage(Ada.KEY)
-        .onlyOnFileType(InputFile.Type.MAIN);
+  public String getName() {
+    return "GNAThub Coverage Sensor";
   }
 
   @Override
-  public void execute(final SensorContext context) {
-    final GNAThub gnathub = new GNAThub(context.settings());
-    final FileSystem fs = context.fileSystem();
-    final FilePredicate mainFilePredicate = fs.predicates().and(
-        fs.predicates().hasType(InputFile.Type.MAIN),
-        fs.predicates().hasLanguage(Ada.KEY));
-    // Integration with SonarQube progress reporter
-    final ProgressReport progress = new ProgressReport(
-        "GNAThub Coverage Sensor Report", TimeUnit.SECONDS.toMillis(10));
-    progress.start(Lists.newArrayList(fs.files(mainFilePredicate)));
-
-    // Iterate over main files known to the SonarQube Scanner and save coverage for each
-    for (final InputFile file : fs.inputFiles(mainFilePredicate)) {
-      progress.nextFile(); // Notify progress reporter of a new step
-
-      // Collect and save the input file coverage information
-      final NewCoverage newCoverage = context.newCoverage().onFile(file).ofType(CoverageType.UNIT);
-      Optional.ofNullable(gnathub.getCoverage().forFile(file.absolutePath()))
-          .ifPresent(coverage -> coverage.getHits()
-              .forEach(hits -> newCoverage.lineHits(hits.getLine(), hits.getCount())));
-      newCoverage.save();
-    }
-
-    progress.stop();
+  public void forInputFile(
+      final SensorContext context, final GNAThub gnathub, final InputFile file)
+  {
+    // Collect and save the input file coverage information
+    final NewCoverage newCoverage = context.newCoverage().onFile(file).ofType(CoverageType.UNIT);
+    Optional.ofNullable(gnathub.getCoverage().forFile(file.absolutePath()))
+        .ifPresent(coverage -> coverage.getHits()
+            .forEach(hits -> newCoverage.lineHits(hits.getLine(), hits.getCount())));
+    newCoverage.save();
   }
 }

@@ -16,12 +16,31 @@
 
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@AllArgsConstructor
-public class Measure {
-  @Getter private String key;
-  @Getter private String rawValue;
+public class Measures {
+  private Map<String, String> measures;
+
+  public Measures(final List<Measure> measures) {
+    this.measures = new HashMap<>();
+    for (final Measure measure : measures) {
+      this.measures.put(measure.getKey(), measure.getRawValue());
+    }
+  }
+
+  public Integer asInt(final String key) {
+    if (!this.measures.containsKey(key)) {
+      return null;
+    }
+    return Integer.valueOf(this.measures.get(key));
+  }
+
+  public Double asDouble(final String key) {
+    if (!this.measures.containsKey(key)) {
+      return null;
+    }
+    return Double.valueOf(this.measures.get(key));
+  }
 }

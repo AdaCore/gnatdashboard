@@ -14,14 +14,16 @@
  * of the license.
  */
 
-package com.adacore.gnatdashboard.gnathub.api.orm;
+package com.adacore.gnatdashboard.gnathub.api.orm.constant;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
+/**
+ * Enumeration of resource kind.
+ */
 @AllArgsConstructor
-public class Measure {
-  @Getter private String key;
-  @Getter private String rawValue;
+public enum ResourceKind {
+  PROJECT(0), DIRECTORY(1), FILE(2);
+
+  public final int img;
 }

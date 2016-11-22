@@ -17,13 +17,20 @@
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.List;
 
 /**
- * Enumeration of resource kind.
+ * TODO(delay)
  */
 @AllArgsConstructor
-public enum RuleKind {
-  ISSUE(0), MEASURE(1);
+public class FileMeasure {
+  @Getter private String path;
+  @Getter private Measures measures;
 
-  public final int img;
+  public FileMeasure(final String path, final List<Measure> measures) {
+    this.path = path;
+    this.measures = new Measures(measures);
+  }
 }

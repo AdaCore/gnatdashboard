@@ -16,12 +16,16 @@
 
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import java.io.File;
+import java.io.FileNotFoundException;
 
-@AllArgsConstructor
-public class Measure {
-  @Getter private String key;
-  @Getter private String rawValue;
+public class GNAThubDBMock {
+  private static final String GNATHUB_TEST_DB = "gnathub-2016-11-17T200502Z.db";
+  private static final String GNATHUB_SOURCE_DIR =
+      "/Users/delay/_work/sandboxes/wave/x86_64-darwin/gnathub-cov/src/gnathub/src/";
+  public static final String GNATHUB_MAIN = GNATHUB_SOURCE_DIR + "gnathub/gnathub.adb";
+
+  public static File getGNAThubTestDB() throws FileNotFoundException {
+    return new File(GNAThubDBMock.class.getClassLoader().getResource(GNATHUB_TEST_DB).getFile());
+  }
 }

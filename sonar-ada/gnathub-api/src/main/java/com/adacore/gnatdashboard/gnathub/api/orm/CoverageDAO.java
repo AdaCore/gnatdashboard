@@ -29,7 +29,7 @@ public class CoverageDAO {
   private final static String GNATHUB_COVERAGE_RULE = "coverage";
   private final static String BASE_COVERAGE_QUERY = String.join(" ",
       "SELECT",
-      "  file.name as path, rm.line as line, msg.data as hits",
+      "  rm.line as line, msg.data as hits",
       "FROM",
       "  resources file, resources_messages rm, messages msg, tools tool, rules rule",
       "WHERE",
@@ -44,7 +44,7 @@ public class CoverageDAO {
       String.join(" ", BASE_COVERAGE_QUERY, "AND file.name = '%s'");
 
   /**
-   * Fetches coverage results for a file.
+   * Fetch coverage results for a file.
    *
    * @param path The path to the file.
    * @return The coverage results for that file.
