@@ -21,11 +21,15 @@ import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.sqlite.JDBC;
+import org.sqlite.jdbc4.JDBC4PreparedStatement;
 
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Connector object to access the project database.
@@ -34,13 +38,18 @@ import java.util.List;
  * loader problem when trying to connect to the DB with MyBatis.
  */
 @Slf4j
-@AllArgsConstructor
 public class Connector {
   private final String dbPath;
+  private Connection connection;
 
   @VisibleForTesting
   public Connector(final File db) {
     this(db.getAbsolutePath());
+  }
+
+  public Connector(final String dbPath) {
+    loadJDBCDriver();
+    this.dbPath = dbPath;
   }
 
   /**
@@ -51,28 +60,60 @@ public class Connector {
   }
 
   /**
+   * Opens a new connection to the database.
+   *
+   * It is the user responsibility to close the connection to database using the
+   * {@link #closeConnection()} method.
+   *
+   * @return The new connection object used to interact with the database.
+   * @throws SQLException
+   */
+  public Connection openConnection() throws SQLException {
+    log.debug("Opening connection to {}", dbUrl());
+    connection = DriverManager.getConnection(dbUrl());
+    return connection;
+  }
+
+  @SuppressWarnings("unused")
+  public void closeConnection() throws SQLException {
+    if (connection != null) {
+      log.debug("Closing connection to {}", dbUrl());
+      connection.close();
+      connection = null;
+    }
+  }
+
+  /**
+   * Creates a prepared statement.
+   *
+   * @param sql The SQL query to initialize the prepared statement.
+   * @return The prepared statement.
+   * @throws SQLException
+   */
+  PreparedStatement createStatement(final String sql) throws SQLException {
+    Objects.requireNonNull(connection);
+    return connection.prepareStatement(sql);
+  }
+
+
+  /**
    * Executes a query on the database, map the results and returns them.
    *
-   * @param sql The SQL query to perform.
+   * {@link #openConnection()} must be called prior to any call to this method.
+   * The user is responsible for closing the {@link PreparedStatement}.
+   *
+   * @param stm The {@link PreparedStatement} to exectute.
    * @param mapper The row mapper to use to map the result of the query.
    * @return The list of results.
+   * @throws SQLException
    */
-  public <T> List<T> query(final String sql, RowMapper<T> mapper) throws SQLException {
-    log.debug("Executing SQL query: {}", sql);
-
-    final List<T> rows = new ArrayList<T>();
-
-    @Cleanup final Connection conn = createConnection();
-    @Cleanup final PreparedStatement ps = conn.prepareStatement(sql);
-    final ResultSet resultSet = ps.executeQuery();
+  public <T> List<T> query(final PreparedStatement stm, RowMapper<T> mapper) throws SQLException {
+    final List<T> rows = new ArrayList<>();
+    final ResultSet resultSet = stm.executeQuery();
 
     while (resultSet.next()) {
-      final T row = mapper.mapRow(resultSet);
-      if (row != null) {
-        rows.add(row);
-      }
+      Optional.ofNullable(mapper.mapRow(resultSet)).ifPresent(rows::add);
     }
-
     return rows;
   }
 
@@ -82,24 +123,10 @@ public class Connector {
   @VisibleForTesting
   public static void loadJDBCDriver() {
     try {
-      // Load the sqlite-JDBC driver using the current class loader
+      // Load the sqlite-JDBC driver using the current class loader.
       Class.forName(JDBC.class.getName());
     } catch (final ClassNotFoundException why) {
       log.error("Could not load JDBC driver", why);
     }
-  }
-
-  /**
-   * Opens a new connection to the database.
-   *
-   * It is the user responsibility to close the connection to database using the
-   * {@code #closeConnection()} method.
-   *
-   * @return The new connection object used to interact with the database.
-   */
-  private Connection createConnection() throws SQLException {
-    loadJDBCDriver();
-    log.debug("Opening new connection to {}", dbUrl());
-    return DriverManager.getConnection(dbUrl());
   }
 }

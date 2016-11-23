@@ -24,8 +24,8 @@ file from the various input rules definition XML files.
 import logging
 import os
 import sys
-
 from argparse import ArgumentParser, FileType
+
 from sonarqube.rule import (
     RulesDefinition, RulesDefinitionXmlReader, RulesProfileXmlWriter
 )

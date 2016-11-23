@@ -35,19 +35,11 @@ public class Coverage {
    *
    * @param path The absolute path of the source file.
    * @return The coverage information collected by GNAThub, or {@code null} if no coverage found.
+   * @throws SQLException
    */
-  public FileCoverage forFile(final String path) {
+  public FileCoverage forFile(final String path) throws SQLException {
     final String originalPath = srcMapper.getOriginalPath(path);
-
-    if (originalPath == null) {
-      return null;
-    }
-
-    try {
-      return new CoverageDAO(connector).getCoverageForFile(originalPath);
-    } catch (final SQLException why) {
-      log.error("Failed to get coverage information", why);
-      return null;
-    }
+    return originalPath == null ?
+        null : new CoverageDAO(connector).getCoverageForFile(originalPath);
   }
 }

@@ -18,8 +18,9 @@ package com.adacore.gnatdashboard.gnathub.api.orm;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 @AllArgsConstructor
 public class Measure {
   @Getter private String key;

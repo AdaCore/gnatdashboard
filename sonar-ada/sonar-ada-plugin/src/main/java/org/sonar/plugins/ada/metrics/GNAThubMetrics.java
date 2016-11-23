@@ -34,8 +34,9 @@ public final class GNAThubMetrics implements Metrics {
    * NOTE: missing implementation of LSLOC at the GNAThub level.
    * Currently, only file-level metrics reported by GNATmetric are supported.
    *
-   * TODO(delay): register this metric with SonarQube once GNAThub can report it.
+   * TODO(delay): register this metric with SonarQube once GNAThub can report it (see P511-010).
    */
+  @SuppressWarnings("unused")
   public static final Metric<Integer> LSLOC =
       new Metric.Builder(
           "gnatmetric_lsloc",

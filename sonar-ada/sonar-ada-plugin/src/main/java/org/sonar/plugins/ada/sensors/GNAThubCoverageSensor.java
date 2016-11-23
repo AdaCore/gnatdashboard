@@ -22,6 +22,7 @@ import org.sonar.api.batch.sensor.coverage.CoverageType;
 import org.sonar.api.batch.sensor.coverage.NewCoverage;
 import org.sonar.plugins.ada.GNAThub;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -30,12 +31,12 @@ import java.util.Optional;
 public class GNAThubCoverageSensor extends MainFilesSensor {
   @Override
   public String getName() {
-    return "GNAThub Coverage Sensor";
+    return "GNAThub Coverage Import";
   }
 
   @Override
   public void forInputFile(
-      final SensorContext context, final GNAThub gnathub, final InputFile file)
+      final SensorContext context, final GNAThub gnathub, final InputFile file) throws SQLException
   {
     // Collect and save the input file coverage information
     final NewCoverage newCoverage = context.newCoverage().onFile(file).ofType(CoverageType.UNIT);

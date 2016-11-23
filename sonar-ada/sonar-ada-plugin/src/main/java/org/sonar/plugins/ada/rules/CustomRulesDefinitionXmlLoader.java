@@ -51,10 +51,10 @@ public abstract class CustomRulesDefinitionXmlLoader implements RulesDefinition 
   public abstract String getRulesDefinitionXMLFile();
 
   @Override
-  public void define(Context context) {
+  public void define(final Context context) {
     final NewRepository repository = context
         .createRepository(getRepositoryKey(), Ada.KEY)
-        .setName(String.format("{} rules", getToolName()));
+        .setName(String.format("%s rules", getToolName()));
 
     final String definitions = getRulesDefinitionXMLFile();
 

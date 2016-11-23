@@ -17,6 +17,7 @@
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
 import com.adacore.gnatdashboard.gnathub.api.orm.constant.GNATmetricMetrics;
+import lombok.Cleanup;
 import org.junit.Test;
 
 import java.io.File;
@@ -28,8 +29,12 @@ public class MeasureDAOTest {
   public void getMeasuresForFile() throws Exception {
     final File db = GNAThubDBMock.getGNAThubTestDB();
     assertThat(db.exists()).isTrue();
-    final MeasureDAO measureDAO = new MeasureDAO(new Connector(db));
-    final FileMeasure measures = measureDAO.getMeasuresForFile(GNAThubDBMock.GNATHUB_MAIN);
+
+    @Cleanup("closeConnection") final Connector connector = new Connector(db);
+    connector.openConnection();
+
+    final MeasureDAO measureDAO = new MeasureDAO(connector);
+    final FileMeasures measures = measureDAO.getMeasuresForFile(GNAThubDBMock.GNATHUB_MAIN);
     assertThat(measures).isNotNull();
     assertThat(measures.getPath()).isEqualTo(GNAThubDBMock.GNATHUB_MAIN);
     assertThat(measures.getMeasures().asInt(GNATmetricMetrics.ALL_LINES)).isEqualTo(177);

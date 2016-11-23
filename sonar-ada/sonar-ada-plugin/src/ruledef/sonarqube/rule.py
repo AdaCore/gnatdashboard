@@ -15,13 +15,13 @@
 """Mimic SonarQube rule-associated classes"""
 
 import logging
-import lxml.builder
-import lxml.etree
 import os
 import sys
 
-from enum import Enum
+import lxml.builder
+import lxml.etree
 
+from enum import Enum
 
 # All the supported severity values, ordered from INFO to BLOCKER
 Severity = Enum('Severity', 'INFO MINOR MAJOR CRITICAL BLOCKER')

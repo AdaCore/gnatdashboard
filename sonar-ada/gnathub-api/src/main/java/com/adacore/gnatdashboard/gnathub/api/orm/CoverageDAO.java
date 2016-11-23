@@ -17,40 +17,43 @@
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Cleanup;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@Slf4j
 @AllArgsConstructor
 public class CoverageDAO {
   private final Connector connector;
 
-  private final static String GNATHUB_COVERAGE_RULE = "coverage";
-  private final static String BASE_COVERAGE_QUERY = String.join(" ",
+  private static final String GNATHUB_COVERAGE_RULE = "coverage";
+  private static final String SQL = String.join(" ",
       "SELECT",
       "  rm.line as line, msg.data as hits",
       "FROM",
       "  resources file, resources_messages rm, messages msg, tools tool, rules rule",
       "WHERE",
       "  tool.id = rule.tool_id",
-      "    AND rule.id = msg.rule_id",
-      "    AND msg.id = rm.message_id",
-      "    AND rm.line != 0",
-      "    AND rm.resource_id = file.id",
-      String.format("AND rule.name = '%s'", GNATHUB_COVERAGE_RULE));
-
-  private final static String COVERAGE_PER_FILE =
-      String.join(" ", BASE_COVERAGE_QUERY, "AND file.name = '%s'");
+      "  AND rule.id = msg.rule_id",
+      "  AND msg.id = rm.message_id",
+      "  AND rm.line != 0",
+      "  AND rm.resource_id = file.id",
+      "  AND rule.name = ?",
+      "  AND file.name = ?");
 
   /**
    * Fetch coverage results for a file.
    *
    * @param path The path to the file.
    * @return The coverage results for that file.
+   * @throws SQLException
    */
   public final FileCoverage getCoverageForFile(final String path) throws SQLException {
-    return new FileCoverage(path, connector.query(String.format(COVERAGE_PER_FILE, path),
+    @Cleanup final PreparedStatement statement = connector.createStatement(SQL);
+    statement.setString(1, GNATHUB_COVERAGE_RULE);
+    statement.setString(2, path);
+
+    return new FileCoverage(path, connector.query(statement,
         resultSet -> new LineHits(resultSet.getInt("line"), resultSet.getInt("hits"))));
   }
 }

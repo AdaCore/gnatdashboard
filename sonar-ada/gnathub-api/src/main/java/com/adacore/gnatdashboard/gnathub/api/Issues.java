@@ -17,8 +17,8 @@
 package com.adacore.gnatdashboard.gnathub.api;
 
 import com.adacore.gnatdashboard.gnathub.api.orm.Connector;
-import com.adacore.gnatdashboard.gnathub.api.orm.FileMeasures;
-import com.adacore.gnatdashboard.gnathub.api.orm.MeasureDAO;
+import com.adacore.gnatdashboard.gnathub.api.orm.FileIssues;
+import com.adacore.gnatdashboard.gnathub.api.orm.IssueDAO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +26,7 @@ import java.sql.SQLException;
 
 @Slf4j
 @AllArgsConstructor
-public class Measures {
+public class Issues {
   final private Connector connector;
   final private SourceMapper srcMapper;
 
@@ -37,8 +37,8 @@ public class Measures {
    * @return The coverage information collected by GNAThub, or {@code null} if no coverage found.
    * @throws SQLException
    */
-  public FileMeasures forFile(final String path) throws SQLException {
+  public FileIssues forFile(final String path) throws SQLException {
     final String originalPath = srcMapper.getOriginalPath(path);
-    return originalPath == null ? null : new MeasureDAO(connector).getMeasuresForFile(originalPath);
+    return originalPath == null ? null : new IssueDAO(connector).getIssuesForFile(originalPath);
   }
 }

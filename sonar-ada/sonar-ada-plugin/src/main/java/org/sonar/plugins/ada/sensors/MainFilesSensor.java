@@ -16,7 +16,10 @@
 
 package org.sonar.plugins.ada.sensors;
 
+import com.adacore.gnatdashboard.gnathub.api.orm.Connector;
 import com.google.common.collect.Lists;
+import lombok.Cleanup;
+import lombok.extern.slf4j.Slf4j;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -27,12 +30,14 @@ import org.sonar.plugins.ada.GNAThub;
 import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.squidbridge.ProgressReport;
 
+import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public abstract class MainFilesSensor implements Sensor {
   public abstract String getName();
   public abstract void forInputFile(
-      final SensorContext context, final GNAThub gnathub, final InputFile file);
+      final SensorContext context, final GNAThub gnathub, final InputFile file) throws SQLException;
 
   @Override
   public void describe(final SensorDescriptor descriptor) {
@@ -41,6 +46,12 @@ public abstract class MainFilesSensor implements Sensor {
         .onlyOnFileType(InputFile.Type.MAIN);
   }
 
+  @SuppressWarnings("unused")
+  public void setUp(final SensorContext context) {}
+
+  @SuppressWarnings("unused")
+  public void tearDown(final SensorContext context) {}
+
   @Override
   public void execute(final SensorContext context) {
     final GNAThub gnathub = new GNAThub(context.settings());
@@ -48,16 +59,26 @@ public abstract class MainFilesSensor implements Sensor {
     final FilePredicate mainFilePredicate = fs.predicates().and(
         fs.predicates().hasType(InputFile.Type.MAIN),
         fs.predicates().hasLanguage(Ada.KEY));
-    // Integration with SonarQube progress reporter
+    // Integration with SonarQube progress reporter.
     final ProgressReport progress = new ProgressReport(
-        "GNAThub Metrics Sensor Report", TimeUnit.SECONDS.toMillis(10));
+        String.format("{} Reporter", getName()), TimeUnit.SECONDS.toMillis(10));
     progress.start(Lists.newArrayList(fs.files(mainFilePredicate)));
+    setUp(context);
 
-    for (final InputFile file : fs.inputFiles(mainFilePredicate)) {
-      progress.nextFile();  // Notify progress reporter of a new step
-      this.forInputFile(context, gnathub, file);
+    try {
+      @Cleanup("closeConnection") final Connector connector = gnathub.getConnector();
+      connector.openConnection();
+
+      for (final InputFile file : fs.inputFiles(mainFilePredicate)) {
+        progress.nextFile();  // Notify progress reporter of a new step.
+        this.forInputFile(context, gnathub, file);
+      }
+
+    } catch (final SQLException why) {
+      log.error("Fatal SQL error", why);
     }
 
+    tearDown(context);
     progress.stop();
   }
 }

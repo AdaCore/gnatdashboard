@@ -14,33 +14,19 @@
  * of the license.
  */
 
-package org.sonar.plugins.ada.utils;
+package com.adacore.gnatdashboard.gnathub.api.orm;
 
-import org.sonar.api.measures.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-@Deprecated
-public class MaxAggregationFormula implements Formula {
-  @Override
-  public List<Metric> dependsUponMetrics() {
-    return Collections.emptyList();
-  }
+@AllArgsConstructor
+public class FileMeasures {
+  @Getter private String path;
+  @Getter private Measures measures;
 
-  @Override
-  public Measure calculate(FormulaData data, FormulaContext context) {
-    double max = 0;
-    final Collection<Measure> measures =
-        data.getChildrenMeasures(context.getTargetMetric());
-
-    for (final Measure measure : measures) {
-      if (MeasureUtils.hasValue(measure)) {
-        max = Math.max(max, measure.getIntValue());
-      }
-    }
-
-    return new Measure(context.getTargetMetric(), max);
+  public FileMeasures(final String path, final List<Measure> measures) {
+    this(path, new Measures(measures));
   }
 }

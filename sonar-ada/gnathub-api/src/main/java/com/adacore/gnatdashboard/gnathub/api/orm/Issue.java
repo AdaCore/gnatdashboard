@@ -14,22 +14,18 @@
  * of the license.
  */
 
-package com.adacore.gnatdashboard.gnathub.api.codepeer;
+package com.adacore.gnatdashboard.gnathub.api.orm;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.sonar.api.rule.Severity;
+import lombok.ToString;
 
-/**
- * CodePeer severity.
- *
- * CodePeer has its own way of attaching a severity to a message. This class
- * maps the CodePeer severities to the SonarQube's one.
- */
+@ToString
 @AllArgsConstructor
-public enum CodePeerSeverity {
-  HIGH(Severity.CRITICAL), MEDIUM(Severity.MAJOR), LOW(Severity.MINOR), INFO(Severity.INFO);
-
-  @Getter
-  private final String sonarSeverity;
+public class Issue {
+  @Getter private int line;
+  @Getter private String key;
+  @Getter private String tool;
+  @Getter private String message;
+  @Getter private String category;
 }

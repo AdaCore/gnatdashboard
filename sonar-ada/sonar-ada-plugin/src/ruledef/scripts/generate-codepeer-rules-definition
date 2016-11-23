@@ -23,8 +23,8 @@ CodePeer documentation.
 
 import logging
 import sys
-
 from argparse import ArgumentParser, FileType
+
 from sonarqube.rule import RulesDefinitionXmlWriter
 from tools.codepeer import CodePeerRulesDefinition
 

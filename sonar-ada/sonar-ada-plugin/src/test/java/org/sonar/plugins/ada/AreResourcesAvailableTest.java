@@ -18,9 +18,9 @@ package org.sonar.plugins.ada;
 
 import org.junit.Test;
 import org.sonar.plugins.ada.rules.CodePeerRulesDefinitionXmlLoader;
+import org.sonar.plugins.ada.rules.CustomRulesDefinitionXmlLoader;
 import org.sonar.plugins.ada.rules.GNATcheckRulesDefinitionXmlLoader;
 import org.sonar.plugins.ada.rules.GNATcoverageRulesDefinitionXmlLoader;
-import org.sonar.plugins.ada.rules.CustomRulesDefinitionXmlLoader;
 
 import java.io.File;
 import java.net.URISyntaxException;

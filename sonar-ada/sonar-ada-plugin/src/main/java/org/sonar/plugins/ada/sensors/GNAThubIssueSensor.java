@@ -16,101 +16,86 @@
 
 package org.sonar.plugins.ada.sensors;
 
-import com.adacore.gnatdashboard.gnathub.api.orm.IssueRecord;
-import lombok.AllArgsConstructor;
-import lombok.ToString;
+import com.adacore.gnatdashboard.gnathub.api.orm.FileIssues;
+import com.adacore.gnatdashboard.gnathub.api.orm.Issue;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.rule.ActiveRule;
 import org.sonar.api.batch.rule.Severity;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.issue.Issuable;
-import org.sonar.api.issue.Issue;
-import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
-import org.sonar.api.rules.Rule;
-import org.sonar.api.rules.RuleFinder;
-import org.sonar.api.rules.RuleQuery;
-import org.sonar.plugins.ada.AdaProjectContext;
-import org.sonar.plugins.ada.lang.Ada;
-import org.sonar.plugins.ada.utils.ResourceUtils;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.issue.NewIssue;
+import org.sonar.api.batch.sensor.issue.NewIssueLocation;
+import org.sonar.api.rule.RuleKey;
+import org.sonar.plugins.ada.GNAThub;
+import org.sonar.plugins.ada.rules.CodePeerSeverity;
 
-import java.util.Collection;
+import java.sql.SQLException;
+import java.util.Optional;
 
 /**
- * Sensor that collect generic issues stored though GNAThub.
+ * Sensor that collect generic issues known to GNAThub.
  *
- * Lists all issues stored within GNAThub, in a tool-agnostic manner. Among
- * other tools, it can read issues from CodePeer and GNATcheck.
+ * Lists all issues stored within GNAThub, in a tool-agnostic manner, and saves them to SonarQube.
+ * Saves among other tools issues from CodePeer and GNATcheck.
  */
 @Slf4j
-@ToString
-@Deprecated
-@AllArgsConstructor
-public class GNAThubIssueSensor implements Sensor {
-  private final FileSystem fs;
-  private final AdaProjectContext adaContext;
-  private final RuleFinder ruleFinder;
-  private final ResourcePerspectives perspective;
+public class GNAThubIssueSensor extends MainFilesSensor {
+  private final Table<String, String, Integer> missingRules = HashBasedTable.create();
 
   @Override
-  public boolean shouldExecuteOnProject(final Project project) {
-    return fs.hasFiles(fs.predicates().and(
-        fs.predicates().hasType(InputFile.Type.MAIN),
-        fs.predicates().hasLanguage(Ada.KEY)));
+  public String getName() {
+    return "GNAThub Issues Import";
+  }
+
+  private Severity getSonarSeverity(final Issue issue) {
+    if("codepeer".equalsIgnoreCase(issue.getTool())) {
+      try {
+        return CodePeerSeverity.valueOf(issue.getCategory().toUpperCase()).getSonarSeverity();
+      } catch (final IllegalArgumentException why) {
+        log.warn("Unsupported CodePeer severity \"{}\" - defaults to MAJOR", issue.getCategory());
+        return Severity.MAJOR;
+      }
+    }
+    return null; // A null value means to use severity configured in the quality profile.
   }
 
   @Override
-  public void analyse(final Project project, final SensorContext context) {
-    log.info("Loading issues from GNAThub (provided by GNAT tools)");
-
-    if (!adaContext.isDAOLoaded()) {
-      log.error("GNAThub db not loaded, cannot list project Issues");
-      return;
+  @SuppressWarnings("unused")
+  public void tearDown(final SensorContext context) {
+    for (final Table.Cell<String, String, Integer> cell : missingRules.cellSet()) {
+      log.warn("Unknown or inactive rule \"{}\" from repository \"{}\" ({} times)",
+          new Object[]{ cell.getColumnKey(), cell.getRowKey(), cell.getValue() });
     }
+    missingRules.clear();
+  }
 
-    final Collection<Resource> scope = ResourceUtils.expandChildren(project, context);
-
-    for (final IssueRecord ai : adaContext.getDao().getIssues()) {
-      // Check that the resource is from the correct project
-      // ??? Augment SQL query to filter out resources per project
-      final Resource resource = ai.getFile();
-
-      if (!scope.contains(resource)) {
-        log.trace("{}: not from project: {}", resource.getLongName(), project.getName());
-        continue;
-      }
-
-      final Issuable issuable = perspective.as(Issuable.class, resource);
-      if (issuable == null) {
-        log.warn("{}: no such file", ai.getFile().getLongName());
-        continue;
-      }
-
-      // Locate the rule in the given rule repository
-      final RuleQuery ruleQuery = RuleQuery.create()
-          .withRepositoryKey(ai.getRule().getRepositoryKey())
-          .withKey(ai.getRule().getKey());
-      final Rule rule = ruleFinder.find(ruleQuery);
+  @Override
+  public void forInputFile
+      (final SensorContext context, final GNAThub gnathub, final InputFile file) throws SQLException
+  {
+    final FileIssues issues = gnathub.getIssues().forFile(file.absolutePath());
+    for (final Issue issue : issues.getIssues().getIssues()) {
+      // Locate the rule in the given rule repository.
+      final ActiveRule rule =
+          context.activeRules().find(RuleKey.of(issue.getTool(), issue.getKey()));
       if (rule == null) {
-        log.warn("could not find rule \"{}:{}\"",
-            ai.getRule().getRepositoryKey(), ai.getRule().getKey());
+        missingRules.put(issue.getTool(), issue.getKey(),
+            Optional.ofNullable(
+                missingRules.get(issue.getTool(), issue.getKey())).orElse(0) + 1);
         continue;
       }
-
-      log.debug("({}:{}) '{}:{}' rule violation detected", new Object[]{
-          ai.getPath(), ai.getLine(), ai.getRule().getRepositoryKey(), rule.getKey()
-      });
-
-      final Issue issue = issuable.newIssueBuilder()
-          .ruleKey(rule.ruleKey())
-          .line(ai.getLine())
-          .message(ai.getMessage())
-          .severity(ai.getSeverity() != null ? ai.getSeverity() : Severity.MAJOR.toString())
-          .build();
-      issuable.addIssue(issue);
+      // Create the issue and save it.
+      final NewIssue newIssue = context.newIssue()
+          .forRule(rule.ruleKey())
+          .overrideSeverity(getSonarSeverity(issue));
+      final NewIssueLocation location = newIssue.newLocation()
+          .message(issue.getMessage())
+          .on(file)
+          .at(file.selectLine(issue.getLine()));
+      newIssue.at(location).save();
     }
   }
 }

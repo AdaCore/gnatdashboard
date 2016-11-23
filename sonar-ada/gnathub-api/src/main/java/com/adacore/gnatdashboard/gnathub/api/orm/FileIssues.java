@@ -21,16 +21,12 @@ import lombok.Getter;
 
 import java.util.List;
 
-/**
- * TODO(delay)
- */
 @AllArgsConstructor
-public class FileMeasure {
+public class FileIssues {
   @Getter private String path;
-  @Getter private Measures measures;
+  @Getter private Issues issues;
 
-  public FileMeasure(final String path, final List<Measure> measures) {
-    this.path = path;
-    this.measures = new Measures(measures);
+  public FileIssues(final String path, final List<Issue> issues) {
+    this(path, new Issues(issues));
   }
 }

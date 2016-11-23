@@ -14,16 +14,19 @@
  * of the license.
  */
 
-package com.adacore.gnatdashboard.gnathub.api.orm;
+package org.sonar.plugins.ada.rules;
 
-import lombok.Value;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.File;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.sonar.api.batch.rule.Severity;
 
-@Value
-@Deprecated
-public class MeasureRecord {
-  String path;
-  File file;
-  Measure measure;
+@AllArgsConstructor
+public enum CodePeerSeverity {
+  HIGH(Severity.CRITICAL),
+  MEDIUM(Severity.MAJOR),
+  LOW(Severity.MINOR),
+  INFO(Severity.INFO),
+  ANNOTATION(Severity.INFO);
+
+  @Getter private final Severity sonarSeverity;
 }

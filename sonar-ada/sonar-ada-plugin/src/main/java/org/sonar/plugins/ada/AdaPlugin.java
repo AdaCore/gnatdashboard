@@ -19,16 +19,16 @@ package org.sonar.plugins.ada;
 import org.sonar.api.Plugin;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
+import org.sonar.plugins.ada.lang.Ada;
+import org.sonar.plugins.ada.lang.AdaColorizer;
 import org.sonar.plugins.ada.metrics.AdaMetrics;
 import org.sonar.plugins.ada.metrics.GNAThubMetrics;
 import org.sonar.plugins.ada.rules.CodePeerRulesDefinitionXmlLoader;
 import org.sonar.plugins.ada.rules.GNATcheckRulesDefinitionXmlLoader;
 import org.sonar.plugins.ada.rules.GNATcoverageRulesDefinitionXmlLoader;
+import org.sonar.plugins.ada.sensors.GNAThubCoverageSensor;
 import org.sonar.plugins.ada.sensors.GNAThubIssueSensor;
 import org.sonar.plugins.ada.sensors.GNAThubMetricsSensor;
-import org.sonar.plugins.ada.sensors.GNAThubCoverageSensor;
-import org.sonar.plugins.ada.lang.Ada;
-import org.sonar.plugins.ada.lang.AdaColorizer;
 
 /**
  * Entry point to the SonarQube's plug-in.
@@ -51,27 +51,26 @@ public final class AdaPlugin implements Plugin {
   @Override
   public void define(final Context context) {
     context.addExtensions(
-        // Declare the Ada language
+        // Declare the Ada language.
         Ada.class,
         AdaColorizer.class,
         AdaDefaultProfile.class,
-        AdaProjectContext.class,
 
-        // Register custom metrics
+        // Register custom metrics.
         AdaMetrics.class,
         GNAThubMetrics.class,
 
-        // Register tools rules
+        // Register tools rules.
         CodePeerRulesDefinitionXmlLoader.class,
         GNATcheckRulesDefinitionXmlLoader.class,
         GNATcoverageRulesDefinitionXmlLoader.class,
 
-        // Collect metrics and issues
+        // Collect metrics and issues.
         GNAThubIssueSensor.class,
         GNAThubCoverageSensor.class,
         GNAThubMetricsSensor.class,
 
-        // Compute higher level metrics
+        // Compute higher level metrics.
         AdaCountIssuesDecorator.class,
 
         PropertyDefinition.builder(FILE_SUFFIXES_KEY)

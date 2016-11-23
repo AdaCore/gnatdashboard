@@ -31,14 +31,13 @@ See the GNATpython documentation for information about the expected output
 :see: http://windyroad.com.au/dl/Open%20Source/JUnit.xsd
 """
 
-import logging
 import json
+import logging
 import os
 import sys
 import xml.dom.minidom as xml
 
 from collections import namedtuple
-
 
 # Module logger
 LOG = logging.getLogger(__name__)

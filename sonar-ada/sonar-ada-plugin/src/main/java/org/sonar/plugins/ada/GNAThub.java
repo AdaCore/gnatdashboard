@@ -17,6 +17,7 @@
 package org.sonar.plugins.ada;
 
 import com.adacore.gnatdashboard.gnathub.api.Coverage;
+import com.adacore.gnatdashboard.gnathub.api.Issues;
 import com.adacore.gnatdashboard.gnathub.api.Measures;
 import com.adacore.gnatdashboard.gnathub.api.SourceMapper;
 import com.adacore.gnatdashboard.gnathub.api.orm.Connector;
@@ -32,10 +33,11 @@ import java.util.Properties;
 
 @BatchSide
 public class GNAThub {
-  private final Connector connector;
+  @Getter private final Connector connector;
   private final SourceMapper srcMapper;
   @Getter private final Coverage coverage;
   @Getter private final Measures measures;
+  @Getter private final Issues issues;
 
   public GNAThub(final Settings settings) {
     final String dbUri = settings.getString(AdaPlugin.GNATHUB_DB_KEY);
@@ -43,12 +45,12 @@ public class GNAThub {
 
     if (dbUri == null) {
       throw new AnalysisException(String.format(
-          "{} is not defined in the project properties file", AdaPlugin.GNATHUB_DB_KEY));
+          "%s is not defined in the project properties file", AdaPlugin.GNATHUB_DB_KEY));
     }
 
     if (srcMappingUri == null) {
       throw new AnalysisException(String.format(
-          "{} is not defined in the project properties file", AdaPlugin.GNATHUB_SRC_MAPPING_KEY));
+          "%s is not defined in the project properties file", AdaPlugin.GNATHUB_SRC_MAPPING_KEY));
     }
 
     final Properties mapping = new Properties();
@@ -64,5 +66,6 @@ public class GNAThub {
     this.srcMapper = new SourceMapper(mapping);
     this.coverage = new Coverage(connector, srcMapper);
     this.measures = new Measures(connector, srcMapper);
+    this.issues = new Issues(connector, srcMapper);
   }
 }

@@ -33,10 +33,10 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.resources.ResourceUtils;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.plugins.ada.metrics.AdaMetrics;
 import org.sonar.plugins.ada.rules.CodePeerRulesDefinitionXmlLoader;
 import org.sonar.plugins.ada.rules.GNATcheckRulesDefinitionXmlLoader;
-import org.sonar.plugins.ada.lang.Ada;
 
 /**
  * Project decorator.
@@ -64,7 +64,7 @@ public class AdaCountIssuesDecorator implements Decorator {
   public void decorate(
       final Resource resource, final DecoratorContext context) {
     if (!ResourceUtils.isFile(resource)) {
-      // Only process files
+      // Only process files.
       return;
     }
 

@@ -16,17 +16,25 @@
 
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
-import lombok.Value;
-import org.sonar.api.resources.File;
-import org.sonar.api.rules.Rule;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Value
-@Deprecated
-public class IssueRecord {
-  String path;
-  File file;
-  int line;
-  String message;
-  Rule rule;
-  String severity;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@AllArgsConstructor
+public class Issues {
+  @Getter private final List<Issue> issues;
+
+  public List<Issue> fromTool(final String toolName) {
+    return issues.stream()
+        .filter(issue -> issue.getTool().equals(toolName))
+        .collect(Collectors.toList());
+  }
+
+  public List<Issue> fromToolIgnoreCase(final String toolName) {
+    return issues.stream()
+        .filter(issue -> issue.getTool().equalsIgnoreCase(toolName))
+        .collect(Collectors.toList());
+  }
 }

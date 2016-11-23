@@ -16,7 +16,7 @@
 
 package org.sonar.plugins.ada.sensors;
 
-import com.adacore.gnatdashboard.gnathub.api.orm.FileMeasure;
+import com.adacore.gnatdashboard.gnathub.api.orm.FileMeasures;
 import com.adacore.gnatdashboard.gnathub.api.orm.constant.GNATmetricMetrics;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -25,6 +25,7 @@ import org.sonar.api.measures.Metric;
 import org.sonar.plugins.ada.GNAThub;
 import org.sonar.plugins.ada.metrics.GNAThubMetrics;
 
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -34,13 +35,14 @@ import java.util.function.BiConsumer;
 public class GNAThubMetricsSensor extends MainFilesSensor {
   @Override
   public String getName() {
-    return "GNAThub Metrics Sensor";
+    return "GNAThub Metrics Import";
   }
 
   @Override
-  public void forInputFile(final SensorContext context, final GNAThub gnathub, final InputFile file)
+  public void forInputFile(
+      final SensorContext context, final GNAThub gnathub, final InputFile file) throws SQLException
   {
-    final FileMeasure measures = gnathub.getMeasures().forFile(file.absolutePath());
+    final FileMeasures measures = gnathub.getMeasures().forFile(file.absolutePath());
     final BiConsumer<String, Metric<Integer>> saveAsInt =
         (gnathubMetric, sonarMetric) ->
             Optional.ofNullable(measures.getMeasures().asInt(gnathubMetric))
@@ -53,12 +55,12 @@ public class GNAThubMetricsSensor extends MainFilesSensor {
                     .withValue(value).forMetric(sonarMetric).save());
 
     saveAsInt.accept(GNATmetricMetrics.ALL_LINES, CoreMetrics.LINES);
-    saveAsInt.accept(GNATmetricMetrics.CODE_LINES, CoreMetrics.NCLOC); // TODO(delay): See P511-010
+    saveAsInt.accept(GNATmetricMetrics.CODE_LINES, CoreMetrics.NCLOC); // TODO(delay): See P511-010.
     saveAsInt.accept(GNATmetricMetrics.COMMENT_LINES, CoreMetrics.COMMENT_LINES);
     saveAsInt.accept(GNATmetricMetrics.EOL_COMMENTS, GNAThubMetrics.EOL_COMMENTS);
     saveAsDouble.accept(GNATmetricMetrics.COMMENT_PERCENTAGE, CoreMetrics.COMMENT_LINES_DENSITY);
     saveAsInt.accept(GNATmetricMetrics.BLANK_LINES, GNAThubMetrics.BLANK_LINES);
-    // NOTE: Duplicate SonarQube's "Complexity / File" to force its display on the GUI
+    // NOTE: Duplicate SonarQube's "Complexity / File" to force its display on the GUI.
     saveAsDouble.accept(GNATmetricMetrics.CYCLOMATIC_COMPLEXITY, CoreMetrics.FILE_COMPLEXITY);
     saveAsDouble.accept(
         GNATmetricMetrics.CYCLOMATIC_COMPLEXITY, GNAThubMetrics.FILE_CYCLOMATIC_COMPLEXITY);

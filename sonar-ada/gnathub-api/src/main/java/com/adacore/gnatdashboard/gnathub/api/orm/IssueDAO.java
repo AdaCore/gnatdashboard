@@ -16,7 +16,6 @@
 
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
-import com.adacore.gnatdashboard.gnathub.api.orm.constant.ResourceKind;
 import com.adacore.gnatdashboard.gnathub.api.orm.constant.RuleKind;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
@@ -25,40 +24,41 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @AllArgsConstructor
-public class MeasureDAO {
+public class IssueDAO {
   private final Connector connector;
 
-  private static final int DEFAULT_METRIC_LINE_NO = 0;
   private static final String SQL = String.join(" ",
       "SELECT",
-      "  msg.data as value, rule.identifier as key",
+      "  rm.line as line_no, rule.identifier as key, msg.data as message, c.label as category,",
+      "  tool.name as tool_name",
       "FROM",
-      "  resources file, resources_messages rm, rules rule, tools tool, messages msg",
+      "  resources_messages rm, rules rule, tools tool, messages msg, resources file",
+      "LEFT OUTER JOIN",
+      "  categories c ON msg.category_id = c.id",
       "WHERE",
-      "  file.id = rm.resource_id",
-      "  AND msg.id = rm.message_id",
+      "  msg.rule_id = rule.id",
+      "  AND rm.message_id = msg.id",
       "  AND rule.tool_id = tool.id",
-      "  AND msg.rule_id = rule.id",
-      "  AND rm.line = ?",
-      "  AND file.kind = ?",
+      "  AND rm.resource_id = file.id",
       "  AND rule.kind = ?",
       "  AND file.name = ?");
 
   /**
-   * Fetch metrics associated to a file.
+   * Fetch issues associated to a file.
    *
    * @param path The path to the file.
-   * @return The metrics for that file.
+   * @return The issues for that file.
    * @throws SQLException
    */
-  public final FileMeasures getMeasuresForFile(final String path) throws SQLException {
+  public final FileIssues getIssuesForFile(final String path) throws SQLException {
     @Cleanup final PreparedStatement statement = connector.createStatement(SQL);
-    statement.setInt(1, DEFAULT_METRIC_LINE_NO);
-    statement.setInt(2, ResourceKind.FILE.img);
-    statement.setInt(3, RuleKind.MEASURE.img);
-    statement.setString(4, path);
+    statement.setInt(1, RuleKind.ISSUE.img);
+    statement.setString(2, path);
 
-    return new FileMeasures(path, connector.query(statement,
-        resultSet -> new Measure(resultSet.getString("key"), resultSet.getString("value"))));
+    return new FileIssues(path, connector.query(statement,
+        resultSet -> new Issue(
+            resultSet.getInt("line_no"), resultSet.getString("key"),
+            resultSet.getString("tool_name"), resultSet.getString("message"),
+            resultSet.getString("category"))));
   }
 }

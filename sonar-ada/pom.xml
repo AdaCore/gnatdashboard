@@ -70,6 +70,7 @@
         <version.sslr-squid-bridge>2.6.1</version.sslr-squid-bridge>
         <version.sonar>5.6.3</version.sonar>
         <version.sonar-packaging-maven-plugin>1.17</version.sonar-packaging-maven-plugin>
+        <version.sqlite-jdbc>3.15.1</version.sqlite-jdbc>
     </properties>
 
     <dependencyManagement>
@@ -82,9 +83,9 @@
             </dependency>
             <!-- Sonar Ada Plugin Dependencies -->
             <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-                <version>5.2.4</version>
+                <groupId>org.xerial</groupId>
+                <artifactId>sqlite-jdbc</artifactId>
+                <version>${version.sqlite-jdbc}</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
