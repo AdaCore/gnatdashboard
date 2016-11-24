@@ -35,9 +35,9 @@ public class IssueDAOTest {
     final IssueDAO issueDAO = new IssueDAO(connector);
     final FileIssues issues = issueDAO.getIssuesForFile(GNAThubDBMock.GNATHUB_MAIN);
     assertThat(issues).isNotNull();
-    assertThat(issues.getIssues().fromToolIgnoreCase("gnatcheck")).isNotEmpty();
-    assertThat(issues.getIssues().fromToolIgnoreCase("gnatcheck").size()).isEqualTo(2);
-    assertThat(issues.getIssues().fromToolIgnoreCase("codepeer")).isNotEmpty();
-    assertThat(issues.getIssues().fromToolIgnoreCase("codepeer").size()).isEqualTo(43);
+    assertThat(issues.fromToolIgnoreCase("gnatcheck")).isNotEmpty();
+    assertThat(issues.fromToolIgnoreCase("gnatcheck").size()).isEqualTo(2);
+    assertThat(issues.fromToolIgnoreCase("codepeer")).isNotEmpty();
+    assertThat(issues.fromToolIgnoreCase("codepeer").size()).isEqualTo(43);
   }
 }

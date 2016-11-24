@@ -25,7 +25,6 @@ import org.sonar.api.measures.Metric;
 import org.sonar.plugins.ada.GNAThub;
 import org.sonar.plugins.ada.metrics.GNAThubMetrics;
 
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -39,18 +38,17 @@ public class GNAThubMetricsSensor extends MainFilesSensor {
   }
 
   @Override
-  public void forInputFile(
-      final SensorContext context, final GNAThub gnathub, final InputFile file) throws SQLException
+  public void forInputFile(final SensorContext context, final GNAThub gnathub, final InputFile file)
   {
     final FileMeasures measures = gnathub.getMeasures().forFile(file.absolutePath());
     final BiConsumer<String, Metric<Integer>> saveAsInt =
         (gnathubMetric, sonarMetric) ->
-            Optional.ofNullable(measures.getMeasures().asInt(gnathubMetric))
+            Optional.ofNullable(measures.asInt(gnathubMetric))
                 .ifPresent(value -> context.<Integer>newMeasure().on(file)
                     .withValue(value).forMetric(sonarMetric).save());
     final BiConsumer<String, Metric<Double>> saveAsDouble =
         (gnathubMetric, sonarMetric) ->
-            Optional.ofNullable(measures.getMeasures().asDouble(gnathubMetric))
+            Optional.ofNullable(measures.asDouble(gnathubMetric))
                 .ifPresent(value -> context.<Double>newMeasure().on(file)
                     .withValue(value).forMetric(sonarMetric).save());
 

@@ -33,7 +33,7 @@ import java.util.List;
  */
 @Slf4j
 public class Ada extends AbstractLanguage {
-  public static final String NAME = "Ada";
+  private static final String NAME = "Ada";
   public static final String KEY = "ada";
 
   public static final String DEFAULT_FILE_SUFFIXES = "adb,ads,ada";

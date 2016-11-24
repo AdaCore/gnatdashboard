@@ -17,14 +17,14 @@
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.experimental.Delegate;
 
 import java.util.List;
 
 @AllArgsConstructor
 public class FileMeasures {
-  @Getter private String path;
-  @Getter private Measures measures;
+  public final String path;
+  @Delegate public final Measures measures;
 
   public FileMeasures(final String path, final List<Measure> measures) {
     this(path, new Measures(measures));

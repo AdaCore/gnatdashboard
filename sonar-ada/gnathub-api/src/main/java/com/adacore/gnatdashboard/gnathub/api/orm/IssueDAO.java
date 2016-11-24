@@ -19,9 +19,9 @@ package com.adacore.gnatdashboard.gnathub.api.orm;
 import com.adacore.gnatdashboard.gnathub.api.orm.constant.RuleKind;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
+import lombok.SneakyThrows;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 @AllArgsConstructor
 public class IssueDAO {
@@ -48,9 +48,9 @@ public class IssueDAO {
    *
    * @param path The path to the file.
    * @return The issues for that file.
-   * @throws SQLException
    */
-  public final FileIssues getIssuesForFile(final String path) throws SQLException {
+  @SneakyThrows
+  public final FileIssues getIssuesForFile(final String path) {
     @Cleanup final PreparedStatement statement = connector.createStatement(SQL);
     statement.setInt(1, RuleKind.ISSUE.img);
     statement.setString(2, path);

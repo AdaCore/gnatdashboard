@@ -20,9 +20,9 @@ import com.adacore.gnatdashboard.gnathub.api.orm.constant.ResourceKind;
 import com.adacore.gnatdashboard.gnathub.api.orm.constant.RuleKind;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
+import lombok.SneakyThrows;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 @AllArgsConstructor
 public class MeasureDAO {
@@ -49,9 +49,9 @@ public class MeasureDAO {
    *
    * @param path The path to the file.
    * @return The metrics for that file.
-   * @throws SQLException
    */
-  public final FileMeasures getMeasuresForFile(final String path) throws SQLException {
+  @SneakyThrows
+  public final FileMeasures getMeasuresForFile(final String path) {
     @Cleanup final PreparedStatement statement = connector.createStatement(SQL);
     statement.setInt(1, DEFAULT_METRIC_LINE_NO);
     statement.setInt(2, ResourceKind.FILE.img);

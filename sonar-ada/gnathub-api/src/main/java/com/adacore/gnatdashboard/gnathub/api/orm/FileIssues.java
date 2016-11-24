@@ -17,14 +17,14 @@
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.experimental.Delegate;
 
 import java.util.List;
 
 @AllArgsConstructor
 public class FileIssues {
-  @Getter private String path;
-  @Getter private Issues issues;
+  public final String path;
+  @Delegate public final Issues issues;
 
   public FileIssues(final String path, final List<Issue> issues) {
     this(path, new Issues(issues));

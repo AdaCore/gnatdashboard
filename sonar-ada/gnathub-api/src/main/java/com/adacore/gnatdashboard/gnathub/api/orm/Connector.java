@@ -17,11 +17,8 @@
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
 import com.google.common.annotations.VisibleForTesting;
-import lombok.AllArgsConstructor;
-import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.sqlite.JDBC;
-import org.sqlite.jdbc4.JDBC4PreparedStatement;
 
 import java.io.File;
 import java.sql.*;
@@ -29,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Connector object to access the project database.
@@ -55,7 +51,7 @@ public class Connector {
   /**
    * @return The full URL to connect to the DB.
    */
-  public String dbUrl() {
+  private String dbUrl() {
     return JDBC.PREFIX + dbPath;
   }
 
@@ -68,10 +64,9 @@ public class Connector {
    * @return The new connection object used to interact with the database.
    * @throws SQLException
    */
-  public Connection openConnection() throws SQLException {
+  public void openConnection() throws SQLException {
     log.debug("Opening connection to {}", dbUrl());
     connection = DriverManager.getConnection(dbUrl());
-    return connection;
   }
 
   @SuppressWarnings("unused")

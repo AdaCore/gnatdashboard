@@ -20,7 +20,6 @@ import lombok.Cleanup;
 import org.junit.Test;
 
 import java.io.File;
-import java.sql.Connection;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -36,12 +35,12 @@ public class CoverageDAOTest {
     final CoverageDAO coverageDAO = new CoverageDAO(connector);
     final FileCoverage coverage = coverageDAO.getCoverageForFile(GNAThubDBMock.GNATHUB_MAIN);
     assertThat(coverage).isNotNull();
-    assertThat(coverage.getPath()).isEqualTo(GNAThubDBMock.GNATHUB_MAIN);
-    assertThat(coverage.getHits()).isNotEmpty();
-    assertThat(coverage.getHits().size()).isEqualTo(59);
-    assertThat(coverage.getHits().get(0).getLine()).isEqualTo(22);
-    assertThat(coverage.getHits().get(0).getCount()).isEqualTo(34);
-    assertThat(coverage.getHits().get(12).getLine()).isEqualTo(69);
-    assertThat(coverage.getHits().get(12).getCount()).isEqualTo(0);
+    assertThat(coverage.path).isEqualTo(GNAThubDBMock.GNATHUB_MAIN);
+    assertThat(coverage.hits).isNotEmpty();
+    assertThat(coverage.hits.size()).isEqualTo(59);
+    assertThat(coverage.hits.get(0).line).isEqualTo(22);
+    assertThat(coverage.hits.get(0).count).isEqualTo(34);
+    assertThat(coverage.hits.get(12).line).isEqualTo(69);
+    assertThat(coverage.hits.get(12).count).isEqualTo(0);
   }
 }

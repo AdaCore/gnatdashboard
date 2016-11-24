@@ -29,7 +29,7 @@ public class GNATcoverageRulesDefinitionXmlLoader extends CustomRulesDefinitionX
     super(xmlLoader);
   }
 
-  public static final String REPOSITORY_KEY = "gnatcoverage";
+  private static final String REPOSITORY_KEY = "gnatcoverage";
   public static final String RULES_DEFINITION_FILE = "/gnatcoverage.xml";
 
   @Override

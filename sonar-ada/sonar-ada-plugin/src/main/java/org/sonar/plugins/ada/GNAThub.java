@@ -34,7 +34,6 @@ import java.util.Properties;
 @BatchSide
 public class GNAThub {
   @Getter private final Connector connector;
-  private final SourceMapper srcMapper;
   @Getter private final Coverage coverage;
   @Getter private final Measures measures;
   @Getter private final Issues issues;
@@ -62,8 +61,9 @@ public class GNAThub {
       throw new AnalysisException("Error reading source file mapping", why);
     }
 
+    final SourceMapper srcMapper = new SourceMapper(mapping);
+
     this.connector = new Connector(dbUri);
-    this.srcMapper = new SourceMapper(mapping);
     this.coverage = new Coverage(connector, srcMapper);
     this.measures = new Measures(connector, srcMapper);
     this.issues = new Issues(connector, srcMapper);

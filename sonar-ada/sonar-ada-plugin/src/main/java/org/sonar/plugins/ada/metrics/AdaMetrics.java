@@ -34,8 +34,8 @@ import java.util.List;
  */
 @Deprecated
 public class AdaMetrics implements Metrics {
-  public static final String DOMAIN_CODING_STANDARD = "Coding standard";
-  public static final String DOMAIN_STATIC_ANALYSIS = "Static analysis";
+  private static final String DOMAIN_CODING_STANDARD = "Coding standard";
+  private static final String DOMAIN_STATIC_ANALYSIS = "Static analysis";
 
   public static final Metric<Integer> GNATCHECK =
       new Metric.Builder(

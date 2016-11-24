@@ -22,7 +22,7 @@ import lombok.ToString;
 
 @ToString
 @AllArgsConstructor
-public class Measure {
+class Measure {
   @Getter private String key;
   @Getter private String rawValue;
 }

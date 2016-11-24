@@ -20,7 +20,6 @@ import com.adacore.gnatdashboard.gnathub.api.orm.FileIssues;
 import com.adacore.gnatdashboard.gnathub.api.orm.Issue;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.ActiveRule;
@@ -32,7 +31,6 @@ import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.ada.GNAThub;
 import org.sonar.plugins.ada.rules.CodePeerSeverity;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -63,8 +61,7 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   }
 
   @Override
-  @SuppressWarnings("unused")
-  public void tearDown(final SensorContext context) {
+  public void tearDown() {
     for (final Table.Cell<String, String, Integer> cell : missingRules.cellSet()) {
       log.warn("Unknown or inactive rule \"{}\" from repository \"{}\" ({} times)",
           new Object[]{ cell.getColumnKey(), cell.getRowKey(), cell.getValue() });
@@ -73,11 +70,10 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   }
 
   @Override
-  public void forInputFile
-      (final SensorContext context, final GNAThub gnathub, final InputFile file) throws SQLException
+  public void forInputFile(final SensorContext context, final GNAThub gnathub, final InputFile file)
   {
     final FileIssues issues = gnathub.getIssues().forFile(file.absolutePath());
-    for (final Issue issue : issues.getIssues().getIssues()) {
+    for (final Issue issue : issues.getIssues()) {
       // Locate the rule in the given rule repository.
       final ActiveRule rule =
           context.activeRules().find(RuleKey.of(issue.getTool(), issue.getKey()));

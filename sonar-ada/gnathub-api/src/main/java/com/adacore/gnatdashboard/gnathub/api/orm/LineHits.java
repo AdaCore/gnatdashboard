@@ -17,12 +17,11 @@
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.ToString;
 
 @ToString
 @AllArgsConstructor
 public class LineHits {
-  @Getter private int line;
-  @Getter private int count;
+  public final int line;
+  public final int count;
 }

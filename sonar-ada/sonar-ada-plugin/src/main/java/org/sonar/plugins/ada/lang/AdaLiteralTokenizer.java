@@ -54,7 +54,7 @@ public class AdaLiteralTokenizer extends Tokenizer {
   private static class EndCommentMatcher implements EndMatcher {
     private final int firstChar;
     private final CodeReader code;
-    private StringBuilder literalValue;
+    private final StringBuilder literalValue;
 
     public EndCommentMatcher(int firstChar, CodeReader code) {
       this.firstChar = firstChar;

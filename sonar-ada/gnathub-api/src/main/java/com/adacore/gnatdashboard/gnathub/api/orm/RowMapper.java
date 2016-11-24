@@ -19,6 +19,6 @@ package com.adacore.gnatdashboard.gnathub.api.orm;
 /**
  * Row mapper interface
  */
-public interface RowMapper<T> {
+interface RowMapper<T> {
   T mapRow(java.sql.ResultSet resultSet) throws java.sql.SQLException;
 }

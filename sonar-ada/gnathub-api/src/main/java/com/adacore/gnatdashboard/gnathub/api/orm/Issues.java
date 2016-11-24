@@ -16,20 +16,17 @@
 
 package com.adacore.gnatdashboard.gnathub.api.orm;
 
-import lombok.AllArgsConstructor;
+import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 public class Issues {
-  @Getter private final List<Issue> issues;
+  @Getter private final ImmutableList<Issue> issues;
 
-  public List<Issue> fromTool(final String toolName) {
-    return issues.stream()
-        .filter(issue -> issue.getTool().equals(toolName))
-        .collect(Collectors.toList());
+  public Issues(final List<Issue> issues) {
+    this.issues = ImmutableList.copyOf(issues);
   }
 
   public List<Issue> fromToolIgnoreCase(final String toolName) {

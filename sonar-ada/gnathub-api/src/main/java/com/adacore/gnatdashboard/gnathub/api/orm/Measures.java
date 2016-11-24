@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Measures {
-  private Map<String, String> measures;
+  private final Map<String, String> measures;
 
   public Measures(final List<Measure> measures) {
     this.measures = new HashMap<>();

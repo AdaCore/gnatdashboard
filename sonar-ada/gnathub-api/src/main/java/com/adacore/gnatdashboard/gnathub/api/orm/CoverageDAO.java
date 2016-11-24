@@ -18,9 +18,9 @@ package com.adacore.gnatdashboard.gnathub.api.orm;
 
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
+import lombok.SneakyThrows;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 @AllArgsConstructor
 public class CoverageDAO {
@@ -46,9 +46,9 @@ public class CoverageDAO {
    *
    * @param path The path to the file.
    * @return The coverage results for that file.
-   * @throws SQLException
    */
-  public final FileCoverage getCoverageForFile(final String path) throws SQLException {
+  @SneakyThrows
+  public final FileCoverage getCoverageForFile(final String path) {
     @Cleanup final PreparedStatement statement = connector.createStatement(SQL);
     statement.setString(1, GNATHUB_COVERAGE_RULE);
     statement.setString(2, path);

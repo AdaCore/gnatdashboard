@@ -34,10 +34,10 @@ import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public abstract class MainFilesSensor implements Sensor {
-  public abstract String getName();
-  public abstract void forInputFile(
-      final SensorContext context, final GNAThub gnathub, final InputFile file) throws SQLException;
+abstract class MainFilesSensor implements Sensor {
+  protected abstract String getName();
+  protected abstract void forInputFile(
+      final SensorContext context, final GNAThub gnathub, final InputFile file);
 
   @Override
   public void describe(final SensorDescriptor descriptor) {
@@ -46,11 +46,7 @@ public abstract class MainFilesSensor implements Sensor {
         .onlyOnFileType(InputFile.Type.MAIN);
   }
 
-  @SuppressWarnings("unused")
-  public void setUp(final SensorContext context) {}
-
-  @SuppressWarnings("unused")
-  public void tearDown(final SensorContext context) {}
+  protected void tearDown() {}
 
   @Override
   public void execute(final SensorContext context) {
@@ -61,9 +57,8 @@ public abstract class MainFilesSensor implements Sensor {
         fs.predicates().hasLanguage(Ada.KEY));
     // Integration with SonarQube progress reporter.
     final ProgressReport progress = new ProgressReport(
-        String.format("{} Reporter", getName()), TimeUnit.SECONDS.toMillis(10));
+        String.format("%s Reporter", getName()), TimeUnit.SECONDS.toMillis(10));
     progress.start(Lists.newArrayList(fs.files(mainFilePredicate)));
-    setUp(context);
 
     try {
       @Cleanup("closeConnection") final Connector connector = gnathub.getConnector();
@@ -78,7 +73,7 @@ public abstract class MainFilesSensor implements Sensor {
       log.error("Fatal SQL error", why);
     }
 
-    tearDown(context);
+    tearDown();
     progress.stop();
   }
 }

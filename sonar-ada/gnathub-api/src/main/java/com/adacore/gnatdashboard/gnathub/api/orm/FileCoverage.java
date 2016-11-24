@@ -23,6 +23,6 @@ import java.util.List;
 
 @AllArgsConstructor
 public class FileCoverage {
-  @Getter private String path;
-  @Getter private List<LineHits> hits;
+  public final String path;
+  public final List<LineHits> hits;
 }

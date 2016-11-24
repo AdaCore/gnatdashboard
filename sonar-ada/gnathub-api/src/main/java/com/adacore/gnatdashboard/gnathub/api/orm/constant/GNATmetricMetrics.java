@@ -17,15 +17,15 @@
 package com.adacore.gnatdashboard.gnathub.api.orm.constant;
 
 public final class GNATmetricMetrics {
-  public static String ALL_LINES = "all_lines";
-  public static String CODE_LINES = "code_lines";
-  public static String COMMENT_LINES = "comment_lines";
-  public static String EOL_COMMENTS = "eol_comments";
-  public static String COMMENT_PERCENTAGE = "comment_percentage";
-  public static String BLANK_LINES = "blank_lines";
-  public static String STATEMENT_COMPLEXITY = "statement_complexity";
-  public static String EXPRESSION_COMPLEXITY = "expression_complexity";
-  public static String CYCLOMATIC_COMPLEXITY = "cyclomatic_complexity";
-  public static String ESSENTIAL_COMPLEXITY = "essential_complexity";
-  public static String MAX_LOOP_NESTING = "max_loop_nesting";
+  public static final String ALL_LINES = "all_lines";
+  public static final String CODE_LINES = "code_lines";
+  public static final String COMMENT_LINES = "comment_lines";
+  public static final String EOL_COMMENTS = "eol_comments";
+  public static final String COMMENT_PERCENTAGE = "comment_percentage";
+  public static final String BLANK_LINES = "blank_lines";
+  public static final String STATEMENT_COMPLEXITY = "statement_complexity";
+  public static final String EXPRESSION_COMPLEXITY = "expression_complexity";
+  public static final String CYCLOMATIC_COMPLEXITY = "cyclomatic_complexity";
+  public static final String ESSENTIAL_COMPLEXITY = "essential_complexity";
+  public static final String MAX_LOOP_NESTING = "max_loop_nesting";
 }

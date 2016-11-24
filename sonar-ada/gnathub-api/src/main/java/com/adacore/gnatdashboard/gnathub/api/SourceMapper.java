@@ -22,34 +22,14 @@ import java.util.Properties;
 
 @Slf4j
 public class SourceMapper {
-  private final Properties srcMapping;
   private final Properties reverseSrcMapping;
 
   public SourceMapper(final Properties srcMapping) {
-    this.srcMapping = srcMapping;
-
     // Generate the reverse property mapping to allow queries both ways
     this.reverseSrcMapping = new Properties();
     for (final Object key : srcMapping.keySet()) {
       reverseSrcMapping.put(srcMapping.get(key), key);
     }
-  }
-
-  /**
-   * Returns the path to the file.
-   *
-   * Use source mapping to compute the local cached file path. Returns {@code null} if not found.
-   *
-   * @param originalPath The original path for the file.
-   * @return The mapped path, or {@code null} if not mapped.
-   */
-  public String getAnalysisPath(final String originalPath) {
-    if (!srcMapping.containsKey(originalPath)) {
-      log.warn("No source mapping found for: {}", originalPath);
-      return null;
-    }
-
-    return srcMapping.getProperty(originalPath);
   }
 
   /**

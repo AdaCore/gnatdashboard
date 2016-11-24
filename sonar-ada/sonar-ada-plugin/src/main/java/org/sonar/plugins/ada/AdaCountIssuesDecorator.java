@@ -28,7 +28,6 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
-import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.resources.ResourceUtils;
@@ -50,7 +49,6 @@ import org.sonar.plugins.ada.rules.GNATcheckRulesDefinitionXmlLoader;
 @DependsUpon(DecoratorBarriers.ISSUES_TRACKED)
 public class AdaCountIssuesDecorator implements Decorator {
   private final FileSystem fs;
-  private final RulesProfile rules;
   private final ResourcePerspectives perspectives;
 
   @Override

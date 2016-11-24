@@ -33,7 +33,6 @@ public class AreResourcesAvailableTest {
      * Given a resource name, test its existence.
      *
      * @param name The name of the resource, eg. "gnatcheck.xml".
-     * @return {@code true} if the resource exists, {@code false} otherwise.
      */
     private void existsResource(final String name) throws URISyntaxException {
         final URL resource = CustomRulesDefinitionXmlLoader.class.getResource(name);

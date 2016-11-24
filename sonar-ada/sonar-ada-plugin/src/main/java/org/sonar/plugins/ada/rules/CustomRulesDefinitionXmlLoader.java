@@ -38,17 +38,17 @@ public abstract class CustomRulesDefinitionXmlLoader implements RulesDefinition 
   /**
    * @return The repository key.
    */
-  public abstract String getRepositoryKey();
+  protected abstract String getRepositoryKey();
 
   /**
    * @return The name of the tool (eg. "GNATcheck").
    */
-  public abstract String getToolName();
+  protected abstract String getToolName();
 
   /**
    * @return The path to the XML file containing the rules definition.
    */
-  public abstract String getRulesDefinitionXMLFile();
+  protected abstract String getRulesDefinitionXMLFile();
 
   @Override
   public void define(final Context context) {
