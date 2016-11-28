@@ -2,6 +2,7 @@ project Disabled is
 
    for Object_Dir use "obj";
    for Source_Dirs use ("src");
+   for Exec_Dir use "src";
 
    type Mode is ("Debug", "Production", "Coverage");
    Build_Mode : Mode := External ("BUILD_MODE", "Debug");

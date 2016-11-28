@@ -86,6 +86,9 @@ assertEqual(relpath(local_repo), 'local_repo')
 main = GNAThub.Project.property_as_string('Main', package='')
 assertEqual(main, 'simple.adb')
 
+exec_dir = GNAThub.Project.property_as_string('Exec_Dir', package='')
+assertEqual(exec_dir, 'src')
+
 plugins_off = GNAThub.Project.property_as_list('Plugins_Off')
 assertIn('gnatcheck', plugins_off)
 assertIn('gnatmetric', plugins_off)
