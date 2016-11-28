@@ -25,6 +25,7 @@ from enum import Enum
 
 # All the supported severity values, ordered from INFO to BLOCKER
 Severity = Enum('Severity', 'INFO MINOR MAJOR CRITICAL BLOCKER')
+Type = Enum('Type', 'BUG VULNERABILITY CODE_SMELL')
 
 
 class Rule(object):
@@ -35,13 +36,16 @@ class Rule(object):
     :type __key: str
     :type __name: str
     :type tags: list[str] | tuple[str] | str | None
+    :type type: Type | None
     :type severity: Severity | None
     :type description: str | None
     """
 
-    def __init__(self, key, name, tags=None, severity=None, description=None):
+    def __init__(self, key, name, tags=None, severity=None, type=None,
+                 description=None):
         self.__key = key
         self.__name = name
+        self.type = type
         self.severity = severity
         self.description = description
 
@@ -123,19 +127,15 @@ class RulesDefinition(set):
         :type fqn: bool
         :rtype: str
         """
-        output = [
+        return os.linesep.join([
             '{}(repository_key="{}", count="{}", rules=['.format(
-                '{}.{}'.format(self.__class__.__module__,
-                               self.__class__.__name__)
+                '{}.{}'.format(
+                    self.__class__.__module__, self.__class__.__name__)
                 if fqn else self.__class__.__name__,
-                self.repository_key, len(self)
-            )
-        ]
-        output.append(',{}'.format(os.linesep).join(
-            ('  {}'.format(rule) for rule in self)
-        ))
-        output.append('])')
-        return os.linesep.join(output)
+                self.repository_key, len(self)),
+            ',{}'.format(os.linesep).join(
+                ('  {}'.format(rule) for rule in self)),
+            '])'])
 
     @property
     def repository_key(self):
@@ -145,26 +145,39 @@ class RulesDefinition(set):
         """
         return self.__repository_key
 
+    def add(self, rule):
+        """Add a new rule
+
+        Return the object to allow methods chaining.
+
+        :param rules: the rule to add to the repository
+        :type rule: Rule
+        :rtype: RulesDefinition
+        """
+        if rule in self:
+            raise KeyError('rule already exists: {}'.format(rule))
+        super(RulesDefinition, self).add(rule)
+        return self
+
     def update(self, rules):
         """Update rules in the set
 
         Return the object to allow methods chaining.
 
         :param rules: the list of rules to add to the repository
-        :type rule: list[Rule]
+        :type rules: list[Rule]
         :rtype: RulesDefinition
         """
         for rule in rules:
-            if rule in self:
-                raise KeyError('rule already exists: {}'.format(rule))
-            super(RulesDefinition, self).add(rule)
+            self.add(rule)
         return self
 
 
 class RulesDefinitionXmlWriter(object):
     """Generate rules definition XML files from :class:`RulesDefinition`"""
 
-    def write(self, rules, stream=sys.stdout):
+    @classmethod
+    def write(cls, rules, stream=sys.stdout):
         """Write the rules definition to XML into `stream`
 
         :param rules: the rules definition
@@ -176,11 +189,12 @@ class RulesDefinitionXmlWriter(object):
         builder = lxml.builder.ElementMaker()
         dom = builder.rules()
         for rule in rules:
-            dom.append(self.__create_rule(rule, builder))
+            dom.append(cls.__create_rule(rule, builder))
         stream.write(lxml.etree.tostring(
             dom, pretty_print=True, xml_declaration=True, encoding='UTF-8'))
 
-    def __create_rule(self, rule, builder):
+    @classmethod
+    def __create_rule(cls, rule, builder):
         """Create a single XML <rule> node
 
         :param rule: the rule to serialize
@@ -196,6 +210,8 @@ class RulesDefinitionXmlWriter(object):
         )
         if rule.severity is not None:
             node.append(builder.severity(rule.severity.name))
+        if rule.type is not None:
+            node.append(builder.type(rule.type.name))
         for tag in rule.tags:
             node.append(builder.tag(tag))
         return node
@@ -220,7 +236,7 @@ class RulesDefinitionXmlReader(object):
         """
         dom = lxml.etree.parse(filename)
         for node in dom.findall('rule'):
-            rules.add([self.__load_rule(node, dom)])
+            rules.add(self.__load_rule(node, dom))
 
     def __load_rule(self, node, dom):
         """Load a rule from an XML node
@@ -237,6 +253,7 @@ class RulesDefinitionXmlReader(object):
             'key': None,
             'name': None,
             'description': None,
+            'type': None,
             'tags': [],
             'severity': None
         }
@@ -259,7 +276,8 @@ class RulesDefinitionXmlReader(object):
 class RulesProfileXmlWriter(object):
     """Generate rules profile XML files"""
 
-    def write(self, language, name, rules_definitions, stream=sys.stdout):
+    @staticmethod
+    def write(language, name, rules_definitions, stream=sys.stdout):
         """Write the rules profile to XML into `stream`
 
         :param language: the language targeted by the rules profile

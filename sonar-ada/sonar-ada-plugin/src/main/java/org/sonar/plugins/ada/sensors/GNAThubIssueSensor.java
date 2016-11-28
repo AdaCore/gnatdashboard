@@ -31,6 +31,8 @@ import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.ada.GNAThub;
 import org.sonar.plugins.ada.rules.CodePeerSeverity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,6 +43,9 @@ import java.util.Optional;
  */
 @Slf4j
 public class GNAThubIssueSensor extends MainFilesSensor {
+  private static final String CODEPEER = "codepeer";
+  private static final String SUPPRESSED = "suppressed";
+  private final List<Issue> suppressedIssues = new ArrayList<>();
   private final Table<String, String, Integer> missingRules = HashBasedTable.create();
 
   @Override
@@ -49,7 +54,7 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   }
 
   private Severity getSonarSeverity(final Issue issue) {
-    if("codepeer".equalsIgnoreCase(issue.getTool())) {
+    if(CODEPEER.equalsIgnoreCase(issue.getTool())) {
       try {
         return CodePeerSeverity.valueOf(issue.getCategory().toUpperCase()).getSonarSeverity();
       } catch (final IllegalArgumentException why) {
@@ -62,6 +67,12 @@ public class GNAThubIssueSensor extends MainFilesSensor {
 
   @Override
   public void tearDown() {
+    if (suppressedIssues.size() != 0) {
+      // Log the number of silenced issues (CodePeer "suppressed").
+      log.info("Silenced {} issues (see CodePeer's \"suppressed\")", suppressedIssues.size());
+      suppressedIssues.clear();
+    }
+    // Log the rules that were unknown or inactive.
     for (final Table.Cell<String, String, Integer> cell : missingRules.cellSet()) {
       log.warn("Unknown or inactive rule \"{}\" from repository \"{}\" ({} times)",
           new Object[]{ cell.getColumnKey(), cell.getRowKey(), cell.getValue() });
@@ -74,6 +85,11 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   {
     final FileIssues issues = gnathub.getIssues().forFile(file.absolutePath());
     for (final Issue issue : issues.getIssues()) {
+      if (CODEPEER.equalsIgnoreCase(issue.getTool()) &&
+          SUPPRESSED.equalsIgnoreCase(issue.getCategory())) {
+        suppressedIssues.add(issue);
+        continue; // Silence CodePeer's SUPPRESSED rules.
+      }
       // Locate the rule in the given rule repository.
       final ActiveRule rule =
           context.activeRules().find(RuleKey.of(issue.getTool(), issue.getKey()));

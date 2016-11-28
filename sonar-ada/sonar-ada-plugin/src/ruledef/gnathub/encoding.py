@@ -15,17 +15,12 @@
 """Provide encoding functions for SonarQube integration"""
 
 
-def encode_codepeer_key(category, message):
+def encode_codepeer_key(message):
     """Create a rule key for CodePeer rule
 
-    :param category: the message category
-    :type category: codepeer.Category
     :param message: the rule message
     :type message: str
     :rtype: str
     """
 
-    return ':'.join((
-        category.name.lower(),
-        message.lower().partition(';')[0].replace(' ', '_')
-    ))
+    return message.lower().partition(';')[0].replace(' ', '_')

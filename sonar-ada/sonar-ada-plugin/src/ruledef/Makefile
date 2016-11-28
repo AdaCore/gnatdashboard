@@ -31,4 +31,8 @@ $(SONAR_ADA_PLUGIN_RESOURCES)/codepeer.xml: $(BUILD_DIR)/$(CODEPEER_DOC)
 
 $(BUILD_DIR)/$(CODEPEER_DOC):
 	mkdir -p $(BUILD_DIR)
+	rm -f $@
 	svn export $(CODEPEER_SVN_USERS_GUIDE)/$(CODEPEER_DOC) $@
+
+clean:
+	rm -f $(BUILD_DIR)/$(CODEPEER_DOC)

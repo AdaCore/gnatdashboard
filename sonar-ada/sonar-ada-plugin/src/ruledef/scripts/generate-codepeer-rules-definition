@@ -42,8 +42,7 @@ def generate_codepeer_rules_repository():
     params = cmdline.parse_args()
 
     rules = CodePeerRulesDefinition.create_from_doc(params.infile)
-    writer = RulesDefinitionXmlWriter()
-    writer.write(rules, stream=params.outfile)
+    RulesDefinitionXmlWriter.write(rules, stream=params.outfile)
     return 0
 
 if __name__ == '__main__':

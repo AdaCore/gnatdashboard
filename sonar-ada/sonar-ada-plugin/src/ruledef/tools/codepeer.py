@@ -20,7 +20,7 @@ import docutils.utils
 
 from enum import Enum
 from gnathub import encoding
-from sonarqube.rule import Rule, RulesDefinition
+from sonarqube.rule import Rule, RulesDefinition, Type
 
 
 # Rule category as defined by CodePeer manual
@@ -82,17 +82,15 @@ class CodePeerRulesDefinition(RulesDefinition):
                           (collector.race_conditions, Category.RACE_CONDITION),
                           (collector.informations, Category.INFORMATIONAL)]:
             for msg, desc in kind:
-                rules.update(cls.__create_rules(msg, desc, cat))
-
+                rules.add(cls.__create_rule(msg, desc, cat))
         return rules
 
     @classmethod
-    def __create_rules(cls, message, description, category):
-        """Create new rules
+    def __create_rule(cls, message, description, category):
+        """Create a new rule
 
-        Encode the rule keys using the message and the category. Attach the
+        Encode the rule key using the message and the category. Attach the
         description to the rule.
-        Also create the "suppressed" version of the rule.
 
         :param message: the rule message
         :type message: str
@@ -100,14 +98,22 @@ class CodePeerRulesDefinition(RulesDefinition):
         :type description: str
         :param category: the message category (as defined by CodePeer)
         :type category: Category
-        :rtype: list[Rule]
+        :rtype: Rule
         """
 
-        tags = 'codepeer', category.name.lower().replace('_', '-')
+        if category == Category.RACE_CONDITION:
+            type = Type.BUG
+        elif category in (Category.CHECK, Category.WARNING):
+            type = Type.CODE_SMELL
+        else:
+            type = None
 
-        return [Rule(encoding.encode_codepeer_key(cat, message),
-                     message, description=description, tags=tags)
-                for cat in category, Category.SUPPRESSED]
+        kwargs = {
+            'description': description,
+            'type': type,
+            'tags': ('codepeer', category.name.lower().replace('_', '-'))
+        }
+        return Rule(encoding.encode_codepeer_key(message), message, **kwargs)
 
 
 class _CollectRulesVisitor(docutils.nodes.SparseNodeVisitor):

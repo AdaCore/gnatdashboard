@@ -53,7 +53,7 @@ def generate_ada_rules_profile():
 
     cmdline = ArgumentParser(description='Ada rules profile generator')
     cmdline.add_argument('-l', '--language', default='Ada')
-    cmdline.add_argument('-n', '--name', default='Default Ada Profile')
+    cmdline.add_argument('-n', '--name', default='GNATdashboard way')
     cmdline.add_argument(
         'rules', nargs='+', metavar='rules-definition',
         help='one or more rules definition file(s)')
@@ -62,8 +62,7 @@ def generate_ada_rules_profile():
         type=FileType('w'), help='Output file')
     params = cmdline.parse_args()
 
-    writer = RulesProfileXmlWriter()
-    writer.write(
+    RulesProfileXmlWriter.write(
         params.language, params.name, __load_rules(params.rules),
         stream=params.outfile)
     return 0

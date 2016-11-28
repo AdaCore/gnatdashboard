@@ -180,11 +180,7 @@ class CodePeer(GNAThub.Plugin):
                         # for suppressed messages: map this to 'info'.
                         severity = 'info'
 
-                    rule_id = ':'.join((
-                        category.lower(),
-                        rule.lower().partition(';')[0].replace(' ', '_')
-                    ))
-
+                    rule_id = rule.lower().partition(';')[0].replace(' ', '_')
                     self.__add_message(
                         source, line, column, rule_id, message, severity,
                         [new_tag if is_new == 'TRUE' else unchanged_tag]
