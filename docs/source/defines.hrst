@@ -18,10 +18,11 @@
 .. |GNATtracker|    replace:: :program:`GNAT Tracker`
 
 .. |SonarQube|      replace:: :program:`SonarQube`
-.. |SonarScanner|    replace:: :program:`SonarQube Scanner`
-.. |SonarSource|    replace:: :program:`Sonar Source`
+.. |SonarRunner|    replace:: :program:`SonarQube Runner`
+.. |SonarScanner|   replace:: :program:`SonarQube Scanner`
+.. |SonarSource|    replace:: :program:`SonarSource`
 
 .. |Squoring|       replace:: :program:`Squoring`
 
-.. |SonarQubeLTSVersion|        replace:: 4.5.4
-.. |SonarQubeStableVersion|     replace:: 5.1.x
+.. |SonarQubeLTSVersion|        replace:: 5.6.3
+.. |SonarQubeStableVersion|     replace:: 6.1
