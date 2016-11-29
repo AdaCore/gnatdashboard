@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.measures.Metrics;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,47 +31,35 @@ import java.util.List;
  *
  * Once defined, these metrics can be assigned values during an analysis.
  */
-@Deprecated
-public class AdaMetrics implements Metrics {
-  private static final String DOMAIN_CODING_STANDARD = "Coding standard";
-  private static final String DOMAIN_STATIC_ANALYSIS = "Static analysis";
+public class CountMetrics implements Metrics {
+  private static final String DOMAIN_TOTALS = "Totals";
 
   public static final Metric<Integer> GNATCHECK =
       new Metric.Builder(
           "gnatcheck_total",
-          "GNATcheck violations",
+          "Total GNATcheck violations",
           Metric.ValueType.INT
       ).setDescription("Number of GNATcheck violations")
           .setDirection(Metric.DIRECTION_WORST)
-          .setQualitative(Boolean.TRUE)
-          .setBestValue(0.0)
-          .setDomain(DOMAIN_CODING_STANDARD)
+          .setQualitative(true)
+          .setBestValue(0.)
+          .setDomain(DOMAIN_TOTALS)
           .create();
 
   public static final Metric<Integer> CODEPEER =
       new Metric.Builder(
           "codepeer_total",
-          "CodePeer messages",
+          "Total CodePeer messages",
           Metric.ValueType.INT
       ).setDescription("Number of CodePeer messages")
           .setDirection(Metric.DIRECTION_WORST)
-          .setQualitative(Boolean.TRUE)
-          .setBestValue(0.0)
-          .setDomain(DOMAIN_STATIC_ANALYSIS)
+          .setQualitative(true)
+          .setBestValue(0.)
+          .setDomain(DOMAIN_TOTALS)
           .create();
-
-  private static final List<Metric> METRICS;
-
-  static {
-    METRICS = new ArrayList<>();
-    METRICS.addAll(ImmutableList.of(
-        GNATCHECK,
-        CODEPEER
-    ));
-  }
 
   @Override
   public List<Metric> getMetrics() {
-    return METRICS;
+    return ImmutableList.of(GNATCHECK, CODEPEER);
   }
 }

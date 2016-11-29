@@ -19,9 +19,10 @@ package org.sonar.plugins.ada;
 import org.sonar.api.Plugin;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
+import org.sonar.plugins.ada.computers.CountMeasuresComputer;
 import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.plugins.ada.lang.AdaColorizer;
-import org.sonar.plugins.ada.metrics.AdaMetrics;
+import org.sonar.plugins.ada.metrics.CountMetrics;
 import org.sonar.plugins.ada.metrics.GNAThubMetrics;
 import org.sonar.plugins.ada.rules.CodePeerRulesDefinitionXmlLoader;
 import org.sonar.plugins.ada.rules.GNATcheckRulesDefinitionXmlLoader;
@@ -57,7 +58,7 @@ public final class AdaPlugin implements Plugin {
         AdaDefaultProfile.class,
 
         // Register custom metrics.
-        AdaMetrics.class,
+        CountMetrics.class,
         GNAThubMetrics.class,
 
         // Register tools rules.
@@ -71,7 +72,7 @@ public final class AdaPlugin implements Plugin {
         GNAThubMetricsSensor.class,
 
         // Compute higher level metrics.
-        AdaCountIssuesDecorator.class,
+        CountMeasuresComputer.class,
 
         PropertyDefinition.builder(FILE_SUFFIXES_KEY)
             .defaultValue(Ada.DEFAULT_FILE_SUFFIXES)
