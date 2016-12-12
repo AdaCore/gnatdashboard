@@ -35,6 +35,7 @@
     :maxdepth: 3
 
     sonar-ada-plugin/index
+    sonar-ada-plugin/faq
 
 |GNATdashboard| Developer's Manual
 ==================================

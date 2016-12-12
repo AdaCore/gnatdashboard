@@ -5,7 +5,7 @@ Sonar Ada Plugin
 
 This SonarQube plugin loads the analysis of Ada projects by GNATdashboard.
 
-ChangeLog 17.1
+ChangeLog 18.x
 --------------
 
 The Sonar Ada Plugin shipped with GNATdashboard now supports |SonarQube|
@@ -37,7 +37,7 @@ AdaCore tools support
 |CodePeer|, |GNATcheck| and |GNATmetric| now better integrate with |SonarQube|:
 
 * a simplified `Quality Profile <http://docs.sonarqube.org/display/SONAR/Quality+Profiles>`_
-  called "GNATdashboard Way" is now the default for Ada Projects and supports
+  called "GNATdashboard Way" is now the default for Ada projects and supports
   the latest additions to |CodePeer|;
 * |CodePeer| race condition messages are marked as BUG during the analysis while
   other messages remain tagged as CODE SMELL to match |SonarQube| jargon;
