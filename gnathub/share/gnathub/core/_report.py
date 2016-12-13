@@ -21,14 +21,36 @@ prior to export.
 import GNAThub
 
 import collections
+import logging
 import os
 import time
 
 from enum import Enum
 
+import pygments.lexers
+import pygments.util
+
 from pygments import highlight
-from pygments.lexers import guess_lexer_for_filename
 from pygments.formatters import HtmlFormatter
+
+
+def count_extra_newlines(lines):
+    """Count the number of leading and trailing newlines
+
+    :rtype: int, int
+    """
+    leading_newline_count, trailing_newline_count = 0, 0
+    for line in lines:
+        if not line:
+            leading_newline_count += 1
+        else:
+            break
+    for line in reversed(lines):
+        if not line:
+            trailing_newline_count += 1
+        else:
+            break
+    return leading_newline_count, trailing_newline_count
 
 
 class CoverageStatus(Enum):
@@ -57,6 +79,7 @@ class ReportBuilder(object):
     def __init__(self):
         rules = GNAThub.Rule.list()
         tools = GNAThub.Tool.list()
+        self.log = logging.getLogger(__name__)
         self._rules_by_id = {rule.id: rule for rule in GNAThub.Rule.list()}
         self._tools_by_id = {tool.id: tool for tool in tools}
         self._tools_by_name = {tool.name.lower(): tool for tool in tools}
@@ -302,29 +325,60 @@ class ReportBuilder(object):
             'lines': None
         }
 
-        # Custom HTML formatter outputting the decorated source code as a DOM.
-        formatter = _HtmlFormatter()
-
         try:
             with open(source_file, 'r') as infile:
                 content = infile.read()
+        except IOError:
+            self.log.exception('failed to read source file: %s', source_file)
+            self.log.warn('report might be incomplete')
+            return src_hunk
 
-            lexer = guess_lexer_for_filename(source_file, content)
-            highlighted = highlight(content, lexer, formatter).splitlines()
+        # NOTE: Pygments lexer seems to drop those loading and trailing new
+        # lines in its output. Add them back after HTMLization to avoid line
+        # desynchronization with the original files.
+        raw_lines = content.splitlines()
+        lead_nl_count, trail_nl_count = count_extra_newlines(raw_lines)
+
+        # Select the appropriate lexer; fall back on "Null" lexer if no match.
+        try:
+            lexer = pygments.lexers.guess_lexer_for_filename(
+                source_file, content)
+        except pygments.util.ClassNotFound:
+            self.log.warn('could not guess lexer from file: %s', source_file)
+            self.log.warn('fall back to using TextLexer (ie. no highlighting)')
+            lexer = pygments.lexers.special.TextLexer()
+
+        # Custom HTML formatter outputting the decorated source code as a DOM.
+        formatter = _HtmlFormatter()
+
+        # Attempt to highligth the source file; fall back on raw on failure.
+        try:
+            highlighted = (
+                [''] * lead_nl_count +
+                highlight(content, lexer, formatter).splitlines() +
+                [''] * trail_nl_count
+            )
+
+            assert len(raw_lines) == len(highlighted), ' '.join([
+                'mismatching number of source line in the HTML output;',
+                'expected {}, got {}'.format(len(raw_lines), len(highlighted))
+            ])
 
             src_hunk['lines'] = [{
                 'number': no,
                 'content': line,
-                'html_content': highlighted[no - 1],
+                'html_content': (
+                    highlighted[no - 1]
+                    if highlighted and len(highlighted) > no else None
+                ),
                 'coverage': coverage[no],
                 'messages': messages[no]
-            } for no, line in enumerate(content.splitlines(), start=1)]
-        except IOError:
-            self.log.exception('failed to read source file: %s', source_file)
-            self.warn('failed to read source file: %s', source_file)
-            self.warn('report might be incomplete')
-        finally:
-            return src_hunk
+            } for no, line in enumerate(raw_lines, start=1)]
+        except Exception:
+            self.log.exception(
+                'unhandled exception during HTML generation: %s', source_file)
+            self.log.warn('report might be incomplete')
+        return src_hunk
 
     def generate_index(self):
         """Generate the report index

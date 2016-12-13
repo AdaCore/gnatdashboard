@@ -91,7 +91,7 @@
                 </table>
             </div>
         </div>
-        <div md-whiteframe="24" class="location-view" *ngIf="blob.lines">
+        <div md-whiteframe="24" class="location-view" *ngIf="getMessageDisplayedCount()">
             <div class="location-view-header">Messages ({{ getMessageDisplayedCount() }})</div>
             <div class="location-view-list">
                 <table class="file-line-container">
