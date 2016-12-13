@@ -411,13 +411,15 @@ class ReportBuilder(object):
                     'message_count': source_dir_msg_count or None
                 }
 
+            paths = module.keys()
             return {
                 'name': name,
                 'source_dirs': source_dirs,
                 'message_count': module_msg_count or None,
-                '_source_dirs_common_prefix': os.path.commonprefix([
-                    source_dir for source_dir in module.iterkeys()
-                ])
+                '_source_dirs_common_prefix': (
+                    os.path.commonprefix(paths) if len(paths) > 1
+                    else os.path.dirname(paths[0])
+                )
             }
 
         return {
