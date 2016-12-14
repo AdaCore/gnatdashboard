@@ -108,6 +108,7 @@
     "parse5": "^2.2.2",
     "phantomjs-prebuilt": "^2.1.13",
     "postcss": "^5.2.5",
+    "postcss-assets": "^4.1.0",
     "postcss-cli": "^2.6.0",
     "postcss-cssnext": "^2.8.0",
     "postcss-loader": "^1.0.0",
