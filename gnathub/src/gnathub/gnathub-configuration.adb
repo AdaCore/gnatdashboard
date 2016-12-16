@@ -187,7 +187,7 @@ package body GNAThub.Configuration is
                end;
             else
                Warn ("Unexpected argument for -X:");
-               Warn ("Expected ""key:value"", got " & Param);
+               Warn ("Expected ""key=value"", got " & Param);
             end if;
 
          elsif Switch = "--plugins" then
