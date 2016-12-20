@@ -15,7 +15,13 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Containers.Indefinite_Vectors;
+
 package GNAThub.Configuration is
+
+   package Tool_Arg_Vectors is
+     new Ada.Containers.Indefinite_Vectors (Positive, String);
+   --  A list of command line arguments
 
    Command_Line_Error : exception;
    --  Raised on invalid input on the command line
@@ -59,6 +65,9 @@ package GNAThub.Configuration is
    function Dry_Run return Boolean;
    --  Whether to run GNAThub in dry run mode (--dry-run). In dry run mode,
    --  GNAThub only list the plugins that it would execute.
+
+   function Tool_Args (Tool_Name : String) return Tool_Arg_Vectors.Vector;
+   --  The list of additional arguments to pass to a tool
 
    procedure Finalize;
    --  Free allocated memory

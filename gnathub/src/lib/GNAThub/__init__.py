@@ -123,6 +123,20 @@ def database():
     return NotImplemented   # Implemented in Ada
 
 
+def tool_args(tool_name):
+    """Return the list of extra switches to pass to an inferior tool.
+
+    This is the concatenation of switches for the tool ``tool_name`` as
+    provided on the command-line with the :command:`-targs:` switch.
+
+    :param tool_name: the name of the tool
+    :type tool_name: str
+    :return: the list of extra switches for ``tool_name``
+    :rtype: list[str]
+    """
+    return NotImplemented   # Implemented in Ada
+
+
 class Logger(object):
 
     """A logger object. Fully implemented in Ada."""

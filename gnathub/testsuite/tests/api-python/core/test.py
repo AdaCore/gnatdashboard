@@ -13,4 +13,7 @@ class TestSimpleExample(TestCase):
 
     def testPythonAPIDefined(self):
         # Test the core Python API
-        self.gnathub.run(script='check-api.py')
+        self.gnathub.run(script='check-api.py', tool_args={
+            'codepeer': ['-msg-output-only', '-j0', 'positional-arg'],
+            'codepeer_msg_reader': ['-msg-output-only']
+        })

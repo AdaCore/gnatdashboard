@@ -5,7 +5,9 @@ import GNAThub
 import os
 import sys
 
-from support.asserts import assertEqual, assertFalse, assertTrue
+from support.asserts import (
+    assertEmpty, assertEqual, assertFalse, assertListUnorderedEqual, assertTrue
+)
 
 
 # The base directory for PATH comparisons
@@ -66,3 +68,10 @@ assertTrue(os.path.isfile(process.output()))
 with open(process.output(), 'r') as logs:
     content = logs.read().strip()
     assertEqual(content, TO_BE_ECHOED)
+
+assertListUnorderedEqual(
+    GNAThub.tool_args('codepeer'),
+    ['-msg-output-only', '-j0', 'positional-arg'])
+assertListUnorderedEqual(
+    GNAThub.tool_args('codepeer_msg_reader'), ['-msg-output-only'])
+assertEmpty(GNAThub.tool_args('unknown-tool'))

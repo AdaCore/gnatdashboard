@@ -216,6 +216,11 @@ class GNAThub(object):
         if kwargs.get('runtime', None):
             argv.extend(['--RTS', kwargs['runtime']])
 
+        for tool_name, arguments in kwargs.get('tool_args', {}).iteritems():
+            argv.append('--targs:%s' % tool_name)
+            argv.extend(arguments)
+            argv.append('--')
+
         if kwargs.get('script', None):
             argv.append('--exec')
 

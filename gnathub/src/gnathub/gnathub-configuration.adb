@@ -15,26 +15,32 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Command_Line;                    use Ada.Command_Line;
+with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Containers;                      use Ada.Containers;
 with Ada.Strings;
 with Ada.Strings.Fixed;
-with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
+with Ada.Strings.Hash;
+with Ada.Strings.Unbounded;               use Ada.Strings.Unbounded;
 with Ada.Text_IO;
 
-with GNAT.Command_Line;       use GNAT.Command_Line;
+with GNAT.Command_Line;                   use GNAT.Command_Line;
+with GNAT.OS_Lib;
 with GNAT.Source_Info;
 with GNAT.Strings;
 
-with GNATCOLL.Projects;       use GNATCOLL.Projects;
-with GNATCOLL.Traces;         use GNATCOLL.Traces;
-with GNATCOLL.Utils;          use GNATCOLL.Utils;
-with GNATCOLL.VFS;            use GNATCOLL.VFS;
-with GNATCOLL.VFS_Utils;      use GNATCOLL.VFS_Utils;
+with GNATCOLL.Projects;                   use GNATCOLL.Projects;
+with GNATCOLL.Traces;                     use GNATCOLL.Traces;
+with GNATCOLL.Utils;                      use GNATCOLL.Utils;
+with GNATCOLL.VFS;                        use GNATCOLL.VFS;
+with GNATCOLL.VFS_Utils;                  use GNATCOLL.VFS_Utils;
 
 with GNAThub.Project;
 with GNAThub.Version;
 
 package body GNAThub.Configuration is
    Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
+   Tool_Args_Section : constant String := "--targs:";
 
    Config : GNAT.Command_Line.Command_Line_Configuration;
 
@@ -50,9 +56,20 @@ package body GNAThub.Configuration is
    Incremental_Arg : aliased Boolean;
 
    All_Plugins : Unbounded_String := Null_Unbounded_String;
-   --  Stores all plugins provided with --plugins
+   --  Store all plugins provided with --plugins
 
-   procedure Parse_Command_Line;
+   package Tool_Arg_Maps is new Ada.Containers.Indefinite_Hashed_Maps
+     (Key_Type        => String,
+      Element_Type    => Tool_Arg_Vectors.Vector,
+      Hash            => Ada.Strings.Hash,
+      Equivalent_Keys => "=",
+      "="             => Tool_Arg_Vectors."=");
+   use Tool_Arg_Maps;
+
+   Tool_Arg_Map : Tool_Arg_Maps.Map;
+   --  Store all tools extra command line switches provided with -targs:
+
+   procedure Parse_Command_Line (Parser : Opt_Parser);
    --  Parse the command line and handle -X switches
 
    procedure Evaluate_Command_Line;
@@ -148,7 +165,9 @@ package body GNAThub.Configuration is
 
       Set_Usage
         (Config => Config,
-         Usage  => "[-vq] -P PROJECT [--plugins PLUGINS | --exec SCRIPT]",
+         Usage  => "[-vq] -P PROJECT [--plugins PLUGINS | --exec SCRIPT]" &
+                   ASCII.LF & ASCII.HT & "       " &
+                   "[--targs:<tool-name> SWITCHES [--]]",
          Help   => "GNAThub, driver & formatter for GNAT tool suite.");
 
       --  Parse the command line
@@ -160,7 +179,7 @@ package body GNAThub.Configuration is
    -- Parse_Command_Line --
    ------------------------
 
-   procedure Parse_Command_Line is
+   procedure Parse_Command_Line (Parser : Opt_Parser) is
       use GNAT.Strings;
 
       procedure Local_Parse_Command_Line (Switch, Param, Section : String);
@@ -200,16 +219,14 @@ package body GNAThub.Configuration is
       end Local_Parse_Command_Line;
 
    begin
-      --  Parse the command line
-
-      Getopt (Config, Local_Parse_Command_Line'Unrestricted_Access);
+      Getopt (Config, Local_Parse_Command_Line'Unrestricted_Access, Parser);
 
       --  If -P is not provided, expect the project file to be the first
       --  positional argument.
 
       if Project_Arg = null or else Project_Arg.all = "" then
          declare
-            Arg : constant String := Get_Argument;
+            Arg : constant String := Get_Argument (Parser => Parser);
          begin
             if Arg /= "" then
                Trace (Me, "Project file supplied with implicit -P");
@@ -218,11 +235,12 @@ package body GNAThub.Configuration is
          end;
       end if;
 
-      --  Display a warning message for each extra positional argument
+      --  Process trailing arguments: display a warning message for each extra
+      --  positional argument.
 
       loop
          declare
-            Arg : constant String := Get_Argument;
+            Arg : constant String := Get_Argument (Parser => Parser);
          begin
             exit when Arg = "";
             Warn ("Ignoring extra argument: " & Arg);
@@ -237,18 +255,169 @@ package body GNAThub.Configuration is
    procedure Evaluate_Command_Line
    is
       use Ada.Text_IO;
-      use GNAT.Strings;
-      --  Bring the '=' operator in the scope
+      use GNAT.Strings; --  Bring the '=' operator in the scope
+
+      GNAThub_Command_Line : Unbounded_String := Null_Unbounded_String;
+      --  The reconstructed command line that will be fed to GNAThub's command
+      --  line parser once tool arguments sections are extracted from the
+      --  original command line.
+
+      procedure Save_Tool_Argument (Tool_Name, Option : String);
+      --  Store the tool argument for later use
+
+      function Starts_With_Tool_Args_Section (Option : String) return Boolean;
+      --  Return True if the given option starts with (or is equal to – the
+      --  error processing is done in the main routine) the --targs: prefix,
+      --  False otherwise.
+
+      procedure Append_To_GNAThub_Command_Line (Option : String);
+      --  Append the option to the reconstructed command line for later
+      --  processing by GNAThub's parser.
+
+      ------------------------
+      -- Save_Tool_Argument --
+      ------------------------
+
+      procedure Save_Tool_Argument (Tool_Name, Option : String) is
+         C : constant Tool_Arg_Maps.Cursor := Tool_Arg_Map.Find (Tool_Name);
+         V : Tool_Arg_Vectors.Vector := (if Has_Element (C) then
+               Element (C) else Tool_Arg_Vectors.Empty_Vector);
+      begin
+         V.Append (Option);
+
+         if Has_Element (C) then
+            Tool_Arg_Map.Replace (Tool_Name, V);
+         else
+            Tool_Arg_Map.Insert (Tool_Name, V);
+         end if;
+      end Save_Tool_Argument;
+
+      -----------------------------------
+      -- Starts_With_Tool_Args_Section --
+      -----------------------------------
+
+      function Starts_With_Tool_Args_Section (Option : String) return Boolean
+      is
+         Idx : constant Natural := Option'First + Tool_Args_Section'Length;
+      begin
+         return Option'Length >= Tool_Args_Section'Length
+            and then Option (Option'First .. Idx - 1) = Tool_Args_Section;
+      end Starts_With_Tool_Args_Section;
+
+      ------------------------------------
+      -- Append_To_GNAThub_Command_Line --
+      ------------------------------------
+
+      procedure Append_To_GNAThub_Command_Line (Option : String) is
+      begin
+         if GNAThub_Command_Line = Null_Unbounded_String then
+            GNAThub_Command_Line := To_Unbounded_String (Option);
+         else
+            Append (GNAThub_Command_Line, " " & Option);
+         end if;
+      end Append_To_GNAThub_Command_Line;
+
+      --  Start of processing for Evaluate_Command_Line
+
+      J : Positive := 1;
 
    begin
-      --  Manage -X (scenario vars) switches and call getopt
-      Parse_Command_Line;
+      --  Extract tool argument switches prior to parser the command line
 
-      --  Sanity checks
+      loop
+         exit when J > Argument_Count;
+
+         declare
+            Arg  : constant String  := Argument (J);
+            Idx  : constant Natural := Arg'First + Tool_Args_Section'Length;
+            Tool : constant String  := Arg (Idx .. Arg'Last);
+         begin
+            if Starts_With_Tool_Args_Section (Arg) then
+               --  Handle the case where --targs: is used without argument, eg.
+               --
+               --    $ gnathub --targs: […]
+
+               if Tool = "" then
+                  raise Command_Line_Error
+                    with "missing argument for " & Tool_Args_Section;
+               end if;
+
+               J := J + 1;
+
+               --  Handle the case where --targs:<tool> is used without
+               --  parameter, eg.
+               --
+               --    $ gnathub […] --targs:codepeer
+
+               if J > Argument_Count then
+                  raise Command_Line_Error with "missing parameter for " & Arg;
+               end if;
+
+               --  Loop over the following switches and save them until either
+               --  the end of the command line is reached, the special sentinel
+               --  "--" is found or another --targs: parameter is next.
+
+               loop
+                  Save_Tool_Argument (Tool, Argument (J));
+
+                  --  Exit if the next switch starts with --targs:
+
+                  exit when J < Argument_Count
+                    and then Starts_With_Tool_Args_Section (Argument (J + 1));
+
+                  J := J + 1;
+
+                  --  Exit at the end of the command line or if the next switch
+                  --  is the special sentinel "--".
+
+                  exit when J > Argument_Count or else Argument (J) = "--";
+               end loop;
+
+            else
+               --  Defer the parsing of other switches to GNAThub's command
+               --  line parser.
+
+               Append_To_GNAThub_Command_Line (Argument (J));
+            end if;
+         end;
+
+         J := J + 1;
+      end loop;
+
+      --  Parse the reconstructed command line now that all tool arguments have
+      --  been extracted from the original command line.
+
+      declare
+         GNAThub_Parser : Opt_Parser;
+         GNAThub_Argv   : constant GNAT.OS_Lib.Argument_List_Access :=
+                            GNAT.OS_Lib.Argument_String_To_List
+                              (To_String (GNAThub_Command_Line));
+      begin
+         --  Parse the remaining switches, ie. all switches that are not
+         --  supposed to be passed to tools, ie. GNAThub switches.
+
+         --  Initialize the command line engine with the command line subset
+
+         Initialize_Option_Scan (GNAThub_Parser, GNAThub_Argv);
+
+         --  Manage -X (scenario vars) switches and call getopt
+
+         Parse_Command_Line (GNAThub_Parser);
+
+         --  Free allocated resources required for the processing of the
+         --  command line.
+
+         Free (GNAThub_Parser);
+      end;
+
+      --  Sanity check the result of the parsing of the command line and apply
+      --  modifiers ie. check for mutual exclusions, set output verbosity, …
+
       Assert (Me, Project_Arg /= null, "unexpected null project");
       Assert (Me, Script_Arg /= null, "unexpected null script argument");
 
       --  Print the version and exit if --version is supplied
+
       if Version_Arg then
          Put_Line ("GNAThub " & GNAThub.Version.Version & " " &
                    GNAThub.Version.Date & " for GNATdashboard Suite");
@@ -259,6 +428,7 @@ package body GNAThub.Configuration is
 
       --  Ensure consistency of use for --quiet and --verbose and set the
       --  logging level accordingly
+
       if Quiet_Arg and then Verbose_Arg then
          raise Command_Line_Error
            with "--verbose and --quiet are mutually exclusive.";
@@ -273,6 +443,7 @@ package body GNAThub.Configuration is
       end if;
 
       --  Ensure consistency of use for --plugins and --exec
+
       if All_Plugins /= Null_Unbounded_String
          and then Script_Arg.all /= ""
       then
@@ -281,17 +452,20 @@ package body GNAThub.Configuration is
       end if;
 
       --  Check that job number is in the correct range
+
       if Jobs_Arg not in Natural'Range then
          raise Command_Line_Error
            with "invalid jobs value: " & Integer'Image (Jobs_Arg);
       end if;
 
       --  Check that project file path has been specified on command line
+
       if Project_Arg.all = "" then
          raise Command_Line_Error with "no project file specified";
       end if;
 
       --  Check existence of the given paths on disk
+
       declare
          Project : constant String := Project_Arg.all;
          Ext     : constant String := +Project_File_Extension;
@@ -434,5 +608,20 @@ package body GNAThub.Configuration is
    begin
       GNAT.Command_Line.Free (Config);
    end Finalize;
+
+   ---------------
+   -- Tool_Args --
+   ---------------
+
+   function Tool_Args (Tool_Name : String) return Tool_Arg_Vectors.Vector
+   is
+      Found : constant Tool_Arg_Maps.Cursor := Tool_Arg_Map.Find (Tool_Name);
+   begin
+      if not Has_Element (Found) then
+         return Tool_Arg_Vectors.Empty_Vector;
+      end if;
+
+      return Element (Found);
+   end Tool_Args;
 
 end GNAThub.Configuration;

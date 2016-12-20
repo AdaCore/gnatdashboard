@@ -247,3 +247,14 @@ Expects the maximum number of processes to be executed concurrently as argument.
 Similar to the :command:`-j` switch passed to :program:`make`. :command:`0` is a
 special value meaning "as many processes as possible". The default is
 :command:`1`.
+
+:command:`--targs:`
+^^^^^^^^^^^^^^^^^^^
+
+Expects a command line program name and a list of switches to pass to that
+program, eg.::
+
+  $ gnathub --targs:codepeer --msg-output-only -- -P project.gpr
+
+All switches following :command:`--targs:<tool>` are passed to `<tool>`,
+stopping either at the sentinel `--` or at another :command:`--targs:` option.

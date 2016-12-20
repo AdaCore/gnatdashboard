@@ -42,9 +42,9 @@ package body GNAThub.Project is
    --  The scenario variables passed on the command line
 
    package Project_Map is new Ada.Containers.Hashed_Maps
-     (Key_Type     => Unbounded_String,
-      Element_Type => Detached_Resource,
-      Hash         => Ada.Strings.Unbounded.Hash,
+     (Key_Type        => Unbounded_String,
+      Element_Type    => Detached_Resource,
+      Hash            => Ada.Strings.Unbounded.Hash,
       Equivalent_Keys => "=");
    use Project_Map;
 
@@ -390,8 +390,8 @@ package body GNAThub.Project is
       function Get_Project_Orm
         (Project : Project_Type) return Detached_Resource
       is
-         Orm                 : Detached_Resource;
-         Project_Cursor      : Project_Map.Cursor;
+         Orm            : Detached_Resource;
+         Project_Cursor : Project_Map.Cursor;
       begin
          Project_Cursor := Project_Orm_By_Name.Find
            (To_Unbounded_String (Project.Name));

@@ -1,5 +1,7 @@
 """Assert methods."""
 
+import collections
+
 
 def assertEqual(first, second):
     """Test that `first` and `second` are equal.
@@ -134,3 +136,22 @@ class _AssertRaisesContext(object):
 def assertRaises(exception):
     """Test that an exception is raised within the context manager."""
     return _AssertRaisesContext(exception)
+
+
+def assertSetEqual(first, second):
+    """Test that two sets are equal."""
+    first, second = set(first), set(second)
+    if first ^ second:
+        raise AssertionError('%s != %s' % (first, second))
+
+
+def assertListUnorderedEqual(first, second):
+    """Test that two lists are unorderedly equal.
+
+    This function does not fail if the two lists contain the same elements,
+    whatever their order.
+    """
+    first, second = list(first), list(second)
+    list_eq = lambda x, y: collections.Counter(x) == collections.Counter(y)
+    if not list_eq(first, second):
+        raise AssertionError('%s != %s' % (first, second))

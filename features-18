@@ -1,0 +1,22 @@
+==================================
+GNATdashboard 18 NEW FEATURES LIST
+==================================
+
+Copyright (C) 2016, AdaCore
+
+This file contains a list of new features introduced in GNATdashboard. A full
+description of all GNATdashboard features can be found in the GNATdashboard
+documentation.
+
+An ISO date (YYYY-MM-DD) appears in parentheses after the description line.
+This date shows the implementation date of the feature.
+
+New features in 18.0
+--------------------
+
+NF-18-PC20-033 Support extra arguments for tools (2016-12-20)
+
+  GNAThub now supports passing any number of extra arguments to tools that it
+  runs via the --targs switch:
+
+    $ gnathub --targs:<tool-name> SWITCHES [--]

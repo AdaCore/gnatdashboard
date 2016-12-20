@@ -65,8 +65,8 @@ package GNAThub.Project is
       Value : Unbounded_String;
    end record;
 
-   package Scenario_Variables_Vector is new Ada.Containers.Vectors
-     (Positive, Scenario_Variable);
+   package Scenario_Variables_Vector is
+     new Ada.Containers.Vectors (Positive, Scenario_Variable);
 
    function Get_Scenario_Variables return Scenario_Variables_Vector.Vector;
    --  Return the scenario variables that were passed as -X switches on the

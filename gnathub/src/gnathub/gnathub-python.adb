@@ -73,8 +73,9 @@ package body GNAThub.Python is
    Plugins_Function       : aliased constant String := "plugins";
    Database_Function      : aliased constant String := "database";
    Repositories_Function  : aliased constant String := "repositories";
+   Tool_Args_Function     : constant String := "tool_args";
 
-   Root_Module_Functions :
+   No_Args_Root_Module_Functions :
      constant array (1 .. 9) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
@@ -315,12 +316,17 @@ package body GNAThub.Python is
 
       Trace (Me, "  + GNAThub");
 
-      for Command of Root_Module_Functions loop
+      for Command of No_Args_Root_Module_Functions loop
          Repository.Register_Command
            (Command => Command.all,
             Params  => No_Params,
             Handler => Root_Module_Handler'Access);
       end loop;
+
+      Repository.Register_Command
+        (Command => Tool_Args_Function,
+         Params  => (1 .. 1 => Param ("tool_name")),
+         Handler => Root_Module_Handler'Access);
 
       --  Classes
 
@@ -687,6 +693,19 @@ package body GNAThub.Python is
 
          Set_Return_Value (Data, Property_As_String ("Local_Repository"));
          Set_Return_Value_Key (Data, "local");
+
+      elsif Command = Tool_Args_Function then
+         --  Return a list of arguments
+
+         Set_Return_Value_As_List (Data);
+
+         declare
+            Tool_Name : constant String := Data.Nth_Arg (1);
+         begin
+            for Argument of GNAThub.Configuration.Tool_Args (Tool_Name) loop
+               Set_Return_Value (Data, Argument);
+            end loop;
+         end;
 
       else
          raise Python_Error with "Unknown method GNAThub." & Command;
