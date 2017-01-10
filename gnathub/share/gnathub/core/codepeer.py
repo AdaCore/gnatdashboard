@@ -65,8 +65,8 @@ class CodePeer(GNAThub.Plugin):
         :rtype: list[str]
         """
         return [
-            'codepeer', '-update-scil', '-P', GNAThub.Project.path(),
-            '-jobs', str(GNAThub.jobs())
+            'codepeer', '-P', GNAThub.Project.path(),
+            '-jobs', str(GNAThub.jobs()), '-update-scil'
         ] + GNAThub.Project.scenario_switches()
 
     @staticmethod
@@ -77,10 +77,11 @@ class CodePeer(GNAThub.Plugin):
         :rtype: list[str]
         """
 
-        return ['codepeer_msg_reader', '-csv', os.path.join(
-            GNAThub.Project.object_dir(), 'codepeer',
-            '{}.output'.format(GNAThub.Project.name().lower())
-        )]
+        return [
+            'codepeer', '-P', GNAThub.Project.path()
+        ] + GNAThub.Project.scenario_switches() + [
+            '-output-msg-only', '-csv'
+        ]
 
     def execute(self):
         """Executes CodePeer
@@ -103,7 +104,7 @@ class CodePeer(GNAThub.Plugin):
 
         self.info('collect results with msg_reader')
         self.postprocess(GNAThub.Run(
-            'msg_reader', CodePeer.__msg_reader_cmd_line(), out=self.csv_report
+            self.name, CodePeer.__msg_reader_cmd_line(), out=self.csv_report
         ).status)
 
     def postprocess(self, exit_code):

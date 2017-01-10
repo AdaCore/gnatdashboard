@@ -105,28 +105,22 @@ class CodePeerExecutable(MockedExecutable):
         super(CodePeerExecutable, self).__init__('codepeer', *args, **kwargs)
 
     def _generate_code(self):
-        return '\n'.join([
-            '#! /bin/bash',
-            '',
-            'mkdir -p obj/codepeer',
-            'exit 0'
-        ])
+        return '''#! /bin/bash
 
+mkdir -p obj/codepeer
 
-class CodePeerMsgReaderExecutable(MockedExecutable):
+while test $# -gt 0
+do
+  case "$1" in
+    -output-msg|-output-msg-only)
+      exec cat %(project_root)s/codepeer.injected-results.csv
+      ;;
+  esac
+  shift
+done
 
-    """Mock the codepeer_msg_reader executable."""
-
-    def __init__(self, *args, **kwargs):
-        super(CodePeerMsgReaderExecutable, self).__init__(
-            'codepeer_msg_reader', *args, **kwargs)
-
-    def _generate_code(self):
-        return '\n'.join([
-            '#! /bin/bash',
-            '',
-            'exec cat %(project_root)s/codepeer.injected-results.csv'
-        ])
+exit 0
+'''
 
 
 class Script(object):

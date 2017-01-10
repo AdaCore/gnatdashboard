@@ -5,9 +5,7 @@ import os
 from ConfigParser import SafeConfigParser
 
 from unittest import TestCase
-from support.mock import (
-    CodePeerExecutable, CodePeerMsgReaderExecutable, GNAThub, Project, Script
-)
+from support.mock import CodePeerExecutable, GNAThub, Project, Script
 
 
 RESULTS = sorted([
@@ -25,7 +23,7 @@ class TestCodePeerSupport(TestCase):
         self.longMessage = True
         self.gnathub = GNAThub(
             Project.simple(), plugins=['codepeer'],
-            mocks=[CodePeerExecutable, CodePeerMsgReaderExecutable])
+            mocks=[CodePeerExecutable])
 
     def testDatabaseContent(self):
         script_output_file = os.path.abspath('script.out')
