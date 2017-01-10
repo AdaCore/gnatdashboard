@@ -27,6 +27,9 @@ import java.sql.PreparedStatement;
 public class IssueDAO {
   private final Connector connector;
 
+  private static final String CODEPEER_TOOL = "codepeer";
+  private static final String CODEPEER_ANNOTATION_CATEGORY = "annotation";
+
   private static final String SQL = String.join(" ",
       "SELECT",
       "  rm.line as line_no, rule.identifier as key, msg.data as message, c.label as category,",
@@ -41,7 +44,8 @@ public class IssueDAO {
       "  AND rule.tool_id = tool.id",
       "  AND rm.resource_id = file.id",
       "  AND rule.kind = ?",
-      "  AND file.name = ?");
+      "  AND file.name = ?",
+      "  AND NOT (tool.name = ? AND c.label = ?)");
 
   /**
    * Fetch issues associated to a file.
@@ -54,6 +58,8 @@ public class IssueDAO {
     @Cleanup final PreparedStatement statement = connector.createStatement(SQL);
     statement.setInt(1, RuleKind.ISSUE.img);
     statement.setString(2, path);
+    statement.setString(3, CODEPEER_TOOL);
+    statement.setString(4, CODEPEER_ANNOTATION_CATEGORY);
 
     return new FileIssues(path, connector.query(statement,
         resultSet -> new Issue(

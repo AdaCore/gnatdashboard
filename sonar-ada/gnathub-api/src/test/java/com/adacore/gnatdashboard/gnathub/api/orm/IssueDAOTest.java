@@ -38,6 +38,6 @@ public class IssueDAOTest {
     assertThat(issues.fromToolIgnoreCase("gnatcheck")).isNotEmpty();
     assertThat(issues.fromToolIgnoreCase("gnatcheck").size()).isEqualTo(2);
     assertThat(issues.fromToolIgnoreCase("codepeer")).isNotEmpty();
-    assertThat(issues.fromToolIgnoreCase("codepeer").size()).isEqualTo(43);
+    assertThat(issues.fromToolIgnoreCase("codepeer").size()).isEqualTo(1);
   }
 }
