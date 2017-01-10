@@ -24,7 +24,7 @@ import os
 import os.path
 
 import GNAThub
-from GNAThub import Console
+from GNAThub import Console, ToolArgsPlaceholder
 
 
 class CodePeer(GNAThub.Plugin):
@@ -78,9 +78,11 @@ class CodePeer(GNAThub.Plugin):
         """
 
         return [
-            'codepeer', '-P', GNAThub.Project.path()
+            'codepeer', '-P', GNAThub.Project.path(),
+            ToolArgsPlaceholder('codepeer')
         ] + GNAThub.Project.scenario_switches() + [
-            '-output-msg-only', '-csv'
+            '-output-msg-only', '-csv',
+            ToolArgsPlaceholder('codepeer_msg_reader')
         ]
 
     def execute(self):

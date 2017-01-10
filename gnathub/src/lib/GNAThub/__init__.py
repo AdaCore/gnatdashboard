@@ -844,6 +844,22 @@ class Plugin(object):
         self._exec_status = status
 
 
+class ToolArgsPlaceholder(object):
+    """Placeholder for tool-specific arguments.
+
+    By default tool-specific arguments (see :func:`tool_args`) are
+    automatically appended to the end of the command line by :class:`Run`. In
+    some cases this is not flexible enough (eg. when used in combination of the
+    :command:`-output-msg[-only]` switches of :prog:`codepeer`. For such cases,
+    this placeholder object should be inserted at the correct position in the
+    command line so that it can be substituted by the appropriate list of
+    arguments.
+    """
+
+    def __init__(self, tool_name):
+        self.tool_name = tool_name
+
+
 class Run(object):
 
     """Class to handle processes."""
@@ -856,7 +872,7 @@ class Run(object):
         :param name: the name of the executable
         :type name: str
         :param argv: the argument array
-        :type argv: list[str]
+        :type argv: list[str] | tuple[str]
         :param env: Map containing the environment to pass through to the
             process. If ``None``, ``os.environ`` is used.
         :type env: dict[str, str]
@@ -867,7 +883,7 @@ class Run(object):
         :type out: str
         """
         self.name = name
-        self.argv = argv
+        self.argv = self.expand_argv(name, argv)
         self.status = 127
         self.pid = -1
         self.out = out
@@ -882,8 +898,9 @@ class Run(object):
 
         try:
             with open(self.output(), 'w') as output:
-                self.inferior = Popen(argv, env=env, stdin=None, stdout=output,
-                                      stderr=STDOUT, cwd=workdir)
+                self.inferior = Popen(
+                    self.argv, env=env, stdin=None, stdout=output,
+                    stderr=STDOUT, cwd=workdir)
 
                 Console.info('output redirected to %s' % output.name)
                 self.pid = self.inferior.pid
@@ -906,6 +923,29 @@ class Run(object):
         """Wait until process ends and returns its status."""
         self.status = self.inferior.wait()
         return self.status
+
+    @staticmethod
+    def expand_argv(name, argv):
+        """TODO(delay)
+
+        :param name: the name of the executable
+        :type name: str
+        :param argv: the argument array
+        :type argv: list[str] | tuple[str]
+        """
+        has_placeholder, expanded_argv = False, []
+
+        for arg in list(argv):
+            if isinstance(arg, ToolArgsPlaceholder):
+                has_placeholder = True
+                expanded_argv += tool_args(arg.tool_name)
+            else:
+                expanded_argv.append(arg)
+
+        if not has_placeholder:
+            expanded_argv += tool_args(name)
+
+        return expanded_argv
 
     @staticmethod
     def quote(arg):
