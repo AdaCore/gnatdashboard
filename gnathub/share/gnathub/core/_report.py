@@ -351,6 +351,14 @@ class ReportBuilder(object):
         # Custom HTML formatter outputting the decorated source code as a DOM.
         formatter = _HtmlFormatter()
 
+        try:
+            decoded_raw_lines = [line.decode('utf-8') for line in raw_lines]
+            assert len(decoded_raw_lines) == len(raw_lines)
+        except UnicodeDecodeError:
+            self.log.exception('failed to decode UTF-8: %s', source_file)
+            self.log.warn('source file content will not be available')
+            decoded_raw_lines = None
+
         # Attempt to highligth the source file; fall back on raw on failure.
         try:
             highlighted = (
@@ -366,14 +374,14 @@ class ReportBuilder(object):
 
             src_hunk['lines'] = [{
                 'number': no,
-                'content': line,
+                'content': decoded_raw_lines[no - 1],
                 'html_content': (
                     highlighted[no - 1]
                     if highlighted and len(highlighted) > no else None
                 ),
                 'coverage': coverage[no],
                 'messages': messages[no]
-            } for no, line in enumerate(raw_lines, start=1)]
+            } for no in range(1, len(raw_lines) + 1)]
         except Exception:
             self.log.exception(
                 'unhandled exception during HTML generation: %s', source_file)
