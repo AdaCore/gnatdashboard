@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2015, AdaCore
+# Copyright (C) 2013-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -22,13 +22,13 @@ module and load it as part of the GNAThub default execution.
 import os
 
 import GNAThub
-from GNAThub import Console
+from GNAThub import Console, Plugin, Reporter, Runner
 
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
 
 
-class GNATmetric(GNAThub.Plugin):
+class GNATmetric(Plugin, Runner, Reporter):
     """GNATmetric & LALmetric plugin for GNAThub"""
 
     # GNATmetric exits with an error code of 1 even on a successful run
@@ -38,7 +38,7 @@ class GNATmetric(GNAThub.Plugin):
         super(GNATmetric, self).__init__()
 
         self.tool = None
-        self.report = os.path.join(GNAThub.Project.object_dir(), 'metrix.xml')
+        self.output = os.path.join(GNAThub.Project.object_dir(), 'metrix.xml')
 
     @property
     def name(self):
@@ -61,7 +61,7 @@ class GNATmetric(GNAThub.Plugin):
         """
 
         cmd_line = [
-            self.name, '-ox', self.report, '-P', GNAThub.Project.path(), '-U'
+            self.name, '-ox', self.output, '-P', GNAThub.Project.path(), '-U'
         ] + GNAThub.Project.scenario_switches()
         if GNAThub.Project.target():
             cmd_line[0] = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
@@ -69,51 +69,38 @@ class GNATmetric(GNAThub.Plugin):
             cmd_line.extend(('--RTS', GNAThub.Project.runtime()))
         return cmd_line
 
-    def execute(self):
+    def run(self):
         """Executes GNATmetric
 
-        :meth:`postprocess()` is called upon process completion.
-        """
+        Returns according to the success of the execution of the tool:
 
-        self.log.info('clear tool references in the database')
-        GNAThub.Tool.clear_references(self.name)
-
-        proc = GNAThub.Run(self.name, self.__cmd_line())
-        self.postprocess(proc.status)
-
-    def postprocess(self, exit_code):
-        """Parses the output XML report if GNATmetric completed successfully
-
-        Sets the exec_status property according to the success of the
-        analysis:
-
-            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
 
-        if exit_code not in GNATmetric.VALID_EXIT_CODES:
-            self.exec_status = GNAThub.EXEC_FAILURE
-            return
+        return GNAThub.EXEC_SUCCESS if GNAThub.Run(
+            self.name, self.__cmd_line()
+        ).status in GNATmetric.VALID_EXIT_CODES else GNAThub.EXEC_FAILURE
 
-        self.__parse_xml_report()
-
-    def __parse_xml_report(self):
+    def report(self):
         """Parses GNATmetric XML report and save data to the database
 
-        Sets the exec_status property according to the success of the
-        analysis:
+        Returns according to the success of the analysis:
 
             * ``GNAThub.EXEC_SUCCESS``: transactions committed to database
             * ``GNAThub.EXEC_FAILURE``: error while parsing the xml report
         """
 
+        self.info('clear existing results if any')
+        GNAThub.Tool.clear_references(self.name)
+
         self.info('analyse report')
 
         tool = GNAThub.Tool(self.name)
-        self.log.debug('parse XML report: %s', self.report)
+        self.log.debug('parse XML report: %s', self.output)
 
         try:
-            tree = ElementTree.parse(self.report)
+            tree = ElementTree.parse(self.output)
 
             # Fetch all files
             files = tree.findall('./file')
@@ -143,8 +130,8 @@ class GNATmetric(GNAThub.Plugin):
                     if name in rules:
                         rule = rules[name]
                     else:
-                        rule = GNAThub.Rule(name, name, GNAThub.METRIC_KIND,
-                                            tool)
+                        rule = GNAThub.Rule(
+                            name, name, GNAThub.METRIC_KIND, tool)
                         rules[name] = rule
 
                     if (rule, metric.text) in messages:
@@ -171,9 +158,9 @@ class GNATmetric(GNAThub.Plugin):
                 Console.progress(index, total, new_line=(index == total))
 
         except ParseError as why:
-            self.exec_status = GNAThub.EXEC_FAILURE
             self.log.exception('failed to parse XML report')
             self.error('%s (%s:%s)' % (why, why.filename, why.lineno))
+            return GNAThub.EXEC_FAILURE
 
         else:
-            self.exec_status = GNAThub.EXEC_SUCCESS
+            return GNAThub.EXEC_SUCCESS

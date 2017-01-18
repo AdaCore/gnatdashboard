@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2016, AdaCore
+# Copyright (C) 2016-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -24,9 +24,10 @@ import platform
 import GNAThub
 
 from _sonarqube import SonarQube
+from GNAThub import Plugin, Reporter
 
 
-class SonarScanner(GNAThub.Plugin):
+class SonarScanner(Plugin, Reporter):
     """SonarQube Scanner plugin for GNAThub"""
 
     def __init__(self):
@@ -58,16 +59,14 @@ class SonarScanner(GNAThub.Plugin):
             return ['cmd', '/c', ' '.join(cmdline)]
         return cmdline
 
-    def execute(self):
+    def report(self):
         """Execute the SonarQube Scanner
 
-        Sets the exec_status property according to the successful of the
-        analysis:
+        Returns according to the successful of the analysis:
 
             * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
-        if GNAThub.Run(self.name, SonarScanner.__cmd_line()).status != 0:
-            self.exec_status = GNAThub.EXEC_FAILURE
-        else:
-            self.exec_status = GNAThub.EXEC_SUCCESS
+        return GNAThub.EXEC_SUCCESS if GNAThub.Run(
+            self.name, self.__cmd_line()
+        ).status == 0 else GNAThub.EXEC_FAILURE

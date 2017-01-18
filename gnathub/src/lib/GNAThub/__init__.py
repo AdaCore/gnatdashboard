@@ -8,7 +8,7 @@ plug-ins.
 """
 
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2016, AdaCore
+# Copyright (C) 2013-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -790,15 +790,6 @@ class Plugin(object):
         """
         pass
 
-    @abstractmethod
-    def execute(self):
-        """Abstract method. Needs custom implementation by derived classes.
-
-        Execute the external tool. This method is called after :meth:`setup`
-        and before :meth:`teardown`.
-        """
-        pass
-
     def teardown(self):
         """Called after a call to :meth:`Plugin.execute`.
 
@@ -842,6 +833,44 @@ class Plugin(object):
         if status not in (EXEC_FAILURE, EXEC_SUCCESS, NOT_EXECUTED):
             raise Error('invalid execution status code')
         self._exec_status = status
+
+
+class Runner(object):
+    """Plugin extension point for analyser tools."""
+
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def run(self):
+        """Abstract method. Needs custom implementation by derived classes.
+
+        Execute the external tool. This method is called after :meth:`setup`
+        and before :meth:`teardown`.
+
+        :return: GNAThub.EXEC_SUCCESS on success, GNAThub.EXEC_FAILURE
+            otherwise
+        :rtype: int
+        """
+        pass
+
+
+class Reporter(object):
+    """Plugin extension point for reporter tools."""
+
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def report(self):
+        """Abstract method. Needs custom implementation by derived classes.
+
+        Collect the results produced by the external tool. This method is
+        called after :meth:`setup` and before :meth:`teardown`.
+
+        :return: GNAThub.EXEC_SUCCESS on success, GNAThub.EXEC_FAILURE
+            otherwise
+        :rtype: int
+        """
+        pass
 
 
 class ToolArgsPlaceholder(object):

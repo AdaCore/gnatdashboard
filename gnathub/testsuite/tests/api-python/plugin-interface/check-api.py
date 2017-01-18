@@ -4,35 +4,77 @@ import GNAThub
 from support.asserts import assertEqual, assertRaises
 
 
-# Global variable supposedly updated by MyCustomPlugin
-MY_VARIABLE = False
+# Global variables supposedly updated by MyCustomPlugin
+MY_RUN_VARIABLE = False
+MY_REPORT_VARIABLE = False
 
 
-class MyIncompletePlugin(GNAThub.Plugin):
+class MyIncompleteRunnerPlugin(GNAThub.Plugin, GNAThub.Runner):
     """Declare a custom plugin that extends the GNAThub Plugin interface.
 
-    However, do not implement the EXECUTE method to test error case.
+    However, do not implement the RUN method to test error case.
     """
 
     name = 'My Incomplete Plugin'
 
 
-class MyCustomPlugin(GNAThub.Plugin):
+class MyIncompleteReporterPlugin(GNAThub.Plugin, GNAThub.Reporter):
+    """Declare a custom plugin that extends the GNAThub Plugin interface.
+
+    However, do not implement the REPORT method to test error case.
+    """
+
+    name = 'My Incomplete Plugin'
+
+
+class MyCustomReporterPlugin(GNAThub.Plugin, GNAThub.Reporter):
+    """Declare a custom plugin that extends the GNAThub reporter interface."""
+
+    name = 'My Custom Plugin'
+
+    def report(self):
+        """Overridden."""
+        pass
+
+
+class MyCustomRunnerPlugin(GNAThub.Plugin, GNAThub.Runner):
+    """Declare a custom plugin that extends the GNAThub runner interface."""
+
+    name = 'My Custom Plugin'
+
+    def run(self):
+        """Overridden."""
+        pass
+
+
+class MyCustomPlugin(GNAThub.Plugin, GNAThub.Runner, GNAThub.Reporter):
     """Declare a custom plugin that extends the GNAThub Plugin interface."""
 
     name = 'My Custom Plugin'
 
-    def execute(self):
+    def run(self):
         """Overridden."""
-        global MY_VARIABLE
-        MY_VARIABLE = True
+        global MY_RUN_VARIABLE
+        MY_RUN_VARIABLE = True
+
+    def report(self):
+        """Overridden."""
+        global MY_REPORT_VARIABLE
+        MY_REPORT_VARIABLE = True
 
 
-# GNAThub.Plugin interface not implemented
+# GNAThub.Runner interface not implemented
 with assertRaises(TypeError):
-    # A type error occurs when the EXECUTE method is not overridden
-    MyIncompletePlugin()
+    # A type error occurs when the RUN method is not overridden
+    MyIncompleteRunnerPlugin()
 
+# GNAThub.Reporter interface not implemented
+with assertRaises(TypeError):
+    # A type error occurs when the REPORT method is not overridden
+    MyIncompleteReporterPlugin()
+
+MyCustomRunnerPlugin()    # Fails if it raises an exception
+MyCustomReporterPlugin()  # Fails if it raises an exception
 PLUGIN = MyCustomPlugin()
 
 # GNAThub.Plugin.name

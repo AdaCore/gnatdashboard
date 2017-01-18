@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2016, AdaCore
+# Copyright (C) 2013-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -22,9 +22,10 @@ module and load it as part of the GNAThub default execution.
 import GNAThub
 
 from _sonarqube import SonarQube, SonarScannerProperties
+from GNAThub import Plugin, Runner
 
 
-class SonarConfig(GNAThub.Plugin):
+class SonarConfig(Plugin, Runner):
     """SonarConfig plugin for GNAThub"""
 
     def setup(self):
@@ -35,15 +36,16 @@ class SonarConfig(GNAThub.Plugin):
     def name(self):
         return 'sonar-config'
 
-    def execute(self):
+    def run(self):
         """Generate SonarQube Scanner configuration file"""
+
         self.info('generate %s' % SonarQube.CONFIGURATION)
         try:
             SonarScannerProperties(self.log).write(SonarQube.configuration())
         except IOError as why:
-            self.exec_status = GNAThub.EXEC_FAILURE
             self.log.exception(
                 'SonarQube Scanner configuration generation failed')
             self.error(str(why))
+            return GNAThub.EXEC_FAILURE
         else:
-            self.exec_status = GNAThub.EXEC_SUCCESS
+            return GNAThub.EXEC_SUCCESS

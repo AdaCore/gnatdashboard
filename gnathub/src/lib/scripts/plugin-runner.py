@@ -5,7 +5,7 @@ spawning the main event loop.
 """
 
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2016, AdaCore
+# Copyright (C) 2013-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -337,7 +337,14 @@ class PluginRunner(object):
         start = time.time()
         LOG.info('%s: set up environment', plugin.name)
         plugin.setup()
-        plugin.execute()
+        if isinstance(plugin, GNAThub.Runner):
+            LOG.info('%s: produce results', plugin.name)
+            plugin.exec_status = plugin.run()
+        if isinstance(plugin, GNAThub.Reporter) and plugin.exec_status in (
+            GNAThub.EXEC_SUCCESS, GNAThub.NOT_EXECUTED
+        ):
+            LOG.info('%s: collect results', plugin.name)
+            plugin.exec_status = plugin.report()
         LOG.info('%s: post execution', plugin.name)
         plugin.teardown()
         elapsed = time.time() - start

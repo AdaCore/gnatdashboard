@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2016, AdaCore
+# Copyright (C) 2016-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -25,13 +25,13 @@ import json
 import inspect
 import os
 
-from GNAThub import Console
+from GNAThub import Console, Plugin, Reporter
 
 from shutil import copy2, copytree, rmtree
 from _report import ReportBuilder
 
 
-class HTMLReport(GNAThub.Plugin):
+class HTMLReport(Plugin, Reporter):
     """HTMLReport plugin for GNAThub"""
 
     def __init__(self):
@@ -87,7 +87,7 @@ class HTMLReport(GNAThub.Plugin):
         with open(output, 'w') as outfile:
             outfile.write(json.dumps(obj, **kwargs))
 
-    def execute(self):
+    def report(self):
         """Generates JSON-encoded representation of the data collected"""
 
         # The output directory for the JSON-encoded report data
@@ -192,9 +192,9 @@ class HTMLReport(GNAThub.Plugin):
             self.info('report written to %s', self.output_dir)
 
         except IOError as why:
-            self.exec_status = GNAThub.EXEC_FAILURE
             self.log.exception('failed to generate the HTML report')
             self.error(str(why))
+            return GNAThub.EXEC_FAILURE
 
         else:
-            self.exec_status = GNAThub.EXEC_SUCCESS
+            return GNAThub.EXEC_SUCCESS

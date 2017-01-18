@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2015, AdaCore
+# Copyright (C) 2013-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -25,10 +25,10 @@ import re
 from _gnat import SLOC_PATTERN
 
 import GNAThub
-from GNAThub import Console
+from GNAThub import Console, Plugin, Reporter, Runner
 
 
-class GNATcheck(GNAThub.Plugin):
+class GNATcheck(Plugin, Runner, Reporter):
     """GNATcheck plugin for GNAThub
 
     Configures and executes GNATcheck, then analyzes the output.
@@ -48,7 +48,7 @@ class GNATcheck(GNAThub.Plugin):
         super(GNATcheck, self).__init__()
 
         self.tool = None
-        self.report = os.path.join(GNAThub.Project.object_dir(),
+        self.output = os.path.join(GNAThub.Project.object_dir(),
                                    '%s.out' % self.name)
 
         # Map of rules (couple (name, rule): dict[str,Rule])
@@ -68,7 +68,7 @@ class GNATcheck(GNAThub.Plugin):
         """
 
         cmd_line = [
-            'gnatcheck', '--show-rule', '-o', self.report,
+            'gnatcheck', '--show-rule', '-o', self.output,
             '-P', GNAThub.Project.path(), '-U', '-j%d' % GNAThub.jobs()
         ] + GNAThub.Project.scenario_switches()
         if GNAThub.Project.target():
@@ -77,39 +77,23 @@ class GNATcheck(GNAThub.Plugin):
             cmd_line.extend(('--RTS', GNAThub.Project.runtime()))
         return cmd_line
 
-    def execute(self):
+    def run(self):
         """Executes GNATcheck
 
-        :meth:`postprocess()` is called upon process completion.
-        """
+        Returns according to the success of the execution of the tool:
 
-        self.log.info('clear tool references in the database')
-        GNAThub.Tool.clear_references(self.name)
-
-        proc = GNAThub.Run(self.name, self.__cmd_line())
-        self.postprocess(proc.status)
-
-    def postprocess(self, exit_code):
-        """Parses the output report if GNATcheck completed successfully
-
-        Sets the ``exec_status`` property according to the success of the
-        analysis:
-
-            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
 
-        if exit_code not in GNATcheck.VALID_EXIT_CODES:
-            self.exec_status = GNAThub.EXEC_FAILURE
-            return
+        return GNAThub.EXEC_SUCCESS if GNAThub.Run(
+            self.name, self.__cmd_line()
+        ).status in GNATcheck.VALID_EXIT_CODES else GNAThub.EXEC_FAILURE
 
-        self.__parse_report()
-
-    def __parse_report(self):
+    def report(self):
         """Parses GNATcheck output file report
 
-        Sets the exec_status property according to the success of the
-        analysis:
+        Returns according to the success of the analysis:
 
             * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
             * ``GNAThub.EXEC_FAILURE``: on any error
@@ -120,18 +104,20 @@ class GNATcheck(GNAThub.Plugin):
             * message for package instantiation
         """
 
+        self.info('clear existing results if any')
+        GNAThub.Tool.clear_references(self.name)
+
         self.info('analyse report')
 
         self.tool = GNAThub.Tool(self.name)
-        self.log.debug('parse report: %s', self.report)
+        self.log.debug('parse report: %s', self.output)
 
-        if not os.path.exists(self.report):
-            self.exec_status = GNAThub.EXEC_FAILURE
+        if not os.path.exists(self.output):
             self.error('no report found')
-            return
+            return GNAThub.EXEC_FAILURE
 
         try:
-            with open(self.report, 'r') as output:
+            with open(self.output, 'r') as output:
                 lines = output.readlines()
                 total = len(lines)
 
@@ -147,13 +133,13 @@ class GNATcheck(GNAThub.Plugin):
                     Console.progress(index, total, new_line=(index == total))
 
         except IOError as why:
-            self.exec_status = GNAThub.EXEC_FAILURE
             self.log.exception('failed to parse report')
             self.error(str(why))
+            return GNAThub.EXEC_FAILURE
 
         else:
             self.__do_bulk_insert()
-            self.exec_status = GNAThub.EXEC_SUCCESS
+            return GNAThub.EXEC_SUCCESS
 
     def __parse_line(self, regex):
         """Parses a GNATcheck message line

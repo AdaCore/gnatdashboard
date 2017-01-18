@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2015, AdaCore
+# Copyright (C) 2013-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -24,10 +24,10 @@ import os
 import os.path
 
 import GNAThub
-from GNAThub import Console, ToolArgsPlaceholder
+from GNAThub import Console, Plugin, Reporter, Runner, ToolArgsPlaceholder
 
 
-class CodePeer(GNAThub.Plugin):
+class CodePeer(Plugin, Runner, Reporter):
     """CodePeer plugin for GNAThub
 
     Configures and executes CodePeer, then analyzes the output.
@@ -41,9 +41,6 @@ class CodePeer(GNAThub.Plugin):
         self.csv_report = os.path.join(
             GNAThub.Project.object_dir(), 'codepeer',
             '{}.csv'.format(GNAThub.Project.name().lower()))
-
-        self.report = os.path.join(
-            GNAThub.Project.object_dir(), '{}.out'.format(self.name))
 
         # Map of rules (couple (name, rule): dict[str,Rule])
         self.rules = {}
@@ -85,54 +82,38 @@ class CodePeer(GNAThub.Plugin):
             ToolArgsPlaceholder('codepeer_msg_reader')
         ]
 
-    def execute(self):
+    def run(self):
         """Executes CodePeer
 
-        :meth:`execute_msg_reader()` is called upon process completion.
+        Sets the exec_status property according to the success of the
+        execution of the tool:
+
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution
+            * ``GNAThub.EXEC_FAILURE``: on any error
         """
 
-        self.log.info('clear tool references in the database')
+        return GNAThub.EXEC_SUCCESS if GNAThub.Run(
+            self.name, self.__cmd_line()
+        ).status == 0 else GNAThub.EXEC_FAILURE
+
+    def report(self):
+        """Executes CodePeer message reader and parses the output
+
+        Sets the exec_status property according to the success of the analysis:
+
+            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
+            * ``GNAThub.EXEC_FAILURE``: on any error
+        """
+
+        self.info('clear existing results if any')
         GNAThub.Tool.clear_references(self.name)
 
-        if GNAThub.Run(self.name, CodePeer.__cmd_line()).status:
-            return
-        self.execute_msg_reader()
+        self.info('extract results with msg_reader')
+        proc = GNAThub.Run(
+            self.name, self.__msg_reader_cmd_line(), out=self.csv_report)
 
-    def execute_msg_reader(self):
-        """Executes CodePeer Message Reader
-
-        :meth:`postprocess()` is called upon process completion.
-        """
-
-        self.info('collect results with msg_reader')
-        self.postprocess(GNAThub.Run(
-            self.name, CodePeer.__msg_reader_cmd_line(), out=self.csv_report
-        ).status)
-
-    def postprocess(self, exit_code):
-        """Parses the output report if CodePeer completed successfully
-
-        Sets the exec_status property according to the success of the
-        analysis:
-
-            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
-            * ``GNAThub.EXEC_FAILURE``: on any error
-        """
-
-        if exit_code != 0:
-            self.exec_status = GNAThub.EXEC_FAILURE
-            return
-        self.__parse_csv_report()
-
-    def __parse_csv_report(self):
-        """Parses CodePeer output CSV report
-
-        Sets the exec_status property according to the success of the
-        analysis:
-
-            * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
-            * ``GNAThub.EXEC_FAILURE``: on any error
-        """
+        if proc.status != 0:
+            return GNAThub.EXEC_FAILURE
 
         self.info('analyse CSV report')
         self.tool = GNAThub.Tool(self.name)
@@ -140,9 +121,8 @@ class CodePeer(GNAThub.Plugin):
         self.log.debug('parse report: %s', self.csv_report)
 
         if not os.path.exists(self.csv_report):
-            self.exec_status = GNAThub.EXEC_FAILURE
             self.error('no report found')
-            return
+            return GNAThub.EXEC_FAILURE
 
         with open(self.csv_report, 'rb') as report:
             # Compute the total number of lines for progress report (-1 because
@@ -192,15 +172,14 @@ class CodePeer(GNAThub.Plugin):
                     Console.progress(index, total, new_line=(index == total))
 
             except csv.Error as why:
-                self.exec_status = GNAThub.EXEC_FAILURE
                 self.log.exception('failed to parse CSV report')
-
                 self.error('%s (%s:%d)' %
                            (why, os.path.basename(self.csv_report), total))
+                return GNAThub.EXEC_FAILURE
 
             else:
                 self.__do_bulk_insert()
-                self.exec_status = GNAThub.EXEC_SUCCESS
+                return GNAThub.EXEC_SUCCESS
 
     def __add_message(self, src, line, column, rule_id, msg, category,
                       properties):
