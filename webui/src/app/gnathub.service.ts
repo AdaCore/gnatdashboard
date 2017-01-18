@@ -12,7 +12,7 @@ export class GNAThubService {
     constructor(private http: Http) {}
 
     getReport(): Observable<IGNAThubReport> {
-        return this.http.get('data/gnathub.report.json')
+        return this.http.get('data/report.json')
                         .map(this.handleResults)
                         .catch(this.handleError);
     }

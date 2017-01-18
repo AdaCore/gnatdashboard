@@ -124,8 +124,7 @@ class HTMLReport(Plugin, Reporter):
             """
 
             def _fname(ext):
-                return '{}.report.{}'.format(
-                    os.path.join(data_output_dir, project_name.lower()), ext)
+                return os.path.join(data_output_dir, 'report.{}'.format(ext))
 
             self._write_json(_fname('json'), index, indent=2)
             self.log.debug('report index written to %s', _fname('json'))
