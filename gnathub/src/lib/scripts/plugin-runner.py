@@ -117,8 +117,8 @@ class PluginRunner(object):
         """
         Console.error(message % args, prefix=MODULE)
 
-    @staticmethod
-    def schedule(plugins):
+    @classmethod
+    def schedule(cls, plugins):
         """Schedule the plugins execution order
 
         Some system plugins might need to be executed in a specific order, or
@@ -147,15 +147,15 @@ class PluginRunner(object):
             :return: -1, 0 or 1 depending on the input
             :rtype: int
             """
-            if a().name in PluginRunner.POST_PHASE_PLUGINS:
+            if a().name in cls.POST_PHASE_PLUGINS:
                 return 1
-            if b().name in PluginRunner.POST_PHASE_PLUGINS:
+            if b().name in cls.POST_PHASE_PLUGINS:
                 return -1
             return 0
         return sorted(plugins, plugin_sort_fn)
 
-    @staticmethod
-    def walk_repository(repository):
+    @classmethod
+    def walk_repository(cls, repository):
         """Walk a script repository, and gathers the scripts is contains
 
         Lists all Python scripts that are located at the root of the
@@ -170,11 +170,11 @@ class PluginRunner(object):
         for script in os.listdir(repository):
             plugin, ext = os.path.splitext(script)
 
-            if ext == PluginRunner.PLUGIN_EXT and not plugin.startswith('_'):
+            if ext == cls.PLUGIN_EXT and not plugin.startswith('_'):
                 yield os.path.join(repository, script)
 
-    @staticmethod
-    def inspect(script):
+    @classmethod
+    def inspect(cls, script):
         """Inspect a Python script for :class:`GNAThub.Plugin` it declares
 
         This method should be used as a generator. It will yield on new every
@@ -184,7 +184,7 @@ class PluginRunner(object):
         :type script: str
         """
         if not os.path.isfile(script):
-            PluginRunner.warn('%s: not a valid script', script)
+            cls.warn('%s: not a valid script', script)
             return
 
         namespace = {}
@@ -195,14 +195,14 @@ class PluginRunner(object):
 
         except Exception as why:
             LOG.exception('failed to load script: %s', script)
-            PluginRunner.warn('%s: failed to load: %s', script, str(why))
+            cls.warn('%s: failed to load: %s', script, str(why))
 
         for obj in namespace.values():
             if inspect.isclass(obj) and obj.__base__ is GNAThub.Plugin:
                 yield obj
 
-    @staticmethod
-    def auto_discover_plugins():
+    @classmethod
+    def auto_discover_plugins(cls):
         """Retrieve all plugins for GNAThub
 
         This routine first lists all available scripts for this run of GNAThub.
@@ -230,7 +230,7 @@ class PluginRunner(object):
                 continue
 
             LOG.info('load scripts from [%s] repository', name)
-            repo_scripts = list(PluginRunner.walk_repository(path))
+            repo_scripts = list(cls.walk_repository(path))
 
             LOG.info('  + %d new script(s) found', len(repo_scripts))
             scripts.update(repo_scripts)
@@ -263,7 +263,7 @@ class PluginRunner(object):
         # extract class definition and filter out those that will not be used.
 
         LOG.info('located %d scripts', len(scripts))
-        plugins = sum([list(PluginRunner.inspect(s)) for s in scripts], [])
+        plugins = sum([list(cls.inspect(s)) for s in scripts], [])
 
         def is_plugin(clazz, name):
             """Check whether this plugin name is ``name``
@@ -315,7 +315,7 @@ class PluginRunner(object):
 
             LOG.warn('%s explicitly disabled but not loaded', name)
 
-        return PluginRunner.schedule(plugins)
+        return cls.schedule(plugins)
 
     @staticmethod
     def execute_runners():
@@ -357,8 +357,13 @@ class PluginRunner(object):
         """
         return isinstance(plugin, GNAThub.Reporter)
 
-    @staticmethod
-    def execute(plugin):
+    @classmethod
+    def should_execute(cls, plugin):
+        return ((cls.execute_runners() and cls.is_runner(plugin)) or
+                (cls.execute_reporters() and cls.is_reporter(plugin)))
+
+    @classmethod
+    def execute(cls, plugin):
         """Execute the plugin
 
         Call methods setup, execute and teardown for a plugin instance.
@@ -368,30 +373,32 @@ class PluginRunner(object):
         :return: the execution time in seconds
         :rtype: int
         """
-        PluginRunner.info('execute plug-in %s', plugin.name)
-        if GNAThub.dry_run():
-            # Early exit if dry-run mode is enabled
-            plugin.exec_status = GNAThub.EXEC_SUCCESS
-            return 0
+        elapsed = 0
 
-        LOG.info('%s: set up environment', plugin.name)
-        start = time.time()
-        plugin.setup()
+        if cls.should_execute(plugin):
+            cls.info('execute plug-in %s', plugin.name)
+            if GNAThub.dry_run():
+                # Early exit if dry-run mode is enabled
+                plugin.exec_status = GNAThub.EXEC_SUCCESS
+                return 0
 
-        if PluginRunner.execute_runners() and PluginRunner.is_runner(plugin):
-            LOG.info('%s: produce results', plugin.name)
-            plugin.exec_status = plugin.run()
+            LOG.info('%s: set up environment', plugin.name)
+            start = time.time()
+            plugin.setup()
 
-        if (PluginRunner.execute_reporters() and
-                PluginRunner.is_reporter(plugin) and
-                plugin.exec_status in (
-                    GNAThub.EXEC_SUCCESS, GNAThub.NOT_EXECUTED)):
-            LOG.info('%s: collect results', plugin.name)
-            plugin.exec_status = plugin.report()
+            if cls.execute_runners() and cls.is_runner(plugin):
+                LOG.info('%s: produce results', plugin.name)
+                plugin.exec_status = plugin.run()
 
-        LOG.info('%s: post execution', plugin.name)
-        plugin.teardown()
-        elapsed = time.time() - start
+            if (cls.execute_reporters() and cls.is_reporter(plugin) and
+                    plugin.exec_status in (
+                        GNAThub.EXEC_SUCCESS, GNAThub.NOT_EXECUTED)):
+                LOG.info('%s: collect results', plugin.name)
+                plugin.exec_status = plugin.report()
+
+            LOG.info('%s: post execution', plugin.name)
+            plugin.teardown()
+            elapsed = time.time() - start
 
         if plugin.exec_status == GNAThub.EXEC_SUCCESS:
             plugin.info('completed (in %d seconds)' % elapsed)
@@ -409,7 +416,7 @@ class PluginRunner(object):
 
         # Early exit if no plug-in are scheduled to be run
         if not self.plugins:
-            PluginRunner.info('nothing to do')
+            self.info('nothing to do')
             return
 
         # Execute each plug-in in order
@@ -420,13 +427,12 @@ class PluginRunner(object):
                     plugin, elapsed = cls(), None
 
                     # Execute the plug-in
-                    elapsed = PluginRunner.execute(plugin)
+                    elapsed = self.execute(plugin)
                 except KeyboardInterrupt:
                     raise
                 except Exception as why:
                     LOG.exception('plug-in execution failed')
-                    PluginRunner.error(
-                        '%s: unexpected error: %s', plugin.name, why)
+                    self.error('%s: unexpected error: %s', plugin.name, why)
                 finally:
                     if plugin.exec_status != GNAThub.NOT_EXECUTED:
                         # A plugin could not have been executed depending on
@@ -437,7 +443,7 @@ class PluginRunner(object):
                                 plugin.exec_status == GNAThub.EXEC_SUCCESS)
                         }))
         except KeyboardInterrupt:
-            PluginRunner.info(os.linesep + 'Interrupt caught...')
+            self.info(os.linesep + 'Interrupt caught...')
 
         # Write results to file
         fname = os.path.join(GNAThub.root(), 'gnathub.backlog')
@@ -446,7 +452,7 @@ class PluginRunner(object):
                 fd.write(json.dumps(backlog))
         except IOError as why:
             LOG.exception('could not write result file %s', fname)
-            PluginRunner.error('%s: unexpected error: %s', fname, why)
+            self.error('%s: unexpected error: %s', fname, why)
 
         if not GNAThub.dry_run() and not GNAThub.quiet():
             # Display a summary
