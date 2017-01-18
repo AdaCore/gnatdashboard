@@ -258,3 +258,25 @@ program, eg.::
 
 All switches following :command:`--targs:<tool>` are passed to `<tool>`,
 stopping either at the sentinel `--` or at another :command:`--targs:` option.
+
+:command:`--runners-only`
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Takes no argument. Instead of its default behavior, when you specify
+:command:`--runners-only`, |GNAThub| will only execute plugins that implement
+the :class:`GNAThub.Runner` interface. This interface should be implemented by
+plugins that need to execute tools to produce results that will be then analysed
+by a plugin implementing the :class:`GNAThub.Reporter` interface. Note that the
+same plugin can implement both interfaces to encapsulate all the logic to run a
+tool and collect its results in the same class.
+
+:command:`--reporters-only`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Takes no argument. Instead of its default behavior, when you specify
+:command:`--reporters-only`, |GNAThub| will only execute plugins that implement
+the :class:`GNAThub.Reporter` interface. This interface should be implemented by
+plugins that need to process the output of the tool to save its results within
+|GNAThub|. Note that the same plugin can implement both interfaces to
+encapsulate all the logic to run a tool and collect its results in the same
+class.

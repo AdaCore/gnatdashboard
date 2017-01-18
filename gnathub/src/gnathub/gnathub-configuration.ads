@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2016, AdaCore                     --
+--                     Copyright (C) 2013-2017, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -68,6 +68,12 @@ package GNAThub.Configuration is
 
    function Tool_Args (Tool_Name : String) return Tool_Arg_Vectors.Vector;
    --  The list of additional arguments to pass to a tool
+
+   function Runners_Only return Boolean;
+   --  Whether to run only plugins implementing the GNAThub.Runner interface
+
+   function Reporters_Only return Boolean;
+   --  Whether to run only plugins implementing the GNAThub.Reporter interface
 
    procedure Finalize;
    --  Free allocated memory

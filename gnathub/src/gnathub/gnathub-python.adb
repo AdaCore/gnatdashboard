@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2016, AdaCore                     --
+--                     Copyright (C) 2013-2017, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -64,19 +64,21 @@ package body GNAThub.Python is
    Project_Property_As_List_Method   : constant String := "property_as_list";
    Scenario_Switches_Method          : constant String := "scenario_switches";
 
-   Root_Function          : aliased constant String := "root";
-   Logs_Function          : aliased constant String := "logs";
-   Jobs_Function          : aliased constant String := "jobs";
-   Dry_Run_Function       : aliased constant String := "dry_run";
-   Quiet_Function         : aliased constant String := "quiet";
-   Verbose_Function       : aliased constant String := "verbose";
-   Plugins_Function       : aliased constant String := "plugins";
-   Database_Function      : aliased constant String := "database";
-   Repositories_Function  : aliased constant String := "repositories";
-   Tool_Args_Function     : constant String := "tool_args";
+   Root_Function           : aliased constant String := "root";
+   Logs_Function           : aliased constant String := "logs";
+   Jobs_Function           : aliased constant String := "jobs";
+   Dry_Run_Function        : aliased constant String := "dry_run";
+   Quiet_Function          : aliased constant String := "quiet";
+   Verbose_Function        : aliased constant String := "verbose";
+   Plugins_Function        : aliased constant String := "plugins";
+   Database_Function       : aliased constant String := "database";
+   Repositories_Function   : aliased constant String := "repositories";
+   Runners_Only_Function   : aliased constant String := "runners_only";
+   Reporters_Only_Function : aliased constant String := "reporters_only";
+   Tool_Args_Function      : constant String := "tool_args";
 
    No_Args_Root_Module_Functions :
-     constant array (1 .. 9) of access constant String :=
+     constant array (1 .. 11) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         Jobs_Function'Access,
@@ -85,7 +87,9 @@ package body GNAThub.Python is
         Verbose_Function'Access,
         Plugins_Function'Access,
         Database_Function'Access,
-        Repositories_Function'Access);
+        Repositories_Function'Access,
+        Runners_Only_Function'Access,
+        Reporters_Only_Function'Access);
 
    --------------------
    -- GNAThub Module --
@@ -706,6 +710,12 @@ package body GNAThub.Python is
                Set_Return_Value (Data, Argument);
             end loop;
          end;
+
+      elsif Command = Runners_Only_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Runners_Only);
+
+      elsif Command = Reporters_Only_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Reporters_Only);
 
       else
          raise Python_Error with "Unknown method GNAThub." & Command;

@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2016, AdaCore                     --
+--                     Copyright (C) 2013-2017, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -44,16 +44,18 @@ package body GNAThub.Configuration is
 
    Config : GNAT.Command_Line.Command_Line_Configuration;
 
-   Project_Arg     : aliased GNAT.Strings.String_Access;
-   Script_Arg      : aliased GNAT.Strings.String_Access;
-   Target_Arg      : aliased GNAT.Strings.String_Access;
-   Runtime_Arg     : aliased GNAT.Strings.String_Access;
-   Jobs_Arg        : aliased Integer;
-   Dry_Run_Arg     : aliased Boolean;
-   Version_Arg     : aliased Boolean;
-   Quiet_Arg       : aliased Boolean;
-   Verbose_Arg     : aliased Boolean;
-   Incremental_Arg : aliased Boolean;
+   Project_Arg        : aliased GNAT.Strings.String_Access;
+   Script_Arg         : aliased GNAT.Strings.String_Access;
+   Target_Arg         : aliased GNAT.Strings.String_Access;
+   Runtime_Arg        : aliased GNAT.Strings.String_Access;
+   Jobs_Arg           : aliased Integer;
+   Dry_Run_Arg        : aliased Boolean;
+   Version_Arg        : aliased Boolean;
+   Quiet_Arg          : aliased Boolean;
+   Verbose_Arg        : aliased Boolean;
+   Incremental_Arg    : aliased Boolean;
+   Runners_Only_Arg   : aliased Boolean;
+   Reporters_Only_Arg : aliased Boolean;
 
    All_Plugins : Unbounded_String := Null_Unbounded_String;
    --  Store all plugins provided with --plugins
@@ -146,6 +148,18 @@ package body GNAThub.Configuration is
          Switch      => "-n",
          Long_Switch => "--dry-run",
          Help        => "Show plugins without executing them");
+
+      Define_Switch
+        (Config      => Config,
+         Output      => Runners_Only_Arg'Access,
+         Long_Switch => "--runners-only",
+         Help        => "Execute only plugins implementing GNAThub.Runner");
+
+      Define_Switch
+        (Config      => Config,
+         Output      => Reporters_Only_Arg'Access,
+         Long_Switch => "--reporters-only",
+         Help        => "Execute only plugins implementing GNAThub.Reporter");
 
       Define_Switch
         (Config      => Config,
@@ -434,6 +448,11 @@ package body GNAThub.Configuration is
            with "--verbose and --quiet are mutually exclusive.";
       end if;
 
+      if Runners_Only_Arg and then Reporters_Only_Arg then
+         raise Command_Line_Error
+           with "--runners-only and --reporters-only are mutually exclusive.";
+      end if;
+
       if Quiet_Arg then
          GNAThub.Set_Verbosity (Quiet);
       end if;
@@ -623,5 +642,23 @@ package body GNAThub.Configuration is
 
       return Element (Found);
    end Tool_Args;
+
+   ------------------
+   -- Runners_Only --
+   ------------------
+
+   function Runners_Only return Boolean is
+   begin
+      return Runners_Only_Arg;
+   end Runners_Only;
+
+   --------------------
+   -- Reporters_Only --
+   --------------------
+
+   function Reporters_Only return Boolean is
+   begin
+      return Reporters_Only_Arg;
+   end Reporters_Only;
 
 end GNAThub.Configuration;

@@ -318,6 +318,46 @@ class PluginRunner(object):
         return PluginRunner.schedule(plugins)
 
     @staticmethod
+    def execute_runners():
+        """Whether to execute plugins implementing :class:`GNAThub.Runner`
+
+        --runners-only and --reporters-only are mutually exclusive. Runners
+        should be executed if --runners-only is specified or if none is
+        specified.
+
+        :rtype: boolean
+        """
+        return GNAThub.runners_only() or not GNAThub.reporters_only()
+
+    @staticmethod
+    def execute_reporters():
+        """Whether to execute plugins implementing :class:`GNAThub.Reporter`
+
+        --runners-only and --reporters-only are mutually exclusive. Runners
+        should be executed if --reporters-only is specified or if none is
+        specified.
+
+        :rtype: boolean
+        """
+        return GNAThub.reporters_only() or not GNAThub.runners_only()
+
+    @staticmethod
+    def is_runner(plugin):
+        """Whether plugin implements :class:`GNAThub.Runner`
+
+        :rtype: boolean
+        """
+        return isinstance(plugin, GNAThub.Runner)
+
+    @staticmethod
+    def is_reporter(plugin):
+        """Whether plugin implements :class:`GNAThub.Reporter`
+
+        :rtype: boolean
+        """
+        return isinstance(plugin, GNAThub.Reporter)
+
+    @staticmethod
     def execute(plugin):
         """Execute the plugin
 
@@ -334,17 +374,21 @@ class PluginRunner(object):
             plugin.exec_status = GNAThub.EXEC_SUCCESS
             return 0
 
-        start = time.time()
         LOG.info('%s: set up environment', plugin.name)
+        start = time.time()
         plugin.setup()
-        if isinstance(plugin, GNAThub.Runner):
+
+        if PluginRunner.execute_runners() and PluginRunner.is_runner(plugin):
             LOG.info('%s: produce results', plugin.name)
             plugin.exec_status = plugin.run()
-        if isinstance(plugin, GNAThub.Reporter) and plugin.exec_status in (
-            GNAThub.EXEC_SUCCESS, GNAThub.NOT_EXECUTED
-        ):
+
+        if (PluginRunner.execute_reporters() and
+                PluginRunner.is_reporter(plugin) and
+                plugin.exec_status in (
+                    GNAThub.EXEC_SUCCESS, GNAThub.NOT_EXECUTED)):
             LOG.info('%s: collect results', plugin.name)
             plugin.exec_status = plugin.report()
+
         LOG.info('%s: post execution', plugin.name)
         plugin.teardown()
         elapsed = time.time() - start
@@ -353,10 +397,8 @@ class PluginRunner(object):
             plugin.info('completed (in %d seconds)' % elapsed)
         elif plugin.exec_status == GNAThub.EXEC_FAILURE:
             plugin.error('execution failed')
-        elif plugin.exec_status != GNAThub.NOT_EXECUTED:
-            plugin.error(
-                'unknown plug-in execution code: %d' % plugin.exec_status)
         else:
+            assert plugin.exec_status == GNAThub.NOT_EXECUTED
             plugin.info('not executed')
         return elapsed
 
@@ -386,10 +428,14 @@ class PluginRunner(object):
                     PluginRunner.error(
                         '%s: unexpected error: %s', plugin.name, why)
                 finally:
-                    backlog.append((plugin.name, {
-                        'time': elapsed or 0,
-                        'success': plugin.exec_status == GNAThub.EXEC_SUCCESS
-                    }))
+                    if plugin.exec_status != GNAThub.NOT_EXECUTED:
+                        # A plugin could not have been executed depending on
+                        # the command line (--runners-only/--reporters-only).
+                        backlog.append((plugin.name, {
+                            'time': elapsed or 0,
+                            'success': (
+                                plugin.exec_status == GNAThub.EXEC_SUCCESS)
+                        }))
         except KeyboardInterrupt:
             PluginRunner.info(os.linesep + 'Interrupt caught...')
 

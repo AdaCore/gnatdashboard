@@ -195,6 +195,12 @@ class GNAThub(object):
         if kwargs.get('dry_run', False):
             argv.append('--dry-run')
 
+        if kwargs.get('runners_only', False):
+            argv.append('--runners-only')
+
+        if kwargs.get('reporters_only', False):
+            argv.append('--reporters-only')
+
         if kwargs.get('scenario_vars', None):
             scenario = kwargs['scenario_vars']
             assert isinstance(scenario, dict), 'invalid "scenario_vars" arg'
