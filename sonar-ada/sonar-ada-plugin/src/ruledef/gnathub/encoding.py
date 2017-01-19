@@ -1,5 +1,5 @@
 # Sonar Ada Plugin (GNATdashboard)
-# Copyright (C) 2015, AdaCore
+# Copyright (C) 2015-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -12,14 +12,13 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""Provide encoding functions for SonarQube integration"""
+"""Provide encoding functions for SonarQube integration."""
 
 
 def encode_codepeer_key(message):
-    """Create a rule key for CodePeer rule
+    """Create a rule key for CodePeer rule.
 
-    :param message: the rule message
-    :type message: str
+    :param str message: the rule message
     :rtype: str
     """
 

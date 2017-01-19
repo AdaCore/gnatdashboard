@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""GNAThub plug-in for the CodePeer command-line tool
+"""GNAThub plug-in for the CodePeer command-line tool.
 
 It exports the CodePeer class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
@@ -28,7 +28,7 @@ from GNAThub import Console, Plugin, Reporter, Runner, ToolArgsPlaceholder
 
 
 class CodePeer(Plugin, Runner, Reporter):
-    """CodePeer plugin for GNAThub
+    """CodePeer plugin for GNAThub.
 
     Configures and executes CodePeer, then analyzes the output.
     """
@@ -56,10 +56,10 @@ class CodePeer(Plugin, Runner, Reporter):
 
     @staticmethod
     def __cmd_line():
-        """Creates CodePeer command line arguments list
+        """Create CodePeer command line arguments list.
 
         :return: the CodePeer command line
-        :rtype: list[str]
+        :rtype: collections.Iterable[str]
         """
         return [
             'codepeer', '-P', GNAThub.Project.path(),
@@ -68,10 +68,10 @@ class CodePeer(Plugin, Runner, Reporter):
 
     @staticmethod
     def __msg_reader_cmd_line():
-        """Creates CodePeer Message Reader command line arguments list
+        """Create CodePeer Message Reader command line arguments list.
 
         :return: the CodePeer message reader command line
-        :rtype: list[str]
+        :rtype: collections.Iterable[str]
         """
 
         return [
@@ -83,7 +83,7 @@ class CodePeer(Plugin, Runner, Reporter):
         ]
 
     def run(self):
-        """Executes CodePeer
+        """Execute CodePeer.
 
         Sets the exec_status property according to the success of the
         execution of the tool:
@@ -97,7 +97,7 @@ class CodePeer(Plugin, Runner, Reporter):
         ).status == 0 else GNAThub.EXEC_FAILURE
 
     def report(self):
-        """Executes CodePeer message reader and parses the output
+        """Execute CodePeer message reader and parses the output.
 
         Sets the exec_status property according to the success of the analysis:
 
@@ -183,22 +183,16 @@ class CodePeer(Plugin, Runner, Reporter):
 
     def __add_message(self, src, line, column, rule_id, msg, category,
                       properties):
-        """Adds CodePeer message to current session database.
+        """Add CodePeer message to current session database.
 
-        :param src: message source file
-        :type src: str
-        :param line: message line number
-        :type line: str
-        :param column: message column number
-        :type column: str
-        :param rule_id: message rule identifier
-        :type rule_id: str
-        :param msg: description of the message
-        :type msg: str
-        :param category: the category of the message
-        :type category: str
+        :param str src: message source file
+        :param str line: message line number
+        :param str column: message column number
+        :param str rule_id: message rule identifier
+        :param str msg: description of the message
+        :param str category: the category of the message
         :param properties: the message properties
-        :type properties: list[GNAThub.Property] | None
+        :type properties: collections.Iterable[GNAThub.Property] or None
         """
 
         # Cache the rules
@@ -231,7 +225,7 @@ class CodePeer(Plugin, Runner, Reporter):
                 [message, int(line), int(column), int(column)]]
 
     def __do_bulk_insert(self):
-        """Insert the codepeer messages in bulk on each resource"""
+        """Insert the codepeer messages in bulk on each resource."""
 
         for src in self.bulk_data:
             base = GNAThub.Project.source_file(os.path.basename(src))

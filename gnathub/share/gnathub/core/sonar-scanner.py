@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""GNAThub plug-in for the SonarQube Scanner command-line tool
+"""GNAThub plug-in for the SonarQube Scanner command-line tool.
 
 It exports the SonarScanner class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in runner to automatically find this
@@ -28,7 +28,7 @@ from GNAThub import Plugin, Reporter
 
 
 class SonarScanner(Plugin, Reporter):
-    """SonarQube Scanner plugin for GNAThub"""
+    """SonarQube Scanner plugin for GNAThub."""
 
     def __init__(self):
         super(SonarScanner, self).__init__()
@@ -44,10 +44,10 @@ class SonarScanner(Plugin, Reporter):
 
     @staticmethod
     def __cmd_line():
-        """Return command line for sonar scanner execution
+        """Return command line for sonar scanner execution.
 
         :return: the SonarQube Scanner command line
-        :rtype: list[str]
+        :rtype: collections.Iterable[str]
         """
         # Enable verbose and debugging output with -e and -X. This is handy for
         # debugging in case of issue in the SonarScanner step.
@@ -60,7 +60,7 @@ class SonarScanner(Plugin, Reporter):
         return cmdline
 
     def report(self):
-        """Execute the SonarQube Scanner
+        """Execute the SonarQube Scanner.
 
         Returns according to the successful of the analysis:
 

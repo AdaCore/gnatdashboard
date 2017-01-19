@@ -1,5 +1,5 @@
 # Sonar Ada Plugin (GNATdashboard)
-# Copyright (C) 2015, AdaCore
+# Copyright (C) 2015-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""Mimic SonarQube rule-associated classes"""
+"""Mimic SonarQube rule-associated classes."""
 
 import logging
 import os
@@ -29,16 +29,16 @@ Type = Enum('Type', 'BUG VULNERABILITY CODE_SMELL')
 
 
 class Rule(object):
-    """Declare a coding rule
+    """Declare a coding rule.
 
     This object is suitable to be inserted in a :class:`set`.
 
     :type __key: str
     :type __name: str
-    :type tags: list[str] | tuple[str] | str | None
-    :type type: Type | None
-    :type severity: Severity | None
-    :type description: str | None
+    :type tags: list[str] or tuple[str] or str or None
+    :type type: Type or None
+    :type severity: Severity or None
+    :type description: str or None
     """
 
     def __init__(self, key, name, tags=None, severity=None, type=None,
@@ -73,10 +73,10 @@ class Rule(object):
         return self.__serialize(fqn=True)
 
     def __serialize(self, fqn=False):
-        """Retun a string representation of this class
+        """Retun a string representation of this class.
 
-        :param fqn: whether to use the fully qualified name or the simple name
-        :type fqn: bool
+        :param bool fqn: whether to use the fully qualified name or the simple
+            name
         :rtype: str
         """
         return '<{} key="{}" name="{}">'.format(
@@ -85,7 +85,7 @@ class Rule(object):
 
     @property
     def key(self):
-        """Return the rule key
+        """Return the rule key.
 
         :rtype: str
         """
@@ -93,7 +93,7 @@ class Rule(object):
 
     @property
     def name(self):
-        """Return the rule name
+        """Return the rule name.
 
         :rtype: str
         """
@@ -101,13 +101,13 @@ class Rule(object):
 
 
 class RulesDefinition(set):
-    """Define some coding rules of the same repository
+    """Define some coding rules of the same repository.
 
     For example the Java Findbugs plugin provides an implementation of this
     extension point in order to define the rules that it supports.
 
     :type __repository_key: str
-    :type default_severity: Severity | None
+    :type default_severity: Severity or None
     """
 
     def __init__(self, repository_key, default_severity=None):
@@ -121,10 +121,10 @@ class RulesDefinition(set):
         return self.__serialize(fqn=True)
 
     def __serialize(self, fqn=False):
-        """Retun a string representation of this class
+        """Retun a string representation of this class.
 
-        :param fqn: whether to use the fully qualified name or the simple name
-        :type fqn: bool
+        :param bool fqn: whether to use the fully qualified name or the simple
+            name
         :rtype: str
         """
         return os.linesep.join([
@@ -139,19 +139,18 @@ class RulesDefinition(set):
 
     @property
     def repository_key(self):
-        """Return the repository key
+        """Return the repository key.
 
         :rtype: str
         """
         return self.__repository_key
 
     def add(self, rule):
-        """Add a new rule
+        """Add a new rule.
 
         Return the object to allow methods chaining.
 
-        :param rules: the rule to add to the repository
-        :type rule: Rule
+        :param Rule rules: the rule to add to the repository
         :rtype: RulesDefinition
         """
         if rule in self:
@@ -160,12 +159,12 @@ class RulesDefinition(set):
         return self
 
     def update(self, rules):
-        """Update rules in the set
+        """Update rules in the set.
 
         Return the object to allow methods chaining.
 
-        :param rules: the list of rules to add to the repository
-        :type rules: list[Rule]
+        :param collections.Iterable[Rule] rules: the list of rules to add to
+            the repository
         :rtype: RulesDefinition
         """
         for rule in rules:
@@ -174,16 +173,14 @@ class RulesDefinition(set):
 
 
 class RulesDefinitionXmlWriter(object):
-    """Generate rules definition XML files from :class:`RulesDefinition`"""
+    """Generate rules definition XML files from :class:`RulesDefinition`."""
 
     @classmethod
     def write(cls, rules, stream=sys.stdout):
-        """Write the rules definition to XML into `stream`
+        """Write the rules definition to XML into `stream`.
 
-        :param rules: the rules definition
-        :type rules: RulesDefinition
-        :param stream: the output stream
-        :type stream: file
+        :param RulesDefinition rules: the rules definition
+        :param file stream: the output stream
         """
 
         builder = lxml.builder.ElementMaker()
@@ -195,12 +192,10 @@ class RulesDefinitionXmlWriter(object):
 
     @classmethod
     def __create_rule(cls, rule, builder):
-        """Create a single XML <rule> node
+        """Create a single XML <rule> node.
 
-        :param rule: the rule to serialize
-        :type rule: Rule
-        :param builder: the XML node builder
-        :type builder: lxml.builder.ElementMaker
+        :param Rule rule: the rule to serialize
+        :param lxml.builder.ElementMaker builder: the XML node builder
         :rtype: lxml.etree.Element
         """
         node = builder.rule(
@@ -218,7 +213,7 @@ class RulesDefinitionXmlWriter(object):
 
 
 class RulesDefinitionXmlReader(object):
-    """Load rules definition XML files into :class:`RulesDefinition`
+    """Load rules definition XML files into :class:`RulesDefinition`.
 
     :type log: logging.Logger
     """
@@ -227,24 +222,21 @@ class RulesDefinitionXmlReader(object):
         self.log = logging.getLogger(self.__class__.__name__)
 
     def load(self, rules, filename):
-        """Load definition of rules from an XML file
+        """Load definition of rules from an XML file.
 
-        :param rules: the rules repository in which to store the loaded rules
-        :type rules: RulesDefinition
-        :param filename: the XML file containing the rules definition
-        :type filename: str
+        :param RulesDefinition rules: the rules repository in which to store
+            the loaded rules
+        :param str filename: the XML file containing the rules definition
         """
         dom = lxml.etree.parse(filename)
         for node in dom.findall('rule'):
             rules.add(self.__load_rule(node, dom))
 
     def __load_rule(self, node, dom):
-        """Load a rule from an XML node
+        """Load a rule from an XML node.
 
-        :param node: the XML <rule> node
-        :type node: str
-        :param dom: the XML dom root
-        :type dom: lxml.etree.ElementTree
+        :param str node: the XML <rule> node
+        :param lxml.etree.ElementTree dom: the XML dom root
         :rtype: Node
         """
         assert node.tag == 'rule', 'expected a <rule> node'
@@ -274,21 +266,18 @@ class RulesDefinitionXmlReader(object):
 
 
 class RulesProfileXmlWriter(object):
-    """Generate rules profile XML files"""
+    """Generate rules profile XML files."""
 
     @staticmethod
     def write(language, name, rules_definitions, stream=sys.stdout):
-        """Write the rules profile to XML into `stream`
+        """Write the rules profile to XML into `stream`.
 
-        :param language: the language targeted by the rules profile
-        :type language: str
-        :param name: the name of the rules profile
-        :type name: str
+        :param str language: the language targeted by the rules profile
+        :param str name: the name of the rules profile
         :param rules_definitions: the collection of :class:`RulesDefinition` to
             activate in the profile
-        :type rules_definitions: list[RulesDefinition] | tuple[RulesDefinition]
-        :param stream: the output stream
-        :type stream: file
+        :type rules_definitions: collections.Iterable[RulesDefinition]
+        :param file stream: the output stream
         """
 
         builder = lxml.builder.ElementMaker()

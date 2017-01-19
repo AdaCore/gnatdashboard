@@ -1,5 +1,5 @@
 # Sonar Ada Plugin (GNATdashboard)
-# Copyright (C) 2016, AdaCore
+# Copyright (C) 2016-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -29,13 +29,13 @@ Category = Enum(
 
 
 class CodePeerRulesDefinition(RulesDefinition):
-    """Define CodePeer coding rules"""
+    """Define CodePeer coding rules."""
 
     # Repository unique identifier
     REPOSITORY_KEY = 'codepeer'
 
     def __init__(self):
-        """Create an empty rule repository
+        """Create an empty rule repository.
 
         To create a populated repository, use :meth:`create_from_doc`.
         """
@@ -43,14 +43,13 @@ class CodePeerRulesDefinition(RulesDefinition):
 
     @classmethod
     def create_from_doc(cls, messages_and_annotations_rst):
-        """Create a :class:`CodePeerRulesDefinition` from documentation
+        """Create a :class:`CodePeerRulesDefinition` from documentation.
 
         Use CodePeer documentation file :file:`messages_and_annotations.rst` to
         populate the rule repository.
 
-        :param messages_and_annotations_rst: path to the CodePeer documentation
-            file :file:`messages_and_annotations.rst`
-        :type messages_and_annotations_rst: str
+        :param str messages_and_annotations_rst: path to the CodePeer
+            documentation file :file:`messages_and_annotations.rst`
         :rtype: CodePeerRulesDefinition
         """
 
@@ -87,17 +86,14 @@ class CodePeerRulesDefinition(RulesDefinition):
 
     @classmethod
     def __create_rule(cls, message, description, category):
-        """Create a new rule
+        """Create a new rule.
 
         Encode the rule key using the message and the category. Attach the
         description to the rule.
 
-        :param message: the rule message
-        :type message: str
-        :param description: the rule description
-        :type description: str
-        :param category: the message category (as defined by CodePeer)
-        :type category: Category
+        :param str message: the rule message
+        :param str description: the rule description
+        :param Category category: the message category (as defined by CodePeer)
         :rtype: Rule
         """
 
@@ -117,17 +113,17 @@ class CodePeerRulesDefinition(RulesDefinition):
 
 
 class _CollectRulesVisitor(docutils.nodes.SparseNodeVisitor):
-    """Walk the reST document and collect CodePeer rules
+    """Walk the reST document and collect CodePeer rules.
 
     CodePeer rules are separated in three categories:
       * Checks (runtime checks, user checks, validity checks)
       * Warnings (logic errors)
       * Race conditions
 
-    :type checks: list[(str, str)]
-    :type warnings: list[(str, str)]
-    :type race_conditions: list[(str, str)]
-    :type informations: list[(str, str)]
+    :type checks: collections.Iterable[(str, str)]
+    :type warnings: collections.Iterable[(str, str)]
+    :type race_conditions: collections.Iterable[(str, str)]
+    :type informations: collections.Iterable[(str, str)]
     """
 
     CHECK_SECTIONS = ('run-time checks', 'user checks',
@@ -172,12 +168,12 @@ class _CollectRulesVisitor(docutils.nodes.SparseNodeVisitor):
 
 
 class _WalkTableVisitor(docutils.nodes.SparseNodeVisitor):
-    """Traverse a table and populate rules
+    """Traverse a table and populate rules.
 
     This visitor is meant to walk a subtree of the document. It looks for
     tables and parses them to collect the rules.
 
-    :type rules: list[(str, str)]
+    :type rules: collections.Iterable[(str, str)]
     """
 
     def __init__(self, rules, document):

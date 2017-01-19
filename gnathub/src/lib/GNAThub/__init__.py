@@ -57,6 +57,7 @@ def quiet():
     """Whether the quiet flag was passed to the GNAThub driver or not.
 
     :return: whether the quiet flag is enabled or not
+    :rtype: bool
     """
     return NotImplemented   # Implemented in Ada
 
@@ -88,7 +89,7 @@ def plugins():
     :command:`--plugins` switch.
 
     :return: the list of plug-in name
-    :rtype: str
+    :rtype: collections.Iterable[str]
     """
     return NotImplemented   # Implemented in Ada
 
@@ -129,10 +130,9 @@ def tool_args(tool_name):
     This is the concatenation of switches for the tool ``tool_name`` as
     provided on the command-line with the :command:`-targs:` switch.
 
-    :param tool_name: the name of the tool
-    :type tool_name: str
+    :param str tool_name: the name of the tool
     :return: the list of extra switches for ``tool_name``
-    :rtype: list[str]
+    :rtype: collections.Iterable[str]
     """
     return NotImplemented   # Implemented in Ada
 
@@ -149,16 +149,14 @@ class Logger(object):
         automatically installed to use :mod:`logging` as logging front-end
         and :class:`GNAThub.Logger` as logging back-end.
 
-        :param name: the name of the logger
-        :type name: str
+        :param str name: the name of the logger
         """
         pass    # Implemented in Ada
 
     def log(self, message):
         """Log a message.
 
-        :param message: the message to log
-        :type message: str
+        :param str message: the message to log
         """
         pass    # Implemented in Ada
 
@@ -173,10 +171,8 @@ class Console(object):
 
         Activated at default verbosity.
 
-        :param message: the message to display
-        :type message: str
-        :param prefix: optional prefix to the message
-        :type prefix: str
+        :param str message: the message to display
+        :param str prefix: optional prefix to the message
         """
         pass    # Implemented in Ada
 
@@ -186,10 +182,8 @@ class Console(object):
 
         Activated at default verbosity output.
 
-        :param message: the message to display
-        :type message: str
-        :param prefix: optional prefix to the message
-        :type prefix: str
+        :param str message: the message to display
+        :param str prefix: optional prefix to the message
         """
         pass    # Implemented in Ada
 
@@ -199,10 +193,8 @@ class Console(object):
 
         Always activated.
 
-        :param message: the message to display
-        :type message: str
-        :param prefix: optional prefix to the message
-        :type prefix: str
+        :param str message: the message to display
+        :param str prefix: optional prefix to the message
         """
         pass    # Implemented in Ada
 
@@ -213,12 +205,9 @@ class Console(object):
         Activated at default verbosity level. If ``new_line`` is
         :command:`True`, then terminates the line with a :kbd:`\n` character.
 
-        :param current: the current value
-        :type current: int
-        :param total: the total value
-        :type total: int
-        :param new_line: whether to terminate with a new line
-        :type new_line: bool
+        :param int current: the current value
+        :param int total: the total value
+        :param bool new_line: whether to terminate with a new line
         """
         pass    # Implemented in Ada
 
@@ -303,8 +292,7 @@ class Project(object):
         returned as is. Otherwise, only the base name is used (i.e. we remove
         any directory information from ``name``).
 
-        :param name: the source file basename
-        :type name: str
+        :param str name: the source file basename
         :return: the full path to the source file
         :rtype: str
         """
@@ -317,10 +305,9 @@ class Project(object):
         The list is used by the project manager to find Ada source files, ie.
         both specifications and implementations.
 
-        :param language: the language of the sources
-        :type language: str
+        :param str language: the language of the sources
         :return: the list of valid Ada source file extensions
-        :rtype: list[str]
+        :rtype: collections.Iterable[str]
         """
         return NotImplemented   # Implemented in Ada
 
@@ -331,10 +318,8 @@ class Project(object):
         Returns the string representation of the project property from the
         package GNATdashboard.
 
-        :param key: the property name
-        :type key: str
-        :param package: the package name (default to GNATdashboard package)
-        :type package: str
+        :param str key: the property name
+        :param str package: the package name (default to GNATdashboard package)
         :return: the property value
         :rtype: str
         """
@@ -347,10 +332,8 @@ class Project(object):
         Returns the list of string representation of the project property from
         the package GNATdashboard.
 
-        :param key: the property name
-        :type key: str
-        :param package: the package name (default to GNATdashboard package)
-        :type package: str
+        :param str key: the property name
+        :param str package: the package name (default to GNATdashboard package)
         :return: the property value
         :rtype: list[str]
         """
@@ -361,7 +344,7 @@ class Project(object):
         """Return the scenario as a list of switches of the form -Xvar=value.
 
         :return: the list of scenario switches passed to GNAThub
-        :rtype: list[str]
+        :rtype: collections.Iterable[str]
         """
         return NotImplemented   # Implemented in Ada
 
@@ -375,8 +358,7 @@ class Tool(object):
     def __init__(self, name):
         """Return the tool of the given name, creating it if necessary.
 
-        :param name: the name of the tool to create or retrieve
-        :type name: str
+        :param str name: the name of the tool to create or retrieve
         """
         pass    # Implemented in Ada
 
@@ -385,7 +367,7 @@ class Tool(object):
         """List all the tools stored in the database.
 
         :return: the list of all tools
-        :rtype: list[GNAThub.Tool]
+        :rtype: collections.Iterable[GNAThub.Tool]
         """
         return NotImplemented   # Implemented in Ada
 
@@ -393,8 +375,7 @@ class Tool(object):
     def clear_references(tool):
         """Clear all references to a tool in the database.
 
-        :param tool: the name of the tool
-        :type tool: str
+        :param str tool: the name of the tool
         """
         return NotImplemented   # Implemented in Ada
 
@@ -410,12 +391,10 @@ class Category(object):
 
         Creates the category if necessary.
 
-        :param label: the label of the category
-        :type label: str
-        :param on_side: whether messages belonging to this category should
+        :param str label: the label of the category
+        :param bool on_side: whether messages belonging to this category should
             be displayed on the side of the lines when representing a source
             file
-        :type on_side: bool
         """
         pass    # Implemented in Ada
 
@@ -424,7 +403,7 @@ class Category(object):
         """Return all categories stored in the database.
 
         :return: the list of all :class:`GNAThub.Category`
-        :rtype: list[GNAThub.Category]
+        :rtype: collections.Iterable[GNAThub.Category]
         """
         return NotImplemented   # Implemented in Ada
 
@@ -438,17 +417,13 @@ class Rule(object):
     def __init__(self, name, identifier, kind, tool):
         """Return the rule of the given properties, creating it if necessary.
 
-        :param name: the name of the rule
-        :type name: str
-        :param identifier: an unique identifier for this rule (typically,
+        :param str name: the name of the rule
+        :param str identifier: an unique identifier for this rule (typically,
             the same as name)
-        :type identifier: str
-        :param kind: RULE_KIND to indicate a rule where messages are given
+        :param int kind: RULE_KIND to indicate a rule where messages are given
             without a numeric value, or METRIC_KIND to indicate a rule where
             messages correspond to a numeric value
-        :type kind: int
-        :param tool: the tool that defines this rule
-        :type tool: GNAThub.Tool
+        :param GNAThub.Tool tool: the tool that defines this rule
         """
         pass    # Implemented in Ada
 
@@ -457,7 +432,7 @@ class Rule(object):
         """Return all the rules stored in the database.
 
         :return: the list of all :class:`GNAThub.Rule`
-        :rtype: list[GNAThub.Rule]
+        :rtype: collections.Iterable[GNAThub.Rule]
         """
         return NotImplemented   # Implemented in Ada
 
@@ -471,10 +446,8 @@ class Property(object):
     def __init__(self, identifier, name):
         """Return a Property, creating it if necessary.
 
-        :param identifier: the unique identifier of the property
-        :type identifier: str
-        :param name: the display name of the property
-        :type name: str
+        :param str identifier: the unique identifier of the property
+        :param str name: the display name of the property
         """
         pass    # Implemented in Ada
 
@@ -483,7 +456,7 @@ class Property(object):
         """Return all properties stored in the database.
 
         :return: the list of all :class:`GNAThub.Property`
-        :rtype: list[GNAThub.Property]
+        :rtype: collections.Iterable[GNAThub.Property]
         """
         return NotImplemented   # Implemented in Ada
 
@@ -499,15 +472,13 @@ class Message(object):
     def __init__(self, rule, message, category=None, properties=None):
         """Return the message matching the given properties.
 
-        :param rule: the rule to which this message belongs
-        :type rule: GNAThub.Rule
-        :param message: the data to associate to the message: this should be a
-            numeric value if the rule is of METRIC_KIND
-        :type message: str
+        :param GNAThub.Rule rule: the rule to which this message belongs
+        :param str message: the data to associate to the message: this should
+            be a numeric value if the rule is of METRIC_KIND
         :param category: the category to which this message belongs
-        :type category: GNAThub.Category | None
+        :type category: GNAThub.Category or None
         :param properties: one or more properties
-        :type properties: list[GNAThub.Property] | None
+        :type properties: collections.Iterable[GNAThub.Property] or None
         """
         return NotImplemented   # Implemented in Ada
 
@@ -516,7 +487,7 @@ class Message(object):
         """Return all messages stored in the database.
 
         :return: the list of all :class:`GNAThub.Message`
-        :rtype: list[GNAThub.Message]
+        :rtype: collections.Iterable[GNAThub.Message]
         """
         return NotImplemented   # Implemented in Ada
 
@@ -533,31 +504,25 @@ class Resource(object):
     def __init__(self, name, kind):
         """Return a Resource, creating it if necessary.
 
-        :param name: the name of the resource. For files and directories,
+        :param str name: the name of the resource. For files and directories,
             this should be a normalized full path: the full path with all
             links resolved, and with the original filesystem casing.
             For a project, this is the cased name of the project
-        :type name: str
-        :param kind: ``PROJECT_KIND``, ``DIRECTORY_KIND``, ``FILE_KIND`` for
-            projects, directories, and files, respectively
-        :type kind: int
+        :param int kind: ``PROJECT_KIND``, ``DIRECTORY_KIND``, ``FILE_KIND``
+            for projects, directories, and files, respectively
         """
         pass    # Implemented in Ada
 
     def add_message(self, message, line=0, col_begin=1, col_end=None):
         """Add a message to the given resource.
 
-        :param message: the Message to add
-        :type message: GNAThub.Message
-        :param line: the line to associate the message to, if the
-            resource is a file. Use ``0`` to indicate a message which should be
+        :param GNAThub.Message message: the Message to add
+        :param int line: the line to associate the message to, if the resource
+            is a file. Use ``0`` to indicate a message which should be
             associated to the resource but not to a specific line
-        :type line: int
-        :param col_begin: the begin column of the message
-        :type col_begin: int
-        :param col_end: the end column of the message. ``None`` means that
+        :param int col_begin: the begin column of the message
+        :param int col_end: the end column of the message. ``None`` means that
             the end column should be the same as the begin column.
-        :type col_end: int
         """
         pass    # Implemented in Ada
 
@@ -584,8 +549,7 @@ class Resource(object):
                 [ message, 10005, 1, 1 ],
             ])
 
-        :param messages: the messages to add
-        :type messages: list
+        :param collections.Iterable messages: the messages to add
         """
         pass    # implemented in Ada
 
@@ -593,7 +557,7 @@ class Resource(object):
         """List all messages associated with this resource.
 
         :return: a list of :class:`GNAThub.Message`
-        :rtype: list[GNAThub.Message]
+        :rtype: collections.Iterable[GNAThub.Message]
         """
         return NotImplemented   # Implemented in Ada
 
@@ -603,8 +567,7 @@ class Resource(object):
 
         Do not create it if it doesn't exist.
 
-        :param name: the name of the resource to get
-        :type name: str
+        :param str name: the name of the resource to get
         :return: the :class:`GNAThub.Resource` of that name
         :rtype: GNAThub.Resource
         """
@@ -615,7 +578,7 @@ class Resource(object):
         """List all resources stored in the database.
 
         :return: the list of all :class:`GNAThub.Resource`
-        :rtype: list[GNAThub.Resource]
+        :rtype: collections.Iterable[GNAThub.Resource]
         """
         return NotImplemented   # Implemented in Ada
 
@@ -669,12 +632,9 @@ def _console_status(message, status, columns):
 
     Execution step ............................... [status]
 
-    :param message: the message to display
-    :type message: str
-    :param status: the status to display
-    :type status: str
-    :param columns: optional maximum column to use for display
-    :type columns: int
+    :param str message: the message to display
+    :param str status: the status to display
+    :param int columns: optional maximum column to use for display
     """
     width = columns - len(status) - 4
     if len(message) < width:
@@ -691,10 +651,9 @@ def _console_ok(message, columns=79):
 
     Execution step ............................... [PASSED]
 
-    :param message: the message to display
-    :type message: str
-    :param columns: optional maximum column to use for display (default to 79)
-    :type columns: int
+    :param str message: the message to display
+    :param int columns: optional maximum column to use for display (default to
+        79)
     """
     Console._status(message, 'PASSED', columns)
 
@@ -705,10 +664,9 @@ def _console_ko(message, columns=79):
 
     Execution step ............................... [FAILED]
 
-    :param message: the message to display
-    :type message: str
-    :param columns: optional maximum column to use for display (default to 79)
-    :type columns: int
+    :param str message: the message to display
+    :param int columns: optional maximum column to use for display (default to
+        79)
     """
     Console._status(message, 'FAILED', columns)
 
@@ -755,30 +713,24 @@ class Plugin(object):
     def info(self, message, *args):
         """Display an informative message, prefixed with the plug-in name.
 
-        :param message: the message to display
-        :type message: str
-        :param args: arguments of the `message` format string
-        :type args: list[*]
+        :param str message: the message to display
+        :param collections.Iterable args: format string arguments
         """
         Console.info(message % args, prefix=self.name)
 
     def warn(self, message, *args):
         """Display a warning message, prefixed with the plug-in name.
 
-        :param message: the message to display
-        :type message: str
-        :param args: arguments of the `message` format string
-        :type args: list[*]
+        :param str message: the message to display
+        :param collections.Iterable args: format string arguments
         """
         Console.warn(message % args, prefix=self.name)
 
     def error(self, message, *args):
         """Display an error message, prefixed with the plug-in name.
 
-        :param message: the message to display
-        :type message: str
-        :param args: arguments of the `message` format string
-        :type args: list[*]
+        :param str message: the message to display
+        :param collections.Iterable args: format string arguments
         """
         Console.error(message % args, prefix=self.name)
 
@@ -827,8 +779,7 @@ class Plugin(object):
         * :command:`GNAThub.EXEC_SUCCESS`: the plugin execution completed
           successfully
 
-        :param status: the new execution status
-        :type status: int
+        :param int status: the new execution status
         """
         if status not in (EXEC_FAILURE, EXEC_SUCCESS, NOT_EXECUTED):
             raise Error('invalid execution status code')
@@ -898,18 +849,13 @@ class Run(object):
 
         Use subprocess.Popen to spawn a process and returns its exit code.
 
-        :param name: the name of the executable
-        :type name: str
-        :param argv: the argument array
-        :type argv: list[str] | tuple[str]
-        :param env: Map containing the environment to pass through to the
-            process. If ``None``, ``os.environ`` is used.
-        :type env: dict[str, str]
-        :param workdir: the directory in which to execute the process. If
+        :param str name: the name of the executable
+        :param collections.Iterable[str] argv: the argument array
+        :param dict[str, str] env: Map containing the environment to pass
+            through to the process. If ``None``, ``os.environ`` is used.
+        :param str workdir: the directory in which to execute the process. If
             ``None``, use the current directory.
-        :type workdir: str
-        :param out: the log file to use
-        :type out: str
+        :param str out: the log file to use
         """
         self.name = name
         self.argv = self.expand_argv(name, argv)
@@ -957,10 +903,8 @@ class Run(object):
     def expand_argv(name, argv):
         """TODO(delay)
 
-        :param name: the name of the executable
-        :type name: str
-        :param argv: the argument array
-        :type argv: list[str] | tuple[str]
+        :param str name: the name of the executable
+        :param collections.Iterable[str] argv: the argument array
         """
         has_placeholder, expanded_argv = False, []
 
@@ -980,8 +924,7 @@ class Run(object):
     def quote(arg):
         """Return the quoted version of the given argument.
 
-        :param arg: the argument to quote
-        :type arg: str
+        :param str arg: the argument to quote
         :return: the quoted argument
         :rtype: str
         """

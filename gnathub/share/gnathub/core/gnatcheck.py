@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""GNAThub plug-in for the GNATcheck command-line tool
+"""GNAThub plug-in for the GNATcheck command-line tool.
 
 It exports the GNATcheck class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
@@ -29,7 +29,7 @@ from GNAThub import Console, Plugin, Reporter, Runner
 
 
 class GNATcheck(Plugin, Runner, Reporter):
-    """GNATcheck plugin for GNAThub
+    """GNATcheck plugin for GNAThub.
 
     Configures and executes GNATcheck, then analyzes the output.
     """
@@ -61,10 +61,10 @@ class GNATcheck(Plugin, Runner, Reporter):
         self.bulk_data = {}
 
     def __cmd_line(self):
-        """Creates GNATcheck command line arguments list
+        """Create GNATcheck command line arguments list.
 
         :return: the GNATcheck command line
-        :rtype: list[str]
+        :rtype: collections.Iterable[str]
         """
 
         cmd_line = [
@@ -78,7 +78,7 @@ class GNATcheck(Plugin, Runner, Reporter):
         return cmd_line
 
     def run(self):
-        """Executes GNATcheck
+        """Execute GNATcheck.
 
         Returns according to the success of the execution of the tool:
 
@@ -91,7 +91,7 @@ class GNATcheck(Plugin, Runner, Reporter):
         ).status in GNATcheck.VALID_EXIT_CODES else GNAThub.EXEC_FAILURE
 
     def report(self):
-        """Parses GNATcheck output file report
+        """Parse GNATcheck output file report.
 
         Returns according to the success of the analysis:
 
@@ -142,9 +142,9 @@ class GNATcheck(Plugin, Runner, Reporter):
             return GNAThub.EXEC_SUCCESS
 
     def __parse_line(self, regex):
-        """Parses a GNATcheck message line
+        """Parse a GNATcheck message line.
 
-        Add the message to the current database session.
+        Adds the message to the current database session.
 
         Retrieves following information:
 
@@ -153,8 +153,7 @@ class GNATcheck(Plugin, Runner, Reporter):
             * rule identification
             * message description
 
-        :param regex: the result of the MSG_RE regex
-        :type regex: re.RegexObject
+        :param re.RegexObject regex: the result of the MSG_RE regex
         """
 
         # The following Regex results are explained using this example.
@@ -173,18 +172,13 @@ class GNATcheck(Plugin, Runner, Reporter):
         self.__add_message(src, line, column, rule, message)
 
     def __add_message(self, src, line, column, rule_id, msg):
-        """Adds GNATcheck message to current session database
+        """Add GNATcheck message to current session database.
 
-        :param src: Message source file.
-        :type src: str
-        :param line: Message line number.
-        :type line: str
-        :param column: Message column number.
-        :type column: str
-        :param rule_id: Message's rule identifier.
-        :type rule_id: str
-        :param msg: Description of the message.
-        :type msg: str
+        :param str src: Message source file.
+        :param str line: Message line number.
+        :param str column: Message column number.
+        :param str rule_id: Message's rule identifier.
+        :param str msg: Description of the message.
         """
 
         # Cache the rules
@@ -210,7 +204,7 @@ class GNATcheck(Plugin, Runner, Reporter):
                 [message, int(line), int(column), int(column)]]
 
     def __do_bulk_insert(self):
-        """Insert the gnatcheck messages in bulk on each resource"""
+        """Insert the gnatcheck messages in bulk on each resource."""
 
         for src in self.bulk_data:
             base = GNAThub.Project.source_file(os.path.basename(src))

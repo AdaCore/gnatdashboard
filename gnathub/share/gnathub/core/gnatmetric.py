@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""GNAThub plug-in for the GNATmetric and LALmetric command-line tool
+"""GNAThub plug-in for the GNATmetric and LALmetric command-line tool.
 
 It exports the GNATmetric class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
@@ -29,7 +29,7 @@ from xml.etree.ElementTree import ParseError
 
 
 class GNATmetric(Plugin, Runner, Reporter):
-    """GNATmetric & LALmetric plugin for GNAThub"""
+    """GNATmetric & LALmetric plugin for GNAThub."""
 
     # GNATmetric exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
@@ -46,7 +46,7 @@ class GNATmetric(Plugin, Runner, Reporter):
 
     @property
     def _use_libadalang_tools(self):
-        """Whether to use GNATmetric or LALmetric
+        """Whether to use GNATmetric or LALmetric.
 
         :return: `True` if we should use LALmetric, `False` for GNATmetric
         :rtype: boolean
@@ -54,10 +54,10 @@ class GNATmetric(Plugin, Runner, Reporter):
         return 'USE_LIBADALANG_TOOLS' in os.environ
 
     def __cmd_line(self):
-        """Creates GNATmetric command line arguments list
+        """Create GNATmetric command line arguments list.
 
         :return: the GNATmetric command line
-        :rtype: list[str]
+        :rtype: collections.Iterable[str]
         """
 
         cmd_line = [
@@ -70,7 +70,7 @@ class GNATmetric(Plugin, Runner, Reporter):
         return cmd_line
 
     def run(self):
-        """Executes GNATmetric
+        """Execute GNATmetric.
 
         Returns according to the success of the execution of the tool:
 
@@ -83,7 +83,7 @@ class GNATmetric(Plugin, Runner, Reporter):
         ).status in GNATmetric.VALID_EXIT_CODES else GNAThub.EXEC_FAILURE
 
     def report(self):
-        """Parses GNATmetric XML report and save data to the database
+        """Parse GNATmetric XML report and save data to the database.
 
         Returns according to the success of the analysis:
 

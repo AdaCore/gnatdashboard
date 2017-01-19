@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2016, AdaCore
+# Copyright (C) 2013-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""Helper module
+"""Helper module.
 
 Factorize shared components between SonarConfig and SonarScanner.
 """
@@ -27,12 +27,12 @@ from GNAThub import Console
 
 
 def _escpath(path):
-    """Escape the given path to avoid issues on Windows"""
+    """Escape the given path to avoid issues on Windows."""
     return path.replace('\\', '\\\\')
 
 
 class SonarQube(object):
-    """SonarQube helper class
+    """SonarQube helper class.
 
     Provides a set of helper static methods used by both the SonarScanner
     plug-in and the SonarConfig plug-in.
@@ -46,7 +46,7 @@ class SonarQube(object):
 
     @staticmethod
     def workdir():
-        """Return the path to sonar execution directory
+        """Return the path to sonar execution directory.
 
         Located within GNAThub's root directory:
 
@@ -59,7 +59,7 @@ class SonarQube(object):
 
     @staticmethod
     def configuration():
-        """Return the path to the SonarQube Scanner configuration file
+        """Return the path to the SonarQube Scanner configuration file.
 
         Located in the SonarQube-specific directory:
 
@@ -72,7 +72,7 @@ class SonarQube(object):
 
     @staticmethod
     def src_mapping():
-        """Return the path to the mapping file
+        """Return the path to the mapping file.
 
         This file associates original sources path with the equivalent source
         in the local cache:
@@ -86,7 +86,7 @@ class SonarQube(object):
 
     @staticmethod
     def src_cache():
-        """Return the path to the local source cache
+        """Return the path to the local source cache.
 
         The source cache contains a copy of all analysed sources:
 
@@ -99,13 +99,13 @@ class SonarQube(object):
 
     @staticmethod
     def make_workdir():
-        """Create the SonarQube execution directory if it does not exist"""
+        """Create the SonarQube execution directory if it does not exist."""
         if not os.path.exists(SonarQube.workdir()):
             os.makedirs(SonarQube.workdir())
 
 
 class SonarScannerProperties(object):
-    """Builder object for the sonar-scanner configuration file"""
+    """Builder object for the sonar-scanner configuration file."""
 
     CONSOLE_NAME = 'sonar-gen-config'
 
@@ -119,63 +119,57 @@ class SonarScannerProperties(object):
         self._generate()
 
     def info(self, message):
-        """Display an informative message
+        """Display an informative message.
 
-        :param message: the message to display
-        :type message: str
+        :param str message: the message to display
         """
         Console.info(message, prefix=SonarScannerProperties.CONSOLE_NAME)
 
     def error(self, message):
-        """Display an error message
+        """Display an error message.
 
-        :param message: the message to display
-        :type message: str
+        :param str message: the message to display
         """
         Console.error(message, prefix=SonarScannerProperties.CONSOLE_NAME)
 
     @staticmethod
     def _key(key, module=None):
-        """Generate the full key
+        """Generate the full key.
 
-        :param key: the property key
-        :type key: str
+        :param str key: the property key
         :param module: module to which belongs the key (if ``None``, use the
             default sonar module)
-        :type module: str | None
+        :type module: str or None
         :return: the key
         :rtype: str
         """
         return '%s.%s' % ('%s.sonar' % module if module else 'sonar', key)
 
     def _set(self, key, value, module=None):
-        """Add a property in the sonar-scanner configuration
+        """Add a property in the sonar-scanner configuration.
 
-        :param key: the property key
-        :type key: str
-        :param value: the property value
-        :type value: str
+        :param str key: the property key
+        :param str value: the property value
         :param module: module to which belongs the key (if ``None``, use the
             default sonar module)
-        :type module: str | None
+        :type module: str or None
         """
         self.attributes[SonarScannerProperties._key(key, module)] = value
 
     def _set_dict(self, attributes, module=None):
-        """Add multiple properties in the sonar-scanner configuration
+        """Add multiple properties in the sonar-scanner configuration.
 
-        :param attributes: collection of attributes to set
-        :type attributes: dict[str, str]
+        :param dict[str, str] attributes: collection of attributes to set
         :param module: module to which belongs the key (if ``None``, use the
             default sonar module)
-        :type module: str | None
+        :type module: str or None
         """
         for key, value in attributes.items():
             self.log.debug('%s = %s', key, value)
             self._set(key, value, module)
 
     def _set_project_customizable_dict(self, attributes, module=None):
-        """Add multiple properties in the sonar-scanner configuration
+        """Add multiple properties in the sonar-scanner configuration.
 
         Those properties can be user-customizable via the project file.
 
@@ -183,7 +177,7 @@ class SonarScannerProperties(object):
         :type attributes: dict[str, (str, str)]
         :param module: module to which belongs the key (if ``None``, use the
             default sonar module)
-        :type module: str | None
+        :type module: str or None
         """
         for key, value in attributes.items():
             # Unpack the tuple containing the default value and the custom
@@ -201,20 +195,18 @@ class SonarScannerProperties(object):
             self._set(key, project_property or value, module)
 
     def _get(self, key, module=None):
-        """Return the value of a property in the sonar-scanner configuration
+        """Return the value of a property in the sonar-scanner configuration.
 
-        :param key: the property key
-        :type key: str
-        :param module: module to which belongs the key (if ``None``, use the
-            default sonar module)
-        :type module: str
+        :param str key: the property key
+        :param str module: module to which belongs the key (if ``None``, use
+            the default sonar module)
         :return: the value of the property ``key``
         :rtype: str
         """
         return self.attributes.get(SonarScannerProperties._key(key, module))
 
     def _generate(self):
-        """Generate the :file:`sonar-project.properties` configuration
+        """Generate the :file:`sonar-project.properties` configuration.
 
         Do not create the file yet. See :meth:`write` for this.
         """
@@ -232,10 +224,9 @@ class SonarScannerProperties(object):
 
     @staticmethod
     def _generate_customizable_attr(project_name):
-        """Customizable attributes for :file:`sonar-project.properties`
+        """Customizable attributes for :file:`sonar-project.properties`.
 
-        :param project_name: the project name
-        :type project_name: str
+        :param str project_name: the project name
         :return: the attributes and their value
         :rtype: collections.OrderedDict
         """
@@ -247,16 +238,13 @@ class SonarScannerProperties(object):
         ])
 
     def _generate_single_module(self, db_path, project_name, suffixes):
-        """Generate part of the :file:`sonar-project.properties` configuration
+        """Generate part of the :file:`sonar-project.properties` configuration.
 
         Do not create the file yet. See :meth:`write` for this.
 
-        :param db_path: full path to the DB
-        :type db_path: str
-        :param project_name: project name
-        :type project_name: str
-        :param suffixes: list of Ada extensions
-        :type suffixes: list[str]
+        :param str db_path: full path to the DB
+        :param str project_name: project name
+        :param collections.Iterable[str] suffixes: list of Ada extensions
         """
         source_dirs = GNAThub.Project.source_dirs()[project_name]
         sources, _ = self._generate_source_dirs({project_name: source_dirs})
@@ -275,16 +263,13 @@ class SonarScannerProperties(object):
         self._set_dict(non_customizable_attributes)
 
     def _generate_multi_module(self, db_path, project_name, suffixes):
-        """Generate part of the :file:`sonar-project.properties` configuration
+        """Generate part of the :file:`sonar-project.properties` configuration.
 
         Do not create the file yet. See :meth:`write` for this.
 
-        :param db_path: full path to the DB
-        :type db_path: str
-        :param project_name: project name
-        :type project_name: str
-        :param suffixes: list of Ada extensions
-        :type suffixes: list[str]
+        :param str db_path: full path to the DB
+        :param str project_name: project name
+        :param collections.Iterable[str] suffixes: list of Ada extensions
         """
         modules = {k: v for k, v in GNAThub.Project.source_dirs().items() if v}
         _, modules = self._generate_source_dirs(modules)
@@ -316,7 +301,7 @@ class SonarScannerProperties(object):
             self._set_dict(module_attributes, module=subproject_name.lower())
 
     def _generate_source_dirs(self, modules):
-        """Generate the source directories configuration
+        """Generate the source directories configuration.
 
         Copy over all sources in a temporary directory before running the Sonar
         Scanner. This is to work around recent versions of SonarQube source
@@ -422,7 +407,7 @@ class SonarScannerProperties(object):
         return root_src_dir, new_modules_mapping
 
     def write(self, properties_fname=None):
-        """Dump the SonarQube Scanner configuration files
+        """Dump the SonarQube Scanner configuration files.
 
         Creates the following configuration file:
 
@@ -432,16 +417,15 @@ class SonarScannerProperties(object):
 
         :param properties_fname: the configuration file name (if ``None``, use
             :meth:`SonarQube.configuration()`)
-        :type properties_fname: str | None
+        :type properties_fname: str or None
         """
         def _escape(key):
-            """Escape ``key``
+            """Escape ``key``.
 
             Escapes the given key to comply with java.util.Properties parser
             (see the ``java.util.Properties.load`` method documentation).
 
-            :param key: the key to escape
-            :type key: str
+            :param str key: the key to escape
             :return: the escaped key
             :rtype: str
             :see: docs.oracle.com/javase/8/docs/api/java/util/Properties.html

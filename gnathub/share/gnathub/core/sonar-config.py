@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""GNAThub plug-in for the generation of SonarQube Scanner configuration file
+"""GNAThub plug-in for the generation of SonarQube Scanner configuration file.
 
 It exports the SonarConfig class which implements the :class:`GNAThub.Plugin`
 interface. This allows GNAThub's plug-in scanner to automatically find this
@@ -26,7 +26,7 @@ from GNAThub import Plugin, Runner
 
 
 class SonarConfig(Plugin, Runner):
-    """SonarConfig plugin for GNAThub"""
+    """SonarConfig plugin for GNAThub."""
 
     def setup(self):
         super(SonarConfig, self).setup()
@@ -37,7 +37,7 @@ class SonarConfig(Plugin, Runner):
         return 'sonar-config'
 
     def run(self):
-        """Generate SonarQube Scanner configuration file"""
+        """Generate SonarQube Scanner configuration file."""
 
         self.info('generate %s' % SonarQube.CONFIGURATION)
         try:

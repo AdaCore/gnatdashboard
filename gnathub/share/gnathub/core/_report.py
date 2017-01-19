@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2016, AdaCore
+# Copyright (C) 2016-2017, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""GNAThub reporters
+"""GNAThub reporters.
 
 It massages the collected results of the various input tools in a common format
 prior to export.
@@ -35,7 +35,7 @@ from pygments.formatters import HtmlFormatter
 
 
 def count_extra_newlines(lines):
-    """Count the number of leading and trailing newlines
+    """Count the number of leading and trailing newlines.
 
     :rtype: int, int
     """
@@ -54,19 +54,19 @@ def count_extra_newlines(lines):
 
 
 class CoverageStatus(Enum):
-    """Coverage status enumeration"""
+    """Coverage status enumeration."""
 
     NO_CODE, COVERED, NOT_COVERED, PARTIALLY_COVERED = range(4)
 
 
 class MessageRanking(Enum):
-    """Ranking values for messages collected and reported by GNAThub"""
+    """Ranking values for messages collected and reported by GNAThub."""
 
     INFO, MINOR, MAJOR, CRITICAL, BLOCKER = range(5)
 
 
 class _HtmlFormatter(HtmlFormatter):
-    """Custom implementation of the Pygments' HTML formatter"""
+    """Custom implementation of the Pygments' HTML formatter."""
 
     def wrap(self, source, _):
         # The default wrap() implementation adds a <div> and a <pre> tag.
@@ -74,7 +74,7 @@ class _HtmlFormatter(HtmlFormatter):
 
 
 class ReportBuilder(object):
-    """Report builder"""
+    """Report builder."""
 
     def __init__(self):
         rules = GNAThub.Rule.list()
@@ -85,7 +85,7 @@ class ReportBuilder(object):
         self._tools_by_name = {tool.name.lower(): tool for tool in tools}
 
     def _generate_source_tree(self, transform=None):
-        """Generate the initial project structure
+        """Generate the initial project structure.
 
         {
             "project_name_1": {
@@ -104,18 +104,18 @@ class ReportBuilder(object):
             filename) and returns any structure. This callback is used to
             populate the leaves of the above tree. Defaults to returning the
             source filename.
-        :type transform: Function | None
+        :type transform: Function or None
         :return: a dictionary listing the project sources
-        :rtype: dict[str,dict[str,list[*]]]
+        :rtype: dict[str, dict[str, list[*]]]
         """
 
         def reduce_source_dirs(sources):
-            """Compute the list of source directories from source files
+            """Compute the list of source directories from source files.
 
-            :param sources: the list of source files' absolute path
-            :type sources: list[str]
+            :param collections.Iterable[str] sources: the list of source files'
+                absolute path
             :return: the list of unique source directories' absolute path
-            :rtype: list[str]
+            :rtype: collections.Iterable[str]
             """
 
             return list(set((
@@ -127,7 +127,7 @@ class ReportBuilder(object):
             lambda project_name, source_dir, filename: filename
         )
 
-        # TODO(charly): it might be worth considering exporting this function
+        # TODO(delay): it might be worth considering exporting this function
         # or a more generic version of it from the GNAThub module.
         return {
             project: {
@@ -143,13 +143,12 @@ class ReportBuilder(object):
 
     @classmethod
     def _decorate_dict(cls, obj, extra=None):
-        """Decorate a Python dictionary with additional properties
+        """Decorate a Python dictionary with additional properties.
 
-        :param obj: the Python dictionary to decorate
-        :type obj: dict[str,*]
+        :param dict[str, *] obj: the Python dictionary to decorate
         :param extra: extra fields to decorate the encoded object with
-        :type extra: dict | None
-        :rtype: dict[str,*]
+        :type extra: dict or None
+        :rtype: dict[str, *]
         """
 
         if extra:
@@ -158,13 +157,12 @@ class ReportBuilder(object):
 
     @classmethod
     def _encode_tool(cls, tool, extra=None):
-        """JSON-encode a tool
+        """JSON-encode a tool.
 
-        :param tool: the tool to encode
-        :type tool: GNAThub.Tool
+        :param GNAThub.Tool tool: the tool to encode
         :param extra: extra fields to decorate the encoded object with
-        :type extra: dict | None
-        :rtype: dict[str,*]
+        :type extra: dict or None
+        :rtype: dict[str, *]
         """
 
         return cls._decorate_dict({
@@ -174,15 +172,13 @@ class ReportBuilder(object):
 
     @classmethod
     def _encode_rule(cls, rule, tool, extra=None):
-        """JSON-encode a rule
+        """JSON-encode a rule.
 
-        :param rule: the rule to encode
-        :type rule: GNAThub.Rule
-        :param tool: the tool associated with the rule
-        :type tool: GNAThub.Tool
+        :param GNAThub.Rule rule: the rule to encode
+        :param GNAThub.Tool tool: the tool associated with the rule
         :param extra: extra fields to decorate the encoded object with
-        :type extra: dict | None
-        :rtype: dict[str,*]
+        :type extra: dict or None
+        :rtype: dict[str, *]
         """
 
         return cls._decorate_dict({
@@ -195,12 +191,11 @@ class ReportBuilder(object):
 
     @classmethod
     def _encode_message_property(cls, prop, extra=None):
-        """JSON-encode a message property
+        """JSON-encode a message property.
 
-        :param prop: the property associated with the message
-        :type prop: GNAThub.Property
+        :param GNAThub.Property prop: the property associated with the message
         :param extra: extra fields to decorate the encoded object with
-        :type extra: dict | None
+        :type extra: dict or None
         :rtype: dict[str,*]
         """
 
@@ -212,17 +207,14 @@ class ReportBuilder(object):
 
     @classmethod
     def _encode_message(cls, msg, rule, tool, extra=None):
-        """JSON-encode a message
+        """JSON-encode a message.
 
-        :param msg: the message to encode
-        :type msg: GNAThub.Message
-        :param rule: the rule associated with the message
-        :type rule: GNAThub.Rule
-        :param tool: the tool associated with the rule
-        :type tool: GNAThub.Tool
+        :param GNAThub.Message msg: the message to encode
+        :param GNAThub.Rule rule: the rule associated with the message
+        :param GNAThub.Tool tool: the tool associated with the rule
         :param extra: extra fields to decorate the encoded object with
-        :type extra: dict | None
-        :rtype: dict[str,*]
+        :type extra: dict or None
+        :rtype: dict[str, *]
         """
 
         return cls._decorate_dict({
@@ -237,15 +229,13 @@ class ReportBuilder(object):
         }, extra)
 
     def _encode_coverage(cls, msg, tool, extra=None):
-        """JSON-encode coverage information
+        """JSON-encode coverage information.
 
-        :param msg: the message to encode
-        :type msg: GNAThub.Message
-        :param tool: the coverage tool that generated this message
-        :type tool: GNAThub.Tool
+        :param GNAThub.Message msg: the message to encode
+        :param GNAThub.Tool tool: the coverage tool that generated this message
         :param extra: extra fields to decorate the encoded object with
-        :type extra: dict | None
-        :rtype: dict[str,*]
+        :type extra: dict or None
+        :rtype: dict[str, *]
         """
 
         hits, status = -1, CoverageStatus.NO_CODE
@@ -261,13 +251,11 @@ class ReportBuilder(object):
     def generate_src_hunk(self, project_name, source_file):
         """Generate the JSON-encoded representation of `source_file`
 
-        :param project_name: the name of the project the source if from
-        :type project_name: str
-        :param source_file: the full path to the source file
-        :type source_file: str
+        :param str project_name: the name of the project the source if from
+        :param str source_file: the full path to the source file
         :return: the JSON-encoded representation of `source_file`
-        :rtype: dict[str,*]
-        :raise: IOError
+        :rtype: dict[str, *]
+        :raises: IOError
         """
 
         assert os.path.isfile(source_file), '{}: not such file ({})'.format(
@@ -389,34 +377,31 @@ class ReportBuilder(object):
         return src_hunk
 
     def generate_index(self):
-        """Generate the report index
+        """Generate the report index.
 
         The index contains top-level information such as project name, database
         location, ... as well as the list of sub-project and their source
         directories and source files, along with some important metrics.
 
         :return: the JSON-encoded index
-        :rtype: dict[str,*]
+        :rtype: dict[str, *]
         """
 
         """Map tool ID to number of message generated project-wide
 
-        :type: dict[int,int]
+        :type: dict[int, int]
         """
         project_msg_count = collections.defaultdict(int)
 
         def _aggregate_metrics(project, source_dir, filename):
-            """Collect metrics about the given source file
+            """Collect metrics about the given source file.
 
-            :param project: the name of the project the source belongs to
-            :type project: str
-            :param source_dir: the full path to the source directory containing
-                the source file
-            :type source_dir: str
-            :param filename: the basename of the source file
-            :type filename: str
+            :param str project: the name of the project the source belongs to
+            :param str source_dir: the full path to the source directory
+                containing the source file
+            :param str filename: the basename of the source file
             :return: the dictionary containing metrics for `filename`
-            :rtype: dict[str,*]
+            :rtype: dict[str, *]
             """
 
             # Computes file-level metrics.
@@ -446,14 +431,13 @@ class ReportBuilder(object):
             }
 
         def _restructure_module(name, module):
-            """Transform the module tree
+            """Transform the module tree.
 
-            :param name: the name of the module
-            :type name: str
-            :param module: the module dictionary to transform
-            :type module: dict[str,list[*]]
+            :param str name: the name of the module
+            :param dict[str, list[*]] module: the module dictionary to
+                transform
             :return: the newly restructured module
-            :rtype: dict[str,*]
+            :rtype: dict[str, *]
             """
 
             source_dirs, module_msg_count = {}, collections.defaultdict(int)

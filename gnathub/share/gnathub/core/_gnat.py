@@ -12,7 +12,7 @@
 # COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
 # of the license.
 
-"""Provides common components to GNAT Pro Tool Suite"""
+"""Provide common components to GNAT Pro Tool Suite."""
 
 # A source location regex pattern
 SLOC_PATTERN = \
