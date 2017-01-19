@@ -10,4 +10,3 @@ describe('Unescape HTML', () => {
         expect(unescapeHTML('')).toEqual('');
     });
 });
-

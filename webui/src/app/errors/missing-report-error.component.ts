@@ -5,4 +5,4 @@ import { Component } from '@angular/core';
     templateUrl: './missing-report-error.component.html',
     styleUrls: [ 'errors.scss' ]
 })
-export class MissingReportError {}
+export class MissingReportErrorComponent {}

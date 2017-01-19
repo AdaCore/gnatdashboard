@@ -3,32 +3,38 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
-import { RouterModule } from '@angular/router';
-import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
+import { RouterModule, PreloadAllModules } from '@angular/router';
+import {
+    removeNgStyles, createNewHosts, createInputTransfer
+} from '@angularclass/hmr';
 
 /*
  * Platform and Environment providers/directives/pipes
  */
 import { ENV_PROVIDERS } from './environment';
 import { ROUTES } from './main-responder.routes';
-import { MainResponder } from './main-responder.component';
+import { MainResponderComponent } from './main-responder.component';
 import { APP_RESOLVER_PROVIDERS } from './main-responder.resolver';
 import { AppState, InteralStateType } from './main-responder.service';
 
-import { About } from './about';
+import { AboutComponent } from './about';
 import { ArrayNaturalSortPipe } from './array.pipe';
-import { AnnotatedSource } from './annotated-source';
-import { AutoScroll } from './scroll.directive';
+import { AnnotatedSourceComponent } from './annotated-source';
+import { AutoScrollDirective } from './scroll.directive';
 import { CountPipe } from './count.pipe';
-import { InlineComment } from './inline-comment';
-import { Spinner } from './spinner';
-import { MapKeysPipe, MapValuesPipe, NotEmptyPipe } from './object.pipe';
-import { MissingSourceError, MissingReportError } from './errors';
-import { NoContent } from './no-content';
-import { OptionSelector } from './option-selector';
-import { Project } from './project';
-import { Report } from './report';
-import { SourceList } from './source-list';
+import { InlineCommentComponent } from './inline-comment';
+import { SpinnerComponent } from './spinner';
+import { MapKeysPipe } from './map-keys.pipe';
+import { MapValuesPipe } from './map-values.pipe';
+import { NotEmptyPipe } from './not-empty.pipe';
+import {
+    MissingSourceErrorComponent, MissingReportErrorComponent
+} from './errors';
+import { NoContentComponent } from './no-content';
+import { OptionSelectorComponent } from './option-selector';
+import { ProjectComponent } from './project';
+import { ReportComponent } from './report';
+import { SourceListComponent } from './source-list';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -38,6 +44,7 @@ const APP_PROVIDERS = [
 
 type StoreType = {
     state: InteralStateType,
+    restoreInputValues: () => void,
     disposeOldHosts: () => void
 };
 
@@ -45,33 +52,36 @@ type StoreType = {
  * `AppModule` is the main entry point into Angular2's bootstrap process.
  */
 @NgModule({
-    bootstrap: [MainResponder],
+    bootstrap: [ MainResponderComponent ],
     declarations: [
-        MainResponder,
-        About,
+        MainResponderComponent,
+        AboutComponent,
         ArrayNaturalSortPipe,
-        AnnotatedSource,
-        AutoScroll,
+        AnnotatedSourceComponent,
+        AutoScrollDirective,
         CountPipe,
-        InlineComment,
-        Spinner,
+        InlineCommentComponent,
+        SpinnerComponent,
         MapKeysPipe,
         MapValuesPipe,
-        MissingReportError,
-        MissingSourceError,
-        NoContent,
+        MissingReportErrorComponent,
+        MissingSourceErrorComponent,
+        NoContentComponent,
         NotEmptyPipe,
-        OptionSelector,
-        Project,
-        Report,
-        SourceList
+        OptionSelectorComponent,
+        ProjectComponent,
+        ReportComponent,
+        SourceListComponent
     ],
     imports: [
         BrowserModule,
         FormsModule,
         HttpModule,
         MaterialModule.forRoot(),
-        RouterModule.forRoot(ROUTES, {useHash: true})
+        RouterModule.forRoot(ROUTES, {
+            useHash: true,
+            preloadingStrategy: PreloadAllModules
+        })
     ],
     providers: [
         ENV_PROVIDERS,
@@ -82,26 +92,34 @@ export class AppModule {
     constructor(public appRef: ApplicationRef, public appState: AppState) {
     }
 
-    hmrOnInit(store: StoreType) {
-        if (!store || !store.state) return;
-        console.log('HMR store', store);
+    public hmrOnInit(store: StoreType) {
+        if (!store || !store.state) {
+            return;
+        }
+        console.log('HMR store', JSON.stringify(store, null, 2));
         this.appState._state = store.state;
+        if ('restoreInputValues' in store) {
+            let restoreInputValues = store.restoreInputValues;
+            setTimeout(restoreInputValues);
+        }
         this.appRef.tick();
         delete store.state;
+        delete store.restoreInputValues;
     }
 
-    hmrOnDestroy(store: StoreType) {
+    public hmrOnDestroy(store: StoreType) {
         const cmpLocation = this.appRef.components.map(
             cmp => cmp.location.nativeElement);
         // recreate elements
         const state = this.appState._state;
         store.state = state;
         store.disposeOldHosts = createNewHosts(cmpLocation);
+        store.restoreInputValues = createInputTransfer();
         // remove styles
         removeNgStyles();
     }
 
-    hmrAfterDestroy(store: StoreType) {
+    public hmrAfterDestroy(store: StoreType) {
         // display new elements
         store.disposeOldHosts();
         delete store.disposeOldHosts;

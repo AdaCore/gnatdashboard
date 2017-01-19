@@ -21,13 +21,13 @@
             <dd>{{ report.creation_time * 1000 | date }}</dd>
 
             <dt>Total modules</dt>
-            <dd>{{ report.modules | count }}</dd>
+            <dd>{{ report.modules | dshCount }}</dd>
 
             <dt>Total sources</dt>
             <dd>{{ sourceCount() }}</dd>
 
             <dt>Total plugins executed</dt>
-            <dd>{{ report.tools | count }}</dd>
+            <dd>{{ report.tools | dshCount }}</dd>
         </dl>
     </div>
 </div>

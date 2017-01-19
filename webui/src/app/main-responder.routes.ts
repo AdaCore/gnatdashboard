@@ -1,18 +1,20 @@
-import { Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 
-import { About } from './about';
-import { AnnotatedSource } from './annotated-source';
-import { NoContent } from './no-content';
-import { Project } from './project';
-import { Report } from './report';
-import { SourceList } from './source-list';
+import { AboutComponent } from './about';
+import { AnnotatedSourceComponent } from './annotated-source';
+import { NoContentComponent } from './no-content';
+import { ProjectComponent } from './project';
+import { ReportComponent } from './report';
+import { SourceListComponent } from './source-list';
+
+import { DataResolver } from './main-responder.resolver';
 
 export const ROUTES: Routes = [
-    { path: '',                 component: Report },
-    { path: 'report',           component: Report },
-    { path: 'project/:name',    component: Project },
-    { path: 'sources',          component: SourceList },
-    { path: 'source/:filename', component: AnnotatedSource },
-    { path: 'about',            component: About },
-    { path: '**',               component: NoContent }
+    { path: '',                 component: ReportComponent },
+    { path: 'report',           component: ReportComponent },
+    { path: 'project/:name',    component: ProjectComponent },
+    { path: 'sources',          component: SourceListComponent },
+    { path: 'source/:filename', component: AnnotatedSourceComponent },
+    { path: 'about',            component: AboutComponent },
+    { path: '**',               component: NoContentComponent }
 ];

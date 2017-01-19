@@ -10,7 +10,7 @@ interface Array<T> {
  *      index |from|.
  * @returns The new length of the array.
  */
-Array.prototype.remove = function(from: number, to?: number): number {
+Array.prototype.remove = (from: number, to?: number): number => {
     let rest = this.slice((to || from) + 1 || this.length);
     this.length = from < 0 ? this.length + from : from;
     return this.push.apply(this, rest);

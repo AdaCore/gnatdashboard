@@ -11,13 +11,13 @@ import 'rxjs/add/operator/catch';
 export class GNAThubService {
     constructor(private http: Http) {}
 
-    getReport(): Observable<IGNAThubReport> {
+    public getReport(): Observable<IGNAThubReport> {
         return this.http.get('data/report.json')
                         .map(this.handleResults)
                         .catch(this.handleError);
     }
 
-    getSource(filename): Observable<IGNAThubBlob> {
+    public getSource(filename): Observable<IGNAThubBlob> {
         return this.http.get(`data/src/${filename}.json`)
                         .map(this.handleResults)
                         .catch(this.handleError);

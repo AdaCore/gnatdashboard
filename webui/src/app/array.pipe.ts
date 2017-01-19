@@ -6,9 +6,9 @@ import * as naturalSort from 'natural-sort';
  *
  * @see https://en.wikipedia.org/wiki/Natural_sort_order
  */
-@Pipe({ name: 'naturalSort'})
+@Pipe({ name: 'dshNaturalSort'})
 export class ArrayNaturalSortPipe implements PipeTransform {
-    transform(arr: string[], args: any[] = null): string[] {
+    public transform(arr: string[], args: any[] = null): string[] {
         return arr.sort(naturalSort({ caseSensitive: true }));
     }
 }

@@ -11,4 +11,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
         'pygments-github.scss'
     ]
 })
-export class MainResponder {}
+export class MainResponderComponent {}

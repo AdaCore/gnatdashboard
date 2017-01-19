@@ -6,8 +6,7 @@ import { IGNAThubMessage } from 'gnat';
     templateUrl: './inline-comment.component.html',
     styleUrls: [ 'inline-comment.component.scss' ]
 })
-export class InlineComment {
+export class InlineCommentComponent {
     // TODO(delay): @Input() message: IGNAThubMessage = null;
-    @Input() message: any = null;
+    @Input() public message: any = null;
 }
-

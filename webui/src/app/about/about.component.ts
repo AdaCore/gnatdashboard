@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { GNAThubService } from '../gnathub.service';
 import { IGNAThubReport } from 'gnat';
@@ -11,13 +11,13 @@ import '../array/operator/sum';
     styleUrls: [ 'about.component.scss' ],
     providers: [ GNAThubService ]
 })
-export class About {
-    private report: IGNAThubReport = null;
-    private isReportFetchError: boolean = false;
+export class AboutComponent implements OnInit {
+    public report: IGNAThubReport = null;
+    public isReportFetchError: boolean = false;
 
     constructor(private gnathub: GNAThubService) {}
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.gnathub.getReport().subscribe(
             report => this.report = report,
             error => this.isReportFetchError = !!error);
@@ -26,7 +26,7 @@ export class About {
     /**
      * @return The total number of sources in the project.
      */
-    sourceCount(): number {
+    public sourceCount(): number {
         if (!this.report) {
             return 0;
         }

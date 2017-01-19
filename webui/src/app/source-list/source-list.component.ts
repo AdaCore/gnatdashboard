@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { GNAThubService } from '../gnathub.service';
 import { IGNAThubReport } from 'gnat';
@@ -9,13 +9,13 @@ import { IGNAThubReport } from 'gnat';
     styleUrls: [ 'source-list.component.scss' ],
     providers: [ GNAThubService ]
 })
-export class SourceList {
-    private report: IGNAThubReport = null;
-    private isReportFetchError: boolean = false;
+export class SourceListComponent implements OnInit {
+    public report: IGNAThubReport = null;
+    public isReportFetchError: boolean = false;
 
     constructor(private gnathub: GNAThubService) {}
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.gnathub.getReport().subscribe(
             report => this.report = report,
             error => this.isReportFetchError = !!error);

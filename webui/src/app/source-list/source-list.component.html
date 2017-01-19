@@ -9,13 +9,13 @@
     <!-- Report display -->
     <div *ngIf="report">
         <h1>Source list <small>{{ report.project }}</small></h1>
-        <div *ngFor="let module of report.modules | mapKeys" class="module">
+        <div *ngFor="let module of report.modules | dshMapKeys" class="module">
             <table>
                 <thead>
                     <th class="module-name">{{ module }}</th>
                 </thead>
                 <tbody>
-                    <template ngFor let-dir [ngForOf]="report.modules[module].source_dirs | mapKeys">
+                    <template ngFor let-dir [ngForOf]="report.modules[module].source_dirs | dshMapKeys">
                         <tr class="source-directory">
                             <td>{{ dir }}</td>
                         </tr>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
@@ -18,11 +18,11 @@ type Annotation = { line: IGNAThubBlobLine; msg: IGNAThubMessage };
     styleUrls: [ 'annotated-source.component.scss' ],
     providers: [ GNAThubService ]
 })
-export class AnnotatedSource {
-    private filename: string = null;
-    private blob: IGNAThubBlob = null;
-    private isBlobFetchError: boolean = false;
-    private annotations: Annotation[] = null;
+export class AnnotatedSourceComponent implements OnInit {
+    public filename: string = null;
+    public blob: IGNAThubBlob = null;
+    public isBlobFetchError: boolean = false;
+    public annotations: Annotation[] = null;
 
     private filters: any = null;
 
@@ -31,7 +31,7 @@ export class AnnotatedSource {
         private route: ActivatedRoute,
         private sanitizer: DomSanitizer) {}
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.filename = this.route.snapshot.params['filename'];
         this.gnathub.getSource(this.filename).subscribe(
             blob => {
@@ -50,7 +50,7 @@ export class AnnotatedSource {
                 let annotations: Annotation[] = [];
                 if (blob.lines) {
                     blob.lines.forEach(line => line.messages.forEach(msg => {
-                        annotations.push({ line: line, msg: msg });
+                        annotations.push({ line, msg });
                     }));
                 }
                 this.blob = blob;
@@ -63,7 +63,7 @@ export class AnnotatedSource {
      * @param metricId The identifier of the metric to look for.
      * @return Whether such a metric has been computed for this file.
      */
-    private hasMetric(metricId: string): boolean {
+    public hasMetric(metricId: string): boolean {
         for (let metric of this.blob.metrics) {
             if (metric.rule.identifier === metricId) {
                 return true;
@@ -76,13 +76,132 @@ export class AnnotatedSource {
      * @param metricId The identifier of the metric to look for.
      * @return The value of the metric if found, |null| otherwise.
      */
-    private getMetricValue(metricId: string): string {
+    public getMetricValue(metricId: string): string {
         for (let metric of this.blob.metrics) {
             if (metric.rule.identifier === metricId) {
                 return metric.message;
             }
         }
         return null;
+    }
+
+    /**
+     * @return The total number of displayed messages.
+     */
+    public getMessageDisplayedCount(): number {
+        return this.reduceMessages((count, message) => {
+            return count + (this.shouldDisplayMessage(message) ? 1 : 0);
+        });
+    }
+
+    /**
+     * @param tool The tool which messages this function counts.
+     * @return The total number of messages displayed for a given tool.
+     */
+    public toolMessageCount = (tool: IGNAThubTool): number => {
+        return this.reduceMessages((count, message) => {
+            if (tool.id === message.rule.tool.id &&
+                this.blob.tools[message.rule.tool.id].ui_selected &&
+                this.shouldDisplayMessage(message))
+            {
+                return count + 1;
+            }
+            return count;
+        });
+    }
+
+    /**
+     * @param rule The rule which messages this function counts.
+     * @return The total number of messages displayed for a given rule.
+     */
+    public ruleMessageCount = (rule: IGNAThubRule): number => {
+        return this.reduceMessages((count, message) => {
+            if (rule.id === message.rule.id &&
+                this.blob.rules[message.rule.id].ui_selected &&
+                this.shouldDisplayMessage(message))
+            {
+                return count + 1;
+            }
+            return count;
+        });
+    }
+
+    /**
+     * @param property The property which messages this function counts.
+     * @return The total number of messages displayed for a given property.
+     */
+    public propertyMessageCount = (property: IGNAThubProperty): number => {
+        return this.reduceMessages((count, message) => {
+            if (message.properties.some(p => p.id === property.id) &&
+                this.blob.properties[property.id].ui_selected &&
+                this.shouldDisplayMessage(message))
+            {
+                return count + 1;
+            }
+            return count;
+        });
+    }
+
+    /**
+     * @param message The message to display or not.
+     * @return Whether we should display the message given the current selection
+     *      of tools/rules/properties.
+     */
+    public shouldDisplayMessage(message: IGNAThubMessage): boolean {
+        return this.blob.tools[message.rule.tool.id].ui_selected &&
+            this.blob.rules[message.rule.id].ui_selected &&
+            (!message.properties.length || message.properties.some(property => {
+                return this.blob.properties[property.id].ui_selected;
+            }));
+    }
+
+    /**
+     * Mark the input string as safe HTML (for use with [innerHTML]).
+     *
+     * @param value The input string.
+     * @return The safe HTML.
+     */
+    public bypassSanitizer(value: string): SafeHtml {
+        return this.sanitizer.bypassSecurityTrustHtml(value);
+    }
+
+    /**
+     *
+     * @param line The line for which to check messages.
+     * @return Whether some messages should be displayed.
+     */
+    public hasDisplayableMessage(line: number): boolean {
+        if (!this.blob || !this.blob.lines) {
+            return false;
+        }
+        return this.blob.lines[line - 1].messages.some(
+            message => this.shouldDisplayMessage(message));
+    }
+
+    /**
+     * Return the list of messages attached to the given line.
+     *
+     * @param line The line for which to list messages.
+     * @return The list of messages.
+     */
+    public messages(line: number): IGNAThubMessage[] {
+        if (!this.blob || !this.blob.lines) {
+            return [];
+        }
+        return this.blob.lines[line - 1].messages;
+    }
+
+    /**
+     * Return the coverage value for for the given line.
+     *
+     * @param line The line for which to get coverage information.
+     * @return The coverage value.
+     */
+    public coverage(line: number): { status: CoverageStatus; hits: number } {
+        if (!this.blob || !this.blob.lines) {
+            return null;
+        }
+        return this.blob.lines[line - 1].coverage || { status: '', hits: 0 };
     }
 
     /**
@@ -104,124 +223,5 @@ export class AnnotatedSource {
             return count +
                 this.messages(line.number).reduce(callback, initialValue);
         }, 0 /* initialValue */);
-    }
-
-    /**
-     * @return The total number of displayed messages.
-     */
-    private getMessageDisplayedCount(): number {
-        return this.reduceMessages((count, message) => {
-            return count + (this.shouldDisplayMessage(message) ? 1 : 0);
-        });
-    }
-
-    /**
-     * @param tool The tool which messages this function counts.
-     * @return The total number of messages displayed for a given tool.
-     */
-    private toolMessageCount = (tool: IGNAThubTool): number => {
-        return this.reduceMessages((count, message) => {
-            if (tool.id === message.rule.tool.id &&
-                this.blob.tools[message.rule.tool.id].ui_selected &&
-                this.shouldDisplayMessage(message))
-            {
-                return count + 1;
-            }
-            return count;
-        });
-    }
-
-    /**
-     * @param rule The rule which messages this function counts.
-     * @return The total number of messages displayed for a given rule.
-     */
-    private ruleMessageCount = (rule: IGNAThubRule): number => {
-        return this.reduceMessages((count, message) => {
-            if (rule.id === message.rule.id &&
-                this.blob.rules[message.rule.id].ui_selected &&
-                this.shouldDisplayMessage(message))
-            {
-                return count + 1;
-            }
-            return count;
-        });
-    }
-
-    /**
-     * @param property The property which messages this function counts.
-     * @return The total number of messages displayed for a given property.
-     */
-    private propertyMessageCount = (property: IGNAThubProperty): number => {
-        return this.reduceMessages((count, message) => {
-            if (message.properties.some(p => p.id === property.id) &&
-                this.blob.properties[property.id].ui_selected &&
-                this.shouldDisplayMessage(message))
-            {
-                return count + 1;
-            }
-            return count;
-        });
-    }
-
-    /**
-     * @param message The message to display or not.
-     * @return Whether we should display the message given the current selection
-     *      of tools/rules/properties.
-     */
-    private shouldDisplayMessage(message: IGNAThubMessage): boolean {
-        return this.blob.tools[message.rule.tool.id].ui_selected &&
-            this.blob.rules[message.rule.id].ui_selected &&
-            (!message.properties.length || message.properties.some(property => {
-                return this.blob.properties[property.id].ui_selected;
-            }));
-    }
-
-    /**
-     * Mark the input string as safe HTML (for use with [innerHTML]).
-     *
-     * @param value The input string.
-     * @return The safe HTML.
-     */
-    private bypassSanitizer(value: string): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(value);
-    }
-
-    /**
-     *
-     * @param line The line for which to check messages.
-     * @return Whether some messages should be displayed.
-     */
-    private hasDisplayableMessage(line: number): boolean {
-        if (!this.blob || !this.blob.lines) {
-            return false;
-        }
-        return this.blob.lines[line - 1].messages.some(
-            message => this.shouldDisplayMessage(message))
-    }
-
-    /**
-     * Return the list of messages attached to the given line.
-     *
-     * @param line The line for which to list messages.
-     * @return The list of messages.
-     */
-    private messages(line: number): IGNAThubMessage[] {
-        if (!this.blob || !this.blob.lines) {
-            return [];
-        }
-        return this.blob.lines[line - 1].messages;
-    }
-
-    /**
-     * Return the coverage value for for the given line.
-     *
-     * @param line The line for which to get coverage information.
-     * @return The coverage value.
-     */
-    private coverage(line: number): { status: CoverageStatus; hits: number } {
-        if (!this.blob || !this.blob.lines) {
-            return null;
-        }
-        return this.blob.lines[line - 1].coverage || { status: '', hits: 0 };
     }
 }

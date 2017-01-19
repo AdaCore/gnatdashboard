@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -12,11 +12,11 @@ import { IGNAThubReport } from 'gnat';
     styleUrls: [ 'project.component.scss' ],
     providers: [ GNAThubService ]
 })
-export class Project {
-    private project: string = null;
-    private directory: string = null;
-    private report: IGNAThubReport = null;
-    private isReportFetchError: boolean = false;
+export class ProjectComponent implements OnDestroy, OnInit {
+    public project: string = null;
+    public directory: string = null;
+    public report: IGNAThubReport = null;
+    public isReportFetchError: boolean = false;
     private sub: Subscription = null;
 
     constructor(
@@ -24,7 +24,7 @@ export class Project {
         private route: ActivatedRoute,
         private router: Router) {}
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.project = this.route.snapshot.params['name'];
         this.sub = this.route.queryParams.subscribe(params => {
             this.directory = params['directory'];
@@ -34,7 +34,7 @@ export class Project {
             error => this.isReportFetchError = !!error);
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.sub.unsubscribe();
     }
 }

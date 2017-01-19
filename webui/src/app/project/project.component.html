@@ -15,11 +15,11 @@
                 <th>Source count</th>
             </thead>
             <tbody>
-                <tr class="source-dir" *ngFor="let directory of report.modules[project] | mapKeys">
+                <tr class="source-dir" *ngFor="let directory of report.modules[project] | dshMapKeys">
                     <td>
                         <a [routerLink]="['.']" [queryParams]="{directory: directory}">{{ directory }}</a>
                     </td>
-                    <td>{{ report.modules[project][directory] | count }}</td>
+                    <td>{{ report.modules[project][directory] | dshCount }}</td>
                 </tr>
             </tbody>
         </table>

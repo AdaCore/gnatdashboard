@@ -44,8 +44,8 @@ import * as _ from 'lodash'
  */
 
 // Typings for https://github.com/studio-b12/natural-sort
-declare module "natural-sort" {
-  type SortOptions = { caseSensitive: boolean }
+declare module 'natural-sort' {
+  type SortOptions = { caseSensitive: boolean };
   function naturalSort(options?: SortOptions): <T>(a: T, b: T) => number;
   namespace naturalSort {}
   export = naturalSort;
@@ -84,7 +84,6 @@ type AsyncRoutes = {
                          FactoryPromise
 };
 
-
 type IdleCallbacks = Es6PromiseLoader |
                              Function |
               FactoryEs6PromiseLoader |
@@ -106,7 +105,6 @@ interface WebpackModule {
   };
 }
 
-
 interface WebpackRequire {
     (id: string): any;
     (paths: string[], callback: (...modules: any[]) => void): void;
@@ -121,7 +119,6 @@ interface WebpackContext extends WebpackRequire {
 interface ErrorStackTraceLimit {
   stackTraceLimit: number;
 }
-
 
 // Extend typings
 interface NodeRequire extends WebpackRequire {}

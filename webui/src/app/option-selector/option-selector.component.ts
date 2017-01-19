@@ -5,9 +5,9 @@ import { Component, Input } from '@angular/core';
     templateUrl: './option-selector.component.html',
     styleUrls: [ 'option-selector.component.scss' ]
 })
-export class OptionSelector {
-    @Input() title: string = null;
-    @Input() options: { name: string, ui_selected: boolean }[] = null;
-    @Input() optionCount: (
+export class OptionSelectorComponent {
+    @Input() public title: string = null;
+    @Input() public options: Array<{ name: string, ui_selected: boolean }> = null;
+    @Input() public optionCount: (
         option: { name: string, ui_selected: boolean }) => number = null;
 }

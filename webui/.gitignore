@@ -6,7 +6,7 @@
 /src/*.js
 /src/*.css
 /src/maps/
-/src/mocks
+/dll
 
 npm-debug.log
 /.idea/

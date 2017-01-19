@@ -27,18 +27,18 @@
         <div class="option-selectors">
             <!-- Tool selector -->
             <option-selector class="tool-selector" title="Tools"
-                *ngIf="blob.tools | notEmpty"
-                [options]="blob.tools | mapValues" [optionCount]="toolMessageCount">
+                *ngIf="blob.tools | dshNotEmpty"
+                [options]="blob.tools | dshMapValues" [optionCount]="toolMessageCount">
             </option-selector>
             <!-- Rule selector -->
             <option-selector class="rule-selector" title="Rules"
-                *ngIf="blob.rules | notEmpty"
-                [options]="blob.rules | mapValues" [optionCount]="ruleMessageCount">
+                *ngIf="blob.rules | dshNotEmpty"
+                [options]="blob.rules | dshMapValues" [optionCount]="ruleMessageCount">
             </option-selector>
             <!-- Property selector -->
             <option-selector class="property-selector" title="Properties"
-                *ngIf="blob.properties | notEmpty"
-                [options]="blob.properties | mapValues" [optionCount]="propertyMessageCount">
+                *ngIf="blob.properties | dshNotEmpty"
+                [options]="blob.properties | dshMapValues" [optionCount]="propertyMessageCount">
             </option-selector>
         </div>
         <!-- Annotated source -->

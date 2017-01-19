@@ -26,21 +26,21 @@ declare module 'gnat' {
     export interface ISource {
         filename: string;
         metrics?: IFileMetrics;
-        message_count?: { [tool_id: number]: number },
+        message_count?: { [toolId: number]: number };
         _associated_resource: boolean;
     }
 
     export interface ISourceDir {
         name: string;
         sources: ISource[];
-        message_count?: { [tool_id: number]: number },
+        message_count?: { [toolId: number]: number };
         _ui_expanded?: boolean;
     }
 
     export interface IProjectModule {
-        name: string
+        name: string;
         source_dirs: { [sourceDir: string]: ISourceDir };
-        message_count?: { [tool_id: number]: number },
+        message_count?: { [toolId: number]: number };
         _source_dirs_common_prefix: string;
         _ui_expanded?: boolean;
     }
@@ -49,7 +49,7 @@ declare module 'gnat' {
         modules: { [moduleName: string]: IProjectModule };
         project: string;
         creation_time: number;
-        tools: { [id: number]: string }[];
+        tools: Array<{ [id: number]: string }>;
         _database: string;
     }
 
@@ -102,6 +102,6 @@ declare module 'gnat' {
         rules: { [id: number]: IGNAThubRule };
         properties: { [id: number]: IGNAThubProperty };
         metrics?: IGNAThubMessage[];
-        message_count?: { [tool_id: number]: number },
+        message_count?: { [toolId: number]: number };
     }
 }
