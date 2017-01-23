@@ -1,18 +1,20 @@
 <script src="main-responder.routes.ts"></script>
-<header class="top" role="header">
-    <div class="container-fluid navbar-default">
-        <a [routerLink]="['./report']" class="navbar-brand pull-left">GNATdashboard Report</a>
-        <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="glyphicon glyphicon-align-justify"></span>
-        </button>
-        <nav class="navbar-collapse collapse" role="navigation">
-            <ul class="navbar-nav nav">
-                <li><a [routerLink]="['./sources']">Sources</a></li>
-                <li><a [routerLink]="['./about']">About</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
-<section>
-    <router-outlet></router-outlet>
-</section>
+<div class="main-responder-page">
+    <header class="main-responder-header top" role="header">
+        <div class="container-fluid navbar-default">
+            <a [routerLink]="['./report']" class="navbar-brand pull-left">GNATdashboard Report</a>
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="glyphicon glyphicon-align-justify"></span>
+            </button>
+            <nav class="navbar-collapse collapse" role="navigation">
+                <ul class="navbar-nav nav">
+                    <li><a [routerLink]="['./sources']">Sources</a></li>
+                    <li><a [routerLink]="['./about']">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="main-responder-body">
+        <router-outlet></router-outlet>
+    </section>
+</div>

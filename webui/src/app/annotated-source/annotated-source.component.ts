@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {
+    Component, ElementRef, Inject, OnInit, ViewChild
+} from '@angular/core';
+import { DOCUMENT, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { GNAThubService } from '../gnathub.service';
@@ -9,6 +11,7 @@ import {
 } from 'gnat';
 
 import '../array/operator/sum';
+import { PageScrollInstance, PageScrollService } from 'ng2-page-scroll';
 
 type Annotation = { line: IGNAThubBlobLine; msg: IGNAThubMessage };
 
@@ -23,10 +26,13 @@ export class AnnotatedSourceComponent implements OnInit {
     public isBlobFetchError: boolean = false;
     public annotations: Annotation[] = null;
 
+    @ViewChild('scrollView') private scrollView: ElementRef;
     private filters: any = null;
 
     constructor(
+        @Inject(DOCUMENT) private document: Document,
         private gnathub: GNAThubService,
+        private pageScrollService: PageScrollService,
         private route: ActivatedRoute,
         private sanitizer: DomSanitizer) {}
 
@@ -57,6 +63,12 @@ export class AnnotatedSourceComponent implements OnInit {
             },
             error => this.isBlobFetchError = !!error);
     }
+
+    public goToLine(line: number): void {
+        let scroll: PageScrollInstance = PageScrollInstance.simpleInlineInstance(
+            this.document, `#L${line}`, this.scrollView.nativeElement);
+        this.pageScrollService.start(scroll);
+    };
 
     /**
      * @param metricId The identifier of the metric to look for.

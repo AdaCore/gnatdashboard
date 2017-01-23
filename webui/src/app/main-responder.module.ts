@@ -20,7 +20,6 @@ import { AppState, InteralStateType } from './main-responder.service';
 import { AboutComponent } from './about';
 import { ArrayNaturalSortPipe } from './array.pipe';
 import { AnnotatedSourceComponent } from './annotated-source';
-import { AutoScrollDirective } from './scroll.directive';
 import { CountPipe } from './count.pipe';
 import { InlineCommentComponent } from './inline-comment';
 import { SourceTreeViewComponent } from './source-tree-view';
@@ -38,6 +37,7 @@ import { ReportComponent } from './report';
 import { SourceListComponent } from './source-list';
 
 import { GNAThubService } from './gnathub.service';
+import { Ng2PageScrollModule } from 'ng2-page-scroll';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -62,7 +62,6 @@ type StoreType = {
         AboutComponent,
         ArrayNaturalSortPipe,
         AnnotatedSourceComponent,
-        AutoScrollDirective,
         CountPipe,
         InlineCommentComponent,
         SpinnerComponent,
@@ -83,6 +82,7 @@ type StoreType = {
         FormsModule,
         HttpModule,
         MaterialModule.forRoot(),
+        Ng2PageScrollModule.forRoot(),
         RouterModule.forRoot(ROUTES, {
             useHash: true,
             preloadingStrategy: PreloadAllModules

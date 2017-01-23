@@ -1,9 +1,41 @@
-section {
-  display: block;
-  padding: 0 20px;
+/*
+ * NOTE: MainResponderComponent encapsulation strategy is set to
+ * ViewEncapsulation.None, meaning that the following styles apply for the whole
+ * application.
+ */
+
+html,
+body,
+.main-responder-page,
+.main-responder-body {
+  height: 100%; /* needed for proper layout */
 }
 
-header { border-bottom: 1px solid #e5e5e5; }
+body { overflow: hidden; }
+
+.main-responder-page {
+  display: flex;
+  flex-direction: column;
+
+  .main-responder-header {
+    flex: 0 0 auto;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .main-responder-body {
+    flex: 1 1 auto;
+    position: relative; /* needed to position inner content */
+    overflow-y: auto;
+  }
+
+  // Should we ever need a footer in the future, the following style should be
+  // applied.
+  /*
+  .main-responder-page-footer {
+    flex: 0 0 auto;
+  }
+  */
+}
 
 .navbar-default .navbar-brand,
 .navbar-default .navbar-nav > li > a {

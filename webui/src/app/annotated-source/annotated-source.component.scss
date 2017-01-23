@@ -1,3 +1,38 @@
+// Applies for viewport width > 1280px
+:host {
+  display: block;
+  height: 100%;
+}
+
+div.annotated-source {
+  display: flex;
+  margin: 0 auto;
+  height: 100%;
+}
+
+header {
+  flex: 0 0 400px;
+  padding: 0 0 0 20px;
+
+  overflow-y: auto;
+}
+
+section {
+  width: 100%;
+  padding: 20px;
+
+  flex: 1 1;
+  overflow-y: auto;
+
+  .annotated-source-body {
+  }
+}
+
+// Only applies for viewport width <= 1280px
+@media only screen and (max-width: 1280px) {
+
+}
+
 h3.source-head {
   font-size: 18px;
   font-weight: normal;

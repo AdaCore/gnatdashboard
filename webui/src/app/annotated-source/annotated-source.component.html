@@ -1,13 +1,13 @@
-<div>
-    <!-- Spinner animation -->
-    <spinner
-        *ngIf="!blob && !isBlobFetchError"
-        caption="Loading annotated source...">
-    </spinner>
-    <!-- Error handling -->
-    <missing-source-error *ngIf="isBlobFetchError" [filename]="filename"></missing-source-error>
-    <!-- Blob display -->
-    <div *ngIf="blob">
+<!-- Spinner animation -->
+<spinner
+    *ngIf="!blob && !isBlobFetchError"
+    caption="Loading annotated source...">
+</spinner>
+<!-- Error handling -->
+<missing-source-error *ngIf="isBlobFetchError" [filename]="filename"></missing-source-error>
+<!-- Blob display -->
+<div *ngIf="blob" class="annotated-source">
+    <header>
         <h3 class="source-head">
             <span class="project">
                 <a [routerLink]="['/project', blob.project]">{{ blob.project }}</a>
@@ -27,87 +27,91 @@
         <div class="option-selectors">
             <!-- Tool selector -->
             <option-selector class="tool-selector" title="Tools"
-                *ngIf="blob.tools | dshNotEmpty"
-                [options]="blob.tools | dshMapValues" [optionCount]="toolMessageCount">
+                             *ngIf="blob.tools | dshNotEmpty"
+                             [options]="blob.tools | dshMapValues" [optionCount]="toolMessageCount">
             </option-selector>
             <!-- Rule selector -->
             <option-selector class="rule-selector" title="Rules"
-                *ngIf="blob.rules | dshNotEmpty"
-                [options]="blob.rules | dshMapValues" [optionCount]="ruleMessageCount">
+                             *ngIf="blob.rules | dshNotEmpty"
+                             [options]="blob.rules | dshMapValues" [optionCount]="ruleMessageCount">
             </option-selector>
             <!-- Property selector -->
             <option-selector class="property-selector" title="Properties"
-                *ngIf="blob.properties | dshNotEmpty"
-                [options]="blob.properties | dshMapValues" [optionCount]="propertyMessageCount">
+                             *ngIf="blob.properties | dshNotEmpty"
+                             [options]="blob.properties | dshMapValues" [optionCount]="propertyMessageCount">
             </option-selector>
         </div>
-        <!-- Annotated source -->
-        <div class="missing-file-content" *ngIf="!blob.lines">
-            <h4>Missing file content</h4>
-            <p>
-                This is most likely due to an error during the HTML report
-                generation.
-            </p>
-        </div>
-        <div class="file" *ngIf="blob.lines">
-            <div class="file-header">
-                <div class="file-info">
-                    {{ blob.lines.length }} lines
-                    <template [ngIf]="hasMetric('code_lines')">
-                        ({{ getMetricValue('code_lines') }} sloc)
-                    </template>
-                    <div class="file-info-divider"></div>
-                    {{ getMessageDisplayedCount() }} annotations displayed
-                </div>
+    </header>
+    <!-- Annotated source -->
+    <section #scrollView>
+        <div class="annotated-source-body">
+            <div class="missing-file-content" *ngIf="!blob.lines">
+                <h4>Missing file content</h4>
+                <p>
+                    This is most likely due to an error during the HTML report
+                    generation.
+                </p>
             </div>
-            <div class="blob-wrapper">
-                <table class="file-line-container">
-                    <template ngFor let-line [ngForOf]="blob.lines">
-                        <tr [ngClass]="{
+            <div class="file" *ngIf="blob.lines">
+                <div class="file-header">
+                    <div class="file-info">
+                        {{ blob.lines.length }} lines
+                        <template [ngIf]="hasMetric('code_lines')">
+                            ({{ getMetricValue('code_lines') }} sloc)
+                        </template>
+                        <div class="file-info-divider"></div>
+                        {{ getMessageDisplayedCount() }} annotations displayed
+                    </div>
+                </div>
+                <div class="blob-wrapper">
+                    <table class="file-line-container">
+                        <template ngFor let-line [ngForOf]="blob.lines">
+                            <tr [ngClass]="{
                                 no_code: coverage(line.number).status.toLowerCase() == 'no_code',
                                 covered: coverage(line.number).status.toLowerCase() == 'covered',
                                 not_covered: coverage(line.number).status.toLowerCase() == 'not_covered',
                                 partially_covered: coverage(line.number).status.toLowerCase() == 'partially_covered'
                             }">
-                            <td class="blob-num">{{ line.number }}</td>
-                            <!-- line.content may contain escaped HTML entities.
-                                Use AngularJS embedded sanitizer to render it.  -->
-                            <td id="L{{ line.number }}" class="blob-code"
-                                [innerHTML]="bypassSanitizer(line.html_content)"></td>
-                        </tr>
-                        <template [ngIf]="hasDisplayableMessage(line.number)">
-                            <tr class="inline-comments">
-                                <td colspan=2>
-                                    <template ngFor let-message [ngForOf]="messages(line.number)">
-                                        <inline-comment
-                                            *ngIf="shouldDisplayMessage(message)"
-                                            [message]="message">
-                                        </inline-comment>
-                                    </template>
+                                <td class="blob-num">{{ line.number }}</td>
+                                <!-- line.content may contain escaped HTML entities.
+                                    Use AngularJS embedded sanitizer to render it.  -->
+                                <td id="L{{ line.number }}" class="blob-code"
+                                    [innerHTML]="bypassSanitizer(line.html_content)"></td>
+                            </tr>
+                            <template [ngIf]="hasDisplayableMessage(line.number)">
+                                <tr class="inline-comments">
+                                    <td colspan=2>
+                                        <template ngFor let-message [ngForOf]="messages(line.number)">
+                                            <inline-comment
+                                                *ngIf="shouldDisplayMessage(message)"
+                                                [message]="message">
+                                            </inline-comment>
+                                        </template>
+                                    </td>
+                                </tr>
+                            </template>
+                        </template>
+                    </table>
+                </div>
+            </div>
+            <div md-whiteframe="24" class="location-view" *ngIf="getMessageDisplayedCount()">
+                <div class="location-view-header">Messages ({{ getMessageDisplayedCount() }})</div>
+                <div class="location-view-list">
+                    <table class="file-line-container">
+                        <template ngFor let-annotation [ngForOf]="annotations" let-isEven="even" >
+                            <tr class="annotation" [ngClass]="{ even: isEven }"
+                                *ngIf="shouldDisplayMessage(annotation.msg)">
+                                <td class="line-num">l.{{ annotation.line.number }}</td>
+                                <td class="line-annotation">
+                                    <a (click)="goToLine(annotation.line.number)">
+                                        {{ annotation.msg.message }} ({{ annotation.msg.rule.tool.name }})
+                                    </a>
                                 </td>
                             </tr>
                         </template>
-                    </template>
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
-        <div md-whiteframe="24" class="location-view" *ngIf="getMessageDisplayedCount()">
-            <div class="location-view-header">Messages ({{ getMessageDisplayedCount() }})</div>
-            <div class="location-view-list">
-                <table class="file-line-container">
-                    <template ngFor let-annotation [ngForOf]="annotations" let-isEven="even" >
-                        <tr class="annotation" [ngClass]="{ even: isEven }"
-                            *ngIf="shouldDisplayMessage(annotation.msg)">
-                            <td class="line-num">l.{{ annotation.line.number }}</td>
-                            <td class="line-annotation">
-                                <a auto-scroll smooth="true" href="#L{{ annotation.line.number }}">
-                                    {{ annotation.msg.message }} ({{ annotation.msg.rule.tool.name }})
-                                </a>
-                            </td>
-                        </tr>
-                    </template>
-                </table>
-            </div>
-        </div>
-    </div>
+    </section>
 </div>

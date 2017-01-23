@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { PageScrollConfig } from 'ng2-page-scroll';
 
 @Component({
     selector: 'main-responder',
@@ -11,4 +12,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
         'pygments-github.scss'
     ]
 })
-export class MainResponderComponent {}
+export class MainResponderComponent {
+    constructor() {
+        PageScrollConfig.defaultDuration = 0;
+    }
+}
