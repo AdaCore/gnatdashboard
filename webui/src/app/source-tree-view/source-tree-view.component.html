@@ -1,0 +1,36 @@
+<div class="container">
+    <div *ngFor="let module of report.modules | dshMapKeys | dshNaturalSort">
+        <div class="node-project node">
+            <button (click)="report.modules[module]._ui_expanded = !report.modules[module]._ui_expanded">
+                <md-icon
+                    class="node-arrow"
+                    [ngClass]="{ 'node-arrow-expanded': report.modules[module]._ui_expanded }"
+                >arrow_drop_down</md-icon>
+            </button>
+            <md-icon class="project">layers</md-icon>
+            <a class="node-label "[routerLink]="['/project', module]">{{ module }}</a>
+        </div>
+        <template [ngIf]="report.modules[module]._ui_expanded">
+            <div class="node-project" *ngFor="let sourceDir of report.modules[module].source_dirs | dshMapKeys | dshNaturalSort">
+                <div class="node-source-dir node">
+                    <button (click)="report.modules[module].source_dirs[sourceDir]._ui_expanded = !report.modules[module].source_dirs[sourceDir]._ui_expanded">
+                        <md-icon
+                            class="node-arrow"
+                            [ngClass]="{ 'node-arrow-expanded': report.modules[module].source_dirs[sourceDir]._ui_expanded }"
+                        >arrow_drop_down</md-icon>
+                    </button>
+                    <md-icon class="source-dir md-18">folder_open</md-icon>
+                    <div class="node-label-prefix" [md-tooltip]="report.modules[module]._source_dirs_common_prefix" tooltip-position="after">…</div>
+                    <div class="node-label">{{ sourceDir.slice(report.modules[module]._source_dirs_common_prefix.length) }}</div>
+                </div>
+                <div class="node-source-dir" *ngIf="report.modules[module].source_dirs[sourceDir]._ui_expanded">
+                    <div class="node-source-file node"
+                         *ngFor="let source of report.modules[module].source_dirs[sourceDir].sources">
+                        <md-icon class="source-file md-18">insert_drive_file</md-icon>
+                        <a class="node-label" [routerLink]="['/source', source.filename]">{{ source.filename }}</a>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
