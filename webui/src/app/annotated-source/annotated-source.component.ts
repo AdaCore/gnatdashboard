@@ -15,8 +15,7 @@ type Annotation = { line: IGNAThubBlobLine; msg: IGNAThubMessage };
 @Component({
     selector: 'annotated-source',
     templateUrl: './annotated-source.component.html',
-    styleUrls: [ 'annotated-source.component.scss' ],
-    providers: [ GNAThubService ]
+    styleUrls: [ 'annotated-source.component.scss' ]
 })
 export class AnnotatedSourceComponent implements OnInit {
     public filename: string = null;

@@ -23,6 +23,7 @@ import { AnnotatedSourceComponent } from './annotated-source';
 import { AutoScrollDirective } from './scroll.directive';
 import { CountPipe } from './count.pipe';
 import { InlineCommentComponent } from './inline-comment';
+import { SourceTreeViewComponent } from './source-tree-view';
 import { SpinnerComponent } from './spinner';
 import { MapKeysPipe } from './map-keys.pipe';
 import { MapValuesPipe } from './map-values.pipe';
@@ -36,9 +37,12 @@ import { ProjectComponent } from './project';
 import { ReportComponent } from './report';
 import { SourceListComponent } from './source-list';
 
+import { GNAThubService } from './gnathub.service';
+
 // Application wide providers
 const APP_PROVIDERS = [
     ...APP_RESOLVER_PROVIDERS,
+    GNAThubService,
     AppState
 ];
 
@@ -71,7 +75,8 @@ type StoreType = {
         OptionSelectorComponent,
         ProjectComponent,
         ReportComponent,
-        SourceListComponent
+        SourceListComponent,
+        SourceTreeViewComponent
     ],
     imports: [
         BrowserModule,

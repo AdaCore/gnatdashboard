@@ -3,23 +3,24 @@
 /* Include the base styles for Angular Material core. */
 @include md-core();
 
-$wesh-app-primary: md-palette($md-blue);
-$wesh-app-accent:  md-palette($md-red);
-$wesh-app-warn:    md-palette($md-deep-orange);
+$dsh-app-primary: md-palette($md-blue);
+$dsh-app-accent:  md-palette($md-red);
+$dsh-app-warn:    md-palette($md-deep-orange);
 
 /* Create the theme object (a Sass map containing all of the palettes). */
-$wesh-app-theme:   md-light-theme(
-                $wesh-app-primary, $wesh-app-accent, $wesh-app-warn);
+$dsh-app-theme:   md-light-theme(
+                $dsh-app-primary, $dsh-app-accent, $dsh-app-warn);
 
 /* Include theme styles for core and each component used in your app. */
-@include angular-material-theme($wesh-app-theme);
+@include angular-material-theme($dsh-app-theme);
 
 body {
   font-kerning: normal;
   font-variant-ligatures: common-ligatures;
   font-feature-settings: "kern", "liga", "clig", "calt";
 
-  font-family: -apple-system, "Helvetica Neue", "Helvetica", sans-serif;
+  font-family: -apple-system, "Helvetica Neue", "Segoe UI", Helvetica, Arial,
+               sans-serif;
   font-size: 13px;
 }
 
@@ -29,39 +30,52 @@ h2 {
   margin-bottom: 16px;
 }
 
+ul li { line-height: 1.5em; }
+
 table {
   width: 100%;
-  font-size: 1.2rem;
   border-spacing: 0;
 
-  thead {
-    color: white;
-    background-color: #639add;
+  td, th {
+    padding: 5px;
+    line-height: 1.5em;
+  }
 
-    th {
-      border: 1px solid #5193fb;
-      padding: 4px;
+  thead { border-bottom: 1px solid #e6e6e6; }
+
+  th {
+    color: #333;
+    padding: 8px 10px;
+    font-weight: bold;
+
+    &.thin { width: 1%; }
+  }
+
+  tr {
+    &.odd { background: rgba(0, 0, 0, .03); }
+
+    td {
+      padding: 5px 8px;
+      line-height: 20px;
     }
   }
 }
 
-ul li,
-table td,
-table th {
-  line-height: 1.5em;
-}
+a.with-icon {
+  display: flex;
+  align-items: center;
 
-table td,
-table th {
-  padding: 5px;
-}
+  &:active,
+  &:focus,
+  &:hover {
+    text-decoration: none;
+    span { text-decoration: underline; }
+  }
 
-table th {
-  font-weight: normal;
-}
-
-table td {
-  border: 1px solid #adb9cc;
+  md-icon {
+    color: rgba(0, 0, 0, .5);
+    margin-right: 8px;
+  }
 }
 
 div.center {
@@ -75,3 +89,17 @@ span.verbatim {
   line-height: 1.5em;
   white-space: nowrap;
 }
+
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; width: 18px; height: 18px; }
+.material-icons.md-24 { font-size: 24px; width: 24px; height: 24px; }
+.material-icons.md-36 { font-size: 36px; width: 36px; height: 36px; }
+.material-icons.md-48 { font-size: 48px; width: 48px; height: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
