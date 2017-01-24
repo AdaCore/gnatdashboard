@@ -1,4 +1,4 @@
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { AboutComponent } from './about';
 import { AnnotatedSourceComponent } from './annotated-source';
@@ -7,10 +7,8 @@ import { ProjectComponent } from './project';
 import { ReportComponent } from './report';
 import { SourceListComponent } from './source-list';
 
-import { DataResolver } from './main-responder.resolver';
-
 export const ROUTES: Routes = [
-    { path: '',                 component: ReportComponent },
+    { path: '',                 redirectTo: '/report', pathMatch: 'full' },
     { path: 'report',           component: ReportComponent },
     { path: 'project/:name',    component: ProjectComponent },
     { path: 'sources',          component: SourceListComponent },
