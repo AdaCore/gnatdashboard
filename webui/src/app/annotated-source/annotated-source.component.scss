@@ -1,30 +1,54 @@
+/* Component layout */
+
 // Applies for viewport width > 1280px
 :host {
   display: block;
   height: 100%;
 }
 
-div.annotated-source {
+section.layout-page {
   display: flex;
-  margin: 0 auto;
+  flex-direction: column;
   height: 100%;
-}
 
-header {
-  flex: 0 0 400px;
-  padding: 0 0 0 20px;
+  div.layout-page-content {
+    flex: 1;
+    overflow: hidden;
 
-  overflow-y: auto;
-}
+    div.annotated-source-body {
+      display: flex;
+      height: 100%;
 
-section {
-  width: 100%;
-  padding: 20px;
+      nav {
+        flex: 0 0 400px;
+        padding-left: 20px;
 
-  flex: 1 1;
-  overflow-y: auto;
+        box-sizing: border-box;
+        overflow-y: auto;
+      }
 
-  .annotated-source-body {
+      main {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 20px;
+      }
+    }
+  }
+
+  footer.layout-page-footer {
+    max-height: 350px;
+
+    .location-view-flex {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+
+      .location-view-header { flex: 0 0 auto; }
+      .location-view-list {
+        flex: 1 1 auto;
+        overflow-y: auto;
+      }
+    }
   }
 }
 
@@ -32,6 +56,8 @@ section {
 @media only screen and (max-width: 1280px) {
 
 }
+
+/* Component style */
 
 h3.source-head {
   font-size: 18px;
@@ -53,15 +79,15 @@ h3.source-head {
 }
 
 div.option-selectors {
+  width: 100%;
+
   display: flex;
   flex-flow: row wrap;
-  option-selector { flex-grow: 1; }
 
-  /*
-   * Set distance between flexbox items. Distance = abs(-8px) + abs(8px) = 16px
-   */
-  margin: 0 -8px;
-  option-selector { padding: 0 8px; }
+  option-selector {
+    flex-grow: 1;
+    padding: 0 8px;
+  }
 
   margin-bottom: 16px;
 }
@@ -194,17 +220,7 @@ inline-comment {
 }
 
 .location-view {
-  position: fixed;
-  left: 16px;
-  right: 16px;
-  bottom: 0;
-  height: 300px;
-
   background-color: white;
-  box-shadow:
-    0 1px 5px 0 rgba(0, 0, 0, 0.2),
-    0 2px 2px 0 rgba(0, 0, 0, 0.14),
-    0 3px 1px -2px rgba(0, 0, 0, 0.12);
 
   &-header {
     padding: 5px 15px;
@@ -217,15 +233,6 @@ inline-comment {
     font-size: 12px;
     line-height: 24px;
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  }
-
-  &-list {
-    overflow-y: auto;
-    position: absolute;
-    top: 36px;
-    left: 0;
-    right: 0;
-    bottom: 0;
   }
 
   table tr.annotation {
@@ -264,8 +271,4 @@ inline-comment {
       }
     }
   }
-}
-
-.file {
-  margin-bottom: 210px;
 }
