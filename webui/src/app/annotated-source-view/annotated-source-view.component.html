@@ -1,0 +1,13 @@
+<!-- Spinner animation -->
+<spinner
+    *ngIf="!blob && !isBlobFetchError"
+    caption="Loading annotated source...">
+</spinner>
+<!-- Error handling -->
+<missing-source-error
+    *ngIf="isBlobFetchError" [filename]="filename">
+</missing-source-error>
+<!-- Annotated source -->
+<section *ngIf="blob" class="layout-page">
+    <annotated-source [blob]="blob"></annotated-source>
+</section>

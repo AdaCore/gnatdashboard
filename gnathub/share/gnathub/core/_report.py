@@ -248,21 +248,22 @@ class ReportBuilder(object):
             'hits': hits
         }, extra)
 
-    def generate_src_hunk(self, project_name, source_file):
-        """Generate the JSON-encoded representation of `source_file`
+    def generate_src_hunk(self, project_name, source_dir, filename):
+        """Generate the JSON-encoded representation of a source file.
 
-        :param str project_name: the name of the project the source if from
-        :param str source_file: the full path to the source file
-        :return: the JSON-encoded representation of `source_file`
+        :param str project_name: the name of the project
+        :param str source_dir: the source file directory
+        :param str filename: the source file filename
+        :return: the JSON-encoded representation of the source file
         :rtype: dict[str, *]
         :raises: IOError
         """
 
-        assert os.path.isfile(source_file), '{}: not such file ({})'.format(
-            os.path.basename(source_file), source_file
-        )
+        full_path = os.path.join(source_dir, filename)
+        assert os.path.isfile(full_path), '{}: not such file ({})'.format(
+            filename, full_path)
 
-        messages_from_db = GNAThub.Resource.get(source_file).list_messages()
+        messages_from_db = GNAThub.Resource.get(full_path).list_messages()
 
         tools, rules, properties = {}, {}, {}
         messages = collections.defaultdict(list)
@@ -271,6 +272,13 @@ class ReportBuilder(object):
         for msg in messages_from_db:
             rule = self._rules_by_id[msg.rule_id]
             tool = self._tools_by_id[rule.tool_id]
+
+            if rule.identifier == 'coverage':
+                # Only one coverage tool shall be used. The last entry
+                # overwrites previous ones.
+                coverage[msg.line] = self._encode_coverage(msg, tool)
+                # Do not register message, rule or property for coverage
+                continue
 
             for prop in msg.get_properties():
                 if prop.id not in properties:
@@ -295,17 +303,15 @@ class ReportBuilder(object):
                 else:
                     rules[rule.id]['message_count'] += 1
 
-            if rule.identifier != 'coverage':
-                messages[msg.line].append(
-                    self._encode_message(msg, rule, tool))
-            else:
-                # Only one coverage tool shall be used. The last entry
-                # overwrites previous ones.
-                coverage[msg.line] = self._encode_coverage(msg, tool)
+            messages[msg.line].append(self._encode_message(msg, rule, tool))
 
         src_hunk = {
             'project': project_name,
-            'filename': os.path.basename(source_file),
+            'filename': filename,
+            'source_dir': source_dir,
+            'has_messages': not not messages,
+            'has_coverage': not not coverage,
+            'full_path': full_path,
             'metrics': messages[0],
             'properties': properties,
             'tools': tools,
@@ -314,10 +320,10 @@ class ReportBuilder(object):
         }
 
         try:
-            with open(source_file, 'r') as infile:
+            with open(full_path, 'r') as infile:
                 content = infile.read()
         except IOError:
-            self.log.exception('failed to read source file: %s', source_file)
+            self.log.exception('failed to read source file: %s', full_path)
             self.log.warn('report might be incomplete')
             return src_hunk
 
@@ -330,9 +336,9 @@ class ReportBuilder(object):
         # Select the appropriate lexer; fall back on "Null" lexer if no match.
         try:
             lexer = pygments.lexers.guess_lexer_for_filename(
-                source_file, content)
+                full_path, content)
         except pygments.util.ClassNotFound:
-            self.log.warn('could not guess lexer from file: %s', source_file)
+            self.log.warn('could not guess lexer from file: %s', full_path)
             self.log.warn('fall back to using TextLexer (ie. no highlighting)')
             lexer = pygments.lexers.special.TextLexer()
 
@@ -343,7 +349,7 @@ class ReportBuilder(object):
             decoded_raw_lines = [line.decode('utf-8') for line in raw_lines]
             assert len(decoded_raw_lines) == len(raw_lines)
         except UnicodeDecodeError:
-            self.log.exception('failed to decode UTF-8: %s', source_file)
+            self.log.exception('failed to decode UTF-8: %s', full_path)
             self.log.warn('source file content will not be available')
             decoded_raw_lines = None
 
@@ -372,7 +378,7 @@ class ReportBuilder(object):
             } for no in range(1, len(raw_lines) + 1)]
         except Exception:
             self.log.exception(
-                'unhandled exception during HTML generation: %s', source_file)
+                'unhandled exception during HTML generation: %s', full_path)
             self.log.warn('report might be incomplete')
         return src_hunk
 

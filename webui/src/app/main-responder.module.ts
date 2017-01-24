@@ -18,23 +18,26 @@ import { APP_RESOLVER_PROVIDERS } from './main-responder.resolver';
 import { AppState, InteralStateType } from './main-responder.service';
 
 import { AboutComponent } from './about';
-import { ArrayNaturalSortPipe } from './array.pipe';
 import { AnnotatedSourceComponent } from './annotated-source';
+import { AnnotatedSourceViewComponent } from './annotated-source-view';
+import { ArrayNaturalSortPipe } from './array.pipe';
 import { CountPipe } from './count.pipe';
 import { InlineCommentComponent } from './inline-comment';
-import { SourceTreeViewComponent } from './source-tree-view';
-import { SpinnerComponent } from './spinner';
 import { MapKeysPipe } from './map-keys.pipe';
 import { MapValuesPipe } from './map-values.pipe';
-import { NotEmptyPipe } from './not-empty.pipe';
+import { MessageCountPipe } from './message-count.pipe';
 import {
     MissingSourceErrorComponent, MissingReportErrorComponent
 } from './errors';
 import { NoContentComponent } from './no-content';
+import { NotEmptyPipe } from './not-empty.pipe';
 import { OptionSelectorComponent } from './option-selector';
-import { ProjectComponent } from './project';
-import { ReportComponent } from './report';
+import { ProjectExplorerComponent } from './project-explorer';
+import { ProjectSourceListComponent } from './project-source-list';
+import { SourceFileCountPipe } from './source-file-count.pipe';
 import { SourceListComponent } from './source-list';
+import { SourceTreeViewComponent } from './source-tree-view';
+import { SpinnerComponent } from './spinner';
 
 import { GNAThubService } from './gnathub.service';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
@@ -58,24 +61,27 @@ type StoreType = {
 @NgModule({
     bootstrap: [ MainResponderComponent ],
     declarations: [
-        MainResponderComponent,
         AboutComponent,
-        ArrayNaturalSortPipe,
         AnnotatedSourceComponent,
+        AnnotatedSourceViewComponent,
+        ArrayNaturalSortPipe,
         CountPipe,
         InlineCommentComponent,
-        SpinnerComponent,
+        MainResponderComponent,
         MapKeysPipe,
         MapValuesPipe,
+        MessageCountPipe,
         MissingReportErrorComponent,
         MissingSourceErrorComponent,
         NoContentComponent,
         NotEmptyPipe,
         OptionSelectorComponent,
-        ProjectComponent,
-        ReportComponent,
+        ProjectExplorerComponent,
+        ProjectSourceListComponent,
+        SourceFileCountPipe,
         SourceListComponent,
-        SourceTreeViewComponent
+        SourceTreeViewComponent,
+        SpinnerComponent
     ],
     imports: [
         BrowserModule,
@@ -89,13 +95,12 @@ type StoreType = {
         })
     ],
     providers: [
-        ENV_PROVIDERS,
-        APP_PROVIDERS
+        APP_PROVIDERS,
+        ENV_PROVIDERS
     ]
 })
 export class AppModule {
-    constructor(public appRef: ApplicationRef, public appState: AppState) {
-    }
+    constructor(public appRef: ApplicationRef, public appState: AppState) {}
 
     public hmrOnInit(store: StoreType) {
         if (!store || !store.state) {

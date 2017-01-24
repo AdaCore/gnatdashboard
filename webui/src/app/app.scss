@@ -14,6 +14,8 @@ $dsh-app-theme:   md-light-theme(
 /* Include theme styles for core and each component used in your app. */
 @include angular-material-theme($dsh-app-theme);
 
+/* Application layout & global styles*/
+
 body {
   font-kerning: normal;
   font-variant-ligatures: common-ligatures;
@@ -24,21 +26,61 @@ body {
   font-size: 13px;
 }
 
+.layout-page {
+  height: 100%;
+  display: block;
+}
+
+/* Titles */
+
 h1,
 h2 {
   font-weight: 300;
   margin-bottom: 16px;
 }
 
+h3.source-head {
+  font-size: 18px;
+  font-weight: normal;
+
+  line-height: 26px;
+  color: #666;
+
+  span.path-divider { margin: 0 0.25em; }
+
+  strong { font-weight: 500; }
+}
+
+h4 {
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
 ul li { line-height: 1.5em; }
+
+/* Tables */
 
 table {
   width: 100%;
   border-spacing: 0;
 
+  margin-bottom: 10px;
+
+  &:last-child { margin-bottom: 0; }
+
+
   td, th {
     padding: 5px;
     line-height: 1.5em;
+  }
+
+  th.code-components-cell {
+    min-width: 180px;
+    white-space: nowrap;
+    padding-left: 30px;
+    box-sizing: border-box;
+    vertical-align: top;
+    line-height: 18px;
   }
 
   thead { border-bottom: 1px solid #e6e6e6; }
@@ -52,14 +94,14 @@ table {
   }
 
   tr {
-    &.odd { background: rgba(0, 0, 0, .03); }
-
     td {
       padding: 5px 8px;
       line-height: 20px;
     }
   }
 }
+
+/* Hyperlinks */
 
 a.with-icon {
   display: flex;
@@ -78,17 +120,44 @@ a.with-icon {
   }
 }
 
-div.center {
+/* Common styles */
+
+label {
+  font-weight: normal;
+  margin-bottom: 0; // defaults to "margin-bottom: 5px"
+
+  small { color: #777; }
+}
+
+input[type="checkbox"] {
+  margin-top: 0; // defaults to "margin-top: 1px\9"
+}
+
+.odd { background: rgba(0, 0, 0, .03); }
+.selected { background-color: #fff8dc; }
+
+.faded {
+  color: #777;
+}
+
+.info {
+  color: #777;
+  font-style: italic;
+}
+
+.center {
   margin-left: auto;
   margin-right: auto;
 }
 
-span.verbatim {
+.verbatim {
   font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
   font-size: 1.2rem;
   line-height: 1.5em;
   white-space: nowrap;
 }
+
+/* Material Design icons */
 
 /* Rules for sizing the icon. */
 .material-icons.md-18 { font-size: 18px; width: 18px; height: 18px; }

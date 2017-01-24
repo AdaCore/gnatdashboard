@@ -32,7 +32,8 @@ INSTALL_DATA = ${INSTALL} -m 644
 NPM = npm
 
 BUILD_MODE = dev
-SOURCES := $(shell find $(srcdir) -name '*.ts')
+SOURCES := $(shell find $(srcdir) \
+	-name '*.ts' -or -name '*.scss' -or -name '*.html')
 
 .PHONY:
 
@@ -65,6 +66,7 @@ installdirs:
 # Custom targets for this project
 $(builddir)/dist/index.html: $(rootdir)/package.json $(SOURCES) \
 		$(srcdir)/index.html $(rootdir)/node_modules/.installed
+	$(NPM) rebuild node-sass
 	BUILD_DIR=$(builddir) $(NPM) run build:$(BUILD_MODE)
 
 install-node-modules: $(rootdir)/node_modules/.installed

@@ -3,30 +3,21 @@
   width: 100%;
   min-width: 300px;
 
-  border: 1px solid #dddddd;
-  border-radius: 2px;
-
   .option {
     display: flex;
-
-    &.even { background-color: #f7f7f7; }
+    padding: 0 16px;
 
     input[type="checkbox"] {
       margin-right: 16px;
+      position: relative;
+      top: 3px;
     }
 
-    label.option-label {
-      flex-grow: 1;
-      padding: 5px;
-      padding-left: 16px;
-      margin-bottom: 0;  /* LABEL tags have a "margin-bottom: 5px" default */
-
-      font-weight: normal;
-    }
+    label { flex-grow: 1; }
 
     .option-count {
       color: #777;
-      padding: 5px 16px;
+      padding-left: 16px;
     }
   }
 }

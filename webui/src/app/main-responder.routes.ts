@@ -1,18 +1,14 @@
 import { Routes } from '@angular/router';
 
 import { AboutComponent } from './about';
-import { AnnotatedSourceComponent } from './annotated-source';
+import { AnnotatedSourceViewComponent } from './annotated-source-view';
 import { NoContentComponent } from './no-content';
-import { ProjectComponent } from './project';
-import { ReportComponent } from './report';
-import { SourceListComponent } from './source-list';
+import { ProjectExplorerComponent } from './project-explorer';
 
 export const ROUTES: Routes = [
-    { path: '',                 redirectTo: '/report', pathMatch: 'full' },
-    { path: 'report',           component: ReportComponent },
-    { path: 'project/:name',    component: ProjectComponent },
-    { path: 'sources',          component: SourceListComponent },
-    { path: 'source/:filename', component: AnnotatedSourceComponent },
+    { path: '', redirectTo: '/project-explorer', pathMatch: 'full' },
+    { path: 'project-explorer', component: ProjectExplorerComponent },
+    { path: 'source/:filename', component: AnnotatedSourceViewComponent },
     { path: 'about',            component: AboutComponent },
     { path: '**',               component: NoContentComponent }
 ];

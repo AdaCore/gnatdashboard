@@ -108,7 +108,7 @@ class HTMLReport(Plugin, Reporter):
 
             self.log.debug('processing %s', source['filename'])
             src_hunk = self._report.generate_src_hunk(
-                project, os.path.join(source_dir, source['filename']))
+                project, source_dir, source['filename'])
             self._write_json(_fname('json'), src_hunk, indent=2)
             self.log.debug('src hunk written to %s', _fname('json'))
 

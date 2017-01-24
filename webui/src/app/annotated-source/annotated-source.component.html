@@ -1,49 +1,80 @@
-<!-- Spinner animation -->
-<spinner
-    *ngIf="!blob && !isBlobFetchError"
-    caption="Loading annotated source...">
-</spinner>
-<!-- Error handling -->
-<missing-source-error *ngIf="isBlobFetchError" [filename]="filename"></missing-source-error>
-<!-- Blob display -->
-<section *ngIf="blob" class="layout-page">
+<section class="layout-page">
     <!-- Annotated source -->
     <div class="layout-page-content">
         <div class="annotated-source-body">
             <nav>
                 <h3 class="source-head">
                     <span class="project">
-                        <a [routerLink]="['/project', blob.project]">{{ blob.project }}</a>
+                        <a [routerLink]="['/project-explorer', {
+                            project: blob.project, directory: blob.source_dir
+                        }]">
+                            {{ blob.project }}
+                        </a>
                     </span>
-                    <span class="path-divider">/</span>
+                    <span  class="path-divider">/</span>
                     <strong>{{ blob.filename }}</strong>
                 </h3>
                 <!-- File metrics -->
-                <div *ngIf="blob.metrics">
+                <template [ngIf]="blob.metrics | dshNotEmpty">
+                    <h4>File metrics</h4>
                     <dl class="dl-horizontal">
                         <template ngFor let-metric [ngForOf]="blob.metrics">
                             <dt class="metric-label">{{ metric.rule.name }}</dt>
                             <dd><span class="metric-value">{{ metric.message }}</span></dd>
                         </template>
                     </dl>
-                </div>
-                <div class="option-selectors">
-                    <!-- Tool selector -->
-                    <option-selector class="tool-selector" title="Tools"
-                                     *ngIf="blob.tools | dshNotEmpty"
-                                     [options]="blob.tools | dshMapValues" [optionCount]="toolMessageCount">
-                    </option-selector>
-                    <!-- Rule selector -->
-                    <option-selector class="rule-selector" title="Rules"
-                                     *ngIf="blob.rules | dshNotEmpty"
-                                     [options]="blob.rules | dshMapValues" [optionCount]="ruleMessageCount">
-                    </option-selector>
-                    <!-- Property selector -->
-                    <option-selector class="property-selector" title="Properties"
-                                     *ngIf="blob.properties | dshNotEmpty"
-                                     [options]="blob.properties | dshMapValues" [optionCount]="propertyMessageCount">
-                    </option-selector>
-                </div>
+                </template>
+                <template [ngIf]="blob.has_messages || blob.has_coverage">
+                    <h4>Preferences</h4>
+                    <div class="preferences">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <label *ngIf="blob.has_messages">
+                                        <input type="checkbox" [(ngModel)]="displayMessages" />
+                                        <span>Show messages</span>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label *ngIf="blob.has_coverage">
+                                        <input type="checkbox" [(ngModel)]="displayCoverage" />
+                                        <span>Show coverage</span>
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
+                <template [ngIf]="displayMessages && messages | dshNotEmpty">
+                    <h4>Message filters</h4>
+                    <div class="option-selectors">
+                        <!-- Tool selector -->
+                        <option-selector
+                            class="tool-selector" title="Tools"
+                            *ngIf="blob.tools | dshNotEmpty"
+                            [options]="blob.tools | dshMapValues"
+                            [optionCount]="toolMessageCount">
+                        </option-selector>
+                        <!-- Rule selector -->
+                        <option-selector
+                            class="rule-selector" title="Rules"
+                            *ngIf="blob.rules | dshNotEmpty"
+                            [options]="blob.rules | dshMapValues"
+                            [optionCount]="ruleMessageCount">
+                        </option-selector>
+                        <!-- Property selector -->
+                        <option-selector
+                            class="property-selector" title="Properties"
+                            *ngIf="blob.properties | dshNotEmpty"
+                            [options]="blob.properties | dshMapValues"
+                            [optionCount]="propertyMessageCount">
+                        </option-selector>
+                    </div>
+                </template>
             </nav>
             <main #scrollView>
                 <div class="missing-file-content" *ngIf="!blob.lines">
@@ -66,23 +97,27 @@
                     </div>
                     <div class="blob-wrapper">
                         <table class="file-line-container">
+                        <tbody>
                             <template ngFor let-line [ngForOf]="blob.lines">
                                 <tr [ngClass]="{
-                                no_code: coverage(line.number).status.toLowerCase() == 'no_code',
-                                covered: coverage(line.number).status.toLowerCase() == 'covered',
-                                not_covered: coverage(line.number).status.toLowerCase() == 'not_covered',
-                                partially_covered: coverage(line.number).status.toLowerCase() == 'partially_covered'
-                            }">
-                                    <td class="blob-num">{{ line.number }}</td>
+                                    selected: selectedLine == line.number,
+                                    no_code: coverageAt(line.number)?.status.toLowerCase() == 'no_code',
+                                    covered: coverageAt(line.number)?.status.toLowerCase() == 'covered',
+                                    not_covered: coverageAt(line.number)?.status.toLowerCase() == 'not_covered',
+                                    partially_covered: coverageAt(line.number)?.status.toLowerCase() == 'partially_covered'
+                                }">
+                                    <td class="blob-num" [attr.data-line-number]="line.number"></td>
                                     <!-- line.content may contain escaped HTML entities.
                                         Use AngularJS embedded sanitizer to render it.  -->
                                     <td id="L{{ line.number }}" class="blob-code"
-                                        [innerHTML]="bypassSanitizer(line.html_content)"></td>
+                                        [innerHTML]="bypassSanitizer(line.html_content)">
+                                        &nbsp;
+                                    </td>
                                 </tr>
-                                <template [ngIf]="hasDisplayableMessage(line.number)">
+                                <template [ngIf]="displayMessages && hasDisplayableMessage(line.number)">
                                     <tr class="inline-comments">
                                         <td colspan=2>
-                                            <template ngFor let-message [ngForOf]="messages(line.number)">
+                                            <template ngFor let-message [ngForOf]="messagesAt(line.number)">
                                                 <inline-comment
                                                     *ngIf="shouldDisplayMessage(message)"
                                                     [message]="message">
@@ -92,28 +127,34 @@
                                     </tr>
                                 </template>
                             </template>
+                        </tbody>
                         </table>
                     </div>
                 </div>
             </main>
         </div>
     </div>
-    <footer class="layout-page-footer location-view" *ngIf="getMessageDisplayedCount()">
+    <footer
+        class="layout-page-footer location-view"
+        *ngIf="displayMessages && getMessageDisplayedCount()">
         <div class="location-view-flex">
             <div class="location-view-header">Messages ({{ getMessageDisplayedCount() }})</div>
             <div class="location-view-list">
                 <table class="file-line-container">
-                    <template ngFor let-annotation [ngForOf]="annotations" let-isEven="even" >
-                        <tr class="annotation" [ngClass]="{ even: isEven }"
-                            *ngIf="shouldDisplayMessage(annotation.msg)">
-                            <td class="line-num">l.{{ annotation.line.number }}</td>
-                            <td class="line-annotation">
-                                <a (click)="goToLine(annotation.line.number)">
-                                    {{ annotation.msg.message }} ({{ annotation.msg.rule.tool.name }})
+                    <tbody>
+                    <template ngFor let-message [ngForOf]="messages">
+                        <tr class="message"
+                            [ngClass]="{ selected: selectedLine == message.line.number }"
+                            *ngIf="shouldDisplayMessage(message.msg)">
+                            <td class="line-num">l.{{ message.line.number }}</td>
+                            <td class="line-msg">
+                                <a [routerLink]="['.', { line: message.line.number }]">
+                                    {{ message.msg.message }} ({{ message.msg.rule.tool.name }})
                                 </a>
                             </td>
                         </tr>
                     </template>
+                    </tbody>
                 </table>
             </div>
         </div>

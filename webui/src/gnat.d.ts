@@ -97,6 +97,10 @@ declare module 'gnat' {
     export interface IGNAThubBlob {
         project: string;
         filename: string;
+        source_dir: string;
+        full_path: string;
+        has_messages: boolean;
+        has_coverage: boolean;
         lines: IGNAThubBlobLine[];
         tools: { [id: number]: IGNAThubTool };
         rules: { [id: number]: IGNAThubRule };

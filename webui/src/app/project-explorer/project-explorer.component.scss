@@ -1,0 +1,28 @@
+// Applies for viewport width > 1280px
+.layout-page {
+  display: flex;
+
+  nav {
+    flex: 0 0 400px;
+    overflow-y: auto;
+    padding: 0 16px;
+
+    div.option-selectors {
+      width: 100%;
+
+      display: flex;
+      flex-flow: row wrap;
+
+      option-selector {
+        flex-grow: 1;
+        margin-bottom: 19px;
+      }
+    }
+  }
+
+  main {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 0 16px;
+  }
+}

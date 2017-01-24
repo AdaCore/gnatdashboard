@@ -1,74 +1,79 @@
 import {
-    Component, ElementRef, Inject, OnInit, ViewChild
+    AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit,
+    ViewChild
 } from '@angular/core';
 import { DOCUMENT, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { GNAThubService } from '../gnathub.service';
 import {
     CoverageStatus, IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage,
     IGNAThubProperty, IGNAThubRule, IGNAThubTool
 } from 'gnat';
 
 import '../array/operator/sum';
-import { PageScrollInstance, PageScrollService } from 'ng2-page-scroll';
 
-type Annotation = { line: IGNAThubBlobLine; msg: IGNAThubMessage };
+import { PageScrollInstance, PageScrollService } from 'ng2-page-scroll';
+import { Subscription } from 'rxjs';
+
+type AttachedMessage = { line: IGNAThubBlobLine; msg: IGNAThubMessage };
 
 @Component({
     selector: 'annotated-source',
     templateUrl: './annotated-source.component.html',
     styleUrls: [ 'annotated-source.component.scss' ]
 })
-export class AnnotatedSourceComponent implements OnInit {
-    public filename: string = null;
-    public blob: IGNAThubBlob = null;
-    public isBlobFetchError: boolean = false;
-    public annotations: Annotation[] = null;
+export class AnnotatedSourceComponent
+    implements AfterViewInit, OnDestroy, OnInit
+{
+    @Input() public blob: IGNAThubBlob = null;
+    public messages: AttachedMessage[] = [];
+    public selectedLine: number = null;
+    public displayMessages: boolean = true;
+    public displayCoverage: boolean = true;
+
+    private sub: Subscription = null;
 
     @ViewChild('scrollView') private scrollView: ElementRef;
-    private filters: any = null;
 
     constructor(
         @Inject(DOCUMENT) private document: Document,
-        private gnathub: GNAThubService,
         private pageScrollService: PageScrollService,
         private route: ActivatedRoute,
         private sanitizer: DomSanitizer) {}
 
     public ngOnInit(): void {
-        this.filename = this.route.snapshot.params['filename'];
-        this.gnathub.getSource(this.filename).subscribe(
-            blob => {
-                for (let toolId of Object.keys(blob.tools)) {
-                    // Show messages triggered by all tools by default
-                    blob.tools[toolId].ui_selected = true;
-                }
-                for (let ruleId of Object.keys(blob.rules)) {
-                    // Show messages triggered by all rules by default
-                    blob.rules[ruleId].ui_selected = true;
-                }
-                for (let propertyId of Object.keys(blob.properties)) {
-                    // Show all messages with properties by default
-                    blob.properties[propertyId].ui_selected = true;
-                }
-                let annotations: Annotation[] = [];
-                if (blob.lines) {
-                    blob.lines.forEach(line => line.messages.forEach(msg => {
-                        annotations.push({ line, msg });
-                    }));
-                }
-                this.blob = blob;
-                this.annotations = annotations;
-            },
-            error => this.isBlobFetchError = !!error);
+        for (let toolId of Object.keys(this.blob.tools)) {
+            // Show messages triggered by all tools by default
+            this.blob.tools[toolId].ui_selected = true;
+        }
+        for (let ruleId of Object.keys(this.blob.rules)) {
+            // Show messages triggered by all rules by default
+            this.blob.rules[ruleId].ui_selected = true;
+        }
+        for (let propertyId of Object.keys(this.blob.properties)) {
+            // Show all messages with properties by default
+            this.blob.properties[propertyId].ui_selected = true;
+        }
+
+        if (this.blob.lines) {
+            this.blob.lines.forEach(
+                line => line.messages.forEach(
+                    msg => this.messages.push({ line, msg })));
+        }
+
+        this.sub = this.route.params.subscribe(params => {
+            this.selectedLine = +params['line'];
+            this.goToLine(this.selectedLine);
+        });
     }
 
-    public goToLine(line: number): void {
-        let scroll: PageScrollInstance = PageScrollInstance.simpleInlineInstance(
-            this.document, `#L${line}`, this.scrollView.nativeElement);
-        this.pageScrollService.start(scroll);
-    };
+    public ngAfterViewInit(): void {
+        this.goToLine(this.selectedLine);
+    }
+
+    public ngOnDestroy(): void {
+        this.sub.unsubscribe();
+    }
 
     /**
      * @param metricId The identifier of the metric to look for.
@@ -195,7 +200,7 @@ export class AnnotatedSourceComponent implements OnInit {
      * @param line The line for which to list messages.
      * @return The list of messages.
      */
-    public messages(line: number): IGNAThubMessage[] {
+    public messagesAt(line: number): IGNAThubMessage[] {
         if (!this.blob || !this.blob.lines) {
             return [];
         }
@@ -208,11 +213,11 @@ export class AnnotatedSourceComponent implements OnInit {
      * @param line The line for which to get coverage information.
      * @return The coverage value.
      */
-    public coverage(line: number): { status: CoverageStatus; hits: number } {
-        if (!this.blob || !this.blob.lines) {
+    public coverageAt(line: number): { status: CoverageStatus; hits: number } {
+        if (!this.displayCoverage || !this.blob || !this.blob.lines) {
             return null;
         }
-        return this.blob.lines[line - 1].coverage || { status: '', hits: 0 };
+        return this.blob.lines[line - 1].coverage || null;
     }
 
     /**
@@ -232,7 +237,14 @@ export class AnnotatedSourceComponent implements OnInit {
         }
         return this.blob.lines.reduce((count, line) => {
             return count +
-                this.messages(line.number).reduce(callback, initialValue);
+                this.messagesAt(line.number).reduce(callback, initialValue);
         }, 0 /* initialValue */);
     }
+
+    private goToLine(line: number): void {
+        let scroll: PageScrollInstance =
+            PageScrollInstance.simpleInlineInstance(
+                this.document, `#L${line}`, this.scrollView.nativeElement);
+        this.pageScrollService.start(scroll);
+    };
 }
