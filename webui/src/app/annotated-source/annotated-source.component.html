@@ -29,17 +29,17 @@
                     <div class="preferences">
                         <table>
                             <tbody>
-                            <tr>
+                            <tr *ngIf="blob.has_messages">
                                 <td>
-                                    <label *ngIf="blob.has_messages">
+                                    <label>
                                         <input type="checkbox" [(ngModel)]="displayMessages" />
                                         <span>Show messages</span>
                                     </label>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr *ngIf="blob.has_coverage">
                                 <td>
-                                    <label *ngIf="blob.has_coverage">
+                                    <label>
                                         <input type="checkbox" [(ngModel)]="displayCoverage" />
                                         <span>Show coverage</span>
                                     </label>

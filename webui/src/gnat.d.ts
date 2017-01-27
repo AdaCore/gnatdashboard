@@ -27,6 +27,7 @@ declare module 'gnat' {
         filename: string;
         metrics?: IFileMetrics;
         message_count?: { [toolId: number]: number };
+        coverage?: number;
         _associated_resource: boolean;
     }
 
@@ -34,6 +35,7 @@ declare module 'gnat' {
         name: string;
         sources: ISource[];
         message_count?: { [toolId: number]: number };
+        coverage?: number;
         _ui_expanded?: boolean;
     }
 

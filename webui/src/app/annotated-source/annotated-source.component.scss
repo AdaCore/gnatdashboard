@@ -60,7 +60,10 @@
 nav h4 { margin-top: 24px; }
 
 .preferences {
-  label { padding: 0 16px; }
+  label {
+    padding: 0 16px;
+    display: block;
+  }
 
   input[type="checkbox"] {
     position: relative;
@@ -150,11 +153,6 @@ div.option-selectors {
     .empty-file { font-style: italic; }
 
     tr {
-      &:hover {
-        &.no_code td.blob-num { background-color: #edf2f9; }
-        td.blob-code { background-color: #f4f7fb; }
-      }
-
       /* Line covered */
       &.covered td.blob-num { background-color: #dbffdb; }
       &:hover.covered td.blob-code { background-color: #eaffea; }
@@ -170,6 +168,8 @@ div.option-selectors {
       &:hover.partially_covered td.blob-code {
         background-color: #fbe597;
       }
+
+      &:hover.inline-comments { background: none; }
 
       &.inline-comments td {
         padding: 8px;

@@ -6,23 +6,27 @@
         <thead>
             <tr>
                 <th>&nbsp;</th>
-                <th class="thin text-right code-components-cell">File count</th>
-                <th class="thin text-right code-components-cell">Message count</th>
-                <th class="thin text-right code-components-cell">Coverage</th>
+                <th class="thin text-right code-components-cell">Files</th>
+                <th class="thin text-right code-components-cell">Messages</th>
+                <th class="thin text-right code-components-cell" *ngIf="project.coverage">
+                    Coverage
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="source-dir" *ngFor="let dir of project.source_dirs | dshMapKeys; let odd = odd"
-                [ngClass]="{ odd: odd, selected: isSelected(dir) }">
+            <tr class="source-dir" *ngFor="let dir of project.source_dirs | dshMapKeys"
+                [ngClass]="{ selected: isSelected(dir) }">
                 <td>
                     <a [routerLink]="['.', { project: project.name, directory: dir }]" class="with-icon">
                         <md-icon class="md-18">folder_open</md-icon>
                         <span>{{ dir }}</span>
                     </a>
                 </td>
-                <td class="thin text-right">{{ project.source_dirs[dir] | dshSourceFileCount }}</td>
-                <td class="thin text-right">N/C</td>
-                <td class="thin text-right">N/C</td>
+                <td class="thin text-right faded">{{ project.source_dirs[dir] | dshSourceFileCount }}</td>
+                <td class="thin text-right faded">{{ project.source_dirs[dir] | dshMessageCount }}</td>
+                <td class="thin text-right faded" *ngIf="project.coverage">
+                    {{ project.source_dirs[dir].coverage }}%
+                </td>
             </tr>
         </tbody>
     </table>
@@ -30,23 +34,25 @@
         <thead>
             <tr>
                 <th>&nbsp;</th>
-                <th class="thin text-right code-components-cell">Lines of code</th>
-                <th class="thin text-right code-components-cell">Message</th>
-                <th class="thin text-right code-components-cell">Coverage</th>
+                <th class="thin text-right code-components-cell">Messages</th>
+                <th class="thin text-right code-components-cell"
+                    *ngIf="project.source_dirs[getSelectedSourceDir()]?.coverage">
+                    Coverage
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let source of getSelectedSourceDir().sources; let odd = odd"
-                [ngClass]="{ odd: odd }">
+            <tr *ngFor="let source of getSelectedSourceDir().sources">
                 <td>
                     <a [routerLink]="['/source', source.filename]" class="with-icon">
                         <md-icon class="md-18">insert_drive_file</md-icon>
                         <span>{{ source.filename }}</span>
                     </a>
                 </td>
-                <td class="thin text-right faded">&nbsp;</td>
                 <td class="thin text-right faded">{{ source | dshMessageCount }}</td>
-                <td class="thin text-right faded">&nbsp;</td>
+                <td class="thin text-right faded" *ngIf="source.coverage">
+                    {{ source.coverage }}%
+                </td>
             </tr>
         </tbody>
     </table>

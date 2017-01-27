@@ -95,9 +95,11 @@ table {
 
   tr {
     td {
-      padding: 5px 8px;
-      line-height: 20px;
+      padding: 4px 8px;
+      line-height: 18px;
     }
+
+    &:hover { background-color: #f4f7fb; }
   }
 }
 

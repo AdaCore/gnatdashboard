@@ -228,6 +228,24 @@ class ReportBuilder(object):
             'message': msg.data
         }, extra)
 
+    @staticmethod
+    def _get_coverage(msg, tool):
+        """Compute coverage results.
+
+        :param GNAThub.Message msg: the message to encode
+        :param GNAThub.Tool tool: the coverage tool that generated this message
+        :return: the number of hits for that line and the coverage status
+        :rtype: int, CoverageStatus
+        """
+        hits, status = -1, CoverageStatus.NO_CODE
+        if tool.name == 'gcov':
+            hits = int(msg.data)
+            status = (
+                CoverageStatus.COVERED if hits else CoverageStatus.NOT_COVERED)
+        # TODO: augment with support for GNATcoverage
+        return hits, status
+
+    @classmethod
     def _encode_coverage(cls, msg, tool, extra=None):
         """JSON-encode coverage information.
 
@@ -238,11 +256,7 @@ class ReportBuilder(object):
         :rtype: dict[str, *]
         """
 
-        hits, status = -1, CoverageStatus.NO_CODE
-        if tool.name == 'gcov':
-            hits = int(msg.data)
-            status = (
-                CoverageStatus.COVERED if hits else CoverageStatus.NOT_COVERED)
+        hits, status = cls._get_coverage(msg, tool)
         return cls._decorate_dict({
             'status': status.name,
             'hits': hits
@@ -413,16 +427,24 @@ class ReportBuilder(object):
             # Computes file-level metrics.
             resource = GNAThub.Resource.get(os.path.join(source_dir, filename))
             metrics, msg_count = [], collections.defaultdict(int)
+            lines_hit, sloc = 0, 0
+
             if resource:
                 for msg in resource.list_messages():
                     rule = self._rules_by_id[msg.rule_id]
+                    tool = self._tools_by_id[rule.tool_id]
+                    if rule.identifier == 'coverage':
+                        _, coverage = self._get_coverage(msg, tool)
+                        lines_hit += 1 if coverage.COVERED else 0
+                        sloc += 1
+                        continue
                     # Note: the DB schema is currently designed so that metrics
                     # are stored has messages, and file metrics are attached to
                     # line 0.
                     if msg.line == 0:
                         metrics.append(self._encode_message(
                             msg, rule, self._tools_by_id[rule.tool_id]))
-                    elif rule.identifier != 'coverage':
+                    else:
                         msg_count[rule.tool_id] += 1
 
             # Report sums at the project level.
@@ -433,6 +455,11 @@ class ReportBuilder(object):
                 'filename': filename,
                 'metrics': metrics or None,
                 'message_count': msg_count or None,
+                # NOTE: this might not be the most accurate file coverage value
+                # possible.
+                # TODO: double-check formula when adding support for
+                # GNATcoverage.
+                'coverage': (lines_hit * 100 / sloc) if sloc else None,
                 '_associated_resource': resource is not None
             }
 
@@ -460,7 +487,12 @@ class ReportBuilder(object):
                 source_dirs[source_dir] = {
                     'name': source_dir,
                     'sources': sources,
-                    'message_count': source_dir_msg_count or None
+                    'message_count': source_dir_msg_count or None,
+                    'coverage': (sum(
+                        src['coverage'] if src['coverage'] is not None else 0
+                        for src in sources) / len(sources)
+                        if any(src['coverage'] is not None for src in sources)
+                        else None)
                 }
 
             paths = module.keys()
@@ -468,6 +500,12 @@ class ReportBuilder(object):
                 'name': name,
                 'source_dirs': source_dirs,
                 'message_count': module_msg_count or None,
+                'coverage': (sum(
+                    sd['coverage'] if sd['coverage'] is not None else 0
+                    for sd in source_dirs.values()) / len(source_dirs)
+                    if any(sd['coverage'] is not None
+                           for sd in source_dirs.values())
+                    else None),
                 '_source_dirs_common_prefix': (
                     os.path.commonprefix(paths) if len(paths) > 1
                     else os.path.dirname(paths[0])

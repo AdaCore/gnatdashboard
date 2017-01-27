@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { GNAThubService } from '../gnathub.service';
@@ -8,7 +8,7 @@ import { IGNAThubBlob } from 'gnat';
     selector: 'annotated-source-view',
     templateUrl: './annotated-source-view.component.html'
 })
-export class AnnotatedSourceViewComponent {
+export class AnnotatedSourceViewComponent implements OnInit {
     public filename: string = null;
     public blob: IGNAThubBlob = null;
     public isBlobFetchError: boolean = false;

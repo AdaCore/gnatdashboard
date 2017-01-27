@@ -26,7 +26,7 @@ export class ProjectSourceListComponent {
         if (!selected) {
             return false;
         }
-        return selected.name == sourceDir;
+        return selected.name === sourceDir;
     }
 
     private getFirstSourceDir(): ISourceDir {

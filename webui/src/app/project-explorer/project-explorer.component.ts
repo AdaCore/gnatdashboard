@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { IGNAThubReport } from 'gnat';
@@ -12,7 +12,7 @@ import { IGNAThubProperty, IGNAThubRule, IGNAThubTool } from 'gnat';
     templateUrl: './project-explorer.component.html',
     styleUrls: [ 'project-explorer.component.scss' ]
 })
-export class ProjectExplorerComponent {
+export class ProjectExplorerComponent implements OnInit, OnDestroy {
     public project: string = null;
     public directory: string = null;
     public report: IGNAThubReport = null;

@@ -34,20 +34,21 @@
         </div>
     </nav>
     <main>
-        <template [ngIf]="!project">
+        <template [ngIf]="!project || !report.modules[project]">
             <h3 class="source-head">All Projects</h3>
             <table>
                 <thead>
                     <tr>
                         <th>&nbsp;</th>
-                        <th class="thin text-right code-components-cell">Source directory</th>
-                        <th class="thin text-right code-components-cell">Message</th>
-                        <th class="thin text-right code-components-cell">Coverage</th>
+                        <th class="thin text-right code-components-cell">Directories</th>
+                        <th class="thin text-right code-components-cell">Messages</th>
+                        <th class="thin text-right code-components-cell" *ngIf="report.modules.coverage">
+                            Coverage
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let project of report.modules | dshMapKeys | dshNaturalSort; let odd = odd"
-                        [ngClass]="{ odd: odd }">
+                    <tr *ngFor="let project of report.modules | dshMapKeys | dshNaturalSort">
                         <td>
                             <a [routerLink]="['.', { project: project }]" class="with-icon">
                                 <md-icon class="md-18">developer_board</md-icon>
@@ -55,20 +56,23 @@
                             </a>
                         </td>
                         <td class="thin text-right faded">{{ report.modules[project].source_dirs | dshCount }}</td>
-                        <td class="thin text-right faded">&nbsp;</td>
-                        <td class="thin text-right faded">&nbsp;</td>
+                        <td class="thin text-right faded">{{ report.modules[project] | dshMessageCount }}</td>
+                        <td class="thin text-right faded" *ngIf="report.modules.coverage">
+                            {{ report.modules[project].coverage }}%
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </template>
-        <template [ngIf]="project">
+        <template [ngIf]="project && report.modules[project]">
             <h3 class="source-head">
                 <a [routerLink]="['.', {}]">All Projects</a>
                 <span class="path-divider">/</span>
                 <strong>{{ project }}</strong>
             </h3>
             <project-source-list
-                *ngIf="project" [project]="report.modules[project]" [directory]="directory">
+                *ngIf="project && report.modules[project]"
+                [project]="report.modules[project]" [directory]="directory">
             </project-source-list>
         </template>
     </main>
