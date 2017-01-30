@@ -17,6 +17,7 @@ export class AnnotatedSourceViewComponent implements OnInit {
         private gnathub: GNAThubService,
         private route: ActivatedRoute) {}
 
+    /** @override */
     public ngOnInit(): void {
         this.filename = this.route.snapshot.params['filename'];
         this.gnathub.getSource(this.filename).subscribe(

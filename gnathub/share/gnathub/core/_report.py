@@ -435,7 +435,8 @@ class ReportBuilder(object):
                     tool = self._tools_by_id[rule.tool_id]
                     if rule.identifier == 'coverage':
                         _, coverage = self._get_coverage(msg, tool)
-                        lines_hit += 1 if coverage.COVERED else 0
+                        lines_hit += (
+                            1 if coverage == CoverageStatus.COVERED else 0)
                         sloc += 1
                         continue
                     # Note: the DB schema is currently designed so that metrics

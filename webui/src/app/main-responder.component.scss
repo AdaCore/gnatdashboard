@@ -25,7 +25,7 @@ body { overflow: hidden; }
   .main-responder-body {
     flex: 1 1 auto;
     position: relative; /* needed to position inner content */
-    overflow-y: auto;
+    overflow-y: hidden;
   }
 
   // Should we ever need a footer in the future, the following style should be

@@ -23,6 +23,7 @@ export class ProjectExplorerComponent implements OnInit, OnDestroy {
         private gnathub: GNAThubService,
         private route: ActivatedRoute) {}
 
+    /** @override */
     public ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
             this.directory = params['directory'];
@@ -33,6 +34,7 @@ export class ProjectExplorerComponent implements OnInit, OnDestroy {
             error => this.isReportFetchError = !!error);
     }
 
+    /** @override */
     public ngOnDestroy(): void {
         this.sub.unsubscribe();
     }

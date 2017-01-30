@@ -106,23 +106,22 @@
                                     not_covered: coverageAt(line.number)?.status.toLowerCase() == 'not_covered',
                                     partially_covered: coverageAt(line.number)?.status.toLowerCase() == 'partially_covered'
                                 }">
-                                    <td class="blob-num" [attr.data-line-number]="line.number"></td>
+                                    <td class="blob-num">
+                                        <a [routerLink]="['.', { line: line.number }]"
+                                           [attr.data-line-number]="line.number">&nbsp;</a>
+                                    </td>
                                     <!-- line.content may contain escaped HTML entities.
                                         Use AngularJS embedded sanitizer to render it.  -->
                                     <td id="L{{ line.number }}" class="blob-code"
-                                        [innerHTML]="bypassSanitizer(line.html_content)">
-                                        &nbsp;
-                                    </td>
+                                        [innerHTML]="bypassSanitizer(line.html_content)"></td>
                                 </tr>
                                 <template [ngIf]="displayMessages && hasDisplayableMessage(line.number)">
                                     <tr class="inline-comments">
                                         <td colspan=2>
-                                            <template ngFor let-message [ngForOf]="messagesAt(line.number)">
-                                                <inline-comment
-                                                    *ngIf="shouldDisplayMessage(message)"
-                                                    [message]="message">
-                                                </inline-comment>
-                                            </template>
+                                            <inline-messages
+                                                [tools]="blob.tools"
+                                                [messages]="displayableMessagesAtByTool(line.number)">
+                                            </inline-messages>
                                         </td>
                                     </tr>
                                 </template>
@@ -138,8 +137,18 @@
         class="layout-page-footer location-view"
         *ngIf="displayMessages && getMessageDisplayedCount()">
         <div class="location-view-flex">
-            <div class="location-view-header">Messages ({{ getMessageDisplayedCount() }})</div>
-            <div class="location-view-list">
+            <div class="location-view-header">
+                <span class="location-view-title">Messages</span>
+                <button class="location-view-collapse-btn">
+                    <md-icon class="md-18"
+                             md-tooltip="Hide/show message list"
+                             [ngClass]="{ collapsed: !showMessageList }"
+                             (click)="showMessageList = !showMessageList">
+                        vertical_align_bottom
+                    </md-icon>
+                </button>
+            </div>
+            <div class="location-view-list" *ngIf="showMessageList">
                 <table class="file-line-container">
                     <tbody>
                     <template ngFor let-message [ngForOf]="messages">
@@ -157,9 +166,10 @@
                                     </template>
                                 </template>
                             </td>
+                            <td class="line-tool">{{ message.msg.rule.tool.name }}</td>
                             <td class="line-msg">
                                 <a [routerLink]="['.', { line: message.line.number }]">
-                                    {{ message.msg.message }} ({{ message.msg.rule.tool.name }})
+                                    {{ message.msg.message }}
                                 </a>
                             </td>
                         </tr>

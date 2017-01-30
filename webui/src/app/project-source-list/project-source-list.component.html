@@ -25,7 +25,9 @@
                 <td class="thin text-right faded">{{ project.source_dirs[dir] | dshSourceFileCount }}</td>
                 <td class="thin text-right faded">{{ project.source_dirs[dir] | dshMessageCount }}</td>
                 <td class="thin text-right faded" *ngIf="project.coverage">
-                    {{ project.source_dirs[dir].coverage }}%
+                    <template [ngIf]="project.source_dirs[dir].coverage">
+                        {{ project.source_dirs[dir].coverage }}%
+                    </template>
                 </td>
             </tr>
         </tbody>
@@ -35,14 +37,13 @@
             <tr>
                 <th>&nbsp;</th>
                 <th class="thin text-right code-components-cell">Messages</th>
-                <th class="thin text-right code-components-cell"
-                    *ngIf="project.source_dirs[getSelectedSourceDir()]?.coverage">
+                <th class="thin text-right code-components-cell" *ngIf="getSelectedSourceDir()?.coverage">
                     Coverage
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let source of getSelectedSourceDir().sources">
+            <tr *ngFor="let source of getSelectedSourceDir()?.sources">
                 <td>
                     <a [routerLink]="['/source', source.filename]" class="with-icon">
                         <md-icon class="md-18">insert_drive_file</md-icon>
@@ -50,8 +51,10 @@
                     </a>
                 </td>
                 <td class="thin text-right faded">{{ source | dshMessageCount }}</td>
-                <td class="thin text-right faded" *ngIf="source.coverage">
-                    {{ source.coverage }}%
+                <td class="thin text-right faded" *ngIf="getSelectedSourceDir()?.coverage">
+                    <template [ngIf]="source.coverage">
+                        {{ source.coverage }}%
+                    </template>
                 </td>
             </tr>
         </tbody>

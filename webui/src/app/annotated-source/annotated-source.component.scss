@@ -33,15 +33,15 @@
     }
 
     footer.layout-page-footer {
-      height: 300px;
-
       .location-view-flex {
         display: flex;
         flex-direction: column;
         height: 100%;
 
         .location-view-header { flex: 0 0 auto; }
+
         .location-view-list {
+          height: 250px;
           flex: 1 1 auto;
           overflow-y: auto;
         }
@@ -190,7 +190,6 @@ div.option-selectors {
       }
 
       .blob-num {
-        color: lighten(black, 70%);
         width: 1%;
         min-width: 50px;
         white-space: nowrap;
@@ -200,7 +199,11 @@ div.option-selectors {
         padding-right: 10px;
         user-select: none;
 
-        &::before { content: attr(data-line-number); }
+        a {
+          color: lighten(black, 70%);
+          text-decoration: none;
+          &::before { content: attr(data-line-number); }
+        }
       }
     }
   }
@@ -217,7 +220,8 @@ inline-comment {
   background-color: white;
 
   &-header {
-    padding: 5px 15px;
+    display: flex;
+    padding: 6px 15px 4px 15px;
     background-color: #f7f7f7;
     border-top: 1px solid #dddddd;
     border-bottom: 1px solid #e5e5e5;
@@ -227,6 +231,22 @@ inline-comment {
     font-size: 12px;
     line-height: 24px;
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  }
+
+  &-title { flex: 1 1 auto; }
+
+  &-collapse-btn {
+    flex: 0;
+    border: 0;
+    background: none;
+    height: 18px;
+    outline: 0;
+    padding: 3px;
+
+    md-icon {
+      transition: transform 300ms linear 0s;
+      &.collapsed { transform: rotate(180deg); }
+    }
   }
 
   table tr.message {
@@ -259,8 +279,6 @@ inline-comment {
         text-align: left;
         padding-right: 10px;
 
-        border-right: 1px solid #eeeeee;
-
         &::before {
           content: ':';
           // Force minimal width to remove extra padding created by pseudo
@@ -270,11 +288,21 @@ inline-comment {
         }
       }
 
+      &.line-col,
+      &.line-tool {
+        border-right: 1px solid #eeeeee;
+        width: 1%;
+        text-align: right;
+      }
+
+
+      &.line-tool { color: #333; }
+
       &.line-msg {
         line-height: 1.5em;
 
         a {
-          color: #555;
+          color: #333;
           display: block;
         }
         &:hover {

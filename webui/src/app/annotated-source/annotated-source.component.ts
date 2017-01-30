@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { InlineMessages } from '../inline-messages';
 
 import {
     CoverageStatus, IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage,
@@ -30,6 +31,7 @@ export class AnnotatedSourceComponent
     public selectedLine: number = null;
     public displayMessages: boolean = true;
     public displayCoverage: boolean = true;
+    public showMessageList: boolean = true;
 
     private sub: Subscription = null;
 
@@ -41,6 +43,7 @@ export class AnnotatedSourceComponent
         private route: ActivatedRoute,
         private sanitizer: DomSanitizer) {}
 
+    /** @override */
     public ngOnInit(): void {
         for (let toolId of Object.keys(this.blob.tools)) {
             // Show messages triggered by all tools by default
@@ -67,10 +70,12 @@ export class AnnotatedSourceComponent
         });
     }
 
+    /** @override */
     public ngAfterViewInit(): void {
         this.goToLine(this.selectedLine);
     }
 
+    /** @override */
     public ngOnDestroy(): void {
         this.sub.unsubscribe();
     }
@@ -195,16 +200,22 @@ export class AnnotatedSourceComponent
     }
 
     /**
-     * Return the list of messages attached to the given line.
+     * Return the list of messages attached to the given line, grouped by tool.
      *
      * @param line The line for which to list messages.
      * @return The list of messages.
      */
-    public messagesAt(line: number): IGNAThubMessage[] {
-        if (!this.blob || !this.blob.lines) {
-            return [];
-        }
-        return this.blob.lines[line - 1].messages;
+    public displayableMessagesAtByTool(line: number): InlineMessages {
+        const dm: IGNAThubMessage[] = this.messagesAt(line).filter(
+            msg => this.shouldDisplayMessage(msg));
+        const im: InlineMessages = {};
+        dm.forEach(msg => {
+            if (!im.hasOwnProperty(msg.rule.tool.id)) {
+                im[msg.rule.tool.id] = [];
+            }
+            im[msg.rule.tool.id].push(msg);
+        });
+        return im;
     }
 
     /**
@@ -218,6 +229,19 @@ export class AnnotatedSourceComponent
             return null;
         }
         return this.blob.lines[line - 1].coverage || null;
+    }
+
+    /**
+     * Return the list of messages attached to the given line.
+     *
+     * @param line The line for which to list messages.
+     * @return The list of messages.
+     */
+    private messagesAt(line: number): IGNAThubMessage[] {
+        if (!this.blob || !this.blob.lines) {
+            return [];
+        }
+        return this.blob.lines[line - 1].messages;
     }
 
     /**
@@ -241,6 +265,11 @@ export class AnnotatedSourceComponent
         }, 0 /* initialValue */);
     }
 
+    /**
+     * Scroll into the source file up to a given line.
+     *
+     * @param line The number of the line to scroll to.
+     */
     private goToLine(line: number): void {
         let scroll: PageScrollInstance =
             PageScrollInstance.simpleInlineInstance(

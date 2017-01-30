@@ -16,6 +16,7 @@ export class AboutComponent implements OnInit {
 
     constructor(private gnathub: GNAThubService) {}
 
+    /** @override */
     public ngOnInit(): void {
         this.gnathub.getReport().subscribe(
             report => this.report = report,

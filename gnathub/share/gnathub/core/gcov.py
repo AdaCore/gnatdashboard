@@ -70,7 +70,7 @@ class Gcov(Plugin, Reporter):
 
                     line = int(line_info[1].strip())
 
-                    # find the message corresponding to this hits number
+                    # Find the message corresponding to this hits number
 
                     if hits in self.hits:
                         msg = self.hits[hits]

@@ -1,0 +1,18 @@
+<template ngFor let-toolId [ngForOf]="messages | dshMapKeys">
+    <div class="messages">
+        <div class="messages-tool">{{ tools[toolId].name }}</div>
+        <div class="messages-list">
+            <div class="messages-list-item" *ngFor="let message of messages[toolId]">
+                <span class="message-text">{{ message.message }}</span>
+                <span class="rule-identifier">
+                    <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
+                    {{ message.rule.identifier }}
+                </span>
+                <span class="message-properties" *ngIf="message.properties | dshNotEmpty">
+                    <md-icon class="tags" md-tooltip="Message properties">local_offer</md-icon>
+                    {{ formatMessageProperties(message) }}
+                </span>
+            </div>
+        </div>
+    </div>
+</template>

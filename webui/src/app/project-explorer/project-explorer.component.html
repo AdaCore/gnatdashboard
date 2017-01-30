@@ -58,7 +58,9 @@
                         <td class="thin text-right faded">{{ report.modules[project].source_dirs | dshCount }}</td>
                         <td class="thin text-right faded">{{ report.modules[project] | dshMessageCount }}</td>
                         <td class="thin text-right faded" *ngIf="report.modules.coverage">
-                            {{ report.modules[project].coverage }}%
+                            <template [ngIf]="report.modules[project].coverage">
+                                {{ report.modules[project].coverage }}%
+                            </template>
                         </td>
                     </tr>
                 </tbody>
