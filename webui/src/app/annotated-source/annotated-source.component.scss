@@ -239,16 +239,35 @@ inline-comment {
       vertical-align: middle;
       cursor: default;
 
-      &.line-num {
-        color: lighten(black, 70%);
+      &.line-num,
+      &.line-col {
+        color: lighten(black, 60%);
         width: 1%;
-        min-width: 50px;
         white-space: nowrap;
-        text-align: right;
         vertical-align: top;
+        padding: 0;
+      }
+
+      &.line-num {
+        min-width: 30px;
+        text-align: right;
         padding-left: 10px;
+      }
+
+      &.line-col {
+        min-width: 15px;
+        text-align: left;
         padding-right: 10px;
+
         border-right: 1px solid #eeeeee;
+
+        &::before {
+          content: ':';
+          // Force minimal width to remove extra padding created by pseudo
+          // element.
+          width: 1px;
+          display: inline-block;
+        }
       }
 
       &.line-msg {

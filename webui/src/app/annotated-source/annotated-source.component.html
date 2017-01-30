@@ -146,7 +146,17 @@
                         <tr class="message"
                             [ngClass]="{ selected: selectedLine == message.line.number }"
                             *ngIf="shouldDisplayMessage(message.msg)">
-                            <td class="line-num">l.{{ message.line.number }}</td>
+                            <td class="line-num">{{ message.line.number }}</td>
+                            <td class="line-col">
+                                <template [ngIf]="message.msg.begin">
+                                    <template [ngIf]="message.msg.begin === message.msg.end">
+                                        {{ message.msg.begin }}
+                                    </template>
+                                    <template [ngIf]="message.msg.begin !== message.msg.end">
+                                        {{ message.msg.begin }}-{{ message.msg.end }}
+                                    </template>
+                                </template>
+                            </td>
                             <td class="line-msg">
                                 <a [routerLink]="['.', { line: message.line.number }]">
                                     {{ message.msg.message }} ({{ message.msg.rule.tool.name }})
