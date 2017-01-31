@@ -385,7 +385,7 @@ class ReportBuilder(object):
                 'content': decoded_raw_lines[no - 1],
                 'html_content': (
                     highlighted[no - 1]
-                    if highlighted and len(highlighted) > no else None
+                    if highlighted and len(highlighted) >= no else None
                 ),
                 'coverage': coverage[no],
                 'messages': messages[no]
@@ -407,7 +407,7 @@ class ReportBuilder(object):
         :rtype: dict[str, *]
         """
 
-        """Map tool ID to number of message generated project-wide
+        """Map tool ID to number of message generated project-wide.
 
         :type: dict[int, int]
         """

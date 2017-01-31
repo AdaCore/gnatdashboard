@@ -110,10 +110,11 @@
                                         <a [routerLink]="['.', { line: line.number }]"
                                            [attr.data-line-number]="line.number">&nbsp;</a>
                                     </td>
-                                    <!-- line.content may contain escaped HTML entities.
-                                        Use AngularJS embedded sanitizer to render it.  -->
+                                    <!-- line.html_content may contain escaped HTML entities. Use AngularJS embedded
+                                         sanitizer to render it.  -->
                                     <td id="L{{ line.number }}" class="blob-code"
-                                        [innerHTML]="bypassSanitizer(line.html_content)"></td>
+                                        [innerHTML]="bypassSanitizer(line.html_content)">
+                                    </td>
                                 </tr>
                                 <template [ngIf]="displayMessages && hasDisplayableMessage(line.number)">
                                     <tr class="inline-comments">
