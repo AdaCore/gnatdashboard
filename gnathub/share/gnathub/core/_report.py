@@ -273,6 +273,22 @@ class ReportBuilder(object):
         :raises: IOError
         """
 
+        def inc_msg_count(store, key, gen_value, *args):
+            """Increment the "message_count" property of a dictionary.
+
+            Create the dictionary and the "message_count" property if needed.
+
+            :param dict store: the dictionary to update
+            :param str key: the key to create/update
+            :param Function gen_value: the function to call to create the value
+                if missing from the dictionary (takes one positional `extra`
+                argument that is a dictionary, ie. see `_encode_*` functions)
+            :param list *args: arguments of the `gen_value` function
+            """
+            if key not in store:
+                store[key] = gen_value(*args, extra={'message_count': 0})
+            store[key]['message_count'] += 1
+
         full_path = os.path.join(source_dir, filename)
         assert os.path.isfile(full_path), '{}: not such file ({})'.format(
             filename, full_path)
@@ -280,6 +296,7 @@ class ReportBuilder(object):
         messages_from_db = GNAThub.Resource.get(full_path).list_messages()
 
         tools, rules, properties = {}, {}, {}
+        metrics = []
         messages = collections.defaultdict(list)
         coverage = collections.defaultdict(str)
 
@@ -291,33 +308,22 @@ class ReportBuilder(object):
                 # Only one coverage tool shall be used. The last entry
                 # overwrites previous ones.
                 coverage[msg.line] = self._encode_coverage(msg, tool)
-                # Do not register message, rule or property for coverage
+                # Do not register message, rule or property for coverage.
                 continue
 
-            for prop in msg.get_properties():
-                if prop.id not in properties:
-                    properties[prop.id] = self._encode_message_property(prop, {
-                        'message_count': 1
-                    })
-                else:
-                    properties[prop.id]['message_count'] += 1
+            encoded_msg = self._encode_message(msg, rule, tool)
 
-            if msg.line != 0:
-                # Increment the count of inline messages
-                if tool.id not in tools:
-                    tools[tool.id] = self._encode_tool(tool, {
-                        'message_count': 1
-                    })
-                else:
-                    tools[tool.id]['message_count'] += 1
-                if rule.id not in rules:
-                    rules[rule.id] = self._encode_rule(rule, tool, {
-                        'message_count': 1
-                    })
-                else:
-                    rules[rule.id]['message_count'] += 1
-
-            messages[msg.line].append(self._encode_message(msg, rule, tool))
+            if msg.line == 0:
+                # Messages stored with line = 0 are metrics from GNATmetric.
+                metrics.append(encoded_msg)
+            else:
+                inc_msg_count(tools, tool.id, self._encode_tool, tool)
+                inc_msg_count(rules, rule.id, self._encode_rule, rule, tool)
+                for prop in msg.get_properties():
+                    inc_msg_count(
+                        properties, prop.id,
+                        self._encode_message_property, prop)
+                messages[msg.line].append(encoded_msg)
 
         src_hunk = {
             'project': project_name,
@@ -326,7 +332,7 @@ class ReportBuilder(object):
             'has_messages': not not messages,
             'has_coverage': not not coverage,
             'full_path': full_path,
-            'metrics': messages[0],
+            'metrics': metrics,
             'properties': properties,
             'tools': tools,
             'rules': rules,
