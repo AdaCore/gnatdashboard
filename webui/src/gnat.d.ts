@@ -7,32 +7,15 @@ declare module 'gnat' {
     //  * PARTIALLY_COVERED
     type CoverageStatus = string;
 
-    export interface IFileMetrics {
-        // Available on all Ada sources
-        all_lines: number;
-        blank_lines: number;
-        code_lines: number;
-        comment_lines: number;
-        eol_comments: number;
-        comment_percentage: number;
-        // Available on implementations only (body files)
-        cyclomatic_complexity?: number;
-        expression_complexity?: number;
-        statement_complexity?: number;
-        essential_complexity?: number;
-        max_loop_nesting?: number;
-    }
-
     export interface ISource {
         filename: string;
-        metrics?: IFileMetrics;
+        metrics?: { [metricId: number]: IGNAThubMetric }[];
         message_count?: { [toolId: number]: number };
         coverage?: number;
-        _associated_resource: boolean;
     }
 
     export interface ISourceDir {
-        name: string;
+        path: string;
         sources: ISource[];
         message_count?: { [toolId: number]: number };
         coverage?: number;
@@ -80,6 +63,11 @@ declare module 'gnat' {
         ui_selected?: boolean;
     }
 
+    export interface IGNAThubMetric {
+        rule: IGNAThubRule;
+        value: string;
+    }
+
     export interface IGNAThubMessage {
         begin: number;
         end: number;
@@ -107,7 +95,7 @@ declare module 'gnat' {
         tools: { [id: number]: IGNAThubTool };
         rules: { [id: number]: IGNAThubRule };
         properties: { [id: number]: IGNAThubProperty };
-        metrics?: IGNAThubMessage[];
+        metrics?: { [metricId: number]: IGNAThubMetric }[];
         message_count?: { [toolId: number]: number };
     }
 }

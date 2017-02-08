@@ -21,11 +21,13 @@ prior to export.
 import GNAThub
 
 import collections
+import json
 import logging
 import os
 import time
 
 from enum import Enum
+from itertools import chain
 
 import pygments.lexers
 import pygments.util
@@ -34,7 +36,24 @@ from pygments import highlight
 from pygments.formatters import HtmlFormatter
 
 
-def count_extra_newlines(lines):
+def _write_json(output, obj, **kwargs):
+    """Dump a JSON-encoded representation of `obj` into `output`.
+
+    :param str output: path to the output file
+    :param obj: object to serialize and save into `output`
+    :type obj: dict or list or str or int
+    :param dict kwargs: the parameters to pass to the underlying
+        :func:`json.dumps` function; see :func:`json.dumps` documentation
+        for more information
+    :raises: IOError
+    :see: :func:`json.dumps`
+    """
+
+    with open(output, 'w') as outfile:
+        outfile.write(json.dumps(obj, **kwargs))
+
+
+def _count_extra_newlines(lines):
     """Count the number of leading and trailing newlines.
 
     :rtype: int, int
@@ -73,471 +92,540 @@ class _HtmlFormatter(HtmlFormatter):
         return source
 
 
-class ReportBuilder(object):
-    """Report builder."""
+def _decorate_dict(obj, extra=None):
+    """Decorate a Python dictionary with additional properties.
+
+    :param dict[str, *] obj: the Python dictionary to decorate
+    :param extra: extra fields to decorate the encoded object with
+    :type extra: dict or None
+    :rtype: dict[str, *]
+    """
+    if extra:
+        obj.update(extra)
+    return obj
+
+
+def _encode_tool(tool, extra=None):
+    """JSON-encode a tool.
+
+    :param GNAThub.Tool tool: the tool to encode
+    :param extra: extra fields to decorate the encoded object with
+    :type extra: dict or None
+    :rtype: dict[str, *]
+    """
+    return _decorate_dict({
+        'id': tool.id,
+        'name': tool.name
+    }, extra)
+
+
+def _encode_rule(rule, tool, extra=None):
+    """JSON-encode a rule.
+
+    :param GNAThub.Rule rule: the rule to encode
+    :param GNAThub.Tool tool: the tool associated with the rule
+    :param extra: extra fields to decorate the encoded object with
+    :type extra: dict or None
+    :rtype: dict[str, *]
+    """
+    return _decorate_dict({
+        'id': rule.id,
+        'identifier': rule.identifier,
+        'name': rule.name,
+        'kind': rule.kind,
+        'tool': _encode_tool(tool)
+    }, extra)
+
+
+def _encode_property(prop, extra=None):
+    """JSON-encode a message property.
+
+    :param GNAThub.Property prop: the property associated with the message
+    :param extra: extra fields to decorate the encoded object with
+    :type extra: dict or None
+    :rtype: dict[str,*]
+    """
+    return _decorate_dict({
+        'id': prop.id,
+        'identifier': prop.identifier,
+        'name': prop.name
+    }, extra)
+
+
+def _encode_message(message, rule, tool, extra=None):
+    """JSON-encode a message.
+
+    :param GNAThub.Message message: the message to encode
+    :param GNAThub.Rule rule: the rule associated with the message
+    :param GNAThub.Tool tool: the tool associated with the rule
+    :param extra: extra fields to decorate the encoded object with
+    :type extra: dict or None
+    :rtype: dict[str, *]
+    """
+    return _decorate_dict({
+        'begin': message.col_begin,
+        'end': message.col_end,
+        'rule': _encode_rule(rule, tool),
+        'properties': [
+            _encode_property(prop) for prop in message.get_properties()],
+        'message': message.data
+    }, extra)
+
+
+def _encode_metric(message, rule, tool, extra=None):
+    """JSON-encode a metric.
+
+    :param GNAThub.Message message: the message to encode
+    :param GNAThub.Rule rule: the rule associated with the message
+    :param GNAThub.Tool tool: the tool associated with the rule
+    :param extra: extra fields to decorate the encoded object with
+    :type extra: dict or None
+    :rtype: dict[str, *]
+    """
+    return _decorate_dict({
+        'rule': _encode_rule(rule, tool),
+        'value': message.data
+    }, extra)
+
+
+def _get_coverage(message, tool):
+    """Compute coverage results.
+
+    :param GNAThub.Message message: the message to encode
+    :param GNAThub.Tool tool: the coverage tool that generated this message
+    :return: the number of hits for that line and the coverage status
+    :rtype: int, CoverageStatus
+    """
+    hits, status = -1, CoverageStatus.NO_CODE
+    if tool.name == 'gcov':
+        hits = int(message.data)
+        status = (
+            CoverageStatus.COVERED if hits else CoverageStatus.NOT_COVERED)
+    # TODO: augment with support for GNATcoverage
+    return hits, status
+
+
+def _encode_coverage(hits, status, extra=None):
+    """JSON-encode coverage information.
+
+    :param int hits: ???
+    :param CoverageStatus status: ???
+    :param extra: extra fields to decorate the encoded object with
+    :type extra: dict or None
+    :rtype: dict[str, *]
+    """
+    return _decorate_dict({
+        'status': status.name,
+        'hits': hits
+    }, extra)
+
+
+def with_static(**kwargs):
+    """Declare static variables for functions with annotation."""
+
+    def decorate(func):
+        for k in kwargs:
+            setattr(func, k, kwargs[k])
+        return func
+    return decorate
+
+
+@with_static(rules=None)
+def _rule_by_id(rule_id):
+    """Return the :class:`GNAThub.Rule` with ``rule_id``.
+
+    :param int rule_id: the unique ID of the rule
+    :rtype: GNAThub.Rule
+    """
+    if _rule_by_id.rules is None:
+        _rule_by_id.rules = {rule.id: rule for rule in GNAThub.Rule.list()}
+    return _rule_by_id.rules[rule_id]
+
+
+@with_static(tools=None)
+def _tool_by_id(tool_id):
+    """Return the :class:`GNAThub.Tool` with ``tool_id``.
+
+    :param int tool_id: the unique ID of the tool
+    :rtype: GNAThub.Tool
+    """
+    if _tool_by_id.tools is None:
+        _tool_by_id.tools = {tool.id: tool for tool in GNAThub.Tool.list()}
+    return _tool_by_id.tools[tool_id]
+
+
+def _inc_msg_count(store, key, gen_value, *args):
+    """Increment the "message_count" property of a dictionary.
+
+    Create the dictionary and the "message_count" property if needed.
+
+    :param dict store: the dictionary to update
+    :param str key: the key to create/update
+    :param Function gen_value: the function to call to create the value
+        if missing from the dictionary (takes one positional `extra`
+        argument that is a dictionary, ie. see `_encode_*` functions)
+    :param list *args: arguments of the `gen_value` function
+    """
+    if key not in store:
+        store[key] = gen_value(*args, extra={'message_count': 0})
+    store[key]['message_count'] += 1
+
+
+class Average(object):
+    """Accumulator to compute an average."""
 
     def __init__(self):
-        rules = GNAThub.Rule.list()
-        tools = GNAThub.Tool.list()
-        self.log = logging.getLogger(__name__)
-        self._rules_by_id = {rule.id: rule for rule in GNAThub.Rule.list()}
-        self._tools_by_id = {tool.id: tool for tool in tools}
-        self._tools_by_name = {tool.name.lower(): tool for tool in tools}
+        self._acc = None
+        self._count = 0
 
-    def _generate_source_tree(self, transform=None):
-        """Generate the initial project structure.
+    def add(self, value):
+        """Add a new sample value.
 
-        {
-            "project_name_1": {
-                "source_dir_path_1": [
-                    "source_filename_1", "source_filename_2"
-                ],
-                ...
-            },
-            ...
-        }
-
-        This structure will then be populated with relevant metrics.
-
-        :param transform: optional routine that takes 3 parameters as input
-            (the project name, the source directory full path, and the source
-            filename) and returns any structure. This callback is used to
-            populate the leaves of the above tree. Defaults to returning the
-            source filename.
-        :type transform: Function or None
-        :return: a dictionary listing the project sources
-        :rtype: dict[str, dict[str, list[*]]]
+        :param value:
+        :type value: int or None
         """
+        self._count += 1
+        if value is None:
+            return
+        self._acc = (self._acc or 0) + value
 
-        def reduce_source_dirs(sources):
-            """Compute the list of source directories from source files.
+    def compute(self):
+        """Compute the average of the sample values added so far.
 
-            :param collections.Iterable[str] sources: the list of source files'
-                absolute path
-            :return: the list of unique source directories' absolute path
-            :rtype: collections.Iterable[str]
-            """
-
-            return list(set((
-                os.path.normpath(os.path.dirname(f)) for f in sources
-            )))
-
-        transform = transform or (
-            # Default to returning the filename if |transform| is not provided
-            lambda project_name, source_dir, filename: filename
-        )
-
-        # TODO(delay): it might be worth considering exporting this function
-        # or a more generic version of it from the GNAThub module.
-        return {
-            project: {
-                directory: [
-                    transform(project, directory, os.path.basename(path))
-                    for path in sources
-                    if os.path.normpath(os.path.dirname(path)) == directory
-                ] for directory in reduce_source_dirs(sources)
-            }
-            for project, sources in GNAThub.Project.source_files().iteritems()
-            if sources
-        }
-
-    @classmethod
-    def _decorate_dict(cls, obj, extra=None):
-        """Decorate a Python dictionary with additional properties.
-
-        :param dict[str, *] obj: the Python dictionary to decorate
-        :param extra: extra fields to decorate the encoded object with
-        :type extra: dict or None
-        :rtype: dict[str, *]
+        :return: the average, or ``None`` if no sample was recorded
+        :rtype: int or None
         """
+        if self._acc is None or not self._count:
+            return None
+        return self._acc / self._count
 
-        if extra:
-            obj.update(extra)
-        return obj
 
-    @classmethod
-    def _encode_tool(cls, tool, extra=None):
-        """JSON-encode a tool.
+class SourceBuilder(object):
+    """Representation of a source file."""
 
-        :param GNAThub.Tool tool: the tool to encode
-        :param extra: extra fields to decorate the encoded object with
-        :type extra: dict or None
-        :rtype: dict[str, *]
+    def __init__(self, project, path):
         """
-
-        return cls._decorate_dict({
-            'id': tool.id,
-            'name': tool.name
-        }, extra)
-
-    @classmethod
-    def _encode_rule(cls, rule, tool, extra=None):
-        """JSON-encode a rule.
-
-        :param GNAThub.Rule rule: the rule to encode
-        :param GNAThub.Tool tool: the tool associated with the rule
-        :param extra: extra fields to decorate the encoded object with
-        :type extra: dict or None
-        :rtype: dict[str, *]
+        :param str project: the name of the project
+        :param str path: the path to the source
         """
+        self.project = project
+        self.path = path
+        self.source_dir, self.filename = os.path.split(self.path)
+        self.log = logging.getLogger(
+            '{}({})'.format(self.__class__.__name__, self.filename))
 
-        return cls._decorate_dict({
-            'id': rule.id,
-            'identifier': rule.identifier,
-            'name': rule.name,
-            'kind': rule.kind,
-            'tool': cls._encode_tool(tool)
-        }, extra)
+        self.tools, self.rules, self.props = {}, {}, {}
+        self.metrics, self.coverage = [], {}
+        self.messages = collections.defaultdict(list)
+        self.message_count = collections.defaultdict(int)
 
-    @classmethod
-    def _encode_message_property(cls, prop, extra=None):
-        """JSON-encode a message property.
+        self._process_messages()
 
-        :param GNAThub.Property prop: the property associated with the message
-        :param extra: extra fields to decorate the encoded object with
-        :type extra: dict or None
-        :rtype: dict[str,*]
+    @property
+    def file_coverage(self):
         """
-
-        return cls._decorate_dict({
-            'id': prop.id,
-            'identifier': prop.identifier,
-            'name': prop.name
-        }, extra)
-
-    @classmethod
-    def _encode_message(cls, msg, rule, tool, extra=None):
-        """JSON-encode a message.
-
-        :param GNAThub.Message msg: the message to encode
-        :param GNAThub.Rule rule: the rule associated with the message
-        :param GNAThub.Tool tool: the tool associated with the rule
-        :param extra: extra fields to decorate the encoded object with
-        :type extra: dict or None
-        :rtype: dict[str, *]
+        :return: the average coverage of the file
+        :rtype: int or None
         """
+        if not self.coverage:
+            return None
+        # TODO: double-check formula when adding support for GNATcoverage.
+        return sum(
+            1 if status == CoverageStatus.COVERED else 0
+            for _, status in self.coverage.itervalues()
+        ) * 100 / len(self.coverage)
 
-        return cls._decorate_dict({
-            'begin': msg.col_begin,
-            'end': msg.col_end,
-            'rule': cls._encode_rule(rule, tool),
-            'properties': [
-                cls._encode_message_property(prop)
-                for prop in msg.get_properties()
-            ],
-            'message': msg.data
-        }, extra)
-
-    @staticmethod
-    def _get_coverage(msg, tool):
-        """Compute coverage results.
-
-        :param GNAThub.Message msg: the message to encode
-        :param GNAThub.Tool tool: the coverage tool that generated this message
-        :return: the number of hits for that line and the coverage status
-        :rtype: int, CoverageStatus
-        """
-        hits, status = -1, CoverageStatus.NO_CODE
-        if tool.name == 'gcov':
-            hits = int(msg.data)
-            status = (
-                CoverageStatus.COVERED if hits else CoverageStatus.NOT_COVERED)
-        # TODO: augment with support for GNATcoverage
-        return hits, status
-
-    @classmethod
-    def _encode_coverage(cls, msg, tool, extra=None):
-        """JSON-encode coverage information.
-
-        :param GNAThub.Message msg: the message to encode
-        :param GNAThub.Tool tool: the coverage tool that generated this message
-        :param extra: extra fields to decorate the encoded object with
-        :type extra: dict or None
-        :rtype: dict[str, *]
-        """
-
-        hits, status = cls._get_coverage(msg, tool)
-        return cls._decorate_dict({
-            'status': status.name,
-            'hits': hits
-        }, extra)
-
-    def generate_src_hunk(self, project_name, source_dir, filename):
-        """Generate the JSON-encoded representation of a source file.
-
-        :param str project_name: the name of the project
-        :param str source_dir: the source file directory
-        :param str filename: the source file filename
-        :return: the JSON-encoded representation of the source file
-        :rtype: dict[str, *]
-        :raises: IOError
-        """
-
-        def inc_msg_count(store, key, gen_value, *args):
-            """Increment the "message_count" property of a dictionary.
-
-            Create the dictionary and the "message_count" property if needed.
-
-            :param dict store: the dictionary to update
-            :param str key: the key to create/update
-            :param Function gen_value: the function to call to create the value
-                if missing from the dictionary (takes one positional `extra`
-                argument that is a dictionary, ie. see `_encode_*` functions)
-            :param list *args: arguments of the `gen_value` function
-            """
-            if key not in store:
-                store[key] = gen_value(*args, extra={'message_count': 0})
-            store[key]['message_count'] += 1
-
-        full_path = os.path.join(source_dir, filename)
-        assert os.path.isfile(full_path), '{}: not such file ({})'.format(
-            filename, full_path)
-
-        messages_from_db = GNAThub.Resource.get(full_path).list_messages()
-
-        tools, rules, properties = {}, {}, {}
-        metrics = []
-        messages = collections.defaultdict(list)
-        coverage = collections.defaultdict(str)
-
-        for msg in messages_from_db:
-            rule = self._rules_by_id[msg.rule_id]
-            tool = self._tools_by_id[rule.tool_id]
+    def _process_messages(self):
+        """Process all messages attached to this source file."""
+        for message in GNAThub.Resource.get(self.path).list_messages():
+            rule = _rule_by_id(message.rule_id)
+            tool = _tool_by_id(rule.tool_id)
 
             if rule.identifier == 'coverage':
                 # Only one coverage tool shall be used. The last entry
                 # overwrites previous ones.
-                coverage[msg.line] = self._encode_coverage(msg, tool)
+                self.coverage[message.line] = _get_coverage(message, tool)
                 # Do not register message, rule or property for coverage.
                 continue
 
-            encoded_msg = self._encode_message(msg, rule, tool)
-
-            if msg.line == 0:
+            if message.line == 0:
                 # Messages stored with line = 0 are metrics from GNATmetric.
-                metrics.append(encoded_msg)
-            else:
-                inc_msg_count(tools, tool.id, self._encode_tool, tool)
-                inc_msg_count(rules, rule.id, self._encode_rule, rule, tool)
-                for prop in msg.get_properties():
-                    inc_msg_count(
-                        properties, prop.id,
-                        self._encode_message_property, prop)
-                messages[msg.line].append(encoded_msg)
+                self.metrics.append((message, rule, tool))
+                continue
 
-        src_hunk = {
-            'project': project_name,
-            'filename': filename,
-            'source_dir': source_dir,
-            'has_messages': not not messages,
-            'has_coverage': not not coverage,
-            'full_path': full_path,
-            'metrics': metrics,
-            'properties': properties,
-            'tools': tools,
-            'rules': rules,
+            _inc_msg_count(self.tools, tool.id, _encode_tool, tool)
+            _inc_msg_count(self.rules, rule.id, _encode_rule, rule, tool)
+            for prop in message.get_properties():
+                _inc_msg_count(self.props, prop.id, _encode_property, prop)
+            self.messages[message.line].append((message, rule, tool))
+            self.message_count[tool.id] += 1
+
+    def to_json(self):
+        """Generate the JSON-encoded representation of a source file.
+
+        :rtype: dict[str, *]
+        """
+        if not os.path.isfile(self.path):
+            self.log.error('%s: not such file (%s)', self.filename, self.path)
+            return
+
+        this = {
+            'project': self.project,
+            'filename': self.filename,
+            'source_dir': self.source_dir,
+            'has_messages': not not self.messages,
+            'has_coverage': not not self.coverage,
+            'full_path': self.path,
+            'metrics': [_encode_metric(*metric) for metric in self.metrics],
+            'properties': self.props,
+            'tools': self.tools,
+            'rules': self.rules,
             'lines': None
         }
 
         try:
-            with open(full_path, 'r') as infile:
+            with open(self.path, 'r') as infile:
                 content = infile.read()
         except IOError:
-            self.log.exception('failed to read source file: %s', full_path)
-            self.log.warn('report might be incomplete')
-            return src_hunk
+            self.log.exception('failed to read source file: %s', self.path)
+            self.log.warn('report will be incomplete')
+            return this
 
-        # NOTE: Pygments lexer seems to drop those loading and trailing new
+        # NOTE: Pygments lexer seems to drop those leading and trailing new
         # lines in its output. Add them back after HTMLization to avoid line
         # desynchronization with the original files.
         raw_lines = content.splitlines()
-        lead_nl_count, trail_nl_count = count_extra_newlines(raw_lines)
+        lead_nl_count, trail_nl_count = _count_extra_newlines(raw_lines)
 
         # Select the appropriate lexer; fall back on "Null" lexer if no match.
         try:
-            lexer = pygments.lexers.guess_lexer_for_filename(
-                full_path, content)
+            lex = pygments.lexers.guess_lexer_for_filename(self.path, content)
         except pygments.util.ClassNotFound:
-            self.log.warn('could not guess lexer from file: %s', full_path)
+            self.log.warn('could not guess lexer from file: %s', self.path)
             self.log.warn('fall back to using TextLexer (ie. no highlighting)')
-            lexer = pygments.lexers.special.TextLexer()
+            lex = pygments.lexers.special.TextLexer()
 
-        # Custom HTML formatter outputting the decorated source code as a DOM.
-        formatter = _HtmlFormatter()
-
+        # Attempt to decode the source file from UTF-8.
         try:
-            decoded_raw_lines = [line.decode('utf-8') for line in raw_lines]
-            assert len(decoded_raw_lines) == len(raw_lines)
+            decoded = [line.decode('utf-8') for line in raw_lines]
+            if len(raw_lines) != len(decoded):
+                raise IndexError(' '.join([
+                    'mismatching number of source line in the decoded output;',
+                    'expected {}, got {}'
+                ]).format(len(raw_lines), len(decoded)))
         except UnicodeDecodeError:
-            self.log.exception('failed to decode UTF-8: %s', full_path)
-            self.log.warn('source file content will not be available')
-            decoded_raw_lines = None
+            self.log.exception('failed to decode UTF-8: %s', self.path)
+            self.log.warn('source file content may not be available')
+            decoded = None
 
-        # Attempt to highligth the source file; fall back on raw on failure.
+        # Attempt to highligth the source file; fall back to raw on failure.
         try:
+            # HTML formatter outputting the decorated source code as a DOM.
             highlighted = (
                 [''] * lead_nl_count +
-                highlight(content, lexer, formatter).splitlines() +
-                [''] * trail_nl_count
-            )
-
-            assert len(raw_lines) == len(highlighted), ' '.join([
-                'mismatching number of source line in the HTML output;',
-                'expected {}, got {}'.format(len(raw_lines), len(highlighted))
-            ])
-
-            src_hunk['lines'] = [{
-                'number': no,
-                'content': decoded_raw_lines[no - 1],
-                'html_content': (
-                    highlighted[no - 1]
-                    if highlighted and len(highlighted) >= no else None
-                ),
-                'coverage': coverage[no],
-                'messages': messages[no]
-            } for no in range(1, len(raw_lines) + 1)]
+                highlight(content, lex, _HtmlFormatter()).splitlines() +
+                [''] * trail_nl_count)
+            if len(raw_lines) != len(highlighted):
+                raise IndexError(' '.join([
+                    'mismatching number of source line in the HTML output;',
+                    'expected {}, got {}'
+                ]).format(len(raw_lines), len(highlighted)))
         except Exception:
-            self.log.exception(
-                'unhandled exception during HTML generation: %s', full_path)
-            self.log.warn('report might be incomplete')
-        return src_hunk
+            self.log.exception('failed to generate HTML: %s', self.path)
+            self.log.warn('source file content may not be available')
+            highlighted = None
 
-    def generate_index(self):
-        """Generate the report index.
+        this['lines'] = [{
+            'number': no,
+            'content': decoded[no - 1] if decoded else None,
+            'html_content': highlighted[no - 1] if highlighted else None,
+            'coverage': (
+                _encode_coverage(*self.coverage[no])
+                if no in self.coverage else None),
+            'messages': [
+                _encode_message(*message) for message in self.messages[no]
+            ] if no in self.messages else None,
+        } for no in range(1, len(raw_lines) + 1)]
 
-        The index contains top-level information such as project name, database
-        location, ... as well as the list of sub-project and their source
-        directories and source files, along with some important metrics.
+        # Return the best-effort representation of the source file.
+        return this
 
-        :return: the JSON-encoded index
+    def save_as(self, path):
+        """Save the JSON-encoded representation of the source file to disk.
+
+        :param str path: the path to the output file
+        """
+        self.log.info('writing source %s', self.filename)
+        _write_json(path, self.to_json(), indent=2)
+
+
+class SourceDirBuilder(object):
+    """Representation of a source directory."""
+
+    def __init__(self, path):
+        """
+        :param str path: the path to the source directory
+        """
+        self.path = path
+        self.source_files = []
+        self.coverage = None
+
+        self._coverage_avg = Average()
+        self.message_count = collections.defaultdict(int)
+
+    def add_source(self, source):
+        """Record a new source file of the directory.
+
+        :param SourceBuilder source: the source to add to this directory
+        """
+        file_coverage = source.file_coverage
+        self.source_files.append({
+            'filename': source.filename,
+            'metrics': [_encode_metric(*metric) for metric in source.metrics],
+            'message_count': source.message_count,
+            'coverage': file_coverage
+        })
+        for _, _, tool in chain.from_iterable(source.messages.itervalues()):
+            self.message_count[tool.id] += 1
+        self._coverage_avg.add(file_coverage)
+
+    def to_json(self):
+        """Generate the JSON-encoded representation of a source directory.
+
         :rtype: dict[str, *]
         """
+        return {
+            'path': self.path,
+            'sources': self.source_files,
+            'message_count': self.message_count or None,
+            'coverage': self._coverage_avg.compute()
+        }
 
-        """Map tool ID to number of message generated project-wide.
 
-        :type: dict[int, int]
+class ModuleBuilder(object):
+    """Representation of a module (ie. a project)."""
+
+    def __init__(self, name):
         """
-        project_msg_count = collections.defaultdict(int)
+        :param str name: the name of the project or subproject
+        """
+        self.name = name
+        self.source_dirs = {}
+        self.coverage = None
+        self.log = logging.getLogger(
+            '{}({})'.format(self.__class__.__name__, self.name))
 
-        def _aggregate_metrics(project, source_dir, filename):
-            """Collect metrics about the given source file.
+        self._coverage_avg = Average()
+        self.message_count = collections.defaultdict(int)
 
-            :param str project: the name of the project the source belongs to
-            :param str source_dir: the full path to the source directory
-                containing the source file
-            :param str filename: the basename of the source file
-            :return: the dictionary containing metrics for `filename`
-            :rtype: dict[str, *]
-            """
+    def add_source(self, source):
+        """Record a new source file of the module.
 
-            # Computes file-level metrics.
-            resource = GNAThub.Resource.get(os.path.join(source_dir, filename))
-            metrics, msg_count = [], collections.defaultdict(int)
-            lines_hit, sloc = 0, 0
+        :param SourceBuilder source: the source to add to this module
+        """
+        if source.source_dir not in self.source_dirs:
+            source_dir = SourceDirBuilder(source.source_dir)
+            self.source_dirs[source.source_dir] = source_dir
+        self.source_dirs[source.source_dir].add_source(source)
 
-            if resource:
-                for msg in resource.list_messages():
-                    rule = self._rules_by_id[msg.rule_id]
-                    tool = self._tools_by_id[rule.tool_id]
-                    if rule.identifier == 'coverage':
-                        _, coverage = self._get_coverage(msg, tool)
-                        lines_hit += (
-                            1 if coverage == CoverageStatus.COVERED else 0)
-                        sloc += 1
-                        continue
-                    # Note: the DB schema is currently designed so that metrics
-                    # are stored has messages, and file metrics are attached to
-                    # line 0.
-                    if msg.line == 0:
-                        metrics.append(self._encode_message(
-                            msg, rule, self._tools_by_id[rule.tool_id]))
-                    else:
-                        msg_count[rule.tool_id] += 1
+        for tool_id, count in source.message_count.iteritems():
+            self.message_count[tool_id] += count
+        self._coverage_avg.add(source.file_coverage)
 
-            # Report sums at the project level.
-            for tool_id in msg_count.iterkeys():
-                project_msg_count[tool_id] += msg_count[tool_id]
+    def to_json(self):
+        """Generate the JSON-encoded representation of a module.
 
-            return {
-                'filename': filename,
-                'metrics': metrics or None,
-                'message_count': msg_count or None,
-                # NOTE: this might not be the most accurate file coverage value
-                # possible.
-                # TODO: double-check formula when adding support for
-                # GNATcoverage.
-                'coverage': (lines_hit * 100 / sloc) if sloc else None,
-                '_associated_resource': resource is not None
-            }
+        :rtype: dict[str, *]
+        """
+        paths = self.source_dirs.keys()
+        return {
+            'name': self.name,
+            'source_dirs': {
+                path: source_dir.to_json()
+                for path, source_dir in self.source_dirs.iteritems()
+            },
+            'message_count': self.message_count or None,
+            'coverage': self._coverage_avg.compute(),
+            '_source_dirs_common_prefix': (
+                os.path.commonprefix(paths)
+                if len(paths) > 1 else os.path.dirname(paths[0]))
+        }
 
-        def _restructure_module(name, module):
-            """Transform the module tree.
 
-            :param str name: the name of the module
-            :param dict[str, list[*]] module: the module dictionary to
-                transform
-            :return: the newly restructured module
-            :rtype: dict[str, *]
-            """
+class IndexBuilder(object):
+    """Representation of the HTML report index."""
 
-            source_dirs, module_msg_count = {}, collections.defaultdict(int)
+    def __init__(self):
+        self.source_files = GNAThub.Project.source_files()
+        self.source_file_count = sum(
+            len(sources)
+            for sources in self.source_files.itervalues())
+        self.log = logging.getLogger(__name__)
 
-            for source_dir, sources in module.iteritems():
-                source_dir_msg_count = collections.defaultdict(int)
-                for source in sources:
-                    if source['message_count']:
-                        for tool_id, count in (
-                            source.get('message_count', {}).iteritems()
-                        ):
-                            source_dir_msg_count[tool_id] += count
-                            module_msg_count[tool_id] += count
-                source_dirs[source_dir] = {
-                    'name': source_dir,
-                    'sources': sources,
-                    'message_count': source_dir_msg_count or None,
-                    'coverage': (sum(
-                        src['coverage'] if src['coverage'] is not None else 0
-                        for src in sources) / len(sources)
-                        if any(src['coverage'] is not None for src in sources)
-                        else None)
-                }
+        self.rules, self.tools = set(), set()
+        self.modules = {}
+        self.message_count = collections.defaultdict(int)
 
-            paths = module.keys()
-            return {
-                'name': name,
-                'source_dirs': source_dirs,
-                'message_count': module_msg_count or None,
-                'coverage': (sum(
-                    sd['coverage'] if sd['coverage'] is not None else 0
-                    for sd in source_dirs.values()) / len(source_dirs)
-                    if any(sd['coverage'] is not None
-                           for sd in source_dirs.values())
-                    else None),
-                '_source_dirs_common_prefix': (
-                    os.path.commonprefix(paths) if len(paths) > 1
-                    else os.path.dirname(paths[0])
-                )
-            }
+    def save_source(self, source):
+        """Record a new source file of the root project.
 
+        :param SourceBuilder source: a project source
+        :return: the input source for conveniency
+        :rtype: SourceBuilder
+        """
+        if source.project not in self.modules:
+            self.modules[source.project] = ModuleBuilder(source.project)
+        self.modules[source.project].add_source(source)
+
+        for _, rule, tool in chain.from_iterable(source.messages.itervalues()):
+            self.tools.add(tool)
+            self.rules.add((rule, tool))
+        for tool_id, count in source.message_count.iteritems():
+            self.message_count[tool_id] += count
+
+        return source
+
+    def to_json(self):
         return {
             'modules': {
-                name: _restructure_module(name, module) for name, module
-                in self._generate_source_tree(_aggregate_metrics).iteritems()
+                name: module.to_json()
+                for name, module in self.modules.iteritems()
             },
             'project': GNAThub.Project.name(),
             'creation_time': int(time.time()),
-            'tools': {
-                id: self._encode_tool(tool)
-                for id, tool in self._tools_by_id.iteritems()
-            },
+            'tools': {tool.id: _encode_tool(tool) for tool in self.tools},
             'rules': {
-                id: self._encode_rule(rule, self._tools_by_id[rule.tool_id])
-                for id, rule in self._rules_by_id.iteritems()
+                rule.id: _encode_rule(rule, tool) for rule, tool in self.rules
             },
             'properties': [
-                self._encode_message_property(prop)
-                for prop in GNAThub.Property.list()
+                _encode_property(prop) for prop in GNAThub.Property.list()
             ],
-            'message_count': project_msg_count,
+            'message_count': self.message_count,
             '_database': GNAThub.database()
         }
+
+    def save_as(self, path):
+        """Save the JSON-encoded representation of the report index to disk.
+
+        :param str path: the path to the output file
+        """
+        self.log.info('writing index')
+        _write_json(path, self.to_json(), indent=2)
+
+
+class ReportBuilder(object):
+    """Report builder."""
+
+    def __init__(self):
+        self.log = logging.getLogger(self.__class__.__name__)
+        self.index = IndexBuilder()
+
+    def iter_sources(self):
+        """Iterate over sources and yield JSON-encoded, augmenting the index.
+
+        :yield: SourceBuilder
+        """
+        for project, sources in self.index.source_files.iteritems():
+            for path in sources:
+                self.log.info('processing %s', path)
+                yield self.index.save_source(SourceBuilder(project, path))

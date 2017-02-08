@@ -292,11 +292,12 @@ inline-comment {
       &.line-tool {
         border-right: 1px solid #eeeeee;
         width: 1%;
-        text-align: right;
       }
 
-
-      &.line-tool { color: #333; }
+      &.line-tool {
+        vertical-align: top;
+        color: #333;
+      }
 
       &.line-msg {
         line-height: 1.5em;

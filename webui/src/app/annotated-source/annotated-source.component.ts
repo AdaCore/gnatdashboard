@@ -59,9 +59,12 @@ export class AnnotatedSourceComponent
         }
 
         if (this.blob.lines) {
-            this.blob.lines.forEach(
-                line => line.messages.forEach(
-                    msg => this.messages.push({ line, msg })));
+            this.blob.lines.forEach(line => {
+                if (line.messages) {
+                    line.messages.forEach(
+                        msg => this.messages.push({ line, msg }))
+                }
+            });
         }
 
         this.sub = this.route.params.subscribe(params => {
@@ -78,32 +81,6 @@ export class AnnotatedSourceComponent
     /** @override */
     public ngOnDestroy(): void {
         this.sub.unsubscribe();
-    }
-
-    /**
-     * @param metricId The identifier of the metric to look for.
-     * @return Whether such a metric has been computed for this file.
-     */
-    public hasMetric(metricId: string): boolean {
-        for (let metric of this.blob.metrics) {
-            if (metric.rule.identifier === metricId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param metricId The identifier of the metric to look for.
-     * @return The value of the metric if found, |null| otherwise.
-     */
-    public getMetricValue(metricId: string): string {
-        for (let metric of this.blob.metrics) {
-            if (metric.rule.identifier === metricId) {
-                return metric.message;
-            }
-        }
-        return null;
     }
 
     /**
@@ -192,7 +169,9 @@ export class AnnotatedSourceComponent
      * @return Whether some messages should be displayed.
      */
     public hasDisplayableMessage(line: number): boolean {
-        if (!this.blob || !this.blob.lines) {
+        if (!this.blob || !this.blob.lines ||
+            !this.blob.lines[line - 1].messages)
+        {
             return false;
         }
         return this.blob.lines[line - 1].messages.some(
@@ -260,8 +239,9 @@ export class AnnotatedSourceComponent
             return 0;
         }
         return this.blob.lines.reduce((count, line) => {
-            return count +
-                this.messagesAt(line.number).reduce(callback, initialValue);
+            const messages = this.messagesAt(line.number);
+            return count + (
+                messages ? messages.reduce(callback, initialValue) : 0);
         }, 0 /* initialValue */);
     }
 

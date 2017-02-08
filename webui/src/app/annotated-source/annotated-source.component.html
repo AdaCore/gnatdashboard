@@ -18,9 +18,9 @@
                 <template [ngIf]="blob.metrics | dshNotEmpty">
                     <h4>File metrics</h4>
                     <dl class="dl-horizontal">
-                        <template ngFor let-metric [ngForOf]="blob.metrics">
-                            <dt class="metric-label">{{ metric.rule.name }}</dt>
-                            <dd><span class="metric-value">{{ metric.message }}</span></dd>
+                        <template ngFor let-metricId [ngForOf]="blob.metrics | dshMapKeys">
+                            <dt class="metric-label">{{ blob.metrics[metricId].rule.name }}</dt>
+                            <dd><span class="metric-value">{{ blob.metrics[metricId].value }}</span></dd>
                         </template>
                     </dl>
                 </template>
@@ -88,8 +88,8 @@
                     <div class="file-header">
                         <div class="file-info">
                             {{ blob.lines.length }} lines
-                            <template [ngIf]="hasMetric('code_lines')">
-                                ({{ getMetricValue('code_lines') }} sloc)
+                            <template [ngIf]="blob.metrics['code_lines']">
+                                ({{ blob.metrics['code_lines'] }} sloc)
                             </template>
                             <div class="file-info-divider"></div>
                             {{ getMessageDisplayedCount() }} annotations displayed
