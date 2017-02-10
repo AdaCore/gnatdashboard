@@ -1,0 +1,26 @@
+<table>
+    <thead>
+        <tr>
+            <th>{{ title }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let option of options">
+            <td>
+                <div class="option">
+                    <label>
+                        <input
+                            #checkbox
+                            type="checkbox"
+                            [ngModel]="!option._ui_unselected"
+                            (click)="toggle.emit({ option: option, checked: checkbox.checked })"/>
+                        <span>{{ option.name }}</span>
+                    </label>
+                    <span class="option-count">
+                        {{ option._ui_selected_message_count != null ? option._ui_selected_message_count : option._message_count }} / {{ option._message_count }}
+                    </span>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

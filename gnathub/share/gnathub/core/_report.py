@@ -168,7 +168,7 @@ def _encode_message(message, rule, tool, extra=None):
         'rule': _encode_rule(rule, tool),
         'properties': [
             _encode_property(prop) for prop in message.get_properties()],
-        'message': message.data
+        'text': message.data
     }, extra)
 
 
@@ -267,8 +267,8 @@ def _inc_msg_count(store, key, gen_value, *args):
     :param list *args: arguments of the `gen_value` function
     """
     if key not in store:
-        store[key] = gen_value(*args, extra={'message_count': 0})
-    store[key]['message_count'] += 1
+        store[key] = gen_value(*args, extra={'_message_count': 0})
+    store[key]['_message_count'] += 1
 
 
 class Average(object):
@@ -373,13 +373,21 @@ class SourceBuilder(object):
             'project': self.project,
             'filename': self.filename,
             'source_dir': self.source_dir,
-            'has_messages': not not self.messages,
-            'has_coverage': not not self.coverage,
             'full_path': self.path,
-            'metrics': [_encode_metric(*metric) for metric in self.metrics],
-            'properties': self.props,
-            'tools': self.tools,
-            'rules': self.rules,
+            'metrics': [
+                _encode_metric(*metric) for metric in self.metrics
+            ] or None,
+            'coverage': {
+                no: _encode_coverage(*self.coverage[no])
+                for no, coverage in self.coverage.iteritems()
+            } or None,
+            'messages': {
+                no: [_encode_message(*message) for message in messages]
+                for no, messages in self.messages.iteritems()
+            } or None,
+            'properties': self.props or None,
+            'tools': self.tools or None,
+            'rules': self.rules or None,
             'lines': None
         }
 
@@ -482,8 +490,10 @@ class SourceDirBuilder(object):
         self.source_files.append({
             'filename': source.filename,
             'metrics': [_encode_metric(*metric) for metric in source.metrics],
+            'coverage': file_coverage,
             'message_count': source.message_count,
-            'coverage': file_coverage
+            '_total_message_count': sum(
+                len(messages) for messages in source.messages.values())
         })
         for _, _, tool in chain.from_iterable(source.messages.itervalues()):
             self.message_count[tool.id] += 1
@@ -497,8 +507,9 @@ class SourceDirBuilder(object):
         return {
             'path': self.path,
             'sources': self.source_files,
+            'coverage': self._coverage_avg.compute(),
             'message_count': self.message_count or None,
-            'coverage': self._coverage_avg.compute()
+            '_total_message_count': sum(self.message_count.itervalues())
         }
 
 
@@ -544,8 +555,9 @@ class ModuleBuilder(object):
                 path: source_dir.to_json()
                 for path, source_dir in self.source_dirs.iteritems()
             },
-            'message_count': self.message_count or None,
             'coverage': self._coverage_avg.compute(),
+            'message_count': self.message_count or None,
+            '_total_message_count': sum(self.message_count.itervalues()),
             '_source_dirs_common_prefix': (
                 os.path.commonprefix(paths)
                 if len(paths) > 1 else os.path.dirname(paths[0]))
@@ -601,6 +613,7 @@ class IndexBuilder(object):
                 _encode_property(prop) for prop in GNAThub.Property.list()
             ],
             'message_count': self.message_count,
+            '_total_message_count': sum(self.message_count.itervalues()),
             '_database': GNAThub.database()
         }
 

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IProjectModule, ISourceDir } from 'gnat';
+import { IModule, ISourceDir } from 'gnat';
 
 @Component({
     selector: 'project-source-list',
@@ -7,7 +7,7 @@ import { IProjectModule, ISourceDir } from 'gnat';
     styleUrls: [ 'project-source-list.component.scss' ],
 })
 export class ProjectSourceListComponent {
-    @Input() public project: IProjectModule = null;
+    @Input() public project: IModule = null;
     @Input() public directory: string = null;
 
     public getSelectedSourceDir(): ISourceDir {

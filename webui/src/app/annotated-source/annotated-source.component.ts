@@ -2,21 +2,22 @@ import {
     AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit,
     ViewChild
 } from '@angular/core';
-import { DOCUMENT, DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { InlineMessages } from '../inline-messages';
-
-import {
-    CoverageStatus, IGNAThubBlob, IGNAThubBlobLine, IGNAThubMessage,
-    IGNAThubProperty, IGNAThubRule, IGNAThubTool
-} from 'gnat';
-
-import '../array/operator/sum';
 
 import { PageScrollInstance, PageScrollService } from 'ng2-page-scroll';
 import { Subscription } from 'rxjs';
 
-type AttachedMessage = { line: IGNAThubBlobLine; msg: IGNAThubMessage };
+import {
+    IAnnotatedSourceFile, IAnnotatedSourceMessage, IPropertyFilter, IRuleFilter,
+    IToolFilter
+} from 'gnat';
+
+import { FilterEvent } from '../filter-selector';
+
+import '../array/operator/sum';
+
+type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
 
 @Component({
     selector: 'annotated-source',
@@ -26,12 +27,12 @@ type AttachedMessage = { line: IGNAThubBlobLine; msg: IGNAThubMessage };
 export class AnnotatedSourceComponent
     implements AfterViewInit, OnDestroy, OnInit
 {
-    @Input() public blob: IGNAThubBlob = null;
-    public messages: AttachedMessage[] = [];
+    @Input() public source: IAnnotatedSourceFile = null;
     public selectedLine: number = null;
     public displayMessages: boolean = true;
     public displayCoverage: boolean = true;
     public showMessageList: boolean = true;
+    public inlineMessages: { [line: number]: MessagesByToolId } = {};
 
     private sub: Subscription = null;
 
@@ -40,32 +41,12 @@ export class AnnotatedSourceComponent
     constructor(
         @Inject(DOCUMENT) private document: Document,
         private pageScrollService: PageScrollService,
-        private route: ActivatedRoute,
-        private sanitizer: DomSanitizer) {}
+        private route: ActivatedRoute) {}
 
     /** @override */
     public ngOnInit(): void {
-        for (let toolId of Object.keys(this.blob.tools)) {
-            // Show messages triggered by all tools by default
-            this.blob.tools[toolId].ui_selected = true;
-        }
-        for (let ruleId of Object.keys(this.blob.rules)) {
-            // Show messages triggered by all rules by default
-            this.blob.rules[ruleId].ui_selected = true;
-        }
-        for (let propertyId of Object.keys(this.blob.properties)) {
-            // Show all messages with properties by default
-            this.blob.properties[propertyId].ui_selected = true;
-        }
-
-        if (this.blob.lines) {
-            this.blob.lines.forEach(line => {
-                if (line.messages) {
-                    line.messages.forEach(
-                        msg => this.messages.push({ line, msg }))
-                }
-            });
-        }
+        this.source.coverage = this.source.coverage || {};
+        this.filterInlineMessages();
 
         this.sub = this.route.params.subscribe(params => {
             this.selectedLine = +params['line'];
@@ -84,165 +65,92 @@ export class AnnotatedSourceComponent
     }
 
     /**
-     * @return The total number of displayed messages.
-     */
-    public getMessageDisplayedCount(): number {
-        return this.reduceMessages((count, message) => {
-            return count + (this.shouldDisplayMessage(message) ? 1 : 0);
-        });
-    }
-
-    /**
-     * @param tool The tool which messages this function counts.
-     * @return The total number of messages displayed for a given tool.
-     */
-    public toolMessageCount = (tool: IGNAThubTool): number => {
-        return this.reduceMessages((count, message) => {
-            if (tool.id === message.rule.tool.id &&
-                this.blob.tools[message.rule.tool.id].ui_selected &&
-                this.shouldDisplayMessage(message))
-            {
-                return count + 1;
-            }
-            return count;
-        });
-    }
-
-    /**
-     * @param rule The rule which messages this function counts.
-     * @return The total number of messages displayed for a given rule.
-     */
-    public ruleMessageCount = (rule: IGNAThubRule): number => {
-        return this.reduceMessages((count, message) => {
-            if (rule.id === message.rule.id &&
-                this.blob.rules[message.rule.id].ui_selected &&
-                this.shouldDisplayMessage(message))
-            {
-                return count + 1;
-            }
-            return count;
-        });
-    }
-
-    /**
-     * @param property The property which messages this function counts.
-     * @return The total number of messages displayed for a given property.
-     */
-    public propertyMessageCount = (property: IGNAThubProperty): number => {
-        return this.reduceMessages((count, message) => {
-            if (message.properties.some(p => p.id === property.id) &&
-                this.blob.properties[property.id].ui_selected &&
-                this.shouldDisplayMessage(message))
-            {
-                return count + 1;
-            }
-            return count;
-        });
-    }
-
-    /**
-     * @param message The message to display or not.
-     * @return Whether we should display the message given the current selection
-     *      of tools/rules/properties.
-     */
-    public shouldDisplayMessage(message: IGNAThubMessage): boolean {
-        return this.blob.tools[message.rule.tool.id].ui_selected &&
-            this.blob.rules[message.rule.id].ui_selected &&
-            (!message.properties.length || message.properties.some(property => {
-                return this.blob.properties[property.id].ui_selected;
-            }));
-    }
-
-    /**
-     * Mark the input string as safe HTML (for use with [innerHTML]).
+     * Checkbox handled for the tool filters.
      *
-     * @param value The input string.
-     * @return The safe HTML.
+     * @param event Event fired by <filter-selector> on checkbox status change.
      */
-    public bypassSanitizer(value: string): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(value);
+    public onToolFilterToggle(event: FilterEvent) {
+        const tool = <IToolFilter> event.option;
+        this.source.tools[tool.id]._ui_unselected = !event.checked;
+        this.updateMessagesUiProperties();
     }
 
     /**
+     * Checkbox handled for the rule filters.
      *
-     * @param line The line for which to check messages.
-     * @return Whether some messages should be displayed.
+     * @param event Event fired by <filter-selector> on checkbox status change.
      */
-    public hasDisplayableMessage(line: number): boolean {
-        if (!this.blob || !this.blob.lines ||
-            !this.blob.lines[line - 1].messages)
-        {
-            return false;
+    public onRuleFilterToggle(event: FilterEvent) {
+        const rule = <IRuleFilter> event.option;
+        this.source.rules[rule.id]._ui_unselected = !event.checked;
+        this.updateMessagesUiProperties();
+    }
+
+    /**
+     * Checkbox handled for the property filters.
+     *
+     * @param event Event fired by <filter-selector> on checkbox status change.
+     */
+    public onPropertyFilterToggle(event: FilterEvent) {
+        const property = <IPropertyFilter> event.option;
+        this.source.properties[property.id]._ui_unselected = !event.checked;
+        this.updateMessagesUiProperties();
+    }
+
+    /**
+     * Update _ui_* properties on inline messages to trigger a refresh.
+     */
+    private updateMessagesUiProperties() {
+        Object.keys(this.source.tools).forEach(id =>
+            this.source.tools[id]._ui_selected_message_count = 0);
+        Object.keys(this.source.rules).forEach(id =>
+            this.source.rules[id]._ui_selected_message_count = 0);
+        Object.keys(this.source.properties).forEach(id =>
+            this.source.properties[id]._ui_selected_message_count = 0);
+
+        Object.keys(this.source.messages).forEach(line => {
+            this.source.messages[line].forEach(message => {
+                const tid = message.rule.tool.id;
+                const rid = message.rule.id;
+
+                const isToolSelected = !this.source.tools[tid]._ui_unselected;
+                const isRuleSelected = !this.source.rules[rid]._ui_unselected;
+                const hasSelectedProperties = !message.properties ||
+                    !message.properties.length || message.properties.some(
+                        p => !this.source.properties[p.id]._ui_unselected);
+
+                message._ui_hidden = !isToolSelected || !isRuleSelected ||
+                    !hasSelectedProperties;
+
+                if (!message._ui_hidden) {
+                    this.source.tools[tid]._ui_selected_message_count++;
+                    this.source.rules[rid]._ui_selected_message_count++;
+                    message.properties.forEach(property =>
+                        this.source.properties[property.id]
+                            ._ui_selected_message_count++);
+                }
+            });
+            this.filterInlineMessages();
+        });
+    }
+
+    /**
+     * (Re)build the ``inlineMessages`` map.
+     */
+    private filterInlineMessages() {
+        for (let line of Object.keys(this.source.messages || {})) {
+            const mappedByToolId: MessagesByToolId = {};
+            this.source.messages[line]
+                .filter(message => !message._ui_hidden)
+                .forEach(message => {
+                    const toolId = message.rule.tool.id;
+                    if (!mappedByToolId.hasOwnProperty(toolId)) {
+                        mappedByToolId[toolId] = [];
+                    }
+                    mappedByToolId[toolId].push(message);
+                });
+            this.inlineMessages[line] = mappedByToolId;
         }
-        return this.blob.lines[line - 1].messages.some(
-            message => this.shouldDisplayMessage(message));
-    }
-
-    /**
-     * Return the list of messages attached to the given line, grouped by tool.
-     *
-     * @param line The line for which to list messages.
-     * @return The list of messages.
-     */
-    public displayableMessagesAtByTool(line: number): InlineMessages {
-        const dm: IGNAThubMessage[] = this.messagesAt(line).filter(
-            msg => this.shouldDisplayMessage(msg));
-        const im: InlineMessages = {};
-        dm.forEach(msg => {
-            if (!im.hasOwnProperty(msg.rule.tool.id)) {
-                im[msg.rule.tool.id] = [];
-            }
-            im[msg.rule.tool.id].push(msg);
-        });
-        return im;
-    }
-
-    /**
-     * Return the coverage value for for the given line.
-     *
-     * @param line The line for which to get coverage information.
-     * @return The coverage value.
-     */
-    public coverageAt(line: number): { status: CoverageStatus; hits: number } {
-        if (!this.displayCoverage || !this.blob || !this.blob.lines) {
-            return null;
-        }
-        return this.blob.lines[line - 1].coverage || null;
-    }
-
-    /**
-     * Return the list of messages attached to the given line.
-     *
-     * @param line The line for which to list messages.
-     * @return The list of messages.
-     */
-    private messagesAt(line: number): IGNAThubMessage[] {
-        if (!this.blob || !this.blob.lines) {
-            return [];
-        }
-        return this.blob.lines[line - 1].messages;
-    }
-
-    /**
-     * Short-hand reduce operation on all messages of the file.
-     *
-     * @param callback Function to invoke on each message of the file.
-     * @param initialValue Optional. Value to use as the first argument to the
-     *      first call of the |callback|. Defaults to |0|.
-     * @return The value that results from the reduction.
-     */
-    private reduceMessages(
-        callback: (count: number, line: IGNAThubMessage) => number,
-        initialValue: number = 0): number
-    {
-        if (!this.blob || !this.blob.lines) {
-            return 0;
-        }
-        return this.blob.lines.reduce((count, line) => {
-            const messages = this.messagesAt(line.number);
-            return count + (
-                messages ? messages.reduce(callback, initialValue) : 0);
-        }, 0 /* initialValue */);
     }
 
     /**

@@ -7,95 +7,121 @@ declare module 'gnat' {
     //  * PARTIALLY_COVERED
     type CoverageStatus = string;
 
-    export interface ISource {
-        filename: string;
-        metrics?: { [metricId: number]: IGNAThubMetric }[];
-        message_count?: { [toolId: number]: number };
-        coverage?: number;
+    export interface ICoverage {
+        hits: number;
+        status: CoverageStatus;
     }
 
-    export interface ISourceDir {
-        path: string;
-        sources: ISource[];
-        message_count?: { [toolId: number]: number };
-        coverage?: number;
-        _ui_expanded?: boolean;
+    export interface IFilter {
+        _message_count: number;
+        _ui_unselected?: boolean;
+        _ui_selected_message_count: number;
     }
 
-    export interface IProjectModule {
-        name: string;
-        source_dirs: { [sourceDir: string]: ISourceDir };
-        message_count?: { [toolId: number]: number };
-        _source_dirs_common_prefix: string;
-        _ui_expanded?: boolean;
-    }
-
-    export interface IGNAThubReport {
-        modules: { [moduleName: string]: IProjectModule };
-        project: string;
-        creation_time: number;
-        tools: Array<{ [id: number]: string }>;
-        _database: string;
-    }
-
-    export interface IGNAThubTool {
+    export interface ITool {
         id: number;
         name: string;
-        message_count?: number;
-        ui_selected?: boolean;
     }
 
-    export interface IGNAThubRule {
+    export interface IToolFilter extends ITool, IFilter {}
+
+    export interface IRule {
         id: number;
         identifier: string;
         name: string;
         kind: number;
-        tool: IGNAThubTool;
-        message_count?: number;
-        ui_selected?: boolean;
+        tool: ITool;
     }
 
-    export interface IGNAThubProperty {
+    export interface IRuleFilter extends IRule, IFilter {}
+
+    export interface IProperty {
         id: number;
         identifier: string;
         name: string;
-        message_count?: number;
-        ui_selected?: boolean;
     }
 
-    export interface IGNAThubMetric {
-        rule: IGNAThubRule;
+    export interface IPropertyFilter extends IProperty, IFilter {}
+
+    export interface IMetric {
+        rule: IRule;
         value: string;
     }
 
-    export interface IGNAThubMessage {
+    // Annotated source file
+
+    export interface IAnnotatedSourceMessage {
         begin: number;
         end: number;
-        rule: IGNAThubRule;
-        properties: IGNAThubProperty[];
-        message: string;
+        rule: IRule;
+        properties: IProperty[];
+        text: string;
+        _ui_hidden?: boolean;
     }
 
-    export interface IGNAThubBlobLine {
+    export interface IAnnotatedSourceLine {
         number: number;
         content: string;
         html_content: string;
-        coverage: { status: CoverageStatus; hits: number };
-        messages: IGNAThubMessage[];
     }
 
-    export interface IGNAThubBlob {
+    export interface IAnnotatedSourceFile {
         project: string;
         filename: string;
         source_dir: string;
         full_path: string;
         has_messages: boolean;
         has_coverage: boolean;
-        lines: IGNAThubBlobLine[];
-        tools: { [id: number]: IGNAThubTool };
-        rules: { [id: number]: IGNAThubRule };
-        properties: { [id: number]: IGNAThubProperty };
-        metrics?: { [metricId: number]: IGNAThubMetric }[];
+        lines: IAnnotatedSourceLine[];
+        tools: { [id: number]: IToolFilter };
+        rules: { [id: number]: IRuleFilter };
+        properties: { [id: number]: IPropertyFilter };
+        metrics?: Array<{ [metricId: number]: IMetric }>;
+        coverage?: { [line: number]: ICoverage };
+        messages?: { [line: number]: IAnnotatedSourceMessage[] };
         message_count?: { [toolId: number]: number };
     }
+
+    // Index structure
+
+    export interface ISource {
+        filename: string;
+        metrics?: Array<{ [metricId: number]: IMetric }>;
+        coverage?: number;
+        message_count?: { [toolId: number]: number };
+        _total_message_count: number;
+        _ui_total_message_count?: number;
+    }
+
+    export interface ISourceDir {
+        path: string;
+        sources: ISource[];
+        coverage?: number;
+        message_count?: { [toolId: number]: number };
+        _total_message_count: number;
+        _ui_expanded?: boolean;
+    }
+
+    export interface IModule {
+        name: string;
+        source_dirs: { [sourceDir: string]: ISourceDir };
+        coverage?: number;
+        message_count?: { [toolId: number]: number };
+        _total_message_count: number;
+        _source_dirs_common_prefix: string;
+        _ui_expanded?: boolean;
+    }
+
+    export interface IReportIndex {
+        modules: { [moduleName: string]: IModule };
+        project: string;
+        creation_time: number;
+        tools: { [id: number]: IToolFilter };
+        rules: { [id: number]: IRuleFilter };
+        properties: { [id: number]: IPropertyFilter };
+        message_count?: { [toolId: number]: number };
+        _total_message_count: number;
+        _database: string;
+    }
+
 }

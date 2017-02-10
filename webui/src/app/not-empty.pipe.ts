@@ -8,6 +8,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({ name: 'dshNotEmpty'})
 export class NotEmptyPipe implements PipeTransform {
     public transform(obj: { [key: string]: any }, args: any[] = null): boolean {
-        return Object.keys(obj).length !== 0;
+        return Object.keys(obj || {}).length !== 0;
     }
 }

@@ -83,6 +83,7 @@ div.option-selectors {
   display: flex;
   flex-flow: row wrap;
 
+  filter-selector,
   option-selector {
     flex-grow: 1;
     margin-bottom: 19px;
@@ -142,6 +143,7 @@ div.option-selectors {
 }
 
 .blob-wrapper {
+  padding: 1ch 0;
   overflow-x: auto;
   overflow-y: hidden;
   border-bottom-left-radius: 2px;
@@ -172,9 +174,11 @@ div.option-selectors {
       &:hover.inline-comments { background: none; }
 
       &.inline-comments td {
-        padding: 8px;
+        padding: 0;
         border-left: 0;
         border-color: #eeeeee;
+
+        inline-messages { margin: 8px; }
       }
 
       .blob-num,
@@ -182,9 +186,9 @@ div.option-selectors {
         font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
         font-size: 1.2rem;
         line-height: 1.5em;
-        padding: 0 2ch;
         white-space: pre;
         border: 0;
+        padding: 0;
         vertical-align: middle;
         cursor: default;
       }
@@ -195,7 +199,6 @@ div.option-selectors {
         white-space: nowrap;
         text-align: right;
         vertical-align: top;
-        padding-left: 10px;
         padding-right: 10px;
         user-select: none;
 
@@ -205,15 +208,10 @@ div.option-selectors {
           &::before { content: attr(data-line-number); }
         }
       }
+
+      .blob-code { padding-left: 10px; }
     }
   }
-}
-
-inline-comment {
-  display: block;
-  margin-bottom: 8px;
-
-  &:last-child { margin-bottom: 0; }
 }
 
 .location-view {
@@ -238,15 +236,14 @@ inline-comment {
   &-collapse-btn {
     flex: 0;
     border: 0;
-    background: none;
-    height: 18px;
     outline: 0;
-    padding: 3px;
+    padding: 3px 10px;
 
-    md-icon {
-      transition: transform 300ms linear 0s;
-      &.collapsed { transform: rotate(180deg); }
-    }
+    height: 24px ;
+    border-radius: 2px;
+    font-size: 0;
+
+    md-icon.expanded { transform: rotate(180deg); }
   }
 
   table tr.message {
@@ -259,8 +256,8 @@ inline-comment {
       vertical-align: middle;
       cursor: default;
 
-      &.line-num,
-      &.line-col {
+      &.message-line,
+      &.message-col {
         color: lighten(black, 60%);
         width: 1%;
         white-space: nowrap;
@@ -268,13 +265,13 @@ inline-comment {
         padding: 0;
       }
 
-      &.line-num {
+      &.message-line {
         min-width: 30px;
         text-align: right;
         padding-left: 10px;
       }
 
-      &.line-col {
+      &.message-col {
         min-width: 15px;
         text-align: left;
         padding-right: 10px;
@@ -288,18 +285,18 @@ inline-comment {
         }
       }
 
-      &.line-col,
-      &.line-tool {
+      &.message-col,
+      &.message-tool {
         border-right: 1px solid #eeeeee;
         width: 1%;
       }
 
-      &.line-tool {
+      &.message-tool {
         vertical-align: top;
         color: #333;
       }
 
-      &.line-msg {
+      &.message-text {
         line-height: 1.5em;
 
         a {

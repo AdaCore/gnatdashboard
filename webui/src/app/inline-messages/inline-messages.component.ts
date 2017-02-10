@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { IGNAThubMessage } from 'gnat';
-import { IGNAThubTool } from 'gnat';
+import { IAnnotatedSourceMessage } from 'gnat';
+import { ITool } from 'gnat';
 
-export type InlineMessages = { [toolId: number]: IGNAThubMessage[] };
+type InlineMessages = { [toolId: number]: IAnnotatedSourceMessage[] };
 
 @Component({
     selector: 'inline-messages',
@@ -10,10 +10,10 @@ export type InlineMessages = { [toolId: number]: IGNAThubMessage[] };
     styleUrls: [ 'inline-messages.component.scss' ]
 })
 export class InlineMessagesComponent {
-    @Input() public messages: InlineMessages = null;
-    @Input() public tools: { [toolId: number]: IGNAThubTool } = null;
+    @Input() public messages: InlineMessages[];
+    @Input() public tools: { [toolId: number]: ITool };
 
-    public formatMessageProperties(message: IGNAThubMessage): string {
+    public formatMessageProperties(message: IAnnotatedSourceMessage): string {
         return message.properties.map(prop => prop.name).join(', ');
     }
 }

@@ -6,30 +6,30 @@
                 <h3 class="source-head">
                     <span class="project">
                         <a [routerLink]="['/project-explorer', {
-                            project: blob.project, directory: blob.source_dir
+                            project: source.project, directory: source.source_dir
                         }]">
-                            {{ blob.project }}
+                            {{ source.project }}
                         </a>
                     </span>
                     <span  class="path-divider">/</span>
-                    <strong>{{ blob.filename }}</strong>
+                    <strong>{{ source.filename }}</strong>
                 </h3>
                 <!-- File metrics -->
-                <template [ngIf]="blob.metrics | dshNotEmpty">
+                <template [ngIf]="source.metrics | dshNotEmpty">
                     <h4>File metrics</h4>
                     <dl class="dl-horizontal">
-                        <template ngFor let-metricId [ngForOf]="blob.metrics | dshMapKeys">
-                            <dt class="metric-label">{{ blob.metrics[metricId].rule.name }}</dt>
-                            <dd><span class="metric-value">{{ blob.metrics[metricId].value }}</span></dd>
+                        <template ngFor let-metricId [ngForOf]="source.metrics | dshMapKeys">
+                            <dt class="metric-label">{{ source.metrics[metricId].rule.name }}</dt>
+                            <dd><span class="metric-value">{{ source.metrics[metricId].value }}</span></dd>
                         </template>
                     </dl>
                 </template>
-                <template [ngIf]="blob.has_messages || blob.has_coverage">
+                <template [ngIf]="source.messages || source.coverage">
                     <h4>Preferences</h4>
                     <div class="preferences">
                         <table>
                             <tbody>
-                            <tr *ngIf="blob.has_messages">
+                            <tr *ngIf="source.messages">
                                 <td>
                                     <label>
                                         <input type="checkbox" [(ngModel)]="displayMessages" />
@@ -37,7 +37,7 @@
                                     </label>
                                 </td>
                             </tr>
-                            <tr *ngIf="blob.has_coverage">
+                            <tr *ngIf="source.coverage | dshNotEmpty">
                                 <td>
                                     <label>
                                         <input type="checkbox" [(ngModel)]="displayCoverage" />
@@ -49,83 +49,70 @@
                         </table>
                     </div>
                 </template>
-                <template [ngIf]="displayMessages && messages | dshNotEmpty">
+                <template [ngIf]="displayMessages && source.messages">
                     <h4>Message filters</h4>
                     <div class="option-selectors">
                         <!-- Tool selector -->
-                        <option-selector
+                        <filter-selector
                             class="tool-selector" title="Tools"
-                            *ngIf="blob.tools | dshNotEmpty"
-                            [options]="blob.tools | dshMapValues"
-                            [optionCount]="toolMessageCount">
-                        </option-selector>
+                            *ngIf="source.tools | dshNotEmpty"
+                            [options]="source.tools | dshMapValues"
+                            (toggle)="onToolFilterToggle($event)">
+                        </filter-selector>
                         <!-- Rule selector -->
-                        <option-selector
+                        <filter-selector
                             class="rule-selector" title="Rules"
-                            *ngIf="blob.rules | dshNotEmpty"
-                            [options]="blob.rules | dshMapValues"
-                            [optionCount]="ruleMessageCount">
-                        </option-selector>
+                            *ngIf="source.rules | dshNotEmpty"
+                            [options]="source.rules | dshMapValues"
+                            (toggle)="onRuleFilterToggle($event)">
+                        </filter-selector>
                         <!-- Property selector -->
-                        <option-selector
+                        <filter-selector
                             class="property-selector" title="Properties"
-                            *ngIf="blob.properties | dshNotEmpty"
-                            [options]="blob.properties | dshMapValues"
-                            [optionCount]="propertyMessageCount">
-                        </option-selector>
+                            *ngIf="source.properties | dshNotEmpty"
+                            [options]="source.properties | dshMapValues"
+                            (toggle)="onPropertyFilterToggle($event)">
+                        </filter-selector>
                     </div>
                 </template>
             </nav>
             <main #scrollView>
-                <div class="missing-file-content" *ngIf="!blob.lines">
+                <div class="missing-file-content" *ngIf="!source.lines">
                     <h4>Missing file content</h4>
                     <p>
                         This is most likely due to an error during the HTML report
                         generation.
                     </p>
                 </div>
-                <div class="file" *ngIf="blob.lines">
-                    <div class="file-header">
-                        <div class="file-info">
-                            {{ blob.lines.length }} lines
-                            <template [ngIf]="blob.metrics['code_lines']">
-                                ({{ blob.metrics['code_lines'] }} sloc)
-                            </template>
-                            <div class="file-info-divider"></div>
-                            {{ getMessageDisplayedCount() }} annotations displayed
-                        </div>
-                    </div>
+                <div class="file" *ngIf="source.lines">
                     <div class="blob-wrapper">
                         <table class="file-line-container">
                         <tbody>
-                            <template ngFor let-line [ngForOf]="blob.lines">
+                            <template ngFor let-line [ngForOf]="source.lines">
                                 <tr [ngClass]="{
                                     selected: selectedLine == line.number,
-                                    no_code: coverageAt(line.number)?.status.toLowerCase() == 'no_code',
-                                    covered: coverageAt(line.number)?.status.toLowerCase() == 'covered',
-                                    not_covered: coverageAt(line.number)?.status.toLowerCase() == 'not_covered',
-                                    partially_covered: coverageAt(line.number)?.status.toLowerCase() == 'partially_covered'
+                                    no_code: source.coverage[line.number]?.status.toLowerCase() == 'no_code',
+                                    covered: source.coverage[line.number]?.status.toLowerCase() == 'covered',
+                                    not_covered: source.coverage[line.number]?.status.toLowerCase() == 'not_covered',
+                                    partially_covered: source.coverage[line.number]?.status.toLowerCase() == 'partially_covered'
                                 }">
                                     <td class="blob-num">
                                         <a [routerLink]="['.', { line: line.number }]"
                                            [attr.data-line-number]="line.number">&nbsp;</a>
                                     </td>
-                                    <!-- line.html_content may contain escaped HTML entities. Use AngularJS embedded
-                                         sanitizer to render it.  -->
                                     <td id="L{{ line.number }}" class="blob-code"
-                                        [innerHTML]="bypassSanitizer(line.html_content)">
+                                        [innerHTML]="line.html_content">
                                     </td>
                                 </tr>
-                                <template [ngIf]="displayMessages && hasDisplayableMessage(line.number)">
-                                    <tr class="inline-comments">
-                                        <td colspan=2>
-                                            <inline-messages
-                                                [tools]="blob.tools"
-                                                [messages]="displayableMessagesAtByTool(line.number)">
-                                            </inline-messages>
-                                        </td>
-                                    </tr>
-                                </template>
+                                <tr class="inline-comments"
+                                    *ngIf="displayMessages && inlineMessages[line.number] | dshNotEmpty">
+                                    <td colspan=2>
+                                        <inline-messages
+                                            [tools]="source.tools"
+                                            [messages]="inlineMessages[line.number]">
+                                        </inline-messages>
+                                    </td>
+                                </tr>
                             </template>
                         </tbody>
                         </table>
@@ -136,44 +123,46 @@
     </div>
     <footer
         class="layout-page-footer location-view"
-        *ngIf="displayMessages && getMessageDisplayedCount()">
+        *ngIf="displayMessages">
         <div class="location-view-flex">
             <div class="location-view-header">
                 <span class="location-view-title">Messages</span>
-                <button class="location-view-collapse-btn">
-                    <md-icon class="md-18"
-                             md-tooltip="Hide/show message list"
-                             [ngClass]="{ collapsed: !showMessageList }"
-                             (click)="showMessageList = !showMessageList">
-                        vertical_align_bottom
+                <button class="location-view-collapse-btn"
+                        [mdTooltip]="showMessageList ? 'Hide' : 'Show'"
+                        mdTooltipPosition="left"
+                        (click)="showMessageList = !showMessageList">
+                    <md-icon class="md-18" [ngClass]="{ expanded: showMessageList }">
+                        keyboard_capslock
                     </md-icon>
                 </button>
             </div>
             <div class="location-view-list" *ngIf="showMessageList">
                 <table class="file-line-container">
                     <tbody>
-                    <template ngFor let-message [ngForOf]="messages">
-                        <tr class="message"
-                            [ngClass]="{ selected: selectedLine == message.line.number }"
-                            *ngIf="shouldDisplayMessage(message.msg)">
-                            <td class="line-num">{{ message.line.number }}</td>
-                            <td class="line-col">
-                                <template [ngIf]="message.msg.begin">
-                                    <template [ngIf]="message.msg.begin === message.msg.end">
-                                        {{ message.msg.begin }}
+                    <template ngFor let-line [ngForOf]="source.messages | dshMapKeys">
+                        <template ngFor let-message [ngForOf]="source.messages[line]">
+                            <tr class="message"
+                                *ngIf="!message._ui_hidden"
+                                [ngClass]="{ selected: selectedLine == line }">
+                                <td class="message-line">{{ line }}</td>
+                                <td class="message-col">
+                                    <template [ngIf]="message.begin">
+                                        <template [ngIf]="message.begin === message.end">
+                                            {{ message.begin }}
+                                        </template>
+                                        <template [ngIf]="message.begin !== message.end">
+                                            {{ message.begin }}-{{ message.end }}
+                                        </template>
                                     </template>
-                                    <template [ngIf]="message.msg.begin !== message.msg.end">
-                                        {{ message.msg.begin }}-{{ message.msg.end }}
-                                    </template>
-                                </template>
-                            </td>
-                            <td class="line-tool">{{ message.msg.rule.tool.name }}</td>
-                            <td class="line-msg">
-                                <a [routerLink]="['.', { line: message.line.number }]">
-                                    {{ message.msg.message }}
-                                </a>
-                            </td>
-                        </tr>
+                                </td>
+                                <td class="message-tool">{{ message.rule.tool.name }}</td>
+                                <td class="message-text">
+                                    <a [routerLink]="['.', { line: line }]">
+                                        {{ message.text }}
+                                    </a>
+                                </td>
+                            </tr>
+                        </template>
                     </template>
                     </tbody>
                 </table>

@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { IGNAThubReport } from 'gnat';
+import { IReportIndex } from 'gnat';
 import { GNAThubService } from '../gnathub.service';
 
 import { Subscription } from 'rxjs';
-import { IGNAThubProperty, IGNAThubRule, IGNAThubTool } from 'gnat';
+import { IProperty, IRule, ITool } from 'gnat';
 
 @Component({
     selector: 'project-explorer',
@@ -15,7 +15,7 @@ import { IGNAThubProperty, IGNAThubRule, IGNAThubTool } from 'gnat';
 export class ProjectExplorerComponent implements OnInit, OnDestroy {
     public project: string = null;
     public directory: string = null;
-    public report: IGNAThubReport = null;
+    public report: IReportIndex = null;
     public isReportFetchError: boolean = false;
     private sub: Subscription = null;
 
@@ -43,7 +43,7 @@ export class ProjectExplorerComponent implements OnInit, OnDestroy {
      * @param tool The tool which messages this function counts.
      * @return The total number of messages displayed for a given tool.
      */
-    public toolMessageCount = (tool: IGNAThubTool): number => {
+    public toolMessageCount = (tool: ITool): number => {
         return 0;
     }
 
@@ -51,7 +51,7 @@ export class ProjectExplorerComponent implements OnInit, OnDestroy {
      * @param rule The rule which messages this function counts.
      * @return The total number of messages displayed for a given rule.
      */
-    public ruleMessageCount = (rule: IGNAThubRule): number => {
+    public ruleMessageCount = (rule: IRule): number => {
         return 0;
     }
 
@@ -59,7 +59,7 @@ export class ProjectExplorerComponent implements OnInit, OnDestroy {
      * @param property The property which messages this function counts.
      * @return The total number of messages displayed for a given property.
      */
-    public propertyMessageCount = (property: IGNAThubProperty): number => {
+    public propertyMessageCount = (property: IProperty): number => {
         return 0;
     }
 }

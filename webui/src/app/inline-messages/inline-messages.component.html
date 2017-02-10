@@ -3,7 +3,7 @@
         <div class="messages-tool">{{ tools[toolId].name }}</div>
         <div class="messages-list">
             <div class="messages-list-item" *ngFor="let message of messages[toolId]">
-                <span class="message-text">{{ message.message }}</span>
+                <span class="message-text">{{ message.text }}</span>
                 <span class="rule-identifier">
                     <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
                     {{ message.rule.identifier }}

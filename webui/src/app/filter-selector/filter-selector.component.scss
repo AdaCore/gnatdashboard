@@ -1,0 +1,28 @@
+:host {
+  display: inline-block;
+  width: 100%;
+  min-width: 300px;
+
+  td { padding: 0; }
+
+  .option {
+    display: flex;
+    padding: 0 16px;
+
+    input[type="checkbox"] {
+      margin-right: 16px;
+      position: relative;
+      top: 3px;
+    }
+
+    label { flex-grow: 1; }
+
+    label,
+    .option-count { padding: 4px 8px; }
+
+    .option-count {
+      color: #777;
+      padding-left: 16px;
+    }
+  }
+}

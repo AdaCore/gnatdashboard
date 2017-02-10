@@ -68,10 +68,17 @@ table {
 
   &:last-child { margin-bottom: 0; }
 
+  td {
+    padding: 4px 8px;
+    line-height: 18px;
+  }
 
-  td, th {
-    padding: 5px;
-    line-height: 1.5em;
+  th {
+    color: #333;
+    padding: 8px 10px;
+    font-weight: bold;
+
+    &.thin { width: 1%; }
   }
 
   th.code-components-cell {
@@ -85,22 +92,7 @@ table {
 
   thead { border-bottom: 1px solid #e6e6e6; }
 
-  th {
-    color: #333;
-    padding: 8px 10px;
-    font-weight: bold;
-
-    &.thin { width: 1%; }
-  }
-
-  tr {
-    td {
-      padding: 4px 8px;
-      line-height: 18px;
-    }
-
-    &:hover { background-color: #f4f7fb; }
-  }
+  tbody tr:hover { background-color: #f4f7fb; }
 }
 
 /* Hyperlinks */

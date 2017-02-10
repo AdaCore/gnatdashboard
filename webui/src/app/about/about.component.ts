@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GNAThubService } from '../gnathub.service';
-import { IGNAThubReport } from 'gnat';
+import { IReportIndex } from 'gnat';
 
 import '../array/operator/sum';
 
@@ -11,7 +11,7 @@ import '../array/operator/sum';
     styleUrls: [ 'about.component.scss' ]
 })
 export class AboutComponent implements OnInit {
-    public report: IGNAThubReport = null;
+    public report: IReportIndex = null;
     public isReportFetchError: boolean = false;
 
     constructor(private gnathub: GNAThubService) {}

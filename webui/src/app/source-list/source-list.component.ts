@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GNAThubService } from '../gnathub.service';
-import { IGNAThubReport } from 'gnat';
+import { IReportIndex } from 'gnat';
 
 @Component({
     selector: 'source-list',
@@ -9,7 +9,7 @@ import { IGNAThubReport } from 'gnat';
     styleUrls: [ 'source-list.component.scss' ]
 })
 export class SourceListComponent implements OnInit {
-    public report: IGNAThubReport = null;
+    public report: IReportIndex = null;
     public isReportFetchError: boolean = false;
 
     constructor(private gnathub: GNAThubService) {}

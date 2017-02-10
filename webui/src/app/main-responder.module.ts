@@ -22,6 +22,7 @@ import { AnnotatedSourceComponent } from './annotated-source';
 import { AnnotatedSourceViewComponent } from './annotated-source-view';
 import { ArrayNaturalSortPipe } from './array.pipe';
 import { CountPipe } from './count.pipe';
+import { FilterSelectorComponent } from './filter-selector';
 import { InlineMessagesComponent } from './inline-messages';
 import { MapKeysPipe } from './map-keys.pipe';
 import { MapValuesPipe } from './map-values.pipe';
@@ -66,6 +67,7 @@ type StoreType = {
         AnnotatedSourceViewComponent,
         ArrayNaturalSortPipe,
         CountPipe,
+        FilterSelectorComponent,
         InlineMessagesComponent,
         MainResponderComponent,
         MapKeysPipe,

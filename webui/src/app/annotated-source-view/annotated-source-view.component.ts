@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { GNAThubService } from '../gnathub.service';
-import { IGNAThubBlob } from 'gnat';
+import { IAnnotatedSourceFile } from 'gnat';
 
 @Component({
     selector: 'annotated-source-view',
@@ -10,7 +10,7 @@ import { IGNAThubBlob } from 'gnat';
 })
 export class AnnotatedSourceViewComponent implements OnInit {
     public filename: string = null;
-    public blob: IGNAThubBlob = null;
+    public blob: IAnnotatedSourceFile = null;
     public isBlobFetchError: boolean = false;
 
     constructor(
