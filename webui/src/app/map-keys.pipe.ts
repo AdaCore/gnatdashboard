@@ -8,7 +8,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  * Example:
  *     <li *ngFor="let key of obj | dshMapKeys">{{ key }}</li>
  */
-@Pipe({ name: 'dshMapKeys'})
+@Pipe({ name: 'dshMapKeys', pure: false})
 export class MapKeysPipe implements PipeTransform {
     public transform(obj: { [key: string]: any }, args: any[] = null): string[]
     {

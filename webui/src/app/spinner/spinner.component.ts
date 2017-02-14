@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
     styleUrls: [ 'spinner.component.scss' ]
 })
 export class SpinnerComponent {
-    @Input() public caption: string = null;
+    @Input() public caption: string;
 }

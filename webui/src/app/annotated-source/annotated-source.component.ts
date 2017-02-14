@@ -1,21 +1,29 @@
 import {
-    AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit,
+    AfterViewInit,
+    Component,
+    ElementRef,
+    HostBinding,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
     ViewChild
 } from '@angular/core';
 import { DOCUMENT } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageScrollInstance, PageScrollService } from 'ng2-page-scroll';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import {
-    IAnnotatedSourceFile, IAnnotatedSourceMessage, IPropertyFilter, IRuleFilter,
+    IAnnotatedSourceFile,
+    IAnnotatedSourceMessage,
+    IPropertyFilter,
+    IRuleFilter,
     IToolFilter
 } from 'gnat';
 
 import { FilterEvent } from '../filter-selector';
-
-import '../array/operator/sum';
 
 type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
 
@@ -27,14 +35,15 @@ type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
 export class AnnotatedSourceComponent
     implements AfterViewInit, OnDestroy, OnInit
 {
-    @Input() public source: IAnnotatedSourceFile = null;
-    public selectedLine: number = null;
+    @Input() public source: IAnnotatedSourceFile;
+    public selectedLine: number = 0;
     public displayMessages: boolean = true;
-    public displayCoverage: boolean = true;
+    @HostBinding('class.with-coverage') public displayCoverage: boolean = true;
     public showMessageList: boolean = true;
-    public inlineMessages: { [line: number]: MessagesByToolId } = {};
+    public inlineMessages: { [line: number]: MessagesByToolId };
+    public inlineMessagesShownCount: number = 0;
 
-    private sub: Subscription = null;
+    private sub: Subscription;
 
     @ViewChild('scrollView') private scrollView: ElementRef;
 
@@ -44,9 +53,28 @@ export class AnnotatedSourceComponent
         private route: ActivatedRoute) {}
 
     /** @override */
-    public ngOnInit(): void {
+    public ngOnInit() {
         this.source.coverage = this.source.coverage || {};
-        this.filterInlineMessages();
+        this.source.messages = this.source.messages || {};
+        this.source.rules = this.source.rules || {};
+        this.source.tools = this.source.tools || {};
+        this.source.properties = this.source.properties || {};
+
+        // Prepare inline messages.
+        this.inlineMessages = {};
+        Object.keys(this.source.messages).forEach(line => {
+            this.source.messages[line].forEach(message => {
+                const toolId = message.rule.tool.id;
+                if (!this.inlineMessages.hasOwnProperty(line)) {
+                    this.inlineMessages[line] = {};
+                }
+                if (!this.inlineMessages[line].hasOwnProperty(toolId)) {
+                    this.inlineMessages[line][toolId] = new Set();
+                }
+                this.inlineMessages[line][toolId].add(message);
+                this.inlineMessagesShownCount++;
+            });
+        });
 
         this.sub = this.route.params.subscribe(params => {
             this.selectedLine = +params['line'];
@@ -55,13 +83,15 @@ export class AnnotatedSourceComponent
     }
 
     /** @override */
-    public ngAfterViewInit(): void {
+    public ngAfterViewInit() {
         this.goToLine(this.selectedLine);
     }
 
     /** @override */
-    public ngOnDestroy(): void {
-        this.sub.unsubscribe();
+    public ngOnDestroy() {
+        if (this.sub) {
+            this.sub.unsubscribe();
+        }
     }
 
     /**
@@ -107,6 +137,7 @@ export class AnnotatedSourceComponent
             this.source.rules[id]._ui_selected_message_count = 0);
         Object.keys(this.source.properties).forEach(id =>
             this.source.properties[id]._ui_selected_message_count = 0);
+        this.inlineMessagesShownCount = 0;
 
         Object.keys(this.source.messages).forEach(line => {
             this.source.messages[line].forEach(message => {
@@ -128,28 +159,40 @@ export class AnnotatedSourceComponent
                     message.properties.forEach(property =>
                         this.source.properties[property.id]
                             ._ui_selected_message_count++);
+                    this.inlineMessagesShownCount++;
+                    this.insertIfMissing(line, message);
+                } else {
+                    this.removeIfPresent(line, message);
                 }
             });
-            this.filterInlineMessages();
         });
     }
 
-    /**
-     * (Re)build the ``inlineMessages`` map.
-     */
-    private filterInlineMessages() {
-        for (let line of Object.keys(this.source.messages || {})) {
-            const mappedByToolId: MessagesByToolId = {};
-            this.source.messages[line]
-                .filter(message => !message._ui_hidden)
-                .forEach(message => {
-                    const toolId = message.rule.tool.id;
-                    if (!mappedByToolId.hasOwnProperty(toolId)) {
-                        mappedByToolId[toolId] = [];
-                    }
-                    mappedByToolId[toolId].push(message);
-                });
-            this.inlineMessages[line] = mappedByToolId;
+    private insertIfMissing(line: string, message: IAnnotatedSourceMessage) {
+        const toolId = message.rule.tool.id;
+        if (!this.inlineMessages.hasOwnProperty(line)) {
+            this.inlineMessages[line] = {};
+        }
+        if (!this.inlineMessages[line].hasOwnProperty(toolId)) {
+            this.inlineMessages[line][toolId] = new Set();
+        }
+        this.inlineMessages[line][toolId].add(message);
+    }
+
+    private removeIfPresent(line: string, message: IAnnotatedSourceMessage) {
+        const toolId = message.rule.tool.id;
+        if (!this.inlineMessages.hasOwnProperty(line) ||
+            !this.inlineMessages[line].hasOwnProperty(toolId)) {
+            return; // Message not found.
+        }
+        this.inlineMessages[line][toolId].delete(message);
+        if (!this.inlineMessages[line][toolId].size) {
+            // Delete the list when the last message is removed.
+            delete this.inlineMessages[line][toolId];
+            if (!Object.keys(this.inlineMessages[line]).length) {
+                // Delete the map when last message is removed.
+                delete this.inlineMessages[line];
+            }
         }
     }
 
@@ -158,10 +201,12 @@ export class AnnotatedSourceComponent
      *
      * @param line The number of the line to scroll to.
      */
-    private goToLine(line: number): void {
-        let scroll: PageScrollInstance =
-            PageScrollInstance.simpleInlineInstance(
-                this.document, `#L${line}`, this.scrollView.nativeElement);
-        this.pageScrollService.start(scroll);
+    private goToLine(line: number) {
+        if (line) {
+            let scroll: PageScrollInstance =
+                PageScrollInstance.simpleInlineInstance(
+                    this.document, `#L${line}`, this.scrollView.nativeElement);
+            this.pageScrollService.start(scroll);
+        }
     };
 }

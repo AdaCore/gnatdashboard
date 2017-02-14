@@ -85,48 +85,23 @@
                     </p>
                 </div>
                 <div class="file" *ngIf="source.lines">
-                    <div class="blob-wrapper">
-                        <table class="file-line-container">
-                        <tbody>
-                            <template ngFor let-line [ngForOf]="source.lines">
-                                <tr [ngClass]="{
-                                    selected: selectedLine == line.number,
-                                    no_code: source.coverage[line.number]?.status.toLowerCase() == 'no_code',
-                                    covered: source.coverage[line.number]?.status.toLowerCase() == 'covered',
-                                    not_covered: source.coverage[line.number]?.status.toLowerCase() == 'not_covered',
-                                    partially_covered: source.coverage[line.number]?.status.toLowerCase() == 'partially_covered'
-                                }">
-                                    <td class="blob-num">
-                                        <a [routerLink]="['.', { line: line.number }]"
-                                           [attr.data-line-number]="line.number">&nbsp;</a>
-                                    </td>
-                                    <td id="L{{ line.number }}" class="blob-code"
-                                        [innerHTML]="line.html_content">
-                                    </td>
-                                </tr>
-                                <tr class="inline-comments"
-                                    *ngIf="displayMessages && inlineMessages[line.number] | dshNotEmpty">
-                                    <td colspan=2>
-                                        <inline-messages
-                                            [tools]="source.tools"
-                                            [messages]="inlineMessages[line.number]">
-                                        </inline-messages>
-                                    </td>
-                                </tr>
-                            </template>
-                        </tbody>
-                        </table>
-                    </div>
+                    <annotated-source-content
+                        [lines]="source.lines"
+                        [tools]="source.tools"
+                        [coverage]="source.coverage"
+                        [inlineMessages]="inlineMessages"
+                        [displayMessages]="displayMessages">
+                    </annotated-source-content>
                 </div>
             </main>
         </div>
     </div>
-    <footer
-        class="layout-page-footer location-view"
-        *ngIf="displayMessages">
+    <footer class="layout-page-footer location-view" *ngIf="displayMessages && inlineMessagesShownCount">
         <div class="location-view-flex">
             <div class="location-view-header">
-                <span class="location-view-title">Messages</span>
+                <span class="location-view-title">
+                    {{ inlineMessagesShownCount }} messages
+                </span>
                 <button class="location-view-collapse-btn"
                         [mdTooltip]="showMessageList ? 'Hide' : 'Show'"
                         mdTooltipPosition="left"

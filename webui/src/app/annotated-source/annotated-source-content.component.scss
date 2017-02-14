@@ -1,0 +1,20 @@
+:host {
+  display: block;
+  padding: 1ch 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+
+table.file-line-container tr {
+  &:hover.inline-comments { background: none; }
+
+  &.inline-comments td {
+    padding: 0;
+    border-left: 0;
+    border-color: #eeeeee;
+
+    inline-messages { margin: 8px; }
+  }
+}

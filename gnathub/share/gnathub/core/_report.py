@@ -506,7 +506,9 @@ class SourceDirBuilder(object):
         """
         return {
             'path': self.path,
-            'sources': self.source_files,
+            'sources': {
+                source['filename']: source for source in self.source_files
+            },
             'coverage': self._coverage_avg.compute(),
             'message_count': self.message_count or None,
             '_total_message_count': sum(self.message_count.itervalues())

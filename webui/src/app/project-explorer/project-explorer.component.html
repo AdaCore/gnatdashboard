@@ -48,7 +48,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let project of report.modules | dshMapKeys | dshNaturalSort">
+                    <tr *ngFor="let project of report.modules | dshMapKeys | dshStringNaturalSort">
                         <td>
                             <a [routerLink]="['.', { project: project }]" class="with-icon">
                                 <md-icon class="md-18">developer_board</md-icon>

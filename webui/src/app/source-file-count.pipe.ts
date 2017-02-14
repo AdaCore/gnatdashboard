@@ -1,6 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ISourceDir } from 'gnat';
 
+import './array/operator/sum';
+
 /**
  * Count the number of source files in a given source directory.
  *
@@ -10,6 +12,6 @@ import { ISourceDir } from 'gnat';
 @Pipe({ name: 'dshSourceFileCount'})
 export class SourceFileCountPipe implements PipeTransform {
     public transform(sourceDir: ISourceDir, args: any[] = null): number {
-        return sourceDir.sources.length;
+        return Object.keys(sourceDir.sources).length;
     }
 }

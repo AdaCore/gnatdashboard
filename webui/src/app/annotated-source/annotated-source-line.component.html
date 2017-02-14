@@ -1,0 +1,5 @@
+<td class="line-number">
+    <a [routerLink]="['.', { line: line.number }]"
+       [attr.data-line-number]="line.number">&nbsp;</a>
+</td>
+<td id="L{{ line.number }}" class="line-content" [innerHTML]="safeHtml"></td>

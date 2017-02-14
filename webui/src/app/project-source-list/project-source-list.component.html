@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="source-dir" *ngFor="let dir of project.source_dirs | dshMapKeys"
+            <tr class="source-dir" *ngFor="let dir of project.source_dirs | dshMapKeys | dshStringNaturalSort"
                 [ngClass]="{ selected: isSelected(dir) }">
                 <td>
                     <a [routerLink]="['.', { project: project.name, directory: dir }]" class="with-icon">
@@ -43,7 +43,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let source of getSelectedSourceDir()?.sources">
+            <tr *ngFor="let source of getSelectedSourceDir()?.sources | dshSourceNaturalSort">
                 <td>
                     <a [routerLink]="['/source', source.filename]" class="with-icon">
                         <md-icon class="md-18">insert_drive_file</md-icon>

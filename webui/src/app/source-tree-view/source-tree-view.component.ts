@@ -8,5 +8,5 @@ import { IReportIndex } from 'gnat';
     styleUrls: [ 'source-tree-view.component.scss' ],
 })
 export class SourceTreeViewComponent {
-    @Input() public report: IReportIndex = null;
+    @Input() public report: IReportIndex;
 }

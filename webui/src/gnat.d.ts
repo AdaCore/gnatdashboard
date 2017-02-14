@@ -70,8 +70,6 @@ declare module 'gnat' {
         filename: string;
         source_dir: string;
         full_path: string;
-        has_messages: boolean;
-        has_coverage: boolean;
         lines: IAnnotatedSourceLine[];
         tools: { [id: number]: IToolFilter };
         rules: { [id: number]: IRuleFilter };
@@ -95,7 +93,7 @@ declare module 'gnat' {
 
     export interface ISourceDir {
         path: string;
-        sources: ISource[];
+        sources: { [filename: string]: ISource };
         coverage?: number;
         message_count?: { [toolId: number]: number };
         _total_message_count: number;

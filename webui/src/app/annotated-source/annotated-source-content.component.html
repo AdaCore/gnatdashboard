@@ -1,0 +1,20 @@
+<table class="file-line-container">
+    <tbody>
+    <template ngFor let-line [ngForOf]="lines">
+        <annotated-source-line
+            [ngClass]="{ selected: selectedLine == line.number }"
+            [line]="line"
+            [coverage]="coverage[line.number]">
+        </annotated-source-line>
+        <tr class="inline-comments"
+            *ngIf="displayMessages && inlineMessages[line.number] | dshNotEmpty">
+            <td colspan=2>
+                <inline-messages
+                    [tools]="tools"
+                    [messages]="inlineMessages[line.number]">
+                </inline-messages>
+            </td>
+        </tr>
+    </template>
+    </tbody>
+</table>

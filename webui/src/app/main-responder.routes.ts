@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { AboutComponent } from './about';
-import { AnnotatedSourceViewComponent } from './annotated-source-view';
+import { AnnotatedSourceViewComponent } from './annotated-source';
 import { NoContentComponent } from './no-content';
 import { ProjectExplorerComponent } from './project-explorer';
 

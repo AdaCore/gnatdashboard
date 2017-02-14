@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { IAnnotatedSourceMessage } from 'gnat';
 import { ITool } from 'gnat';
 
-type InlineMessages = { [toolId: number]: IAnnotatedSourceMessage[] };
+type InlineMessages = { [toolId: number]: Set<IAnnotatedSourceMessage> };
 
 @Component({
     selector: 'inline-messages',

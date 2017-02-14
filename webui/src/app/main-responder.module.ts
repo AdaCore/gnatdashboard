@@ -18,9 +18,14 @@ import { APP_RESOLVER_PROVIDERS } from './main-responder.resolver';
 import { AppState, InteralStateType } from './main-responder.service';
 
 import { AboutComponent } from './about';
-import { AnnotatedSourceComponent } from './annotated-source';
-import { AnnotatedSourceViewComponent } from './annotated-source-view';
-import { ArrayNaturalSortPipe } from './array.pipe';
+import {
+    AnnotatedSourceComponent,
+    AnnotatedSourceContentComponent,
+    AnnotatedSourceLineComponent,
+    AnnotatedSourceViewComponent
+} from './annotated-source';
+import { SourceNaturalSortPipe } from './source-natural-sort.pipe';
+import { StringNaturalSortPipe } from './string-natural-sort.pipe';
 import { CountPipe } from './count.pipe';
 import { FilterSelectorComponent } from './filter-selector';
 import { InlineMessagesComponent } from './inline-messages';
@@ -64,8 +69,11 @@ type StoreType = {
     declarations: [
         AboutComponent,
         AnnotatedSourceComponent,
+        AnnotatedSourceContentComponent,
+        AnnotatedSourceLineComponent,
         AnnotatedSourceViewComponent,
-        ArrayNaturalSortPipe,
+        SourceNaturalSortPipe,
+        StringNaturalSortPipe,
         CountPipe,
         FilterSelectorComponent,
         InlineMessagesComponent,

@@ -13,18 +13,18 @@ import { IProperty, IRule, ITool } from 'gnat';
     styleUrls: [ 'project-explorer.component.scss' ]
 })
 export class ProjectExplorerComponent implements OnInit, OnDestroy {
-    public project: string = null;
-    public directory: string = null;
-    public report: IReportIndex = null;
+    public project: string;
+    public directory: string;
+    public report: IReportIndex;
     public isReportFetchError: boolean = false;
-    private sub: Subscription = null;
+    private sub: Subscription;
 
     constructor(
         private gnathub: GNAThubService,
         private route: ActivatedRoute) {}
 
     /** @override */
-    public ngOnInit(): void {
+    public ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.directory = params['directory'];
             this.project = params['project'];
@@ -35,7 +35,7 @@ export class ProjectExplorerComponent implements OnInit, OnDestroy {
     }
 
     /** @override */
-    public ngOnDestroy(): void {
+    public ngOnDestroy() {
         this.sub.unsubscribe();
     }
 

@@ -6,11 +6,11 @@ import { IAnnotatedSourceFile } from 'gnat';
 
 @Component({
     selector: 'annotated-source-view',
-    templateUrl: './annotated-source-view.component.html'
+    templateUrl: 'annotated-source-view.component.html'
 })
 export class AnnotatedSourceViewComponent implements OnInit {
-    public filename: string = null;
-    public blob: IAnnotatedSourceFile = null;
+    public filename: string;
+    public blob: IAnnotatedSourceFile;
     public isBlobFetchError: boolean = false;
 
     constructor(
@@ -18,7 +18,7 @@ export class AnnotatedSourceViewComponent implements OnInit {
         private route: ActivatedRoute) {}
 
     /** @override */
-    public ngOnInit(): void {
+    public ngOnInit() {
         this.filename = this.route.snapshot.params['filename'];
         this.gnathub.getSource(this.filename).subscribe(
             blob => this.blob = blob,

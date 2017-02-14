@@ -7,8 +7,8 @@ import { IModule, ISourceDir } from 'gnat';
     styleUrls: [ 'project-source-list.component.scss' ],
 })
 export class ProjectSourceListComponent {
-    @Input() public project: IModule = null;
-    @Input() public directory: string = null;
+    @Input() public project: IModule;
+    @Input() public directory: string;
 
     public getSelectedSourceDir(): ISourceDir {
         if (!this.directory) {

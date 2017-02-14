@@ -1,0 +1,34 @@
+:host { display: table-row; }
+
+.line-number,
+.line-content {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 1.2rem;
+  line-height: 1.5em;
+  white-space: pre;
+  border: 0;
+  padding: 0;
+  vertical-align: middle;
+  cursor: default;
+}
+
+.line-number {
+  width: 1%;
+  min-width: 50px;
+  white-space: nowrap;
+  text-align: right;
+  vertical-align: top;
+  padding-right: 10px;
+  user-select: none;
+
+  a {
+    color: lighten(black, 70%);
+    text-decoration: none;
+    &::before { content: attr(data-line-number); }
+  }
+}
+
+.line-content {
+  padding-left: 10px;
+  tab-size: 3; /* TODO: should only be the case for Ada sources */
+}

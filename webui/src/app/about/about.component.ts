@@ -11,13 +11,13 @@ import '../array/operator/sum';
     styleUrls: [ 'about.component.scss' ]
 })
 export class AboutComponent implements OnInit {
-    public report: IReportIndex = null;
+    public report: IReportIndex;
     public isReportFetchError: boolean = false;
 
     constructor(private gnathub: GNAThubService) {}
 
     /** @override */
-    public ngOnInit(): void {
+    public ngOnInit() {
         this.gnathub.getReport().subscribe(
             report => this.report = report,
             error => this.isReportFetchError = !!error);
@@ -32,7 +32,7 @@ export class AboutComponent implements OnInit {
         }
         return Object.keys(this.report.modules)
             .sum(mod => Object.keys(this.report.modules[mod].source_dirs)
-                .sum(dir =>
-                    this.report.modules[mod].source_dirs[dir].sources.length));
+                .sum(dir => Object.keys(
+                    this.report.modules[mod].source_dirs[dir].sources).length));
     }
 }

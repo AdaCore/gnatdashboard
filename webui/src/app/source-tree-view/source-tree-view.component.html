@@ -1,5 +1,5 @@
 <div class="container">
-    <div *ngFor="let module of report.modules | dshMapKeys | dshNaturalSort">
+    <div *ngFor="let module of report.modules | dshMapKeys | dshStringNaturalSort">
         <div class="node-project node">
             <button (click)="report.modules[module]._ui_expanded = !report.modules[module]._ui_expanded">
                 <md-icon
@@ -11,7 +11,7 @@
             <a class="node-label "[routerLink]="['/project', module]">{{ module }}</a>
         </div>
         <template [ngIf]="report.modules[module]._ui_expanded">
-            <div class="node-project" *ngFor="let sourceDir of report.modules[module].source_dirs | dshMapKeys | dshNaturalSort">
+            <div class="node-project" *ngFor="let sourceDir of report.modules[module].source_dirs | dshMapKeys | dshStringNaturalSort">
                 <div class="node-source-dir node">
                     <button (click)="report.modules[module].source_dirs[sourceDir]._ui_expanded = !report.modules[module].source_dirs[sourceDir]._ui_expanded">
                         <md-icon
