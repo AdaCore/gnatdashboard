@@ -15,7 +15,7 @@
         </thead>
         <tbody>
             <tr class="source-dir" *ngFor="let dir of project.source_dirs | dshMapKeys | dshStringNaturalSort"
-                [ngClass]="{ selected: isSelected(dir) }">
+                [ngClass]="{ selected: dir == currentSourceDir?.path }">
                 <td>
                     <a [routerLink]="['.', { project: project.name, directory: dir }]" class="with-icon">
                         <md-icon class="md-18">folder_open</md-icon>
@@ -37,13 +37,13 @@
             <tr>
                 <th>&nbsp;</th>
                 <th class="thin text-right code-components-cell">Messages</th>
-                <th class="thin text-right code-components-cell" *ngIf="getSelectedSourceDir()?.coverage">
+                <th class="thin text-right code-components-cell" *ngIf="currentSourceDir?.coverage">
                     Coverage
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let source of getSelectedSourceDir()?.sources | dshSourceNaturalSort">
+            <tr *ngFor="let source of currentSourceDir?.sources | dshSourceNaturalSort">
                 <td>
                     <a [routerLink]="['/source', source.filename]" class="with-icon">
                         <md-icon class="md-18">insert_drive_file</md-icon>
@@ -51,7 +51,7 @@
                     </a>
                 </td>
                 <td class="thin text-right faded">{{ source | dshMessageCount }}</td>
-                <td class="thin text-right faded" *ngIf="getSelectedSourceDir()?.coverage">
+                <td class="thin text-right faded" *ngIf="currentSourceDir?.coverage">
                     <template [ngIf]="source.coverage">
                         {{ source.coverage }}%
                     </template>

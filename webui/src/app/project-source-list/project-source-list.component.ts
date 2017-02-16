@@ -1,39 +1,34 @@
-import { Component, Input } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges
+} from '@angular/core';
 import { IModule, ISourceDir } from 'gnat';
+import * as naturalSort from 'natural-sort';
 
 @Component({
     selector: 'project-source-list',
     templateUrl: 'project-source-list.component.html',
     styleUrls: [ 'project-source-list.component.scss' ],
 })
-export class ProjectSourceListComponent {
+export class ProjectSourceListComponent implements OnChanges {
     @Input() public project: IModule;
     @Input() public directory: string;
 
-    public getSelectedSourceDir(): ISourceDir {
-        if (!this.directory) {
-            const sourceDir = this.getFirstSourceDir();
-            if (sourceDir) {
-                return sourceDir;
-            }
-            return null;
-        }
-        return this.project.source_dirs[this.directory];
-    }
+    public currentSourceDir: ISourceDir;
 
-    public isSelected(sourceDir: string): boolean {
-        const selected = this.getSelectedSourceDir();
-        if (!selected) {
-            return false;
+    public ngOnChanges() {
+        if (this.directory) {
+            this.currentSourceDir = this.project.source_dirs[this.directory];
+            return;
         }
-        return selected.path === sourceDir;
-    }
-
-    private getFirstSourceDir(): ISourceDir {
-        const sourceDirs = Object.keys(this.project.source_dirs);
-        if (sourceDirs.length) {
-            return this.project.source_dirs[sourceDirs[0]];
+        const orderedPath = Object
+            .keys(this.project.source_dirs)
+            .sort(naturalSort({ caseSensitive: true }));
+        if (orderedPath.length) {
+            this.currentSourceDir = this.project.source_dirs[orderedPath[0]];
+        } else {
+            this.currentSourceDir = null;
         }
-        return null;
     }
 }

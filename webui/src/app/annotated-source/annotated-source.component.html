@@ -24,12 +24,12 @@
                         </template>
                     </dl>
                 </template>
-                <template [ngIf]="source.messages || source.coverage">
+                <template [ngIf]="(source.messages || source.coverage) | dshNotEmpty">
                     <h4>Preferences</h4>
                     <div class="preferences">
                         <table>
                             <tbody>
-                            <tr *ngIf="source.messages">
+                            <tr *ngIf="source.messages | dshNotEmpty">
                                 <td>
                                     <label>
                                         <input type="checkbox" [(ngModel)]="displayMessages" />
@@ -49,7 +49,7 @@
                         </table>
                     </div>
                 </template>
-                <template [ngIf]="displayMessages && source.messages">
+                <template [ngIf]="displayMessages && source.messages | dshNotEmpty">
                     <h4>Message filters</h4>
                     <div class="option-selectors">
                         <!-- Tool selector -->
