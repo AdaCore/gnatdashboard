@@ -37,9 +37,10 @@ import {
 } from './errors';
 import { NoContentComponent } from './no-content';
 import { NotEmptyPipe } from './not-empty.pipe';
-import { OptionSelectorComponent } from './option-selector';
-import { ProjectExplorerComponent } from './project-explorer';
-import { ProjectSourceListComponent } from './project-source-list';
+import {
+    ProjectExplorerComponent,
+    ProjectSourceListComponent
+} from './project-explorer';
 import { SourceFileCountPipe } from './source-file-count.pipe';
 import { SourceListComponent } from './source-list';
 import { SourceTreeViewComponent } from './source-tree-view';
@@ -85,7 +86,6 @@ type StoreType = {
         MissingSourceErrorComponent,
         NoContentComponent,
         NotEmptyPipe,
-        OptionSelectorComponent,
         ProjectExplorerComponent,
         ProjectSourceListComponent,
         SourceFileCountPipe,

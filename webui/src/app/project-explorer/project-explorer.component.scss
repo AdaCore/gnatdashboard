@@ -7,13 +7,14 @@
     overflow-y: auto;
     padding: 0 16px;
 
+
     div.option-selectors {
       width: 100%;
 
       display: flex;
       flex-flow: row wrap;
 
-      option-selector {
+      filter-selector {
         flex-grow: 1;
         margin-bottom: 19px;
       }

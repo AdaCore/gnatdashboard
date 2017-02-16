@@ -1,11 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-import { IReportIndex } from 'gnat';
 import { GNAThubService } from '../gnathub.service';
 
-import { Subscription } from 'rxjs';
-import { IProperty, IRule, ITool } from 'gnat';
+import { FilterEvent } from '../filter-selector/filter-selector.component';
+import {
+    IPropertyFilter,
+    IReportIndex,
+    IRuleFilter,
+    IToolFilter
+} from 'gnat';
 
 @Component({
     selector: 'project-explorer',
@@ -40,26 +45,90 @@ export class ProjectExplorerComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * @param tool The tool which messages this function counts.
-     * @return The total number of messages displayed for a given tool.
+     * Checkbox handled for the tool filters.
+     *
+     * @param event Event fired by <filter-selector> on checkbox status change.
      */
-    public toolMessageCount = (tool: ITool): number => {
-        return 0;
+    public onToolFilterToggle(event: FilterEvent) {
+        const tool = <IToolFilter> event.option;
+        this.report.tools[tool.id]._ui_unselected = !event.checked;
+        this.updateMessagesUiProperties();
     }
 
     /**
-     * @param rule The rule which messages this function counts.
-     * @return The total number of messages displayed for a given rule.
+     * Checkbox handled for the rule filters.
+     *
+     * @param event Event fired by <filter-selector> on checkbox status change.
      */
-    public ruleMessageCount = (rule: IRule): number => {
-        return 0;
+    public onRuleFilterToggle(event: FilterEvent) {
+        const rule = <IRuleFilter> event.option;
+        this.report.rules[rule.id]._ui_unselected = !event.checked;
+        this.updateMessagesUiProperties();
     }
 
     /**
-     * @param property The property which messages this function counts.
-     * @return The total number of messages displayed for a given property.
+     * Checkbox handled for the property filters.
+     *
+     * @param event Event fired by <filter-selector> on checkbox status change.
      */
-    public propertyMessageCount = (property: IProperty): number => {
-        return 0;
+    public onPropertyFilterToggle(event: FilterEvent) {
+        const property = <IPropertyFilter> event.option;
+        this.report.properties[property.id]._ui_unselected = !event.checked;
+        this.updateMessagesUiProperties();
+    }
+
+    private updateMessagesUiProperties() {
+        const tools = this.report.tools;
+        const rules = this.report.rules;
+        const properties = this.report.properties;
+
+        Object.keys(tools).forEach(id =>
+            tools[id]._ui_selected_message_count = 0);
+        Object.keys(rules).forEach(id =>
+            rules[id]._ui_selected_message_count = 0);
+        Object.keys(properties).forEach(id =>
+            properties[id]._ui_selected_message_count = 0);
+
+        Object.keys(this.report.modules).forEach(name => {
+            const module = this.report.modules[name];
+            module._ui_total_message_count = 0;
+            Object.keys(module.source_dirs).forEach(path => {
+                const sourceDir = module.source_dirs[path];
+                sourceDir._ui_total_message_count = 0;
+                Object.keys(sourceDir.sources).forEach(filename => {
+                    const source = sourceDir.sources[filename];
+                    source._ui_total_message_count = 0;
+                    if (!source._messages) {
+                        return;
+                    }
+                    source._messages.forEach(message => {
+                        const tid = message.tool_id;
+                        const rid = message.rule_id;
+
+                        const isToolSelected = !tools[tid]._ui_unselected;
+                        const isRuleSelected = !rules[rid]._ui_unselected;
+                        const hasSelectedProperties = !message.property_ids ||
+                            !message.property_ids.length || message.property_ids
+                                .some(id => !properties[id]._ui_unselected);
+
+                        if (isToolSelected && isRuleSelected &&
+                                hasSelectedProperties)
+                        {
+                            tools[tid]._ui_selected_message_count++;
+                            rules[rid]._ui_selected_message_count++;
+                            if (message.property_ids) {
+                                message.property_ids.forEach(id => {
+                                    const property = properties[id];
+                                    property._ui_selected_message_count++;
+                                });
+                            }
+                            source._ui_total_message_count++;
+                            sourceDir._ui_total_message_count++;
+                            module._ui_total_message_count++;
+                        }
+                    });
+                });
+            });
+        });
     }
 }

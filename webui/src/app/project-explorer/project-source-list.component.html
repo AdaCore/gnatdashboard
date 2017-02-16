@@ -23,7 +23,13 @@
                     </a>
                 </td>
                 <td class="thin text-right faded">{{ project.source_dirs[dir] | dshSourceFileCount }}</td>
-                <td class="thin text-right faded">{{ project.source_dirs[dir] | dshMessageCount }}</td>
+                <td class="thin text-right faded">
+                    {{
+                        project.source_dirs[dir]._ui_total_message_count != null ?
+                            project.source_dirs[dir]._ui_total_message_count :
+                            project.source_dirs[dir]._total_message_count
+                    }}
+                </td>
                 <td class="thin text-right faded" *ngIf="project.coverage">
                     <template [ngIf]="project.source_dirs[dir].coverage">
                         {{ project.source_dirs[dir].coverage }}%
@@ -50,7 +56,12 @@
                         <span>{{ source.filename }}</span>
                     </a>
                 </td>
-                <td class="thin text-right faded">{{ source | dshMessageCount }}</td>
+                <td class="thin text-right faded">
+                    {{
+                        source._ui_total_message_count != null ?
+                            source._ui_total_message_count : source._total_message_count
+                    }}
+                </td>
                 <td class="thin text-right faded" *ngIf="currentSourceDir?.coverage">
                     <template [ngIf]="source.coverage">
                         {{ source.coverage }}%

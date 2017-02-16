@@ -83,8 +83,7 @@ div.option-selectors {
   display: flex;
   flex-flow: row wrap;
 
-  filter-selector,
-  option-selector {
+  filter-selector {
     flex-grow: 1;
     margin-bottom: 19px;
   }

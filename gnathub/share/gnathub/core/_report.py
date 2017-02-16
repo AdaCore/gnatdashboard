@@ -492,8 +492,17 @@ class SourceDirBuilder(object):
             'metrics': [_encode_metric(*metric) for metric in source.metrics],
             'coverage': file_coverage,
             'message_count': source.message_count,
+            '_messages': [{
+                'tool_id': tool.id,
+                'rule_id': rule.id,
+                'property_ids': [
+                    prop.id for prop in message.get_properties()
+                ] or None
+            } for message, rule, tool
+              in chain.from_iterable(source.messages.itervalues())
+            ] or None,
             '_total_message_count': sum(
-                len(messages) for messages in source.messages.values())
+                len(messages) for messages in source.messages.itervalues())
         })
         for _, _, tool in chain.from_iterable(source.messages.itervalues()):
             self.message_count[tool.id] += 1
@@ -576,7 +585,7 @@ class IndexBuilder(object):
             for sources in self.source_files.itervalues())
         self.log = logging.getLogger(__name__)
 
-        self.rules, self.tools = set(), set()
+        self.tools, self.rules, self.props = {}, {}, {}
         self.modules = {}
         self.message_count = collections.defaultdict(int)
 
@@ -591,9 +600,13 @@ class IndexBuilder(object):
             self.modules[source.project] = ModuleBuilder(source.project)
         self.modules[source.project].add_source(source)
 
-        for _, rule, tool in chain.from_iterable(source.messages.itervalues()):
-            self.tools.add(tool)
-            self.rules.add((rule, tool))
+        for message, rule, tool in chain.from_iterable(
+            source.messages.itervalues()
+        ):
+            _inc_msg_count(self.tools, tool.id, _encode_tool, tool)
+            _inc_msg_count(self.rules, rule.id, _encode_rule, rule, tool)
+            for prop in message.get_properties():
+                _inc_msg_count(self.props, prop.id, _encode_property, prop)
         for tool_id, count in source.message_count.iteritems():
             self.message_count[tool_id] += count
 
@@ -607,13 +620,9 @@ class IndexBuilder(object):
             },
             'project': GNAThub.Project.name(),
             'creation_time': int(time.time()),
-            'tools': {tool.id: _encode_tool(tool) for tool in self.tools},
-            'rules': {
-                rule.id: _encode_rule(rule, tool) for rule, tool in self.rules
-            },
-            'properties': [
-                _encode_property(prop) for prop in GNAThub.Property.list()
-            ],
+            'properties': self.props or None,
+            'tools': self.tools or None,
+            'rules': self.rules or None,
             'message_count': self.message_count,
             '_total_message_count': sum(self.message_count.itervalues()),
             '_database': GNAThub.database()
