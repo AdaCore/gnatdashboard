@@ -2,7 +2,7 @@
 GNATdashboard 18 NEW FEATURES LIST
 ==================================
 
-Copyright (C) 2016, AdaCore
+Copyright (C) 2016-2017, AdaCore
 
 This file contains a list of new features introduced in GNATdashboard. A full
 description of all GNATdashboard features can be found in the GNATdashboard
@@ -13,6 +13,11 @@ This date shows the implementation date of the feature.
 
 New features in 18.0
 --------------------
+
+NF-18-N805-021 Support for SPARK2014 (2017-02-27)
+
+  GNAThub now supports executing and collecting the results of GNATprove, part
+  of the SPARK2014 toolsuite.
 
 NF-18-PC20-033 Support extra arguments for tools (2016-12-20)
 
