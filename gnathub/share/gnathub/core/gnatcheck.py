@@ -35,7 +35,7 @@ class GNATcheck(Plugin, Runner, Reporter):
     """
 
     # Regex to identify lines that contain messages
-    _RULE_PATTERN = r'(?P<message>.+)\s\[(?P<rule>[A-Za-z_:]+)\]$'
+    _RULE_PATTERN = r'(?P<message>.+)\s\[(?P<rule_id>[A-Za-z_:]+)\]$'
 
     # Regular expression to match GNATcheck output and extract all relevant
     # information stored in it.
@@ -123,7 +123,6 @@ class GNATcheck(Plugin, Runner, Reporter):
 
                 for index, line in enumerate(lines, start=1):
                     self.log.debug('parse line: %s', line)
-
                     match = self._MESSAGE.match(line)
 
                     if match:
@@ -134,7 +133,8 @@ class GNATcheck(Plugin, Runner, Reporter):
 
         except IOError as why:
             self.log.exception('failed to parse report')
-            self.error(str(why))
+            self.error('%s (%s:%d)' % (
+                why, os.path.basename(self.output), total))
             return GNAThub.EXEC_FAILURE
 
         else:
@@ -153,7 +153,7 @@ class GNATcheck(Plugin, Runner, Reporter):
             * rule identification
             * message description
 
-        :param re.RegexObject regex: the result of the MSG_RE regex
+        :param re.RegexObject regex: the result of the _MESSAGE regex
         """
 
         # The following Regex results are explained using this example.
@@ -167,9 +167,9 @@ class GNATcheck(Plugin, Runner, Reporter):
         line = regex.group('line')
         column = regex.group('column')
         message = regex.group('message')
-        rule = regex.group('rule').lower()
+        rule_id = regex.group('rule_id').lower()
 
-        self.__add_message(src, line, column, rule, message)
+        self.__add_message(src, line, column, rule_id, message)
 
     def __add_message(self, src, line, column, rule_id, msg):
         """Add GNATcheck message to current session database.

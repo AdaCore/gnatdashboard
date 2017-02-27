@@ -120,14 +120,14 @@ class CodePeer(Plugin, Runner, Reporter):
 
         self.log.debug('parse report: %s', self.csv_report)
 
-        if not os.path.exists(self.csv_report):
+        if not os.path.isfile(self.csv_report):
             self.error('no report found')
             return GNAThub.EXEC_FAILURE
 
         with open(self.csv_report, 'rb') as report:
             # Compute the total number of lines for progress report (-1 because
             # the first line in irrelevant to the analysis).
-            total = len(report.readlines()) - 1
+            index, total = 0, len(report.readlines()) - 1
 
             # Reset the read cursor to the first byte
             report.seek(0)
@@ -173,8 +173,8 @@ class CodePeer(Plugin, Runner, Reporter):
 
             except csv.Error as why:
                 self.log.exception('failed to parse CSV report')
-                self.error('%s (%s:%d)' %
-                           (why, os.path.basename(self.csv_report), total))
+                self.error('%s (%s:%d)' % (
+                    why, os.path.basename(self.csv_report), index))
                 return GNAThub.EXEC_FAILURE
 
             else:
@@ -209,7 +209,7 @@ class CodePeer(Plugin, Runner, Reporter):
             cat = GNAThub.Category(category)
             self.categories[category] = cat
 
-        # cache the messages
+        # Cache the messages
         if (rule, msg, cat) in self.messages:
             message = self.messages[(rule, msg, cat)]
         else:
