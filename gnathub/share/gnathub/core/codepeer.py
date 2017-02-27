@@ -19,6 +19,7 @@ interface. This allows GNAThub's plug-in scanner to automatically find this
 module and load it as part of the GNAThub default execution.
 """
 
+import collections
 import csv
 import os
 import os.path
@@ -52,7 +53,7 @@ class CodePeer(Plugin, Runner, Reporter):
         self.messages = {}
 
         # Map of bulk data (couple (source, message_data): dict[str,list])
-        self.bulk_data = {}
+        self.bulk_data = collections.defaultdict(list)
 
     @staticmethod
     def __cmd_line():
@@ -217,12 +218,8 @@ class CodePeer(Plugin, Runner, Reporter):
             self.messages[(rule, msg, cat)] = message
 
         # Add the message to the given resource
-        if src in self.bulk_data:
-            self.bulk_data[src].append(
-                [message, int(line), int(column), int(column)])
-        else:
-            self.bulk_data[src] = [
-                [message, int(line), int(column), int(column)]]
+        self.bulk_data[src].append(
+            [message, int(line), int(column), int(column)])
 
     def __do_bulk_insert(self):
         """Insert the codepeer messages in bulk on each resource."""

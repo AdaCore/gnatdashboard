@@ -19,6 +19,7 @@ interface. This allows GNAThub's plug-in scanner to automatically find this
 module and load it as part of the GNAThub default execution.
 """
 
+import collections
 import os
 import re
 
@@ -58,7 +59,7 @@ class GNATcheck(Plugin, Runner, Reporter):
         self.messages = {}
 
         # Map of bulk data (couple (source, message_data): dict[str,list])
-        self.bulk_data = {}
+        self.bulk_data = collections.defaultdict(list)
 
     def __cmd_line(self):
         """Create GNATcheck command line arguments list.
@@ -196,12 +197,8 @@ class GNATcheck(Plugin, Runner, Reporter):
             self.messages[(rule, msg)] = message
 
         # Add the message to the given resource
-        if src in self.bulk_data:
-            self.bulk_data[src].append(
-                [message, int(line), int(column), int(column)])
-        else:
-            self.bulk_data[src] = [
-                [message, int(line), int(column), int(column)]]
+        self.bulk_data[src].append(
+            [message, int(line), int(column), int(column)])
 
     def __do_bulk_insert(self):
         """Insert the gnatcheck messages in bulk on each resource."""
