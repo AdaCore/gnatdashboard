@@ -68,5 +68,5 @@ class SonarScanner(Plugin, Reporter):
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
         return GNAThub.EXEC_SUCCESS if GNAThub.Run(
-            self.name, self.__cmd_line()
+            self.name, self.__cmd_line(), workdir=SonarQube.workdir()
         ).status == 0 else GNAThub.EXEC_FAILURE
