@@ -20,7 +20,7 @@ See also the [online docs](https://docs.adacore.com/gnatdashboard-docs/).
 ## Note on SonarQube
 
 The SonarAdaPlugin available in GNATdashboard 17.x is compatible with versions
-of SonarQube up to 5.1.2, *ie.* older than the current LTS (5.6.3). AdaCore's
+of SonarQube up to 5.1.2, *ie.* older than the current LTS (5.6.6). AdaCore's
 customers can request a wavefront of GNATdashboard in order to have an Ada
 plugin compatible with the latest versions of SonarQube, *ie.* from the current
-LTS (5.6.3) up to the stable release (6.1).
+LTS (5.6.6) up to the stable release (6.2).
