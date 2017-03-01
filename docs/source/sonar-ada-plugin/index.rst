@@ -25,7 +25,7 @@ SonarQube Scanner
 to analyse a project.
 
 GNATdashboard dropped support for |SonarRunner|, and is now compatible with
-|SonarScanner| version 2.8, recommanded as the default launcher for |SonarQube|
+|SonarScanner| version 2.8, recommended as the default launcher for |SonarQube|
 5.6+ (LTS).
 
 Install |SonarScanner| make it available in your :envvar:`PATH` prior to
