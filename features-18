@@ -14,6 +14,10 @@ This date shows the implementation date of the feature.
 New features in 18.0
 --------------------
 
+NF-18-Q301-033 Support for SonarQube 6.2 (2017-03-01)
+
+  GNATdashboard now officially supports SonarQube versions from 5.6.6 to 6.2.
+
 NF-18-N805-021 Support for SPARK2014 (2017-02-27)
 
   GNAThub now supports executing and collecting the results of GNATprove, part

@@ -29,7 +29,7 @@
     <packaging>sonar-plugin</packaging>
 
     <name>GNATdashboard :: Sonar Ada Plugin</name>
-    <description>Ada Plugin for SonarQube 5.6.3 to 6.x.y</description>
+    <description>Ada Plugin for SonarQube 5.6.6 to 6.x.y</description>
     <inceptionYear>2012</inceptionYear>
 
     <properties>
