@@ -56,10 +56,10 @@ public class GNAThubMetricsSensor extends MainFilesSensor {
     saveAsInt.accept(GNATmetricMetrics.CODE_LINES, CoreMetrics.NCLOC); // TODO(delay): See P511-010.
     saveAsInt.accept(GNATmetricMetrics.COMMENT_LINES, CoreMetrics.COMMENT_LINES);
     saveAsInt.accept(GNATmetricMetrics.EOL_COMMENTS, GNAThubMetrics.EOL_COMMENTS);
-    saveAsDouble.accept(GNATmetricMetrics.COMMENT_PERCENTAGE, CoreMetrics.COMMENT_LINES_DENSITY);
     saveAsInt.accept(GNATmetricMetrics.BLANK_LINES, GNAThubMetrics.BLANK_LINES);
     // NOTE: Duplicate SonarQube's "Complexity / File" to force its display on the GUI.
-    saveAsDouble.accept(GNATmetricMetrics.CYCLOMATIC_COMPLEXITY, CoreMetrics.FILE_COMPLEXITY);
+    saveAsDouble.accept(
+        GNATmetricMetrics.COMMENT_PERCENTAGE, GNAThubMetrics.COMMENT_PERCENTAGE);
     saveAsDouble.accept(
         GNATmetricMetrics.CYCLOMATIC_COMPLEXITY, GNAThubMetrics.FILE_CYCLOMATIC_COMPLEXITY);
     saveAsDouble.accept(

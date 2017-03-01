@@ -70,6 +70,17 @@ public final class GNAThubMetrics implements Metrics {
           .setDomain(CoreMetrics.DOMAIN_DOCUMENTATION)
           .create();
 
+  public static final Metric<Double> COMMENT_PERCENTAGE =
+      new Metric.Builder(
+          "gnatmetric_comment_percentage",
+          "Comment density / File",
+          Metric.ValueType.FLOAT
+      ).setDescription("Comment density per file")
+          .setDirection(Metric.DIRECTION_BETTER)
+          .setQualitative(true)
+          .setDomain(CoreMetrics.DOMAIN_DOCUMENTATION)
+          .create();
+
   public static final Metric<Double> FILE_CYCLOMATIC_COMPLEXITY =
       new Metric.Builder(
           "gnatmetric_file_cyclomatic_complexity",
@@ -130,6 +141,7 @@ public final class GNAThubMetrics implements Metrics {
     return ImmutableList.of(
         BLANK_LINES,
         EOL_COMMENTS,
+        COMMENT_PERCENTAGE,
         FILE_CYCLOMATIC_COMPLEXITY,
         FILE_STATEMENT_COMPLEXITY,
         FILE_EXPRESSION_COMPLEXITY,
