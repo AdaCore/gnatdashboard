@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2017, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -30,6 +30,7 @@ import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.ada.GNAThub;
 import org.sonar.plugins.ada.rules.CodePeerSeverity;
+import org.sonar.plugins.ada.rules.SPARK2014Severity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ import java.util.Optional;
 @Slf4j
 public class GNAThubIssueSensor extends MainFilesSensor {
   private static final String CODEPEER = "codepeer";
+  private static final String SPARK2014 = "spark2014";
   private static final String SUPPRESSED = "suppressed";
   private final List<Issue> suppressedIssues = new ArrayList<>();
   private final Table<String, String, Integer> missingRules = HashBasedTable.create();
@@ -54,11 +56,19 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   }
 
   private Severity getSonarSeverity(final Issue issue) {
-    if(CODEPEER.equalsIgnoreCase(issue.getTool())) {
+    if (CODEPEER.equalsIgnoreCase(issue.getTool())) {
       try {
         return CodePeerSeverity.valueOf(issue.getCategory().toUpperCase()).getSonarSeverity();
       } catch (final IllegalArgumentException why) {
         log.warn("Unsupported CodePeer severity \"{}\" - defaults to MAJOR", issue.getCategory());
+        return Severity.MAJOR;
+      }
+    }
+    if (SPARK2014.equalsIgnoreCase(issue.getTool())) {
+      try {
+        return SPARK2014Severity.valueOf(issue.getCategory().toUpperCase()).getSonarSeverity();
+      } catch (final IllegalArgumentException why) {
+        log.warn("Unsupported SPARK2014 severity \"{}\" - defaults to MAJOR", issue.getCategory());
         return Severity.MAJOR;
       }
     }
