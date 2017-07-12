@@ -18,6 +18,7 @@ package com.adacore.gnatdashboard.gnathub.api;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.util.Properties;
 
 @Slf4j
@@ -43,8 +44,15 @@ public class SourceMapper {
    */
   public String getOriginalPath(final String analysisPath) {
     if (!reverseSrcMapping.containsKey(analysisPath)) {
-      log.warn("No reverse source mapping found for: {}", analysisPath);
-      return null;
+      // We didn't find the file from the original path, attempt once more after normalizing
+      final String canonicalized = new File(analysisPath).getPath();
+
+      if (!reverseSrcMapping.containsKey(canonicalized)) {
+        log.warn("No reverse source mapping found for: {}", canonicalized);
+        return null;
+      }
+
+      return reverseSrcMapping.getProperty(canonicalized);
     }
 
     return reverseSrcMapping.getProperty(analysisPath);
