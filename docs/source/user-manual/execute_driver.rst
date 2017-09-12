@@ -41,8 +41,8 @@ platforms.
       $ gnathub -P project --plugins gnatcheck,gnatcoverage --incremental
       $ gnathub -P project --plugins sonar-config,sonar-scanner --incremental
 
-  Make sure to use the same project across all invocations of gnathub
-  with the :commmand:` --incremental` switch.
+  Make sure to use the same project across all invocations of gnathub with the
+  :commmand:` --incremental` switch.
 
   It is important to note that |GNAThub| assumes the following properties on the
   |SQLite| database:
@@ -234,7 +234,7 @@ Takes no argument. Instead of its default behavior, when you specify
 :command:`--incremental`, |GNAThub| retains any previous database (instead of
 clearing it). The |GNAThub| database is intended to represent the results
 of analysis tools on one single project, so you need pass the same projects
-to all invocations of gnathubn with the :command:`--incremental` switch.
+to all invocations of `gnathub` with the :command:`--incremental` switch.
 
 :command:`--dry-run` (short option :command:`-n`)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
