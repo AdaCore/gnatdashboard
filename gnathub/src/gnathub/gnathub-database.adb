@@ -46,7 +46,6 @@ package body GNAThub.Database is
 
    Max_Sessions : constant Natural := 2;
    Schema_IO    : DB_Schema_IO;
-   Schema_DB    : Database_Connection;
 
    function Kind_Factory
      (From    : Base_Element'Class;
@@ -127,7 +126,7 @@ package body GNAThub.Database is
       end if;
 
       SQLite := GNATCOLL.SQL.Sqlite.Setup (Database_File.Display_Full_Name);
-      Schema_DB := SQLite.Build_Connection;
+      Schema_IO.DB := SQLite.Build_Connection;
 
       if Overwrite then
          declare
@@ -135,16 +134,15 @@ package body GNAThub.Database is
          begin
             --  Retrieve schema from text file
             Trace (Me, "Schema: " & Database_Model_File.Display_Full_Name);
-            Schema :=
-              New_Schema_IO (Database_Model_File).Read_Schema (Schema_DB);
+            Schema := New_Schema_IO (Database_Model_File).Read_Schema;
 
             --  And write it to the database (ie. create table if necessary)
             Trace (Me, "Write to database (create tables)");
-            Write_Schema (Schema_IO, Schema_DB, Schema);
+            Write_Schema (Schema_IO, Schema);
          end;
       end if;
 
-      if not Schema_DB.Success then
+      if not Schema_IO.DB.Success then
          raise Fatal_Error with "Unable to initialize the database";
       end if;
 
@@ -204,9 +202,9 @@ package body GNAThub.Database is
 
    procedure Finalize is
    begin
-      if Schema_DB /= null then
-         Schema_DB.Close;
-         Schema_DB := null;
+      if Schema_IO.DB /= null then
+         Schema_IO.DB.Close;
+         Schema_IO.DB := null;
       end if;
    end Finalize;
 
@@ -216,7 +214,7 @@ package body GNAThub.Database is
 
    function DB return GNATCOLL.SQL.Exec.Database_Connection is
    begin
-      return Schema_DB;
+      return Schema_IO.DB;
    end DB;
 
 end GNAThub.Database;
