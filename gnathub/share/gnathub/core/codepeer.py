@@ -111,7 +111,8 @@ class CodePeer(Plugin, Runner, Reporter):
 
         self.info('extract results with msg_reader')
         proc = GNAThub.Run(
-            self.name, self.__msg_reader_cmd_line(), out=self.csv_report)
+            self.name, self.__msg_reader_cmd_line(), out=self.csv_report,
+            capture_stderr=False)
 
         if proc.status != 0:
             return GNAThub.EXEC_FAILURE

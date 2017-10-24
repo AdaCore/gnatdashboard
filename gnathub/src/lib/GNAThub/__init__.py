@@ -844,7 +844,8 @@ class Run(object):
 
     """Class to handle processes."""
 
-    def __init__(self, name, argv, env=None, workdir=None, out=None):
+    def __init__(self, name, argv, env=None, workdir=None, out=None,
+                 capture_stderr=True):
         """Spawn the process.
 
         Use subprocess.Popen to spawn a process and returns its exit code.
@@ -856,6 +857,8 @@ class Run(object):
         :param str workdir: the directory in which to execute the process. If
             ``None``, use the current directory.
         :param str out: the log file to use
+        :param bool capture_stderr: whether to capture the standard error
+            in the log file
         """
         self.name = name
         self.argv = self.expand_argv(name, argv)
@@ -875,7 +878,8 @@ class Run(object):
             with open(self.output(), 'w') as output:
                 self.inferior = Popen(
                     self.argv, env=env, stdin=None, stdout=output,
-                    stderr=STDOUT, cwd=workdir)
+                    stderr=STDOUT if capture_stderr else None,
+                    cwd=workdir)
 
                 Console.info('output redirected to %s' % output.name)
                 self.pid = self.inferior.pid
