@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2017, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -55,7 +55,9 @@ public final class AdaPlugin implements Plugin {
     context.addExtensions(
         // Declare the Ada language.
         Ada.class,
-        AdaColorizer.class,
+        // in order to support 6.7 LTS SonarQube :
+        // temporary ada highlighting is removed
+        // AdaColorizer.class,
         AdaDefaultProfile.class,
 
         // Register custom metrics.
