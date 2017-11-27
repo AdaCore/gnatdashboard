@@ -94,6 +94,11 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   public void forInputFile(final SensorContext context, final GNAThub gnathub, final InputFile file)
   {
     final FileIssues issues = gnathub.getIssues().forFile(file.absolutePath());
+    // Defensive programming
+    if (issues == null) {
+      log.warn("Skipping: {}", file.absolutePath());
+      return;
+    }
     for (final Issue issue : issues.getIssues()) {
       if (CODEPEER.equalsIgnoreCase(issue.getTool()) &&
           SUPPRESSED.equalsIgnoreCase(issue.getCategory())) {

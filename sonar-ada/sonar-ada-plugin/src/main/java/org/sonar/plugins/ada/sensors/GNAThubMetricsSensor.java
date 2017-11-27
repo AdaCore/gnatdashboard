@@ -41,6 +41,9 @@ public class GNAThubMetricsSensor extends MainFilesSensor {
   public void forInputFile(final SensorContext context, final GNAThub gnathub, final InputFile file)
   {
     final FileMeasures measures = gnathub.getMeasures().forFile(file.absolutePath());
+    if (measures == null) {
+      return;
+    }
     final BiConsumer<String, Metric<Integer>> saveAsInt =
         (gnathubMetric, sonarMetric) ->
             Optional.ofNullable(measures.asInt(gnathubMetric))
