@@ -21,7 +21,7 @@ import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
 import org.sonar.plugins.ada.computers.CountMeasuresComputer;
 import org.sonar.plugins.ada.lang.Ada;
-import org.sonar.plugins.ada.lang.AdaColorizer;
+import org.sonar.plugins.ada.lang.AdaHighlightingSensor;
 import org.sonar.plugins.ada.metrics.CountMetrics;
 import org.sonar.plugins.ada.metrics.GNAThubMetrics;
 import org.sonar.plugins.ada.rules.CodePeerRulesDefinitionXmlLoader;
@@ -55,9 +55,10 @@ public final class AdaPlugin implements Plugin {
     context.addExtensions(
         // Declare the Ada language.
         Ada.class,
-        // in order to support 6.7 LTS SonarQube :
-        // temporary ada highlighting is removed
-        // AdaColorizer.class,
+
+        // Ada highlighting (comments, keywords and strings delimited by "")
+        AdaHighlightingSensor.class,
+
         AdaDefaultProfile.class,
 
         // Register custom metrics.
