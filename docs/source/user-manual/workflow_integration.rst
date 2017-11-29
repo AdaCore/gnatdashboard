@@ -8,9 +8,8 @@ software. |SonarQube| is an open platform to manage code quality. It is
 extensible with plug-ins to add support for new languages and rules.
 
 The |SonarAdaPlugin| provided with |GNATdashboard| packages supports
-|SonarQube| platform from the LTS (long-term support) version (currently
-|SonarQubeLTSVersion|) to the latest stable (currently
-|SonarQubeStableVersion|).
+|SonarQube| platform for the LTS (long-term support) version (currently
+|SonarQubeLTSVersion|).
 
 How |GNAThub| integrates with |SonarQube|
 -----------------------------------------

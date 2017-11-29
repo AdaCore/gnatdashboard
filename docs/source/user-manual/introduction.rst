@@ -44,9 +44,8 @@ plug-in must be deployed.
 |SonarAdaPlugin| is supported for versions of |SonarQube| and |SonarScanner|
 supported by |SonarSource|:
 
-  * from |SonarQube| |SonarQubeLTSVersion| LTS (Long Term Support) to
-    |SonarQube| |SonarQubeStableVersion| stable
-  * |SonarScanner| 2.4
+  * for |SonarQube| |SonarQubeLTSVersion| LTS (Long Term Support)
+  * |SonarScanner| 3.0.3
 
 Upgrading from GNATdashboard 1.0
 --------------------------------

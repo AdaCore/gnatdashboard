@@ -9,7 +9,7 @@ ChangeLog 18.x
 --------------
 
 The Sonar Ada Plugin shipped with GNATdashboard now supports |SonarQube|
-|SonarQubeLTSVersion| (LTS) up to |SonarQube| |SonarQubeStableVersion| (stable).
+|SonarQubeLTSVersion| (LTS).
 
 Because of that, it also drops support for old versions of |SonarQube| (*i.e.*
 all versions *pre* |SonarQubeLTSVersion|).
@@ -25,8 +25,8 @@ SonarQube Scanner
 to analyse a project.
 
 GNATdashboard dropped support for |SonarRunner|, and is now compatible with
-|SonarScanner| version 2.8, recommended as the default launcher for |SonarQube|
-5.6+ (LTS).
+|SonarScanner| version 3.0.3, recommended as the default launcher for |SonarQube|
+|SonarQubeLTSVersion| (LTS).
 
 Install |SonarScanner| make it available in your :envvar:`PATH` prior to
 executing |GNAThub| on your projects.
