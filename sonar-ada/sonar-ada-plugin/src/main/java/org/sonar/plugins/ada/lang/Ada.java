@@ -16,12 +16,13 @@
 
 package org.sonar.plugins.ada.lang;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+//import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.ada.AdaPlugin;
 
 import java.util.List;
@@ -31,29 +32,25 @@ import java.util.List;
  *
  * Provides the basic of the language to the SonarQube core engine.
  */
-@Slf4j
+//@Slf4j
 public class Ada extends AbstractLanguage {
+  private static final Logger LOG = Loggers.get(Ada.class);
+
+
   private static final String NAME = "Ada";
   public static final String KEY = "ada";
 
   public static final String DEFAULT_FILE_SUFFIXES = "adb,ads,ada";
 
-  private final Settings settings;
+  // private final Settings settings;
+  private final Configuration settings;
 
   /**
    * Default constructor
    */
-  public Ada(Settings settings) {
+  public Ada (Configuration settings) {
     super(KEY, NAME);
     this.settings = settings;
-  }
-
-  /**
-   * Only for testing purposes
-   */
-  @VisibleForTesting
-  public Ada() {
-    this(new Settings());
   }
 
   /**
@@ -68,9 +65,9 @@ public class Ada extends AbstractLanguage {
       suffixes = StringUtils.split(Ada.DEFAULT_FILE_SUFFIXES, ",");
     }
 
-    log.debug("Ada file suffixes:");
+    LOG.debug("Ada file suffixes:");
     for (final String suffix : suffixes) {
-      log.debug(" + {}", suffix);
+      LOG.debug(" + {}", suffix);
     }
 
     return suffixes;

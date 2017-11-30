@@ -22,14 +22,15 @@
     <parent>
         <groupId>com.adacore.gnatdashboard</groupId>
         <artifactId>parent</artifactId>
-        <version>18.0w-SNAPSHOT</version>
+        <version>19.0w-SNAPSHOT</version>
     </parent>
 
     <artifactId>sonar-ada-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
 
     <name>GNATdashboard :: Sonar Ada Plugin</name>
-    <description>Ada Plugin for SonarQube 5.6.6 to 6.x.y</description>
+
+    <description>Ada Plugin for SonarQube 6.7 LTS</description>
     <inceptionYear>2012</inceptionYear>
 
     <properties>

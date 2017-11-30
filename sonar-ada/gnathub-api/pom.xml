@@ -22,7 +22,7 @@
     <parent>
         <groupId>com.adacore.gnatdashboard</groupId>
         <artifactId>parent</artifactId>
-        <version>18.0w-SNAPSHOT</version>
+        <version>19.0w-SNAPSHOT</version>
     </parent>
 
     <artifactId>gnathub-api</artifactId>

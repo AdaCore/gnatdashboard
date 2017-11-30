@@ -21,7 +21,7 @@
 
     <groupId>com.adacore.gnatdashboard</groupId>
     <artifactId>parent</artifactId>
-    <version>18.0w-SNAPSHOT</version>
+    <version>19.0w-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GNATdashboard</name>
@@ -68,7 +68,7 @@
         <version.guava>20.0</version.guava>
         <version.slf4j>1.6.2</version.slf4j>
         <version.sslr-squid-bridge>2.6.1</version.sslr-squid-bridge>
-        <version.sonar>5.6.6</version.sonar>
+        <version.sonar>6.7</version.sonar>
         <version.sonar-packaging-maven-plugin>1.17</version.sonar-packaging-maven-plugin>
         <version.sqlite-jdbc>3.15.1</version.sqlite-jdbc>
     </properties>
