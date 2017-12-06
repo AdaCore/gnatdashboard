@@ -98,12 +98,14 @@ public class AdaHighlightingSensor implements Sensor {
 
         // get strings values between "" as a string array
         String[] valuesInQuotes = StringUtils.substringsBetween(line , "\"", "\"");
-        for (String stringVal : valuesInQuotes) {
-            if (!stringVal.isEmpty()){
-                int stPos = subStringIndex(line, stringVal);
-                int endPos = stPos + stringVal.length();
-                TextRange txtRange = inputFile.newRange(lineNb, stPos, lineNb, endPos);
-                highlighting.highlight(txtRange, stringType);
+        if (valuesInQuotes != null) {
+            for (String stringVal : valuesInQuotes) {
+                if (!stringVal.isEmpty()){
+                    int stPos = subStringIndex(line, stringVal);
+                    int endPos = stPos + stringVal.length();
+                    TextRange txtRange = inputFile.newRange(lineNb, stPos, lineNb, endPos);
+                    highlighting.highlight(txtRange, stringType);
+                }
             }
         }
     }
