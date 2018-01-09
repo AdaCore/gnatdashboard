@@ -13,14 +13,14 @@ export class GNAThubService {
 
     public getReport(): Observable<IReportIndex> {
         return this.http.get('data/report.json')
-                        .map(this.handleResults)
-                        .catch(this.handleError);
+            .map(this.handleResults)
+            .catch(this.handleError);
     }
 
     public getSource(filename): Observable<IAnnotatedSourceFile> {
         return this.http.get(`data/src/${filename}.json`)
-                        .map(this.handleResults)
-                        .catch(this.handleError);
+            .map(this.handleResults)
+            .catch(this.handleError);
     }
 
     private handleResults(res: Response) {
@@ -30,7 +30,7 @@ export class GNAThubService {
     private handleError(error: any) {
         let errMsg = (error.message) ?
             error.message : error.status ?
-                `${error.status} - ${error.statusText}` : 'Server error';
+            `${error.status} - ${error.statusText}` : 'Server error';
         console.error(errMsg);
         return Observable.throw(errMsg);
     }

@@ -1,6 +1,16 @@
 .info {
-  margin: 8px;
-  margin-top: 24px;
+    margin: 8px;
+    margin-top: 24px;
+}
+
+table {
+    th.code-components-cell.click {
+        cursor: pointer;
+    }
+
+    th.code-components-cell.click:hover {
+        background-color: #f8f8f8;
+    }
 }
 
 .source-dirs { margin-bottom: 23px; }

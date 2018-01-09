@@ -101,6 +101,7 @@ declare module 'gnat' {
     export interface ISourceDir {
         path: string;
         sources: { [filename: string]: ISource };
+        showed_sources: { [id: number]: ISource };
         coverage?: number;
         message_count?: { [toolId: number]: number };
         _total_message_count: number;
@@ -111,6 +112,7 @@ declare module 'gnat' {
     export interface IModule {
         name: string;
         source_dirs: { [sourceDir: string]: ISourceDir };
+        showed_dirs: { [id: number]: ISourceDir };
         coverage?: number;
         message_count?: { [toolId: number]: number };
         _source_dirs_common_prefix: string;
@@ -121,6 +123,7 @@ declare module 'gnat' {
 
     export interface IReportIndex {
         modules: { [moduleName: string]: IModule };
+        showed_modules: { [id: number]: IModule };
         project: string;
         creation_time: number;
         tools: { [id: number]: IToolFilter };

@@ -1,7 +1,7 @@
 <!-- Spinner animation -->
 <spinner
-    *ngIf="!report && !isReportFetchError"
-    caption="Loading report...">
+         *ngIf="!report && !isReportFetchError"
+         caption="Loading report...">
 </spinner>
 <!-- Error handling -->
 <missing-report-error *ngIf="isReportFetchError"></missing-report-error>
@@ -12,25 +12,24 @@
         <template [ngIf]="(report.tools || report.rules || report.properties) | dshNotEmpty">
             <div class="option-selectors">
                 <!-- Tool selector -->
-                <filter-selector
-                    class="tool-selector" title="Tools"
-                    *ngIf="report.tools | dshNotEmpty"
-                    [options]="report.tools | dshMapValues"
-                    (toggle)="onToolFilterToggle($event)">
+                <filter-selector class="tool-selector" title="Tools"
+                                 *ngIf="report.tools | dshNotEmpty"
+                                 [options]="report.tools | dshMapValues"
+                                 (toggle)="onToolFilterToggle($event)">
                 </filter-selector>
                 <!-- Rule selector -->
                 <filter-selector
-                    class="rule-selector" title="Rules"
-                    *ngIf="report.rules | dshNotEmpty"
-                    [options]="report.rules | dshMapValues"
-                    (toggle)="onRuleFilterToggle($event)">
+                                 class="rule-selector" title="Rules"
+                                 *ngIf="report.rules | dshNotEmpty"
+                                 [options]="report.rules | dshMapValues"
+                                 (toggle)="onRuleFilterToggle($event)">
                 </filter-selector>
                 <!-- Property selector -->
                 <filter-selector
-                    class="property-selector" title="Properties"
-                    *ngIf="report.properties | dshNotEmpty"
-                    [options]="report.properties | dshMapValues"
-                    (toggle)="onPropertyFilterToggle($event)">
+                                 class="property-selector" title="Properties"
+                                 *ngIf="report.properties | dshNotEmpty"
+                                 [options]="report.properties | dshMapValues"
+                                 (toggle)="onPropertyFilterToggle($event)">
                 </filter-selector>
             </div>
         </template>
@@ -41,39 +40,47 @@
             <table>
                 <thead>
                     <tr>
-                        <th>&nbsp;</th>
+                        <th class="thin text-left code-components-cell click" (click)="sortModules('name', '')">
+                            <span>Project Name</span>
+                            <span *ngIf="modulesFilter.newSort == 'name'">
+                                <md-icon class="md-18" *ngIf="modulesFilter.order == 1">arrow_downward</md-icon>
+                                <md-icon class="md-18" *ngIf="modulesFilter.order == -1">arrow_upward</md-icon>
+                            </span>
+                        </th>
                         <th class="thin text-right code-components-cell">Directories</th>
-                        <th class="thin text-right code-components-cell">Messages</th>
+                        <th class="thin text-right code-components-cell click" (click)="sortModules('_ui_total_message_count','_total_message_count')">
+                            <span>Messages</span>
+                            <span *ngIf="modulesFilter.newSort == '_ui_total_message_count'">
+                                <md-icon class="md-18" *ngIf="modulesFilter.order == 1">arrow_downward</md-icon>
+                                <md-icon class="md-18" *ngIf="modulesFilter.order == -1">arrow_upward</md-icon>
+                            </span>
+                        </th>
                         <th class="thin text-right code-components-cell" *ngIf="report.modules.coverage">
                             Coverage
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let project of report.modules | dshMapKeys | dshStringNaturalSort">
+                    <tr *ngFor="let project of report.showed_modules">
                         <td>
-                            <a [routerLink]="['.', { project: project }]" class="with-icon">
+                            <a [routerLink]="['.', { project: project.name }]" class="with-icon">
                                 <md-icon class="md-18">developer_board</md-icon>
-                                <span>{{ project }}</span>
+                                <span>{{project.name}}</span>
                             </a>
                         </td>
-                        <td class="thin text-right faded">{{ report.modules[project].source_dirs | dshCount }}</td>
+                        <td class="thin text-right faded">{{ project.source_dirs | dshCount }}</td>
                         <td class="thin text-right faded">
                             {{
-                                report.modules[project]._ui_total_message_count != null ?
-                                    report.modules[project]._ui_total_message_count :
-                                    report.modules[project]._total_message_count
+                            project._ui_total_message_count != null ?
+                            project._ui_total_message_count :
+                            project._total_message_count
                             }}
-                        </td>
-                        <td class="thin text-right faded" *ngIf="report.modules.coverage">
-                            <template [ngIf]="report.modules[project].coverage">
-                                {{ report.modules[project].coverage }}%
-                            </template>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </template>
+
         <template [ngIf]="project && report.modules[project]">
             <h3 class="source-head">
                 <a [routerLink]="['.', {}]">All Projects</a>
@@ -81,8 +88,8 @@
                 <strong>{{ project }}</strong>
             </h3>
             <project-source-list
-                *ngIf="project && report.modules[project]"
-                [project]="report.modules[project]" [directory]="directory">
+                                 *ngIf="project && report.modules[project]"
+                                 [project]="report.modules[project]" [directory]="directory" [change]="change">
             </project-source-list>
         </template>
     </main>
