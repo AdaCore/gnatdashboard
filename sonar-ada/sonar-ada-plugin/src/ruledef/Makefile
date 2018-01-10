@@ -21,6 +21,10 @@ ada_rules_profile: $(SONAR_ADA_PLUGIN_RESOURCES)/default-profile.xml
 
 codepeer_rules_definition: $(SONAR_ADA_PLUGIN_RESOURCES)/codepeer.xml
 
+gnatcheck_rules_definition:
+	gnatcheck -h 2>&1 | python $(TOP)/scripts/generate_gnatcheck_rules.py > \
+         $(SONAR_ADA_PLUGIN_RESOURCES)/gnatcheck.xml
+
 $(SONAR_ADA_PLUGIN_RESOURCES)/default-profile.xml: $(RULES_DEFINITIONS)
 	PYTHONPATH=$(TOP)/$(PYTHONPATH) \
 		python $(TOP)/scripts/generate-ada-default-profile -o $@ $^
