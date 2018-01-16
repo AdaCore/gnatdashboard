@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2016, AdaCore                     --
+--                     Copyright (C) 2013-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -19,6 +19,7 @@ with Database.Orm;               use Database.Orm;
 
 with GNATCOLL.VFS;
 with GNATCOLL.SQL.Exec;
+with GNATCOLL.SQL.Sessions; use GNATCOLL.SQL.Sessions;
 
 --  This package defines the database interaction
 
@@ -62,22 +63,26 @@ package GNAThub.Database is
    -------------------------
 
    function Create_And_Save_Resource
-     (Name : String;
-      Kind : Resource_Kind) return Detached_Resource;
+     (Name    : String;
+      Kind    : Resource_Kind;
+      Session : Session_Type) return Detached_Resource;
    --  Create a Detached_Resource Object and persist it in the DB.
    --
    --  Name: the absolute file path
    --  Kind: kind of the resource
+   --  Session: The database session in which the requests will be made.
    --  Returns the created Detached_Resource object that represents the
    --  persisted resource in the database.
 
    procedure Save_Resource_Tree
      (Child  : Detached_Resource;
-      Parent : Detached_Resource);
+      Parent : Detached_Resource;
+      Session : Session_Type);
    --  Persist resource dependence in the project tree.
    --
    --  Child: DB object representation of the child resource.
    --  Parent: DB object representation of the parent resource.
+   --  Session: The database session in which the requests will be made.
 
    function DB return GNATCOLL.SQL.Exec.Database_Connection;
    --  Return the currently connected database

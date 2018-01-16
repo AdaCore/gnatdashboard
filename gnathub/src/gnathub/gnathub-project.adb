@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2016, AdaCore                     --
+--                     Copyright (C) 2013-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -27,6 +27,8 @@ with GNAT.Source_Info;
 
 with GNATCOLL.Traces;                     use GNATCOLL.Traces;
 with GNATCOLL.VFS_Utils;                  use GNATCOLL.VFS_Utils;
+
+with GNATCOLL.SQL.Sessions; use GNATCOLL.SQL.Sessions;
 
 with GNAThub.Configuration;
 with GNAThub.Database;                    use GNAThub.Database;
@@ -59,8 +61,10 @@ package body GNAThub.Project is
 
    procedure Save_Project_Sources
      (Project     : Project_Type;
-      Project_Orm : Detached_Resource);
-   --  Save source files and directories associated with a project
+      Project_Orm : Detached_Resource;
+      Session     : Session_Type);
+   --  Save source files and directories associated with a project.
+   --  Session: The database session in which the requests will be made.
 
    procedure Project_Errors (Msg : String);
    --  Procedure to use for GNATCOLL.Projects.Load Errors argument. Use this
@@ -327,7 +331,8 @@ package body GNAThub.Project is
 
    procedure Save_Project_Sources
      (Project     : Project_Type;
-      Project_Orm : Detached_Resource)
+      Project_Orm : Detached_Resource;
+      Session     : Session_Type)
    is
       Directory_Orm : Detached_Resource;
       File_Orm      : Detached_Resource;
@@ -351,8 +356,9 @@ package body GNAThub.Project is
             --  Save source directory and tree.
             Directory_Orm := Create_And_Save_Resource
               (Name => Files (F).Display_Dir_Name,
-               Kind => Kind_Directory);
-            Save_Resource_Tree (Directory_Orm, Project_Orm);
+               Kind => Kind_Directory,
+               Session => Session);
+            Save_Resource_Tree (Directory_Orm, Project_Orm, Session);
 
             Trace (Me, "New source directory: " & Files (F).Display_Dir_Name);
          end if;
@@ -360,8 +366,9 @@ package body GNAThub.Project is
          --  Save source file, and source tree
          File_Orm := Create_And_Save_Resource
            (Name => Files (F).Display_Full_Name,
-            Kind => Kind_File);
-         Save_Resource_Tree (File_Orm, Directory_Orm);
+            Kind => Kind_File,
+            Session => Session);
+         Save_Resource_Tree (File_Orm, Directory_Orm, Session);
 
          Trace (Me, "New source file: " & Files (F).Display_Full_Name);
       end loop;
@@ -381,14 +388,16 @@ package body GNAThub.Project is
       Parent_Project_Orm  : Detached_Resource;
 
       function Get_Project_Orm
-        (Project : Project_Type) return Detached_Resource;
+        (Project : Project_Type;
+         Session : Session_Type) return Detached_Resource;
 
       ---------------------
       -- Get_Project_Orm --
       ---------------------
 
       function Get_Project_Orm
-        (Project : Project_Type) return Detached_Resource
+        (Project : Project_Type;
+         Session : Session_Type) return Detached_Resource
       is
          Orm            : Detached_Resource;
          Project_Cursor : Project_Map.Cursor;
@@ -400,7 +409,8 @@ package body GNAThub.Project is
          --  add it to the map
          if Project_Cursor = Project_Map.No_Element then
             Orm := Create_And_Save_Resource (Name => Project.Name,
-                                             Kind => Kind_Project);
+                                             Kind => Kind_Project,
+                                             Session => Session);
             Project_Orm_By_Name.Insert
               (Key => To_Unbounded_String (Project.Name),
                New_Item => Orm);
@@ -415,40 +425,52 @@ package body GNAThub.Project is
       --  All projects
       Iterator := Project_Tree.Root_Project.Start;
 
-      loop
-         Project := Current (Iterator);
-         exit when Project = No_Project;
+      declare
+         Session : constant Session_Type := Get_New_Session;
+      begin
+         loop
+            Project := Current (Iterator);
+            exit when Project = No_Project;
 
-         --  Retrieve Project DB object representation
-         Project_Orm := Get_Project_Orm (Project);
+            --  Retrieve Project DB object representation
+            Project_Orm := Get_Project_Orm (Project, Session);
 
-         --  All parents' current project
-         Parent_Iterator := Project.Find_All_Projects_Importing
-           (Direct_Only => True);
+            --  All parents' current project
+            Parent_Iterator := Project.Find_All_Projects_Importing
+              (Direct_Only => True);
 
-         --  Save Root project, with no parent
-         if Current (Parent_Iterator) = No_Project then
-            Save_Resource_Tree (Child => Project_Orm,
-                                Parent => No_Detached_Resource);
-         else
+            --  Save Root project, with no parent
+            if Current (Parent_Iterator) = No_Project then
+               Save_Resource_Tree (Child => Project_Orm,
+                                   Parent => No_Detached_Resource,
+                                   Session => Session);
+            else
+               loop
+                  Parent_Project := Current (Parent_Iterator);
+                  exit when Parent_Project = No_Project;
 
-            loop
-               Parent_Project := Current (Parent_Iterator);
-               exit when Parent_Project = No_Project;
+                  Parent_Project_Orm := Get_Project_Orm
+                    (Parent_Project, Session);
+                  Save_Resource_Tree
+                    (Project_Orm, Parent_Project_Orm, Session);
 
-               Parent_Project_Orm := Get_Project_Orm (Parent_Project);
-               Save_Resource_Tree (Project_Orm, Parent_Project_Orm);
+                  Next (Parent_Iterator);
+               end loop;
+            end if;
 
-               Next (Parent_Iterator);
-            end loop;
+            --  Save Project's source directories and files
+            Save_Project_Sources (Project, Project_Orm, Session);
 
-         end if;
+            Next (Iterator);
+         end loop;
 
-         --  Save Project's source directories and files
-         Save_Project_Sources (Project, Project_Orm);
-
-         Next (Iterator);
-      end loop;
+         Session.Commit;
+      exception
+         when E : others =>
+            --  Make sure to close the session.
+            Session.Commit;
+            Trace (Me, E);
+      end;
    end Save_Project_Tree;
 
    --------------

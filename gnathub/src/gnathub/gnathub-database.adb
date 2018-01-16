@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2017, AdaCore                     --
+--                     Copyright (C) 2013-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -20,7 +20,6 @@ with GNAT.Source_Info;
 with GNATCOLL.SQL;            use GNATCOLL.SQL;
 with GNATCOLL.SQL.Exec;       use GNATCOLL.SQL.Exec;
 with GNATCOLL.SQL.Inspect;    use GNATCOLL.SQL.Inspect;
-with GNATCOLL.SQL.Sessions;   use GNATCOLL.SQL.Sessions;
 with GNATCOLL.SQL.Sqlite;     use GNATCOLL.SQL.Sqlite;
 
 with GNATCOLL.Traces;         use GNATCOLL.Traces;
@@ -156,10 +155,10 @@ package body GNAThub.Database is
    ------------------------------
 
    function Create_And_Save_Resource
-     (Name : String;
-      Kind : Resource_Kind) return Detached_Resource
+     (Name    : String;
+      Kind    : Resource_Kind;
+      Session : Session_Type) return Detached_Resource
    is
-      Session  : constant Session_Type := Get_New_Session;
       Resource : constant Detached_Resource'Class := New_Resource;
    begin
       Trace (Me, "Create resource """ & Name & """");
@@ -168,7 +167,6 @@ package body GNAThub.Database is
       Resource.Set_Kind (Resource_Kind'Pos (Kind));
 
       Session.Persist (Resource);
-      Session.Commit;
 
       Trace (Me, "Resource """ & Name & """ saved to database");
 
@@ -181,9 +179,9 @@ package body GNAThub.Database is
 
    procedure Save_Resource_Tree
      (Child  : Detached_Resource;
-      Parent : Detached_Resource)
+      Parent : Detached_Resource;
+      Session : Session_Type)
    is
-      Session : constant Session_Type := Get_New_Session;
       Tree    : constant Detached_Resource_Tree'Class := New_Resource_Tree;
    begin
       Tree.Set_Child_Id (Child);
@@ -193,7 +191,6 @@ package body GNAThub.Database is
       end if;
 
       Session.Persist (Tree);
-      Session.Commit;
    end Save_Resource_Tree;
 
    --------------
