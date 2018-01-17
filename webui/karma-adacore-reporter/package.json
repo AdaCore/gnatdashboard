@@ -1,0 +1,57 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "karma-adacore-reporter",
+        "scope": null,
+        "escapedName": "karma-adacore-reporter",
+        "name": "karma-adacore-reporter",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/home/lespinasse/ancr/src/gnatdashboard/webui"
+    ]
+  ],
+  "_from": "karma-adacore-reporter@latest",
+  "_id": "karma-adacore-reporter@1.0.1",
+  "_inCache": true,
+  "_location": "/karma-adacore-reporter",
+  "_nodeVersion": "7.9.0",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/karma-adacore-reporter-1.0.1.tgz_1496526747032_0.5226627096999437"
+  },
+  "_npmUser": {
+    "name": "lespinasse",
+    "email": "lespinasse@adacore.com"
+  },
+  "_npmVersion": "4.2.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "karma-adacore-reporter",
+    "scope": null,
+    "escapedName": "karma-adacore-reporter",
+    "name": "karma-adacore-reporter",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_spec": "karma-adacore-reporter",
+  "_where": "/home/lespinasse/ancr/src/gnatdashboard/webui",
+  "dependencies": {},
+  "description": "karma test results structured as Adacore needs.",
+  "devDependencies": {
+    "del": "^2.2.1",
+    "jasmine": "^2.4.1",
+    "mkdirp": "^0.5.1"
+  },
+
+  "main": "index.js",
+
+  "scripts": {
+    "test": "jasmine"
+  },
+  "version": "1.0.1",
+  "name": "karma-adacore"
+}
