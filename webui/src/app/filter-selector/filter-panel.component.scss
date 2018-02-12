@@ -1,0 +1,149 @@
+.filter-panel.open {
+    animation-timing-function: ease-in;
+    animation-duration: 2s;
+
+    .group-button {
+        padding: 15px 30px;
+
+        input[type=radio] {
+            display: none;
+        }
+
+        label {
+            background-color: rgba(00,00,00,0.1);
+        }
+        label:hover, input[type=radio]:not(:checked) + label:hover {
+            background-color: rgba(00,00,00,0.15);
+        }
+
+        input[type=radio]:not(:checked) + label {
+            opacity: 0.5;
+            background-color: rgba(00,00,00,0.05);
+        }
+    }
+
+    .navig-button {
+        text-align: center;
+        margin: 15px 0px 5px 0px;
+
+        button {
+            padding: 5px;
+            margin: 0px;
+            text-align: center;
+            background-color: #d5d5d5;
+            border: 1px #C4c4c5 solid;
+
+            button#ErrorButton {
+                margin-left: -5px;
+            }
+            button#ProjectButton {
+                margin-right: 2.5px;
+            }
+        }
+        .active {
+            background-color: #C4c4c5;
+            border: 1px grey solid;
+        }
+    }
+
+    .arrow-button.open {
+        padding: 1px 0px;
+        background-color: #d5d5d5;
+        line-height: 1;
+        border: 1px #C4c4c5 solid;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+
+        .right {
+            opacity: 1;
+            animation-timing-function: ease-in;
+            animation-duration: 2s;
+        }
+
+        .left {
+            opacity: 0;
+            animation-timing-function: ease-in;
+            animation-duration: 2s;
+        }
+    }
+
+    .hide-files {
+        text-align: center;
+        input {
+            display: none;
+        }
+        label {
+            padding: 3px 10px;
+            background-color: rgba(0,0,0,0.05);
+            margin-bottom: 5px;
+        }
+        label:hover {
+            background-color: rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .hideIt {
+            display: none;
+        }
+    }
+
+
+    .tool-selector {
+        opacity: 1;
+        animation-timing-function: ease-in;
+        animation-duration: 2s;
+    }
+
+    .option-selectors {
+        height: calc(100% - 80px);
+        overflow: auto;
+    }
+
+}
+
+.filter-panel.reduce {
+    width: 55px;
+    animation-timing-function: ease-in;
+    animation-duration: 2s;
+
+    filter-selector {
+        opacity: 0;
+        animation-timing-function: ease-in;
+        animation-duration: 2s;
+    }
+
+    .navig-button, .hide-files, .option-selectors {
+        display: none;
+    }
+
+    .arrow-button.reduce {
+        padding: 1px 0px;
+        background-color: #d5d5d5;
+        line-height: 1;
+        border: 1px #C4c4c5 solid;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+
+
+
+        .right {
+            opacity: 0;
+            animation-timing-function: ease-in;
+            animation-duration: 2s;
+        }
+
+        .left {
+            opacity: 1;
+            animation-timing-function: ease-in;
+            animation-duration: 2s;
+        }
+    }
+
+    .filter-span {
+        transform: rotate(-90deg);
+        display: block;
+        margin-top: 65px;
+        font-weight: bold;
+    }
+}

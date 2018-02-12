@@ -1,18 +1,11 @@
-<div class="main-responder-page">
-    <header class="main-responder-header top" role="header">
-        <div class="container-fluid navbar-default">
-            <a [routerLink]="['./project-explorer']" class="navbar-brand pull-left">GNATdashboard Report</a>
-            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="glyphicon glyphicon-align-justify"></span>
-            </button>
-            <nav class="navbar-collapse collapse" role="navigation">
-                <ul class="navbar-nav nav">
-                    <li><a [routerLink]="['./about']">About</a></li>
-                </ul>
-            </nav>
-        </div>
+<div class="main-responder-page col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+    <header class="main-responder-header top col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" role="header">
+        <span [routerLink]="['./project-explorer']" class="pull-left">GNATdashboard Report</span>
+        <span [routerLink]="['./about']">About</span>
     </header>
-    <section class="main-responder-body">
+
+    <section id="filterPanel" class="main-responder-body open col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <filter-panel class="col-lg-3 col-md-3 col-sm-4 col-xs-4 no-pad"></filter-panel>
         <router-outlet></router-outlet>
     </section>
 </div>

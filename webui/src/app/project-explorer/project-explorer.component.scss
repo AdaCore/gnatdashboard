@@ -1,30 +1,81 @@
 .layout-page {
-    display: flex;
-    nav {
-        flex: 0 0 400px;
-        overflow-y: auto;
-        padding: 0 16px;
-        div.option-selectors {
-            width: 100%;
-            display: flex;
-            flex-flow: row wrap;
-            filter-selector {
-                flex-grow: 1;
-                margin-bottom: 19px;
+    display: inline-block;
+
+    main {
+        height: 100%;
+        /*overflow: auto;*/
+
+        .center {
+            text-align: center;
+        }
+        .hideIt {
+            display: none;
+        }
+
+        .tab-header {
+            background-color: #f8f8f8;
+            border: solid 1px #eee;
+            font-size: 14px;
+            text-align: left;
+
+            .click {
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+            .click:hover {
+                background-color: rgba(0,0,0,0.05);
+                cursor: pointer;
+            }
+
+            .header-icon {
+                margin: 1px;
+                position: absolute;
             }
         }
-    }
-    table {
-        th.code-components-cell.click {
-            cursor: pointer;
+
+        .all-projects-line {
+            height: calc(100% - 34px);
+            overflow: auto;
+
+            .project-line {
+                padding-bottom: 2px;
+                padding-top: 2px;
+                text-align: left;
+            }
+            .project-line:hover {
+                background-color: rgba(0,0,0,0.025);
+                cursor: pointer;
+            }
+
+            .all-folders-line {
+                .folder-line {
+                    background-color: rgba(0,0,0,0.05);
+                }
+                .folder-line:hover {
+                    background-color: rgba(0,0,0,0.075);
+                    cursor: pointer;
+                }
+
+                .all-files-line {
+                    .file-line {
+                        background-color: rgba(0,0,0,0.1);
+                    }
+                    .file-line:hover {
+                        background-color: rgba(0,0,0,0.125);
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .reduce {
+                height: 0px;
+                display: none
+            }
+            .open {
+                height: 100%;
+                display: inline-block;
+            }
+
         }
-        th.code-components-cell.click:hover {
-            background-color: #f8f8f8;
-        }
-    }
-    main {
-        flex: 1 1 auto;
-        overflow-y: auto;
-        padding: 0 16px;
     }
 }

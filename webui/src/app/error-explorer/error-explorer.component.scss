@@ -1,0 +1,30 @@
+.layout-page {
+    display: flex;
+    nav {
+        flex: 0 0 400px;
+        overflow-y: auto;
+        padding: 0 16px;
+        div.option-selectors {
+            width: 100%;
+            display: flex;
+            flex-flow: row wrap;
+            filter-selector {
+                flex-grow: 1;
+                margin-bottom: 19px;
+            }
+        }
+    }
+    table {
+        th.code-components-cell.click {
+            cursor: pointer;
+        }
+        th.code-components-cell.click:hover {
+            background-color: #f8f8f8;
+        }
+    }
+    main {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 0 16px;
+    }
+}

@@ -1,96 +1,115 @@
 <!-- Spinner animation -->
 <spinner
-         *ngIf="!report && !isReportFetchError"
+         *ngIf="!reportService.report && !isReportFetchError"
          caption="Loading report...">
 </spinner>
 <!-- Error handling -->
-<missing-report-error *ngIf="isReportFetchError"></missing-report-error>
+<missing-report-error *ngIf="isReportFetchError" clas="col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad"></missing-report-error>
 <!-- Report display -->
-<div *ngIf="report" class="layout-page">
-    <nav>
-        <h3 class="source-head">{{ report.project }}</h3>
-        <template [ngIf]="(report.tools || report.rules || report.properties) | dshNotEmpty">
-            <div class="option-selectors">
-                <!-- Tool selector -->
-                <filter-selector class="tool-selector" title="Tools"
-                                 *ngIf="report.tools | dshNotEmpty"
-                                 [options]="report.tools | dshMapValues"
-                                 (toggle)="onToolFilterToggle($event)">
-                </filter-selector>
-                <!-- Rule selector -->
-                <filter-selector
-                                 class="rule-selector" title="Rules"
-                                 *ngIf="report.rules | dshNotEmpty"
-                                 [options]="report.rules | dshMapValues"
-                                 (toggle)="onRuleFilterToggle($event)">
-                </filter-selector>
-                <!-- Property selector -->
-                <filter-selector
-                                 class="property-selector" title="Properties"
-                                 *ngIf="report.properties | dshNotEmpty"
-                                 [options]="report.properties | dshMapValues"
-                                 (toggle)="onPropertyFilterToggle($event)">
-                </filter-selector>
-            </div>
-        </template>
-    </nav>
-    <main>
-        <template [ngIf]="!project || !report.modules[project]">
-            <h3 class="source-head">All Projects</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="thin text-left code-components-cell click" (click)="sortModules('name', '')">
-                            <span>Project Name</span>
-                            <span *ngIf="modulesFilter.newSort == 'name'">
-                                <md-icon class="md-18" *ngIf="modulesFilter.order == 1">arrow_downward</md-icon>
-                                <md-icon class="md-18" *ngIf="modulesFilter.order == -1">arrow_upward</md-icon>
-                            </span>
-                        </th>
-                        <th class="thin text-right code-components-cell">Directories</th>
-                        <th class="thin text-right code-components-cell click" (click)="sortModules('_ui_total_message_count','_total_message_count')">
-                            <span>Messages</span>
-                            <span *ngIf="modulesFilter.newSort == '_ui_total_message_count'">
-                                <md-icon class="md-18" *ngIf="modulesFilter.order == 1">arrow_downward</md-icon>
-                                <md-icon class="md-18" *ngIf="modulesFilter.order == -1">arrow_upward</md-icon>
-                            </span>
-                        </th>
-                        <th class="thin text-right code-components-cell" *ngIf="report.modules.coverage">
-                            Coverage
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let project of report.showed_modules">
-                        <td>
-                            <a [routerLink]="['.', { project: project.name }]" class="with-icon">
-                                <md-icon class="md-18">developer_board</md-icon>
-                                <span>{{project.name}}</span>
-                            </a>
-                        </td>
-                        <td class="thin text-right faded">{{ project.source_dirs | dshCount }}</td>
-                        <td class="thin text-right faded">
-                            {{
-                            project._ui_total_message_count != null ?
-                            project._ui_total_message_count :
-                            project._total_message_count
-                            }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </template>
+<div *ngIf="reportService.report" class="layout-page col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad">
+    <main class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                <span class="col-lg-5 col-md-5 col-sm-5 col-xs-5 click" (click)="sortModules('name', '')">
+                    <span>Name</span>
+                    <span class="header-icon"
+                          *ngIf="reportService.modulesFilter.newSort == 'name'">
+                        <md-icon class="md-18" *ngIf="reportService.modulesFilter.order == 1">arrow_downward</md-icon>
+                        <md-icon class="md-18" *ngIf="reportService.modulesFilter.order == -1">arrow_upward</md-icon>
+                    </span>
+                </span>
+                <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
+                <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','_total_message_count')">
+                    <span>Messages</span>
+                    <span class="header-icon"
+                          *ngIf="reportService.modulesFilter.newSort == '_ui_total_message_count'">
+                        <md-icon class="md-18" *ngIf="reportService.modulesFilter.order == 1">arrow_downward</md-icon>
+                        <md-icon class="md-18" *ngIf="reportService.modulesFilter.order == -1">arrow_upward</md-icon>
+                    </span>
+                </span>
+                <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 click" (click)="sortModules('coverage','')">
+                    <span>Coverage</span>
+                    <span class="header-icon"
+                          *ngIf="reportService.modulesFilter.newSort == 'coverage'">
+                        <md-icon class="md-18" *ngIf="reportService.modulesFilter.order == 1">arrow_downward</md-icon>
+                        <md-icon class="md-18" *ngIf="reportService.modulesFilter.order == -1">arrow_upward</md-icon>
+                    </span>
+                </span>
+            </span>
+        </span>
+        <span class="all-projects-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <span *ngFor="let project of reportService.report.showed_modules"
+                  class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                  [ngClass]="(this.reportService.hideFiles && (project._ui_total_message_count == 0 || ( project._ui_total_message_count == null && project._total_message_count == 0))) ? 'hideIt' : ''">
+                <span class="project-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(project.name)">
+                    <span class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        {{project.name}}
+                    </span>
+                    <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        {{ project.source_dirs | dshCount }} folders
+                    </span>
+                    <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        {{
+                        project._ui_total_message_count != null ?
+                        project._ui_total_message_count :
+                        project._total_message_count
+                        }}
+                    </span>
+                    <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        {{project.coverage != null ? project.coverage : 0}} %
+                    </span>
+                </span>
 
-        <template [ngIf]="project && report.modules[project]">
-            <h3 class="source-head">
-                <a [routerLink]="['.', {}]">All Projects</a>
-                <span class="path-divider">/</span>
-                <strong>{{ project }}</strong>
-            </h3>
-            <project-source-list
-                                 *ngIf="project && report.modules[project]"
-                                 [project]="report.modules[project]" [directory]="directory" [change]="change">
-            </project-source-list>
-        </template>
+                <span id="{{project.name}}" class="all-folders-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad reduce">
+                    <span *ngFor="let folder of project.showed_dirs"
+                          class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                          [ngClass]="(this.reportService.hideFiles && (folder._ui_total_message_count == 0 || ( folder._ui_total_message_count == null && folder._total_message_count == 0))) ? 'hideIt' : ''">
+                        <span class="folder-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(folder.path)">
+                            <span style="text-indent:20px;"
+                                  class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                {{folder.name}}
+                            </span>
+                            <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                {{ folder.sources | dshCount }} files
+                            </span>
+                            <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                {{
+                                folder._ui_total_message_count != null ?
+                                folder._ui_total_message_count :
+                                folder._total_message_count
+                                }}
+                            </span>
+                            <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                {{folder.coverage != null ? folder.coverage : 0}} %
+                            </span>
+                        </span>
+
+                        <span id="{{folder.path}}" class="all-files-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad reduce">
+                            <span *ngFor="let file of folder.showed_sources"
+                                  class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                                  [ngClass]="(this.reportService.hideFiles && (file._ui_total_message_count == 0 || ( file._ui_total_message_count == null && file._total_message_count == 0))) ? 'hideIt' : ''">
+                                <span class="file-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [routerLink]="['/source', file.filename]">
+                                    <span style="text-indent:20px;"
+                                          class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                        {{file.filename}}
+                                    </span>
+                                    <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                        {{
+                                        file._ui_total_message_count != null ?
+                                        file._ui_total_message_count :
+                                        file._total_message_count
+                                        }}
+                                    </span>
+                                    <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        {{file.coverage != null ? file.coverage : 0}} %
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
+
+                    </span>
+                </span>
+            </span>
+        </span>
     </main>
 </div>

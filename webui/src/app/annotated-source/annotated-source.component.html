@@ -1,104 +1,39 @@
-<section class="layout-page">
+<div class="layout-page col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad">
     <!-- Annotated source -->
-    <div class="layout-page-content">
-        <div class="annotated-source-body">
-            <nav>
-                <h3 class="source-head">
-                    <span class="project">
-                        <a [routerLink]="['/project-explorer', {
-                            project: source.project, directory: source.source_dir
-                        }]">
-                            {{ source.project }}
-                        </a>
-                    </span>
-                    <span  class="path-divider">/</span>
-                    <strong>{{ source.filename }}</strong>
-                </h3>
-                <!-- File metrics -->
-                <template [ngIf]="source.metrics | dshNotEmpty">
-                    <h4>File metrics</h4>
-                    <dl class="dl-horizontal">
-                        <template ngFor let-metricId [ngForOf]="source.metrics | dshMapKeys">
-                            <dt class="metric-label">{{ source.metrics[metricId].rule.name }}</dt>
-                            <dd><span class="metric-value">{{ source.metrics[metricId].value }}</span></dd>
-                        </template>
-                    </dl>
-                </template>
-                <template [ngIf]="(source.messages || source.coverage) | dshNotEmpty">
-                    <h4>Preferences</h4>
-                    <div class="preferences">
-                        <table>
-                            <tbody>
-                            <tr *ngIf="source.messages | dshNotEmpty">
-                                <td>
-                                    <label>
-                                        <input type="checkbox" [(ngModel)]="displayMessages" />
-                                        <span>Show messages</span>
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr *ngIf="source.coverage | dshNotEmpty">
-                                <td>
-                                    <label>
-                                        <input type="checkbox" [(ngModel)]="displayCoverage" />
-                                        <span>Show coverage</span>
-                                    </label>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </template>
-                <template [ngIf]="displayMessages && source.messages | dshNotEmpty">
-                    <h4>Message filters</h4>
-                    <div class="option-selectors">
-                        <!-- Tool selector -->
-                        <filter-selector
-                            class="tool-selector" title="Tools"
-                            *ngIf="source.tools | dshNotEmpty"
-                            [options]="source.tools | dshMapValues"
-                            (toggle)="onToolFilterToggle($event)">
-                        </filter-selector>
-                        <!-- Rule selector -->
-                        <filter-selector
-                            class="rule-selector" title="Rules"
-                            *ngIf="source.rules | dshNotEmpty"
-                            [options]="source.rules | dshMapValues"
-                            (toggle)="onRuleFilterToggle($event)">
-                        </filter-selector>
-                        <!-- Property selector -->
-                        <filter-selector
-                            class="property-selector" title="Properties"
-                            *ngIf="source.properties | dshNotEmpty"
-                            [options]="source.properties | dshMapValues"
-                            (toggle)="onPropertyFilterToggle($event)">
-                        </filter-selector>
-                    </div>
-                </template>
-            </nav>
-            <main #scrollView>
-                <div class="missing-file-content" *ngIf="!source.lines">
-                    <h4>Missing file content</h4>
-                    <p>
-                        This is most likely due to an error during the HTML report
-                        generation.
-                    </p>
-                </div>
-                <div class="file" *ngIf="source.lines">
-                    <annotated-source-content
-                        [lines]="source.lines"
-                        [tools]="source.tools"
-                        [coverage]="source.coverage"
-                        [inlineMessages]="inlineMessages"
-                        [displayMessages]="displayMessages">
-                    </annotated-source-content>
-                </div>
-            </main>
-        </div>
+    <div class="annotated-source-body col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <nav class="file-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <!--<a [routerLink]="['/project-explorer', {
+project: source.project, directory: source.source_dir
+}]">-->
+            <a [routerLink]="['/project-explorer', source.project, source.source_dir]">
+                {{ source.project }}
+            </a>
+            <span  class="path-divider">/</span>
+            <strong>{{ source.filename }}</strong>
+        </nav>
+        <main #scrollView class="scrollable-content col-lg-12 col-md-12 col-sm-12 col-xs-12" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
+            <div class="missing-file-content" *ngIf="!source.lines">
+                <h4>Missing file content</h4>
+                <p>
+                    This is most likely due to an error during the HTML report
+                    generation.
+                </p>
+            </div>
+            <div class="file" *ngIf="source.lines">
+                <annotated-source-content
+                                          [lines]="source.lines"
+                                          [tools]="source.tools"
+                                          [coverage]="source.coverage"
+                                          [inlineMessages]="inlineMessages"
+                                          [displayMessages]="displayMessages">
+                </annotated-source-content>
+            </div>
+        </main>
     </div>
-    <footer class="layout-page-footer location-view" *ngIf="displayMessages && inlineMessagesShownCount">
-        <div class="location-view-flex">
-            <div class="location-view-header">
+    <!--    <footer class="layout-page-footer location-view col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngIf="displayMessages && inlineMessagesShownCount">-->
+    <footer class="layout-page-footer location-view col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngIf="displayMessages">
+        <div class="location-view-flex col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <div class="location-view-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                 <span class="location-view-title">
                     {{ inlineMessagesShownCount }} messages
                 </span>
@@ -111,37 +46,38 @@
                     </md-icon>
                 </button>
             </div>
-            <div class="location-view-list" *ngIf="showMessageList">
-                <table class="file-line-container">
-                    <tbody>
-                    <template ngFor let-line [ngForOf]="source.messages | dshMapKeys">
-                        <template ngFor let-message [ngForOf]="source.messages[line]">
-                            <tr class="message"
-                                *ngIf="!message._ui_hidden"
-                                [ngClass]="{ selected: selectedLine == line }">
-                                <td class="message-line">{{ line }}</td>
-                                <td class="message-col">
-                                    <template [ngIf]="message.begin">
-                                        <template [ngIf]="message.begin === message.end">
-                                            {{ message.begin }}
+            <!--<div class="location-view-list" *ngIf="showMessageList">-->
+            <div class="location-view-list col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
+                <table class="file-line-container col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                    <tbody class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                        <template ngFor let-line [ngForOf]="source.messages | dshMapKeys">
+                            <template ngFor let-message [ngForOf]="source.messages[line]">
+                                <tr class="message"
+                                    *ngIf="!message._ui_hidden"
+                                    [ngClass]="{ selected: selectedLine == line }">
+                                    <td class="message-line">{{ line }}</td>
+                                    <td class="message-col">
+                                        <template [ngIf]="message.begin">
+                                            <template [ngIf]="message.begin === message.end">
+                                                {{ message.begin }}
+                                            </template>
+                                            <template [ngIf]="message.begin !== message.end">
+                                                {{ message.begin }}-{{ message.end }}
+                                            </template>
                                         </template>
-                                        <template [ngIf]="message.begin !== message.end">
-                                            {{ message.begin }}-{{ message.end }}
-                                        </template>
-                                    </template>
-                                </td>
-                                <td class="message-tool">{{ message.rule.tool.name }}</td>
-                                <td class="message-text">
-                                    <a [routerLink]="['.', { line: line }]">
-                                        {{ message.text }}
-                                    </a>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td class="message-tool">{{ message.rule.tool.name }}</td>
+                                    <td class="message-text">
+                                        <a [routerLink]="['.', { line: line }]">
+                                            {{ message.text }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </template>
                         </template>
-                    </template>
                     </tbody>
                 </table>
             </div>
         </div>
     </footer>
-</section>
+</div>

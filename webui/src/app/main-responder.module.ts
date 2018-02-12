@@ -15,7 +15,7 @@ import { ENV_PROVIDERS } from './environment';
 import { ROUTES } from './main-responder.routes';
 import { MainResponderComponent } from './main-responder.component';
 import { APP_RESOLVER_PROVIDERS } from './main-responder.resolver';
-import { AppState, InteralStateType } from './main-responder.service';
+import { AppState, InteralStateType,SharedReport } from './main-responder.service';
 
 import { AboutComponent } from './about';
 import {
@@ -28,6 +28,7 @@ import { SourceNaturalSortPipe } from './source-natural-sort.pipe';
 import { StringNaturalSortPipe } from './string-natural-sort.pipe';
 import { CountPipe } from './count.pipe';
 import { FilterSelectorComponent } from './filter-selector';
+import { FilterPanelComponent } from './filter-selector';
 import { InlineMessagesComponent } from './inline-messages';
 import { MapKeysPipe } from './map-keys.pipe';
 import { MapValuesPipe } from './map-values.pipe';
@@ -41,6 +42,7 @@ import {
     ProjectExplorerComponent,
     ProjectSourceListComponent
 } from './project-explorer';
+import { ErrorExplorerComponent } from './error-explorer';
 import { SourceFileCountPipe } from './source-file-count.pipe';
 import { SourceListComponent } from './source-list';
 import { SourceTreeViewComponent } from './source-tree-view';
@@ -53,7 +55,8 @@ import { Ng2PageScrollModule } from 'ng2-page-scroll';
 const APP_PROVIDERS = [
     ...APP_RESOLVER_PROVIDERS,
     GNAThubService,
-    AppState
+    AppState,
+    SharedReport
 ];
 
 type StoreType = {
@@ -77,6 +80,7 @@ type StoreType = {
         StringNaturalSortPipe,
         CountPipe,
         FilterSelectorComponent,
+        FilterPanelComponent,
         InlineMessagesComponent,
         MainResponderComponent,
         MapKeysPipe,
@@ -88,6 +92,7 @@ type StoreType = {
         NotEmptyPipe,
         ProjectExplorerComponent,
         ProjectSourceListComponent,
+        ErrorExplorerComponent,
         SourceFileCountPipe,
         SourceListComponent,
         SourceTreeViewComponent,

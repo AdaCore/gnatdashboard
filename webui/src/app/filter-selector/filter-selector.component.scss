@@ -1,28 +1,64 @@
-:host {
-  display: inline-block;
-  width: 100%;
-  min-width: 300px;
+.filter-selector {
 
-  td { padding: 0; }
+  .filter-header {
+    border-bottom: 1px solid #e6e6e6;
+    color: #333;
+    padding: 8px 10px;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 2px;
+  }
 
-  .option {
-    display: flex;
-    padding: 0 16px;
+  input[type=checkbox] {
+    display: none;
+  }
 
-    input[type="checkbox"] {
-      margin-right: 16px;
-      position: relative;
-      top: 3px;
+  label.option {
+    margin: 1px 0px;
+    padding: 5px;
+    background-color: rgba(00,00,00,0.1);
+    div.count{
+      text-align: right;
+      float: right;
     }
+  }
+  label.option:hover, input[type=checkbox]:not(:checked) + label.option:hover {
+    background-color: rgba(00,00,00,0.15);
+  }
 
-    label { flex-grow: 1; }
+  input[type=checkbox]:not(:checked) + label.option {
+    opacity: 0.5;
+    background-color: rgba(00,00,00,0.05);
+  }
 
-    label,
-    .option-count { padding: 4px 8px; }
+  i.arrow {
+    position: absolute;
+    right: 0px;
+  }
+  i.arrow:hover {
+    background-color: rgba(00,00,00,0.05);
+  }
+  .select {
+    font-weight: 200;
+    padding-left: 15px;
 
-    .option-count {
-      color: #777;
-      padding-left: 16px;
+    span:hover {
+      text-decoration: underline;
     }
+  }
+}
+
+.filter-selector.open {
+  .filter-body {
+    display: inline-block;
+  }
+}
+
+.filter-selector.reduce {
+  .filter-body {
+    display: none;
+  }
+  i.arrow {
+    transform: rotate(180deg);
   }
 }

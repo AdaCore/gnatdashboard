@@ -33,6 +33,7 @@
     }
 
     footer.layout-page-footer {
+
       .location-view-flex {
         display: flex;
         flex-direction: column;
@@ -49,6 +50,8 @@
     }
   }
 }
+
+
 
 // Only applies for viewport width <= 1280px
 @media only screen and (max-width: 1280px) {
@@ -110,6 +113,15 @@ div.option-selectors {
   font-size: 14px;
 }
 
+.scrollable-content.expanded {
+  overflow: auto;
+  height: calc(100vh - 6vh - 6vh - 20vh);
+}
+.scrollable-content.reduce {
+  overflow: auto;
+  height: calc(100vh - 6vh - 6vh - 4vh);
+}
+
 .file {
   font-size: 12px;
   border-radius: 2px;
@@ -117,58 +129,56 @@ div.option-selectors {
 }
 
 .file-header {
-  padding: 5px 15px;
-  background-color: #f7f7f7;
-  border-bottom: 1px solid #e6e6e6;
-  border-top: 1px solid transparent;  /* to balance the 1px border-bottom */
+  padding: 15px;
+  font-size: 16px;
 
   color: #333;
   cursor: default;
-
-  .file-info {
-    font-size: 12px;
-    line-height: 32px;
-
-    &-divider {
-      width: 1px;
-      display: inline-block;
-      height: 18px;
-      margin-left: 3px;
-      margin-right: 3px;
-      vertical-align: middle;
-      background-color: #dddddd;
-    }
-  }
+  border-bottom: solid 1px grey;
+  height: 6vh;
+  min-height: 50px;
 }
 
 .location-view {
   background-color: white;
+  bottom: 0;
+  left: 0;
+  position: absolute;
 
+
+
+  .location-view-list.expanded {
+    height: 20vh;
+    overflow: auto;
+  }
+
+  .location-view-list.reduce {
+    height: 0px;
+  }
   &-header {
     display: flex;
     padding: 6px 15px 4px 15px;
     background-color: #f7f7f7;
     border-top: 1px solid #dddddd;
     border-bottom: 1px solid #e5e5e5;
-
     color: #333;
     cursor: default;
     font-size: 12px;
     line-height: 24px;
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    height: 4vh;
+    min-height: 34px;
   }
 
-  &-title { flex: 1 1 auto; }
 
   &-collapse-btn {
-    flex: 0;
     border: 0;
-    outline: 0;
     padding: 3px 10px;
-
     height: 24px ;
     border-radius: 2px;
     font-size: 0;
+    right: 15px;
+    position: absolute;
 
     md-icon.expanded { transform: rotate(180deg); }
   }

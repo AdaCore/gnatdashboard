@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
 
 export type Option = {
     id: number,
@@ -18,4 +19,23 @@ export class FilterSelectorComponent {
     @Input() public title: string;
     @Input() public options: Option[];
     @Output() public toggle = new EventEmitter<FilterEvent>();
+
+    constructor( @Inject(DOCUMENT) private document: Document) {}
+
+    public openClose(id: string) {
+        let elem = this.document.getElementById(id);
+        elem.classList.toggle('reduce');
+        elem.classList.toggle('open');
+    }
+
+    public selectAll(options) {
+        options.forEach(function(option){
+            this.toggle.emit({ option: option, checked: true })
+        }.bind(this));
+    }
+    public unselectAll(options) {
+        options.forEach(function(option){
+            this.toggle.emit({ option: option, checked: false })
+        }.bind(this));
+    }
 }
