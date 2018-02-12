@@ -112,8 +112,23 @@ package body GNAThub.Project is
    ----------------
 
    function Object_Dir return Virtual_File is
+      Dir : Virtual_File := Project_Tree.Root_Project.Object_Dir;
    begin
-      return Project_Tree.Root_Project.Object_Dir;
+      if GNAThub.Configuration.Subdirs /= "" then
+         Dir := Dir.Sub_Dir
+           (Filesystem_String (GNAThub.Configuration.Subdirs));
+
+         if Dir = No_File then
+            --  The subdir doesn't exist => create it
+            Dir := Project_Tree.Root_Project.Object_Dir;
+            Dir.Create_From_Dir
+              (Filesystem_String (GNAThub.Configuration.Subdirs)).Make_Dir;
+            Dir := Dir.Sub_Dir
+              (Filesystem_String (GNAThub.Configuration.Subdirs));
+         end if;
+      end if;
+
+      return Dir;
    end Object_Dir;
 
    ----------

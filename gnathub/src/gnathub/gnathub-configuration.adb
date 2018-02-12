@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2017, AdaCore                     --
+--                     Copyright (C) 2013-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -47,6 +47,7 @@ package body GNAThub.Configuration is
    Project_Arg        : aliased GNAT.Strings.String_Access;
    Script_Arg         : aliased GNAT.Strings.String_Access;
    Target_Arg         : aliased GNAT.Strings.String_Access;
+   Subdirs_Arg        : aliased GNAT.Strings.String_Access;
    Runtime_Arg        : aliased GNAT.Strings.String_Access;
    Jobs_Arg           : aliased Integer;
    Dry_Run_Arg        : aliased Boolean;
@@ -113,6 +114,13 @@ package body GNAThub.Configuration is
          Output      => Target_Arg'Access,
          Long_Switch => "--target=",
          Help        => "Specify a target for cross platforms");
+
+      Define_Switch
+        (Config      => Config,
+         Output      => Subdirs_Arg'Access,
+         Long_Switch => "--subdirs=",
+         Help        =>
+           "Specify the location of the database from the object directory");
 
       Define_Switch
         (Config      => Config,
@@ -546,6 +554,15 @@ package body GNAThub.Configuration is
    begin
       return Script_Arg.all;
    end Script;
+
+   -------------
+   -- Subdirs --
+   -------------
+
+   function Subdirs return String is
+   begin
+      return Subdirs_Arg.all;
+   end Subdirs;
 
    ------------
    -- Target --

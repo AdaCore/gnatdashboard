@@ -245,6 +245,23 @@ what plugins it would have executed rather than making and executing them. Check
 mode is a simulation that can be useful for testing the validity of a command
 line and project configuration without running the actual tools.
 
+:command:`--target`
+^^^^^^^^^^^^^^^^^^^^
+
+Expects the target name as argument. Used to specify an alternate toolchain.
+
+:command:`--subdirs`
+^^^^^^^^^^^^^^^^^^^^
+
+Expects a directory as argument. The database will be located in this
+directory relatively from the project object directory. Creates the
+subdirectory if necessary.
+
+:command:`--RTS`
+^^^^^^^^^^^^^^^^^^^^
+
+Expects an Ada runtime as argument. Forces a specific runtime.
+
 :command:`--jobs` (short option :command:`-j`)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
