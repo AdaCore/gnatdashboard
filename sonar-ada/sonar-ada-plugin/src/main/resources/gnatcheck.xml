@@ -92,6 +92,12 @@
       <tag>gnatcheck</tag>
     </rule>
     <rule>
+      <key>deeply_nested_inlining</key>
+      <name>deeply nested inlining (global check)</name>
+      <description>deeply nested inlining (global check)</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
       <key>default_parameters</key>
       <name>declarations of default subprogram parameters</name>
       <description>declarations of default subprogram parameters</description>
@@ -509,6 +515,12 @@
       <key>raising_predefined_exceptions</key>
       <name>explicit raise of predefined exceptions</name>
       <description>explicit raise of predefined exceptions</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>recursive_subprograms</key>
+      <name>recursion (call graph cycles)</name>
+      <description>recursion (call graph cycles)</description>
       <tag>gnatcheck</tag>
     </rule>
     <rule>
