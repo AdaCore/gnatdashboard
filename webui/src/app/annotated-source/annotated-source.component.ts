@@ -203,6 +203,7 @@ export class AnnotatedSourceComponent
      */
     private goToLine(line: number) {
         if (line) {
+            line = line - 10 > 0 ? line - 10 : 0;
             let scroll: PageScrollInstance =
                 PageScrollInstance.simpleInlineInstance(
                     this.document, `#L${line}`, this.scrollView.nativeElement);

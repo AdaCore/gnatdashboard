@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { AboutComponent } from './about';
+import { PreferencesComponent } from './preferences';
 import { AnnotatedSourceViewComponent } from './annotated-source';
 import { NoContentComponent } from './no-content';
 import { ProjectExplorerComponent } from './project-explorer';
@@ -14,6 +14,6 @@ export const ROUTES: Routes = [
      component: ProjectExplorerComponent },
     { path: 'error-explorer',   component: ErrorExplorerComponent },
     { path: 'source/:filename', component: AnnotatedSourceViewComponent },
-    { path: 'about',            component: AboutComponent },
+    { path: 'preferences',      component: PreferencesComponent },
     { path: '**',               component: NoContentComponent }
 ];

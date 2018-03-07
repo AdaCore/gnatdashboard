@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PageScrollConfig } from 'ng2-page-scroll';
+import { SharedReport } from './main-responder.service';
 
 @Component({
     selector: 'main-responder',
@@ -13,7 +14,7 @@ import { PageScrollConfig } from 'ng2-page-scroll';
     ]
 })
 export class MainResponderComponent {
-    constructor() {
+    constructor(private reportService: SharedReport) {
         PageScrollConfig.defaultDuration = 0;
     }
 }

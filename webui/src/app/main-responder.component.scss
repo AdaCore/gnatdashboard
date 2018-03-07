@@ -31,16 +31,17 @@ body { overflow: hidden; }
         border-bottom: 1px solid #ddd;
         padding-left: 20px;
 
-        a {
+        span {
             color: black;
             font-size: 13px;
-            padding: 0px 10px;
-        }
-        a:hover {
-            color: black;
-            text-decoration: none;
+            padding: 10px;
+            margin-left: 15px;
         }
 
+        span:hover {
+            border: 5px;
+            background-color: rgba(0,0,0,0.05)
+        }
     }
 
     .main-responder-body {

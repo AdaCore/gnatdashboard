@@ -46,12 +46,14 @@ export class SharedReport {
   public page: string;
   public hideFiles:boolean = false;
   public isReportFetchError:boolean = false;
+  public projectName: string;
 
   constructor( private gnathub: GNAThubService,
                 private route: ActivatedRoute) {
     this.gnathub.getReport().subscribe(
       report => {
         this.report = report;
+        this.projectName = report.project;
         this.report.showed_modules = sortMapInArray(
           {newSort: 'name', otherSort: ''},
           this.modulesFilter, report.modules);

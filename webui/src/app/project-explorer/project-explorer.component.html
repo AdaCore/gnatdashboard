@@ -43,6 +43,7 @@
                   [ngClass]="(this.reportService.hideFiles && (project._ui_total_message_count == 0 || ( project._ui_total_message_count == null && project._total_message_count == 0))) ? 'hideIt' : ''">
                 <span class="project-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(project.name)">
                     <span class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        <md-icon class="md-18 project-tree">chevron_right</md-icon>
                         {{project.name}}
                     </span>
                     <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
@@ -65,8 +66,9 @@
                           class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                           [ngClass]="(this.reportService.hideFiles && (folder._ui_total_message_count == 0 || ( folder._ui_total_message_count == null && folder._total_message_count == 0))) ? 'hideIt' : ''">
                         <span class="folder-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(folder.path)">
-                            <span style="text-indent:20px;"
+                            <span style="text-indent:15px;"
                                   class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                <md-icon class="md-18 folder-tree">folder_open</md-icon>
                                 {{folder.name}}
                             </span>
                             <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
@@ -89,8 +91,9 @@
                                   class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                   [ngClass]="(this.reportService.hideFiles && (file._ui_total_message_count == 0 || ( file._ui_total_message_count == null && file._total_message_count == 0))) ? 'hideIt' : ''">
                                 <span class="file-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [routerLink]="['/source', file.filename]">
-                                    <span style="text-indent:20px;"
+                                    <span style="text-indent:35px;"
                                           class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                        <md-icon class="md-18 file-tree">insert_drive_file</md-icon>
                                         {{file.filename}}
                                     </span>
                                     <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3">

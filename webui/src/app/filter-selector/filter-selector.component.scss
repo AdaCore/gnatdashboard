@@ -51,6 +51,11 @@
 .filter-selector.open {
   .filter-body {
     display: inline-block;
+
+    .hide {
+      display: none;
+    }
+
   }
 }
 

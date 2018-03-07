@@ -17,7 +17,7 @@ import { MainResponderComponent } from './main-responder.component';
 import { APP_RESOLVER_PROVIDERS } from './main-responder.resolver';
 import { AppState, InteralStateType,SharedReport } from './main-responder.service';
 
-import { AboutComponent } from './about';
+import { PreferencesComponent } from './preferences';
 import {
     AnnotatedSourceComponent,
     AnnotatedSourceContentComponent,
@@ -71,7 +71,7 @@ type StoreType = {
 @NgModule({
     bootstrap: [ MainResponderComponent ],
     declarations: [
-        AboutComponent,
+        PreferencesComponent,
         AnnotatedSourceComponent,
         AnnotatedSourceContentComponent,
         AnnotatedSourceLineComponent,

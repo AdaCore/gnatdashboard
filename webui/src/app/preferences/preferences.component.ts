@@ -6,11 +6,11 @@ import { IReportIndex } from 'gnat';
 import '../array/operator/sum';
 
 @Component({
-    selector: 'about',
-    templateUrl: './about.component.html',
-    styleUrls: [ 'about.component.scss' ]
+    selector: 'preferences',
+    templateUrl: './preferences.component.html',
+    styleUrls: [ 'preferences.component.scss' ]
 })
-export class AboutComponent implements OnInit {
+export class PreferencesComponent implements OnInit {
     public report: IReportIndex;
     public isReportFetchError: boolean = false;
 
