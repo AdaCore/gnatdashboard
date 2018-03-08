@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { SharedReport } from '../main-responder.service';
 
 import { FilterEvent } from '../filter-selector/filter-selector.component';
-import { sortMapInArray } from './project-sort.component';
+import { sortCodeArray } from './project-sort.component';
 import {
     IPropertyFilter,
     IReportIndex,
@@ -14,11 +14,11 @@ import {
     IToolFilter
 } from 'gnat';
 @Component({
-    selector: 'project-explorer',
-    templateUrl: './project-explorer.component.html',
-    styleUrls: [ 'project-explorer.component.scss' ]
+    selector: 'code-explorer',
+    templateUrl: './code-explorer.component.html',
+    styleUrls: [ 'code-explorer.component.scss' ]
 })
-export class ProjectExplorerComponent implements OnInit, OnDestroy {
+export class CodeExplorerComponent implements OnInit, OnDestroy {
     public project: string;
     public directory: string;
     private sub: Subscription;
@@ -34,7 +34,7 @@ export class ProjectExplorerComponent implements OnInit, OnDestroy {
 /*            if (this.project) { this.openClose(this.project); }
             if (this.project) { this.openClose(this.directory); }*/
         });
-        this.reportService.page = 'project-explorer';
+        this.reportService.page = 'code-explorer';
     }
 
     /** @override */
@@ -43,10 +43,10 @@ export class ProjectExplorerComponent implements OnInit, OnDestroy {
     }
 
     public sortModules(firstSort: string, secondSort: string) {
-        this.reportService.report.showed_modules =
-            sortMapInArray({newSort: firstSort, otherSort: secondSort},
-                           this.reportService.modulesFilter,
-                           this.reportService.report.modules);
+        this.reportService.code.modules =
+            sortCodeArray({newSort: firstSort, otherSort: secondSort},
+                           this.reportService.codeFilter,
+                           this.reportService.code.modules);
     }
 
     public openClose(id: string) {

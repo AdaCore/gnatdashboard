@@ -8,7 +8,7 @@ export type Option = {
     _ui_selected_message_count?: number,
 };
 
-export type FilterEvent = { option: Option; checked: boolean };
+export type FilterEvent = { option: Option; checked: boolean; id: number };
 
 @Component({
     selector: 'filter-selector',

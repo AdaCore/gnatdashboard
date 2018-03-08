@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { GNAThubService } from './gnathub.service';
 import { ActivatedRoute } from '@angular/router';
 import { IReportIndex } from 'gnat';
-import { sortMapInArray } from './project-explorer/project-sort.component';
+import { IFilterIndex, ICodeIndex, IMessageIndex } from 'gnat';
+import { sortCodeArray, sortMessageArray } from './code-explorer/project-sort.component';
 
 export type InteralStateType = {
   [key: string]: any
@@ -41,27 +42,49 @@ export class AppState {
 
 @Injectable()
 export class SharedReport {
-  public report: IReportIndex;
-  public modulesFilter = {newSort: 'name', otherSort: '', order: -1};
+  public filter: IFilterIndex;
+  public code: ICodeIndex;
+  public message: IMessageIndex;
+
+  public codeFilter = {newSort: 'name', otherSort: 'filename', order: 1};
+  public messageFilter = {newSort: 'name', otherSort: 'filename', order: 1};
+
   public page: string;
-  public hideFiles:boolean = false;
+  public hideFiles:boolean = true;
   public isReportFetchError:boolean = false;
   public projectName: string;
 
   constructor( private gnathub: GNAThubService,
                 private route: ActivatedRoute) {
-    this.gnathub.getReport().subscribe(
-      report => {
-        this.report = report;
-        this.projectName = report.project;
-        this.report.showed_modules = sortMapInArray(
-          {newSort: 'name', otherSort: ''},
-          this.modulesFilter, report.modules);
-        console.log("SharedReport.report : ", this.report); //will be erased before merge
+    this.gnathub.getFilter().subscribe(
+      filter => {
+        this.filter = filter;
+        this.projectName = filter.project;
       }, error => {
         this.isReportFetchError = true;
       }
     );
+    this.gnathub.getCode().subscribe(
+      object => {
+        this.code = object;
+        this.code.modules = sortCodeArray(
+          this.codeFilter,
+          this.codeFilter, object.modules);
+      }, error => {
+        this.isReportFetchError = true;
+      }
+    );
+    this.gnathub.getMessage().subscribe(
+      object => {
+        this.message = object;
+        this.message.sources = sortMessageArray(
+          this.messageFilter,
+          this.messageFilter, object.sources);
+      }, error => {
+        this.isReportFetchError = true;
+      }
+    );
+
   }
 
 }

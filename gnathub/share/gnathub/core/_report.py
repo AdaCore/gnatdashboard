@@ -130,14 +130,12 @@ def _encode_rule(rule, tool, extra=None):
     """
     return _decorate_dict({
         'id': rule.id,
-        'identifier': rule.identifier,
         'name': rule.name,
-        'kind': rule.kind,
-        'tool': _encode_tool(tool)
+        'tool_id': tool.id
     }, extra)
 
 
-def _encode_property(prop, extra=None):
+def _encode_property(prop, tool, extra=None):
     """JSON-encode a message property.
 
     :param GNAThub.Property prop: the property associated with the message
@@ -147,8 +145,8 @@ def _encode_property(prop, extra=None):
     """
     return _decorate_dict({
         'id': prop.id,
-        'identifier': prop.identifier,
-        'name': prop.name
+        'name': prop.name,
+        'tool_id': tool.id
     }, extra)
 
 
@@ -162,13 +160,16 @@ def _encode_message(message, rule, tool, extra=None):
     :type extra: dict or None
     :rtype: dict[str, *]
     """
+
     return _decorate_dict({
-        'begin': message.col_begin,
-        'end': message.col_end,
+        'id': message.id,
+        'line': message.line,
+        'col_begin': message.col_begin,
+        'col_end': message.col_end,
         'rule': _encode_rule(rule, tool),
         'properties': [
-            _encode_property(prop) for prop in message.get_properties()],
-        'text': message.data
+            _encode_property(prop, tool) for prop in message.get_properties()],
+        'name': message.data
     }, extra)
 
 
@@ -254,6 +255,8 @@ def _tool_by_id(tool_id):
     return _tool_by_id.tools[tool_id]
 
 
+# TODO: after checking the FILENAME.json files, maybe erase this function
+# We will keep it for now, as it's used for un un-reviewd part
 def _inc_msg_count(store, key, gen_value, *args):
     """Increment the "message_count" property of a dictionary.
 
@@ -269,6 +272,37 @@ def _inc_msg_count(store, key, gen_value, *args):
     if key not in store:
         store[key] = gen_value(*args, extra={'_message_count': 0})
     store[key]['_message_count'] += 1
+
+
+def get_list_index(elem, elem_list):
+    """Return the the index correspondng of the given dict in the given list
+
+    :param elem: the dictionary to update/add
+    :param elem_list: the list to update
+    """
+    for idx in range(len(elem_list)):
+        if elem_list[idx]['id'] == elem['id']:
+            return idx
+    return -1
+
+
+def inc_msg_count(store, gen_value, *args):
+    """Increment the "message_count" property of a dictionary in a given list.
+
+    Create the dictionary and the "message_count" property if needed
+    and append it to the list.
+
+    :param store: the list to update
+    :param Function gen_value: the function to call to create the value
+        if missing from the dictionary (takes one positional `extra`
+        argument that is a dictionary, ie. see `_encode_*` functions)
+    :param list *args: arguments of the `gen_value` function
+    """
+    tmp = gen_value(*args, extra={'_message_count': 0})
+    i = get_list_index(tmp, store)
+    if i == -1:
+        store.append(gen_value(*args, extra={'_message_count': 0}))
+    store[i]['_message_count'] += 1
 
 
 class Average(object):
@@ -300,6 +334,7 @@ class Average(object):
         return self._acc / self._count
 
 
+# TODO: Chech the FILENAME.json files creation
 class SourceBuilder(object):
     """Representation of a source file."""
 
@@ -318,7 +353,8 @@ class SourceBuilder(object):
         self.metrics, self.coverage = [], {}
         self.messages = collections.defaultdict(list)
         self.message_count = collections.defaultdict(int)
-
+        self.all_messages = []
+        self.id_array = []
         self._process_messages()
 
     @property
@@ -356,9 +392,30 @@ class SourceBuilder(object):
             _inc_msg_count(self.tools, tool.id, _encode_tool, tool)
             _inc_msg_count(self.rules, rule.id, _encode_rule, rule, tool)
             for prop in message.get_properties():
-                _inc_msg_count(self.props, prop.id, _encode_property, prop)
+                _inc_msg_count(self.props, prop.id, _encode_property,
+                               prop, tool)
             self.messages[message.line].append((message, rule, tool))
             self.message_count[tool.id] += 1
+
+            for no, messages in self.messages.iteritems():
+                for message in messages:
+                    my_message = _encode_message(*message)
+                    if my_message['id'] not in self.id_array:
+                        self.all_messages.append(my_message)
+                        self.id_array.append(my_message['id'])
+
+    def sources_to_json(self, projectName):
+        this = {
+            'projectName': projectName,
+            'filename': self.filename,
+            'source_dir': self.source_dir,
+            'full_path': self.path,
+            'messages': self.all_messages or None,
+            'coverage': self.file_coverage,
+            'message_count': self.message_count,
+            '_total_message_count': sum(self.message_count.itervalues())
+        }
+        return this
 
     def to_json(self):
         """Generate the JSON-encoded representation of a source file.
@@ -489,18 +546,8 @@ class SourceDirBuilder(object):
         file_coverage = source.file_coverage
         self.source_files.append({
             'filename': source.filename,
-            'metrics': [_encode_metric(*metric) for metric in source.metrics],
             'coverage': file_coverage,
             'message_count': source.message_count,
-            '_messages': [{
-                'tool_id': tool.id,
-                'rule_id': rule.id,
-                'property_ids': [
-                    prop.id for prop in message.get_properties()
-                ] or None
-            } for message, rule, tool
-              in chain.from_iterable(source.messages.itervalues())
-            ] or None,
             '_total_message_count': sum(
                 len(messages) for messages in source.messages.itervalues())
         })
@@ -514,10 +561,10 @@ class SourceDirBuilder(object):
         :rtype: dict[str, *]
         """
         return {
-            'path': self.path,
-            'sources': {
-                source['filename']: source for source in self.source_files
-            },
+            'name': self.path,
+            'sources': [
+                source for source in self.source_files
+            ],
             'coverage': self._coverage_avg.compute(),
             'message_count': self.message_count or None,
             '_total_message_count': sum(self.message_count.itervalues())
@@ -562,10 +609,10 @@ class ModuleBuilder(object):
         paths = self.source_dirs.keys()
         return {
             'name': self.name,
-            'source_dirs': {
-                path: source_dir.to_json()
+            'source_dirs': [
+                source_dir.to_json()
                 for path, source_dir in self.source_dirs.iteritems()
-            },
+            ],
             'coverage': self._coverage_avg.compute(),
             'message_count': self.message_count or None,
             '_total_message_count': sum(self.message_count.itervalues()),
@@ -585,8 +632,11 @@ class IndexBuilder(object):
             for sources in self.source_files.itervalues())
         self.log = logging.getLogger(__name__)
 
-        self.tools, self.rules, self.props = {}, {}, {}
+        self.tools, self.rules, self.props = [], [], []
+        # TODO: Find the way to fill self.ranking and self.review_status
+        self.ranking, self.review_status = [], []
         self.modules = {}
+        self.sources = []
         self.message_count = collections.defaultdict(int)
 
     def save_source(self, source):
@@ -599,42 +649,91 @@ class IndexBuilder(object):
         if source.project not in self.modules:
             self.modules[source.project] = ModuleBuilder(source.project)
         self.modules[source.project].add_source(source)
+        self.sources.append(source.sources_to_json(source.project))
 
         for message, rule, tool in chain.from_iterable(
             source.messages.itervalues()
         ):
-            _inc_msg_count(self.tools, tool.id, _encode_tool, tool)
-            _inc_msg_count(self.rules, rule.id, _encode_rule, rule, tool)
+            inc_msg_count(self.tools, _encode_tool, tool)
+            inc_msg_count(self.rules, _encode_rule, rule, tool)
             for prop in message.get_properties():
-                _inc_msg_count(self.props, prop.id, _encode_property, prop)
+                inc_msg_count(self.props, _encode_property, prop, tool)
         for tool_id, count in source.message_count.iteritems():
             self.message_count[tool_id] += count
 
         return source
 
-    def to_json(self):
-        return {
-            'modules': {
-                name: module.to_json()
-                for name, module in self.modules.iteritems()
-            },
+    def full_json(self, path):
+        """Create and fill an object,
+        then create the JSON file to the given path
+
+        This one is for debugging purpose
+
+        :param path string: the path to create the file
+        """
+        tmp = {
             'project': GNAThub.Project.name(),
+            '_total_message_count': sum(self.message_count.itervalues()),
+            '_database': GNAThub.database(),
             'creation_time': int(time.time()),
             'properties': self.props or None,
             'tools': self.tools or None,
             'rules': self.rules or None,
-            'message_count': self.message_count,
-            '_total_message_count': sum(self.message_count.itervalues()),
-            '_database': GNAThub.database()
+            'ranking': self.ranking or None,
+            'review_status': self.review_status or None,
+            'modules': [module.to_json() for name,
+                        module in self.modules.iteritems()],
+            'sources': self.sources
         }
+        _write_json(path, tmp, indent=2)
 
-    def save_as(self, path):
-        """Save the JSON-encoded representation of the report index to disk.
+    def code_to_json(self, path):
+        """Create and fill an object,
+        then create the JSON file to the given path
 
-        :param str path: the path to the output file
+        This one is for code navigation
+
+        :param path string: the path to create the file
         """
-        self.log.info('writing index')
-        _write_json(path, self.to_json(), indent=2)
+        tmp = {
+            'modules': [module.to_json()
+                        for name, module in self.modules.iteritems()]
+        }
+        _write_json(path, tmp, indent=2)
+
+    def message_to_json(self, path):
+        """Create and fill an object,
+        then create the JSON file to the given path
+
+        This one is for message navigation
+
+        :param path string: the path to create the file
+        """
+        tmp = {
+            'sources': self.sources
+        }
+        _write_json(path, tmp, indent=2)
+
+    def filter_to_json(self, path):
+        """Create and fill an object,
+        then create the JSON file to the given path
+
+        This one is for filter panel
+
+        :param path string: the path to create the file
+        """
+        tmp = {
+            'project': GNAThub.Project.name(),
+            '_total_message_count': sum(self.message_count.itervalues()),
+            '_database': GNAThub.database(),
+            'creation_time': int(time.time()),
+            'properties': self.props or None,
+            'tools': self.tools or None,
+            'rules': self.rules or None,
+            'ranking': self.ranking or None,
+            'review_status': self.review_status or None
+        }
+        _write_json(path, tmp, indent=2)
 
 
 class ReportBuilder(object):

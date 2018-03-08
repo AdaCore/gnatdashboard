@@ -106,11 +106,23 @@ class HTMLReport(Plugin, Reporter):
                 self.log.debug('%s: saved as %s', source.filename, dest)
                 Console.progress(count, report.index.source_file_count, False)
 
-            # Generate the JSON-encoded report index.
-            dest = os.path.join(data_output_dir, 'report.json')
-            report.index.save_as(dest)
+            # Generate the JSON-encoded report for message navigation.
+            dest = os.path.join(data_output_dir, 'message.json')
+            report.index.message_to_json(dest)
             self.log.debug('report index saved as %s', dest)
-            self.info('HTML report generated in %s', self.output_dir)
+            self.info('HTML report generated in %s', dest)
+
+            # Generate the JSON-encoded report for filter panel.
+            dest = os.path.join(data_output_dir, 'filter.json')
+            report.index.filter_to_json(dest)
+            self.log.debug('report index saved as %s', dest)
+            self.info('HTML report generated in %s', dest)
+
+            # Generate the JSON-encoded report for code navigation.
+            dest = os.path.join(data_output_dir, 'code.json')
+            report.index.code_to_json(dest)
+            self.log.debug('report index saved as %s', dest)
+            self.info('HTML report generated in %s', dest)
 
         except IOError as why:
             self.log.exception('failed to generate the HTML report')

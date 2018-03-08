@@ -1,0 +1,87 @@
+.layout-page {
+    display: inline-block;
+
+    main {
+        height: 100%;
+        /*overflow: auto;*/
+
+        .center {
+            text-align: center;
+        }
+        .hideIt {
+            display: none;
+        }
+
+        .tab-header {
+            background-color: #f8f8f8;
+            border: solid 1px #eee;
+            font-size: 14px;
+            text-align: left;
+
+            .click {
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+            .click:hover {
+                background-color: rgba(0,0,0,0.05);
+                cursor: pointer;
+            }
+
+            .header-icon {
+                margin: 1px;
+                position: absolute;
+            }
+        }
+
+        .all-sources-line {
+            height: calc(100% - 34px);
+            overflow: auto;
+
+            .source-line {
+                padding-bottom: 2px;
+                padding-top: 2px;
+                text-align: left;
+            }
+            .source-line:hover {
+                background-color: rgba(0,0,0,0.025);
+                cursor: pointer;
+            }
+
+            .source-tree {
+                position: absolute;
+                left: 0px;
+                top: -1px;
+            }
+
+            .all-messages-line {
+                .message-line {
+                    background-color: rgba(0,0,0,0.05);
+                    border: solid 1px rgba(0,0,0,0.25);
+                    border-radius: 5px;
+                    padding: 10px 0px;
+                    margin-bottom: 2px;
+                }
+                .message-line:hover {
+                    background-color: rgba(0,0,0,0.075);
+                    cursor: pointer;
+                }
+
+                .message-tree {
+                    position: absolute;
+                    left: -5px;
+                    top: -1px;
+                }
+            }
+
+            .reduce {
+                height: 0px;
+                display: none
+            }
+            .open {
+                height: 100%;
+                display: inline-block;
+            }
+
+        }
+    }
+}

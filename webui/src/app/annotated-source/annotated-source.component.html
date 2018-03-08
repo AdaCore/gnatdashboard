@@ -2,10 +2,7 @@
     <!-- Annotated source -->
     <div class="annotated-source-body col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <nav class="file-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-            <!--<a [routerLink]="['/project-explorer', {
-project: source.project, directory: source.source_dir
-}]">-->
-            <a [routerLink]="['/project-explorer', source.project, source.source_dir]">
+            <a [routerLink]="['/code-explorer', source.project, source.source_dir]">
                 {{ source.project }}
             </a>
             <span  class="path-divider">/</span>

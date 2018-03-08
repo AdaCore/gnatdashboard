@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { IReportIndex, IAnnotatedSourceFile } from 'gnat';
 
+import { IFilterIndex, ICodeIndex, IMessageIndex } from 'gnat';
+
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
@@ -13,6 +15,21 @@ export class GNAThubService {
 
     public getReport(): Observable<IReportIndex> {
         return this.http.get('data/report.json')
+            .map(this.handleResults)
+            .catch(this.handleError);
+    }
+    public getFilter(): Observable<IFilterIndex> {
+        return this.http.get('data/filter.json')
+            .map(this.handleResults)
+            .catch(this.handleError);
+    }
+    public getCode(): Observable<ICodeIndex> {
+        return this.http.get('data/code.json')
+            .map(this.handleResults)
+            .catch(this.handleError);
+    }
+    public getMessage(): Observable<IMessageIndex> {
+        return this.http.get('data/message.json')
             .map(this.handleResults)
             .catch(this.handleError);
     }

@@ -16,13 +16,13 @@
     </div>
 
     <div class="filter-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <span *ngFor="let option of options">
+        <span *ngFor="let option of options; let idx = index">
             <input
                    #checkbox
                    type="checkbox"
                    id="{{option.name}}"
                    [ngModel]="!option._ui_unselected"
-                   (click)="toggle.emit({ option: option, checked: checkbox.checked })"/>
+                   (click)="toggle.emit({ option: option, checked: checkbox.checked, id: idx })"/>
             <label class="option col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" for="{{option.name}}">
                 <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">{{ option.name }}</span>
                 <div class="count col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
