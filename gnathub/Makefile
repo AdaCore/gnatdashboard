@@ -66,12 +66,12 @@ all: $(builddir)/bin/gnathub
 install: $(DESTDIR)$(datadir)/gnathub/python all installdirs \
 		$(builddir)/$(GNATHUB_LIB_MANIFEST)
 	$(INSTALL_PROGRAM) $(builddir)/bin/gnathub $(DESTDIR)$(bindir)
-	(cd $(rootdir)/share && tar cf - gnathub) | \
-		(cd $(DESTDIR)$(datadir) && tar xf -)
+	(cd "$(rootdir)/share" && tar cf - gnathub) | \
+		(cd "$(DESTDIR)$(datadir)" && tar xf -)
 	find $(DESTDIR)$(datadir)/gnathub/core -name '*.pyc' -delete
 	find $(DESTDIR)$(datadir)/gnathub/extras -name '*.pyc' -delete
-	(cd $(rootdir)/share/examples && tar cf - gnatdashboard) | \
-		(cd $(DESTDIR)$(datadir)/examples && tar xf -)
+	(cd "$(rootdir)/share/examples" && tar cf - gnatdashboard) | \
+		(cd "$(DESTDIR)$(datadir)/examples" && tar xf -)
 	$(INSTALL_DATA) $(builddir)/$(GNATHUB_LIB_MANIFEST) \
 		$(DESTDIR)$(datadir)/gnathub
 ifdef IS_WINDOWS
@@ -126,13 +126,13 @@ gen-db-bindings: $(rootdir)/share/gnathub/sql/db.model
 install-python-lib: $(builddir)/$(GNATHUB_LIB_MANIFEST)
 
 $(builddir)/$(GNATHUB_LIB_MANIFEST): $(srcdir)/lib/setup.py
-	$(PYTHON) $< build -b "$(builddir)" install --record $@
+	"$(PYTHON)" $< build -b "$(builddir)" install --record $@
 
 install-python-distrib: $(DESTDIR)$(datadir)/gnathub/python
 
 $(DESTDIR)$(datadir)/gnathub/python:
 	if test ! -d "$@"; then \
-		$(MKDIR) $@; \
-		(cd $(dir $(PYTHON_PREFIX)) && tar cf - $(notdir $(PYTHON_PREFIX))) | \
-			(cd $@ && tar xf - --strip-component 1) \
+		$(MKDIR) "$@"; \
+		(cd "$(realpath $(dir $(PYTHON_PREFIX)))" && tar cf - $(notdir $(PYTHON_PREFIX))) | \
+			(cd "$@" && tar xvf - --strip-component 1) \
 	fi

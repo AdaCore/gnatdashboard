@@ -42,7 +42,7 @@ all: $(builddir)/dist/index.html
 
 install: all installdirs
 	(cd $(builddir) && tar cf - dist) | \
-		(cd $(DESTDIR)$(datadir)/gnathub/webui && tar xf - --strip-components 1)
+		(cd "$(DESTDIR)$(datadir)/gnathub/webui" && tar xf - --strip-components 1)
 
 install-strip:
 	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
