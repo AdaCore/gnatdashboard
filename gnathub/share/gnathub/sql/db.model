@@ -45,6 +45,7 @@
 | line          | INTEGER                           | NOT NULL          |   | Entitie's line begin                                                          |
 | col_begin     | INTEGER                           | NOT NULL          |   | Entitie's column begin                                                        |
 | col_end       | INTEGER                           | NOT NULL          |   | Entitie's column end                                                          |
+| resource_id   | FK resources(resource)            | NOT NULL          |   | Entitie's associated ressource                                                |
 
 | TABLE         | entities_messages                 | entity_message    |   | Association between messages and entities                                     |
 | id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
