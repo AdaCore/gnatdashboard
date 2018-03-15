@@ -583,6 +583,40 @@ class Resource(object):
         return NotImplemented   # Implemented in Ada
 
 
+class Entity(object):
+
+    """An Entity object, representing an entity in the database."""
+
+    __slots__ = ('id', 'name', 'line', 'col_begin', 'col_end', 'resource_id')
+
+    def __init__(self, name, line, col_begin, col_end, resource):
+        """Return the entity of the given properties, creating it if necessary.
+
+        :param str name: the name of the entity
+        :param GNAThub.Resource resource: the resource that contains entity
+        """
+        pass    # Implemented in Ada
+
+    @staticmethod
+    def list():
+        """Return all the entities stored in the database.
+
+        :return: the list of all :class:`GNAThub.Entity`
+        :rtype: collections.Iterable[GNAThub.Entity]
+        """
+        return NotImplemented   # Implemented in Ada
+
+    def add_messages(self, messages):
+        """Add multiple messages to the given entity.
+
+        Prefer this function when there are many messages to insert, for
+        efficiency.
+
+        :param collections.Iterable messages: the messages to add
+        """
+        return NotImplemented   # Implemented in Ada
+
+
 # Install all Ada extensions, i.e. functions and classes implemented in Ada and
 # exported to Python. These extensions should be declared above this statement
 # with no implementation.

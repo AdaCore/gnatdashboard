@@ -143,16 +143,44 @@ class GNATmetric(Plugin, Runner, Reporter):
                     message_data.append([msg, 0, 1, 1])
 
                 # Save unit level metric
+
+                # Map of entities for a ressource
+                entities = {}
                 for unit in node.findall('.//unit'):
-                    for metric in unit.findall('./metric'):
-                        pass
-                        # /!\ Not handled for now: to be done /!\
-                        # File --> node.attrib.get('name'),
-                        # Entity Line --> unit.attrib.get('line'),
-                        # Entity name --> unit.attrib.get('name'),
-                        # Entity Col --> unit.attrib.get('col'),
-                        # Metric name --> metric.attrib.get('name'),
-                        # Metric value --> metric.text)
+
+                    ename = unit.attrib.get('name')
+                    eline = unit.attrib.get('line')
+                    ecol = unit.attrib.get('col')
+
+                    if ename in entities:
+                        entity = entities[ename]
+                    else:
+                        entity = GNAThub.Entity(ename, int(eline),
+                                                int(ecol), int(ecol),
+                                                resource)
+                        entities[ename] = entity
+
+                    # A list of entity messages suitable for bulk addition
+                    emessage_data = []
+                    for emetric in unit.findall('./metric'):
+
+                        name = emetric.attrib.get('name')
+                        if name in rules:
+                            rule = rules[name]
+                        else:
+                            rule = GNAThub.Rule(name, name,
+                                                GNAThub.METRIC_KIND, tool)
+                            rules[name] = rule
+
+                        if (rule, emetric.text) in messages:
+                            msg = messages[(rule, emetric.text)]
+                        else:
+                            msg = GNAThub.Message(rule, emetric.text)
+                            messages[(rule, emetric.text)] = msg
+
+                        emessage_data.append(msg)
+
+                    entity.add_messages(emessage_data)
 
                 resource.add_messages(message_data)
                 Console.progress(index, total, new_line=(index == total))

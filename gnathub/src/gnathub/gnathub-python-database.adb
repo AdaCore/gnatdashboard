@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2014-2016, AdaCore                     --
+--                     Copyright (C) 2014-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -50,6 +50,13 @@ package body GNAThub.Python.Database is
            & (D.Resources_Messages.Col_Begin   = Integer_Param (4))
            & (D.Resources_Messages.Col_End     = Integer_Param (5)))),
        On_Server => True);
+
+   Insert_Entity_Message : constant Prepared_Statement :=
+     Prepare
+       (SQL_Insert
+          (((D.Entities_Messages.Entity_Id   = Integer_Param (1))
+           & (D.Entities_Messages.Message_Id = Integer_Param (2)))),
+        On_Server => True);
 
    -----------
    -- Tools --
@@ -199,6 +206,33 @@ package body GNAThub.Python.Database is
       Name          : String;
       Kind          : Integer);
    --  Set the fields describing a Resource in Resource_Inst
+
+   --------------
+   -- Entities --
+   --------------
+
+   Entity_Class_Name : constant String := "Entity";
+   Entity_Class      : Class_Type;
+
+   type Entity_Property_Record is new Instance_Property_Record with record
+      Id : Integer;
+   end record;
+   type Entity_Property is access all Entity_Property_Record'Class;
+
+   procedure Entity_Command_Handler
+     (Data    : in out Callback_Data'Class;
+      Command : String);
+   --  Implement GNAThub.Entity methods
+
+   procedure Set_Entity_Fields
+     (Entity_Inst : Class_Instance;
+      Id           : Integer;
+      Name         : String;
+      Line         : Integer := -1;
+      Col_Begin    : Integer := -1;
+      Col_End      : Integer := -1;
+      Resource_Id  : Integer);
+   --  Set the fields describing an Entity in Entity_Inst
 
    -------------
    -- Helpers --
@@ -367,6 +401,13 @@ package body GNAThub.Python.Database is
             DB.Execute
               (SQL_Delete
                  (From  => D.Resources_Messages,
+                  Where =>
+                    SQL_In
+                      (D.Resources_Messages.Message_Id, To_String (Ids))));
+
+            DB.Execute
+              (SQL_Delete
+                 (From  => D.Entities_Messages,
                   Where =>
                     SQL_In (D.Entities_Messages.Message_Id, To_String (Ids))));
          end;
@@ -1101,6 +1142,169 @@ package body GNAThub.Python.Database is
       end if;
    end Resource_Command_Handler;
 
+   -----------------------
+   -- Set_Entity_Fields --
+   -----------------------
+
+   procedure Set_Entity_Fields
+     (Entity_Inst : Class_Instance;
+      Id           : Integer;
+      Name         : String;
+      Line         : Integer := -1;
+      Col_Begin    : Integer := -1;
+      Col_End      : Integer := -1;
+      Resource_Id  : Integer)
+   is
+   begin
+      Set_Data (Entity_Inst, Entity_Class_Name,
+                Entity_Property_Record'(Id => Id));
+      Set_Property (Entity_Inst, "id", Id);
+      Set_Property (Entity_Inst, "name", Name);
+
+      if Line /= -1 then
+         Set_Property (Entity_Inst, "line", Line);
+      end if;
+
+      if Col_Begin /= -1 then
+         Set_Property (Entity_Inst, "col_begin", Col_Begin);
+      end if;
+
+      if Col_End /= -1 then
+         Set_Property (Entity_Inst, "col_end", Col_End);
+      end if;
+
+      Set_Property (Entity_Inst, "resource_id", Resource_Id);
+   end Set_Entity_Fields;
+
+   ----------------------------
+   -- Entity_Command_Handler --
+   ----------------------------
+
+   procedure Entity_Command_Handler
+     (Data    : in out Callback_Data'Class;
+      Command : String)
+   is
+      Entity_Inst : Class_Instance;
+   begin
+      if Command = Constructor_Method then
+         declare
+            Name        : constant String := Nth_Arg (Data, 2);
+            Line        : constant Integer := Nth_Arg (Data, 3);
+            Col_Begin   : constant Integer := Nth_Arg (Data, 4);
+            Col_End     : constant Integer := Nth_Arg (Data, 5);
+            Resource    : constant Class_Instance := Nth_Arg (Data, 6);
+            Resource_Id : constant Integer := Resource_Property
+              (Get_Data (Resource, Resource_Class_Name)).Id;
+
+            Q          : SQL_Query;
+            R          : Forward_Cursor;
+            Id         : Integer;
+         begin
+            Q := SQL_Select
+              (To_List ((0 => +D.Entities.Id)),
+               From  => D.Entities,
+               Where => (D.Entities.Name = Name) and
+                   (D.Entities.Line = Line) and
+                   (D.Entities.Col_Begin = Col_Begin) and
+                   (D.Entities.Col_End = Col_End) and
+                   (D.Entities.Resource_Id = Resource_Id));
+            Entity_Inst := Nth_Arg (Data, 1, Entity_Class);
+
+            R.Fetch (DB, Q);
+
+            if R.Has_Row then
+               --  An Entity has been found with this name: return it
+               Id := R.Integer_Value (0);
+
+            else
+               --  No Rule with that name has been found: create one
+               Id := DB.Insert_And_Get_PK
+                 (SQL_Insert (
+                  (D.Entities.Name = Name) &
+                   (D.Entities.Line = Line) &
+                   (D.Entities.Col_Begin = Col_Begin) &
+                   (D.Entities.Col_End = Col_End) &
+                   (D.Entities.Resource_Id = Resource_Id)),
+                  PK => D.Entities.Id);
+               DB.Commit;
+            end if;
+
+            Set_Entity_Fields (Entity_Inst => Entity_Inst,
+                               Id          => Id,
+                               Name        => Name,
+                               Line        => Line,
+                               Col_Begin   => Col_Begin,
+                               Col_End     => Col_End,
+                               Resource_Id => Resource_Id);
+         end;
+
+      elsif Command = "list" then
+         Set_Return_Value_As_List (Data);
+
+         declare
+            Q : SQL_Query;
+            R : Forward_Cursor;
+         begin
+            Q := SQL_Select
+              (To_List ((0 => +D.Entities.Id,
+                         1 => +D.Entities.Name,
+                         2 => +D.Entities.Line,
+                         3 => +D.Entities.Col_Begin,
+                         4 => +D.Entities.Col_Begin,
+                         5 => +D.Entities.Resource_Id)),
+               From  => D.Entities);
+            R.Fetch (DB, Q);
+
+            while R.Has_Row loop
+               Entity_Inst := New_Instance (Get_Script (Data), Entity_Class);
+               Set_Entity_Fields
+                 (Entity_Inst => Entity_Inst,
+                  Id          => R.Integer_Value (0),
+                  Name        => R.Value (1),
+                  Line        => R.Integer_Value (2),
+                  Col_Begin   => R.Integer_Value (3),
+                  Col_End     => R.Integer_Value (4),
+                  Resource_Id => R.Integer_Value (5));
+               Set_Return_Value (Data, Entity_Inst);
+
+               R.Next;
+            end loop;
+         end;
+
+      elsif Command = "add_messages" then
+         declare
+            --  Required parameters
+            Entity    : constant Class_Instance := Nth_Arg (Data, 1);
+            Entity_Id : constant Integer := Entity_Property
+              (Get_Data (Entity, Entity_Class_Name)).Id;
+            Global_List : constant List_Instance := Nth_Arg (Data, 2);
+         begin
+            Database.DB.Automatic_Transactions (False);
+            Database.DB.Execute ("BEGIN");
+
+            for J in 1 .. Global_List.Number_Of_Arguments loop
+               declare
+                  Message      : constant Class_Instance
+                    := Nth_Arg (Global_List, J);
+                  Message_Id   : constant Integer := Message_Property
+                    (Get_Data (Message, Message_Class_Name)).Id;
+               begin
+                  Database.DB.Execute
+                    (Stmt   => Insert_Entity_Message,
+                     Params => (1 => +Entity_Id,
+                                2 => +Message_Id));
+               end;
+            end loop;
+
+            Database.DB.Commit_Or_Rollback;
+            Database.DB.Automatic_Transactions (True);
+         end;
+
+      else
+         raise Python_Error with "Unknown method GNAThub.Entity." & Command;
+      end if;
+   end Entity_Command_Handler;
+
    ---------------------------------------
    -- Register_Database_Interaction_API --
    ---------------------------------------
@@ -1265,6 +1469,35 @@ package body GNAThub.Python.Database is
          Params  => No_Params,
          Handler => Resource_Command_Handler'Access,
          Class   => Resource_Class);
+
+      --  Entities
+
+      Entity_Class := Repository.New_Class (Entity_Class_Name);
+
+      Repository.Register_Command
+        (Command => Constructor_Method,
+         Params  =>
+           (Param ("name"),
+            Param ("line",      Optional => True),
+            Param ("col_begin", Optional => True),
+            Param ("col_end",   Optional => True),
+            Param ("resource")),
+         Handler => Entity_Command_Handler'Access,
+         Class   => Entity_Class);
+
+      Repository.Register_Command
+        (Command       => "list",
+         Params        => No_Params,
+         Handler       => Entity_Command_Handler'Access,
+         Class         => Entity_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command => "add_messages",
+         Params  => (1 .. 1 => Param ("messages")),
+         Handler => Entity_Command_Handler'Access,
+         Class   => Entity_Class);
+
    end Register_Database_Interaction_API;
 
 end GNAThub.Python.Database;

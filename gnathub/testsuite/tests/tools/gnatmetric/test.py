@@ -20,8 +20,8 @@ EXPECTED_METRICS = {
     'blank_lines': 11,
     'statement_complexity': 1.75,
     'expression_complexity': 0.00,
-    'essential_complexity': 1.75,
     'cyclomatic_complexity': 1.75,
+    'essential_complexity': 1.75,
     'max_loop_nesting': 2.00
 }
 
