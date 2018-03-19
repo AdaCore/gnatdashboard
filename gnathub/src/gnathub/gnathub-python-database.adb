@@ -1137,6 +1137,57 @@ package body GNAThub.Python.Database is
             end loop;
 
          end;
+
+      elsif Command = "list_entities_messages" then
+         Set_Return_Value_As_List (Data);
+         declare
+            Resource    : constant Class_Instance := Nth_Arg (Data, 1);
+            Resource_Id : constant Integer := Resource_Property
+              (Get_Data (Resource, Resource_Class_Name)).Id;
+
+            Message_Inst : Class_Instance;
+
+            Q : SQL_Query;
+            R : Forward_Cursor;
+         begin
+            --  list all message in entities_messages
+            Q := SQL_Select
+              (To_List
+                 ((0 => +D.Messages.Id,
+                   1 => +D.Messages.Rule_Id,
+                   2 => +D.Messages.Data,
+                   3 => +D.Messages.Category_Id,
+                   4 => +D.Entities.Line,
+                   5 => +D.Entities.Col_Begin,
+                   6 => +D.Entities.Col_End)),
+
+               From  => D.Messages & D.Entities & D.Entities_Messages,
+
+               Where => D.Entities.Resource_Id = Resource_Id
+                 and D.Entities.Id = D.Entities_Messages.Entity_Id
+                 and D.Messages.Id = D.Entities_Messages.Message_Id);
+
+            R.Fetch (DB, Q);
+
+            while R.Has_Row loop
+               Message_Inst := New_Instance (Get_Script (Data), Message_Class);
+               Set_Message_Fields
+                 (Message_Inst => Message_Inst,
+                  Id           => R.Integer_Value (0),
+                  Rule_Id      => R.Integer_Value (1),
+                  Message_Data => R.Value (2),
+                  Category_Id  => R.Integer_Value (3, -1),
+                  Line         => R.Integer_Value (4, 0),
+                  Col_Begin    => R.Integer_Value (5, 0),
+                  Col_End      => R.Integer_Value (6, 0));
+
+               Set_Return_Value (Data, Message_Inst);
+
+               R.Next;
+            end loop;
+
+         end;
+
       else
          raise Python_Error with "Unknown method GNAThub.Resource." & Command;
       end if;
@@ -1298,6 +1349,56 @@ package body GNAThub.Python.Database is
 
             Database.DB.Commit_Or_Rollback;
             Database.DB.Automatic_Transactions (True);
+         end;
+
+      elsif Command = "list_messages" then
+         Set_Return_Value_As_List (Data);
+         declare
+            Entity    : constant Class_Instance := Nth_Arg (Data, 1);
+            Entity_Id : constant Integer := Entity_Property
+              (Get_Data (Entity, Entity_Class_Name)).Id;
+
+            Message_Inst : Class_Instance;
+
+            Q : SQL_Query;
+            R : Forward_Cursor;
+         begin
+            --  list all message in enties_messages
+
+            Q := SQL_Select
+              (To_List
+                 ((0 => +D.Messages.Id,
+                   1 => +D.Messages.Rule_Id,
+                   2 => +D.Messages.Data,
+                   3 => +D.Messages.Category_Id,
+                   4 => +D.Entities.Line,
+                   5 => +D.Entities.Col_Begin,
+                   6 => +D.Entities.Col_End)),
+
+               From  => D.Messages & D.Entities & D.Entities_Messages,
+
+               Where => D.Entities.Id = Entity_Id
+                 and D.Entities.Id = D.Entities_Messages.Entity_Id
+                 and D.Messages.Id = D.Entities_Messages.Message_Id);
+
+            R.Fetch (DB, Q);
+
+            while R.Has_Row loop
+               Message_Inst := New_Instance (Get_Script (Data), Message_Class);
+               Set_Message_Fields
+                 (Message_Inst => Message_Inst,
+                  Id           => R.Integer_Value (0),
+                  Rule_Id      => R.Integer_Value (1),
+                  Message_Data => R.Value (2),
+                  Category_Id  => R.Integer_Value (3, -1),
+                  Line         => R.Integer_Value (4, 0),
+                  Col_Begin    => R.Integer_Value (5, 0),
+                  Col_End      => R.Integer_Value (6, 0));
+
+               Set_Return_Value (Data, Message_Inst);
+
+               R.Next;
+            end loop;
          end;
 
       else
@@ -1470,6 +1571,12 @@ package body GNAThub.Python.Database is
          Handler => Resource_Command_Handler'Access,
          Class   => Resource_Class);
 
+      Repository.Register_Command
+        (Command => "list_entities_messages",
+         Params  => No_Params,
+         Handler => Resource_Command_Handler'Access,
+         Class   => Resource_Class);
+
       --  Entities
 
       Entity_Class := Repository.New_Class (Entity_Class_Name);
@@ -1495,6 +1602,12 @@ package body GNAThub.Python.Database is
       Repository.Register_Command
         (Command => "add_messages",
          Params  => (1 .. 1 => Param ("messages")),
+         Handler => Entity_Command_Handler'Access,
+         Class   => Entity_Class);
+
+      Repository.Register_Command
+        (Command => "list_messages",
+         Params  => No_Params,
          Handler => Entity_Command_Handler'Access,
          Class   => Entity_Class);
 

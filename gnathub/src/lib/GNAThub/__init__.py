@@ -582,6 +582,14 @@ class Resource(object):
         """
         return NotImplemented   # Implemented in Ada
 
+    def list_entities_messages(self):
+        """List all entities messages associated with this resource.
+
+        :return: a list of :class:`GNAThub.Message`
+        :rtype: collections.Iterable[GNAThub.Message]
+        """
+        return NotImplemented   # Implemented in Ada
+
 
 class Entity(object):
 
@@ -613,6 +621,14 @@ class Entity(object):
         efficiency.
 
         :param collections.Iterable messages: the messages to add
+        """
+        return NotImplemented   # Implemented in Ada
+
+    def list_messages(self):
+        """List all messages associated with this entity.
+
+        :return: a list of :class:`GNAThub.Message`
+        :rtype: collections.Iterable[GNAThub.Message]
         """
         return NotImplemented   # Implemented in Ada
 

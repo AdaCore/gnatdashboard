@@ -24,6 +24,7 @@ def collect_data(writer):
     for resource in sorted(files, key=lambda x: x.name):
         basename = os.path.basename(resource.name)
         messages = resource.list_messages()
+        emessages = resource.list_entities_messages()
 
         writer.add_section(basename)
         for message in [message for message in messages if not message.line]:
@@ -33,6 +34,10 @@ def collect_data(writer):
         for message in [message for message in messages if message.line]:
             line_messages[message.line].append(message)
 
+        for emessage in [emessage for emessage in emessages if emessage.line]:
+            line_messages[emessage.line].append(emessage)
+
+            
         for line, messages in line_messages.iteritems():
             columns = set()
             for message in messages:
