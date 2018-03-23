@@ -40,10 +40,10 @@
         <!-- Button open/close filters -->
         <button id="chrevonButton" class="arrow-button open"
                 (click)="openCloseFilterTab()">
-            <i *ngIf="!filter_open" class="material-icons">chevron_right</i>
-            <i *ngIf="filter_open" class="material-icons">chevron_left</i>
+            <i *ngIf="!filterOpen" class="material-icons">chevron_right</i>
+            <i *ngIf="filterOpen" class="material-icons">chevron_left</i>
         </button>
-        <span *ngIf="!filter_open" class="filter-span">My filter</span>
+        <span *ngIf="!filterOpen" class="filter-span">My filter</span>
     </span>
 
     <!-- Show all the filters according to the report.json -->

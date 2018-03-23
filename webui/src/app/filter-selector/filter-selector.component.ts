@@ -29,13 +29,13 @@ export class FilterSelectorComponent {
     }
 
     public selectAll(options) {
-        options.forEach(function(option){
-            this.toggle.emit({ option: option, checked: true })
+        options.forEach(function(opt){
+            this.toggle.emit({ option: opt, checked: true });
         }.bind(this));
     }
     public unselectAll(options) {
-        options.forEach(function(option){
-            this.toggle.emit({ option: option, checked: false })
+        options.forEach(function(opt){
+            this.toggle.emit({ option: opt, checked: false });
         }.bind(this));
     }
 }

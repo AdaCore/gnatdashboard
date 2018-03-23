@@ -14,7 +14,7 @@ import { SharedReport } from './main-responder.service';
     ]
 })
 export class MainResponderComponent {
-    constructor(private reportService: SharedReport) {
+    constructor(public reportService: SharedReport) {
         PageScrollConfig.defaultDuration = 0;
     }
 }

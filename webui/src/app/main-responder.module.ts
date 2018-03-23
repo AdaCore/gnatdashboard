@@ -15,7 +15,7 @@ import { ENV_PROVIDERS } from './environment';
 import { ROUTES } from './main-responder.routes';
 import { MainResponderComponent } from './main-responder.component';
 import { APP_RESOLVER_PROVIDERS } from './main-responder.resolver';
-import { AppState, InteralStateType,SharedReport } from './main-responder.service';
+import { AppState, InteralStateType, SharedReport } from './main-responder.service';
 
 import { PreferencesComponent } from './preferences';
 import {
@@ -38,7 +38,7 @@ import {
 } from './errors';
 import { NoContentComponent } from './no-content';
 import { NotEmptyPipe } from './not-empty.pipe';
-import { CodeExplorerComponent} from './code-explorer';
+import { CodeExplorerComponent } from './code-explorer';
 import { MessageExplorerComponent } from './message-explorer';
 import { SourceFileCountPipe } from './source-file-count.pipe';
 import { SourceListComponent } from './source-list';

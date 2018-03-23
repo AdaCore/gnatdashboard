@@ -37,7 +37,7 @@ export class AnnotatedSourceComponent
 {
     @Input() public source: IAnnotatedSourceFile;
     public selectedLine: number = 0;
-    public displayMessages: boolean = true; //TODO: check this variable
+    public displayMessages: boolean = true;
     @HostBinding('class.with-coverage') public displayCoverage: boolean = true;
     public showMessageList: boolean = true;
     public inlineMessages: { [line: number]: MessagesByToolId };

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { SharedReport } from '../main-responder.service';
 
 import { FilterEvent } from '../filter-selector/filter-selector.component';
-import { sortMessageArray } from '../code-explorer/project-sort.component';
+import { sortMessageArray } from '../utils/sortArray';
 import {
     IPropertyFilter,
     IReportIndex,
@@ -23,7 +23,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 export class MessageExplorerComponent implements OnInit {
 
     constructor(private route: ActivatedRoute,
-                 private reportService: SharedReport,
+                public reportService: SharedReport,
                 @Inject(DOCUMENT) private document: Document) {}
     /** @override */
     public ngOnInit() {
@@ -34,7 +34,7 @@ export class MessageExplorerComponent implements OnInit {
         this.reportService.message.sources = sortMessageArray(
             {newSort: firstSort, otherSort: secondSort},
             this.reportService.messageFilter,
-            this.reportService.message.sources)
+            this.reportService.message.sources);
     }
 
     public openClose(id: string) {

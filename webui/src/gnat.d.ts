@@ -79,7 +79,6 @@ declare module 'gnat' {
         _total_message_count: number;
         _ui_total_message_count?: number;
         sources: [ ISource ];
-        //expanded ?
     }
 
     export interface IModule {
@@ -90,11 +89,10 @@ declare module 'gnat' {
         _source_dirs_common_prefix: string;
         coverage?: number;
         source_dirs: [ ISourceDir ];
-        //expanded ?
     }
 
     export interface ICodeIndex {
-        modules: [ IModule ]
+        modules: [ IModule ];
     }
 
     // **
@@ -123,15 +121,12 @@ declare module 'gnat' {
     }
 
     export interface IMessageIndex {
-        sources: [ ISourceNav ]
+        sources: [ ISourceNav ];
     }
-
 
     // **
     //  Part for the FILENAME.json (annotated-source)
     // **
-
-
 
     // **
     //  OLD PART, TO CLEAN AFTER TEST
@@ -282,7 +277,4 @@ declare module 'gnat' {
         _total_message_count: number;
         _database: string;
     }
-
-
-
 }

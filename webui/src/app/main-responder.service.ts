@@ -3,7 +3,7 @@ import { GNAThubService } from './gnathub.service';
 import { ActivatedRoute } from '@angular/router';
 import { IReportIndex } from 'gnat';
 import { IFilterIndex, ICodeIndex, IMessageIndex } from 'gnat';
-import { sortCodeArray, sortMessageArray } from './code-explorer/project-sort.component';
+import { sortCodeArray, sortMessageArray } from './utils/sortArray';
 
 export type InteralStateType = {
   [key: string]: any
@@ -40,7 +40,6 @@ export class AppState {
   }
 }
 
-@Injectable()
 export class SharedReport {
   public filter: IFilterIndex;
   public code: ICodeIndex;
@@ -50,12 +49,12 @@ export class SharedReport {
   public messageFilter = {newSort: 'name', otherSort: 'filename', order: 1};
 
   public page: string;
-  public hideFiles:boolean = true;
-  public isReportFetchError:boolean = false;
+  public hideFiles: boolean = true;
+  public isReportFetchError: boolean = false;
   public projectName: string;
 
   constructor( private gnathub: GNAThubService,
-                private route: ActivatedRoute) {
+               private route: ActivatedRoute) {
     this.gnathub.getFilter().subscribe(
       filter => {
         this.filter = filter;

@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { SharedReport } from '../main-responder.service';
 
 import { FilterEvent } from '../filter-selector/filter-selector.component';
-import { sortCodeArray } from './project-sort.component';
+import { sortCodeArray } from '../utils/sortArray';
 import {
     IPropertyFilter,
     IReportIndex,
@@ -24,7 +24,7 @@ export class CodeExplorerComponent implements OnInit, OnDestroy {
     private sub: Subscription;
 
     constructor(private route: ActivatedRoute,
-                 private reportService: SharedReport,
+                public reportService: SharedReport,
                 @Inject(DOCUMENT) private document: Document) {}
     /** @override */
     public ngOnInit() {

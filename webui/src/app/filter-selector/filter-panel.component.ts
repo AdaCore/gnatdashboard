@@ -15,23 +15,23 @@ import {
 })
 
 export class FilterPanelComponent {
-    public filter_open: boolean = true;
+    public filterOpen: boolean = true;
     public isReportFetchError: boolean = false;
     public change: number;
 
-    constructor( private reportService: SharedReport) {}
+    constructor( public reportService: SharedReport) {}
 
     public openCloseFilterTab() {
-        let button = document.getElementById("chrevonButton")
-        button.classList.toggle("reduce");
-        button.classList.toggle("open")
-        let filter = document.getElementById("filterBar")
-        filter.classList.toggle("reduce");
-        filter.classList.toggle("open")
-        let panel = document.getElementById("filterPanel")
-        panel.classList.toggle("reduce");
-        panel.classList.toggle("open")
-        this.filter_open = !this.filter_open;
+        let button = document.getElementById('chrevonButton');
+        button.classList.toggle('reduce');
+        button.classList.toggle('open');
+        let filter = document.getElementById('filterBar');
+        filter.classList.toggle('reduce');
+        filter.classList.toggle('open');
+        let panel = document.getElementById('filterPanel');
+        panel.classList.toggle('reduce');
+        panel.classList.toggle('open');
+        this.filterOpen = !this.filterOpen;
     }
 
     /*
@@ -70,7 +70,7 @@ export class FilterPanelComponent {
     private isSelected(id: number, array: any): boolean {
         let isSelected: boolean;
         array.forEach(function(cell){
-            if (cell.id == id){
+            if (cell.id === id){
                 if (cell._ui_unselected) {
                     isSelected = !cell._ui_unselected;
                 } else {
@@ -83,7 +83,7 @@ export class FilterPanelComponent {
 
     private incMessageCount(id: number, array: any){
         array.forEach(function(cell){
-            if (cell.id == id){
+            if (cell.id === id){
                 cell._ui_selected_message_count += 1;
             }
         });
@@ -113,11 +113,12 @@ export class FilterPanelComponent {
             myModule.source_dirs.forEach(function(folder){
                 folder._ui_total_message_count = 0;
 
-                folder.sources.forEach(function(code_source){
-                    code_source._ui_total_message_count = 0;
+                folder.sources.forEach(function(codeSource){
+                    codeSource._ui_total_message_count = 0;
 
                     this.reportService.message.sources.forEach(function(source){
-                        if(source.filename == code_source.filename && source.messages != null){
+                        if (source.filename === codeSource.filename &&
+                           source.messages != null){
                             source.messages.forEach(function(message){
                                 const tid = message.rule.tool_id;
                                 const rid = message.rule.id;
@@ -126,11 +127,12 @@ export class FilterPanelComponent {
                                 let hasSelectedProperties = false;
 
                                 if (message.properties != null){
-                                    if (message.properties.length == 0){
+                                    if (message.properties.length === 0){
                                         hasSelectedProperties = true;
                                     }
                                     message.properties.forEach(function(property){
-                                        let isPropertySelected = this.isSelected(property.id, properties);
+                                        let isPropertySelected =
+                                            this.isSelected(property.id, properties);
                                         if (isPropertySelected){
                                             hasSelectedProperties = true;
                                         }
@@ -141,7 +143,8 @@ export class FilterPanelComponent {
                                     this.incMessageCount(tid, tools);
                                     this.incMessageCount(rid, rules);
                                     message.properties.forEach(function(property){
-                                        let isPropertySelected = this.isSelected(property.id, properties);
+                                        let isPropertySelected =
+                                            this.isSelected(property.id, properties);
                                         if (isPropertySelected){
                                             this.incMessageCount(property.id, properties);
                                         }
@@ -149,7 +152,7 @@ export class FilterPanelComponent {
 
                                     message.hide = true;
                                     source._ui_total_message_count ++;
-                                    code_source._ui_total_message_count ++;
+                                    codeSource._ui_total_message_count ++;
                                     folder._ui_total_message_count++;
                                     myModule._ui_total_message_count++;
                                 } else {
@@ -163,7 +166,4 @@ export class FilterPanelComponent {
         }.bind(this));
         this.change++;
     }
-
 }
-
-

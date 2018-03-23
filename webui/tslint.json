@@ -41,6 +41,10 @@
       true,
       100
     ],
+    "max-classes-per-file": [
+      true,
+      2
+    ],
     "no-string-literal": false,
     "no-use-before-declare": true,
     "object-literal-sort-keys": false,

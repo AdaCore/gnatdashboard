@@ -1,10 +1,10 @@
 <!-- Spinner animation -->
 <spinner
-         *ngIf="!reportService.message && !isReportFetchError"
+         *ngIf="!reportService.message && !reportService.isReportFetchError"
          caption="Loading report...">
 </spinner>
 <!-- Error handling -->
-<missing-report-error *ngIf="isReportFetchError" clas="col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad"></missing-report-error>
+<missing-report-error *ngIf="reportService.isReportFetchError" clas="col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad"></missing-report-error>
 <!-- Report display -->
 <div *ngIf="reportService.message" class="layout-page col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad">
     <main class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
