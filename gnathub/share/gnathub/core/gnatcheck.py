@@ -203,9 +203,14 @@ class GNATcheck(Plugin, Runner, Reporter):
     def __do_bulk_insert(self):
         """Insert the gnatcheck messages in bulk on each resource."""
 
+        # List of resource messages suitable for tool level bulk insertion
+        resources_messages = []
+
         for src in self.bulk_data:
             base = GNAThub.Project.source_file(os.path.basename(src))
             resource = GNAThub.Resource.get(base)
 
             if resource:
-                resource.add_messages(self.bulk_data[src])
+                resources_messages.append([resource, self.bulk_data[src]])
+
+        self.tool.add_messages(resources_messages, [])

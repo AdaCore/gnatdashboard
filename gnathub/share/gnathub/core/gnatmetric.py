@@ -112,6 +112,12 @@ class GNATmetric(Plugin, Runner, Reporter):
             # Map of messages (couple (rule, message): dict[str,Message])
             messages = {}
 
+            # List of resource messages suitable for tool level bulk insertion
+            resources_messages = []
+
+            # List of entities messages suitable for tool level bulk insertion
+            entities_messages = []
+
             for index, node in enumerate(files, start=1):
                 resource = GNAThub.Resource.get(node.attrib.get('name'))
 
@@ -180,10 +186,12 @@ class GNATmetric(Plugin, Runner, Reporter):
 
                         emessage_data.append(msg)
 
-                    entity.add_messages(emessage_data)
+                    entities_messages.append([entity, emessage_data])
 
-                resource.add_messages(message_data)
+                resources_messages.append([resource, message_data])
                 Console.progress(index, total, new_line=(index == total))
+
+            tool.add_messages(resources_messages, entities_messages)
 
         except ParseError as why:
             self.log.exception('failed to parse XML report')

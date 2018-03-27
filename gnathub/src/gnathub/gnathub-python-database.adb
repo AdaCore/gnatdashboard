@@ -321,6 +321,97 @@ package body GNAThub.Python.Database is
             end loop;
          end;
 
+      elsif Command = "add_messages" then
+         declare
+            --  Required parameters
+            RGlobal_List : constant List_Instance := Nth_Arg (Data, 2);
+            EGlobal_List : constant List_Instance := Nth_Arg (Data, 3);
+         begin
+            Database.DB.Automatic_Transactions (False);
+            Database.DB.Execute ("BEGIN");
+
+            begin
+               --  Handle resources messages
+               for R1 in 1 .. RGlobal_List.Number_Of_Arguments loop
+                  declare
+                     List : constant List_Instance := Nth_Arg
+                       (RGlobal_List, R1);
+
+                     Resource    : constant Class_Instance := List.Nth_Arg (1);
+                     Resource_Id : constant Integer := Resource_Property
+                       (Get_Data (Resource, Resource_Class_Name)).Id;
+
+                     Messages_Data : constant List_Instance :=
+                       List.Nth_Arg (2);
+                  begin
+
+                     for R2 in 1 .. Messages_Data.Number_Of_Arguments loop
+                        declare
+                           Messages_List : constant List_Instance
+                             := Nth_Arg (Messages_Data, R2);
+
+                           Message      : constant Class_Instance
+                             := Messages_List.Nth_Arg (1);
+                           Message_Id   : constant Integer := Message_Property
+                             (Get_Data (Message, Message_Class_Name)).Id;
+                           Line         : constant Integer
+                             := Messages_List.Nth_Arg (2);
+                           Col_Begin    : constant Integer
+                             := Messages_List.Nth_Arg (3);
+                           Col_End      : constant Integer
+                             := Messages_List.Nth_Arg (4);
+                        begin
+                           Database.DB.Execute
+                             (Stmt   => Insert_Message,
+                              Params => (1 => +Message_Id,
+                                         2 => +Resource_Id,
+                                         3 => +Line,
+                                         4 => +Col_Begin,
+                                         5 => +Col_End));
+                        end;
+                     end loop;
+                  end;
+               end loop;
+
+               --  Handle entities messages
+               for E1 in 1 .. EGlobal_List.Number_Of_Arguments loop
+                  declare
+                     List : constant List_Instance := Nth_Arg
+                       (EGlobal_List, E1);
+
+                     Entity    : constant Class_Instance := List.Nth_Arg (1);
+                     Entity_Id : constant Integer := Entity_Property
+                       (Get_Data (Entity, Entity_Class_Name)).Id;
+
+                     Messages_Data : constant List_Instance :=
+                       List.Nth_Arg (2);
+                  begin
+                     for E2 in 1 .. Messages_Data.Number_Of_Arguments loop
+                        declare
+                           Message      : constant Class_Instance
+                             := Nth_Arg (Messages_Data, E2);
+                           Message_Id   : constant Integer := Message_Property
+                             (Get_Data (Message, Message_Class_Name)).Id;
+                        begin
+                           Database.DB.Execute
+                             (Stmt   => Insert_Entity_Message,
+                              Params => (1 => +Entity_Id,
+                                      2 => +Message_Id));
+                        end;
+                     end loop;
+                  end;
+               end loop;
+
+               Database.DB.Commit_Or_Rollback;
+               Database.DB.Automatic_Transactions (True);
+            exception
+               when others =>
+                  --  Catch any exception during messages insertion
+                  Database.DB.Commit_Or_Rollback;
+                  Database.DB.Automatic_Transactions (True);
+            end;
+         end;
+
       elsif Command = "clear_references" then
          Clear_Tool_References (Nth_Arg (Data, 1));
 
@@ -1436,6 +1527,14 @@ package body GNAThub.Python.Database is
          Handler       => Tool_Command_Handler'Access,
          Class         => Tool_Class,
          Static_Method => True);
+
+      Repository.Register_Command
+        (Command => "add_messages",
+         Params  =>
+           (Param ("resources_messages"),
+            Param ("entities_messages")),
+         Handler => Tool_Command_Handler'Access,
+         Class   => Tool_Class);
 
       --  Categories
 

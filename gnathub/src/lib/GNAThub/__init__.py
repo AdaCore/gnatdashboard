@@ -379,6 +379,40 @@ class Tool(object):
         """
         return NotImplemented   # Implemented in Ada
 
+    def add_messages(self, resources_messages, entities_messages):
+        """Add resources and entities (if any) messages to the given tool.
+
+        Prefer this function when there are many messages to insert, for
+        efficiency.
+        ``resources_messages`` is a list, each entry being a list
+        of the form::
+
+            [resource, message_data]
+
+        where ``message_data`` is a list and each entry is of the form
+
+            [message, line, col_begin, col_end]
+
+        ``message`` is the :class:`GNAThub.Message` to add.
+        ``line``, ``col_begin``, ``col_end``: int.
+
+        Example::
+
+            tool.add_messages(
+                    [[resource1, [[ message, 1, 2, 2 ],
+                                 [ message, 2, 1, 1 ],
+                                 [ message, 0, 1, 1 ]]],
+                     [resource2, [[ message, 10002, 1, 1 ],
+                                 [ message, 10003, 1, 1 ],
+                                 [ message, 10005, 1, 1 ]]]],
+                    [[entity1, [[message, 1, 2, 2]]],
+                     [entity2, [[ message, 1, 2, 2 ],
+                                [ message, 2, 1, 1 ]]]])
+
+        :param collections.Iterable messages: the messages to add
+        """
+        pass    # implemented in Ada
+
 
 class Category(object):
 
