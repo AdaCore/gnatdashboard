@@ -189,12 +189,15 @@ class GNATcheck(Plugin, Runner, Reporter):
             rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
             self.rules[rule_id] = rule
 
+        # Set predefined unspecified ranking for all GNATcheck messages
+        ranking = GNAThub.RANKING_UNSPECIFIED
+
         # Cache the messages
-        if (rule, msg) in self.messages:
-            message = self.messages[(rule, msg)]
+        if (rule, msg, ranking) in self.messages:
+            message = self.messages[(rule, msg, ranking)]
         else:
-            message = GNAThub.Message(rule, msg)
-            self.messages[(rule, msg)] = message
+            message = GNAThub.Message(rule, msg, ranking)
+            self.messages[(rule, msg, ranking)] = message
 
         # Add the message to the given resource
         self.bulk_data[src].append(

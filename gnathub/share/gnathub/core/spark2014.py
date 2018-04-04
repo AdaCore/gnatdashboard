@@ -27,7 +27,7 @@ import os
 import os.path
 import re
 
-from GNAThub import Console, Plugin, Reporter, Runner, ToolArgsPlaceholder
+from GNAThub import Console, Plugin, Reporter, Runner
 
 from _gnat import SLOC_PATTERN
 from itertools import chain
@@ -38,6 +38,14 @@ class SPARK2014(Plugin, Runner, Reporter):
 
     Configures and executes GNATprove, then analyzes the output.
     """
+
+    SPARK_TO_RANKING = {
+      'info': GNAThub.RANKING_INFO,
+      'low':  GNAThub.RANKING_LOW,
+      'warning': GNAThub.RANKING_MEDIUM,
+      'medium': GNAThub.RANKING_MEDIUM,
+      'high': GNAThub.RANKING_HIGH
+      }
 
     # Regex to identify lines that contain messages
     _MSG_PATTERN = \
@@ -62,9 +70,6 @@ class SPARK2014(Plugin, Runner, Reporter):
 
         # Map of rules (couple (name, rule): dict[str,Rule])
         self.rules = {}
-
-        # Map of categories (couple (name, category): dict[str,Category])
-        self.categories = {}
 
         # Map of messages (couple (rule, message): dict[str,Message])
         self.messages = {}
@@ -161,7 +166,7 @@ class SPARK2014(Plugin, Runner, Reporter):
             except IOError as why:
                 self.log.exception('failed to parse GNATprove .spark file')
                 self.error('%s (%s:%d)' % (
-                    why, os.path.basename(self.output), total))
+                    why, os.path.basename(self.output)))
 
         try:
             with open(self.output, 'rb') as fdin:
@@ -222,6 +227,16 @@ class SPARK2014(Plugin, Runner, Reporter):
         rule_id = record['rule'].lower()
         self.__add_message(src, line, column, rule_id, message, category)
 
+    def __get_ranking(self, severity):
+        """Get corresponding ranking for a given severity
+
+        :param str severity: message severity string value
+        :param str ranking: corresponding integer value
+        """
+
+        sev = severity.lower().replace(' ', '')
+        return self.SPARK_TO_RANKING.get(sev, GNAThub.RANKING_UNSPECIFIED)
+
     def __add_message(self, src, line, column, rule_id, msg, category):
         """Add GNATprove message to current session database.
 
@@ -233,6 +248,9 @@ class SPARK2014(Plugin, Runner, Reporter):
         :param str category: the category of the message
         """
 
+        # Get message ranking value
+        ranking = self.__get_ranking(category)
+
         # Cache the rules
         if rule_id in self.rules:
             rule = self.rules[rule_id]
@@ -240,30 +258,28 @@ class SPARK2014(Plugin, Runner, Reporter):
             rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
             self.rules[rule_id] = rule
 
-        # Cache the categories
-        if category in self.categories:
-            cat = self.categories[category]
+        # Cache messages
+        if (rule, msg, ranking) in self.messages:
+            message = self.messages[(rule, msg, ranking)]
         else:
-            cat = GNAThub.Category(category)
-            self.categories[category] = cat
-
-        # Cache the messages
-        if (rule, msg, cat) in self.messages:
-            message = self.messages[(rule, msg, cat)]
-        else:
-            message = GNAThub.Message(rule, msg, cat)
-            self.messages[(rule, msg, cat)] = message
+            message = GNAThub.Message(rule, msg, ranking)
+            self.messages[(rule, msg, ranking)] = message
 
         # Add the message to the given resource
         self.bulk_data[src].append(
             [message, int(line), int(column), int(column)])
 
     def __do_bulk_insert(self):
-        """Insert the codepeer messages in bulk on each resource."""
+        """Insert the spark messages in bulk on each resource."""
+
+        # List of resource messages suitable for tool level bulk insertion
+        resources_messages = []
 
         for src in self.bulk_data:
             base = GNAThub.Project.source_file(os.path.basename(src))
             resource = GNAThub.Resource.get(base)
 
             if resource:
-                resource.add_messages(self.bulk_data[src])
+                resources_messages.append([resource, self.bulk_data[src]])
+
+        self.tool.add_messages(resources_messages, [])

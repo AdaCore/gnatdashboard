@@ -34,6 +34,14 @@ class CodePeer(Plugin, Runner, Reporter):
     Configures and executes CodePeer, then analyzes the output.
     """
 
+    CODEPEER_TO_RANKING = {
+      'annotation': GNAThub.RANKING_ANNOTATION,
+      'info': GNAThub.RANKING_INFO,
+      'low':  GNAThub.RANKING_LOW,
+      'medium': GNAThub.RANKING_MEDIUM,
+      'high': GNAThub.RANKING_HIGH
+      }
+
     def __init__(self):
         super(CodePeer, self).__init__()
 
@@ -45,9 +53,6 @@ class CodePeer(Plugin, Runner, Reporter):
 
         # Map of rules (couple (name, rule): dict[str,Rule])
         self.rules = {}
-
-        # Map of categories (couple (name, category): dict[str,Category])
-        self.categories = {}
 
         # Map of messages (couple (rule, message): dict[str,Message])
         self.messages = {}
@@ -183,6 +188,16 @@ class CodePeer(Plugin, Runner, Reporter):
                 self.__do_bulk_insert()
                 return GNAThub.EXEC_SUCCESS
 
+    def __get_ranking(self, severity):
+        """Get corresponding ranking for a given severity
+
+        :param str severity: message severity string value
+        :param str ranking: corresponding integer value
+        """
+
+        sev = severity.lower().replace(' ', '')
+        return self.CODEPEER_TO_RANKING.get(sev, GNAThub.RANKING_UNSPECIFIED)
+
     def __add_message(self, src, line, column, rule_id, msg, category,
                       properties):
         """Add CodePeer message to current session database.
@@ -197,6 +212,9 @@ class CodePeer(Plugin, Runner, Reporter):
         :type properties: collections.Iterable[GNAThub.Property] or None
         """
 
+        # Get message ranking value
+        ranking = self.__get_ranking(category)
+
         # Cache the rules
         if rule_id in self.rules:
             rule = self.rules[rule_id]
@@ -204,19 +222,12 @@ class CodePeer(Plugin, Runner, Reporter):
             rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
             self.rules[rule_id] = rule
 
-        # cache the categories
-        if category in self.categories:
-            cat = self.categories[category]
-        else:
-            cat = GNAThub.Category(category)
-            self.categories[category] = cat
-
         # Cache the messages
-        if (rule, msg, cat) in self.messages:
-            message = self.messages[(rule, msg, cat)]
+        if (rule, msg, ranking) in self.messages:
+            message = self.messages[(rule, msg, ranking)]
         else:
-            message = GNAThub.Message(rule, msg, cat, properties)
-            self.messages[(rule, msg, cat)] = message
+            message = GNAThub.Message(rule, msg, ranking, properties)
+            self.messages[(rule, msg, ranking)] = message
 
         # Add the message to the given resource
         self.bulk_data[src].append(

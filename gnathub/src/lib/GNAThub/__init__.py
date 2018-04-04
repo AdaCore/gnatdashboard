@@ -414,34 +414,6 @@ class Tool(object):
         pass    # implemented in Ada
 
 
-class Category(object):
-
-    """A Category object, representing a category in the database."""
-
-    __slots__ = ('id', 'label', 'on_side')
-
-    def __init__(self, label, on_side=False):
-        """Return the category of the given label and property.
-
-        Creates the category if necessary.
-
-        :param str label: the label of the category
-        :param bool on_side: whether messages belonging to this category should
-            be displayed on the side of the lines when representing a source
-            file
-        """
-        pass    # Implemented in Ada
-
-    @staticmethod
-    def list():
-        """Return all categories stored in the database.
-
-        :return: the list of all :class:`GNAThub.Category`
-        :rtype: collections.Iterable[GNAThub.Category]
-        """
-        return NotImplemented   # Implemented in Ada
-
-
 class Rule(object):
 
     """A Rule object, representing a rule in the database."""
@@ -499,18 +471,22 @@ class Message(object):
 
     """A Message object, representing one message in the database."""
 
-    __slots__ = (
-        'id', 'rule_id', 'data', 'category_id', 'line', 'col_begin', 'col_end'
-    )
+    __slots__ = ('id', 'rule_id', 'data', 'ranking',
+                 'line', 'col_begin', 'col_end')
 
-    def __init__(self, rule, message, category=None, properties=None):
+    def __init__(self, rule, message, ranking=1, properties=None):
         """Return the message matching the given properties.
 
         :param GNAThub.Rule rule: the rule to which this message belongs
         :param str message: the data to associate to the message: this should
             be a numeric value if the rule is of METRIC_KIND
-        :param category: the category to which this message belongs
-        :type category: GNAThub.Category or None
+        :type ranking: Integer values in 0 to 5 range corresponding to
+                       0-'Annotation',
+                       1-'Unspecified',
+                       2-'Info',
+                       3-'Low',
+                       4-'Medium',
+                       5-'High'
         :param properties: one or more properties
         :type properties: collections.Iterable[GNAThub.Property] or None
         """
@@ -695,6 +671,14 @@ EXEC_SUCCESS, EXEC_FAILURE, NOT_EXECUTED = range(3)
 # Database-related constants
 RULE_KIND, METRIC_KIND = range(2)
 PROJECT_KIND, DIRECTORY_KIND, FILE_KIND = range(3)
+
+# Predefined ranking constants
+RANKING_ANNOTATION = 0
+RANKING_UNSPECIFIED = 1
+RANKING_INFO = 2
+RANKING_LOW = 3
+RANKING_MEDIUM = 4
+RANKING_HIGH = 5
 
 
 class Error(Exception):

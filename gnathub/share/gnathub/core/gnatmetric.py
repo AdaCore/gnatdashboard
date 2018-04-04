@@ -118,6 +118,7 @@ class GNATmetric(Plugin, Runner, Reporter):
             # List of entities messages suitable for tool level bulk insertion
             entities_messages = []
 
+            ranking = GNAThub.RANKING_UNSPECIFIED
             for index, node in enumerate(files, start=1):
                 resource = GNAThub.Resource.get(node.attrib.get('name'))
 
@@ -140,11 +141,11 @@ class GNATmetric(Plugin, Runner, Reporter):
                             name, name, GNAThub.METRIC_KIND, tool)
                         rules[name] = rule
 
-                    if (rule, metric.text) in messages:
-                        msg = messages[(rule, metric.text)]
+                    if (rule, metric.text, ranking) in messages:
+                        msg = messages[(rule, metric.text, ranking)]
                     else:
-                        msg = GNAThub.Message(rule, metric.text)
-                        messages[(rule, metric.text)] = msg
+                        msg = GNAThub.Message(rule, metric.text, ranking)
+                        messages[(rule, metric.text, ranking)] = msg
 
                     message_data.append([msg, 0, 1, 1])
 
@@ -178,11 +179,11 @@ class GNATmetric(Plugin, Runner, Reporter):
                                                 GNAThub.METRIC_KIND, tool)
                             rules[name] = rule
 
-                        if (rule, emetric.text) in messages:
-                            msg = messages[(rule, emetric.text)]
+                        if (rule, emetric.text, ranking) in messages:
+                            msg = messages[(rule, emetric.text, ranking)]
                         else:
-                            msg = GNAThub.Message(rule, emetric.text)
-                            messages[(rule, emetric.text)] = msg
+                            msg = GNAThub.Message(rule, emetric.text, ranking)
+                            messages[(rule, emetric.text, ranking)] = msg
 
                         emessage_data.append(msg)
 

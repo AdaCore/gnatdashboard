@@ -2,11 +2,6 @@
 | id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
 | name          | TEXT                              | NOT NULL, NOCASE  |   | Tool's name                                                                   |
 
-| TABLE         | categories                        | category          |   | Category for the rules                                                        |
-| id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
-| label         | TEXT                              | NOT NULL, NOCASE  |   | Categorie's label                                                             |
-| on_side       | BOOLEAN                           | NULL              |   | Whether messages belonging to this category should be displayed on the side   |
-
 | TABLE         | rules                             | rule              |   | The rules used for analysis                                                   |
 | id            | AUTOINCREMENT                     | PK                |   |                                                                               |
 | name          | TEXT                              | NOT NULL, NOCASE  |   | Rule's name                                                                   |
@@ -18,7 +13,7 @@
 | id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
 | rule_id       | FK rules(rule_messages)           | NOT NULL          |   | Messages' associated rule                                                     |
 | data          | TEXT                              |                   |   | Value associated with the message, possibly a numeric value for metrics       |
-| category_id   | FK categories(category_messages)  |                   |   | Category of the rule                                                          |
+| ranking       | INTEGER                           | NOT NULL          | 1 | Values : 0-Annotation, 1-Unspecified, 2-Info, 3-Low, 4-Medium, 5-High         |
 
 | TABLE         | resources                         | resource          |   | Resource in the project, can be either a project, a directory or a file       |
 | id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |

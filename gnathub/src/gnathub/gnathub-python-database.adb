@@ -81,30 +81,6 @@ package body GNAThub.Python.Database is
       Name      : String);
    --  Set the fields describing a Tool in Tool_Inst
 
-   ----------------
-   -- Categories --
-   ----------------
-
-   Category_Class_Name : constant String := "Category";
-   Category_Class      : Class_Type;
-
-   type Category_Property_Record is new Instance_Property_Record with record
-      Id : Integer;
-   end record;
-   type Category_Property is access all Category_Property_Record'Class;
-
-   procedure Category_Command_Handler
-     (Data    : in out Callback_Data'Class;
-      Command : String);
-   --  Implement GNAThub.Category methods
-
-   procedure Set_Category_Fields
-     (Category_Inst : Class_Instance;
-      Id            : Integer;
-      Label         : String;
-      On_Side       : Boolean);
-   --  Set the fields describing a Category in Category_Inst
-
    -----------
    -- Rules --
    -----------
@@ -159,8 +135,10 @@ package body GNAThub.Python.Database is
    -- Messages --
    --------------
 
-   Message_Class_Name : constant String := "Message";
-   Message_Class      : Class_Type;
+   Ranking_Unspecified : constant Integer := 1;
+
+   Message_Class_Name  : constant String := "Message";
+   Message_Class       : Class_Type;
 
    type Message_Property_Record is new Instance_Property_Record with record
       Id : Integer;
@@ -177,7 +155,7 @@ package body GNAThub.Python.Database is
       Id           : Integer;
       Rule_Id      : Integer;
       Message_Data : String;
-      Category_Id  : Integer;
+      Ranking      : Integer;
       Line         : Integer := -1;
       Col_Begin    : Integer := -1;
       Col_End      : Integer := -1);
@@ -522,96 +500,6 @@ package body GNAThub.Python.Database is
       DB.Commit;
    end Clear_Tool_References;
 
-   -------------------------
-   -- Set_Category_Fields --
-   -------------------------
-
-   procedure Set_Category_Fields
-     (Category_Inst : Class_Instance;
-      Id            : Integer;
-      Label         : String;
-      On_Side       : Boolean) is
-   begin
-      Set_Data (Category_Inst, Category_Class_Name,
-                Category_Property_Record'(Id => Id));
-      Set_Property (Category_Inst, "id", Id);
-      Set_Property (Category_Inst, "label", Label);
-      Set_Property (Category_Inst, "on_side", On_Side);
-   end Set_Category_Fields;
-
-   ------------------------------
-   -- Category_Command_Handler --
-   ------------------------------
-
-   procedure Category_Command_Handler
-     (Data    : in out Callback_Data'Class;
-      Command : String)
-   is
-      Category_Inst : Class_Instance;
-   begin
-      if Command = Constructor_Method then
-         declare
-            Label   : constant String := Nth_Arg (Data, 2);
-            On_Side : constant Boolean := Nth_Arg (Data, 3, False);
-            Q       : SQL_Query;
-            R       : Forward_Cursor;
-            Id      : Integer;
-         begin
-            Q := SQL_Select
-              (To_List ((0 => +D.Categories.Id)),
-               From  => D.Categories,
-               Where => (D.Categories.Label = Label) and
-                        (D.Categories.On_Side = On_Side));
-            Category_Inst := Nth_Arg (Data, 1, Category_Class);
-
-            R.Fetch (DB, Q);
-
-            if R.Has_Row then
-               --  A Category has been found with this name: return it
-               Id := R.Integer_Value (0);
-
-            else
-               --  No Category with that name has been found: create one
-               Id := DB.Insert_And_Get_PK
-                 (SQL_Insert
-                    (((D.Categories.Label = Label) &
-                      (D.Categories.On_Side = On_Side))),
-                  PK => D.Categories.Id);
-               DB.Commit;
-            end if;
-            Set_Category_Fields (Category_Inst, Id, Label, On_Side);
-         end;
-
-      elsif Command = "list" then
-         Set_Return_Value_As_List (Data);
-
-         declare
-            Q : SQL_Query;
-            R : Forward_Cursor;
-         begin
-            Q := SQL_Select
-              (To_List ((0 => +D.Categories.Id,
-                         1 => +D.Categories.Label,
-                         2 => +D.Categories.On_Side)),
-               From  => D.Categories);
-            R.Fetch (DB, Q);
-
-            while R.Has_Row loop
-               Category_Inst := New_Instance
-                 (Get_Script (Data), Category_Class);
-               Set_Category_Fields
-                 (Category_Inst,
-                  R.Integer_Value (0), R.Value (1), R.Boolean_Value (2));
-               Set_Return_Value (Data, Category_Inst);
-
-               R.Next;
-            end loop;
-         end;
-      else
-         raise Python_Error with "Unknown method GNAThub.Category." & Command;
-      end if;
-   end Category_Command_Handler;
-
    ---------------------
    -- Set_Rule_Fields --
    ---------------------
@@ -730,7 +618,7 @@ package body GNAThub.Python.Database is
       Id           : Integer;
       Rule_Id      : Integer;
       Message_Data : String;
-      Category_Id  : Integer;
+      Ranking      : Integer;
       Line         : Integer := -1;
       Col_Begin    : Integer := -1;
       Col_End      : Integer := -1) is
@@ -741,11 +629,7 @@ package body GNAThub.Python.Database is
       Set_Property (Message_Inst, "rule_id", Rule_Id);
       Set_Property (Message_Inst, "data", Message_Data);
 
-      if Category_Id /= -1 then
-         Set_Property (Message_Inst, "category_id", Category_Id);
-      else
-         Set_Property (Message_Inst, "category_id", "");
-      end if;
+      Set_Property (Message_Inst, "ranking", Ranking);
 
       if Line /= -1 then
          Set_Property (Message_Inst, "line", Line);
@@ -869,31 +753,18 @@ package body GNAThub.Python.Database is
             Rule_Id      : constant Integer := Rule_Property
               (Get_Data (Rule, Rule_Class_Name)).Id;
             Message_Data : constant String := Nth_Arg (Data, 3);
-            Category     : constant Class_Instance :=
-              Nth_Arg (Data, 4, Default => No_Class_Instance);
-            Category_Id  : Integer := -1;  --  -1 iff Category is not specified
+            Ranking      : constant Integer := Nth_Arg
+              (Data, 4, Default => Ranking_Unspecified);
             Q            : SQL_Query;
             R            : Forward_Cursor;
             Id           : Integer;
-
          begin
-            if Category = No_Class_Instance then
-               Q := SQL_Select
+            Q := SQL_Select
                  (To_List ((0 => +D.Messages.Id)),
                   From  => D.Messages,
                   Where => D.Messages.Rule_Id = Rule_Id
                            and D.Messages.Data = Message_Data
-                           and D.Messages.Category_Id = Null_Field_Integer);
-            else
-               Category_Id := Category_Property
-                 (Get_Data (Category, Category_Class_Name)).Id;
-               Q := SQL_Select
-                 (To_List ((0 => +D.Messages.Id)),
-                  From  => D.Messages,
-                  Where => D.Messages.Rule_Id = Rule_Id
-                           and D.Messages.Data = Message_Data
-                           and D.Messages.Category_Id = Category_Id);
-            end if;
+                           and D.Messages.Ranking = Ranking);
 
             Message_Inst := Nth_Arg (Data, 1, Message_Class);
             R.Fetch (DB, Q);
@@ -901,21 +772,46 @@ package body GNAThub.Python.Database is
             if R.Has_Row then
                --  A Message has been found with this name: return it
                Id := R.Integer_Value (0);
+
+               declare
+                  Props        : constant List_Instance := Nth_Arg (Data, 5);
+                  Length       : constant Natural := Props.Number_Of_Arguments;
+                  Prop_Id      : Integer;
+                  Unused_PK    : Integer;
+               begin
+                  if Length > 0 then
+
+                     --  Create new message
+                     Id := DB.Insert_And_Get_PK
+                       (SQL_Insert (((D.Messages.Rule_Id = Rule_Id) &
+                                     (D.Messages.Data = Message_Data) &
+                                     (D.Messages.Ranking = Ranking))),
+                        PK => D.Messages.Id);
+
+                     --  Set properties for new message
+                     for N in 1 .. Length loop
+                        Prop_Id := Property_Property
+                          (Get_Data
+                             (Props.Nth_Arg (N), Property_Class_Name)).Id;
+                        Unused_PK := DB.Insert_And_Get_PK
+                          (SQL_Insert
+                             (((D.Messages_Properties.Message_Id = Id) &
+                              (D.Messages_Properties.Property_Id = Prop_Id)
+                             )),
+                           PK => D.Messages_Properties.Id);
+                     end loop;
+
+                     DB.Commit;
+                  end if;
+               end;
+
             else
                --  No Message with that name has been found: create one
-
-               if Category = No_Class_Instance then
-                  Id := DB.Insert_And_Get_PK (SQL_Insert
-                    (((D.Messages.Rule_Id = Rule_Id) &
-                      (D.Messages.Data = Message_Data))),
-                    PK => D.Messages.Id);
-               else
-                  Id := DB.Insert_And_Get_PK (SQL_Insert
+               Id := DB.Insert_And_Get_PK (SQL_Insert
                     (((D.Messages.Rule_Id = Rule_Id) &
                       (D.Messages.Data = Message_Data) &
-                      (D.Messages.Category_Id = Category_Id))),
-                    PK => D.Messages.Id);
-               end if;
+                      (D.Messages.Ranking = Ranking))),
+                     PK => D.Messages.Id);
 
                --  Link the message with associated properties
                declare
@@ -938,7 +834,7 @@ package body GNAThub.Python.Database is
             end if;
 
             Set_Message_Fields
-              (Message_Inst, Id, Rule_Id, Message_Data, Category_Id);
+              (Message_Inst, Id, Rule_Id, Message_Data, Ranking);
          end;
 
       elsif Command = "list" then
@@ -951,7 +847,7 @@ package body GNAThub.Python.Database is
               (To_List ((0 => +D.Messages.Id,
                          1 => +D.Messages.Rule_Id,
                          2 => +D.Messages.Data,
-                         3 => +D.Messages.Category_ID)),
+                         3 => +D.Messages.Ranking)),
                From  => D.Messages);
             R.Fetch (DB, Q);
 
@@ -960,7 +856,7 @@ package body GNAThub.Python.Database is
                Set_Message_Fields
                  (Message_Inst,
                   R.Integer_Value (0), R.Integer_Value (1),
-                  R.Value (2), R.Integer_Value (3, -1));
+                  R.Value (2), R.Integer_Value (3, Ranking_Unspecified));
                Set_Return_Value (Data, Message_Inst);
 
                R.Next;
@@ -1198,7 +1094,7 @@ package body GNAThub.Python.Database is
                  ((0 => +D.Messages.Id,
                    1 => +D.Messages.Rule_Id,
                    2 => +D.Messages.Data,
-                   3 => +D.Messages.Category_Id,
+                   3 => +D.Messages.Ranking,
                    4 => +D.Resources_Messages.Line,
                    5 => +D.Resources_Messages.Col_Begin,
                    6 => +D.Resources_Messages.Col_End)),
@@ -1217,7 +1113,7 @@ package body GNAThub.Python.Database is
                   Id           => R.Integer_Value (0),
                   Rule_Id      => R.Integer_Value (1),
                   Message_Data => R.Value (2),
-                  Category_Id  => R.Integer_Value (3, -1),
+                  Ranking      => R.Integer_Value (3, Ranking_Unspecified),
                   Line         => R.Integer_Value (4, 0),
                   Col_Begin    => R.Integer_Value (5, 0),
                   Col_End      => R.Integer_Value (6, 0));
@@ -1247,7 +1143,7 @@ package body GNAThub.Python.Database is
                  ((0 => +D.Messages.Id,
                    1 => +D.Messages.Rule_Id,
                    2 => +D.Messages.Data,
-                   3 => +D.Messages.Category_Id,
+                   3 => +D.Messages.Ranking,
                    4 => +D.Entities.Line,
                    5 => +D.Entities.Col_Begin,
                    6 => +D.Entities.Col_End)),
@@ -1267,7 +1163,7 @@ package body GNAThub.Python.Database is
                   Id           => R.Integer_Value (0),
                   Rule_Id      => R.Integer_Value (1),
                   Message_Data => R.Value (2),
-                  Category_Id  => R.Integer_Value (3, -1),
+                  Ranking      => R.Integer_Value (3, Ranking_Unspecified),
                   Line         => R.Integer_Value (4, 0),
                   Col_Begin    => R.Integer_Value (5, 0),
                   Col_End      => R.Integer_Value (6, 0));
@@ -1461,7 +1357,7 @@ package body GNAThub.Python.Database is
                  ((0 => +D.Messages.Id,
                    1 => +D.Messages.Rule_Id,
                    2 => +D.Messages.Data,
-                   3 => +D.Messages.Category_Id,
+                   3 => +D.Messages.Ranking,
                    4 => +D.Entities.Line,
                    5 => +D.Entities.Col_Begin,
                    6 => +D.Entities.Col_End)),
@@ -1481,7 +1377,7 @@ package body GNAThub.Python.Database is
                   Id           => R.Integer_Value (0),
                   Rule_Id      => R.Integer_Value (1),
                   Message_Data => R.Value (2),
-                  Category_Id  => R.Integer_Value (3, -1),
+                  Ranking      => R.Integer_Value (3, Ranking_Unspecified),
                   Line         => R.Integer_Value (4, 0),
                   Col_Begin    => R.Integer_Value (5, 0),
                   Col_End      => R.Integer_Value (6, 0));
@@ -1536,25 +1432,6 @@ package body GNAThub.Python.Database is
          Handler => Tool_Command_Handler'Access,
          Class   => Tool_Class);
 
-      --  Categories
-
-      Category_Class := Repository.New_Class (Category_Class_Name);
-
-      Repository.Register_Command
-        (Command => Constructor_Method,
-         Params  =>
-           (Param ("label"),
-            Param ("on_side", Optional => True)),
-         Handler => Category_Command_Handler'Access,
-         Class   => Category_Class);
-
-      Repository.Register_Command
-        (Command       => "list",
-         Params        => No_Params,
-         Handler       => Category_Command_Handler'Access,
-         Class         => Category_Class,
-         Static_Method => True);
-
       --  Properties
 
       Property_Class := Repository.New_Class (Property_Class_Name);
@@ -1604,7 +1481,7 @@ package body GNAThub.Python.Database is
          Params  =>
            (Param ("rule"),
             Param ("message"),
-            Param ("category", Optional => True),
+            Param ("ranking", Optional => True),
             Param ("properties", Optional => True)),
          Handler => Message_Command_Handler'Access,
          Class   => Message_Class);
