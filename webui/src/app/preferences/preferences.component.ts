@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'preferences',
     templateUrl: './preferences.component.html',
     styleUrls: [ 'preferences.component.scss' ]
 })
-export class PreferencesComponent implements OnInit {
+export class PreferencesComponent {
 
 }

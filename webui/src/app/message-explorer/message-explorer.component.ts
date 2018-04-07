@@ -1,16 +1,6 @@
-import { Component, OnDestroy, OnInit,
-        Input, Output, EventEmitter, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, Inject } from '@angular/core';
 import { SharedReport } from '../main-responder.service';
-
-import { FilterEvent } from '../filter-selector/filter-selector.component';
 import { sortMessageArray } from '../utils/sortArray';
-import {
-    IPropertyFilter,
-    IRuleFilter,
-    IToolFilter
-} from 'gnat';
 
 import { DOCUMENT } from '@angular/platform-browser';
 
@@ -21,8 +11,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 })
 export class MessageExplorerComponent implements OnInit {
 
-    constructor(private route: ActivatedRoute,
-                public reportService: SharedReport,
+    constructor(public reportService: SharedReport,
                 @Inject(DOCUMENT) private document: Document) {}
     /** @override */
     public ngOnInit() {

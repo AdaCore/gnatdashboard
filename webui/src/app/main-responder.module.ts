@@ -24,15 +24,12 @@ import {
     AnnotatedSourceLineComponent,
     AnnotatedSourceViewComponent
 } from './annotated-source';
-import { SourceNaturalSortPipe } from './source-natural-sort.pipe';
-import { StringNaturalSortPipe } from './string-natural-sort.pipe';
 import { CountPipe } from './count.pipe';
 import { FilterSelectorComponent } from './filter-selector';
 import { FilterPanelComponent } from './filter-selector';
 import { InlineMessagesComponent } from './inline-messages';
 import { MapKeysPipe } from './map-keys.pipe';
 import { MapValuesPipe } from './map-values.pipe';
-import { MessageCountPipe } from './message-count.pipe';
 import {
     MissingSourceErrorComponent, MissingReportErrorComponent
 } from './errors';
@@ -40,9 +37,6 @@ import { NoContentComponent } from './no-content';
 import { NotEmptyPipe } from './not-empty.pipe';
 import { CodeExplorerComponent } from './code-explorer';
 import { MessageExplorerComponent } from './message-explorer';
-import { SourceFileCountPipe } from './source-file-count.pipe';
-import { SourceListComponent } from './source-list';
-import { SourceTreeViewComponent } from './source-tree-view';
 import { SpinnerComponent } from './spinner';
 
 import { GNAThubService } from './gnathub.service';
@@ -73,8 +67,6 @@ type StoreType = {
         AnnotatedSourceContentComponent,
         AnnotatedSourceLineComponent,
         AnnotatedSourceViewComponent,
-        SourceNaturalSortPipe,
-        StringNaturalSortPipe,
         CountPipe,
         FilterSelectorComponent,
         FilterPanelComponent,
@@ -82,16 +74,12 @@ type StoreType = {
         MainResponderComponent,
         MapKeysPipe,
         MapValuesPipe,
-        MessageCountPipe,
         MissingReportErrorComponent,
         MissingSourceErrorComponent,
         NoContentComponent,
         NotEmptyPipe,
         CodeExplorerComponent,
         MessageExplorerComponent,
-        SourceFileCountPipe,
-        SourceListComponent,
-        SourceTreeViewComponent,
         SpinnerComponent
     ],
     imports: [

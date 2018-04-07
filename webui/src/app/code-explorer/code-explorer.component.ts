@@ -1,17 +1,10 @@
-import { Component, OnDestroy, OnInit,
-        Input, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SharedReport } from '../main-responder.service';
-
-import { FilterEvent } from '../filter-selector/filter-selector.component';
 import { sortCodeArray } from '../utils/sortArray';
-import {
-    IPropertyFilter,
-    IRuleFilter,
-    IToolFilter
-} from 'gnat';
+
 @Component({
     selector: 'code-explorer',
     templateUrl: './code-explorer.component.html',
@@ -30,8 +23,6 @@ export class CodeExplorerComponent implements OnInit, OnDestroy {
         this.sub = this.route.params.subscribe(params => {
             this.directory = params['directory'];
             this.project = params['project'];
-/*            if (this.project) { this.openClose(this.project); }
-            if (this.project) { this.openClose(this.directory); }*/
         });
         this.reportService.page = 'code-explorer';
     }

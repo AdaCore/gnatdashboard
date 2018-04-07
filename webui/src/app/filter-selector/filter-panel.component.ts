@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { SharedReport } from '../main-responder.service';
 import { FilterEvent } from '../filter-selector/filter-selector.component';
 import {

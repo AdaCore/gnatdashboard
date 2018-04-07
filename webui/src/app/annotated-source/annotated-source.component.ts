@@ -14,19 +14,14 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
 import { PageScrollInstance, PageScrollService } from 'ng2-page-scroll';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { SharedReport } from '../main-responder.service'
 
 import {
     IAnnotatedSourceFile,
     IAnnotatedSourceMessage,
-    IPropertyFilter,
-    IRuleFilter,
-    IToolFilter
 } from 'gnat';
-
-import { FilterEvent } from '../filter-selector';
 
 type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
 

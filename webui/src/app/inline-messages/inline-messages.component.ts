@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IAnnotatedSourceMessage } from 'gnat';
-import { ITool } from 'gnat';
+import { IAnnotatedSourceMessage, ITool } from 'gnat';
 import { SharedReport } from '../main-responder.service'
 
 type InlineMessages = { [toolId: number]: Set<IAnnotatedSourceMessage> };
