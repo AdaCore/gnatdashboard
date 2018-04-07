@@ -122,6 +122,7 @@ declare module 'gnat' {
 
     export interface IMessageIndex {
         sources: [ ISourceNav ];
+        _ui_total_message_count?: number;
     }
 
     // **
@@ -162,7 +163,8 @@ declare module 'gnat' {
     export interface IAnnotatedSourceMessage {
         begin: number;
         end: number;
-        rule: IOLDRule;
+        rule: IRule;
+        line: number;
         properties: IProperty[];
         text: string;
         _ui_hidden?: boolean;
@@ -180,101 +182,9 @@ declare module 'gnat' {
         source_dir: string;
         full_path: string;
         lines: IAnnotatedSourceLine[];
-        tools: { [id: number]: IToolFilter };
-        rules: { [id: number]: IOLDRuleFilter };
-        properties: { [id: number]: IPropertyFilter };
         metrics?: Array<{ [metricId: number]: IMetric }>;
         coverage?: { [line: number]: ICoverage };
-        messages?: { [line: number]: IAnnotatedSourceMessage[] };
-        message_count?: { [toolId: number]: number };
+        messages?: IAnnotatedSourceMessage[];
     }
 
-    // Index structure
-
-    /*export interface IMessage {
-        tool_id: number;
-        rule_id: number;
-        property_ids: number[];
-    }*/
-
-    /*export interface ISource {
-        filename: string;
-        metrics?: Array<{ [metricId: number]: IMetric }>;
-        coverage?: number;
-        message_count?: { [toolId: number]: number };
-        _messages?: IMessage[];
-        _total_message_count: number;
-        _ui_total_message_count?: number;
-    }*/
-
-    /*export interface ISourceDir {
-        path: string;
-        sources: { [filename: string]: ISource };
-        showed_sources: { [id: number]: ISource };
-        coverage?: number;
-        message_count?: { [toolId: number]: number };
-        _total_message_count: number;
-        _ui_total_message_count?: number;
-        _ui_expanded?: boolean;
-    }*/
-
-    /*export interface IModule {
-        name: string;
-        source_dirs: { [sourceDir: string]: ISourceDir };
-        showed_dirs: { [id: number]: ISourceDir };
-        coverage?: number;
-        message_count?: { [toolId: number]: number };
-        _source_dirs_common_prefix: string;
-        _total_message_count: number;
-        _ui_total_message_count?: number;
-        _ui_expanded?: boolean;
-    }*/
-    export interface IOLDMessage {
-        tool_id: number;
-        rule_id: number;
-        property_ids: number[];
-    }
-    export interface IOLDSource {
-        filename: string;
-        metrics?: Array<{ [metricId: number]: IMetric }>;
-        coverage?: number;
-        message_count?: { [toolId: number]: number };
-        _messages?: IOLDMessage[];
-        _total_message_count: number;
-        _ui_total_message_count?: number;
-    }
-    export interface IOLDSourceDir {
-        path: string;
-        sources: { [filename: string]: IOLDSource };
-        showed_sources: { [id: number]: IOLDSource };
-        coverage?: number;
-        message_count?: { [toolId: number]: number };
-        _total_message_count: number;
-        _ui_total_message_count?: number;
-        _ui_expanded?: boolean;
-    }
-    export interface IOLDModule {
-        name: string;
-        source_dirs: { [sourceDir: string]: IOLDSourceDir };
-        showed_dirs: { [id: number]: IOLDSourceDir };
-        coverage?: number;
-        message_count?: { [toolId: number]: number };
-        _source_dirs_common_prefix: string;
-        _total_message_count: number;
-        _ui_total_message_count?: number;
-        _ui_expanded?: boolean;
-    }
-
-    export interface IReportIndex {
-        modules: { [moduleName: string]: IOLDModule };
-        showed_modules: { [id: number]: IOLDModule };
-        project: string;
-        creation_time: number;
-        tools: { [id: number]: IOLDToolFilter };
-        rules: { [id: number]: IOLDRuleFilter };
-        properties: { [id: number]: IOLDPropertyFilter };
-        message_count?: { [toolId: number]: number };
-        _total_message_count: number;
-        _database: string;
-    }
 }

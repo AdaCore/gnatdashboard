@@ -109,20 +109,20 @@ class HTMLReport(Plugin, Reporter):
             # Generate the JSON-encoded report for message navigation.
             dest = os.path.join(data_output_dir, 'message.json')
             report.index.message_to_json(dest)
-            self.log.debug('report index saved as %s', dest)
-            self.info('HTML report generated in %s', dest)
+            self.log.debug('message index saved as %s', dest)
+            self.info('HTML report message generated in %s', dest)
 
             # Generate the JSON-encoded report for filter panel.
             dest = os.path.join(data_output_dir, 'filter.json')
             report.index.filter_to_json(dest)
-            self.log.debug('report index saved as %s', dest)
-            self.info('HTML report generated in %s', dest)
+            self.log.debug('filter index saved as %s', dest)
+            self.info('HTML report filter generated in %s', dest)
 
             # Generate the JSON-encoded report for code navigation.
             dest = os.path.join(data_output_dir, 'code.json')
             report.index.code_to_json(dest)
-            self.log.debug('report index saved as %s', dest)
-            self.info('HTML report generated in %s', dest)
+            self.log.debug('code index saved as %s', dest)
+            self.info('HTML report code generated in %s', dest)
 
         except IOError as why:
             self.log.exception('failed to generate the HTML report')

@@ -438,13 +438,7 @@ class SourceBuilder(object):
                 no: _encode_coverage(*self.coverage[no])
                 for no, coverage in self.coverage.iteritems()
             } or None,
-            'messages': {
-                no: [_encode_message(*message) for message in messages]
-                for no, messages in self.messages.iteritems()
-            } or None,
-            'properties': self.props or None,
-            'tools': self.tools or None,
-            'rules': self.rules or None,
+            'messages': self.all_messages or None,
             'lines': None
         }
 

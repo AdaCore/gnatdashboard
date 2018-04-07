@@ -2,9 +2,7 @@
     <!-- Annotated source -->
     <div class="annotated-source-body col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <nav class="file-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-            <a [routerLink]="['/code-explorer', source.project, source.source_dir]">
-                {{ source.project }}
-            </a>
+            <span>{{ source.project }}</span>
             <span  class="path-divider">/</span>
             <strong>{{ source.filename }}</strong>
         </nav>
@@ -31,8 +29,14 @@
     <footer class="layout-page-footer location-view col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngIf="displayMessages">
         <div class="location-view-flex col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
             <div class="location-view-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                <span class="location-view-title">
-                    {{ inlineMessagesShownCount }} messages
+                <span class="location-view-title" (click)="tabOpen = 'metric'" [ngClass]="tabOpen == 'metric' ? 'selected': ''">
+                    File Metrics
+                </span>
+                <span class="location-view-title" (click)="tabOpen = 'message'; thisFile = true" [ngClass]="tabOpen == 'message' ? 'selected': ''">
+                    File messages
+                </span>
+                <span class="location-view-title" (click)="tabOpen = 'messages'; thisFile = false" [ngClass]="tabOpen == 'messages' ? 'selected': ''">
+                    All messages
                 </span>
                 <button class="location-view-collapse-btn"
                         [mdTooltip]="showMessageList ? 'Hide' : 'Show'"
@@ -43,36 +47,88 @@
                     </md-icon>
                 </button>
             </div>
-            <!--<div class="location-view-list" *ngIf="showMessageList">-->
             <div class="location-view-list col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
-                <table class="file-line-container col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                    <tbody class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                        <template ngFor let-line [ngForOf]="source.messages | dshMapKeys">
-                            <template ngFor let-message [ngForOf]="source.messages[line]">
-                                <tr class="message"
-                                    *ngIf="!message._ui_hidden"
-                                    [ngClass]="{ selected: selectedLine == line }">
-                                    <td class="message-line">{{ line }}</td>
-                                    <td class="message-col">
-                                        <template [ngIf]="message.begin">
-                                            <template [ngIf]="message.begin === message.end">
-                                                {{ message.begin }}
-                                            </template>
-                                            <template [ngIf]="message.begin !== message.end">
-                                                {{ message.begin }}-{{ message.end }}
-                                            </template>
-                                        </template>
-                                    </td>
-                                    <td class="message-tool">{{ message.rule.tool.name }}</td>
-                                    <td class="message-text">
-                                        <a [routerLink]="['.', { line: line }]">
-                                            {{ message.text }}
-                                        </a>
-                                    </td>
-                                </tr>
-                            </template>
-                        </template>
-                    </tbody>
+                <table *ngIf="tabOpen == 'metric'" class="file-line-container col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <span *ngIf="source.metrics.length > 0">
+                        <tbody *ngFor="let metric of source.metrics; let idx = index" [attr.data-index]="idx" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'">
+                            <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ">{{metric.rule.name}}</span>
+                            <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ">{{metric.value}}</span>
+                        </tbody>
+                    </span>
+                    <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="source.metrics.length == 0">
+                        No metrics for this file.
+                    </span>
+                </table>
+
+
+                <table *ngIf="tabOpen == 'message'" class="file-line-container col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                    <span class="all-sources-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+
+                        <span *ngFor="let mySource of reportService.message.sources"
+                              class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                              [ngClass]="mySource.filename === source.filename ? '' : 'hideIt'">
+                            <span id="{{mySource.filename}}" class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open" *ngIf="(mySource._total_message_count > 0 || !mySource._total_message_count)" >
+                                <span *ngFor="let message of mySource.messages"
+                                      class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                                      [ngClass]="(this.reportService.hideFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
+                                    <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [routerLink]="['.', { line: message.line }]" [ngClass]="{ selected: selectedLine == message.line }">
+                                        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
+                                                {{message.line}}:{{message.col_begin}}
+                                            </span>
+                                            <span class="col-lg-11 col-md-11 col-sm-11 col-xs-11 no-pad">{{message.name}}</span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="mySource.filename === source.filename && mySource._ui_total_message_count === 0"> There are no message corresponding to the selected filters </span>
+                        </span>
+                    </span>
+                </table>
+
+                <table *ngIf="tabOpen == 'messages'" class="file-line-container col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                    <span class="all-sources-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                          *ngIf="reportService.message._ui_total_message_count > 0 || !reportService.message._ui_total_message_count">
+                        <span *ngFor="let mySource of reportService.message.sources"
+                              class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                              [ngClass]="(this.reportService.hideFiles && (mySource._ui_total_message_count == 0 || ( mySource._ui_total_message_count == null && mySource._total_message_count == 0))) ? 'hideIt' : ''">
+                            <span id="{{mySource.filename}}" class="source-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open">
+                                <span class="header-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(mySource.filename)">
+                                    <span class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                        <span *ngIf="!(mySource._ui_total_message_count == 0 || ( mySource._ui_total_message_count == null && mySource._total_message_count == 0))">
+                                            <md-icon  class="md-18 source-tree">chevron_right</md-icon>
+                                        </span>
+                                        <span class="project-name"> {{mySource.projectName}} </span>
+                                        <span class="file-name">{{mySource.filename}}</span>
+                                    </span>
+                                    <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                        {{
+                                        mySource._ui_total_message_count != null ?
+                                        mySource._ui_total_message_count :
+                                        mySource._total_message_count
+                                        }}
+                                    </span>
+                                </span>
+
+                                <span class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                                    <span *ngFor="let message of mySource.messages"
+                                          class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                                          [ngClass]="(this.reportService.hideFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
+                                        <!--<span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [routerLink]="['/source', mySource.filename, { line: message.line }]" [ngClass]="{ selected: selectedLine == message.line && source.filename == mySource.filename }">-->
+                                        <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="changeFile(mySource.filename, message.line)"  [ngClass]="{ selected: selectedLine == message.line && source.filename == mySource.filename }">
+                                            <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
+                                                    {{message.line}}:{{message.col_begin}}
+                                                </span>
+                                                <span class="col-lg-11 col-md-11 col-sm-11 col-xs-11 no-pad">{{message.name}}</span>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                    <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="reportService.message._ui_total_message_count == 0"> There are no message corresponding to the selected filters</span>
                 </table>
             </div>
         </div>

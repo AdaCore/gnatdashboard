@@ -40,6 +40,7 @@ export class AppState {
   }
 }
 
+@Injectable()
 export class SharedReport {
   public filter: IFilterIndex;
   public code: ICodeIndex;
@@ -52,9 +53,9 @@ export class SharedReport {
   public hideFiles: boolean = true;
   public isReportFetchError: boolean = false;
   public projectName: string;
+  public _ui_total_message_count: number = -1;
 
-  constructor( private gnathub: GNAThubService,
-               private route: ActivatedRoute) {
+  constructor( private gnathub: GNAThubService ) {
     this.gnathub.getFilter().subscribe(
       filter => {
         this.filter = filter;
@@ -83,7 +84,6 @@ export class SharedReport {
         this.isReportFetchError = true;
       }
     );
-
   }
 
 }

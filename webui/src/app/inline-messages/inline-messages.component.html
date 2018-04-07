@@ -1,16 +1,16 @@
 <div class="messages" *ngFor="let toolId of messages | dshMapKeys">
-    <div class="messages-tool">{{ tools[toolId].name }}</div>
+    <div class="messages-tool">{{ getToolName(toolId) }}</div>
     <div class="messages-list">
         <div class="messages-list-item" *ngFor="let message of messages[toolId]">
-            <span class="message-text">{{ message.text }}</span>
             <span class="rule-identifier">
                 <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
-                {{ message.rule.identifier }}
+                {{ message.rule.name }}
             </span>
             <span class="message-properties" *ngIf="message.properties | dshNotEmpty">
                 <md-icon class="tags" md-tooltip="Message properties">local_offer</md-icon>
                 {{ formatMessageProperties(message) }}
             </span>
+            <span class="message-text">{{ message.name }}</span>
         </div>
     </div>
 </div>
