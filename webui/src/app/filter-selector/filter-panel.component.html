@@ -25,17 +25,11 @@
             </button>
         </span>
         <span class="hide-files col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-            <input
-                   #checkbox
-                   type="checkbox"
-                   id="hideFiles"
-                   [ngModel]="reportService.hideFiles"
-                   (click)="reportService.hideFiles = !reportService.hideFiles"/>
-            <label class="" for="hideFiles">
-                <span [ngClass]="reportService.hideFiles ? 'hideIt' : ''">Hide </span>
-                <span [ngClass]="reportService.hideFiles ? '' : 'hideIt'">Show </span>
-                files with no messages
+            <label class="switch">
+                <input #checkbox type="checkbox" [ngModel]="reportService.hideFiles" (ngModelChange)="hideFilesChanges()"/>
+                <span class="slider"></span>
             </label>
+            <span>Show files with no messages</span>
         </span>
         <!-- Button open/close filters -->
         <button id="chrevonButton" class="arrow-button open"

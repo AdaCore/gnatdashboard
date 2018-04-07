@@ -1,6 +1,14 @@
 .layout-page {
     display: inline-block;
 
+    .info-span {
+        color: grey;
+        font-size: 15px;
+        text-align: center;
+        width: 100%;
+        padding-top: 10px;
+    }
+
     main {
         height: 100%;
         /*overflow: auto;*/
@@ -17,6 +25,16 @@
             border: solid 1px #eee;
             font-size: 14px;
             text-align: left;
+
+            .expandCollapse {
+                padding-top: 5px;
+                padding-bottom: 5px;
+                display: inline-block;
+            }
+            .expandCollapse:hover {
+                text-decoration: underline;
+                cursor: pointer;
+            }
 
             .click {
                 padding-top: 5px;

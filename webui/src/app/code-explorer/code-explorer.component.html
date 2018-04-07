@@ -9,6 +9,11 @@
 <div *ngIf="reportService.code" class="layout-page col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad">
     <main class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <span (click)="expandCollapseAll('reduce')" class="expandCollapse">expand all  </span>
+                <span> / </span>
+                <span (click)="expandCollapseAll('open')" class="expandCollapse">  collapse all</span>
+            </span>
             <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                 <span class="col-lg-5 col-md-5 col-sm-5 col-xs-5 click" (click)="sortModules('name', 'filename')">
                     <span>Name</span>
@@ -41,6 +46,7 @@
             <span *ngFor="let project of reportService.code.modules"
                   class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                   [ngClass]="(this.reportService.hideFiles && (project._ui_total_message_count == 0 || ( project._ui_total_message_count == null && project._total_message_count == 0))) ? 'hideIt' : ''">
+
                 <span class="project-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(project.name)">
                     <span class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
                         <md-icon class="md-18 project-tree">chevron_right</md-icon>
@@ -109,10 +115,10 @@
                                 </span>
                             </span>
                         </span>
-
                     </span>
                 </span>
             </span>
+            <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="reportService._ui_total_message_count == 0"> There are no message corresponding to the selected filters</span>
         </span>
     </main>
 </div>

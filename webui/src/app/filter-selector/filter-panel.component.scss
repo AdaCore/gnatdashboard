@@ -69,17 +69,51 @@
     }
 
     .hide-files {
-        text-align: center;
-        input {
-            display: none;
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
         }
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 12px;
+            width: 12px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: limegreen;
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px limegreen;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(20px);
+            -ms-transform: translateX(20px);
+            transform: translateX(20px);
+        }
+
         label {
             padding: 3px 10px;
-            background-color: rgba(0,0,0,0.05);
             margin-bottom: 5px;
-        }
-        label:hover {
-            background-color: rgba(0,0,0,0.1);
             cursor: pointer;
         }
         .hideIt {

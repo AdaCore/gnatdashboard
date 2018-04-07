@@ -43,4 +43,16 @@ export class MessageExplorerComponent implements OnInit {
         elem.classList.toggle('open');
     }
 
+    public expandCollapseAll(badClass: string) {
+        this.reportService.message.sources.forEach(function(source){
+            let elem = this.document.getElementById(source.filename);
+            if (elem) {
+                let idx = elem.classList.contains(badClass);
+                if (idx) {
+                    this.openClose(source.filename);
+                }
+            }
+        }.bind(this));
+    }
+
 }

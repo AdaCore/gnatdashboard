@@ -19,7 +19,8 @@ export class FilterPanelComponent {
     public isReportFetchError: boolean = false;
     public change: number;
 
-    constructor( public reportService: SharedReport) {}
+    constructor( public reportService: SharedReport) {
+    }
 
     public openCloseFilterTab() {
         let button = document.getElementById('chrevonButton');
@@ -32,6 +33,10 @@ export class FilterPanelComponent {
         panel.classList.toggle('reduce');
         panel.classList.toggle('open');
         this.filterOpen = !this.filterOpen;
+    }
+
+    public hideFilesChanges() {
+        this.reportService.hideFiles = !this.reportService.hideFiles;
     }
 
     /*
@@ -93,6 +98,7 @@ export class FilterPanelComponent {
         const tools = this.reportService.filter.tools;
         const rules = this.reportService.filter.rules;
         const properties = this.reportService.filter.properties;
+        this.reportService._ui_total_message_count = 0;
 
         tools.forEach(function(tool){
             tool._ui_selected_message_count = 0;
@@ -103,6 +109,7 @@ export class FilterPanelComponent {
         properties.forEach(function(property){
             property._ui_selected_message_count = 0;
         });
+
         this.reportService.message.sources.forEach(function(source){
             source._ui_total_message_count = 0;
         });
@@ -118,7 +125,7 @@ export class FilterPanelComponent {
 
                     this.reportService.message.sources.forEach(function(source){
                         if (source.filename === codeSource.filename &&
-                           source.messages != null){
+                            source.messages != null){
                             source.messages.forEach(function(message){
                                 const tid = message.rule.tool_id;
                                 const rid = message.rule.id;
@@ -155,6 +162,8 @@ export class FilterPanelComponent {
                                     codeSource._ui_total_message_count ++;
                                     folder._ui_total_message_count++;
                                     myModule._ui_total_message_count++;
+
+                                    this.reportService._ui_total_message_count ++;
                                 } else {
                                     message.hide = false;
                                 }
