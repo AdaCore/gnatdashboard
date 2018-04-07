@@ -3,7 +3,6 @@ import { SharedReport } from '../main-responder.service';
 import { FilterEvent } from '../filter-selector/filter-selector.component';
 import {
     IPropertyFilter,
-    IReportIndex,
     IRuleFilter,
     IToolFilter
 } from 'gnat';

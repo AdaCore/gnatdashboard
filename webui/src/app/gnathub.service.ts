@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { IReportIndex, IAnnotatedSourceFile } from 'gnat';
-
-import { IFilterIndex, ICodeIndex, IMessageIndex } from 'gnat';
+import { IAnnotatedSourceFile, IFilterIndex, ICodeIndex, IMessageIndex } from 'gnat';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -13,11 +11,6 @@ import 'rxjs/add/operator/catch';
 export class GNAThubService {
     constructor(private http: Http) {}
 
-    public getReport(): Observable<IReportIndex> {
-        return this.http.get('data/report.json')
-            .map(this.handleResults)
-            .catch(this.handleError);
-    }
     public getFilter(): Observable<IFilterIndex> {
         return this.http.get('data/filter.json')
             .map(this.handleResults)

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GNAThubService } from './gnathub.service';
 import { ActivatedRoute } from '@angular/router';
-import { IReportIndex } from 'gnat';
 import { IFilterIndex, ICodeIndex, IMessageIndex } from 'gnat';
 import { sortCodeArray, sortMessageArray } from './utils/sortArray';
 

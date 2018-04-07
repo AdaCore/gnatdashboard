@@ -9,7 +9,6 @@ import { FilterEvent } from '../filter-selector/filter-selector.component';
 import { sortCodeArray } from '../utils/sortArray';
 import {
     IPropertyFilter,
-    IReportIndex,
     IRuleFilter,
     IToolFilter
 } from 'gnat';

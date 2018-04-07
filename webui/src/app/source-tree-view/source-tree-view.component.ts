@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 
-import { IReportIndex } from 'gnat';
 
 @Component({
     selector: 'source-tree-view',
@@ -8,5 +7,4 @@ import { IReportIndex } from 'gnat';
     styleUrls: [ 'source-tree-view.component.scss' ],
 })
 export class SourceTreeViewComponent {
-    @Input() public report: IReportIndex;
 }
