@@ -52,7 +52,7 @@
                              class="property-selector" title="Ranking"
                              *ngIf="this.reportService.filter.ranking | dshNotEmpty"
                              [options]="this.reportService.filter.ranking | dshMapValues"
-                             (toggle)="onPropertyFilterToggle($event)">
+                             (toggle)="onRankingFilterToggle($event)">
             </filter-selector>
             <filter-selector
                              class="rule-selector" title="Categories"

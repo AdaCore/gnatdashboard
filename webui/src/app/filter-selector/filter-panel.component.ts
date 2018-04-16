@@ -4,7 +4,8 @@ import { FilterEvent } from '../filter-selector/filter-selector.component';
 import {
     IPropertyFilter,
     IRuleFilter,
-    IToolFilter
+    IToolFilter,
+    IRankingFilter
 } from 'gnat';
 
 @Component({
@@ -71,8 +72,20 @@ export class FilterPanelComponent {
         this.updateMessagesUiProperties();
     }
 
+    /*
+     * Checkbox handled for the ranking filters.
+     *
+     * @param event Event fired by <filter-selector> on checkbox status change.
+     */
+    public onRankingFilterToggle(event: FilterEvent) {
+        const rank = <IRankingFilter> event.option;
+        this.reportService.filter.ranking[event.id]._ui_unselected = !event.checked;
+        this.updateMessagesUiProperties();
+    }
+
     private isSelected(id: number, array: any): boolean {
         let isSelected: boolean;
+
         array.forEach(function(cell){
             if (cell.id === id){
                 if (cell._ui_unselected) {
@@ -97,6 +110,7 @@ export class FilterPanelComponent {
         const tools = this.reportService.filter.tools;
         const rules = this.reportService.filter.rules;
         const properties = this.reportService.filter.properties;
+        const ranking = this.reportService.filter.ranking;
         this.reportService._ui_total_message_count = 0;
 
         tools.forEach(function(tool){
@@ -108,7 +122,9 @@ export class FilterPanelComponent {
         properties.forEach(function(property){
             property._ui_selected_message_count = 0;
         });
-
+        ranking.forEach(function(rank){
+            rank._ui_selected_message_count = 0;
+        });
         this.reportService.message.sources.forEach(function(source){
             source._ui_total_message_count = 0;
         });
@@ -126,10 +142,12 @@ export class FilterPanelComponent {
                         if (source.filename === codeSource.filename &&
                             source.messages != null){
                             source.messages.forEach(function(message){
-                                const tid = message.rule.tool_id;
-                                const rid = message.rule.id;
-                                const isToolSelected = this.isSelected(tid, tools);
-                                const isRuleSelected = this.isSelected(rid, rules);
+                                const toolId = message.rule.tool_id;
+                                const ruleId = message.rule.id;
+                                const rankId = message.ranking.id;
+                                const isToolSelected = this.isSelected(toolId, tools);
+                                const isRuleSelected = this.isSelected(ruleId, rules);
+                                const isRankSelected = this.isSelected(rankId, ranking)
                                 let hasSelectedProperties = false;
 
                                 if (message.properties != null){
@@ -145,9 +163,10 @@ export class FilterPanelComponent {
                                     }.bind(this));
                                 }
 
-                                if (isToolSelected && isRuleSelected && hasSelectedProperties) {
-                                    this.incMessageCount(tid, tools);
-                                    this.incMessageCount(rid, rules);
+                                if (isToolSelected && isRuleSelected && isRankSelected && hasSelectedProperties) {
+                                    this.incMessageCount(toolId, tools);
+                                    this.incMessageCount(ruleId, rules);
+                                    this.incMessageCount(rankId, ranking);
                                     message.properties.forEach(function(property){
                                         let isPropertySelected =
                                             this.isSelected(property.id, properties);
@@ -161,7 +180,6 @@ export class FilterPanelComponent {
                                     codeSource._ui_total_message_count ++;
                                     folder._ui_total_message_count++;
                                     myModule._ui_total_message_count++;
-
                                     this.reportService._ui_total_message_count ++;
                                 } else {
                                     message.hide = false;

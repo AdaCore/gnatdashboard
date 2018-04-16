@@ -25,10 +25,10 @@
             border: solid 1px #eee;
             font-size: 14px;
             text-align: left;
+            padding-top: 5px;
+            padding-bottom: 5px;
 
             .expandCollapse {
-                padding-top: 5px;
-                padding-bottom: 5px;
                 display: inline-block;
             }
             .expandCollapse:hover {
@@ -36,10 +36,6 @@
                 cursor: pointer;
             }
 
-            .click {
-                padding-top: 5px;
-                padding-bottom: 5px;
-            }
             .click:hover {
                 background-color: rgba(0,0,0,0.05);
                 cursor: pointer;
@@ -97,6 +93,36 @@
                     position: absolute;
                     left: -5px;
                     top: -1px;
+                }
+
+                .ranking {
+                    text-align: center;
+                }
+
+                .Info {
+                    .ranking {
+                        background-color: #ddddff;
+                    }
+                }
+                .Unspecified {
+                    .ranking {
+                        background-color: rgba(0,0,0,0.1);
+                    }
+                }
+                .Medium {
+                    .ranking {
+                        background-color: #ffe0a7;
+                    }
+                }
+                .Low {
+                    .ranking {
+                        background-color: #ffffb5;
+                    }
+                }
+                .High {
+                    .ranking {
+                        background-color: #ffb0b0;
+                    }
                 }
             }
 

@@ -36,8 +36,15 @@ declare module 'gnat' {
         tool_id: number;
     }
 
-    // Create the property for the rule filter
+    // Create the property for the property filter
     export interface IProperty {
+        id: number;
+        name: string;
+        tool_id: number;
+    }
+
+    // Create the property for the ranking filter
+    export interface IRanking {
         id: number;
         name: string;
         tool_id: number;
@@ -47,6 +54,7 @@ declare module 'gnat' {
     export interface IRuleFilter extends IRule, IFilter {}
     export interface IToolFilter extends ITool, IFilter {}
     export interface IPropertyFilter extends IProperty, IFilter {}
+    export interface IRankingFilter extends IRanking, IFilter {}
 
     // Define the model for the filter object
     export interface IFilterIndex {
@@ -55,6 +63,7 @@ declare module 'gnat' {
         tools: [ IToolFilter ];
         rules: [ IRuleFilter ];
         properties: [ IPropertyFilter ];
+        ranking: [ IRankingFilter ];
         message_count?: { [toolId: number]: number };
         _total_message_count: number;
         _database: string;
@@ -101,11 +110,13 @@ declare module 'gnat' {
 
     export interface IMessage {
         id: number;
-        begin: number;
-        end: number;
+        col_begin: number;
+        col_end: number;
         line: number;
-        value: string;
         name: string;
+        properties: IProperty[];
+        rule: IRule;
+        ranking: IRanking;
     }
 
     export interface ISourceNav {

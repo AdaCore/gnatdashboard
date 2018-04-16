@@ -81,7 +81,7 @@ class CoverageStatus(Enum):
 class MessageRanking(Enum):
     """Ranking values for messages collected and reported by GNAThub."""
 
-    INFO, MINOR, MAJOR, CRITICAL, BLOCKER = range(5)
+    Annotation, Unspecified, Info, Low, Medium, High = range(6)
 
 
 class _HtmlFormatter(HtmlFormatter):
@@ -116,6 +116,24 @@ def _encode_tool(tool, extra=None):
     return _decorate_dict({
         'id': tool.id,
         'name': tool.name
+    }, extra)
+
+
+def _encode_ranking(message, tool, extra=None):
+    """JSON-encode a rank.
+
+    :param GNAThub.message.rank rank: the rank to encode
+    :param GNAThub.Tool tool: the tool associated with the rule
+    :param extra: extra fields to decorate the encoded object with
+    :type extra: dict or None
+    :rtype: dict[str, *]
+    """
+    ranks = ['Annotation', 'Unspecified', 'Info', 'Low', 'Medium', 'High']
+
+    return _decorate_dict({
+        'id': message.ranking,
+        'name': ranks[message.ranking],
+        'tool_id': tool.id
     }, extra)
 
 
@@ -169,6 +187,7 @@ def _encode_message(message, rule, tool, extra=None):
         'rule': _encode_rule(rule, tool),
         'properties': [
             _encode_property(prop, tool) for prop in message.get_properties()],
+        'ranking': _encode_ranking(message, tool),
         'name': message.data
     }, extra)
 
@@ -650,6 +669,7 @@ class IndexBuilder(object):
         ):
             inc_msg_count(self.tools, _encode_tool, tool)
             inc_msg_count(self.rules, _encode_rule, rule, tool)
+            inc_msg_count(self.ranking, _encode_ranking, message, tool)
             for prop in message.get_properties():
                 inc_msg_count(self.props, _encode_property, prop, tool)
         for tool_id, count in source.message_count.iteritems():

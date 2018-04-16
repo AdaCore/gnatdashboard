@@ -21,6 +21,39 @@
       text-align: right;
       float: right;
     }
+
+    &.Info {
+      background-color: #cfcfff;
+      &:hover {
+        background-color: #b0b0ff;
+      }
+    }
+    &.Unspecified {
+      background-color: rgba(0, 0, 0, .1);
+      &:hover {
+        background-color: rgba(0, 0, 0, .15);
+      }
+    }
+    &.Medium {
+      background-color: #ffe0a7;
+      &:hover {
+        background-color: #ffcb6b;
+      }
+    }
+    &.Low {
+      background-color: #ffffb5;
+      &:hover {
+        background-color: #ffff4e;
+      }
+    }
+    &.High {
+      background-color: #ffb0b0;
+      &:hover {
+        background-color: #ff8080;
+      }
+    }
+
+
   }
   label.option:hover, input[type=checkbox]:not(:checked) + label.option:hover {
     background-color: rgba(00,00,00,0.15);
