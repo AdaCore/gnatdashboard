@@ -140,32 +140,8 @@ declare module 'gnat' {
     //  Part for the FILENAME.json (annotated-source)
     // **
 
-    // **
-    //  OLD PART, TO CLEAN AFTER TEST
-    // **
-
-    export interface IOLDRule {
-        id: number;
-        name: string;
-        tool: IOLDTool;
-    }
-    export interface IOLDTool {
-        id: number;
-        name: string;
-        tool_id: number;
-    }
-    export interface IOLDProperty {
-        id: number;
-        name: string;
-        tool_id: number;
-    }
-
-    export interface IOLDRuleFilter extends IOLDRule, IFilter {}
-    export interface IOLDToolFilter extends IOLDTool, IFilter {}
-    export interface IOLDPropertyFilter extends IOLDProperty, IFilter {}
-
     export interface IMetric {
-        rule: IOLDRule;
+        rule: IRule;
         value: string;
     }
 
