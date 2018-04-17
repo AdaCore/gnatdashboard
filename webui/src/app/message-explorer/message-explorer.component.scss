@@ -25,17 +25,21 @@
             border: solid 1px #eee;
             font-size: 14px;
             text-align: left;
-            padding-top: 5px;
-            padding-bottom: 5px;
+
 
             .expandCollapse {
+                padding-top: 5px;
+                padding-bottom: 5px;
                 display: inline-block;
             }
             .expandCollapse:hover {
                 text-decoration: underline;
                 cursor: pointer;
             }
-
+            .click {
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
             .click:hover {
                 background-color: rgba(0,0,0,0.05);
                 cursor: pointer;

@@ -90,6 +90,7 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
         newFilter.newSort : (sourceArray[0][newFilter.otherSort] != null ?
                              newFilter.otherSort : null);
 
+
     if (property != null) {
         sourceArray.sort((a: any, b: any) => {
             if (a[property] < b[property]) {
@@ -100,7 +101,7 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
             }
             return 0;
         });
-    } else {
+    } else if (newFilter.otherSort != '') {
         console.log('bad filter', newFilter, sourceArray);
     }
 
@@ -111,17 +112,18 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
                 newFilter.newSort : (messageArray[0][newFilter.otherSort] != null ?
                                      newFilter.otherSort : null);
 
-            if (property != null) {
-                /* console.log('property', property);*/
+            if (property == "ranking") {
                 messageArray.sort((a: any, b: any) => {
-                    /* console.log('a[property]', a[property]);
-                    console.log('b[property]', b[property]);*/
+                    if (a['ranking']['id'] < b['ranking']['id']) { return -1 * newFilter.order; }
+                    if (a['ranking']['id'] > b['ranking']['id']) { return 1 * newFilter.order; }
+                    return 0;
+                });
+            } else if (property != null) {
+                messageArray.sort((a: any, b: any) => {
                     if (a[property] < b[property]) { return -1 * newFilter.order; }
                     if (a[property] > b[property]) { return 1 * newFilter.order; }
                     return 0;
                 });
-            } else  {
-                console.log('bad filter', newFilter, messageArray);
             }
             source.messages = messageArray;
         }

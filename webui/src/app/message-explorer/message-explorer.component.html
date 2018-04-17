@@ -31,8 +31,14 @@
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</md-icon>
                     </span>
                 </span>
-                <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
+                      (click)="sortModules('ranking','')">
                     <span>Ranking</span>
+                     <span class="header-icon"
+                          *ngIf="reportService.messageFilter.newSort == 'ranking'">
+                        <md-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</md-icon>
+                        <md-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</md-icon>
+                    </span>
                 </span>
             </span>
         </span>
