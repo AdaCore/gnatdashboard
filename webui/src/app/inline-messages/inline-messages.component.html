@@ -1,7 +1,7 @@
-<div class="messages" *ngFor="let toolId of messages | dshMapKeys">
-    <div class="messages-tool">{{ getToolName(toolId) }}</div>
-    <div class="messages-list">
-        <div class="messages-list-item" *ngFor="let message of messages[toolId]">
+<div class="messages col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let toolId of messages | dshMapKeys">
+    <div class="messages-tool col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">{{ getToolName(toolId) }}</div>
+    <div class="messages-list col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <div class="messages-list-item col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let message of messages[toolId]">
             <span class="rule-identifier">
                 <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
                 {{ message.rule.name }}
@@ -14,3 +14,4 @@
         </div>
     </div>
 </div>
+
