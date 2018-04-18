@@ -40,6 +40,7 @@ export class AnnotatedSourceComponent
     public showMessageList: boolean = true;
     public inlineMessages: { [line: number]: MessagesByToolId };
     public inlineMessagesShownCount: number = 0;
+    public inlineAnnotations: { [line: number]: IAnnotatedSourceMessage[] };
     public tabOpen = 'message';
     private sub: Subscription;
 
@@ -72,6 +73,16 @@ export class AnnotatedSourceComponent
             }
             this.inlineMessages[line][toolId].add(message);
             this.inlineMessagesShownCount++;
+        }.bind(this));
+        // Prepare inline annotations.
+        this.inlineAnnotations = {};
+        this.source.annotations.forEach(function(annotation){
+            const toolId = annotation.rule.tool_id;
+            const line = annotation.line;
+            if (!this.inlineAnnotations.hasOwnProperty(line)) {
+                this.inlineAnnotations[line] = new Set();
+            }
+             this.inlineAnnotations[line].add(annotation);
         }.bind(this));
 
         this.sub = this.route.params.subscribe(params => {

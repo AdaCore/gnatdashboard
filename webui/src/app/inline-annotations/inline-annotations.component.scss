@@ -1,0 +1,69 @@
+:host { display: block; }
+
+.annotations {
+  border: 1px solid #dddddd;
+  margin: 2px 0px 5px 0px;
+  border-radius: 10px;
+
+  .click {
+    cursor: pointer;
+  }
+}
+
+.annotations-tool {
+  padding: 5px 15px;
+  background-color: #f7f7f7;
+  color: #333;
+  cursor: default;
+  border-radius: 10px;
+
+  .annotation-icon {
+    position: absolute;
+    right: 10px;
+    top: 3px;
+  }
+}
+
+.annotations-list.expand {
+  padding: 0 5px;
+  height: auto;
+  display: inline-block;
+
+  .annotations-list-item {
+    padding: 5px;
+
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+
+    border-bottom: 1px solid rgba(0, 0, 0, .075);
+    &:last-child { border-bottom: none; }
+
+    span {
+      margin-right: 16px;
+      &:last-child { margin-right: 0; }
+    }
+
+    .rule-identifier,
+    .annotation-properties {
+      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      color: #777;
+
+      display: inline-block;
+      white-space: nowrap;
+
+      .tags {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+
+        position: relative;
+        top: 3px;
+      }
+    }
+  }
+}
+
+.annotations-list {
+  height: 0px;
+  display: none;
+}

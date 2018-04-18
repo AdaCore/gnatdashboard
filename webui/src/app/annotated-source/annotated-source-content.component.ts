@@ -26,6 +26,7 @@ export class AnnotatedSourceContentComponent implements OnDestroy, OnInit {
     @Input() public tools: { [toolId: number]: ITool };
     @Input() public coverage: { [line: number]: ICoverage };
     @Input() public inlineMessages: { [line: number]: MessagesByToolId };
+    @Input() public inlineAnnotations: { [line: number]: MessagesByToolId };
     @Input() public displayMessages;
 
     public selectedLine: number;

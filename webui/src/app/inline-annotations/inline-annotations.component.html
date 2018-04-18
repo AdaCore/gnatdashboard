@@ -1,0 +1,25 @@
+<span class="annotations col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+    <div class="annotations-tool col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad click"
+         (click)="openClose(line)" >
+        <span>
+            Annotations ( {{annotations.size}} )
+        </span>
+        <span class="annotation-icon">
+            <md-icon>keyboard_arrow_down</md-icon>
+        </span>
+    </div>
+    <div id="{{line}}" class="annotations-list col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <div class="annotations-list-item col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let annotation of annotations">
+            <span class="rule-identifier">
+                <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
+                {{ annotation.rule.name }}
+            </span>
+            <span class="annotation-properties" *ngIf="annotation.properties | dshNotEmpty">
+                <md-icon class="tags" md-tooltip="Annotation properties">local_offer</md-icon>
+                {{ formatAnnotationProperties(annotation) }}
+            </span>
+            <span class="annotation-text">{{ annotation.name }}</span>
+        </div>
+    </div>
+</span>
+

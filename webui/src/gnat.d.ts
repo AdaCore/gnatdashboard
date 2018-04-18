@@ -125,8 +125,8 @@ declare module 'gnat' {
         full_path: string;
         coverage?: number;
         message_count?: { [toolId: number]: number };
-        _messages?: IMessage[];
-        // expanded ?
+        messages?: IMessage[];
+        annotations?: IMessage[];
         _total_message_count: number;
         _ui_total_message_count?: number;
     }
@@ -172,6 +172,7 @@ declare module 'gnat' {
         metrics?: Array<{ [metricId: number]: IMetric }>;
         coverage?: { [line: number]: ICoverage };
         messages?: IAnnotatedSourceMessage[];
+        annotations?: IAnnotatedSourceMessage[];
     }
 
 }

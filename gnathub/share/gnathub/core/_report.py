@@ -371,8 +371,9 @@ class SourceBuilder(object):
         self.tools, self.rules, self.props = {}, {}, {}
         self.metrics, self.coverage = [], {}
         self.messages = collections.defaultdict(list)
+        self.annotations = collections.defaultdict(list)
         self.message_count = collections.defaultdict(int)
-        self.all_messages = []
+        self.all_messages, self.all_annotations = [], []
         self.id_array = []
         self._process_messages()
 
@@ -413,15 +414,20 @@ class SourceBuilder(object):
             for prop in message.get_properties():
                 _inc_msg_count(self.props, prop.id, _encode_property,
                                prop, tool)
-            self.messages[message.line].append((message, rule, tool))
-            self.message_count[tool.id] += 1
 
-            for no, messages in self.messages.iteritems():
-                for message in messages:
-                    my_message = _encode_message(*message)
-                    if my_message['id'] not in self.id_array:
-                        self.all_messages.append(my_message)
-                        self.id_array.append(my_message['id'])
+            if message.ranking != 0:  # If not an annotation then...
+                self.messages[message.line].append((message, rule, tool))
+                self.message_count[tool.id] += 1
+            else:
+                self.annotations[message.line].append((message, rule, tool))
+
+        for no, messages in self.messages.iteritems():
+            for message in messages:
+                self.all_messages.append(_encode_message(*message))
+
+        for no, annotations in self.annotations.iteritems():
+            for annotation in annotations:
+                self.all_annotations.append(_encode_message(*annotation))
 
     def sources_to_json(self, projectName):
         this = {
@@ -458,6 +464,7 @@ class SourceBuilder(object):
                 for no, coverage in self.coverage.iteritems()
             } or None,
             'messages': self.all_messages or None,
+            'annotations': self.all_annotations or None,
             'lines': None
         }
 

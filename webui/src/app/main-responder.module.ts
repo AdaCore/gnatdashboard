@@ -28,6 +28,7 @@ import { CountPipe } from './count.pipe';
 import { FilterSelectorComponent } from './filter-selector';
 import { FilterPanelComponent } from './filter-selector';
 import { InlineMessagesComponent } from './inline-messages';
+import { InlineAnnotationsComponent } from './inline-annotations';
 import { MapKeysPipe } from './map-keys.pipe';
 import { MapValuesPipe } from './map-values.pipe';
 import {
@@ -71,6 +72,7 @@ type StoreType = {
         FilterSelectorComponent,
         FilterPanelComponent,
         InlineMessagesComponent,
+        InlineAnnotationsComponent,
         MainResponderComponent,
         MapKeysPipe,
         MapValuesPipe,
