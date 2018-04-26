@@ -11,20 +11,14 @@ from support.mock import GNAThub, Project, Script
 
 class TestCoverageExhaustiveExample(TestCase):
 
-    OK = '1'
     Violation = namedtuple('Violation', 'level column message')
     CoverageRecord = namedtuple('CoverageRecord',
                                 'file rule line column message')
 
     EXPECTED_COVERAGE = {
-        'main.adb':       {7: OK, 8: OK, 9: OK, 10: OK},
-        'do_nothing.adb': {3: OK},
         'test_stmt.adb':  {
-            6:  OK,
-            8:  OK,
             10: Violation('stmt', 7,  'not executed'),
             14: Violation('stmt', 42, 'not executed'),
-            17: OK,
             18: [
                 Violation('stmt', 7,  'not executed'),
                 Violation('stmt', 19, 'not executed')
@@ -32,21 +26,16 @@ class TestCoverageExhaustiveExample(TestCase):
         },
         'test_decision.adb': {
             6:  Violation('decision', 7,  'outcome FALSE never exercised'),
-            7:  OK,
             11: Violation('decision', 11, 'outcome TRUE never exercised'),
             12: Violation('stmt', 7,  'not executed'),
             15: Violation('stmt', 7,  'not executed'),
             16: Violation('stmt', 10, 'not executed'),
-            20: OK,
-            22: OK,
-            23: OK,
         },
         'test_mcdc.adb': {
             6:  Violation(
                     'mcdc', 7,
                     'has no independent influence pair, MC/DC not achieved'
-                ),
-            7:  OK,
+                )
         },
     }
 
@@ -91,15 +80,10 @@ class TestCoverageExhaustiveExample(TestCase):
                             filename, rule, line, column, message)
                     if isinstance(content, self.Violation):
                         result.append(get_rec(
-                            'coverage', content.column, '0'))
-                        result.append(get_rec(
                             content.level,
                             content.column,
                             content.message
                         ))
-                    else:
-                        result.append(get_rec('coverage', 1, content))
-
         result.sort()
         return result
 

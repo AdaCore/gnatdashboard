@@ -33,12 +33,15 @@ class GNATmetric(Plugin, Runner, Reporter):
 
     # GNATmetric exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
+    RANKING = GNAThub.RANKING_UNSPECIFIED
 
     def __init__(self):
         super(GNATmetric, self).__init__()
 
         self.tool = None
         self.output = os.path.join(GNAThub.Project.object_dir(), 'metrix.xml')
+        self.rules = {}
+        self.messages = {}
 
     @property
     def name(self):
@@ -82,6 +85,54 @@ class GNATmetric(Plugin, Runner, Reporter):
             self.name, self.__cmd_line()
         ).status in GNATmetric.VALID_EXIT_CODES else GNAThub.EXEC_FAILURE
 
+    def parse_metrics(self, node, entity=False):
+        """Parse the xml *node* returns a list of metrics"""
+        message_data = []
+
+        for metric in node.findall('./metric'):
+            name = metric.attrib.get('name')
+            if name in self.rules:
+                rule = self.rules[name]
+            else:
+                rule = GNAThub.Rule(
+                    name, name, GNAThub.METRIC_KIND, self.tool)
+                self.rules[name] = rule
+
+            if (rule, metric.text, GNATmetric.RANKING) in self.messages:
+                msg = self.messages[(rule, metric.text, GNATmetric.RANKING)]
+            else:
+                msg = GNAThub.Message(rule, metric.text, GNATmetric.RANKING)
+                self.messages[(rule, metric.text, GNATmetric.RANKING)] = msg
+
+            if entity:
+                message_data.append(msg)
+            else:
+                message_data.append([msg, 0, 1, 1])
+        return message_data
+
+    def parse_units(self, node, resource):
+        """Recursively parse the unit node until all of them are found"""
+        # Map of entities for a ressource
+        entities_messages = []
+
+        if not node.findall('./unit'):
+            return []
+
+        for unit in node.findall('./unit'):
+
+            ename = unit.attrib.get('name')
+            eline = unit.attrib.get('line')
+            ecol = unit.attrib.get('col')
+
+            # A resource can have multiple entities with the same name
+            entity = GNAThub.Entity(ename, int(eline),
+                                    int(ecol), int(ecol),
+                                    resource)
+
+            entities_messages.append([entity, self.parse_metrics(unit, True)])
+            entities_messages += self.parse_units(unit, resource)
+        return entities_messages
+
     def report(self):
         """Parse GNATmetric XML report and save data to the database.
 
@@ -96,7 +147,7 @@ class GNATmetric(Plugin, Runner, Reporter):
 
         self.info('analyse report')
 
-        tool = GNAThub.Tool(self.name)
+        self.tool = GNAThub.Tool(self.name)
         self.log.debug('parse XML report: %s', self.output)
 
         try:
@@ -106,19 +157,9 @@ class GNATmetric(Plugin, Runner, Reporter):
             files = tree.findall('./file')
             total = len(files)
 
-            # Map of rules (couple (name, rule): dict[str,Rule])
-            rules = {}
-
-            # Map of messages (couple (rule, message): dict[str,Message])
-            messages = {}
-
             # List of resource messages suitable for tool level bulk insertion
             resources_messages = []
 
-            # List of entities messages suitable for tool level bulk insertion
-            entities_messages = []
-
-            ranking = GNAThub.RANKING_UNSPECIFIED
             for index, node in enumerate(files, start=1):
                 resource = GNAThub.Resource.get(node.attrib.get('name'))
 
@@ -131,68 +172,17 @@ class GNATmetric(Plugin, Runner, Reporter):
                               node.attrib.get('name'))
                     continue
 
-                for metric in node.findall('./metric'):
-                    name = metric.attrib.get('name')
+                resources_messages.append([resource, self.parse_metrics(node)])
 
-                    if name in rules:
-                        rule = rules[name]
-                    else:
-                        rule = GNAThub.Rule(
-                            name, name, GNAThub.METRIC_KIND, tool)
-                        rules[name] = rule
+                self.tool.add_messages([], self.parse_units(node, resource))
 
-                    if (rule, metric.text, ranking) in messages:
-                        msg = messages[(rule, metric.text, ranking)]
-                    else:
-                        msg = GNAThub.Message(rule, metric.text, ranking)
-                        messages[(rule, metric.text, ranking)] = msg
-
-                    message_data.append([msg, 0, 1, 1])
-
-                # Save unit level metric
-
-                # Map of entities for a ressource
-                entities = {}
-                for unit in node.findall('.//unit'):
-
-                    ename = unit.attrib.get('name')
-                    eline = unit.attrib.get('line')
-                    ecol = unit.attrib.get('col')
-
-                    if ename in entities:
-                        entity = entities[ename]
-                    else:
-                        entity = GNAThub.Entity(ename, int(eline),
-                                                int(ecol), int(ecol),
-                                                resource)
-                        entities[ename] = entity
-
-                    # A list of entity messages suitable for bulk addition
-                    emessage_data = []
-                    for emetric in unit.findall('./metric'):
-
-                        name = emetric.attrib.get('name')
-                        if name in rules:
-                            rule = rules[name]
-                        else:
-                            rule = GNAThub.Rule(name, name,
-                                                GNAThub.METRIC_KIND, tool)
-                            rules[name] = rule
-
-                        if (rule, emetric.text, ranking) in messages:
-                            msg = messages[(rule, emetric.text, ranking)]
-                        else:
-                            msg = GNAThub.Message(rule, emetric.text, ranking)
-                            messages[(rule, emetric.text, ranking)] = msg
-
-                        emessage_data.append(msg)
-
-                    entities_messages.append([entity, emessage_data])
-
-                resources_messages.append([resource, message_data])
                 Console.progress(index, total, new_line=(index == total))
 
-            tool.add_messages(resources_messages, entities_messages)
+            # Retrieve the project metrics
+            resource = GNAThub.Resource(GNAThub.Project.name(),
+                                        GNAThub.PROJECT_KIND)
+            resources_messages.append([resource, self.parse_metrics(tree)])
+            self.tool.add_messages(resources_messages, [])
 
         except ParseError as why:
             self.log.exception('failed to parse XML report')

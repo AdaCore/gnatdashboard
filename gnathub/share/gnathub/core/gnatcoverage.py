@@ -44,7 +44,6 @@ class GNATcoverage(Plugin, Reporter):
         super(GNATcoverage, self).__init__()
 
         self.tool = None
-        self.coverage_rule = None
         # Mapping: coverage level -> issue rule for this coverage.
         self.issue_rules = {}
 
@@ -89,19 +88,12 @@ class GNATcoverage(Plugin, Reporter):
                 if m:
                     line_no = int(m.group('line_no'))
                     cov_char = m.group('cov_char')
-                    if cov_char == '+':
-                        add_message(self.coverage_rule, '1', line_no, 1)
                 else:
                     m = self.COV_SLOC_RE.match(line)
                     assert m
                     assert int(m.group('line_no')) == line_no
                     column_no = int(m.group('col_no'))
                     message_label = m.group('message')
-
-                    # Insert one message for coverage reports and another one
-                    # for issue reports.
-                    add_message(self.coverage_rule, '0',
-                                line_no, column_no)
                     cov_level = {
                         'statement': 'stmt',
                         'decision':  'decision',
@@ -141,8 +133,6 @@ class GNATcoverage(Plugin, Reporter):
             return GNAThub.EXEC_FAILURE
 
         self.tool = GNAThub.Tool(self.name)
-        self.coverage_rule = GNAThub.Rule('coverage', 'coverage',
-                                          GNAThub.METRIC_KIND, self.tool)
         for cov_level in ('stmt', 'decision', 'mcdc'):
             self.issue_rules[cov_level] = GNAThub.Rule(
                 cov_level, cov_level, GNAThub.RULE_KIND, self.tool)
