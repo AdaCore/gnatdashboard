@@ -84,7 +84,7 @@ class CodePeer(Plugin, Runner, Reporter):
             'codepeer', '-P', GNAThub.Project.path(),
             ToolArgsPlaceholder('codepeer')
         ] + GNAThub.Project.scenario_switches() + [
-            '-output-msg-only', '-csv',
+            '-output-msg-only', '-csv', '-show-annotations',
             ToolArgsPlaceholder('codepeer_msg_reader')
         ]
 
