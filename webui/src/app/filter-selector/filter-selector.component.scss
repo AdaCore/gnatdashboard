@@ -1,7 +1,7 @@
 .filter-selector {
 
   .filter-header {
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid var(--elem-border);
     color: #333;
     padding: 8px 10px;
     font-weight: bold;
@@ -16,52 +16,51 @@
   label.option {
     margin: 1px 0px;
     padding: 5px;
-    background-color: rgba(00,00,00,0.1);
+    background-color: var(--elem-color);
     div.count{
       text-align: right;
       float: right;
     }
 
     &.Info {
-      background-color: #cfcfff;
+      background-color: var(--Info);
       &:hover {
-        background-color: #b0b0ff;
+        background-color: var(--Info-hover);
       }
     }
     &.Unspecified {
-      background-color: rgba(0, 0, 0, .1);
+      background-color: var(--Unspecified);
       &:hover {
-        background-color: rgba(0, 0, 0, .15);
+        background-color: var(--Unspecified-hover);
       }
     }
     &.Medium {
-      background-color: #ffe0a7;
+      background-color: var(--Medium);
       &:hover {
-        background-color: #ffcb6b;
+        background-color: var(--Medium-hover);
       }
     }
     &.Low {
-      background-color: #ffffb5;
+      background-color: var(--Low);
       &:hover {
-        background-color: #ffff4e;
+        background-color: var(--Low-hover);
       }
     }
     &.High {
-      background-color: #ffb0b0;
+      background-color: var(--High);
       &:hover {
-        background-color: #ff8080;
+        background-color: var(--High-hover);
       }
     }
 
-
   }
   label.option:hover, input[type=checkbox]:not(:checked) + label.option:hover {
-    background-color: rgba(00,00,00,0.15);
+    background-color: var(--elem-hover);
   }
 
   input[type=checkbox]:not(:checked) + label.option {
     opacity: 0.5;
-    background-color: rgba(00,00,00,0.05);
+    background-color: var(--elem-unchecked);
   }
 
   i.arrow {
@@ -69,7 +68,7 @@
     right: 0px;
   }
   i.arrow:hover {
-    background-color: rgba(00,00,00,0.05);
+    background-color: var(--elem-unchecked);
   }
   .select {
     font-weight: 200;

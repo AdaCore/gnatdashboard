@@ -21,8 +21,9 @@
         }
 
         .tab-header {
-            background-color: #f8f8f8;
-            border: solid 1px #eee;
+            background-color: var(--header-color);
+            border: solid 1px var(--header-border);
+            border-width: 0px 0px 1px 0px;
             font-size: 14px;
             text-align: left;
 
@@ -41,7 +42,7 @@
                 padding-bottom: 5px;
             }
             .click:hover {
-                background-color: rgba(0,0,0,0.05);
+                background-color: var(--header-hover);
                 cursor: pointer;
             }
 
@@ -61,7 +62,7 @@
                 text-align: left;
             }
             .project-line:hover {
-                background-color: rgba(0,0,0,0.025);
+                background-color: var(--light-shade);
                 cursor: pointer;
             }
 
@@ -73,10 +74,10 @@
 
             .all-folders-line {
                 .folder-line {
-                    background-color: rgba(0,0,0,0.05);
+                    background-color: var(--medium-shade);
                 }
                 .folder-line:hover {
-                    background-color: rgba(0,0,0,0.075);
+                    background-color: var(--strong-shade);
                     cursor: pointer;
                 }
 
@@ -88,10 +89,10 @@
 
                 .all-files-line {
                     .file-line {
-                        background-color: rgba(0,0,0,0.1);
+                        background-color: var(--elem-color);
                     }
                     .file-line:hover {
-                        background-color: rgba(0,0,0,0.125);
+                        background-color: var(--elem-hover);
                         cursor: pointer;
                     }
 

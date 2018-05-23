@@ -11,7 +11,6 @@
 
     main {
         height: 100%;
-        /*overflow: auto;*/
 
         .center {
             text-align: center;
@@ -21,8 +20,9 @@
         }
 
         .tab-header {
-            background-color: #f8f8f8;
-            border: solid 1px #eee;
+            background-color: var(--header-color);
+            border: solid 1px var(--header-border);
+            border-width: 0px 0px 1px 0px;
             font-size: 14px;
             text-align: left;
 
@@ -41,7 +41,7 @@
                 padding-bottom: 5px;
             }
             .click:hover {
-                background-color: rgba(0,0,0,0.05);
+                background-color: var(--header-hover);
                 cursor: pointer;
             }
 
@@ -69,7 +69,7 @@
                 }
             }
             .header-line:hover {
-                background-color: rgba(0,0,0,0.025);
+                background-color: var(--light-shade);
                 cursor: pointer;
             }
 
@@ -84,12 +84,12 @@
 
             .all-messages-line {
                 .message-line {
-                    background-color: rgba(0, 0, 0, .05);
+                    background-color: var(--medium-shade);
                     padding: 2px 0px;
                     margin-bottom: 1px;
                 }
                 .message-line:hover {
-                    background-color: rgba(0,0,0,0.075);
+                    background-color: var(--strong-shade);
                     cursor: pointer;
                 }
 
@@ -105,27 +105,27 @@
 
                 .Info {
                     .ranking {
-                        background-color: #ddddff;
+                        background-color: var(--Info);
                     }
                 }
                 .Unspecified {
                     .ranking {
-                        background-color: rgba(0,0,0,0.1);
+                        background-color: var(--Unspecified);
                     }
                 }
                 .Medium {
                     .ranking {
-                        background-color: #ffe0a7;
+                        background-color: var(--Medium);
                     }
                 }
                 .Low {
                     .ranking {
-                        background-color: #ffffb5;
+                        background-color: var(--Low);
                     }
                 }
                 .High {
                     .ranking {
-                        background-color: #ffb0b0;
+                        background-color: var(--High);
                     }
                 }
             }

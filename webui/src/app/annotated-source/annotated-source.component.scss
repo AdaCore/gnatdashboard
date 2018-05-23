@@ -66,12 +66,12 @@
     padding: 6px 15px 0px 3px !important;
 
     .selected {
-        background-color: rgba(0,0,0, 0.25);
+        background-color: var(--elem-color);
     }
 }
 
 .location-view-title {
-    border: 1px solid grey;
+    border: 1px solid var(--elem-border);
     border-radius: 2px;
     margin-right: 1px;
     padding: 0px 5px;
@@ -80,10 +80,10 @@
 .file-line-container {
     padding: 0px 15px;
     .metric1 {
-        background-color: rgba(0,0,0, 0.10);
+        background-color: var(--light-shade);
     }
     .metric2 {
-        background-color: rgba(0,0,0, 0.05);
+        background-color: var(--strong-shade);
     }
 }
 
@@ -104,7 +104,7 @@
         }
     }
     .header-line:hover {
-        background-color: rgba(0,0,0,0.025);
+        background-color: var(--light-shade);
         cursor: pointer;
     }
 
@@ -119,16 +119,16 @@
 
     .all-messages-line {
         .message-line {
-            background-color: rgba(0, 0, 0, .05);
+            background-color: var(--medium-shade);
             padding: 2px 0px;
             margin-bottom: 1px;
         }
         .message-line:hover {
-            background-color: rgba(0,0,0,0.075);
+            background-color: var(--strong-shade);
             cursor: pointer;
         }
         .message-line.selected {
-            background-color: #fff8dc !important;
+            background-color: var(--selected-color) !important;
         }
 
         .message-tree {
@@ -148,45 +148,8 @@
     }
 
 }
-// Only applies for viewport width <= 1280px
-@media only screen and (max-width: 1280px) {
 
-}
-
-/* Component style */
-
-nav h4 { margin-top: 24px; }
-
-.preferences {
-    label {
-        padding: 0 16px;
-        display: block;
-    }
-
-    input[type="checkbox"] {
-        position: relative;
-        top: 2px;
-        margin-right: 16px;
-    }
-}
-
-.file-header,
-.metric-value {
-    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-}
-
-div.option-selectors {
-    width: 100%;
-
-    display: flex;
-    flex-flow: row wrap;
-
-    filter-selector {
-        flex-grow: 1;
-        margin-bottom: 19px;
-    }
-}
-
+// TODO: Review this error message to make it prettier
 .missing-file-content {
     h4 {
         color: #ce4844;
@@ -220,7 +183,7 @@ div.option-selectors {
 .file {
     font-size: 12px;
     border-radius: 2px;
-    border: 1px solid #e6e6e6;
+    border: 1px solid var(--header-border);
 }
 
 .file-header {
@@ -229,18 +192,16 @@ div.option-selectors {
 
     color: #333;
     cursor: default;
-    border-bottom: solid 1px grey;
+    border-bottom: solid 1px var(--strong-border);
     height: 6vh;
     min-height: 50px;
 }
 
 .location-view {
-    background-color: white;
+    background-color: var(--main-color);
     bottom: 0;
     left: 0;
     position: absolute;
-
-
 
     .location-view-list.expanded {
         height: 20vh;
@@ -253,9 +214,9 @@ div.option-selectors {
     &-header {
         display: flex;
         padding: 6px 15px 4px 15px;
-        background-color: #f7f7f7;
-        border-top: 1px solid #dddddd;
-        border-bottom: 1px solid #e5e5e5;
+        background-color: var(--header-color);
+        border-top: 1px solid var(--header-border);
+        border-bottom: 1px solid var(--header-border);
         color: #333;
         cursor: default;
         font-size: 12px;
@@ -264,7 +225,6 @@ div.option-selectors {
         height: 4vh;
         min-height: 34px;
     }
-
 
     &-collapse-btn {
         border: 0;
@@ -276,70 +236,5 @@ div.option-selectors {
         position: absolute;
 
         md-icon.expanded { transform: rotate(180deg); }
-    }
-
-    table tr.message {
-        td {
-            font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-            font-size: 1.2rem;
-            line-height: 1.5em;
-            padding: 0 2ch;
-            border: 0;
-            vertical-align: middle;
-            cursor: default;
-
-            &.message-line,
-            &.message-col {
-                color: lighten(black, 60%);
-                width: 1%;
-                white-space: nowrap;
-                vertical-align: top;
-                padding: 0;
-            }
-
-            &.message-line {
-                min-width: 30px;
-                text-align: right;
-                padding-left: 10px;
-            }
-
-            &.message-col {
-                min-width: 15px;
-                text-align: left;
-                padding-right: 10px;
-
-                &::before {
-                    content: ':';
-                    // Force minimal width to remove extra padding created by pseudo
-                    // element.
-                    width: 1px;
-                    display: inline-block;
-                }
-            }
-
-            &.message-col,
-            &.message-tool {
-                border-right: 1px solid #eeeeee;
-                width: 1%;
-            }
-
-            &.message-tool {
-                vertical-align: top;
-                color: #333;
-            }
-
-            &.message-text {
-                line-height: 1.5em;
-
-                a {
-                    color: #333;
-                    display: block;
-                }
-                &:hover {
-                    a { color: #4078c0; }
-                    background-color: #f4f7fb;
-                }
-            }
-        }
     }
 }

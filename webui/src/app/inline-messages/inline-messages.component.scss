@@ -1,53 +1,54 @@
 :host { display: block; }
 
 .messages {
-  border: 1px solid #dddddd;
+  border: 1px solid var(--elem-border);
 
   margin-bottom: 5px;
   &:last-child { margin-bottom: 0; }
-}
 
-.messages-tool {
-  padding: 5px 15px;
-  background-color: #f7f7f7;
-  border-bottom: 1px solid #d8d8d8;
 
-  color: #333;
-  cursor: default;
-}
+  .messages-tool {
+    padding: 5px 15px;
+    background-color: var(--medium-shade);
+    border-bottom: 1px solid var(--strong-shade);
 
-.messages-list {
-  padding: 0 5px;
+    color: #333;
+    cursor: default;
+  }
 
-  .messages-list-item {
-    padding: 5px;
+  .messages-list {
+    padding: 0 5px;
 
-    border-bottom-left-radius: 2px;
-    border-bottom-right-radius: 2px;
+    .messages-list-item {
+      padding: 5px;
 
-    border-bottom: 1px solid rgba(0, 0, 0, .075);
-    &:last-child { border-bottom: none; }
+      border-bottom-left-radius: 2px;
+      border-bottom-right-radius: 2px;
 
-    span {
-      margin-right: 16px;
-      &:last-child { margin-right: 0; }
-    }
+      border-bottom: 1px solid var(--strong-shade);
+      &:last-child { border-bottom: none; }
 
-    .rule-identifier,
-    .message-properties {
-      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-      color: #777;
+      span {
+        margin-right: 16px;
+        &:last-child { margin-right: 0; }
+      }
 
-      display: inline-block;
-      white-space: nowrap;
+      .rule-identifier,
+      .message-properties {
+        font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        color: #777;
 
-      .tags {
-        font-size: 15px;
-        width: 15px;
-        height: 15px;
+        display: inline-block;
+        white-space: nowrap;
 
-        position: relative;
-        top: 3px;
+        .tags {
+          font-size: 15px;
+          width: 15px;
+          height: 15px;
+
+          position: relative;
+          top: 3px;
+        }
       }
     }
   }

@@ -59,6 +59,7 @@ export class AnnotatedSourceComponent
         console.log("this.source ", this.source);
         this.source.coverage = this.source.coverage || {};
         this.source.messages = this.source.messages || [];
+        this.source.annotations = this.source.annotations || [];
 
         // Prepare inline messages.
         this.inlineMessages = {};

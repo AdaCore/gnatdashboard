@@ -7,14 +7,10 @@
   border-bottom-right-radius: 2px;
 }
 
-table.file-line-container tr {
-  &:hover.inline-comments { background: none; }
+table.file-line-container {
+  display: inline-block;
+}
 
-  &.inline-comments td {
-    padding: 0;
-    border-left: 0;
-    border-color: #eeeeee;
-
-    inline-messages, inline-annotations { margin: 8px; }
-  }
+.inline-comments {
+      padding: 1px 1%;
 }

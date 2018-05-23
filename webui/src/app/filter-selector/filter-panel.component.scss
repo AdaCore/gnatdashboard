@@ -10,15 +10,15 @@
         }
 
         label {
-            background-color: rgba(00,00,00,0.1);
+            background-color: var(--elem-color);
         }
         label:hover, input[type=radio]:not(:checked) + label:hover {
-            background-color: rgba(00,00,00,0.15);
+            background-color: var(--elem-hover);
         }
 
         input[type=radio]:not(:checked) + label {
             opacity: 0.5;
-            background-color: rgba(00,00,00,0.05);
+            background-color: var(--elem-unchecked);
         }
     }
 
@@ -30,7 +30,7 @@
             padding: 5px;
             margin: 0px;
             text-align: center;
-            background-color: #d5d5d5;
+            background-color: var(--elem-color);
             border: 1px #C4c4c5 solid;
 
             button#ErrorButton {
@@ -41,16 +41,16 @@
             }
         }
         .active {
-            background-color: #C4c4c5;
-            border: 1px grey solid;
+            background-color: var(--elem-hover);
+            border: 1px var(--elem-border) solid;
         }
     }
 
     .arrow-button.open {
         padding: 1px 0px;
-        background-color: #d5d5d5;
+        background-color: var(--elem-hover);
+        border: 1px var(--elem-border) solid;
         line-height: 1;
-        border: 1px #C4c4c5 solid;
         position: absolute;
         right: 15px;
         top: 15px;
@@ -133,6 +133,18 @@
         overflow: auto;
     }
 
+    /*div.option-selectors {
+    width: 100%;
+
+    display: flex;
+    flex-flow: row wrap;
+
+    filter-selector {
+        flex-grow: 1;
+        margin-bottom: 19px;
+    }
+}*/
+
 }
 
 .filter-panel.reduce {
@@ -152,14 +164,12 @@
 
     .arrow-button.reduce {
         padding: 1px 0px;
-        background-color: #d5d5d5;
-        line-height: 1;
-        border: 1px #C4c4c5 solid;
+        background-color: var(--elem-hover);
+        border: 1px var(--elem-border) solid;
         position: absolute;
+        line-height: 1;
         right: 15px;
         top: 15px;
-
-
 
         .right {
             opacity: 0;

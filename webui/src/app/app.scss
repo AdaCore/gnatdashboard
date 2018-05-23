@@ -1,21 +1,5 @@
 @import '~@angular/material/core/theming/all-theme';
 
-/* Include the base styles for Angular Material core. */
-@include md-core();
-
-$dsh-app-primary: md-palette($md-blue);
-$dsh-app-accent:  md-palette($md-red);
-$dsh-app-warn:    md-palette($md-deep-orange);
-
-/* Create the theme object (a Sass map containing all of the palettes). */
-$dsh-app-theme:   md-light-theme(
-                $dsh-app-primary, $dsh-app-accent, $dsh-app-warn);
-
-/* Include theme styles for core and each component used in your app. */
-@include angular-material-theme($dsh-app-theme);
-
-/* Application layout & global styles*/
-
 body {
   font-kerning: normal;
   font-variant-ligatures: common-ligatures;
@@ -29,92 +13,6 @@ body {
 .layout-page {
   height: 100%;
   display: block;
-}
-
-/* Titles */
-
-h1,
-h2 {
-  font-weight: 300;
-  margin-bottom: 16px;
-}
-
-h3.source-head {
-  font-size: 18px;
-  font-weight: normal;
-
-  line-height: 26px;
-  color: #666;
-
-  span.path-divider { margin: 0 0.25em; }
-
-  strong { font-weight: 500; }
-}
-
-h4 {
-  margin-top: 10px;
-  margin-bottom: 6px;
-}
-
-ul li { line-height: 1.5em; }
-
-/* Tables */
-
-table {
-  width: 100%;
-  border-spacing: 0;
-
-  margin-bottom: 10px;
-
-  &:last-child { margin-bottom: 0; }
-
-  td {
-    padding: 4px 8px;
-    line-height: 18px;
-  }
-
-  th {
-    color: #333;
-    padding: 8px 10px;
-    font-weight: bold;
-
-    &.thin { width: 1%; }
-  }
-
-  th.code-components-cell {
-    min-width: 180px;
-    white-space: nowrap;
-    padding-left: 30px;
-    box-sizing: border-box;
-    vertical-align: top;
-    line-height: 18px;
-  }
-
-  thead { border-bottom: 1px solid #e6e6e6; }
-
-  tbody {
-    annotated-source-line:hover,
-    tr:hover { background-color: #f4f7fb; }
-  }
-}
-
-/* Hyperlinks */
-
-a.with-icon {
-  display: flex;
-  align-items: center;
-
-  &:active,
-  &:focus,
-  &:hover {
-    text-decoration: none;
-    span { text-decoration: underline; }
-  }
-
-  md-icon {
-    color: rgba(0, 0, 0, .5);
-    margin-right: 8px;
-  }
 }
 
 /* Common styles */
@@ -132,15 +30,6 @@ input[type="checkbox"] {
 
 .odd { background: rgba(0, 0, 0, .03); }
 .selected { background-color: #fff8dc; }
-
-.faded {
-  color: #777;
-}
-
-.info {
-  color: #777;
-  font-style: italic;
-}
 
 .center {
   margin-left: auto;

@@ -1,0 +1,65 @@
+/* Declare global variables for the application */
+
+:root {
+    /* Main color for backgorund*/
+    --main-color: white;
+    --main-font-color: black;
+    /* Second color for all big elements above background*/
+    --header-color: rgba( 0, 0, 0, 0.03);
+    --header-border: rgba( 0, 0, 0, 0.05);
+    --header-hover: rgba( 0, 0, 0, 0.05);
+    /* Color for all other elements */
+    --elem-color: rgba( 0, 0, 0, 0.1);
+    --elem-unchecked: rgba( 0, 0, 0, 0.08);
+    --elem-hover: rgba( 0, 0, 0, 0.15);
+    --elem-border: rgba( 0, 0, 0, 0.2);
+    /* Color for really clear element */
+    --light-shade: rgba( 0, 0, 0, 0.025);
+    --medium-shade: rgba( 0, 0, 0, 0.05);
+    --strong-shade: rgba( 0, 0, 0, 0.075);
+    --strong-border: rgba( 0, 0, 0, 0.75);
+
+    /* Color for selected line */
+    --selected-color: #fff8dc;
+
+    /* Colors for Ranking */
+    --Info: #ddddff;
+    --Info-hover: #b0b0ff;
+    --Unspecified: rgba(0,0,0,0.1);
+    --Unspecified-hover: rgba(0, 0, 0, .15);
+    --Low: #ffffb5;
+    --Low-hover: #ffff4e;
+    --Medium: #ffe0a7;
+    --Medium-hover: #ffcb6b;
+    --High: #ffb0b0;
+    --High-hover: #ff8080;
+}
+
+/* Declaration of variable for Dark Theme */
+/* TODO : Finish the font color */
+.dark {
+    --main-color: rgba(0, 0, 0, 1);
+    --main-font-color: white;
+    --header-color: rgba( 255, 255, 255, 0.15);
+    --header-border: rgba( 255, 255, 255, 0.2);
+    --header-hover: rgba( 255, 255, 255, 0.15);
+    --elem-color: rgba( 255, 255, 255, 0.15);
+    --elem-unchecked: rgba( 255, 255, 255, 0.1);
+    --elem-hover: rgba( 255, 255, 255, 0.2);
+    --elem-border: rgba( 255, 255, 255, 0.3);
+    --light-shade: rgba( 255, 255, 255, 0.05);
+    --medium-shade: rgba( 255, 255, 255, 0.15);
+    --strong-shade: rgba( 255, 255, 255, 0.18);
+    --strong-border: rgba( 255, 255, 255, 0.75);
+    --selected-color: #fff8dc;
+    --Info: #ddddff;
+    --Info-hover: #b0b0ff;
+    --Unspecified: rgba( 255, 255, 255, 0.1);
+    --Unspecified-hover: rgba( 255, 255, 255, .15);
+    --Low: #ffffb5;
+    --Low-hover: #ffff4e;
+    --Medium: #ffe0a7;
+    --Medium-hover: #ffcb6b;
+    --High: #ffb0b0;
+    --High-hover: #ff8080;
+}

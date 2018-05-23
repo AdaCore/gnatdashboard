@@ -9,6 +9,8 @@ body,
 .main-responder-page,
 .main-responder-body {
     height: 100%; /* needed for proper layout */
+    background-color: var(--main-color);
+    color: var(--main-font-color);
 }
 
 body { overflow: hidden; }
@@ -27,8 +29,10 @@ body { overflow: hidden; }
         flex: 0 0 auto;
         height: 6vh;
         line-height: 6vh;
-        background-color: #eee;
-        border-bottom: 1px solid #ddd;
+        /* background-color: #eee;
+        border-bottom: 1px solid #ddd;*/
+        background-color: var(--header-color);
+        border-bottom: 1px solid var(--header-border);
         padding-left: 20px;
 
         span {
@@ -40,7 +44,7 @@ body { overflow: hidden; }
 
         span:hover {
             border: 5px;
-            background-color: rgba(0,0,0,0.05)
+            background-color: var(--header-hover);
         }
     }
 
@@ -52,8 +56,8 @@ body { overflow: hidden; }
 
     .filter-panel {
         height: 94vh;
-        background-color: #f5f5f5;
-        border-right: 1px solid #eee;
+        background-color: var(--header-color);
+        border-right: 1px solid var(--header-border);
     }
 
     .main-responder-body.reduce {
@@ -67,17 +71,7 @@ body { overflow: hidden; }
             display: inline-block;
         }
     }
-    // Should we ever need a footer in the future, the following style should be
-    // applied.
-    /*
-    .main-responder-page-footer {
-    flex: 0 0 auto;
 }
-    */
-}
-
-
-
 
 .filter-panel.open {
     animation-timing-function: ease-in;
@@ -96,15 +90,15 @@ body { overflow: hidden; }
         }
 
         label {
-            background-color: rgba(00,00,00,0.1);
+            background-color: var(--elem-color);
         }
         label:hover, input[type=radio]:not(:checked) + label:hover {
-            background-color: rgba(00,00,00,0.15);
+            background-color: var(--elem-hover);
         }
 
         input[type=radio]:not(:checked) + label {
             opacity: 0.5;
-            background-color: rgba(00,00,00,0.05);
+            background-color: var(elem-unchecked);
         }
     }
 
