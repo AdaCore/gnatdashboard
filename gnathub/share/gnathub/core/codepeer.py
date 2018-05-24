@@ -42,14 +42,24 @@ class CodePeer(Plugin, Runner, Reporter):
       'high': GNAThub.RANKING_HIGH
       }
 
+    @property
+    def output_dir(self):
+        """Return the path to the directory where to generate the Codepeer files
+
+        :return: the full path to the output directory
+        :rtype: str
+        """
+
+        return os.path.join(GNAThub.Project.object_dir(), self.name)
+
     def __init__(self):
         super(CodePeer, self).__init__()
 
         self.tool = None
 
         self.csv_report = os.path.join(
-            GNAThub.Project.object_dir(), 'codepeer',
-            '{}.csv'.format(GNAThub.Project.name().lower()))
+             GNAThub.Project.object_dir(), 'codepeer',
+             '{}.csv'.format(GNAThub.Project.name().lower()))
 
         # Map of rules (couple (name, rule): dict[str,Rule])
         self.rules = {}
@@ -67,10 +77,12 @@ class CodePeer(Plugin, Runner, Reporter):
         :return: the CodePeer command line
         :rtype: collections.Iterable[str]
         """
-        return [
-            'codepeer', '-P', GNAThub.Project.path(),
-            '-jobs', str(GNAThub.jobs()), '-update-scil'
-        ] + GNAThub.Project.scenario_switches()
+        cmd_line = ['codepeer', '-P', GNAThub.Project.path()]
+        if GNAThub.subdirs():
+            cmd_line.extend(['--subdirs=' + GNAThub.subdirs()])
+
+        cmd_line.extend(['-jobs', str(GNAThub.jobs()), '-update-scil'])
+        return cmd_line + GNAThub.Project.scenario_switches()
 
     @staticmethod
     def __msg_reader_cmd_line():
@@ -79,14 +91,17 @@ class CodePeer(Plugin, Runner, Reporter):
         :return: the CodePeer message reader command line
         :rtype: collections.Iterable[str]
         """
+        cmd_start = ['codepeer', '-P', GNAThub.Project.path()]
+        if GNAThub.subdirs():
+            cmd_start.extend(['--subdirs=' + GNAThub.subdirs()])
 
-        return [
-            'codepeer', '-P', GNAThub.Project.path(),
-            ToolArgsPlaceholder('codepeer')
-        ] + GNAThub.Project.scenario_switches() + [
-            '-output-msg-only', '-csv', '-show-annotations',
-            ToolArgsPlaceholder('codepeer_msg_reader')
-        ]
+        cmd_start.extend([ToolArgsPlaceholder('codepeer')])
+
+        cmd_end = [
+                   '-output-msg-only', '-csv', '-show-annotations',
+                   ToolArgsPlaceholder('codepeer_msg_reader')
+                  ]
+        return cmd_start + GNAThub.Project.scenario_switches() + cmd_end
 
     def run(self):
         """Execute CodePeer.
@@ -116,8 +131,8 @@ class CodePeer(Plugin, Runner, Reporter):
 
         self.info('extract results with msg_reader')
         proc = GNAThub.Run(
-            self.name, self.__msg_reader_cmd_line(), out=self.csv_report,
-            capture_stderr=False)
+            self.output_dir, self.__msg_reader_cmd_line(),
+            out=self.csv_report, capture_stderr=False)
 
         if proc.status != 0:
             return GNAThub.EXEC_FAILURE

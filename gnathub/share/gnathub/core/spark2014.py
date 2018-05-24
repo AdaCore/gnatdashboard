@@ -84,10 +84,13 @@ class SPARK2014(Plugin, Runner, Reporter):
         :return: the GNATprove command line
         :rtype: collections.Iterable[str]
         """
-        return [
-            'gnatprove', '-P', GNAThub.Project.path(), '--report=all',
-            '-j', str(GNAThub.jobs())
-        ] + GNAThub.Project.scenario_switches()
+
+        cmd_line = ['gnatprove', '-P', GNAThub.Project.path()]
+        if GNAThub.subdirs():
+            cmd_line.extend(['--subdirs=' + GNAThub.subdirs()])
+
+        cmd_line.extend(['--report=all', '-j', str(GNAThub.jobs())])
+        return cmd_line + GNAThub.Project.scenario_switches()
 
     @staticmethod
     def __msg_reader_cmd_line():
@@ -97,11 +100,13 @@ class SPARK2014(Plugin, Runner, Reporter):
         :rtype: collections.Iterable[str]
         """
 
-        return [
-            'gnatprove', '-P', GNAThub.Project.path(), '--report=all',
-            '-j', str(GNAThub.jobs()), '--output-msg-only',
-            '--ide-progress-bar'
-        ] + GNAThub.Project.scenario_switches()
+        cmd_line = ['gnatprove', '-P', GNAThub.Project.path()]
+        if GNAThub.subdirs():
+            cmd_line.extend(['--subdirs=' + GNAThub.subdirs()])
+
+        cmd_line.extend(['--report=all', '-j', str(GNAThub.jobs()),
+                         '--output-msg-only', '--ide-progress-bar'])
+        return cmd_line + GNAThub.Project.scenario_switches()
 
     def run(self):
         """Execute GNATprove.
@@ -131,7 +136,7 @@ class SPARK2014(Plugin, Runner, Reporter):
 
         self.info('extract results with msg_reader')
         proc = GNAThub.Run(
-            self.name, self.__msg_reader_cmd_line(), out=self.output)
+            self.output_dir, self.__msg_reader_cmd_line(), out=self.output)
 
         if proc.status != 0:
             return GNAThub.EXEC_FAILURE

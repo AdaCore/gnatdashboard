@@ -62,14 +62,16 @@ class GNATmetric(Plugin, Runner, Reporter):
         :return: the GNATmetric command line
         :rtype: collections.Iterable[str]
         """
-
         cmd_line = [
             self.name, '-ox', self.output, '-P', GNAThub.Project.path(), '-U'
         ] + GNAThub.Project.scenario_switches()
+
         if GNAThub.Project.target():
             cmd_line[0] = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
         if GNAThub.Project.runtime():
             cmd_line.extend(('--RTS', GNAThub.Project.runtime()))
+        if GNAThub.subdirs():
+            cmd_line.extend(['--subdirs=' + GNAThub.subdirs()])
         return cmd_line
 
     def run(self):
@@ -162,9 +164,6 @@ class GNATmetric(Plugin, Runner, Reporter):
 
             for index, node in enumerate(files, start=1):
                 resource = GNAThub.Resource.get(node.attrib.get('name'))
-
-                # A list of message data suitable for bulk addition
-                message_data = []
 
                 # Save file level metrics
                 if not resource:

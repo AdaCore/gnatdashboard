@@ -76,6 +76,8 @@ class GNATcheck(Plugin, Runner, Reporter):
             cmd_line[0] = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
         if GNAThub.Project.runtime():
             cmd_line.extend(('--RTS', GNAThub.Project.runtime()))
+        if GNAThub.subdirs():
+            cmd_line.extend(['--subdirs=' + GNAThub.subdirs()])
         return cmd_line
 
     def run(self):

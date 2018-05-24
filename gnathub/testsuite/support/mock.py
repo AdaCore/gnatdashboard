@@ -210,6 +210,9 @@ class GNAThub(object):
             assert isinstance(kwargs['plugins'], list), 'invalid "plugins" arg'
             argv.extend(['--plugins', ','.join(kwargs['plugins'])])
 
+        if kwargs.get('subdirs', None):
+            argv.extend(['--subdirs', kwargs['subdirs']])
+
         if kwargs.get('target', None):
             argv.extend(['--target', kwargs['target']])
 

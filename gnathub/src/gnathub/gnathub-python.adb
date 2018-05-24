@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2017, AdaCore                     --
+--                     Copyright (C) 2013-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -71,6 +71,7 @@ package body GNAThub.Python is
    Quiet_Function          : aliased constant String := "quiet";
    Verbose_Function        : aliased constant String := "verbose";
    Plugins_Function        : aliased constant String := "plugins";
+   Subdirs_Function        : aliased constant String := "subdirs";
    Database_Function       : aliased constant String := "database";
    Repositories_Function   : aliased constant String := "repositories";
    Runners_Only_Function   : aliased constant String := "runners_only";
@@ -78,7 +79,7 @@ package body GNAThub.Python is
    Tool_Args_Function      : constant String := "tool_args";
 
    No_Args_Root_Module_Functions :
-     constant array (1 .. 11) of access constant String :=
+     constant array (1 .. 12) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         Jobs_Function'Access,
@@ -86,6 +87,7 @@ package body GNAThub.Python is
         Quiet_Function'Access,
         Verbose_Function'Access,
         Plugins_Function'Access,
+        Subdirs_Function'Access,
         Database_Function'Access,
         Repositories_Function'Access,
         Runners_Only_Function'Access,
@@ -683,6 +685,9 @@ package body GNAThub.Python is
 
       elsif Command = Plugins_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Plugins);
+
+      elsif Command = Subdirs_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Subdirs);
 
       elsif Command = Repositories_Function then
          --  Create a dictionary containing 3 keys: system, global, local

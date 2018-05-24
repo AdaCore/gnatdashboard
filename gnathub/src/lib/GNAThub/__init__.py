@@ -82,6 +82,17 @@ def jobs():
     return NotImplemented   # Implemented in Ada
 
 
+def subdirs():
+    """Return the name of the new object directory provided with the switch.
+
+    This is the equivalent to using :command:`--subdirs` on the command-line.
+
+    :return: the name of the new object directory
+    :rtype: str
+    """
+    return NotImplemented   # Implemented in Ada
+
+
 def plugins():
     """Return the list of comma-separated plug-in names.
 
