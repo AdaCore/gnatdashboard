@@ -64,25 +64,29 @@ package body GNAThub.Python is
    Project_Property_As_List_Method   : constant String := "property_as_list";
    Scenario_Switches_Method          : constant String := "scenario_switches";
 
-   Root_Function           : aliased constant String := "root";
-   Logs_Function           : aliased constant String := "logs";
-   HTML_Data_Function      : aliased constant String := "html_data";
-   Jobs_Function           : aliased constant String := "jobs";
-   Dry_Run_Function        : aliased constant String := "dry_run";
-   Quiet_Function          : aliased constant String := "quiet";
-   Verbose_Function        : aliased constant String := "verbose";
-   Plugins_Function        : aliased constant String := "plugins";
-   Subdirs_Function        : aliased constant String := "subdirs";
+   Root_Function              : aliased constant String := "root";
+   Logs_Function              : aliased constant String := "logs";
+   HTML_Data_Function         : aliased constant String := "html_data";
+   Jobs_Function              : aliased constant String := "jobs";
+   Dry_Run_Function           : aliased constant String := "dry_run";
+   Quiet_Function             : aliased constant String := "quiet";
+   Verbose_Function           : aliased constant String := "verbose";
+   Plugins_Function           : aliased constant String := "plugins";
+   Subdirs_Function           : aliased constant String := "subdirs";
+
+   --  Keeping this for later implemntation of -U main switch
+   --     U_Main_Function            : aliased constant String := "u_main";
+   U_Process_All_Function     : aliased constant String := "u_process_all";
    Database_Function          : aliased constant String := "database";
    Repositories_Function      : aliased constant String := "repositories";
    Engine_Repository_Function : aliased constant String := "engine_repository";
    Runners_Only_Function      : aliased constant String := "runners_only";
    Reporters_Only_Function    : aliased constant String := "reporters_only";
-   Tool_Args_Function         : constant String := "tool_args";
+   Tool_Args_Function         : constant String         := "tool_args";
    Server_Port_Function       : aliased constant String := "port";
 
    No_Args_Root_Module_Functions :
-     constant array (1 .. 15) of access constant String :=
+     constant array (1 .. 16) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         HTML_Data_Function'Access,
@@ -92,6 +96,8 @@ package body GNAThub.Python is
         Verbose_Function'Access,
         Plugins_Function'Access,
         Subdirs_Function'Access,
+        -- U_Main_Function'Access,
+        U_Process_All_Function'Access,
         Database_Function'Access,
         Repositories_Function'Access,
         Engine_Repository_Function'Access,
@@ -700,6 +706,13 @@ package body GNAThub.Python is
 
       elsif Command = Subdirs_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Subdirs);
+
+      --  Keeping this for later implementation of -U main switch
+      --        elsif Command = U_Main_Function then
+      --           Set_Return_Value (Data, GNAThub.Configuration.U_Main);
+
+      elsif Command = U_Process_All_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.U_Process_All);
 
       elsif Command = Repositories_Function then
          --  Create a dictionary containing 3 keys: system, global, local

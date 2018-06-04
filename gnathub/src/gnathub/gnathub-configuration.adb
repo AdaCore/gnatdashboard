@@ -23,6 +23,7 @@ with Ada.Strings.Fixed;
 with Ada.Strings.Hash;
 with Ada.Strings.Unbounded;               use Ada.Strings.Unbounded;
 with Ada.Text_IO;
+with Ada.Characters.Latin_1;
 
 with GNAT.Command_Line;                   use GNAT.Command_Line;
 with GNAT.OS_Lib;
@@ -59,6 +60,12 @@ package body GNAThub.Configuration is
    Reporters_Only_Arg   : aliased Boolean;
    Display_Progress_Arg : aliased Boolean;
 
+   --  Switch -U switch implementation
+   U_Process_All_Arg    : aliased Boolean;
+
+   --  Keeping this for later -U main_file switchimplementation
+   --  U_Main_Arg           : aliased GNAT.Strings.String_Access;
+
    --  WEB server handling
    Server_Arg         : aliased Boolean;
    Port_Arg           : aliased Integer;
@@ -88,6 +95,9 @@ package body GNAThub.Configuration is
    ----------------
 
    procedure Initialize is
+      EOL    : constant String :=
+        "" & Ada.Characters.Latin_1.CR & Ada.Characters.Latin_1.LF;
+      Spaces : constant String (1 .. 19) := (others => ' ');
    begin
       --  Declare the switches
 
@@ -102,6 +112,23 @@ package body GNAThub.Configuration is
          Switch      => "-P:",
          Long_Switch => "--project=",
          Help        => "Run on the given project (mandatory)");
+
+      Define_Switch
+        (Config      => Config,
+         Output      => U_Process_All_Arg'Access,
+         Long_Switch => "-U",
+         Help        => "Process all sources in all projects,"
+         & " except for projects that" & EOL & Spaces
+         & "have the ""Externally_Built"" attribute set to ""true""");
+
+      --  Keeping this for later implemntation of -U main switch
+      --        Define_Switch
+      --          (Config      => Config,
+      --           Output      => U_Main_Arg'Access,
+      --           Switch      => "-U:",
+      --           Help        =>
+      --             "Process the closure of units rooted at the unit"
+      --             & " contained in ARG");
 
       Define_Switch
         (Config      => Config,
@@ -561,6 +588,25 @@ package body GNAThub.Configuration is
    begin
       return Project_Arg.all;
    end Project;
+
+   --  Keeping this for -U main switch implementation
+   --     ------------
+   --     -- U_Main --
+   --     ------------
+   --
+   --     function U_Main return String is
+   --     begin
+   --        return U_Main_Arg.all;
+   --     end U_Main;
+
+   -------------------
+   -- U_Process_All --
+   -------------------
+
+   function U_Process_All return Boolean is
+   begin
+      return U_Process_All_Arg;
+   end U_Process_All;
 
    -------------
    -- Plugins --

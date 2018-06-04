@@ -103,6 +103,26 @@ def subdirs():
     """
     return NotImplemented   # Implemented in Ada
 
+# Keeping this for later implementation of -U main switch
+# def u_main():
+#     """Return the name of the main file provided with the switch.
+#
+#     This is the equivalent to using :command:`-U <main_file>` on command-line
+#
+#     :return: the name of the new object directory
+#     :rtype: str
+#     """
+#     return NotImplemented   # Implemented in Ada
+
+
+def u_process_all():
+    """Whether the -U switch was passed to the GNAThub driver or not.
+
+    :return: whether -U switch is enabled or not
+    :rtype: bool
+    """
+    return NotImplemented   # Implemented in Ada
+
 
 def plugins():
     """Return the list of comma-separated plug-in names.

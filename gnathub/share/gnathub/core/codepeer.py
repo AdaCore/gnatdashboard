@@ -79,6 +79,15 @@ class CodePeer(Plugin, Runner, Reporter):
         """
         cmd_line = ['codepeer', '-P', GNAThub.Project.path(),
                     '-j%d' % GNAThub.jobs()]
+
+        if GNAThub.u_process_all():
+            cmd_line.extend(['-U'])
+
+#  Keeping this for -U main switch implemntation
+#        if GNAThub.u_main():
+#            cmd_line.extend(['-U'])
+#            cmd_line.extend([GNAThub.u_main()])
+
         if GNAThub.subdirs():
             cmd_line.extend(['--subdirs=' + GNAThub.subdirs()])
 

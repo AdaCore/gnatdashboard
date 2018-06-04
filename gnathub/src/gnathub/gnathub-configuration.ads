@@ -32,6 +32,13 @@ package GNAThub.Configuration is
    function Project return String;
    --  Return the Project name given on the command line
 
+   function U_Process_All return Boolean;
+   --  Notify -U switch is present in the command line
+
+   --  Keeping this for later implementation of -U main switch
+   --     function U_Main return String;
+   --  Return the -U switch main file name given on the command line
+
    function Plugins return String;
    --  Return the list of plugins to execute, as a comma-separated string
 

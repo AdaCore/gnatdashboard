@@ -86,6 +86,13 @@ class SPARK2014(Plugin, Runner, Reporter):
         """
 
         cmd_line = ['gnatprove', '-P', GNAThub.Project.path()]
+        if GNAThub.u_process_all():
+            cmd_line.extend(['-U'])
+
+#  Keeping this for later implementation of -U main switch
+#        if GNAThub.u_main():
+#            cmd_line.extend([GNAThub.u_main()])
+
         if GNAThub.subdirs():
             cmd_line.extend(['--subdirs=' + GNAThub.subdirs()])
 

@@ -63,8 +63,17 @@ class GNATmetric(Plugin, Runner, Reporter):
         :rtype: collections.Iterable[str]
         """
         cmd_line = [
-            self.name, '-ox', self.output, '-P', GNAThub.Project.path(), '-U'
-        ] + GNAThub.Project.scenario_switches()
+            self.name, '-ox', self.output, '-P', GNAThub.Project.path()]
+
+        if GNAThub.u_process_all():
+            cmd_line.extend(['-U'])
+
+#  Keeping this for later implementation of -U main switch
+#        if GNAThub.u_main():
+#            cmd_line.extend(['-U'])
+#            cmd_line.extend([GNAThub.u_main()])
+
+        cmd_line = cmd_line + GNAThub.Project.scenario_switches()
 
         if GNAThub.Project.target():
             cmd_line[0] = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
@@ -72,6 +81,7 @@ class GNATmetric(Plugin, Runner, Reporter):
             cmd_line.extend(('--RTS', GNAThub.Project.runtime()))
         if GNAThub.subdirs():
             cmd_line.extend(['--subdirs=' + GNAThub.subdirs()])
+
         return cmd_line
 
     def run(self):

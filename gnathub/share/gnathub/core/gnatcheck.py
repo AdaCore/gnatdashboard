@@ -70,8 +70,20 @@ class GNATcheck(Plugin, Runner, Reporter):
 
         cmd_line = [
             'gnatcheck', '--show-rule', '-o', self.output,
-            '-P', GNAThub.Project.path(), '-U', '-j%d' % GNAThub.jobs()
-        ] + GNAThub.Project.scenario_switches()
+            '-P', GNAThub.Project.path()]
+
+        if GNAThub.u_process_all():
+            cmd_line.extend(['-U'])
+
+#  Keeping this for later implemntation of -U main switch
+#        if GNAThub.u_main():
+#            cmd_line.extend(['-U'])
+#            cmd_line.extend([GNAThub.u_main()])
+
+        cmd_line.extend(['-j%d' % GNAThub.jobs()])
+
+        cmd_line = cmd_line + GNAThub.Project.scenario_switches()
+
         if GNAThub.Project.target():
             cmd_line[0] = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
         if GNAThub.Project.runtime():
