@@ -66,22 +66,27 @@ package body GNAThub.Python is
 
    Root_Function           : aliased constant String := "root";
    Logs_Function           : aliased constant String := "logs";
+   HTML_Data_Function      : aliased constant String := "html_data";
    Jobs_Function           : aliased constant String := "jobs";
    Dry_Run_Function        : aliased constant String := "dry_run";
    Quiet_Function          : aliased constant String := "quiet";
    Verbose_Function        : aliased constant String := "verbose";
    Plugins_Function        : aliased constant String := "plugins";
    Subdirs_Function        : aliased constant String := "subdirs";
-   Database_Function       : aliased constant String := "database";
-   Repositories_Function   : aliased constant String := "repositories";
-   Runners_Only_Function   : aliased constant String := "runners_only";
-   Reporters_Only_Function : aliased constant String := "reporters_only";
-   Tool_Args_Function      : constant String := "tool_args";
+   Database_Function          : aliased constant String := "database";
+   Repositories_Function      : aliased constant String := "repositories";
+   Engine_Repository_Function : aliased constant String := "engine_repository";
+   Runners_Only_Function      : aliased constant String := "runners_only";
+   Reporters_Only_Function    : aliased constant String := "reporters_only";
+   Tool_Args_Function         : constant String := "tool_args";
+   Server_Port_Function       : aliased constant String := "port";
+   Server_Dir_Function        : aliased constant String := "server_dir";
 
    No_Args_Root_Module_Functions :
-     constant array (1 .. 12) of access constant String :=
+     constant array (1 .. 16) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
+        HTML_Data_Function'Access,
         Jobs_Function'Access,
         Dry_Run_Function'Access,
         Quiet_Function'Access,
@@ -90,8 +95,11 @@ package body GNAThub.Python is
         Subdirs_Function'Access,
         Database_Function'Access,
         Repositories_Function'Access,
+        Engine_Repository_Function'Access,
         Runners_Only_Function'Access,
-        Reporters_Only_Function'Access);
+        Reporters_Only_Function'Access,
+        Server_Port_Function'Access,
+        Server_Dir_Function'Access);
 
    --------------------
    -- GNAThub Module --
@@ -671,6 +679,12 @@ package body GNAThub.Python is
             Create_From_Dir
               (Object_Dir, Logs_Dir.Full_Name).Display_Full_Name);
 
+      elsif Command = HTML_Data_Function then
+         Set_Return_Value
+           (Data,
+            Create_From_Dir
+              (Object_Dir, HTML_Data_Dir.Full_Name).Display_Full_Name);
+
       elsif Command = Jobs_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Jobs);
 
@@ -702,6 +716,15 @@ package body GNAThub.Python is
 
          Set_Return_Value (Data, Property_As_String ("Local_Repository"));
          Set_Return_Value_Key (Data, "local");
+
+      elsif Command = Engine_Repository_Function then
+         Set_Return_Value (Data, Server_Engine_Dir.Display_Full_Name);
+
+      elsif Command = Server_Port_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Port);
+
+      elsif Command = Server_Dir_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Server_Dir);
 
       elsif Command = Tool_Args_Function then
          --  Return a list of arguments

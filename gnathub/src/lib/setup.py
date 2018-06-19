@@ -22,5 +22,6 @@ setup(
     url='https://www.adacore.com',
     description='A Python framework for building GNAThub plug-ins.',
     packages=['GNAThub'],
-    scripts=[os.path.join('scripts', 'plugin-runner.py')],
+    scripts=[os.path.join('scripts', 'plugin-runner.py'),
+             os.path.join('scripts', 'server-runner.py')],
 )

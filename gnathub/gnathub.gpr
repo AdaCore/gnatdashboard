@@ -24,6 +24,7 @@ project GNAThub is
       Gen_Src_Dir,
       "share/gnathub/sql",
       "share/gnathub/core",
+      "share/gnathub/engine",
       "share/gnathub/extras");
 
    for Main use ("gnathub-main.adb");

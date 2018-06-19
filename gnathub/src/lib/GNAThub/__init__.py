@@ -44,6 +44,17 @@ def logs():
     return NotImplemented   # Implemented in Ada
 
 
+def html_data():
+    """Return the path to the GNAThub-specific directory for HTML report data.
+
+    Usually :file:`<project_object_dir>/gnathub/html-report/data`.
+
+    :return: the full path to the log directory
+    :rtype: str
+    """
+    return NotImplemented   # Implemented in Ada
+
+
 def dry_run():
     """Whether to run in "check mode" or not.
 
@@ -105,6 +116,28 @@ def plugins():
     return NotImplemented   # Implemented in Ada
 
 
+def port():
+    """Return the port number provided with the switch.
+
+    This is the equivalent to using :`--port` switch on the command-line.
+
+    :return: the port number
+    :rtype: int
+    """
+    return NotImplemented   # Implemented in Ada
+
+
+def server_dir():
+    """Return the server directory path provided with the switch.
+
+    This is the equivalent to using :`--server-dir` switch on the command-line.
+
+    :return: the server script location path
+    :rtype: str
+    """
+    return NotImplemented   # Implemented in Ada
+
+
 def repositories():
     """Return the list of available repositories.
 
@@ -120,6 +153,15 @@ def repositories():
 
     :return: the available repositories details
     :rtype: dict[str, str]
+    """
+    return NotImplemented   # Implemented in Ada
+
+
+def engine_repository():
+    """Return the ``engine`` repository
+
+    :return: the repository path
+    :rtype: str
     """
     return NotImplemented   # Implemented in Ada
 

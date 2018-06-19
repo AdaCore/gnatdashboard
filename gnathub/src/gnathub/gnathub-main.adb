@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2016, AdaCore                     --
+--                     Copyright (C) 2013-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -45,6 +45,9 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    procedure Init_Local_Database (Overwrite : Boolean := True);
    --  Creates the GNAThub database and initializes it with the project
    --  information. Overrides any existing database if Overwrite is True.
+
+   procedure Execute_Server_Script;
+   --  Executes the server script when --server switch in the command-line.
 
    procedure Execute_Plugin_Runner;
    --  Loads the plugin runner that executes every GNAThub plugin (both core
@@ -124,6 +127,25 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
            Exception_Information (E);
 
    end Create_Project_Directory_Env;
+
+   ---------------------------
+   -- Execute_Server_Script --
+   ---------------------------
+
+   procedure Execute_Server_Script
+   is
+      Server_Script : constant String := Server_Runner.Display_Full_Name;
+      Had_Errors  : Boolean := False;
+   begin
+      Trace (Me, "Server: " & Server_Script);
+      if GNAThub.Configuration.Server then
+         GNAThub.Python.Execute_File (Server_Script, Had_Errors);
+      end if;
+
+      if Had_Errors then
+         raise Fatal_Error with "Execute_server : unexpected errors";
+      end if;
+   end Execute_Server_Script;
 
    ---------------------------
    -- Execute_Plugin_Runner --
@@ -249,6 +271,11 @@ begin
    else
       Trace (Me, "Execute plugin-runner");
       Execute_Plugin_Runner;
+   end if;
+
+   if GNAThub.Configuration.Server then
+      Trace (Me, "Launch server");
+      Execute_Server_Script;
    end if;
 
    Trace (Me, "Execution completed");

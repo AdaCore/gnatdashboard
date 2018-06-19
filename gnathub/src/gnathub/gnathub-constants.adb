@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2016, AdaCore                     --
+--                     Copyright (C) 2013-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -64,6 +64,15 @@ package body GNAThub.Constants is
       return Create_From_Dir (Share_Dir, "sql");
    end Sql_Dir;
 
+   -----------------------
+   -- Server_Engine_Dir --
+   -----------------------
+
+   function Server_Engine_Dir return Virtual_File is
+   begin
+      return Create_From_Dir (Share_Dir, "engine");
+   end Server_Engine_Dir;
+
    ----------------------
    -- Core_Plugins_Dir --
    ----------------------
@@ -106,6 +115,21 @@ package body GNAThub.Constants is
       return Runner;
    end Plugin_Runner;
 
+   -------------------
+   -- Server_Runner --
+   -------------------
+
+   function Server_Runner return Virtual_File is
+      Runner : Virtual_File := Create_From_Dir
+                                 (Python_Home, "bin/server-runner.py");
+   begin
+      if not Runner.Is_Regular_File then
+         Runner := Create_From_Dir (Python_Home, "Scripts/server-runner.py");
+      end if;
+
+      return Runner;
+   end Server_Runner;
+
    -------------------------
    -- Database_Model_File --
    -------------------------
@@ -132,6 +156,18 @@ package body GNAThub.Constants is
    begin
       return Create_From_Dir (Root_Dir, "logs");
    end Logs_Dir;
+
+   -------------------
+   -- HTML_Data_Dir --
+   -------------------
+
+   function HTML_Data_Dir return Virtual_File
+   is
+      Report_Dir : constant Virtual_File :=
+        Create_From_Dir (Root_Dir, "html-report");
+   begin
+      return Create_From_Dir (Report_Dir, "data");
+   end HTML_Data_Dir;
 
    -------------------
    -- Database_File --

@@ -82,6 +82,15 @@ package GNAThub.Configuration is
    function Reporters_Only return Boolean;
    --  Whether to run only plugins implementing the GNAThub.Reporter interface
 
+   function Server return Boolean;
+   --  Whether to run WEB server script
+
+   function Server_Dir return String;
+   --  Return the path for the server given on the command line
+
+   function Port return Integer;
+   --  Return the port to launch the server
+
    procedure Finalize;
    --  Free allocated memory
 
