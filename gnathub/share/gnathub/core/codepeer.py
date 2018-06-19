@@ -77,11 +77,11 @@ class CodePeer(Plugin, Runner, Reporter):
         :return: the CodePeer command line
         :rtype: collections.Iterable[str]
         """
-        cmd_line = ['codepeer', '-P', GNAThub.Project.path()]
+        cmd_line = ['codepeer', '-P', GNAThub.Project.path(),
+                    '-j%d' % GNAThub.jobs()]
         if GNAThub.subdirs():
             cmd_line.extend(['--subdirs=' + GNAThub.subdirs()])
 
-        cmd_line.extend(['-jobs', str(GNAThub.jobs()), '-update-scil'])
         return cmd_line + GNAThub.Project.scenario_switches()
 
     @staticmethod
@@ -98,7 +98,7 @@ class CodePeer(Plugin, Runner, Reporter):
         cmd_start.extend([ToolArgsPlaceholder('codepeer')])
 
         cmd_end = [
-                   '-output-msg-only', '-csv', '-show-annotations',
+                   '-output-msg-only', '-csv',
                    ToolArgsPlaceholder('codepeer_msg_reader')
                   ]
         return cmd_start + GNAThub.Project.scenario_switches() + cmd_end
