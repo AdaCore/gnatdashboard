@@ -155,7 +155,8 @@ class CodePeer(Plugin, Runner, Reporter):
             report.seek(0)
 
             # Create the tag "New" for new CodePeer messages
-            new_tag = GNAThub.Property('codepeer:is-new', 'New')
+            added_tag = GNAThub.Property('codepeer:added', 'Added')
+            removed_tag = GNAThub.Property('codepeer:removed', 'Removed')
             unchanged_tag = GNAThub.Property('codepeer:unchanged', 'Unchanged')
 
             try:
@@ -173,12 +174,18 @@ class CodePeer(Plugin, Runner, Reporter):
 
                     # Each row is a list of strings:
                     #
-                    #   File, Line, Column, Category, New?, Review?, Ranking,
-                    #   Kind, Message, Classification, CWE
+                    #   File, Line, Column, Category, History, Has_Review,
+                    #   Ranking, Kind, Message, Classification, CWE, Checks,
+                    #   Primary_Checks, Subp, Timestamp, Approved By, Comment,
+                    #   Message_Id
                     (
-                        source, line, column, rule, is_new, _, severity,
+                        source, line, column, rule, history, _, severity,
                         category, message
                     ) = record[:9]
+
+                    # ??? we are ignoring the review classification and more
+                    # importantly, the Message_Id which must be stored in the
+                    # DB to allow manual reviews. See R620-010.
 
                     if not severity or severity == 'suppressed':
                         # Some versions of codepeer report an empty severity
@@ -188,7 +195,9 @@ class CodePeer(Plugin, Runner, Reporter):
                     rule_id = rule.lower().partition(';')[0].replace(' ', '_')
                     self.__add_message(
                         source, line, column, rule_id, message, severity,
-                        [new_tag if is_new == 'TRUE' else unchanged_tag]
+                        [added_tag if history == 'added' else
+                         (removed_tag if history == 'removed' else
+                          unchanged_tag)]
                     )
 
                     if index % 100 == 1 or index == total:
