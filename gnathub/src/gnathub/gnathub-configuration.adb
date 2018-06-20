@@ -44,19 +44,20 @@ package body GNAThub.Configuration is
 
    Config : GNAT.Command_Line.Command_Line_Configuration;
 
-   Project_Arg        : aliased GNAT.Strings.String_Access;
-   Script_Arg         : aliased GNAT.Strings.String_Access;
-   Target_Arg         : aliased GNAT.Strings.String_Access;
-   Subdirs_Arg        : aliased GNAT.Strings.String_Access;
-   Runtime_Arg        : aliased GNAT.Strings.String_Access;
-   Jobs_Arg           : aliased Integer;
-   Dry_Run_Arg        : aliased Boolean;
-   Version_Arg        : aliased Boolean;
-   Quiet_Arg          : aliased Boolean;
-   Verbose_Arg        : aliased Boolean;
-   Incremental_Arg    : aliased Boolean;
-   Runners_Only_Arg   : aliased Boolean;
-   Reporters_Only_Arg : aliased Boolean;
+   Project_Arg          : aliased GNAT.Strings.String_Access;
+   Script_Arg           : aliased GNAT.Strings.String_Access;
+   Target_Arg           : aliased GNAT.Strings.String_Access;
+   Subdirs_Arg          : aliased GNAT.Strings.String_Access;
+   Runtime_Arg          : aliased GNAT.Strings.String_Access;
+   Jobs_Arg             : aliased Integer;
+   Dry_Run_Arg          : aliased Boolean;
+   Version_Arg          : aliased Boolean;
+   Quiet_Arg            : aliased Boolean;
+   Verbose_Arg          : aliased Boolean;
+   Incremental_Arg      : aliased Boolean;
+   Runners_Only_Arg     : aliased Boolean;
+   Reporters_Only_Arg   : aliased Boolean;
+   Display_Progress_Arg : aliased Boolean;
 
    All_Plugins : Unbounded_String := Null_Unbounded_String;
    --  Store all plugins provided with --plugins
@@ -102,6 +103,12 @@ package body GNAThub.Configuration is
         (Config      => Config,
          Long_Switch => "--plugins=",
          Help        => "Comma separated list of plugins to execute");
+
+      Define_Switch
+        (Config      => Config,
+         Output      => Display_Progress_Arg'Access,
+         Long_Switch => "-d",
+         Help        => "Whether to display a progress bar for IDEs");
 
       Define_Switch
         (Config      => Config,
@@ -463,11 +470,11 @@ package body GNAThub.Configuration is
 
       if Quiet_Arg then
          GNAThub.Set_Verbosity (Quiet);
-      end if;
-
-      if Verbose_Arg then
+      elsif Verbose_Arg then
          GNAThub.Set_Verbosity (Verbose);
       end if;
+
+      GNAThub.Set_IDE_Progress_Bar (Display_Progress_Arg);
 
       --  Ensure consistency of use for --plugins and --exec
 
@@ -626,6 +633,15 @@ package body GNAThub.Configuration is
    begin
       return Interpreter_Mode or else Incremental_Arg;
    end Incremental;
+
+   ----------------------
+   -- Display_Progress --
+   ----------------------
+
+   function Display_Progress return Boolean is
+   begin
+      return Display_Progress_Arg;
+   end Display_Progress;
 
    -------------
    -- Dry_Run --

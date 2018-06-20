@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2016, AdaCore                     --
+--                     Copyright (C) 2013-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -53,6 +53,9 @@ package GNAThub is
 
    procedure Set_Verbosity (Verbosity : Verbosity_Level);
    --  Set the output verbosity of the GNAThub application
+
+   procedure Set_IDE_Progress_Bar (Progress : Boolean);
+   --  Set whether a progress bar for IDEs should be displayed
 
    procedure Progress
      (Current  : Natural;

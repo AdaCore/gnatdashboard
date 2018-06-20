@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2016, AdaCore                     --
+--                     Copyright (C) 2013-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -26,6 +26,9 @@ package body GNAThub is
 
    Output_Verbosity : Verbosity_Level := Default;
    --  Verbosity of the program
+
+   IDE_Progress_Bar : Boolean := False;
+   --  Whether a progress bar for IDEs should be displayed
 
    function Format_Message
      (Message : String; Prefix : String := "") return String;
@@ -137,6 +140,15 @@ package body GNAThub is
       Trace (Me, "Output_Verbosity = " & Verbosity_Level'Image (Verbosity));
    end Set_Verbosity;
 
+   --------------------------
+   -- Set_IDE_Progress_Bar --
+   --------------------------
+
+   procedure Set_IDE_Progress_Bar (Progress : Boolean) is
+   begin
+      IDE_Progress_Bar := Progress;
+   end Set_IDE_Progress_Bar;
+
    --------------
    -- Progress --
    --------------
@@ -158,16 +170,20 @@ package body GNAThub is
       end Image;
 
       Percent : constant Integer := Current * 100 / Total;
-      Message : constant String  := "... completed " & Image (Current) &
+      Message : constant String  := "completed " & Image (Current) &
                                     " out of " & Image (Total) &
                                     " (" & Image (Percent) & "%)";
 
    begin
       if Output_Verbosity >= Default then
-         Put (Message & ASCII.CR);
+         if IDE_Progress_Bar then
+            Put_Line (Message & "...");
+         else
+            Put ("... " & Message & ASCII.CR);
 
-         if New_Line then
-            Ada.Text_IO.New_Line;
+            if New_Line then
+               Ada.Text_IO.New_Line;
+            end if;
          end if;
       end if;
 

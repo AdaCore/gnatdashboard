@@ -66,6 +66,9 @@ package GNAThub.Configuration is
    function Incremental return Boolean;
    --  Whether the run should be incremental (not removing the DB) or not
 
+   function Display_Progress return Boolean;
+   --  Whether to display a progress bar for IDEs
+
    function Dry_Run return Boolean;
    --  Whether to run GNAThub in dry run mode (--dry-run). In dry run mode,
    --  GNAThub only list the plugins that it would execute.

@@ -191,7 +191,9 @@ class CodePeer(Plugin, Runner, Reporter):
                         [new_tag if is_new == 'TRUE' else unchanged_tag]
                     )
 
-                    Console.progress(index, total, new_line=(index == total))
+                    if index % 100 == 1 or index == total:
+                        Console.progress(
+                            index, total, new_line=(index == total))
 
             except csv.Error as why:
                 self.log.exception('failed to parse CSV report')
