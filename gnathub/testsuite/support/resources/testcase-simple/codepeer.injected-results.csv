@@ -1,4 +1,4 @@
-File,Line,Column,Category,New?,Review?,Ranking,Kind,Message,Classification,CWE,Checks,Primary_Checks,Subp,Timestamp,Approved By,Comment
-/gnatdashboard/gnathub/testsuite/support/resources/testcase-simple/src/f.adb,18,32,validity check,FALSE,FALSE,high,check,"validity check: uninitialized is uninitialized here",unclassified,"232,236,475","","",f.foo,,,
-/gnatdashboard/gnathub/testsuite/support/resources/testcase-simple/src/simple.adb,30,24,test always true,FALSE,FALSE,medium,warning,"test always true because J <= (42) - 38",unclassified,"561","","",test_case.bar,,,
-/gnatdashboard/gnathub/testsuite/support/resources/testcase-simple/src/simple.adb,37,8,dead code,FALSE,FALSE,medium,warning,"dead code because (1) = (42) - 41",unclassified,"561","","",test_case.bar,,,
+File,Line,Column,Category,History,Has_Review,Ranking,Kind,Message,Classification,CWE,Checks,Primary_Checks,Subp,Timestamp,Approved By,Comment,Message_Id
+c:\gnatmail\ancr\install\gnatdashboard\share\examples\gnatdashboard\testcase-simple\src\f.adb,18,32,validity check,unchanged,FALSE,high,check,validity check: uninitialized is uninitialized here,unclassified,457,,,f.foo,,,,209
+c:\gnatmail\ancr\install\gnatdashboard\share\examples\gnatdashboard\testcase-simple\src\simple.adb,30,24,test always true,unchanged,FALSE,medium,warning,test always true because J <= (42) - 38,unclassified,571,,,test_case.bar,,,,197
+c:\gnatmail\ancr\install\gnatdashboard\share\examples\gnatdashboard\testcase-simple\src\simple.adb,37,8,dead code,unchanged,FALSE,medium,warning,dead code because (1) = (42) - 41,unclassified,561,,,test_case.bar,,,,198

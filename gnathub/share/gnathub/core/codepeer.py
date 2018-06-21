@@ -179,13 +179,11 @@ class CodePeer(Plugin, Runner, Reporter):
                     #   Primary_Checks, Subp, Timestamp, Approved By, Comment,
                     #   Message_Id
                     (
-                        source, line, column, rule, history, _, severity,
-                        category, message
-                    ) = record[:9]
-
-                    # ??? we are ignoring the review classification and more
-                    # importantly, the Message_Id which must be stored in the
-                    # DB to allow manual reviews. See R620-010.
+                        source, line, column, rule, history, has_review,
+                        severity, category, message, classification, cwe,
+                        checks, pchecks, subp, timestamp, app_by, comment,
+                        message_id
+                    ) = record[:18]
 
                     if not severity or severity == 'suppressed':
                         # Some versions of codepeer report an empty severity
@@ -195,6 +193,7 @@ class CodePeer(Plugin, Runner, Reporter):
                     rule_id = rule.lower().partition(';')[0].replace(' ', '_')
                     self.__add_message(
                         source, line, column, rule_id, message, severity,
+                        message_id,
                         [added_tag if history == 'added' else
                          (removed_tag if history == 'removed' else
                           unchanged_tag)]
@@ -225,7 +224,7 @@ class CodePeer(Plugin, Runner, Reporter):
         return self.CODEPEER_TO_RANKING.get(sev, GNAThub.RANKING_UNSPECIFIED)
 
     def __add_message(self, src, line, column, rule_id, msg, category,
-                      properties):
+                      tool_msg_id, properties):
         """Add CodePeer message to current session database.
 
         :param str src: message source file
@@ -234,6 +233,7 @@ class CodePeer(Plugin, Runner, Reporter):
         :param str rule_id: message rule identifier
         :param str msg: description of the message
         :param str category: the category of the message
+        :param str tool_msg_id: the original id of the message
         :param properties: the message properties
         :type properties: collections.Iterable[GNAThub.Property] or None
         """
@@ -248,12 +248,17 @@ class CodePeer(Plugin, Runner, Reporter):
             rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
             self.rules[rule_id] = rule
 
+        # Get message id from string
+        msg_id = 0
+        if tool_msg_id and tool_msg_id.strip().isdigit():
+            msg_id = int(tool_msg_id)
+
         # Cache the messages
-        if (rule, msg, ranking) in self.messages:
-            message = self.messages[(rule, msg, ranking)]
+        if (rule, msg, ranking, msg_id) in self.messages:
+            message = self.messages[(rule, msg, ranking, msg_id)]
         else:
-            message = GNAThub.Message(rule, msg, ranking, properties)
-            self.messages[(rule, msg, ranking)] = message
+            message = GNAThub.Message(rule, msg, ranking, msg_id, properties)
+            self.messages[(rule, msg, ranking, msg_id)] = message
 
         # Add the message to the given resource
         self.bulk_data[src].append(

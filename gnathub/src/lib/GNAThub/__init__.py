@@ -513,10 +513,11 @@ class Message(object):
 
     """A Message object, representing one message in the database."""
 
-    __slots__ = ('id', 'rule_id', 'data', 'ranking',
+    __slots__ = ('id', 'rule_id', 'data', 'ranking', 'tool_msg_id',
                  'line', 'col_begin', 'col_end')
 
-    def __init__(self, rule, message, ranking=1, properties=None):
+    def __init__(self, rule, message, ranking=1, tool_msg_id=0,
+                 properties=None):
         """Return the message matching the given properties.
 
         :param GNAThub.Rule rule: the rule to which this message belongs
@@ -529,6 +530,7 @@ class Message(object):
                        3-'Low',
                        4-'Medium',
                        5-'High'
+        :param int tool_msg_id: the tool original message id
         :param properties: one or more properties
         :type properties: collections.Iterable[GNAThub.Property] or None
         """

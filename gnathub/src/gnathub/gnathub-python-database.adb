@@ -156,6 +156,7 @@ package body GNAThub.Python.Database is
       Rule_Id      : Integer;
       Message_Data : String;
       Ranking      : Integer;
+      Tool_Msg_Id  : Integer;
       Line         : Integer := -1;
       Col_Begin    : Integer := -1;
       Col_End      : Integer := -1);
@@ -374,7 +375,7 @@ package body GNAThub.Python.Database is
                            Database.DB.Execute
                              (Stmt   => Insert_Entity_Message,
                               Params => (1 => +Entity_Id,
-                                      2 => +Message_Id));
+                                         2 => +Message_Id));
                         end;
                      end loop;
                   end;
@@ -619,6 +620,7 @@ package body GNAThub.Python.Database is
       Rule_Id      : Integer;
       Message_Data : String;
       Ranking      : Integer;
+      Tool_Msg_Id  : Integer;
       Line         : Integer := -1;
       Col_Begin    : Integer := -1;
       Col_End      : Integer := -1) is
@@ -630,6 +632,8 @@ package body GNAThub.Python.Database is
       Set_Property (Message_Inst, "data", Message_Data);
 
       Set_Property (Message_Inst, "ranking", Ranking);
+
+      Set_Property (Message_Inst, "tool_msg_id", Tool_Msg_Id);
 
       if Line /= -1 then
          Set_Property (Message_Inst, "line", Line);
@@ -755,6 +759,7 @@ package body GNAThub.Python.Database is
             Message_Data : constant String := Nth_Arg (Data, 3);
             Ranking      : constant Integer := Nth_Arg
               (Data, 4, Default => Ranking_Unspecified);
+            Tool_Msg_Id  : constant Integer := Nth_Arg (Data, 5, Default => 0);
             Q            : SQL_Query;
             R            : Forward_Cursor;
             Id           : Integer;
@@ -764,7 +769,8 @@ package body GNAThub.Python.Database is
                   From  => D.Messages,
                   Where => D.Messages.Rule_Id = Rule_Id
                            and D.Messages.Data = Message_Data
-                           and D.Messages.Ranking = Ranking);
+                           and D.Messages.Ranking = Ranking
+                           and D.Messages.Tool_Msg_Id = Tool_Msg_Id);
 
             Message_Inst := Nth_Arg (Data, 1, Message_Class);
             R.Fetch (DB, Q);
@@ -774,7 +780,7 @@ package body GNAThub.Python.Database is
                Id := R.Integer_Value (0);
 
                declare
-                  Props        : constant List_Instance := Nth_Arg (Data, 5);
+                  Props        : constant List_Instance := Nth_Arg (Data, 6);
                   Length       : constant Natural := Props.Number_Of_Arguments;
                   Prop_Id      : Integer;
                   Unused_PK    : Integer;
@@ -785,7 +791,8 @@ package body GNAThub.Python.Database is
                      Id := DB.Insert_And_Get_PK
                        (SQL_Insert (((D.Messages.Rule_Id = Rule_Id) &
                                      (D.Messages.Data = Message_Data) &
-                                     (D.Messages.Ranking = Ranking))),
+                                     (D.Messages.Ranking = Ranking) &
+                                     (D.Messages.Tool_Msg_Id = Tool_Msg_Id))),
                         PK => D.Messages.Id);
 
                      --  Set properties for new message
@@ -810,12 +817,13 @@ package body GNAThub.Python.Database is
                Id := DB.Insert_And_Get_PK (SQL_Insert
                     (((D.Messages.Rule_Id = Rule_Id) &
                       (D.Messages.Data = Message_Data) &
-                      (D.Messages.Ranking = Ranking))),
+                      (D.Messages.Ranking = Ranking) &
+                      (D.Messages.Tool_Msg_Id = Tool_Msg_Id))),
                      PK => D.Messages.Id);
 
                --  Link the message with associated properties
                declare
-                  Props     : constant List_Instance := Nth_Arg (Data, 5);
+                  Props     : constant List_Instance := Nth_Arg (Data, 6);
                   Length    : constant Natural := Props.Number_Of_Arguments;
                   Prop_Id   : Integer;
                   Unused_PK : Integer;
@@ -834,7 +842,7 @@ package body GNAThub.Python.Database is
             end if;
 
             Set_Message_Fields
-              (Message_Inst, Id, Rule_Id, Message_Data, Ranking);
+              (Message_Inst, Id, Rule_Id, Message_Data, Ranking, Tool_Msg_Id);
          end;
 
       elsif Command = "list" then
@@ -847,7 +855,8 @@ package body GNAThub.Python.Database is
               (To_List ((0 => +D.Messages.Id,
                          1 => +D.Messages.Rule_Id,
                          2 => +D.Messages.Data,
-                         3 => +D.Messages.Ranking)),
+                         3 => +D.Messages.Ranking,
+                         4 => +D.Messages.Tool_Msg_Id)),
                From  => D.Messages);
             R.Fetch (DB, Q);
 
@@ -856,7 +865,8 @@ package body GNAThub.Python.Database is
                Set_Message_Fields
                  (Message_Inst,
                   R.Integer_Value (0), R.Integer_Value (1),
-                  R.Value (2), R.Integer_Value (3, Ranking_Unspecified));
+                  R.Value (2), R.Integer_Value (3, Ranking_Unspecified),
+                  R.Integer_Value (4, 0));
                Set_Return_Value (Data, Message_Inst);
 
                R.Next;
@@ -1095,9 +1105,10 @@ package body GNAThub.Python.Database is
                    1 => +D.Messages.Rule_Id,
                    2 => +D.Messages.Data,
                    3 => +D.Messages.Ranking,
-                   4 => +D.Resources_Messages.Line,
-                   5 => +D.Resources_Messages.Col_Begin,
-                   6 => +D.Resources_Messages.Col_End)),
+                   4 => +D.Messages.Tool_Msg_Id,
+                   5 => +D.Resources_Messages.Line,
+                   6 => +D.Resources_Messages.Col_Begin,
+                   7 => +D.Resources_Messages.Col_End)),
 
                From  => D.Messages & D.Resources_Messages,
 
@@ -1114,9 +1125,10 @@ package body GNAThub.Python.Database is
                   Rule_Id      => R.Integer_Value (1),
                   Message_Data => R.Value (2),
                   Ranking      => R.Integer_Value (3, Ranking_Unspecified),
-                  Line         => R.Integer_Value (4, 0),
-                  Col_Begin    => R.Integer_Value (5, 0),
-                  Col_End      => R.Integer_Value (6, 0));
+                  Tool_Msg_Id  => R.Integer_Value (4, 0),
+                  Line         => R.Integer_Value (5, 0),
+                  Col_Begin    => R.Integer_Value (6, 0),
+                  Col_End      => R.Integer_Value (7, 0));
 
                Set_Return_Value (Data, Message_Inst);
 
@@ -1144,9 +1156,10 @@ package body GNAThub.Python.Database is
                    1 => +D.Messages.Rule_Id,
                    2 => +D.Messages.Data,
                    3 => +D.Messages.Ranking,
-                   4 => +D.Entities.Line,
-                   5 => +D.Entities.Col_Begin,
-                   6 => +D.Entities.Col_End)),
+                   4 => +D.Messages.Tool_Msg_Id,
+                   5 => +D.Entities.Line,
+                   6 => +D.Entities.Col_Begin,
+                   7 => +D.Entities.Col_End)),
 
                From  => D.Messages & D.Entities & D.Entities_Messages,
 
@@ -1164,9 +1177,10 @@ package body GNAThub.Python.Database is
                   Rule_Id      => R.Integer_Value (1),
                   Message_Data => R.Value (2),
                   Ranking      => R.Integer_Value (3, Ranking_Unspecified),
-                  Line         => R.Integer_Value (4, 0),
-                  Col_Begin    => R.Integer_Value (5, 0),
-                  Col_End      => R.Integer_Value (6, 0));
+                  Tool_Msg_Id  => R.Integer_Value (4, 0),
+                  Line         => R.Integer_Value (5, 0),
+                  Col_Begin    => R.Integer_Value (6, 0),
+                  Col_End      => R.Integer_Value (7, 0));
 
                Set_Return_Value (Data, Message_Inst);
 
@@ -1358,9 +1372,10 @@ package body GNAThub.Python.Database is
                    1 => +D.Messages.Rule_Id,
                    2 => +D.Messages.Data,
                    3 => +D.Messages.Ranking,
-                   4 => +D.Entities.Line,
-                   5 => +D.Entities.Col_Begin,
-                   6 => +D.Entities.Col_End)),
+                   4 => +D.Messages.Tool_Msg_Id,
+                   5 => +D.Entities.Line,
+                   6 => +D.Entities.Col_Begin,
+                   7 => +D.Entities.Col_End)),
 
                From  => D.Messages & D.Entities & D.Entities_Messages,
 
@@ -1378,9 +1393,10 @@ package body GNAThub.Python.Database is
                   Rule_Id      => R.Integer_Value (1),
                   Message_Data => R.Value (2),
                   Ranking      => R.Integer_Value (3, Ranking_Unspecified),
-                  Line         => R.Integer_Value (4, 0),
-                  Col_Begin    => R.Integer_Value (5, 0),
-                  Col_End      => R.Integer_Value (6, 0));
+                  Tool_Msg_Id  => R.Integer_Value (4, 0),
+                  Line         => R.Integer_Value (5, 0),
+                  Col_Begin    => R.Integer_Value (6, 0),
+                  Col_End      => R.Integer_Value (7, 0));
 
                Set_Return_Value (Data, Message_Inst);
 
@@ -1482,6 +1498,7 @@ package body GNAThub.Python.Database is
            (Param ("rule"),
             Param ("message"),
             Param ("ranking", Optional => True),
+            Param ("tool_msg_id", Optional => True),
             Param ("properties", Optional => True)),
          Handler => Message_Command_Handler'Access,
          Class   => Message_Class);

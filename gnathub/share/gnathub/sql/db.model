@@ -14,6 +14,7 @@
 | rule_id       | FK rules(rule_messages)           | NOT NULL          |   | Messages' associated rule                                                     |
 | data          | TEXT                              |                   |   | Value associated with the message, possibly a numeric value for metrics       |
 | ranking       | INTEGER                           | NOT NULL          | 1 | Values : 0-Annotation, 1-Unspecified, 2-Info, 3-Low, 4-Medium, 5-High         |
+| tool_msg_id   | INTEGER                           | NOT NULL          | 0 | Stores original message id value issued from tools                            |
 
 | TABLE         | resources                         | resource          |   | Resource in the project, can be either a project, a directory or a file       |
 | id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
