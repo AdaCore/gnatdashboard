@@ -127,17 +127,6 @@ def port():
     return NotImplemented   # Implemented in Ada
 
 
-def server_dir():
-    """Return the server directory path provided with the switch.
-
-    This is the equivalent to using :`--server-dir` switch on the command-line.
-
-    :return: the server script location path
-    :rtype: str
-    """
-    return NotImplemented   # Implemented in Ada
-
-
 def repositories():
     """Return the list of available repositories.
 

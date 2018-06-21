@@ -31,6 +31,9 @@ LOG = logging.getLogger(MODULE)
 DEFAULT_SCRIPT_PATH = GNAThub.engine_repository()
 SCRIPT_NAME = 'server.py'
 
+# Default port value
+DEFAULT_PORT = 8000
+
 # Determine script path and check is different of default value
 script_path = DEFAULT_SCRIPT_PATH
 #  TO DO : Add handling when path is given via --server-dir
@@ -48,7 +51,12 @@ else:
     if os.path.exists(server_script_path):
         if os.path.isfile(server_script_path):
             try:
-                msg_exec = 'execute server script ' + SCRIPT_NAME
+                port = DEFAULT_PORT
+                if GNAThub.port():
+                    port = GNAThub.port()
+
+                msg_exec = 'execute ' + SCRIPT_NAME
+                msg_exec = msg_exec + ' (PORT NUMBER: ' + str(port) + ')'
                 Console.info(msg_exec, prefix=MODULE)
                 execfile(server_script_path)
             except Exception as why:

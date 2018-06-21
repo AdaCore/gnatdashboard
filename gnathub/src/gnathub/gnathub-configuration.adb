@@ -61,7 +61,6 @@ package body GNAThub.Configuration is
 
    --  WEB server handling
    Server_Arg         : aliased Boolean;
-   Server_Dir_Arg     : aliased GNAT.Strings.String_Access;
    Port_Arg           : aliased Integer;
 
    All_Plugins : Unbounded_String := Null_Unbounded_String;
@@ -194,13 +193,6 @@ package body GNAThub.Configuration is
          Switch       => "-p:",
          Long_Switch  => "--port=",
          Help         => "Specify a port to launch server (default: 8000)");
-
-      Define_Switch
-        (Config       => Config,
-         Output       => Server_Dir_Arg'Access,
-         Switch       => "-serv-dir:",
-         Long_Switch  => "--server-dir=",
-         Help         => "Specify a directory for server (current directory)");
 
       Define_Switch
         (Config      => Config,
@@ -686,15 +678,6 @@ package body GNAThub.Configuration is
    begin
       return Server_Arg;
    end Server;
-
-   ----------------
-   -- Server_Dir --
-   ----------------
-
-   function Server_Dir return String is
-   begin
-      return Server_Dir_Arg.all;
-   end Server_Dir;
 
    -------------
    -- Port -----

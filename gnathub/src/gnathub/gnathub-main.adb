@@ -256,26 +256,28 @@ begin
    Trace (Me, "Setup execution environment");
    Create_Project_Directory_Env;
 
-   if GNAThub.Configuration.Incremental
-      and then not Is_Regular_File (Database_Full_Path)
-   then
-      Warn ("database does not exist but --incremental or --exec used");
-   end if;
-
-   Trace (Me, "Initialize local database");
-   Init_Local_Database (Overwrite => not GNAThub.Configuration.Incremental);
-
-   if GNAThub.Configuration.Interpreter_Mode then
-      Trace (Me, "Execute user script: " & Script);
-      Execute_User_Script;
-   else
-      Trace (Me, "Execute plugin-runner");
-      Execute_Plugin_Runner;
-   end if;
-
    if GNAThub.Configuration.Server then
-      Trace (Me, "Launch server");
+      Trace (Me, "Launch only WEB server "
+             & " (ignore all other command line switches if any)");
       Execute_Server_Script;
+
+   else
+      if GNAThub.Configuration.Incremental
+        and then not Is_Regular_File (Database_Full_Path)
+      then
+         Warn ("database does not exist but --incremental or --exec used");
+      end if;
+
+      Trace (Me, "Initialize local database");
+      Init_Local_Database (Overwrite => not GNAThub.Configuration.Incremental);
+
+      if GNAThub.Configuration.Interpreter_Mode then
+         Trace (Me, "Execute user script: " & Script);
+         Execute_User_Script;
+      else
+         Trace (Me, "Execute plugin-runner");
+         Execute_Plugin_Runner;
+      end if;
    end if;
 
    Trace (Me, "Execution completed");

@@ -80,10 +80,9 @@ package body GNAThub.Python is
    Reporters_Only_Function    : aliased constant String := "reporters_only";
    Tool_Args_Function         : constant String := "tool_args";
    Server_Port_Function       : aliased constant String := "port";
-   Server_Dir_Function        : aliased constant String := "server_dir";
 
    No_Args_Root_Module_Functions :
-     constant array (1 .. 16) of access constant String :=
+     constant array (1 .. 15) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         HTML_Data_Function'Access,
@@ -98,8 +97,7 @@ package body GNAThub.Python is
         Engine_Repository_Function'Access,
         Runners_Only_Function'Access,
         Reporters_Only_Function'Access,
-        Server_Port_Function'Access,
-        Server_Dir_Function'Access);
+        Server_Port_Function'Access);
 
    --------------------
    -- GNAThub Module --
@@ -722,9 +720,6 @@ package body GNAThub.Python is
 
       elsif Command = Server_Port_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Port);
-
-      elsif Command = Server_Dir_Function then
-         Set_Return_Value (Data, GNAThub.Configuration.Server_Dir);
 
       elsif Command = Tool_Args_Function then
          --  Return a list of arguments
