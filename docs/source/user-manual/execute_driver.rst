@@ -192,8 +192,8 @@ The following tools are currently supported by the |GNAThub|'s core plugins:
 | |GNATcoverage| | gnatcoverage    | Parse the :file:`.xcov` files              |
 +----------------+-----------------+--------------------------------------------+
 
-|GNAThub|'s additonal plug-ins
-------------------------------
+|GNAThub|'s additional plug-ins
+-------------------------------
 
 An additional :command:`[global]` repository is available for the user to store
 plugins.  |GNAThub| searches this directory looking for additional plugins
@@ -313,5 +313,14 @@ using a default port which is 8000. Any plugin will be executed.
 :command:`--port`
 ^^^^^^^^^^^^^^^^^^^^
 
-Takes a port number as argument where the web server will be launched. To be used
-with `--server` switch in order to specify a custom port for the WEB server.
+Takes a port number as argument where the web server will be launched. To be
+used with `--server` switch in order to specify a custom port for the WEB
+server.
+
+:command:`-d`
+^^^^^^^^^^^^^
+
+Display progress for use in IDEs. This command is mainly intended for
+integration in IDEs, e.g. GPS.
+
+
