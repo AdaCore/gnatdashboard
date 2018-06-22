@@ -7,7 +7,8 @@ project Simple is
 
    package Compiler is
       for Default_Switches ("Ada")
-        use ("-ftest-coverage", "-fprofile-arcs", "-gnatwa");
+      use ("-ftest-coverage", "-fprofile-arcs",
+           "-gnatwa", "-fcallgraph-info=su");
    end Compiler;
 
    package Linker is
