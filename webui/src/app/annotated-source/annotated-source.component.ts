@@ -16,7 +16,9 @@ import { Router } from '@angular/router';
 import { PageScrollInstance, PageScrollService } from 'ng2-page-scroll';
 import { Subscription } from 'rxjs';
 
-import { SharedReport } from '../main-responder.service'
+import { SharedReport } from '../main-responder.service';
+
+import { DialogsService } from './dialog.service'
 
 import {
     IAnnotatedSourceFile,
@@ -28,7 +30,8 @@ type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
 @Component({
     selector: 'annotated-source',
     templateUrl: './annotated-source.component.html',
-    styleUrls: [ 'annotated-source.component.scss' ]
+    styleUrls: [ 'annotated-source.component.scss' ],
+    providers: [DialogsService]
 })
 export class AnnotatedSourceComponent
     implements AfterViewInit, OnDestroy, OnInit
@@ -42,21 +45,22 @@ export class AnnotatedSourceComponent
     public inlineMessagesShownCount: number = 0;
     public inlineAnnotations: { [line: number]: IAnnotatedSourceMessage[] };
     public tabOpen = 'message';
+    public checked_msg: Array<number> = [];
     private sub: Subscription;
 
     @ViewChild('scrollView') private scrollView: ElementRef;
 
     constructor(
-        @Inject(DOCUMENT) private document: Document,
-        private pageScrollService: PageScrollService,
-        private route: ActivatedRoute,
-        private router: Router,
-        public reportService: SharedReport) {}
+    @Inject(DOCUMENT) private document: Document,
+     private pageScrollService: PageScrollService,
+     private route: ActivatedRoute,
+     private router: Router,
+     public reportService: SharedReport,
+     public dialog: DialogsService) {}
 
     /** @override */
     public ngOnInit() {
 
-        console.log("this.source ", this.source);
         this.source.coverage = this.source.coverage || {};
         this.source.messages = this.source.messages || [];
         this.source.annotations = this.source.annotations || [];
@@ -83,7 +87,7 @@ export class AnnotatedSourceComponent
             if (!this.inlineAnnotations.hasOwnProperty(line)) {
                 this.inlineAnnotations[line] = new Set();
             }
-             this.inlineAnnotations[line].add(annotation);
+            this.inlineAnnotations[line].add(annotation);
         }.bind(this));
 
         this.sub = this.route.params.subscribe(params => {
@@ -128,6 +132,72 @@ export class AnnotatedSourceComponent
     public changeFile(filename: string, file_line: number) {
         this.router.navigate(['/source', filename, { line: file_line }]);
         window.location.reload();
+    }
+
+    public checkMessage(id: number) {
+        let index = this.checked_msg.indexOf(id);
+        if (index != -1) {
+            this.checked_msg.splice(index, 1);
+        } else {
+            this.checked_msg.push(id);
+        }
+    }
+
+    public addDynamicReview(new_review) {
+        this.reportService.message.sources.forEach(function(source){
+            if (source.messages){
+                source.messages.forEach(function(message){
+                    if (new_review[message.tool_msg_id]){
+                        if (!message.user_review) {
+                            message.user_review = [];
+                        }
+                        message.user_review.unshift(new_review[message.tool_msg_id]);
+                    }
+                })
+            }
+        });
+    }
+
+    public writeReview() {
+
+        if (!this.checked_msg || this.checked_msg.length == 0) {return }
+        this.dialog.review().subscribe((data: any) => {
+
+            let date = Date.now();
+            let xml = '<?xml version="1.0" encoding="utf-8"?>\n<audit_trail format="6">\n';
+            let new_review = [];
+
+            this.checked_msg.forEach(function(id){
+
+                /* Create the xml to send to codepeer_bridge */
+                xml += '<message identifier="' + id + '">\n';
+                xml += '<audit timestamp="' + date + '" ';
+
+                /* Create the object to add to the client side to show it */
+                new_review[id] = {};
+                new_review[id].date = date;
+
+                if (data.status) {
+                    xml += 'status="' + data.status + '" ';
+                    new_review[id].status = data.status;
+                }
+                if (data.username) {
+                    xml += 'approved="' + data.username + '" ';
+                    new_review[id].author = data.username;
+                }
+                xml += 'from_source="FALSE">';
+                if (data.review) {
+                    xml += data.review;
+                    new_review[id].message = data.review;
+                }
+                xml += '</audit>\n</message>\n';
+
+            });
+            xml += '</audit_trail>';
+
+            this.reportService.sendUserReview(xml);
+            this.addDynamicReview(new_review);
+        });
     }
 
 }

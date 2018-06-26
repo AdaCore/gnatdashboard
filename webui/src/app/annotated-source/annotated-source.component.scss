@@ -131,6 +131,16 @@
             background-color: var(--selected-color) !important;
         }
 
+        .checkbox-span {
+            text-align: right;
+            padding-right: 10px;
+            input[type="checkbox"] {
+                margin-top: 2px;
+                position: absolute;
+                transform: scale(1.25);
+            }
+        }
+
         .message-tree {
             position: absolute;
             left: -5px;
@@ -236,5 +246,19 @@
         position: absolute;
 
         md-icon.expanded { transform: rotate(180deg); }
+    }
+
+    &-review-btn {
+        border: 0;
+        padding: 3px 10px;
+        height: 24px ;
+        border-radius: 2px;
+        right: 60px;
+        position: absolute;
+    }
+
+    &-review-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
     }
 }

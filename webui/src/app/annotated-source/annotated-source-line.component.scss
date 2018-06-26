@@ -26,6 +26,17 @@
     text-decoration: none;
     &::before { content: attr(data-line-number); }
   }
+
+  .review-btn {
+    display: none;
+  }
+
+  &:hover .review-btn {
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    font-size: 20px;
+  }
 }
 
 .line-content {

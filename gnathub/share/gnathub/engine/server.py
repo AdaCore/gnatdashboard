@@ -35,6 +35,8 @@ SERVER_DIR_PATH = GNAThub.html_data()
 class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
     json_pattern = re.compile("^\/json\/[a-z]*.json")
+    get_review_pattern = re.compile("^\/get-review\/")
+    post_review_pattern = re.compile("^\/post-review\/")
 
     # Error if not declared ?
     def __base__():
@@ -74,11 +76,82 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write("No such file")
 
+    def _get_review(self):
+        filename = 'codepeer_review.xml'
+
+        self._export_codeper_bridge(filename)
+
+        path = SERVER_DIR_PATH
+        serverpath = os.path.join(os.getcwd(), path)
+        filepath = ''
+
+        # Find the path to the asked file
+        for root, dirs, files in os.walk(serverpath):
+            if filename in files:
+                filepath = os.path.join(root, filename)
+
+        if os.path.isfile(filepath):
+            with open(filepath, 'r') as myFile:
+                data = myFile.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "text/xml")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(data)
+        else:
+            self.send_response(404)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write("No such file")
+
+    def _export_codeper_bridge(self, filename):
+        os.system('codepeer_bridge '
+                  + '--output-dir=obj/codepeer/sdc.output/ '
+                  + '--export-reviews=obj/gnathub/html-report/data/'
+                  + filename)
+
+    def _post_review(self):
+        temp_filename = 'user_review_temp.xml'
+
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+
+        tempFile = open(temp_filename, "w+")
+        tempFile.write(post_data)
+        tempFile.close()
+
+        self._import_codepeer_bridge(temp_filename)
+
+        self.send_response(200)
+        self.send_header("Content-Type", "text/xml")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write("OK")
+
+    def _import_codepeer_bridge(self, filename):
+        os.system('codepeer_bridge '
+                  + '--output-dir=obj/codepeer/sdc.output/ '
+                  + '--import-reviews='
+                  + filename)
+
     def do_GET(self, **args):
-        print "received the following request: {}".format(self.path)
+        print "received the following GET request: {}".format(self.path)
 
         if self.json_pattern.match(self.path):
             self._get_json()
+        elif self.get_review_pattern.match(self.path):
+            self._get_review()
+        elif self.post_review_pattern.match(self.path):
+            self._post_review()
+        else:
+            self._error_not_found()
+
+    def do_POST(self, **args):
+        print "received the following POST request: {}".format(self.path)
+
+        if self.post_review_pattern.match(self.path):
+            self._post_review()
         else:
             self._error_not_found()
 

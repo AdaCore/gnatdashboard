@@ -50,11 +50,19 @@ declare module 'gnat' {
         tool_id: number;
     }
 
+    //Create the review for the review filter
+    export interface IReview {
+        id: number;
+        name: string;
+        tool_id: number;
+    }
+
     // Now concats the propert for filters and for specific filter
     export interface IRuleFilter extends IRule, IFilter {}
     export interface IToolFilter extends ITool, IFilter {}
     export interface IPropertyFilter extends IProperty, IFilter {}
     export interface IRankingFilter extends IRanking, IFilter {}
+    export interface IReviewFilter extends IReview, IFilter {}
 
     // Define the model for the filter object
     export interface IFilterIndex {
@@ -108,6 +116,14 @@ declare module 'gnat' {
     //  Part for the message.json (message-navigation)
     // **
 
+    export interface IReviewUser {
+        author : string;
+        status: string;
+        date: string;
+        from_source: string;
+        message: string;
+    }
+
     export interface IMessage {
         id: number;
         col_begin: number;
@@ -117,6 +133,8 @@ declare module 'gnat' {
         properties: IProperty[];
         rule: IRule;
         ranking: IRanking;
+        tool_msg_id: number;
+        user_review: IReviewUser[];
     }
 
     export interface ISourceNav {

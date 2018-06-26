@@ -2,7 +2,7 @@ import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { MaterialModule } from '@angular/material';
+import { MaterialModule } from '@angular/material'
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import {
     removeNgStyles, createNewHosts, createInputTransfer
@@ -24,6 +24,8 @@ import {
     AnnotatedSourceLineComponent,
     AnnotatedSourceViewComponent
 } from './annotated-source';
+import { ReviewDialog } from './annotated-source/review-dialog.component'
+import { DialogsService } from './annotated-source/dialog.service'
 import { CountPipe } from './count.pipe';
 import { FilterSelectorComponent } from './filter-selector';
 import { FilterPanelComponent } from './filter-selector';
@@ -82,7 +84,8 @@ type StoreType = {
         NotEmptyPipe,
         CodeExplorerComponent,
         MessageExplorerComponent,
-        SpinnerComponent
+        SpinnerComponent,
+        ReviewDialog
     ],
     imports: [
         BrowserModule,
@@ -98,7 +101,8 @@ type StoreType = {
     providers: [
         APP_PROVIDERS,
         ENV_PROVIDERS
-    ]
+    ],
+    entryComponents: [ReviewDialog]
 })
 export class AppModule {
     constructor(public appRef: ApplicationRef, public appState: AppState) {}

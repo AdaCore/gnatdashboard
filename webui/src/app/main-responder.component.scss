@@ -109,3 +109,87 @@ body { overflow: hidden; }
     }
 
 }
+
+.cdk-overlay-container {
+
+
+    .cdk-global-overlay-wrapper {
+        position: absolute ;
+        display: inline-block;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+    }
+
+    .cdk-overlay-pane, .md-dialog-container,
+    cdk-focus-trap, .cdk-focus-trap-content, review-dialog {
+        width: 100%;
+        height: 100%;
+        display: inline-block;
+    }
+
+    md-dialog-container {
+        overflow: hidden;
+        max-width: 100%;
+    }
+
+    review-dialog {
+
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+
+        .form-back {
+            background-color: rgba(0, 0, 0, .2);
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .form-box {
+            top: calc(50% - 350px) ;
+            left: calc(50% - 235px)  ;
+            width: 700px;
+            height: 470px;
+            background-color: white;
+
+            .form-title {
+                padding-top: 20px;
+                padding-bottom: 30px;
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .form-field {
+                padding-bottom: 10px;
+            }
+
+
+            .dialog-error {
+                display: none;
+            }
+            .dialog-error.show {
+                background-color: #b2222287;
+                border-radius: 5px;
+                padding: 5px 15px;
+                border: 1px solid firebrick;
+                margin-top: 10px;
+                display: inline-block;
+            }
+
+            [md-button] {
+                bottom: 10px;
+                position: absolute;
+                left: 10px;
+            }
+            [md-raised-button] {
+                bottom: 10px;
+                position: absolute;
+                right: 10px
+            }
+        }
+    }
+}

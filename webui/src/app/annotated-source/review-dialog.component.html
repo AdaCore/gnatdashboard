@@ -1,0 +1,29 @@
+<span class="form-back col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="cancel()"></span>
+<span class="form-box col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <span  class="form-title col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        Create a new review :
+    </span>
+    <span class="form-field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span class="col-lg-3 col-md-4 col-sm-12 col-xs-12"> Username </span>
+        <input type="text" class="col-lg-9 col-md-8 col-sm-12 col-xs-12" [(ngModel)]="username"/>
+    </span>
+    <span class="form-field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span class="col-lg-3 col-md-4 col-sm-12 col-xs-12"> Status </span>
+        <select class="col-lg-9 col-md-8 col-sm-12 col-xs-12" [(ngModel)]="status">
+            <option *ngFor=" let opt of review_status">{{opt}}</option>
+        </select>
+    </span>
+    <span class="form-field col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span class="col-lg-3 col-md-4 col-sm-12 col-xs-12"> Review </span>
+        <textarea rows="10" class="col-lg-9 col-md-8 col-sm-12 col-xs-12" [(ngModel)]="review">
+        </textarea>
+    </span>
+    <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span id='dialogError' class="dialog-error col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            You must choose a status
+        </span>
+    </span>
+    <button md-raised-button (click)="submit()"> Save </button>
+    <button md-button (click)="cancel()"> Cancel </button>
+</span>
+
