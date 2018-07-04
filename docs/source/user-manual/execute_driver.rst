@@ -317,6 +317,24 @@ Takes a port number as argument where the web server will be launched. To be
 used with `--server` switch in order to specify a custom port for the WEB
 server.
 
+:command:`--output-dir`
+^^^^^^^^^^^^^^^^^^^^
+
+Expects a directory as argument. This switch is used only by GNAThub WebUI to pass
+arguments for Codepeer bridge. The specified argument contains where the Codepeer
+output directory will be located. The location is computed relatively to the current
+directory. If this switch is not present in the GNAThub command line, the Codepeer
+default output directory will be set.
+
+:command:`--db-dir`
+^^^^^^^^^^^^^^^^^^^^
+
+Expects a directory as argument. This switch is used only by GNAThub WebUI to pass
+arguments for Codepeer bridge. The specified argument contains where the Codepeer
+database directory will be located. The location is computed relatively to the current
+directory. If this switch is not present in the GNAThub command line, the Codepeer
+default database directory will be set.
+
 :command:`-d`
 ^^^^^^^^^^^^^
 

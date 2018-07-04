@@ -186,6 +186,24 @@ def database():
     return NotImplemented   # Implemented in Ada
 
 
+def output_dir():
+    """Return the Codepeer output repository
+
+    :return: the repository path
+    :rtype: str
+    """
+    return NotImplemented   # Implemented in Ada
+
+
+def db_dir():
+    """Return the Codepeer DB repository
+
+    :return: the repository path
+    :rtype: str
+    """
+    return NotImplemented   # Implemented in Ada
+
+
 def tool_args(tool_name):
     """Return the list of extra switches to pass to an inferior tool.
 

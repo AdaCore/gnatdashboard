@@ -15,7 +15,12 @@
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Characters.Handling;
+
 with GNATCOLL.Utils; use GNATCOLL.Utils;
+
+with GNAThub.Project;       use GNAThub.Project;
+with GNAThub.Configuration; use GNAThub.Configuration;
 
 package body GNAThub.Constants is
 
@@ -177,5 +182,58 @@ package body GNAThub.Constants is
    begin
       return Create_From_Dir (Root_Dir, "gnathub.db");
    end Database_File;
+
+   ----------------------
+   -- Obj_Codepeer_Dir --
+   ----------------------
+
+   function Obj_Codepeer_Dir return Virtual_File is
+   begin
+      return Create_From_Dir (GNAThub.Project.Object_Dir, "codepeer");
+   end Obj_Codepeer_Dir;
+
+   -------------------------
+   -- Codepeer_Output_Dir --
+   -------------------------
+
+   function Codepeer_Output_Dir return Virtual_File is
+      Name : constant Filesystem_String :=
+        Filesystem_String
+          (Ada.Characters.Handling.To_Lower (GNAThub.Project.Name));
+
+      Dir  : Virtual_File;
+   begin
+      if GNAThub.Configuration.Output_Dir /= "" then
+         Dir := Create_From_Base
+           (Filesystem_String (GNAThub.Configuration.Output_Dir));
+
+      else
+         Dir := Create_From_Dir (Obj_Codepeer_Dir, Name & ".output");
+      end if;
+
+      return Dir;
+   end Codepeer_Output_Dir;
+
+   ---------------------
+   -- Codepeer_DB_Dir --
+   ---------------------
+
+   function Codepeer_DB_Dir return Virtual_File is
+      Name : constant Filesystem_String :=
+        Filesystem_String
+          (Ada.Characters.Handling.To_Lower (GNAThub.Project.Name));
+
+      Dir : Virtual_File;
+   begin
+      if GNAThub.Configuration.DB_Dir /= "" then
+         Dir := Create_From_Base
+           (Filesystem_String (GNAThub.Configuration.DB_Dir));
+
+      else
+         Dir := Create_From_Dir (Obj_Codepeer_Dir, Name & ".db");
+      end if;
+
+      return Dir;
+   end Codepeer_DB_Dir;
 
 end GNAThub.Constants;

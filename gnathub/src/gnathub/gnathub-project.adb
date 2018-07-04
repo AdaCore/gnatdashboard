@@ -140,6 +140,15 @@ package body GNAThub.Project is
       return Project_Tree.Root_Project.Project_Path;
    end Path;
 
+   -----------------
+   -- Project_Dir --
+   -----------------
+
+   function Project_Dir return Virtual_File is
+   begin
+      return Project_Tree.Root_Project.Project_Path.Dir;
+   end Project_Dir;
+
    ------------
    -- Target --
    ------------

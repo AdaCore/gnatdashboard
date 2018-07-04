@@ -85,8 +85,14 @@ package body GNAThub.Python is
    Tool_Args_Function         : constant String         := "tool_args";
    Server_Port_Function       : aliased constant String := "port";
 
+   --  Codepeer WebUI specific repositories
+   Object_Codepeer_Dir_Function : aliased constant String :=
+     "obj_codepeer_dir";
+   Codepeer_Output_Dir_Function : aliased constant String := "output_dir";
+   Codepeer_DB_Dir_Function     : aliased constant String := "db_dir";
+
    No_Args_Root_Module_Functions :
-     constant array (1 .. 16) of access constant String :=
+     constant array (1 .. 19) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         HTML_Data_Function'Access,
@@ -103,7 +109,10 @@ package body GNAThub.Python is
         Engine_Repository_Function'Access,
         Runners_Only_Function'Access,
         Reporters_Only_Function'Access,
-        Server_Port_Function'Access);
+        Server_Port_Function'Access,
+        Object_Codepeer_Dir_Function'Access,
+        Codepeer_Output_Dir_Function'Access,
+        Codepeer_DB_Dir_Function'Access);
 
    --------------------
    -- GNAThub Module --
@@ -733,6 +742,15 @@ package body GNAThub.Python is
 
       elsif Command = Server_Port_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Port);
+
+      elsif Command = Object_Codepeer_Dir_Function then
+         Set_Return_Value (Data, Obj_Codepeer_Dir.Display_Full_Name);
+
+      elsif Command = Codepeer_Output_Dir_Function then
+         Set_Return_Value (Data, Codepeer_Output_Dir.Display_Full_Name);
+
+      elsif Command = Codepeer_DB_Dir_Function then
+         Set_Return_Value (Data, Codepeer_DB_Dir.Display_Full_Name);
 
       elsif Command = Tool_Args_Function then
          --  Return a list of arguments

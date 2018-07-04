@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2016, AdaCore                     --
+--                     Copyright (C) 2013-2018, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -90,6 +90,10 @@ package GNAThub.Project is
    function Path return Virtual_File
      with Pre => Initialized and then Loaded;
    --  Return the path of the root project
+
+   function Project_Dir return Virtual_File
+     with Pre => Initialized and then Loaded;
+   --  Return the project directory of the root project
 
    function Target return String
      with Pre => Initialized and then Loaded;

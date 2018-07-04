@@ -62,4 +62,15 @@ package GNAThub.Constants is
    function Database_File return Virtual_File;
    --  The GNAThub database file where all plugins store or read their data
 
+   --  Codepeer specific accessors for WebUI interface
+
+   function Obj_Codepeer_Dir return Virtual_File;
+   --  Directory containig Codepeer execution results after GNAThub run
+
+   function Codepeer_Output_Dir return Virtual_File;
+   --  [prj_name].output directory contained inside the Codepeer folder
+
+   function Codepeer_DB_Dir return Virtual_File;
+   --  [prj_name].db directory contained inside the Codepeer folder
+
 end GNAThub.Constants;
