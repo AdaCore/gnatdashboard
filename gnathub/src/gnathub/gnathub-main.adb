@@ -86,8 +86,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    -- Create_Project_Directory_Env --
    ----------------------------------
 
-   procedure Create_Project_Directory_Env
-   is
+   procedure Create_Project_Directory_Env is
       Object_Directory : constant Virtual_File :=
                            GNAThub.Project.Object_Dir;
 
@@ -132,8 +131,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    -- Execute_Server_Script --
    ---------------------------
 
-   procedure Execute_Server_Script
-   is
+   procedure Execute_Server_Script is
       Server_Script : constant String := Server_Runner.Display_Full_Name;
       Had_Errors  : Boolean := False;
    begin
@@ -151,8 +149,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    -- Execute_Plugin_Runner --
    ---------------------------
 
-   procedure Execute_Plugin_Runner
-   is
+   procedure Execute_Plugin_Runner is
       Runner_Script : constant String := Plugin_Runner.Display_Full_Name;
       Had_Errors    : Boolean := False;
    begin
@@ -171,8 +168,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    -- Execute_User_Script --
    -------------------------
 
-   procedure Execute_User_Script
-   is
+   procedure Execute_User_Script is
       User_Script : constant String := GNAThub.Configuration.Script;
       Had_Errors  : Boolean := False;
    begin

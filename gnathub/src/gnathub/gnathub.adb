@@ -83,8 +83,7 @@ package body GNAThub is
    -- Warn --
    ----------
 
-   procedure Warn (Message : String; Prefix : String := Console_Prefix)
-   is
+   procedure Warn (Message : String; Prefix : String := Console_Prefix) is
       Output : constant String := Format_Message
                                     ("warning: " & Message, Prefix);
    begin
@@ -96,8 +95,7 @@ package body GNAThub is
    -- Error --
    -----------
 
-   procedure Error (Message : String; Prefix : String := Console_Prefix)
-   is
+   procedure Error (Message : String; Prefix : String := Console_Prefix) is
       Output : constant String := Format_Message ("error: " & Message, Prefix);
    begin
       Put_Line (Standard_Error, Output);
@@ -120,8 +118,7 @@ package body GNAThub is
    -- Fail --
    ----------
 
-   procedure Fail (Message : String; Prefix : String := Console_Prefix)
-   is
+   procedure Fail (Message : String; Prefix : String := Console_Prefix) is
       Output : constant String := Format_Message ("fatal: " & Message, Prefix);
    begin
       Put_Line (Standard_Error, Output);
