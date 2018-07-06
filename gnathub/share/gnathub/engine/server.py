@@ -25,8 +25,18 @@ import re
 import os
 import socket
 
-# Defining a default value for server port
-DEFAULT_PORT = 8000
+import thread
+import posixpath
+import urllib
+
+from SimpleHTTPServer import SimpleHTTPRequestHandler
+from BaseHTTPServer import HTTPServer
+
+# Defining a default value for client server port
+DEFAULT_PORT = 8080
+
+# Defining a default value for API server port
+DEFAULT_API_PORT = 8000
 
 # The repository where .json files are supposed to be located
 SERVER_DIR_PATH = GNAThub.html_data()
@@ -130,7 +140,7 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.wfile.write("OK")
 
     def _import_codepeer_bridge(self, filename):
-        os.system('codepeer_bridge '
+        os.system('codepeer_bridge'
                   + '--output-dir=obj/codepeer/sdc.output/ '
                   + '--import-reviews='
                   + filename)
@@ -167,21 +177,29 @@ class Launch_Server(Plugin, Reporter):
 
     def launch_server(self):
 
-        # Find the first open port to launch the server
-        # or take the one given by the user
         port = DEFAULT_PORT
-        # port = self.find_free_port()
+        api_port = DEFAULT_API_PORT
 
         if GNAThub.port():
             port = GNAThub.port()
 
-        httpd = SocketServer.TCPServer(("", port), My_Request_Handler)
-        print("Launched GNAThub server on port {}".format(port))
+        print("Launched GNAThub API server on port {}".format(api_port))
+        thread.start_new_thread(self.launch_api_server, (api_port,))
+        print("Launched GNAThub client server on port {}".format(port))
+        self.set_client_server(port)
+
+    def set_client_server(self, port):
+        launch_client_server(port)
+
+    def launch_api_server(self, api_port):
+
+        # Define the server for the Web API
+        httpd_api = SocketServer.TCPServer(("", api_port), My_Request_Handler)
 
         try:
-            httpd.serve_forever()
+            httpd_api.serve_forever()
         except KeyboardInterrupt:
-            httpd.shutdown()
+            httpd_api.shutdown()
 
     def find_free_port(self):
         tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -192,6 +210,44 @@ class Launch_Server(Plugin, Reporter):
 
     def report(self):
         return GNAThub.EXEC_SUCCESS
+
+
+class RootedHTTPServer(HTTPServer):
+
+    def __init__(self, base_path, *args, **kwargs):
+        HTTPServer.__init__(self, *args, **kwargs)
+        self.RequestHandlerClass.base_path = base_path
+
+
+class RootedHTTPRequestHandler(SimpleHTTPRequestHandler):
+
+    def translate_path(self, path):
+        path = posixpath.normpath(urllib.unquote(path))
+        words = path.split('/')
+        words = filter(None, words)
+        path = self.base_path
+        for word in words:
+            drive, word = os.path.splitdrive(word)
+            head, word = os.path.split(word)
+            if word in (os.curdir, os.pardir):
+                continue
+            path = os.path.join(path, word)
+        return path
+
+
+def launch_client_server(port, HandlerClass=RootedHTTPRequestHandler,
+                         ServerClass=RootedHTTPServer):
+
+    server_address = ('', port)
+    httpd = ServerClass('obj/gnathub/html-report', server_address,
+                        HandlerClass)
+    sa = httpd.socket.getsockname()
+    print "Serving HTTP on ", sa[0], "port", sa[1], "..."
+
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        httpd.shutdown()
 
 
 # Script entry point
