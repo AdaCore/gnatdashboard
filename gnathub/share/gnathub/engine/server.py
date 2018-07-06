@@ -116,10 +116,12 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.wfile.write("No such file")
 
     def _export_codeper_bridge(self, filename):
-        os.system('codepeer_bridge '
-                  + '--output-dir=obj/codepeer/sdc.output/ '
-                  + '--export-reviews=obj/gnathub/html-report/data/'
-                  + filename)
+        cmd = ('codepeer_bridge '
+               + '--output-dir=' + GNAThub.output_dir()
+               + ' --db-dir=' + GNAThub.db_dir()
+               + ' --export-reviews=obj/gnathub/html-report/data/'
+               + filename)
+        os.system(cmd)
 
     def _post_review(self):
         temp_filename = 'user_review_temp.xml'
@@ -140,10 +142,12 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.wfile.write("OK")
 
     def _import_codepeer_bridge(self, filename):
-        os.system('codepeer_bridge'
-                  + '--output-dir=obj/codepeer/sdc.output/ '
-                  + '--import-reviews='
-                  + filename)
+        cmd = ('codepeer_bridge'
+               + '--output-dir=' + GNAThub.output_dir()
+               + ' --db-dir=' + GNAThub.db_dir()
+               + ' --import-reviews='
+               + filename)
+        os.system(cmd)
 
     def do_GET(self, **args):
         print "received the following GET request: {}".format(self.path)
