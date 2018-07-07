@@ -41,6 +41,11 @@ DEFAULT_API_PORT = 8000
 # The repository where .json files are supposed to be located
 SERVER_DIR_PATH = GNAThub.html_data()
 
+# The info for the logs
+GNATHUB_LOG = GNAThub.logs()
+API_SERVER_LOG = os.path.join(GNATHUB_LOG, "webui_api_server.log")
+CLIENT_SERVER_LOG = os.path.join(GNATHUB_LOG, "webui_client_server.log")
+
 
 class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
@@ -52,6 +57,19 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def __base__():
         print ""
 
+    def log_message(self, format, *args):
+        with open(API_SERVER_LOG, 'a') as file_descriptor:
+            file_descriptor.write("%s - - [%s] %s\n" %
+                                  (self.client_address[0],
+                                   self.log_date_time_string(),
+                                   format % args))
+
+    def _log_api_error(self, error):
+        print "[ERROR] {}".format(error)
+        with open(CLIENT_SERVER_LOG, 'a') as file_descriptor:
+            msg = "[ERROR] " + error
+            file_descriptor.write(msg)
+
     def _error_not_found(self):
         # the headers
         self.send_response(404)
@@ -59,6 +77,7 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write("<html><body>This url doesn't exist</body></html>")
+        self._log_api_error(self.path + " : url doesn't exist")
 
     def _get_json(self):
         filename = self.path.replace('/json/', '')
@@ -85,6 +104,7 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write("No such file")
+            self._log_api_error(filepath + " : file doesn't exist")
 
     def _get_review(self):
         filename = 'codepeer_review.xml'
@@ -114,13 +134,15 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write("No such file")
+            self._log_api_error(filepath + " : file doesn't exist")
 
     def _export_codeper_bridge(self, filename):
-        cmd = ('codepeer_bridge '
-               + '--output-dir=' + GNAThub.output_dir()
+        cmd = ('codepeer_bridge'
+               + ' --output-dir=' + GNAThub.output_dir()
                + ' --db-dir=' + GNAThub.db_dir()
                + ' --export-reviews=obj/gnathub/html-report/data/'
-               + filename)
+               + filename
+               + ' >> ' + API_SERVER_LOG + ' 2>&1')
         os.system(cmd)
 
     def _post_review(self):
@@ -143,10 +165,11 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
     def _import_codepeer_bridge(self, filename):
         cmd = ('codepeer_bridge'
-               + '--output-dir=' + GNAThub.output_dir()
+               + ' --output-dir=' + GNAThub.output_dir()
                + ' --db-dir=' + GNAThub.db_dir()
                + ' --import-reviews='
-               + filename)
+               + filename
+               + ' >> ' + API_SERVER_LOG + ' 2>&1')
         os.system(cmd)
 
     def do_GET(self, **args):
@@ -224,6 +247,13 @@ class RootedHTTPServer(HTTPServer):
 
 
 class RootedHTTPRequestHandler(SimpleHTTPRequestHandler):
+
+    def log_message(self, format, *args):
+        with open(CLIENT_SERVER_LOG, 'a') as file_descriptor:
+            file_descriptor.write("%s - - [%s] %s\n" %
+                                  (self.client_address[0],
+                                   self.log_date_time_string(),
+                                   format % args))
 
     def translate_path(self, path):
         path = posixpath.normpath(urllib.unquote(path))
