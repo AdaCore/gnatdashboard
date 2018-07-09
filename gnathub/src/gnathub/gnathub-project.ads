@@ -95,6 +95,16 @@ package GNAThub.Project is
      with Pre => Initialized and then Loaded;
    --  Return the project directory of the root project
 
+   function Project_Database_Directory return Virtual_File
+     with Pre => Initialized and then Loaded;
+     --  Return the project database directory if Database_Directory_Attribute
+     --  present or No_File otherwise
+
+   function Project_Output_Directory return Virtual_File
+     with Pre => Initialized and then Loaded;
+   --  Return the project database directory if Output_Directory_Attribute
+   --  present or No_File otherwise
+
    function Target return String
      with Pre => Initialized and then Loaded;
    --  Return the target configured, if any, otherwise the empty string.

@@ -203,9 +203,13 @@ package body GNAThub.Constants is
 
       Dir  : Virtual_File;
    begin
-      if GNAThub.Configuration.Output_Dir /= "" then
+      if GNAThub.Configuration.Codepeer_Output_Dir /= "" then
          Dir := Create_From_Base
-           (Filesystem_String (GNAThub.Configuration.Output_Dir));
+           (Filesystem_String (GNAThub.Configuration.Codepeer_Output_Dir));
+
+      elsif GNAThub.Project.Project_Output_Directory /= No_File then
+         --  Store value if "output_directory" attribute found in project
+         Dir := GNAThub.Project.Project_Output_Directory;
 
       else
          Dir := Create_From_Dir (Obj_Codepeer_Dir, Name & ".output");
@@ -225,9 +229,13 @@ package body GNAThub.Constants is
 
       Dir : Virtual_File;
    begin
-      if GNAThub.Configuration.DB_Dir /= "" then
+      if GNAThub.Configuration.Codepeer_DB_Dir /= "" then
          Dir := Create_From_Base
-           (Filesystem_String (GNAThub.Configuration.DB_Dir));
+           (Filesystem_String (GNAThub.Configuration.Codepeer_DB_Dir));
+
+      elsif GNAThub.Project.Project_Database_Directory /= No_File then
+         --  Store value if "database_directory" attribute found in project
+         Dir := GNAThub.Project.Project_Database_Directory;
 
       else
          Dir := Create_From_Dir (Obj_Codepeer_Dir, Name & ".db");

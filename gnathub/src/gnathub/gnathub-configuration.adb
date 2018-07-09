@@ -654,23 +654,23 @@ package body GNAThub.Configuration is
       return Subdirs_Arg.all;
    end Subdirs;
 
-   ----------------
-   -- Output_Dir --
-   ----------------
+   -------------------------
+   -- Codepeer_Output_Dir --
+   -------------------------
 
-   function Output_Dir return String is
+   function Codepeer_Output_Dir return String is
    begin
       return Codepeer_Output_Dir_Arg.all;
-   end Output_Dir;
+   end Codepeer_Output_Dir;
 
-   ------------
-   -- DB_Dir --
-   ------------
+   ---------------------
+   -- Codepeer_DB_Dir --
+   ---------------------
 
-   function DB_Dir return String is
+   function Codepeer_DB_Dir return String is
    begin
       return Codepeer_DB_Dir_Arg.all;
-   end DB_Dir;
+   end Codepeer_DB_Dir;
 
    ------------
    -- Target --

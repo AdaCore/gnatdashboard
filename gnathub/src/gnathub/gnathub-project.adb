@@ -149,6 +149,56 @@ package body GNAThub.Project is
       return Project_Tree.Root_Project.Project_Path.Dir;
    end Project_Dir;
 
+   ------------------------------
+   -- Project_Output_Directory --
+   ------------------------------
+
+   function Project_Output_Directory return Virtual_File is
+      Prj        : constant Project_Type :=  Project_Tree.Root_Project;
+      Output_Dir : Virtual_File := No_File;
+
+      --  Codepeer "Output_Directory" attribute from .gpr
+      Output_Dir_Str  : constant String := "output_directory";
+      Output_Dir_Attr : constant Attribute_Pkg_String :=
+        Build ("codepeer", Output_Dir_Str);
+   begin
+      if Prj.Has_Attribute (Output_Dir_Attr) then
+         declare
+            Dir : constant Filesystem_String :=
+              Filesystem_String (Prj.Attribute_Value (Output_Dir_Attr));
+         begin
+            Output_Dir := Create_From_Base (Dir, Project_Dir.Full_Name.all);
+         end;
+      end if;
+
+      return Output_Dir;
+   end Project_Output_Directory;
+
+   --------------------------------
+   -- Project_Database_Directory --
+   --------------------------------
+
+   function Project_Database_Directory return Virtual_File is
+      Prj    : constant Project_Type := Project_Tree.Root_Project;
+      DB_Dir : Virtual_File := No_File;
+
+      --  Codepeer "Database_Directory" attribute from .gpr
+      Database_Dir_Str  : constant String := "database_directory";
+      Database_Dir_Attr : constant Attribute_Pkg_String :=
+        Build ("codepeer", Database_Dir_Str);
+   begin
+      if Prj.Has_Attribute (Database_Dir_Attr) then
+         declare
+            Dir : constant Filesystem_String :=
+              Filesystem_String (Prj.Attribute_Value (Database_Dir_Attr));
+         begin
+            DB_Dir := Create_From_Base (Dir, Project_Dir.Full_Name.all);
+         end;
+      end if;
+
+      return DB_Dir;
+   end Project_Database_Directory;
+
    ------------
    -- Target --
    ------------
