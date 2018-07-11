@@ -70,9 +70,6 @@ package body GNAThub.Configuration is
    Server_Arg         : aliased Boolean;
    Port_Arg           : aliased Integer;
 
-   Codepeer_Output_Dir_Arg : aliased GNAT.Strings.String_Access;
-   Codepeer_DB_Dir_Arg     : aliased GNAT.Strings.String_Access;
-
    All_Plugins : Unbounded_String := Null_Unbounded_String;
    --  Store all plugins provided with --plugins
 
@@ -223,22 +220,6 @@ package body GNAThub.Configuration is
          Switch       => "-p:",
          Long_Switch  => "--port=",
          Help         => "Specify a port to launch server (default: 8000)");
-
-      Define_Switch
-        (Config      => Config,
-         Output      => Codepeer_Output_Dir_Arg'Access,
-         Long_Switch => "--output-dir=",
-         Help        =>
-           "Specify the location of the Codepeer output directory from the"
-           & " current folder");
-
-      Define_Switch
-        (Config      => Config,
-         Output      => Codepeer_DB_Dir_Arg'Access,
-         Long_Switch => "--db-dir=",
-         Help        =>
-           "Specify the location of the Codepeer database directory from the"
-           & " current folder");
 
       Define_Switch
         (Config      => Config,
@@ -653,24 +634,6 @@ package body GNAThub.Configuration is
    begin
       return Subdirs_Arg.all;
    end Subdirs;
-
-   -------------------------
-   -- Codepeer_Output_Dir --
-   -------------------------
-
-   function Codepeer_Output_Dir return String is
-   begin
-      return Codepeer_Output_Dir_Arg.all;
-   end Codepeer_Output_Dir;
-
-   ---------------------
-   -- Codepeer_DB_Dir --
-   ---------------------
-
-   function Codepeer_DB_Dir return String is
-   begin
-      return Codepeer_DB_Dir_Arg.all;
-   end Codepeer_DB_Dir;
 
    ------------
    -- Target --

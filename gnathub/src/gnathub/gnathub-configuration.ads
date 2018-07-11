@@ -50,16 +50,6 @@ package GNAThub.Configuration is
    --  Return where the database is located relatively from the object
    --  directory. Return empty string otherwise.
 
-   function Codepeer_Output_Dir return String;
-   --  Return where the Codepeer output repository will be located relatively
-   --  from the project directory. Return empty string otherwise.
-   --  (needed for WebUI interface with Codepeer bridge)
-
-   function Codepeer_DB_Dir return String;
-   --  Return where the Codepeer database repository will be located relatively
-   --  from the project directory. Return empty string otherwise.
-   --  (needed for WebUI interface with Codepeer bridge)
-
    function Target return String;
    --  Return the Target attribute if given on the command line. Return the
    --  empty string otherwise.

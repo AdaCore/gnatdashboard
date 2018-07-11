@@ -20,7 +20,6 @@ with Ada.Characters.Handling;
 with GNATCOLL.Utils; use GNATCOLL.Utils;
 
 with GNAThub.Project;       use GNAThub.Project;
-with GNAThub.Configuration; use GNAThub.Configuration;
 
 package body GNAThub.Constants is
 
@@ -203,11 +202,7 @@ package body GNAThub.Constants is
 
       Dir  : Virtual_File;
    begin
-      if GNAThub.Configuration.Codepeer_Output_Dir /= "" then
-         Dir := Create_From_Base
-           (Filesystem_String (GNAThub.Configuration.Codepeer_Output_Dir));
-
-      elsif GNAThub.Project.Project_Output_Directory /= No_File then
+      if GNAThub.Project.Project_Output_Directory /= No_File then
          --  Store value if "output_directory" attribute found in project
          Dir := GNAThub.Project.Project_Output_Directory;
 
@@ -229,11 +224,7 @@ package body GNAThub.Constants is
 
       Dir : Virtual_File;
    begin
-      if GNAThub.Configuration.Codepeer_DB_Dir /= "" then
-         Dir := Create_From_Base
-           (Filesystem_String (GNAThub.Configuration.Codepeer_DB_Dir));
-
-      elsif GNAThub.Project.Project_Database_Directory /= No_File then
+      if GNAThub.Project.Project_Database_Directory /= No_File then
          --  Store value if "database_directory" attribute found in project
          Dir := GNAThub.Project.Project_Database_Directory;
 
