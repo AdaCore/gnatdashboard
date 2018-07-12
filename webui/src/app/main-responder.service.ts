@@ -50,7 +50,7 @@ export class SharedReport {
   public messageFilter = {newSort: 'name', otherSort: 'filename', order: 1};
 
   public page: string;
-  public hideFiles: boolean = true;
+  public hideFiles: boolean = false;
   public isReportFetchError: boolean = false;
   public projectName: string;
   public _ui_total_message_count: number = -1;
