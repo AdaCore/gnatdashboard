@@ -55,7 +55,10 @@ export class SharedReport {
   public projectName: string;
   public _ui_total_message_count: number = -1;
 
-  private url = "http://127.0.0.1:8000/";
+  private client_host: string = window.location.origin;
+  private client_port: number = Number(window.location.port);
+  private api_port: number = this.client_port + 1;
+  private url: string = this.client_host.replace(String(this.client_port), String(this.api_port)+"/");
 
   constructor( private gnathub: GNAThubService, private http: Http ) {
 
@@ -64,6 +67,8 @@ export class SharedReport {
      * If server not running or responding, use the old get
      */
 
+    console.log("Designated API Url :", this.url)
+
     let url = this.url + "json/";
     this.http.get(url + 'filter.json')
       .subscribe(
@@ -71,7 +76,7 @@ export class SharedReport {
         this.filter = JSON.parse(JSON.parse(data['_body']));
         this.projectName = this.filter.project;
       }, error => {
-         console.log("[Error] get filter : ", error);
+        console.log("[Error] get filter : ", error);
         this.gnathub.getFilter().subscribe(
           filter => {
             this.filter = filter;
@@ -87,8 +92,11 @@ export class SharedReport {
       .subscribe(
       data => {
         this.code = JSON.parse(JSON.parse(data['_body']));
+        this.code.modules = sortCodeArray(
+          this.codeFilter,
+          this.codeFilter, this.code.modules);
       }, error => {
-         console.log("[Error] get code : ", error);
+        console.log("[Error] get code : ", error);
         this.gnathub.getCode().subscribe(
           object => {
             this.code = object;
@@ -108,10 +116,14 @@ export class SharedReport {
         this.message = JSON.parse(JSON.parse(data['_body']));
         this.getUserReview(this.message);
       }, error => {
-         console.log("[Error] get message : ", error);
+        console.log("[Error] get message : ", error);
         this.gnathub.getMessage().subscribe(
-          object => {
-            this.getUserReview(object);
+          messages => {
+            this.message = messages;
+            this.message.sources = sortMessageArray(
+              this.messageFilter,
+              this.messageFilter, messages.sources);
+            //this.getUserReview(object);
           }, error => {
             this.isReportFetchError = true;
           }

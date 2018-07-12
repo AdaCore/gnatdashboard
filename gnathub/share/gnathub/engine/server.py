@@ -35,9 +35,6 @@ from BaseHTTPServer import HTTPServer
 # Defining a default value for client server port
 DEFAULT_PORT = 8080
 
-# Defining a default value for API server port
-DEFAULT_API_PORT = 8000
-
 # The repository where .json files are supposed to be located
 SERVER_DIR_PATH = GNAThub.html_data()
 
@@ -205,10 +202,11 @@ class Launch_Server(Plugin, Reporter):
     def launch_server(self):
 
         port = DEFAULT_PORT
-        api_port = DEFAULT_API_PORT
 
         if GNAThub.port():
             port = GNAThub.port()
+
+        api_port = port + 1
 
         print("Launched GNAThub API server on port {}".format(api_port))
         thread.start_new_thread(self.launch_api_server, (api_port,))
