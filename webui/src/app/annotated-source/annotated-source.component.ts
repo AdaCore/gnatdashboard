@@ -143,15 +143,26 @@ export class AnnotatedSourceComponent
         }
     }
 
+    public showReviewsChanges() {
+        this.reportService.showReviews = !this.reportService.showReviews
+    }
+
+    public ShowReviewHistory(review_history: any) {
+
+        this.reportService.history = review_history;
+        this.dialog.reviewHistory().subscribe((data:any) => {});
+    }
+
     public addDynamicReview(new_review) {
         this.reportService.message.sources.forEach(function(source){
             if (source.messages){
                 source.messages.forEach(function(message){
                     if (new_review[message.tool_msg_id]){
-                        if (!message.user_review) {
-                            message.user_review = [];
+                        if (!message.review_history) {
+                            message.review_history = [];
                         }
-                        message.user_review.unshift(new_review[message.tool_msg_id]);
+                        message.review_history.unshift(new_review[message.tool_msg_id]);
+                        message.user_review = new_review[message.tool_msg_id];
                     }
                 })
             }

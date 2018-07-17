@@ -1,0 +1,25 @@
+
+.review-dialog {
+
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+
+    .form-box {
+        height: 100%;
+    }
+
+    .form-field {
+        padding-bottom: 10px;
+    }
+
+    [md-button] {
+        bottom: 10px;
+        position: absolute;
+    }
+    [md-raise-button] {
+        bottom: 10px;
+        position: absolute;
+    }
+
+}

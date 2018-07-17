@@ -51,6 +51,7 @@ export class SharedReport {
 
   public page: string;
   public hideFiles: boolean = false;
+  public showReviews: boolean = true;
   public isReportFetchError: boolean = false;
   public projectName: string;
   public _ui_total_message_count: number = -1;
@@ -59,6 +60,8 @@ export class SharedReport {
   private client_port: number = Number(window.location.port);
   private api_port: number = this.client_port + 1;
   private url: string = this.client_host.replace(String(this.client_port), String(this.api_port)+"/");
+
+  public history = [];
 
   constructor( private gnathub: GNAThubService, private http: Http ) {
 
@@ -163,16 +166,13 @@ export class SharedReport {
       if (source.messages){
         source.messages.forEach(function(message){
           if (this.codepeer_review[message.tool_msg_id]) {
-            if (!message.user_review) {
-              message.user_review = [];
-            }
-            message.user_review.push(this.codepeer_review[message.tool_msg_id]);
+            message.review_history = this.codepeer_review[message.tool_msg_id].review_history;
+            message.user_review = this.codepeer_review[message.tool_msg_id].user_review;
           }
         }.bind(this));
       }
     }.bind(this));
   }
-
 
   public sendUserReview(xml) {
     let url = this.url + "post-review/";

@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material'
+import { MdDialogModule } from '@angular/material'
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import {
     removeNgStyles, createNewHosts, createInputTransfer
@@ -25,6 +26,7 @@ import {
     AnnotatedSourceViewComponent
 } from './annotated-source';
 import { ReviewDialog } from './annotated-source/review-dialog.component'
+import { ReviewHistoryDialog } from './annotated-source/review-history-dialog.component'
 import { DialogsService } from './annotated-source/dialog.service'
 import { CountPipe } from './count.pipe';
 import { FilterSelectorComponent } from './filter-selector';
@@ -85,13 +87,15 @@ type StoreType = {
         CodeExplorerComponent,
         MessageExplorerComponent,
         SpinnerComponent,
-        ReviewDialog
+        ReviewDialog,
+        ReviewHistoryDialog
     ],
     imports: [
         BrowserModule,
         FormsModule,
         HttpModule,
         MaterialModule.forRoot(),
+        MdDialogModule.forRoot(),
         Ng2PageScrollModule.forRoot(),
         RouterModule.forRoot(ROUTES, {
             useHash: true,
@@ -102,7 +106,7 @@ type StoreType = {
         APP_PROVIDERS,
         ENV_PROVIDERS
     ],
-    entryComponents: [ReviewDialog]
+    entryComponents: [ReviewDialog, ReviewHistoryDialog]
 })
 export class AppModule {
     constructor(public appRef: ApplicationRef, public appState: AppState) {}

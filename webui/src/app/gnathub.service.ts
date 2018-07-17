@@ -59,28 +59,51 @@ export class GNAThubService {
             } else {
                 result.audit_trail.message.forEach(function(review){
 
-                    let myReview = {};
+                    let myReview = [];
+                    let lastReview = {
+                        author : '',
+                        status: '',
+                        date: 0,
+                        from_source: '',
+                        message: ''
+                    };
                     if (review.audit.$){
-                        myReview = {
+                        let tmpReview = {
                             author : review.audit.$.approved,
                             status: review.audit.$.status,
                             date: review.audit.$.timestamp,
                             from_source: review.audit.$.from_source,
                             message: review.audit._
                         };
+                        myReview.push(tmpReview)
+                        lastReview = tmpReview;
                     } else if (review.audit[0].$) {
-                        myReview = {
-                            author : review.audit[0].$.approved,
-                            status: review.audit[0].$.status,
-                            date: review.audit[0].$.timestamp,
-                            from_source: review.audit[0].$.from_source,
-                            message: review.audit[0]._
-                        };
+                        review.audit.forEach(function(tmp){
+
+                            let tmpReview = {
+                                author : tmp.$.approved,
+                                status: tmp.$.status,
+                                date: tmp.$.timestamp,
+                                from_source: tmp.$.from_source,
+                                message: tmp._
+                            };
+                            myReview.push(tmpReview)
+                            if (lastReview.date < tmpReview.date) {
+                                lastReview = tmpReview;
+                            }
+                        });
+
+
                     } else {
                         console.log("[Error] convertToJson : Problem to add this user_review : ", review);
                     }
+                    let tmp = {
+                        review_history: myReview,
+                        user_review: lastReview
+                    };
 
-                    user_review[review.$.identifier] = myReview;
+                    user_review[review.$.identifier] = tmp;
+
                 });
             }
         });

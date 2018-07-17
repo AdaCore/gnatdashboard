@@ -146,6 +146,19 @@
             left: -5px;
             top: -1px;
         }
+
+        .review-line {
+
+            md-icon {
+                position: absolute;
+                font-size: 20px;
+                right: 15px;
+                cursor: pointer;
+            }
+            md-icon.inactive {
+                color: darkgrey;
+            }
+        }
     }
 
     .source-line.reduce .all-messages-line {
@@ -260,5 +273,18 @@
     &-review-btn:disabled {
         cursor: not-allowed;
         opacity: 0.5;
+    }
+
+    &-review-input {
+        padding: 3px 10px;
+        right: 160px;
+        position: absolute;
+
+        input {
+            transform: scale(1.2);
+            position: absolute;
+            top: 7px;
+            left: -8px;
+        }
     }
 }

@@ -134,7 +134,8 @@ declare module 'gnat' {
         rule: IRule;
         ranking: IRanking;
         tool_msg_id: number;
-        user_review: IReviewUser[];
+        user_review: IReviewUser;
+        review_history: IReviewUser[];
     }
 
     export interface ISourceNav {

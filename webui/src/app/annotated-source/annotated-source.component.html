@@ -39,9 +39,6 @@
                 <span class="location-view-title" (click)="tabOpen = 'messages'; thisFile = false" [ngClass]="tabOpen == 'messages' ? 'selected': ''">
                     All messages
                 </span>
-                <span class="location-view-title" (click)="tabOpen = 'review'" [ngClass]="tabOpen == 'review' ? 'selected': ''">
-                    User review
-                </span>
 
                 <button (click)="writeReview()" class="location-view-review-btn" [disabled]="!checked_msg || checked_msg.length == 0">
                     <span>Add review</span>
@@ -79,7 +76,6 @@
                                 <span *ngFor="let message of mySource.messages"
                                       class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [ngClass]="(this.reportService.hideFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
-                                    <!--<span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [routerLink]="['.', { line: message.line }]" [ngClass]="{ selected: selectedLine == message.line }">-->
                                     <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="{ selected: selectedLine == message.line }">
                                         <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad" [routerLink]="['.', { line: message.line }]">
@@ -90,6 +86,29 @@
                                             </span>
                                             <span class="checkbox-span col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
                                                 <input type="checkbox" (click)="checkMessage(message.tool_msg_id)">
+                                            </span>
+                                        </span>
+                                    </span>
+
+                                    <span  *ngIf="message.user_review" class="review-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                                        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <!--<span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad"></span>-->
+                                            <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
+                                                {{message.user_review.date | date : 'dd-MM-yyyy HH:mm'}}
+                                            </span>
+                                            <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
+                                                {{message.user_review.author}}
+                                            </span>
+                                            <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
+                                                {{message.user_review.status.toUpperCase()}}
+                                            </span>
+                                            <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                                                {{message.user_review.message}}
+                                            </span>
+
+                                            <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad"
+                                                  (click)="ShowReviewHistory(message.review_history)">
+                                                <md-icon>history</md-icon>
                                             </span>
                                         </span>
                                     </span>
