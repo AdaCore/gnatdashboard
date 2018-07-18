@@ -39,7 +39,12 @@
                 <span class="location-view-title" (click)="tabOpen = 'messages'; thisFile = false" [ngClass]="tabOpen == 'messages' ? 'selected': ''">
                     All messages
                 </span>
-
+                <span class="location-view-review-input">
+                    <label>
+                        <input type="checkbox" [ngModel]="reportService.showReviews" (ngModelChange)="showReviewsChanges()">
+                        <span>Only reviews</span>
+                    </label>
+                </span>
                 <button (click)="writeReview()" class="location-view-review-btn" [disabled]="!checked_msg || checked_msg.length == 0">
                     <span>Add review</span>
                 </button>
@@ -75,7 +80,7 @@
                             <span id="{{mySource.filename}}" class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open" *ngIf="(mySource._total_message_count > 0 || !mySource._total_message_count)" >
                                 <span *ngFor="let message of mySource.messages"
                                       class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                                      [ngClass]="(this.reportService.hideFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
+                                      [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) || (!reportService.showReviews && !message.user_review) ? 'hideIt' : ''">
                                     <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="{ selected: selectedLine == message.line }">
                                         <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad" [routerLink]="['.', { line: message.line }]">
@@ -84,8 +89,8 @@
                                             <span class="col-lg-10 col-md-10 col-sm-10 col-xs-10 no-pad" [routerLink]="['.', { line: message.line }]">
                                                 {{message.name}}
                                             </span>
-                                            <span class="checkbox-span col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
-                                                <input type="checkbox" (click)="checkMessage(message.tool_msg_id)">
+                                            <span *ngIf="message.rule.tool_id == reportService.codepeer_code" class="checkbox-span col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
+                                                <input type="checkbox" (click)="checkMessage(message.tool_msg_id, message)">
                                             </span>
                                         </span>
                                     </span>
@@ -103,7 +108,9 @@
                                                 {{message.user_review.status.toUpperCase()}}
                                             </span>
                                             <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
-                                                {{message.user_review.message}}
+                                                {{message.user_review.message && message.user_review.message.substring(0, 150) != message.user_review.message ?
+                                                message.user_review.message.substring(0, 150).concat('...') :
+                                                message.user_review.message}}
                                             </span>
 
                                             <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad"
@@ -114,7 +121,7 @@
                                     </span>
                                 </span>
                             </span>
-                            <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="mySource.filename === source.filename && mySource._ui_total_message_count === 0"> There are no message corresponding to the selected filters </span>
+                            <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="mySource.filename === source.filename && mySource._ui_total_message_count === 0"> There are no messages corresponding to the selected filters </span>
                         </span>
                     </span>
                 </table>
@@ -124,7 +131,7 @@
                           *ngIf="reportService.message._ui_total_message_count > 0 || !reportService.message._ui_total_message_count">
                         <span *ngFor="let mySource of reportService.message.sources"
                               class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                              [ngClass]="(this.reportService.hideFiles && (mySource._ui_total_message_count == 0 || ( mySource._ui_total_message_count == null && mySource._total_message_count == 0))) ? 'hideIt' : ''">
+                              [ngClass]="(!this.reportService.showFiles && (mySource._ui_total_message_count == 0 || ( mySource._ui_total_message_count == null && mySource._total_message_count == 0))) ? 'hideIt' : ''">
                             <span id="{{mySource.filename}}" class="source-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open">
                                 <span class="header-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(mySource.filename)">
                                     <span class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
@@ -146,7 +153,7 @@
                                 <span class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                                     <span *ngFor="let message of mySource.messages"
                                           class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                                          [ngClass]="(this.reportService.hideFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
+                                          [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
                                         <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="changeFile(mySource.filename, message.line)"  [ngClass]="{ selected: selectedLine == message.line && source.filename == mySource.filename }">
                                             <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
@@ -160,50 +167,8 @@
                             </span>
                         </span>
                     </span>
-                    <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="reportService.message._ui_total_message_count == 0"> There are no message corresponding to the selected filters</span>
+                    <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="reportService.message._ui_total_message_count == 0"> There are no messages corresponding to the selected filters</span>
                 </table>
-
-                <table *ngIf="tabOpen == 'review'" class="file-line-container col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                    <span class="all-sources-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-
-                        <span *ngFor="let mySource of reportService.message.sources"
-                              class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                              [ngClass]="mySource.filename === source.filename ? '' : 'hideIt'">
-                            <span id="{{mySource.filename}}" class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open" *ngIf="(mySource._total_message_count > 0 || !mySource._total_message_count)" >
-                                <span *ngFor="let message of mySource.messages"
-                                      class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                                      [ngClass]="(this.reportService.hideFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
-
-                                    <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 ">
-                                            {{message.line}}:{{message.col_begin}}
-                                        </span>
-                                        <span class="col-lg-11 col-md-11 col-sm-11 col-xs-11 ">{{message.name}}</span>
-                                    </span>
-                                    <span *ngFor="let user_review of message.user_review">
-                                        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <!--<span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad"></span>-->
-                                            <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
-                                                {{user_review.date | date : 'dd-MM-yyyy HH:mm'}}
-                                            </span>
-                                            <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
-                                                {{user_review.author}}
-                                            </span>
-                                            <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
-                                                {{user_review.status.toUpperCase()}}
-                                            </span>
-                                            <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
-                                                {{user_review.message}}
-                                            </span>
-                                        </span>
-                                    </span>
-                                </span>
-                            </span>
-                            <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="mySource.filename === source.filename && mySource._ui_total_message_count === 0"> There are no message corresponding to the selected filters </span>
-                        </span>
-                    </span>
-                </table>
-
             </div>
         </div>
     </footer>

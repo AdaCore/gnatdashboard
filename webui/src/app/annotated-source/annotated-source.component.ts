@@ -134,12 +134,18 @@ export class AnnotatedSourceComponent
         window.location.reload();
     }
 
-    public checkMessage(id: number) {
+    public checkMessage(id: number, message: any) {
+        if (this.checked_msg.length == 0) {
+            this.reportService.selectedMessage = [];
+        }
+
         let index = this.checked_msg.indexOf(id);
         if (index != -1) {
             this.checked_msg.splice(index, 1);
+            this.reportService.selectedMessage.splice(index, 1);
         } else {
             this.checked_msg.push(id);
+            this.reportService.selectedMessage.push(message);
         }
     }
 
@@ -173,6 +179,8 @@ export class AnnotatedSourceComponent
 
         if (!this.checked_msg || this.checked_msg.length == 0) {return }
         this.dialog.review().subscribe((data: any) => {
+
+            if (!data) {return }
 
             let date = Date.now();
             let xml = '<?xml version="1.0" encoding="utf-8"?>\n<audit_trail format="6">\n';

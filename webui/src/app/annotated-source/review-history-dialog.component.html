@@ -1,16 +1,16 @@
 <span class="form-back col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="close()"></span>
 <span class="form-box col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <span  class="title-review col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        User review history :
+        User review history
     </span>
     <span class="all-review col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <span *ngFor="let review of history" class="line-review col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
 
             <span class="date-review col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
-                Review from the {{review.date | date : 'dd-MM-yyyy HH:mm'}}
+                {{review.date | date : 'yyyy-MM-dd HH:mm'}}
             </span>
             <span class="author-review col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
-                From : {{review.author}}
+                From: {{review.author ? review.author : '[Anonymous]'}}
             </span>
             <span class="status-review col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                 {{review.status.toUpperCase()}}

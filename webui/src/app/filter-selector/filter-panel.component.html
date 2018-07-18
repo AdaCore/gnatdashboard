@@ -14,23 +14,6 @@
 
 
     <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-        <span class="navig-button col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <button [ngClass]="this.reportService.page == 'code-explorer' ? 'active' : '' " id="ProjectButton" class="project-button col-lg-5 col-md-5 col-sm-5 col-xs-10 no-pad"
-                    [routerLink]="['./code-explorer']">
-                Code
-            </button>
-            <button [ngClass]="this.reportService.page == 'message-explorer' ? 'active' : '' " id="ErrorButton" class="error-button col-lg-5 col-md-5 col-sm-5 col-xs-10 no-pad"
-                    [routerLink]="['./message-explorer']">
-                Message
-            </button>
-        </span>
-        <span class="hide-files col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-            <label class="switch">
-                <input #checkbox type="checkbox" [ngModel]="reportService.hideFiles" (ngModelChange)="hideFilesChanges()"/>
-                <span class="slider"></span>
-            </label>
-            <span>Show all files</span>
-        </span>
         <!-- Button open/close filters -->
         <button id="chrevonButton" class="arrow-button open"
                 (click)="openCloseFilterTab()">
@@ -61,7 +44,7 @@
                              (toggle)="onRuleFilterToggle($event)">
             </filter-selector>
             <filter-selector
-                             class="property-selector" title="States"
+                             class="property-selector" title="History"
                              *ngIf="this.reportService.filter.properties | dshNotEmpty"
                              [options]="this.reportService.filter.properties | dshMapValues"
                              (toggle)="onPropertyFilterToggle($event)">

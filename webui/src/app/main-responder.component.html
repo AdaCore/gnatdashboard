@@ -1,7 +1,17 @@
 <div class="main-responder-page col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
     <header class="main-responder-header top col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" role="header">
-        <span [routerLink]="['./code-explorer']">{{reportService.projectName}}</span>
-        <span [routerLink]="['./preferences']">Preferences</span>
+        <span>{{reportService.projectName}}</span>
+           <span class="navig-button">
+            <button [ngClass]="this.reportService.page == 'code-explorer' ? 'active' : '' " id="ProjectButton" class="project-button"
+                    [routerLink]="['./code-explorer']">
+                Code
+            </button>
+            <button [ngClass]="this.reportService.page == 'message-explorer' ? 'active' : '' " id="ErrorButton" class="error-button"
+                    [routerLink]="['./message-explorer']">
+                Messages
+            </button>
+        </span>
+        <!--<span [routerLink]="['./preferences']">Preferences</span>-->
     </header>
 
     <section id="filterPanel" class="main-responder-body open col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">

@@ -9,13 +9,23 @@
 <div *ngIf="reportService.message" class="layout-page col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad">
     <main class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-            <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <span (click)="expandCollapseAll('reduce')" class="expandCollapse">expand all  </span>
-                <span> / </span>
-                <span (click)="expandCollapseAll('open')" class="expandCollapse">  collapse all</span>
+            <span class="tab-header right col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <span class="expand-collapse">
+                    <span (click)="expandCollapseAll('reduce')" class="expandCollapse">expand all  </span>
+                    <span> / </span>
+                    <span (click)="expandCollapseAll('open')" class="expandCollapse">  collapse all</span>
+                </span>
+
+                <span class="hide-files">
+                    <label class="switch">
+                        <input #checkbox type="checkbox" [ngModel]="reportService.showFiles" (ngModelChange)="showFilesChanges()"/>
+                        <span class="slider"></span>
+                    </label>
+                    <span>Show all files</span>
+                </span>
             </span>
             <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                <span class="col-lg-7 col-md-7 col-sm-7 col-xs-7 click" (click)="sortModules('name', 'filename')">
+                <span class="col-lg-7 col-md-7 col-sm-7 col-xs-7 click" (click)="sortModules('filename', 'line')">
                     <span>Name</span>
                     <span class="header-icon"
                           *ngIf="reportService.messageFilter.newSort == 'name'">
@@ -23,7 +33,7 @@
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</md-icon>
                     </span>
                 </span>
-                <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','_total_message_count')">
+                <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','name')">
                     <span>Messages</span>
                     <span class="header-icon"
                           *ngIf="reportService.messageFilter.newSort == '_ui_total_message_count'">
@@ -46,7 +56,7 @@
             <span class="all-sources-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                 <span *ngFor="let source of reportService.message.sources"
                       class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                      [ngClass]="(!this.reportService.hideFiles && (source._ui_total_message_count == 0 || ( source._ui_total_message_count == null && source._total_message_count == 0))) ? 'hideIt' : ''">
+                      [ngClass]="(!this.reportService.showFiles && (source._ui_total_message_count == 0 || ( source._ui_total_message_count == null && source._total_message_count == 0))) ? 'hideIt' : ''">
                     <span id="{{source.filename}}" class="source-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open">
                         <span class="header-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(source.filename)">
                             <span class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
@@ -66,7 +76,7 @@
                         <span class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                             <span *ngFor="let message of source.messages"
                                   class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                                  [ngClass]="(!this.reportService.hideFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
+                                  [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
                                 <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [routerLink]="['/source', source.filename, { line: message.line }]"
                                       [ngClass]="message.ranking.name">
@@ -74,7 +84,10 @@
                                         <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                                             {{message.line}}:{{message.col_begin}}
                                         </span>
-                                        <span class="col-lg-9 col-md-9 col-sm-9 col-xs-9">{{message.name}}</span>
+                                        <span class="col-lg-7 col-md-7 col-sm-7 col-xs-7">{{message.name}}</span>
+                                        <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                            {{ message.user_review ? message.user_review.status.toUpperCase() : 'UNCATEGORIZED'}}
+                                        </span>
                                         <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ranking">
                                             {{ message.ranking.name }}
                                         </span>
@@ -84,7 +97,7 @@
                         </span>
                     </span>
                 </span>
-                <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="reportService._ui_total_message_count == 0"> There are no message corresponding to the selected filters</span>
+                <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="reportService._ui_total_message_count == 0"> There are no messages corresponding to the selected filters</span>
             </span>
         </span>
     </main>

@@ -2,6 +2,10 @@
     animation-timing-function: ease-in;
     animation-duration: 2s;
 
+    .tool-selector .filter-selector {
+        margin-top: 50px;
+    }
+
     .group-button {
         padding: 15px 30px;
 
@@ -19,30 +23,6 @@
         input[type=radio]:not(:checked) + label {
             opacity: 0.5;
             background-color: var(--elem-unchecked);
-        }
-    }
-
-    .navig-button {
-        text-align: center;
-        margin: 15px 0px 5px 0px;
-
-        button {
-            padding: 5px;
-            margin: 0px;
-            text-align: center;
-            background-color: var(--elem-color);
-            border: 1px #C4c4c5 solid;
-
-            button#ErrorButton {
-                margin-left: -5px;
-            }
-            button#ProjectButton {
-                margin-right: 2.5px;
-            }
-        }
-        .active {
-            background-color: var(--elem-hover);
-            border: 1px var(--elem-border) solid;
         }
     }
 
@@ -68,60 +48,6 @@
         }
     }
 
-    .hide-files {
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
-        .slider {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 12px;
-            width: 12px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-
-        input:checked + .slider {
-            background-color: #94d894;
-        }
-        input:focus + .slider {
-            box-shadow: 0 0 1px #94d894;
-        }
-
-        input:checked + .slider:before {
-            -webkit-transform: translateX(20px);
-            -ms-transform: translateX(20px);
-            transform: translateX(20px);
-        }
-
-        label {
-            padding: 3px 10px;
-            margin-bottom: 5px;
-            cursor: pointer;
-        }
-        .hideIt {
-            display: none;
-        }
-    }
-
-
     .tool-selector {
         opacity: 1;
         animation-timing-function: ease-in;
@@ -132,18 +58,6 @@
         height: calc(100% - 80px);
         overflow: auto;
     }
-
-    /*div.option-selectors {
-    width: 100%;
-
-    display: flex;
-    flex-flow: row wrap;
-
-    filter-selector {
-        flex-grow: 1;
-        margin-bottom: 19px;
-    }
-}*/
 
 }
 
@@ -158,7 +72,7 @@
         animation-duration: 2s;
     }
 
-    .navig-button, .hide-files, .option-selectors {
+    .option-selectors {
         display: none;
     }
 
@@ -190,4 +104,8 @@
         margin-top: 65px;
         font-weight: bold;
     }
+}
+
+filter-selector.tool-selector .filter-selector {
+    margin-top: 40px;
 }

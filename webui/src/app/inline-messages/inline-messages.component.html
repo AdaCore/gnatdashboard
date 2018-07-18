@@ -2,15 +2,21 @@
     <div class="messages-tool col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">{{ getToolName(toolId) }}</div>
     <div class="messages-list col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <div class="messages-list-item col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let message of messages[toolId]">
-            <span class="rule-identifier">
-                <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
-                {{ message.rule.name }}
+            <span class="message-text col-lg-8 col-md-8 col-sm-8 col-xs-8">{{ message.name }}</span>
+            <span class="identifier col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <span class="rule-identifier">
+                    <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
+                    {{ message.rule.name }}
+                </span>
+                <span class="message-properties" *ngIf="message.properties | dshNotEmpty">
+                    <md-icon class="tags" md-tooltip="Message properties">local_offer</md-icon>
+                    {{ formatMessageProperties(message) }}
+                </span>
+                <span class="review-identifier">
+                    <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
+                    {{ message.user_review ? message.user_review.status.toUpperCase() : 'UNCATEGORIZED' }}
+                </span>
             </span>
-            <span class="message-properties" *ngIf="message.properties | dshNotEmpty">
-                <md-icon class="tags" md-tooltip="Message properties">local_offer</md-icon>
-                {{ formatMessageProperties(message) }}
-            </span>
-            <span class="message-text">{{ message.name }}</span>
         </div>
     </div>
 </div>

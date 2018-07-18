@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
-import { MdDialogRef } from '@angular/material'
+import { MdDialogRef } from '@angular/material';
+import { SharedReport } from '../main-responder.service';
 
 @Component({
     selector: 'review-dialog',
@@ -13,9 +14,30 @@ export class ReviewDialog {
     public username: string;
     public review: string;
     public status: string;
-    public review_status = ['Uncategorized', 'Pending', 'Not_A_Bug', 'False_Positive', 'Intentional', 'Bug'];
+    public review_status = [
+        {
+            show: 'Pending',
+            value: 'PENDING'
+        },
+        {
+            show: 'Not a bug',
+            value: 'NOT_A_BUG'
+        },
+        {
+            show: 'False positive',
+            value: 'FALSE_POSITIVE'
+        },
+        {
+            show: 'Intentional',
+            value: 'INTENTIONAL'
+        },
+        {
+            show: 'Bug',
+            value: 'BUG'
+        }];
 
-    constructor(public dialogRef: MdDialogRef<ReviewDialog>) {}
+    constructor(public dialogRef: MdDialogRef<ReviewDialog>,
+                public reportService: SharedReport) {}
 
     public cancel() {
         this.dialogRef.close();
@@ -26,6 +48,7 @@ export class ReviewDialog {
             this.showError();
             return;
         }
+
         let data = {
             username : this.username,
             review : this.review,

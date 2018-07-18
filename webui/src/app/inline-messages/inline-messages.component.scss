@@ -1,4 +1,7 @@
-:host { display: block; }
+:host {
+  display: block;
+  padding-left: 40px;
+}
 
 .messages {
   border: 1px solid var(--elem-border);
@@ -28,26 +31,27 @@
       border-bottom: 1px solid var(--strong-shade);
       &:last-child { border-bottom: none; }
 
-      span {
-        margin-right: 16px;
-        &:last-child { margin-right: 0; }
-      }
+      span.identifier {
+        text-align: right;
 
-      .rule-identifier,
-      .message-properties {
-        font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-        color: #777;
+        .rule-identifier,
+        .message-properties,
+        .review-identifier {
+          font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+          color: #777;
 
-        display: inline-block;
-        white-space: nowrap;
+          display: inline-block;
+          white-space: nowrap;
+          padding-left: 10px;
 
-        .tags {
-          font-size: 15px;
-          width: 15px;
-          height: 15px;
+          .tags {
+            font-size: 15px;
+            width: 15px;
+            height: 15px;
 
-          position: relative;
-          top: 3px;
+            position: relative;
+            top: 3px;
+          }
         }
       }
     }

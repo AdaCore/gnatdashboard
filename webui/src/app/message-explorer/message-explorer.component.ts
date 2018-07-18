@@ -12,7 +12,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 export class MessageExplorerComponent implements OnInit {
 
     constructor(public reportService: SharedReport,
-                @Inject(DOCUMENT) private document: Document) {}
+                 @Inject(DOCUMENT) private document: Document) {}
     /** @override */
     public ngOnInit() {
         this.reportService.page = 'message-explorer';
@@ -41,6 +41,10 @@ export class MessageExplorerComponent implements OnInit {
                 }
             }
         }.bind(this));
+    }
+
+    public showFilesChanges() {
+        this.reportService.showFiles = !this.reportService.showFiles;
     }
 
 }

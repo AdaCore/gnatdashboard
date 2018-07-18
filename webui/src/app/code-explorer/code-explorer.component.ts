@@ -16,8 +16,8 @@ export class CodeExplorerComponent implements OnInit, OnDestroy {
     private sub: Subscription;
 
     constructor(private route: ActivatedRoute,
-                public reportService: SharedReport,
-                @Inject(DOCUMENT) private document: Document) {}
+                 public reportService: SharedReport,
+                 @Inject(DOCUMENT) private document: Document) {}
     /** @override */
     public ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
@@ -35,8 +35,8 @@ export class CodeExplorerComponent implements OnInit, OnDestroy {
     public sortModules(firstSort: string, secondSort: string) {
         this.reportService.code.modules =
             sortCodeArray({newSort: firstSort, otherSort: secondSort},
-                           this.reportService.codeFilter,
-                           this.reportService.code.modules);
+                          this.reportService.codeFilter,
+                          this.reportService.code.modules);
     }
 
     public openClose(id: string) {
@@ -62,6 +62,10 @@ export class CodeExplorerComponent implements OnInit, OnDestroy {
             }.bind(this));
 
         }.bind(this));
+    }
+
+    public showFilesChanges() {
+        this.reportService.showFiles = !this.reportService.showFiles;
     }
 
 }

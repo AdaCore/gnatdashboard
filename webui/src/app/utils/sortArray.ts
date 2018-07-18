@@ -11,9 +11,8 @@ export function sortCodeArray(newFilter, oldFilter, projectArray) {
     } else {
         newFilter.order = 1;
     }
-    let property = projectArray[0][newFilter.newSort] != null ?
-        newFilter.newSort : (projectArray[0][newFilter.otherSort] != null ?
-                             newFilter.otherSort : null);
+
+    let property = checkProperty(projectArray, newFilter);
 
     if (property != null) {
         projectArray.sort((a: any, b: any) => {
@@ -29,9 +28,7 @@ export function sortCodeArray(newFilter, oldFilter, projectArray) {
     projectArray.forEach(function(project){
         let folderArray =  project.source_dirs;
 
-        property = folderArray[0][newFilter.newSort] != null ?
-            newFilter.newSort : (folderArray[0][newFilter.otherSort] != null ?
-                                 newFilter.otherSort : null);
+        property = checkProperty(folderArray, newFilter);
 
         if (property != null) {
             folderArray.sort((a: any, b: any) => {
@@ -48,9 +45,8 @@ export function sortCodeArray(newFilter, oldFilter, projectArray) {
             let fileArray = folder.sources;
             folder.name = folder.name.replace(project._source_dirs_common_prefix, '');
 
-            property = fileArray[0][newFilter.newSort] != null ?
-                newFilter.newSort : (fileArray[0][newFilter.otherSort] != null ?
-                                     newFilter.otherSort : null);
+            property = checkProperty(fileArray, newFilter);
+
             if (property != null) {
                 fileArray.sort((a: any, b: any) => {
                     if (a[property] < b[property]) { return -1 * newFilter.order; }
@@ -72,6 +68,24 @@ export function sortCodeArray(newFilter, oldFilter, projectArray) {
     return projectArray;
 }
 
+function checkProperty(myArray, newFilter) {
+    let property = myArray[0][newFilter.newSort] != null ?
+        newFilter.newSort : (myArray[0][newFilter.otherSort] != null ?
+                             newFilter.otherSort : null);
+    if (property == null) {
+
+        if (newFilter.newSort == '_ui_total_message_count'){
+            newFilter.newSort = '_total_message_count';
+        } else if (newFilter.otherSort == '_ui_total_message_count'){
+            newFilter.otherSort = '_total_message_count';
+        }
+        property = myArray[0][newFilter.newSort] != null ?
+            newFilter.newSort : (myArray[0][newFilter.otherSort] != null ?
+                                 newFilter.otherSort : null);
+    }
+    return property;
+}
+
 /*
  *  Sort the array containing all the information
  *  for message navigation according to the given filter
@@ -86,10 +100,7 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
         newFilter.order = 1;
     }
 
-    let property = sourceArray[0][newFilter.newSort] != null ?
-        newFilter.newSort : (sourceArray[0][newFilter.otherSort] != null ?
-                             newFilter.otherSort : null);
-
+    let property = checkProperty(sourceArray, newFilter);
 
     if (property != null) {
         sourceArray.sort((a: any, b: any) => {
@@ -108,9 +119,7 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
     sourceArray.forEach(function(source){
         if (source.messages){
             let messageArray =  source.messages;
-            property = messageArray[0][newFilter.newSort] != null ?
-                newFilter.newSort : (messageArray[0][newFilter.otherSort] != null ?
-                                     newFilter.otherSort : null);
+            property = checkProperty(messageArray, newFilter);
 
             if (property == "ranking") {
                 messageArray.sort((a: any, b: any) => {

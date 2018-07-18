@@ -10,12 +10,24 @@
     <main class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
             <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <span (click)="expandCollapseAll('reduce')" class="expandCollapse">expand all  </span>
-                <span> / </span>
-                <span (click)="expandCollapseAll('open')" class="expandCollapse">  collapse all</span>
+
+                <span class="expand-collapse">
+                    <span (click)="expandCollapseAll('reduce')" class="expandCollapse">expand all  </span>
+                    <span> / </span>
+                    <span (click)="expandCollapseAll('open')" class="expandCollapse">  collapse all</span>
+                </span>
+
+                <span class="hide-files">
+                    <label class="switch">
+                        <input #checkbox type="checkbox" [ngModel]="reportService.showFiles" (ngModelChange)="showFilesChanges()"/>
+                        <span class="slider"></span>
+                    </label>
+                    <span>Show all files</span>
+                </span>
+
             </span>
             <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                <span class="col-lg-5 col-md-5 col-sm-5 col-xs-5 click" (click)="sortModules('name', 'filename')">
+                <span class="col-lg-5 col-md-5 col-sm-5 col-xs-5 click" (click)="sortModules('filename', 'line')">
                     <span>Name</span>
                     <span class="header-icon"
                           *ngIf="reportService.codeFilter.newSort == 'name'">
@@ -24,7 +36,7 @@
                     </span>
                 </span>
                 <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
-                <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','_total_message_count')">
+                <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','name')">
                     <span>Messages</span>
                     <span class="header-icon"
                           *ngIf="reportService.codeFilter.newSort == '_ui_total_message_count'">
@@ -45,7 +57,7 @@
         <span class="all-projects-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
             <span *ngFor="let project of reportService.code.modules"
                   class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                  [ngClass]="(!this.reportService.hideFiles && (project._ui_total_message_count == 0 || ( project._ui_total_message_count == null && project._total_message_count == 0))) ? 'hideIt' : ''">
+                  [ngClass]="(!this.reportService.showFiles && (project._ui_total_message_count == 0 || ( project._ui_total_message_count == null && project._total_message_count == 0))) ? 'hideIt' : ''">
 
                 <span class="project-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(project.name)">
                     <span class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
@@ -70,7 +82,7 @@
                 <span id="{{project.name}}" class="all-folders-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad reduce">
                     <span *ngFor="let folder of project.source_dirs"
                           class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                          [ngClass]="(!this.reportService.hideFiles && (folder._ui_total_message_count == 0 || ( folder._ui_total_message_count == null && folder._total_message_count == 0))) ? 'hideIt' : ''">
+                          [ngClass]="(!this.reportService.showFiles && (folder._ui_total_message_count == 0 || ( folder._ui_total_message_count == null && folder._total_message_count == 0))) ? 'hideIt' : ''">
                         <span class="folder-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(folder.name)">
                             <span style="text-indent:15px;"
                                   class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
@@ -95,7 +107,7 @@
                         <span id="{{folder.name}}" class="all-files-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad reduce">
                             <span *ngFor="let file of folder.sources"
                                   class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                                  [ngClass]="(!this.reportService.hideFiles && (file._ui_total_message_count == 0 || ( file._ui_total_message_count == null && file._total_message_count == 0))) ? 'hideIt' : ''">
+                                  [ngClass]="(!this.reportService.showFiles && (file._ui_total_message_count == 0 || ( file._ui_total_message_count == null && file._total_message_count == 0))) ? 'hideIt' : ''">
                                 <span class="file-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [routerLink]="['/source', file.filename]">
                                     <span style="text-indent:35px;"
                                           class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
@@ -118,7 +130,7 @@
                     </span>
                 </span>
             </span>
-            <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="reportService._ui_total_message_count == 0"> There are no message corresponding to the selected filters</span>
+            <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="reportService._ui_total_message_count == 0"> There are no messages corresponding to the selected filters</span>
         </span>
     </main>
 </div>

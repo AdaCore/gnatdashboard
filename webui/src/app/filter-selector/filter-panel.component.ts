@@ -35,10 +35,6 @@ export class FilterPanelComponent {
         this.filterOpen = !this.filterOpen;
     }
 
-    public hideFilesChanges() {
-        this.reportService.hideFiles = !this.reportService.hideFiles;
-    }
-
     /*
      * Checkbox handled for the tool filters.
      *

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GNAThubService } from './gnathub.service';
-import { IFilterIndex, ICodeIndex, IMessageIndex } from 'gnat';
+import { IFilterIndex, ICodeIndex, IMessageIndex, IReviewFilter, IRankingFilter } from 'gnat';
 import { sortCodeArray, sortMessageArray } from './utils/sortArray';
 import { Http, Response } from '@angular/http';
 
@@ -50,7 +50,7 @@ export class SharedReport {
   public messageFilter = {newSort: 'name', otherSort: 'filename', order: 1};
 
   public page: string;
-  public hideFiles: boolean = false;
+  public showFiles: boolean = false;
   public showReviews: boolean = true;
   public isReportFetchError: boolean = false;
   public projectName: string;
@@ -62,6 +62,8 @@ export class SharedReport {
   private url: string = this.client_host.replace(String(this.client_port), String(this.api_port)+"/");
 
   public history = [];
+  public codepeer_code = -1;
+  public selectedMessage = [];
 
   constructor( private gnathub: GNAThubService, private http: Http ) {
 
@@ -77,13 +79,16 @@ export class SharedReport {
       .subscribe(
       data => {
         this.filter = JSON.parse(JSON.parse(data['_body']));
+        this.orderRanking();
         this.projectName = this.filter.project;
+        this.getCodepeerCode();
       }, error => {
         console.log("[Error] get filter : ", error);
         this.gnathub.getFilter().subscribe(
           filter => {
             this.filter = filter;
             this.projectName = filter.project;
+            this.getCodepeerCode();
           }, error => {
             this.isReportFetchError = true;
           }
@@ -133,6 +138,33 @@ export class SharedReport {
         );
       }
     );
+  }
+
+  private orderRanking() {
+    let order = ['Info', 'Low', 'Medium', 'High', 'Unspecified'];
+    let newOrder: [IRankingFilter] ;
+
+    order.forEach(function(status){
+      this.filter.ranking.forEach(function(rank){
+        if (newOrder && rank.name == status) {
+           newOrder.push(rank);
+        } else if (rank.name == status) {
+          newOrder = [rank];
+        }
+
+      })
+    }.bind(this));
+
+    this.filter.ranking = newOrder;
+  }
+
+
+  private getCodepeerCode() {
+    this.filter.tools.forEach(function(tool){
+      if (tool.name == 'codepeer'){
+        this.codepeer_code = tool.id;
+      }
+    }.bind(this));
   }
 
   private getUserReview(messages) {
