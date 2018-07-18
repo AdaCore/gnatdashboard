@@ -53,7 +53,7 @@
                              class="property-selector" title="Review Status"
                              *ngIf="this.reportService.filter.review_status | dshNotEmpty"
                              [options]="this.reportService.filter.review_status | dshMapValues"
-                             (toggle)="onPropertyFilterToggle($event)">
+                             (toggle)="onReviewFilterToggle($event)">
             </filter-selector>
         </div>
     </template>

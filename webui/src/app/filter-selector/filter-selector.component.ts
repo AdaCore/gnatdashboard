@@ -8,7 +8,7 @@ export type Option = {
     _ui_selected_message_count?: number,
 };
 
-export type FilterEvent = { option: Option; checked: boolean; id: number };
+export type FilterEvent = { option: Option; checked: boolean; id: number;};
 
 @Component({
     selector: 'filter-selector',
@@ -30,7 +30,7 @@ export class FilterSelectorComponent {
 
     public selectAll(options) {
         options.forEach(function(opt, idx){
-            this.toggle.emit({ option: opt, checked: true, id: idx});
+            this.toggle.emit({ option: opt, checked: true, id: idx });
         }.bind(this));
     }
     public unselectAll(options) {

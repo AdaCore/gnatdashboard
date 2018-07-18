@@ -5,7 +5,8 @@ import {
     IPropertyFilter,
     IRuleFilter,
     IToolFilter,
-    IRankingFilter
+    IRankingFilter,
+    IReviewFilter
 } from 'gnat';
 
 @Component({
@@ -79,6 +80,17 @@ export class FilterPanelComponent {
         this.updateMessagesUiProperties();
     }
 
+     /*
+     * Checkbox handled for the ranking filters.
+     *
+     * @param event Event fired by <filter-selector> on checkbox status change.
+     */
+    public onReviewFilterToggle(event: FilterEvent) {
+        const review = <IReviewFilter> event.option;
+        this.reportService.filter.review_status[event.id]._ui_unselected = !event.checked;
+        this.updateMessagesUiProperties();
+    }
+
     private isSelected(id: number, array: any): boolean {
         let isSelected: boolean;
 
@@ -94,9 +106,33 @@ export class FilterPanelComponent {
         return isSelected;
     }
 
+    private reviewSelected(name: string, array: any): boolean {
+         let isSelected: boolean;
+
+        array.forEach(function(cell){
+            if (cell.name === name){
+                if (cell._ui_unselected) {
+                    isSelected = !cell._ui_unselected;
+                } else {
+                    isSelected = true;
+                }
+            }
+        });
+        return isSelected;
+
+    }
+
     private incMessageCount(id: number, array: any){
         array.forEach(function(cell){
             if (cell.id === id){
+                cell._ui_selected_message_count += 1;
+            }
+        });
+    }
+
+    private incRevMessageCount(name: string, array: any){
+        array.forEach(function(cell){
+            if (cell.name === name){
                 cell._ui_selected_message_count += 1;
             }
         });
@@ -107,6 +143,7 @@ export class FilterPanelComponent {
         const rules = this.reportService.filter.rules;
         const properties = this.reportService.filter.properties;
         const ranking = this.reportService.filter.ranking;
+        const review = this.reportService.filter.review_status;
         this.reportService._ui_total_message_count = 0;
 
         tools.forEach(function(tool){
@@ -120,6 +157,9 @@ export class FilterPanelComponent {
         });
         ranking.forEach(function(rank){
             rank._ui_selected_message_count = 0;
+        });
+        review.forEach(function(rev){
+            rev._ui_selected_message_count = 0;
         });
         this.reportService.message.sources.forEach(function(source){
             source._ui_total_message_count = 0;
@@ -141,9 +181,13 @@ export class FilterPanelComponent {
                                 const toolId = message.rule.tool_id;
                                 const ruleId = message.rule.id;
                                 const rankId = message.ranking.id;
+                                const reviewName = (message.user_review ? message.user_review.status : 'UNCATEGORIZED');
+
                                 const isToolSelected = this.isSelected(toolId, tools);
                                 const isRuleSelected = this.isSelected(ruleId, rules);
-                                const isRankSelected = this.isSelected(rankId, ranking)
+                                const isRankSelected = this.isSelected(rankId, ranking);
+                                const IsReviewSelected = this.reviewSelected(reviewName, review);
+
                                 let hasSelectedProperties = false;
 
                                 if (message.properties != null){
@@ -159,10 +203,11 @@ export class FilterPanelComponent {
                                     }.bind(this));
                                 }
 
-                                if (isToolSelected && isRuleSelected && isRankSelected && hasSelectedProperties) {
+                                if (isToolSelected && isRuleSelected && isRankSelected && IsReviewSelected && hasSelectedProperties) {
                                     this.incMessageCount(toolId, tools);
                                     this.incMessageCount(ruleId, rules);
                                     this.incMessageCount(rankId, ranking);
+                                    this.incRevMessageCount(reviewName, review);
                                     message.properties.forEach(function(property){
                                         let isPropertySelected =
                                             this.isSelected(property.id, properties);

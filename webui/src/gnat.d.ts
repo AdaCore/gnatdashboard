@@ -54,7 +54,6 @@ declare module 'gnat' {
     export interface IReview {
         id: number;
         name: string;
-        tool_id: number;
     }
 
     // Now concats the propert for filters and for specific filter
@@ -72,6 +71,7 @@ declare module 'gnat' {
         rules: [ IRuleFilter ];
         properties: [ IPropertyFilter ];
         ranking: [ IRankingFilter ];
+        review_status: [ IReviewFilter ];
         message_count?: { [toolId: number]: number };
         _total_message_count: number;
         _database: string;

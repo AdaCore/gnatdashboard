@@ -56,6 +56,8 @@ export class SharedReport {
   public projectName: string;
   public _ui_total_message_count: number = -1;
 
+  private userReviewFilter: [IReviewFilter];
+
   private client_host: string = window.location.origin;
   private client_port: number = Number(window.location.port);
   private api_port: number = this.client_port + 1;
@@ -188,6 +190,50 @@ export class SharedReport {
     );
   }
 
+  private countUncategorized(filter, total_count) {
+    let count = 0;
+    filter.forEach(function(reviewStatus){
+      if (reviewStatus.name != 'UNCATEGORIZED') {
+        count += reviewStatus._message_count;
+      }
+    });
+    count = total_count - count;
+    filter.forEach(function(reviewStatus){
+      if (reviewStatus.name == 'UNCATEGORIZED') {
+        reviewStatus._message_count = count;
+      }
+    });
+  }
+
+  private putInFilter(status, filter): [IReviewFilter] {
+    let stop = false;
+    let newIdx = 1;
+    if (filter){
+      filter.forEach(function(reviewStatus){
+        if (reviewStatus.id >= newIdx){
+          newIdx = reviewStatus.id + 1;
+        }
+        if (!stop && reviewStatus.name == status){
+          reviewStatus._message_count += 1;
+          stop = true;
+        }
+      });
+    }
+    if (!stop) {
+      let tmp = {
+        id : newIdx,
+        name : status,
+        _message_count : 1
+      };
+      if (!filter){
+        filter = [tmp];
+      } else {
+        filter.push(tmp);
+      }
+    }
+    return filter;
+  }
+
   private addUserReview(messages) {
     this.message = messages;
     this.message.sources = sortMessageArray(
@@ -197,13 +243,21 @@ export class SharedReport {
     this.message.sources.forEach(function(source){
       if (source.messages){
         source.messages.forEach(function(message){
+
           if (this.codepeer_review[message.tool_msg_id]) {
             message.review_history = this.codepeer_review[message.tool_msg_id].review_history;
             message.user_review = this.codepeer_review[message.tool_msg_id].user_review;
+
+            this.userReviewFilter = this.putInFilter(message.user_review.status, this.userReviewFilter);
           }
         }.bind(this));
       }
     }.bind(this));
+    if (this.filter){
+      this.putInFilter('UNCATEGORIZED', this.userReviewFilter);
+      this.countUncategorized(this.userReviewFilter, this.filter._total_message_count);
+      this.filter.review_status = this.userReviewFilter;
+    }
   }
 
   public sendUserReview(xml) {
