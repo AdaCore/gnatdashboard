@@ -137,8 +137,9 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         cmd = ('codepeer_bridge'
                + ' --output-dir=' + GNAThub.output_dir()
                + ' --db-dir=' + GNAThub.db_dir()
-               + ' --export-reviews=obj/gnathub/html-report/data/'
-               + filename
+               + ' --export-reviews='
+               + os.path.join(GNAThub.Project.object_dir(),
+                              'gnathub', 'html-report', 'data', filename)
                + ' >> ' + API_SERVER_LOG + ' 2>&1')
         os.system(cmd)
 
@@ -271,8 +272,11 @@ def launch_client_server(port, HandlerClass=RootedHTTPRequestHandler,
                          ServerClass=RootedHTTPServer):
 
     server_address = ('', port)
-    httpd = ServerClass('obj/gnathub/html-report', server_address,
+    httpd = ServerClass(os.path.join(GNAThub.Project.object_dir(),
+                                     'gnathub', 'html-report'),
+                        server_address,
                         HandlerClass)
+
     sa = httpd.socket.getsockname()
     print "Serving HTTP on ", sa[0], "port", sa[1], "..."
 
