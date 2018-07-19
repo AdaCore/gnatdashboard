@@ -57,54 +57,59 @@ export class GNAThubService {
             if (error) {
                 console.log("[Error] convertToJson : Problem to parse :", error);
             } else {
-                result.audit_trail.message.forEach(function(review){
+                if (result.audit_trail.message.length > 0){
+                    result.audit_trail.message.forEach(function(review){
 
-                    let myReview = [];
-                    let lastReview = {
-                        author : '',
-                        status: '',
-                        date: 0,
-                        from_source: '',
-                        message: ''
-                    };
-                    if (review.audit.$){
-                        let tmpReview = {
-                            author : review.audit.$.approved,
-                            status: review.audit.$.status,
-                            date: review.audit.$.timestamp,
-                            from_source: review.audit.$.from_source,
-                            message: review.audit._
+                        let myReview = [];
+                        let lastReview = {
+                            author : '',
+                            status: '',
+                            date: 0,
+                            from_source: '',
+                            message: ''
                         };
-                        myReview.push(tmpReview)
-                        lastReview = tmpReview;
-                    } else if (review.audit[0].$) {
-                        review.audit.forEach(function(tmp){
-
+                        if (review.audit.$){
                             let tmpReview = {
-                                author : tmp.$.approved,
-                                status: tmp.$.status,
-                                date: tmp.$.timestamp,
-                                from_source: tmp.$.from_source,
-                                message: tmp._
+                                author : review.audit.$.approved,
+                                status: review.audit.$.status,
+                                date: review.audit.$.timestamp,
+                                from_source: review.audit.$.from_source,
+                                message: review.audit._
                             };
                             myReview.push(tmpReview)
-                            if (lastReview.date < tmpReview.date) {
-                                lastReview = tmpReview;
-                            }
-                        });
+                            lastReview = tmpReview;
+                        } else if (review.audit[0].$) {
+
+                            review.audit.forEach(function(tmp){
+
+                                let tmpReview = {
+                                    author : tmp.$.approved,
+                                    status: tmp.$.status,
+                                    date: tmp.$.timestamp,
+                                    from_source: tmp.$.from_source,
+                                    message: tmp._
+                                };
+                                myReview.push(tmpReview)
+                                if (lastReview.date < tmpReview.date) {
+                                    lastReview = tmpReview;
+                                }
+                            });
 
 
-                    } else {
-                        console.log("[Error] convertToJson : Problem to add this user_review : ", review);
-                    }
-                    let tmp = {
-                        review_history: myReview,
-                        user_review: lastReview
-                    };
+                        } else {
+                            console.log("[Error] convertToJson : Problem to add this user_review : ", review);
+                        }
+                        let tmp = {
+                            review_history: myReview,
+                            user_review: lastReview
+                        };
 
-                    user_review[review.$.identifier] = tmp;
+                        user_review[review.$.identifier] = tmp;
 
-                });
+                    });
+                } else {
+                    console.log("[Error] gnathub.service:convertToJson : result.audit_trail.message should not be empty.");
+                }
             }
         });
         return user_review;

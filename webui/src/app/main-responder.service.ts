@@ -148,31 +148,37 @@ export class SharedReport {
     let newOrder: [IRankingFilter] ;
 
     order.forEach(function(status){
-      this.filter.ranking.forEach(function(rank){
-        if (newOrder && rank.name == status) {
-          newOrder.push(rank);
-        } else if (rank.name == status) {
-          newOrder = [rank];
-        }
+      if (this.checkArray(this.filter.ranking, "main-responder.service",
+                          "orderRanking", "filter.ranking")){
+        this.filter.ranking.forEach(function(rank){
+          if (newOrder && rank.name == status) {
+            newOrder.push(rank);
+          } else if (rank.name == status) {
+            newOrder = [rank];
+          }
+        })
+      }
 
-      })
     }.bind(this));
 
     this.filter.ranking = newOrder;
   }
 
   private checkCoverage() {
-    if (this.code.modules.length > 0){
+    if (this.checkArray(this.code.modules, "main-responder.service",
+                        "checkCoverage", "code.modules")){
       this.code.modules.forEach(function(project){
         if (project.coverage > 0) {
           this.showCoverage = true;
         }
-        if (project.source_dirs.length > 0){
+        if (this.checkArray( project.source_dirs, "main-responder.service",
+                            "checkCoverage", " project.source_dirs")){
           project.source_dirs.forEach(function(folder){
             if (folder.coverage > 0) {
               this.showCoverage = true;
             }
-            if (folder.sources.length > 0){
+            if (this.checkArray(folder.sources, "main-responder.service",
+                                "checkCoverage", "folder.sources")){
               folder.sources.forEach(function(source){
                 if (source.coverage > 0) {
                   this.showCoverage = true;
@@ -186,11 +192,14 @@ export class SharedReport {
   }
 
   private getCodepeerCode() {
-    this.filter.tools.forEach(function(tool){
-      if (tool.name == 'codepeer'){
-        this.codepeer_code = tool.id;
-      }
-    }.bind(this));
+    if (this.checkArray(this.filter.tools, "main-responder.service",
+                        "getCodepeerCode", "filter.tools")){
+      this.filter.tools.forEach(function(tool){
+        if (tool.name == 'codepeer'){
+          this.codepeer_code = tool.id;
+        }
+      }.bind(this));
+    }
   }
 
   private getUserReview(messages) {
@@ -216,23 +225,27 @@ export class SharedReport {
 
   private countUncategorized(filter, total_count) {
     let count = 0;
-    filter.forEach(function(reviewStatus){
-      if (reviewStatus.name != 'UNCATEGORIZED') {
-        count += reviewStatus._message_count;
-      }
-    });
-    count = total_count - count;
-    filter.forEach(function(reviewStatus){
-      if (reviewStatus.name == 'UNCATEGORIZED') {
-        reviewStatus._message_count = count;
-      }
-    });
+    if (this.checkArray(filter, "main-responder.service",
+                        "countUncategorized", "filter")){
+      filter.forEach(function(reviewStatus){
+        if (reviewStatus.name != 'UNCATEGORIZED') {
+          count += reviewStatus._message_count;
+        }
+      });
+      count = total_count - count;
+      filter.forEach(function(reviewStatus){
+        if (reviewStatus.name == 'UNCATEGORIZED') {
+          reviewStatus._message_count = count;
+        }
+      });
+    }
   }
 
   private putInFilter(status, filter): [IReviewFilter] {
     let stop = false;
     let newIdx = 1;
-    if (filter){
+    if (this.checkArray(filter, "main-responder.service",
+                        "putInFilter", "filter")){
       filter.forEach(function(reviewStatus){
         if (reviewStatus.id >= newIdx){
           newIdx = reviewStatus.id + 1;
@@ -264,19 +277,22 @@ export class SharedReport {
       this.messageFilter,
       this.messageFilter, messages.sources);
 
-    this.message.sources.forEach(function(source){
-      if (source.messages){
-        source.messages.forEach(function(message){
+    if (this.checkArray(this.message.sources, "main-responder.service",
+                        "addUserReview", "message.sources")){
+      this.message.sources.forEach(function(source){
+        if (source.messages){
+          source.messages.forEach(function(message){
 
-          if (this.codepeer_review[message.tool_msg_id]) {
-            message.review_history = this.codepeer_review[message.tool_msg_id].review_history;
-            message.user_review = this.codepeer_review[message.tool_msg_id].user_review;
+            if (this.codepeer_review[message.tool_msg_id]) {
+              message.review_history = this.codepeer_review[message.tool_msg_id].review_history;
+              message.user_review = this.codepeer_review[message.tool_msg_id].user_review;
 
-            this.userReviewFilter = this.putInFilter(message.user_review.status, this.userReviewFilter);
-          }
-        }.bind(this));
-      }
-    }.bind(this));
+              this.userReviewFilter = this.putInFilter(message.user_review.status, this.userReviewFilter);
+            }
+          }.bind(this));
+        }
+      }.bind(this));
+    }
     if (this.filter){
       this.putInFilter('UNCATEGORIZED', this.userReviewFilter);
       this.countUncategorized(this.userReviewFilter, this.filter._total_message_count);
@@ -294,4 +310,18 @@ export class SharedReport {
     });
   }
 
+  public checkArray(array, file, func_name, name): boolean {
+    if (!array){
+      console.log("[Warning] " + file + ":" + func_name +" : " + name + " doesn´t exist.");
+      return false;
+    } else if (array == null){
+      console.log("[Warning] " + file + ":" + func_name +" : " + name + " is null.");
+      return false;
+    } else if (array.length == 0) {
+      console.log("[Warning] " + file + ":" + func_name +" : " + name + " is empty.");
+      return false;
+    } else {
+      return true;
+    }
+  }
 }

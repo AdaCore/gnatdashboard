@@ -21,11 +21,20 @@ export class InlineMessagesComponent {
 
     public getToolName(id: number) {
         let toolName: string = "";
-        this.reportService.filter.tools.forEach(function(tool){
-            if(tool.id == id){
-                toolName = tool.name;
+
+        if (this.reportService.filter) {
+            if (this.reportService.checkArray(this.reportService.filter.tools,
+                                              "inline-messages.component",
+                                              "getToolName", "reportService.filter.tools")) {
+                this.reportService.filter.tools.forEach(function(tool){
+                    if(tool.id == id){
+                        toolName = tool.name;
+                    }
+                });
             }
-        });
+        } else {
+            console.log("[Error] inline-messages.component:getToolName : reportService.filter doesn't exist.");
+        }
         return toolName;
     }
 }

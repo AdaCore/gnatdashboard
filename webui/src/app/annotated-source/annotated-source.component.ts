@@ -67,33 +67,50 @@ export class AnnotatedSourceComponent
 
         // Prepare inline messages.
         this.inlineMessages = {};
-        this.source.messages.forEach(function(message){
-            const toolId = message.rule.tool_id;
-            const line = message.line;
-            if (!this.inlineMessages.hasOwnProperty(line)) {
-                this.inlineMessages[line] = {};
+        if (this.source) {
+            if (this.reportService.checkArray(this.source.messages,
+                                              "annotated-source.component",
+                                              "inlineMessages", "source.messages")) {
+                this.source.messages.forEach(function(message){
+                    const toolId = message.rule.tool_id;
+                    const line = message.line;
+                    if (!this.inlineMessages.hasOwnProperty(line)) {
+                        this.inlineMessages[line] = {};
+                    }
+                    if (!this.inlineMessages[line].hasOwnProperty(toolId)) {
+                        this.inlineMessages[line][toolId] = new Set();
+                    }
+                    this.inlineMessages[line][toolId].add(message);
+                    this.inlineMessagesShownCount++;
+                }.bind(this));
             }
-            if (!this.inlineMessages[line].hasOwnProperty(toolId)) {
-                this.inlineMessages[line][toolId] = new Set();
-            }
-            this.inlineMessages[line][toolId].add(message);
-            this.inlineMessagesShownCount++;
-        }.bind(this));
+        } else {
+            console.log("[Error] annotated-source.component:inlineMessages : source doesn't exist.");
+        }
+
         // Prepare inline annotations.
         this.inlineAnnotations = {};
-        this.source.annotations.forEach(function(annotation){
-            const toolId = annotation.rule.tool_id;
-            const line = annotation.line;
-            if (!this.inlineAnnotations.hasOwnProperty(line)) {
-                this.inlineAnnotations[line] = new Set();
-            }
-            this.inlineAnnotations[line].add(annotation);
-        }.bind(this));
+        if (this.source) {
+            if (this.reportService.checkArray(this.source.annotations,
+                                              "annotated-source.component",
+                                              "inlineAnnotations", "source.annotations")) {
+                this.source.annotations.forEach(function(annotation){
+                    const toolId = annotation.rule.tool_id;
+                    const line = annotation.line;
+                    if (!this.inlineAnnotations.hasOwnProperty(line)) {
+                        this.inlineAnnotations[line] = new Set();
+                    }
+                    this.inlineAnnotations[line].add(annotation);
+                }.bind(this));
 
-        this.sub = this.route.params.subscribe(params => {
-            this.selectedLine = +params['line'];
-            this.goToLine(this.selectedLine);
-        });
+                this.sub = this.route.params.subscribe(params => {
+                    this.selectedLine = +params['line'];
+                    this.goToLine(this.selectedLine);
+                });
+            }
+        } else {
+            console.log("[Error] annotated-source.component:inlineAnnotations : source doesn't exist.");
+        }
     }
 
     /** @override */
@@ -160,19 +177,23 @@ export class AnnotatedSourceComponent
     }
 
     public addDynamicReview(new_review) {
-        this.reportService.message.sources.forEach(function(source){
-            if (source.messages){
-                source.messages.forEach(function(message){
-                    if (new_review[message.tool_msg_id]){
-                        if (!message.review_history) {
-                            message.review_history = [];
+        if (this.reportService.checkArray(this.reportService.message.sources,
+                                          "annotated-source.component",
+                                          "addDynamicReview", "reportService.message.sources")) {
+            this.reportService.message.sources.forEach(function(source){
+                if (source.messages){
+                    source.messages.forEach(function(message){
+                        if (new_review[message.tool_msg_id]){
+                            if (!message.review_history) {
+                                message.review_history = [];
+                            }
+                            message.review_history.unshift(new_review[message.tool_msg_id]);
+                            message.user_review = new_review[message.tool_msg_id];
                         }
-                        message.review_history.unshift(new_review[message.tool_msg_id]);
-                        message.user_review = new_review[message.tool_msg_id];
-                    }
-                })
-            }
-        });
+                    })
+                }
+            });
+        }
     }
 
     public writeReview() {
@@ -186,32 +207,36 @@ export class AnnotatedSourceComponent
             let xml = '<?xml version="1.0" encoding="utf-8"?>\n<audit_trail format="6">\n';
             let new_review = [];
 
-            this.checked_msg.forEach(function(id){
+            if (this.reportService.checkArray(this.checked_msg,
+                                              "annotated-source.component",
+                                              "writeReview", "checked_msg")) {
+                this.checked_msg.forEach(function(id){
 
-                /* Create the xml to send to codepeer_bridge */
-                xml += '<message identifier="' + id + '">\n';
-                xml += '<audit timestamp="' + date + '" ';
+                    /* Create the xml to send to codepeer_bridge */
+                    xml += '<message identifier="' + id + '">\n';
+                    xml += '<audit timestamp="' + date + '" ';
 
-                /* Create the object to add to the client side to show it */
-                new_review[id] = {};
-                new_review[id].date = date;
+                    /* Create the object to add to the client side to show it */
+                    new_review[id] = {};
+                    new_review[id].date = date;
 
-                if (data.status) {
-                    xml += 'status="' + data.status + '" ';
-                    new_review[id].status = data.status;
-                }
-                if (data.username) {
-                    xml += 'approved="' + data.username + '" ';
-                    new_review[id].author = data.username;
-                }
-                xml += 'from_source="FALSE">';
-                if (data.review) {
-                    xml += data.review;
-                    new_review[id].message = data.review;
-                }
-                xml += '</audit>\n</message>\n';
+                    if (data.status) {
+                        xml += 'status="' + data.status + '" ';
+                        new_review[id].status = data.status;
+                    }
+                    if (data.username) {
+                        xml += 'approved="' + data.username + '" ';
+                        new_review[id].author = data.username;
+                    }
+                    xml += 'from_source="FALSE">';
+                    if (data.review) {
+                        xml += data.review;
+                        new_review[id].message = data.review;
+                    }
+                    xml += '</audit>\n</message>\n';
 
-            });
+                });
+            }
             xml += '</audit_trail>';
 
             this.reportService.sendUserReview(xml);
