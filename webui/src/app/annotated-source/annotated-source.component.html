@@ -86,7 +86,10 @@
                                             <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad" [routerLink]="['.', { line: message.line }]">
                                                 {{message.line}}:{{message.col_begin}}
                                             </span>
-                                            <span class="col-lg-10 col-md-10 col-sm-10 col-xs-10 no-pad" [routerLink]="['.', { line: message.line }]">
+                                             <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad" [routerLink]="['.', { line: message.line }]">
+                                                {{message.ranking.name}}
+                                            </span>
+                                            <span class="col-lg-9 col-md-9 col-sm-9 col-xs-9 no-pad" [routerLink]="['.', { line: message.line }]">
                                                 {{message.name}}
                                             </span>
                                             <span *ngIf="message.rule.tool_id == reportService.codepeer_code" class="checkbox-span col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
@@ -159,7 +162,10 @@
                                                 <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
                                                     {{message.line}}:{{message.col_begin}}
                                                 </span>
-                                                <span class="col-lg-11 col-md-11 col-sm-11 col-xs-11 no-pad">{{message.name}}</span>
+                                                <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
+                                                    {{message.ranking.name}}
+                                                </span>
+                                                <span class="col-lg-10 col-md-10 col-sm-10 col-xs-10 no-pad">{{message.name}}</span>
                                             </span>
                                         </span>
                                     </span>
