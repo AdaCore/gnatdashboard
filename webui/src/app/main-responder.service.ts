@@ -52,6 +52,7 @@ export class SharedReport {
   public page: string;
   public showFiles: boolean = false;
   public showReviews: boolean = true;
+  public showCoverage: boolean = false;
   public isReportFetchError: boolean = false;
   public projectName: string;
   public _ui_total_message_count: number = -1;
@@ -149,7 +150,7 @@ export class SharedReport {
     order.forEach(function(status){
       this.filter.ranking.forEach(function(rank){
         if (newOrder && rank.name == status) {
-           newOrder.push(rank);
+          newOrder.push(rank);
         } else if (rank.name == status) {
           newOrder = [rank];
         }
@@ -160,6 +161,29 @@ export class SharedReport {
     this.filter.ranking = newOrder;
   }
 
+  private checkCoverage() {
+    if (this.code.modules.length > 0){
+      this.code.modules.forEach(function(project){
+        if (project.coverage > 0) {
+          this.showCoverage = true;
+        }
+        if (project.source_dirs.length > 0){
+          project.source_dirs.forEach(function(folder){
+            if (folder.coverage > 0) {
+              this.showCoverage = true;
+            }
+            if (folder.sources.length > 0){
+              folder.sources.forEach(function(source){
+                if (source.coverage > 0) {
+                  this.showCoverage = true;
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  }
 
   private getCodepeerCode() {
     this.filter.tools.forEach(function(tool){

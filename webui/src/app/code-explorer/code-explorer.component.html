@@ -27,7 +27,8 @@
 
             </span>
             <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                <span class="col-lg-5 col-md-5 col-sm-5 col-xs-5 click" (click)="sortModules('filename', 'line')">
+                <span class="click" (click)="sortModules('filename', 'line')"
+                      [ngClass]="reportService.showCoverage ? 'col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'col-lg-7 col-md-7 col-sm-7 col-xs-7'">
                     <span>Name</span>
                     <span class="header-icon"
                           *ngIf="reportService.codeFilter.newSort == 'name'">
@@ -44,7 +45,7 @@
                         <md-icon class="md-18" *ngIf="reportService.codeFilter.order == -1">arrow_upward</md-icon>
                     </span>
                 </span>
-                <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 click" (click)="sortModules('coverage','')">
+                <span *ngIf="reportService.showCoverage" class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 click" (click)="sortModules('coverage','')">
                     <span>Coverage</span>
                     <span class="header-icon"
                           *ngIf="reportService.codeFilter.newSort == 'coverage'">
@@ -60,7 +61,8 @@
                   [ngClass]="(!this.reportService.showFiles && (project._ui_total_message_count == 0 || ( project._ui_total_message_count == null && project._total_message_count == 0))) ? 'hideIt' : ''">
 
                 <span class="project-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(project.name)">
-                    <span class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                    <span class=""
+                          [ngClass]="reportService.showCoverage ? 'col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'col-lg-7 col-md-7 col-sm-7 col-xs-7'">
                         <md-icon class="md-18 project-tree">chevron_right</md-icon>
                         {{project.name}}
                     </span>
@@ -74,7 +76,7 @@
                         project._total_message_count
                         }}
                     </span>
-                    <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <span *ngIf="reportService.showCoverage" class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
                         {{project.coverage != null ? project.coverage : 0}} %
                     </span>
                 </span>
@@ -85,7 +87,8 @@
                           [ngClass]="(!this.reportService.showFiles && (folder._ui_total_message_count == 0 || ( folder._ui_total_message_count == null && folder._total_message_count == 0))) ? 'hideIt' : ''">
                         <span class="folder-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(folder.name)">
                             <span style="text-indent:15px;"
-                                  class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                  class=""
+                                  [ngClass]="reportService.showCoverage ? 'col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'col-lg-7 col-md-7 col-sm-7 col-xs-7'">
                                 <md-icon class="md-18 folder-tree">folder_open</md-icon>
                                 {{folder.name}}
                             </span>
@@ -99,7 +102,7 @@
                                 folder._total_message_count
                                 }}
                             </span>
-                            <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <span *ngIf="reportService.showCoverage" class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                 {{folder.coverage != null ? folder.coverage : 0}} %
                             </span>
                         </span>
@@ -110,7 +113,8 @@
                                   [ngClass]="(!this.reportService.showFiles && (file._ui_total_message_count == 0 || ( file._ui_total_message_count == null && file._total_message_count == 0))) ? 'hideIt' : ''">
                                 <span class="file-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [routerLink]="['/source', file.filename]">
                                     <span style="text-indent:35px;"
-                                          class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                          class=""
+                                          [ngClass]="reportService.showCoverage ? 'col-lg-7 col-md-7 col-sm-7 col-xs-7' : 'col-lg-9 col-md-9 col-sm-9 col-xs-9'">
                                         <md-icon class="md-18 file-tree">insert_drive_file</md-icon>
                                         {{file.filename}}
                                     </span>
@@ -121,7 +125,7 @@
                                         file._total_message_count
                                         }}
                                     </span>
-                                    <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                    <span *ngIf="reportService.showCoverage" class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                         {{file.coverage != null ? file.coverage : 0}} %
                                     </span>
                                 </span>
