@@ -32,7 +32,7 @@ DEFAULT_SCRIPT_PATH = GNAThub.engine_repository()
 SCRIPT_NAME = 'server.py'
 
 # Default port value
-DEFAULT_PORT = 8000
+DEFAULT_PORT = 8080
 
 # Determine script path and check is different of default value
 script_path = DEFAULT_SCRIPT_PATH
