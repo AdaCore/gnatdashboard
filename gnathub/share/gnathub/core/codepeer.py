@@ -199,7 +199,7 @@ class CodePeer(Plugin, Runner, Reporter):
                         # for suppressed messages: map this to 'info'.
                         severity = 'info'
 
-                    rule_id = rule.lower().partition(';')[0].replace(' ', '_')
+                    rule_id = rule.lower()
                     self.__add_message(
                         source, line, column, rule_id, message, severity,
                         message_id,
