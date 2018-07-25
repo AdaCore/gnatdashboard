@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2016-2018, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -19,10 +19,13 @@ package com.adacore.gnatdashboard.gnathub.api.orm;
 import java.io.File;
 
 class GNAThubDBMock {
-  private static final String GNATHUB_TEST_DB = "gnathub-2016-11-17T200502Z.db";
+  private static final String GNATHUB_TEST_DB = "gnathub_sdc_20180725.db";
+
+  //  This needs to be sync with the file path which is present in resources table of the
+  //  GNATHUB_TEST_DB database
   private static final String GNATHUB_SOURCE_DIR =
-      "/Users/delay/_work/sandboxes/wave/x86_64-darwin/gnathub-cov/src/gnathub/src/";
-  public static final String GNATHUB_MAIN = GNATHUB_SOURCE_DIR + "gnathub/gnathub.adb";
+          "C:\\gnatmail\\ancr\\install\\gnatdashboard\\share\\examples\\gnatdashboard\\sdc\\";
+  public static final String GNATHUB_MAIN = GNATHUB_SOURCE_DIR + "common\\sdc.adb";
 
   public static File getGNAThubTestDB() {
     return new File(GNAThubDBMock.class.getClassLoader().getResource(GNATHUB_TEST_DB).getFile());

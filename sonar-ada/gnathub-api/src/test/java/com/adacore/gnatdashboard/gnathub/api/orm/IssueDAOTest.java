@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2016-2018, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -36,8 +36,8 @@ public class IssueDAOTest {
     final FileIssues issues = issueDAO.getIssuesForFile(GNAThubDBMock.GNATHUB_MAIN);
     assertThat(issues).isNotNull();
     assertThat(issues.fromToolIgnoreCase("gnatcheck")).isNotEmpty();
-    assertThat(issues.fromToolIgnoreCase("gnatcheck").size()).isEqualTo(2);
+    assertThat(issues.fromToolIgnoreCase("gnatcheck").size()).isEqualTo(9);
     assertThat(issues.fromToolIgnoreCase("codepeer")).isNotEmpty();
-    assertThat(issues.fromToolIgnoreCase("codepeer").size()).isEqualTo(1);
+    assertThat(issues.fromToolIgnoreCase("codepeer").size()).isEqualTo(7);
   }
 }

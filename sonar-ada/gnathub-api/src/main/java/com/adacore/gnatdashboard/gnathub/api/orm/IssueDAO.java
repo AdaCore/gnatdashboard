@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2016-2018, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -30,14 +30,23 @@ public class IssueDAO {
   private static final String CODEPEER_TOOL = "codepeer";
   private static final String CODEPEER_ANNOTATION_CATEGORY = "annotation";
 
+   // Returns the category string related to the current ranking value
+   //
+   private String getCategory (int Ranking) {
+       if      (Ranking == 0) return "annotation";
+       else if (Ranking == 2) return "info";
+       else if (Ranking == 3) return "low";
+       else if (Ranking == 4) return "medium";
+       else if (Ranking == 5) return "high";
+       else return "unspecified";
+   }
+
   private static final String SQL = String.join(" ",
       "SELECT",
-      "  rm.line as line_no, rule.identifier as key, msg.data as message, c.label as category,",
+      "  rm.line as line_no, rule.identifier as key, msg.data as message, msg.ranking as category,",
       "  tool.name as tool_name",
       "FROM",
       "  resources_messages rm, rules rule, tools tool, messages msg, resources file",
-      "LEFT OUTER JOIN",
-      "  categories c ON msg.category_id = c.id",
       "WHERE",
       "  msg.rule_id = rule.id",
       "  AND rm.message_id = msg.id",
@@ -45,7 +54,7 @@ public class IssueDAO {
       "  AND rm.resource_id = file.id",
       "  AND rule.kind = ?",
       "  AND file.name = ?",
-      "  AND NOT (tool.name = ? AND c.label = ?)");
+      "  AND NOT (tool.name = ? AND msg.ranking = ?)");
 
   /**
    * Fetch issues associated to a file.
@@ -65,6 +74,6 @@ public class IssueDAO {
         resultSet -> new Issue(
             resultSet.getInt("line_no"), resultSet.getString("key"),
             resultSet.getString("tool_name"), resultSet.getString("message"),
-            resultSet.getString("category"))));
+            getCategory(resultSet.getInt("category")))));
   }
 }
