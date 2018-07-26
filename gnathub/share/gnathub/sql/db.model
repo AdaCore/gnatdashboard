@@ -47,6 +47,10 @@
 | id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
 | entity_id     | FK entities(entity_messages)      | NOT NULL          |   | Entitie's id                                                                  |
 | message_id    | FK messages(message_entities)     | NOT NULL          |   | Message's id                                                                  |
+| line          | INTEGER                           | NULL              |   | Corresponding line for message - zero means not associated to a line          |
+| col_begin     | INTEGER                           | NULL              |   | Line's column begin                                                           |
+| col_end       | INTEGER                           | NULL              |   | Line's column end                                                             |
+
 
 | TABLE         | properties                        | property          |   | Message property                                                              |
 | id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |

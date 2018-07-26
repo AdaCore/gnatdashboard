@@ -116,10 +116,7 @@ class GNATmetric(Plugin, Runner, Reporter):
                 msg = GNAThub.Message(rule, metric.text, GNATmetric.RANKING)
                 self.messages[(rule, metric.text, GNATmetric.RANKING)] = msg
 
-            if entity:
-                message_data.append(msg)
-            else:
-                message_data.append([msg, 0, 1, 1])
+            message_data.append([msg, 0, 1, 1])
         return message_data
 
     def parse_units(self, node, resource):

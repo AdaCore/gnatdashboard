@@ -39,7 +39,9 @@ class GNATstack(Plugin, Runner, Reporter):
         super(GNATstack, self).__init__()
 
         self.tool = None
-        self.output = os.path.join(GNAThub.Project.object_dir(),
+        # FIXME: For now we can't control where the xml file is created:
+        # it is always created in the project directory
+        self.output = os.path.join(os.path.dirname(GNAThub.Project.path()),
                                    "stack_usage.xml")
         self.resources = {}
 
@@ -77,6 +79,12 @@ class GNATstack(Plugin, Runner, Reporter):
             self.name, self.__cmd_line()
         ).status in GNATstack.VALID_EXIT_CODES else GNAThub.EXEC_FAILURE
 
+    def pretty_print_name(self, name):
+        if '<' in name:
+            return name
+        else:
+            return name.split('.')[-1].title()
+
     def report(self):
         """Parse GNATstack output file report.
 
@@ -102,8 +110,8 @@ class GNATstack(Plugin, Runner, Reporter):
         entities_messages_map = {}
         # List of entity messages suitable for tool level bulk insertion
         entities_messages = []
-        # List of skipped file
-        skipped = []
+        # List of indirect call location
+        indirect_loc_list = []
 
         try:
             tree = ElementTree.parse(self.output)
@@ -135,14 +143,18 @@ class GNATstack(Plugin, Runner, Reporter):
                 local_usage = node.find('./localstackusage')
                 name = node.attrib.get('prefixname')
                 if name == "indirect call":
+                    # The columns are only defined here so save them for later
+                    line = locations[0].attrib.get('line')
+                    column = locations[0].attrib.get('column')
+                    indirect_loc_list.append([line, column])
                     continue
+                else:
+                    name = self.pretty_print_name(name)
 
                 for loc in locations:
                     file = loc.attrib.get('file')
                     line = loc.attrib.get('line')
                     column = loc.attrib.get('column')
-                    if name == "Debug_Test":
-                        self.info(file + " at " + line + ":" + column)
                     if file in self.resources:
                         resource = self.resources[file]
                     else:
@@ -171,7 +183,7 @@ class GNATstack(Plugin, Runner, Reporter):
                     local_metric = GNAThub.Message(metric, size)
 
                     entities_messages_map[subprogram_id] = (
-                        [global_metric, local_metric])
+                        [[global_metric, 0, 1, 1], [local_metric, 0, 1, 1]])
 
             # Analyse the indirect calls
             indirects = global_node.find('./indirectset').findall('./indirect')
@@ -188,8 +200,22 @@ class GNATstack(Plugin, Runner, Reporter):
                 set = node.find('./indirectcallset').findall('./indirectcall')
                 for call in set:
                     line = call.find('./line').find('./value').text
+                    # Go through the list of saved locations and use the
+                    # line to retrieve a corresponding column
+                    column = 1
+                    pos = -1
+                    for ix in range(len(indirect_loc_list)):
+                        if indirect_loc_list[ix][0] == line:
+                            pos = ix
+                            column = indirect_loc_list[pos][1]
+                            continue
+                    if pos != -1:
+                        indirect_loc_list.pop(pos)
                     message = GNAThub.Message(indirect_rule, 'indirect call')
-                    entities_messages_map[indirect_id].append(message)
+                    entities_messages_map[indirect_id].append([message,
+                                                               int(line),
+                                                               int(column),
+                                                               int(column)])
 
             # Analyse the external calls
             externals = global_node.find('./externalset').findall('./external')
@@ -203,7 +229,7 @@ class GNATstack(Plugin, Runner, Reporter):
                 if subprogram_id not in self.subprograms:
                     continue
                 message = GNAThub.Message(external_rule, "external call")
-                entities_messages_map[subprogram_id].append(message)
+                entities_messages_map[subprogram_id].append([message, 0, 1, 1])
 
             # Analyse the potential cycle
             cycles = global_node.find('./cycleset').findall('./cycle')
@@ -223,7 +249,7 @@ class GNATstack(Plugin, Runner, Reporter):
                 message = GNAThub.Message(cycle_rule,
                                           "potential cycle detected:\n\t\t" +
                                           "\n\t\t".join(cycle_list))
-                entities_messages_map[subprogram_id].append(message)
+                entities_messages_map[subprogram_id].append([message, 0, 1, 1])
 
             # Analyse the unbounded frames
             unboundeds = (
@@ -238,7 +264,8 @@ class GNATstack(Plugin, Runner, Reporter):
                 if subprogram_id in self.subprograms:
                     message = GNAThub.Message(unbounded_rule,
                                               "This frame is unbounded")
-                    entities_messages_map[subprogram_id].append(message)
+                    entities_messages_map[subprogram_id].append([message,
+                                                                 0, 1, 1])
 
             # Analyse the entry points
             entries = tree.find('./entryset').findall('./entry')
@@ -271,7 +298,7 @@ class GNATstack(Plugin, Runner, Reporter):
                 text += (" and the callchain is:\n\t\t%s" %
                          "\n\t\t".join(callchain_list))
                 message = GNAThub.Message(entry_rule, text)
-                entities_messages_map[subprogram_id].append(message)
+                entities_messages_map[subprogram_id].append([message, 0, 1, 1])
 
             # Project message explaining the accuracy of the metrics
             accurate = global_node.find('./accurate')

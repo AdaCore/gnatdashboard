@@ -55,7 +55,10 @@ package body GNAThub.Python.Database is
      Prepare
        (SQL_Insert
           (((D.Entities_Messages.Entity_Id   = Integer_Param (1))
-           & (D.Entities_Messages.Message_Id = Integer_Param (2)))),
+           & (D.Entities_Messages.Message_Id = Integer_Param (2))
+           & (D.Entities_Messages.Line       = Integer_Param (3))
+           & (D.Entities_Messages.Col_Begin  = Integer_Param (4))
+           & (D.Entities_Messages.Col_End    = Integer_Param (5)))),
         On_Server => True);
 
    -----------
@@ -367,15 +370,27 @@ package body GNAThub.Python.Database is
                   begin
                      for E2 in 1 .. Messages_Data.Number_Of_Arguments loop
                         declare
-                           Message      : constant Class_Instance
+                           Messages_List : constant List_Instance
                              := Nth_Arg (Messages_Data, E2);
+
+                           Message      : constant Class_Instance
+                             := Messages_List.Nth_Arg (1);
                            Message_Id   : constant Integer := Message_Property
-                             (Get_Data (Message, Message_Class_Name)).Id;
+                              (Get_Data (Message, Message_Class_Name)).Id;
+                           Line         : constant Integer
+                             := Messages_List.Nth_Arg (2);
+                           Col_Begin    : constant Integer
+                             := Messages_List.Nth_Arg (3);
+                           Col_End      : constant Integer
+                             := Messages_List.Nth_Arg (4);
                         begin
                            Database.DB.Execute
                              (Stmt   => Insert_Entity_Message,
                               Params => (1 => +Entity_Id,
-                                         2 => +Message_Id));
+                                         2 => +Message_Id,
+                                         3 => +Line,
+                                         4 => +Col_Begin,
+                                         5 => +Col_End));
                         end;
                      end loop;
                   end;
@@ -1336,15 +1351,23 @@ package body GNAThub.Python.Database is
 
             for J in 1 .. Global_List.Number_Of_Arguments loop
                declare
-                  Message      : constant Class_Instance
-                    := Nth_Arg (Global_List, J);
+                  List : constant List_Instance := Nth_Arg (Global_List, J);
+
+                  Message      : constant Class_Instance := List.Nth_Arg (1);
                   Message_Id   : constant Integer := Message_Property
                     (Get_Data (Message, Message_Class_Name)).Id;
+                  Line         : constant Integer := List.Nth_Arg (2);
+                  Col_Begin    : constant Integer := List.Nth_Arg (3);
+                  Col_End      : constant Integer := List.Nth_Arg (4);
                begin
                   Database.DB.Execute
                     (Stmt   => Insert_Entity_Message,
                      Params => (1 => +Entity_Id,
-                                2 => +Message_Id));
+                                2 => +Message_Id,
+                                3 => +Line,
+                                4 => +Col_Begin,
+                                5 => +Col_End));
+
                end;
             end loop;
 
@@ -1364,7 +1387,7 @@ package body GNAThub.Python.Database is
             Q : SQL_Query;
             R : Forward_Cursor;
          begin
-            --  list all message in enties_messages
+            --  list all message in entities_messages
 
             Q := SQL_Select
               (To_List
@@ -1373,14 +1396,13 @@ package body GNAThub.Python.Database is
                    2 => +D.Messages.Data,
                    3 => +D.Messages.Ranking,
                    4 => +D.Messages.Tool_Msg_Id,
-                   5 => +D.Entities.Line,
-                   6 => +D.Entities.Col_Begin,
-                   7 => +D.Entities.Col_End)),
+                   5 => +D.Entities_Messages.Line,
+                   6 => +D.Entities_Messages.Col_Begin,
+                   7 => +D.Entities_Messages.Col_End)),
 
-               From  => D.Messages & D.Entities & D.Entities_Messages,
+               From  => D.Messages & D.Entities_Messages,
 
-               Where => D.Entities.Id = Entity_Id
-                 and D.Entities.Id = D.Entities_Messages.Entity_Id
+               Where => D.Entities_Messages.Entity_Id = Entity_Id
                  and D.Messages.Id = D.Entities_Messages.Message_Id);
 
             R.Fetch (DB, Q);
