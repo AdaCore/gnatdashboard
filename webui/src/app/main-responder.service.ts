@@ -47,7 +47,7 @@ export class SharedReport {
   public codepeer_review: any;
 
   public codeFilter = {newSort: 'name', otherSort: 'filename', order: 1};
-  public messageFilter = {newSort: 'name', otherSort: 'filename', order: 1};
+  public messageFilter = {newSort: 'filename', otherSort: 'line', order: 1};
 
   public page: string;
   public showFiles: boolean = false;
