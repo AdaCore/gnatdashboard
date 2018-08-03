@@ -43,7 +43,11 @@ export function sortCodeArray(newFilter, oldFilter, projectArray) {
         // Map of files to array of files
         folderArray.forEach(function(folder){
             let fileArray = folder.sources;
-            folder.name = folder.name.replace(project._source_dirs_common_prefix, '');
+            folder.name =
+                (folder.name != project._source_dirs_common_prefix ?
+                 folder.name.replace(project._source_dirs_common_prefix, '')
+                 : '.');
+
 
             property = checkProperty(fileArray, newFilter);
 
