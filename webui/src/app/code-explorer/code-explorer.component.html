@@ -9,12 +9,12 @@
 <div *ngIf="reportService.code" class="layout-page col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad">
     <main class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-            <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span class="tab-header right col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
                 <span class="expand-collapse">
-                    <span (click)="expandCollapseAll('reduce')" class="expandCollapse">expand all  </span>
+                    <span (click)="expandCollapseAll(true)" class="expandCollapse">expand all  </span>
                     <span> / </span>
-                    <span (click)="expandCollapseAll('open')" class="expandCollapse">  collapse all</span>
+                    <span (click)="expandCollapseAll(false)" class="expandCollapse">  collapse all</span>
                 </span>
 
                 <span class="hide-files">
@@ -60,10 +60,10 @@
                   class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                   [ngClass]="(!this.reportService.showFiles && (project._ui_total_message_count == 0 || ( project._ui_total_message_count == null && project._total_message_count == 0))) ? 'hideIt' : ''">
 
-                <span class="project-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(project.name)">
+                <span class="project-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(project)">
                     <span class=""
                           [ngClass]="reportService.showCoverage ? 'col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'col-lg-7 col-md-7 col-sm-7 col-xs-7'">
-                        <md-icon class="md-18 project-tree">chevron_right</md-icon>
+                        <md-icon class="md-18 project-tree" [ngClass]="project.expand ? 'open': ''">chevron_right</md-icon>
                         {{project.name}}
                     </span>
                     <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
@@ -81,11 +81,11 @@
                     </span>
                 </span>
 
-                <span id="{{project.name}}" class="all-folders-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad reduce">
+                <span id="{{project.name}}" class="all-folders-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="project.expand ? 'open': 'reduce'">
                     <span *ngFor="let folder of project.source_dirs"
                           class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                           [ngClass]="(!this.reportService.showFiles && (folder._ui_total_message_count == 0 || ( folder._ui_total_message_count == null && folder._total_message_count == 0))) ? 'hideIt' : ''">
-                        <span class="folder-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(folder.name)">
+                        <span class="folder-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(folder)">
                             <span style="text-indent:15px;"
                                   class=""
                                   [ngClass]="reportService.showCoverage ? 'col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'col-lg-7 col-md-7 col-sm-7 col-xs-7'">
@@ -107,7 +107,7 @@
                             </span>
                         </span>
 
-                        <span id="{{folder.name}}" class="all-files-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad reduce">
+                        <span id="{{folder.name}}" class="all-files-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="folder.expand ? 'open': 'reduce'">
                             <span *ngFor="let file of folder.sources"
                                   class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                   [ngClass]="(!this.reportService.showFiles && (file._ui_total_message_count == 0 || ( file._ui_total_message_count == null && file._total_message_count == 0))) ? 'hideIt' : ''">

@@ -87,6 +87,7 @@ declare module 'gnat' {
         message_count?: { [toolId: number]: number };
         _total_message_count: number;
         _ui_total_message_count?: number;
+        expand: boolean;
     }
 
     export interface ISourceDir {

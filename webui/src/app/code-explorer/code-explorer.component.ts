@@ -39,36 +39,26 @@ export class CodeExplorerComponent implements OnInit, OnDestroy {
                           this.reportService.code.modules);
     }
 
-    public openClose(id: string) {
-        let elem = this.document.getElementById(id);
-        elem.classList.toggle('reduce');
-        elem.classList.toggle('open');
-    }
-
-    public expandCollapseAll(badClass: string) {
+    public expandCollapseAll(myValue:boolean) {
         if (this.reportService.checkArray(this.reportService.code.modules,
                                           "code-explorer.component",
                                           "expandCollapseAll", "reportService.code.modules")) {
             this.reportService.code.modules.forEach(function(project){
-                let elem = this.document.getElementById(project.name);
-                let idx = elem.classList.contains(badClass);
-                if (idx) {
-                    this.openClose(project.name);
-                }
+                project.expand = myValue;
 
                 if (this.reportService.checkArray(project.source_dirs,
                                                   "code-explorer.component",
                                                   "expandCollapseAll", "project.source_dirs")) {
                     project.source_dirs.forEach(function(source){
-                        let elem = this.document.getElementById(source.name);
-                        let idx = elem.classList.contains(badClass);
-                        if (idx) {
-                            this.openClose(source.name);
-                        }
+                        source.expand = myValue;
                     }.bind(this));
                 }
             }.bind(this));
         }
+    }
+
+    public openClose(source) {
+        source.expand = !source.expand;
     }
 
     public showFilesChanges() {

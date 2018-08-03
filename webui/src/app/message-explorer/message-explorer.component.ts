@@ -25,28 +25,19 @@ export class MessageExplorerComponent implements OnInit {
             this.reportService.message.sources);
     }
 
-    public openClose(id: string) {
-        let elem = this.document.getElementById(id);
-        elem.classList.toggle('reduce');
-        elem.classList.toggle('open');
-    }
-
-    public expandCollapseAll(badClass: string) {
-
+    public expandCollapseAll(myValue:boolean) {
         if (this.reportService.checkArray(this.reportService.message.sources,
                                           "message-explorer.component",
                                           "expandCollapseAll",
                                           "reportService.message.sources")) {
             this.reportService.message.sources.forEach(function(source){
-                let elem = this.document.getElementById(source.filename);
-                if (elem) {
-                    let idx = elem.classList.contains(badClass);
-                    if (idx) {
-                        this.openClose(source.filename);
-                    }
-                }
+                source.expand = myValue;
             }.bind(this));
         }
+    }
+
+    public openClose(source) {
+        source.expand = !source.expand;
     }
 
     public showFilesChanges() {

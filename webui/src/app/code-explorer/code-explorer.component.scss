@@ -78,6 +78,9 @@
                 left: 0px;
                 top: -1px;
             }
+            .project-tree.open {
+                transform: rotate(90deg);
+            }
 
             .all-folders-line {
                 .folder-line {
@@ -93,6 +96,7 @@
                     left: -5px;
                     top: -1px;
                 }
+
 
                 .all-files-line {
                     .file-line {

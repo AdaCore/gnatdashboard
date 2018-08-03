@@ -280,6 +280,7 @@ export class SharedReport {
     if (this.checkArray(this.message.sources, "main-responder.service",
                         "addUserReview", "message.sources")){
       this.message.sources.forEach(function(source){
+        source.expand = true;
         if (source.messages){
           source.messages.forEach(function(message){
 
