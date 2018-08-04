@@ -59,7 +59,7 @@
             </div>
             <div class="location-view-list col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
                 <table *ngIf="tabOpen == 'metric'" class="file-line-container col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <span *ngIf="source.metrics.length > 0">
+                    <span *ngIf="source.metrics && source.metrics.length > 0">
                         <tbody *ngFor="let metric of source.metrics; let idx = index" [attr.data-index]="idx" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'">
                             <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ">{{metric.rule.name}}</span>
                             <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ">{{metric.value}}</span>
@@ -77,7 +77,7 @@
                         <span *ngFor="let mySource of reportService.message.sources"
                               class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                               [ngClass]="mySource.filename === source.filename ? '' : 'hideIt'">
-                            <span id="{{mySource.filename}}" class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open" *ngIf="(mySource._total_message_count > 0 || !mySource._total_message_count)" >
+                            <span id="{{mySource.filename}}" class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open" *ngIf="mySource && (mySource._total_message_count > 0 || !mySource._total_message_count)" >
                                 <span *ngFor="let message of mySource.messages"
                                       class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) || (!reportService.showReviews && !message.user_review) ? 'hideIt' : ''">
@@ -150,7 +150,8 @@
                                     </span>
                                 </span>
 
-                                <span class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                                <span class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                                      *ngIf="mySource">
                                     <span *ngFor="let message of mySource.messages"
                                           class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                           [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">

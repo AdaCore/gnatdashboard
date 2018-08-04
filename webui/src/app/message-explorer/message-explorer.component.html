@@ -53,7 +53,8 @@
             </span>
         </span>
         <span class="all-sources-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-            <span class="all-sources-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <span class="all-sources-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                  *ngIf="reportService && reportService.message">
                 <span *ngFor="let source of reportService.message.sources"
                       class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                       [ngClass]="(!this.reportService.showFiles && (source._ui_total_message_count == 0 || ( source._ui_total_message_count == null && source._total_message_count == 0))) ? 'hideIt' : ''">
@@ -73,7 +74,8 @@
                             </span>
                         </span>
 
-                        <span class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                        <span class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                              *ngIf="source">
                             <span *ngFor="let message of source.messages"
                                   class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                   [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
