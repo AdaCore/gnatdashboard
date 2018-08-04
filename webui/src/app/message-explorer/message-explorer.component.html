@@ -78,7 +78,7 @@
                                   class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                   [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
                                 <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                                      [routerLink]="['/source', source.filename, { line: message.line }]"
+                                      [routerLink]="['/source', source.filename, { line: message.line, id: message.id }]"
                                       [ngClass]="message.ranking.name">
                                     <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                                         <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1">

@@ -68,6 +68,7 @@
     .selected {
         background-color: var(--elem-color);
     }
+
 }
 
 .location-view-title {
@@ -127,6 +128,9 @@
         }
         .message-line.selected {
             background-color: var(--selected-color) !important;
+        }
+        .message-line.checked {
+            background-color: rgba(154,205,50,0.4) !important;
         }
 
         .checkbox-span {
