@@ -22,6 +22,19 @@
         </button>
         <span *ngIf="!filterOpen" class="filter-span">My filter</span>
     </span>
+    <!-- If there is no filter and so no messages -->
+    <span  class="no-filter-span col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+           *ngIf="reportService.isFilter == false">
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          There are no messages in the gnathub databases.
+        </span>
+        <span  class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          So there are no filters.
+        </span>
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          To see files anyway in the navigation view, please activate "Show all files" in the head bar.
+        </span>
+    </span>
 
     <!-- Show all the filters according to the report.json -->
     <template [ngIf]="(this.reportService.filter.tools || this.reportService.filter.rules || this.reportService.filter.properties) | dshNotEmpty" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">

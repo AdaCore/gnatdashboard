@@ -6,7 +6,7 @@ import {
     IRuleFilter,
     IToolFilter,
     IRankingFilter,
-    IReviewFilter
+   IReviewFilter
 } from 'gnat';
 
 @Component({
@@ -107,17 +107,20 @@ export class FilterPanelComponent {
     }
 
     private reviewSelected(name: string, array: any): boolean {
-         let isSelected: boolean;
-
-        array.forEach(function(cell){
-            if (cell.name === name){
-                if (cell._ui_unselected) {
-                    isSelected = !cell._ui_unselected;
-                } else {
-                    isSelected = true;
+        let isSelected: boolean;
+        if (array){
+            array.forEach(function(cell){
+                if (cell.name === name){
+                    if (cell._ui_unselected) {
+                        isSelected = !cell._ui_unselected;
+                    } else {
+                        isSelected = true;
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            isSelected = true;
+        }
         return isSelected;
 
     }
@@ -131,11 +134,13 @@ export class FilterPanelComponent {
     }
 
     private incRevMessageCount(name: string, array: any){
-        array.forEach(function(cell){
-            if (cell.name === name){
-                cell._ui_selected_message_count += 1;
-            }
-        });
+        if (array){
+            array.forEach(function(cell){
+                if (cell.name === name){
+                    cell._ui_selected_message_count += 1;
+                }
+            });
+        }
     }
 
     private updateMessagesUiProperties() {
@@ -146,24 +151,41 @@ export class FilterPanelComponent {
         const review = this.reportService.filter.review_status;
         this.reportService._ui_total_message_count = 0;
 
-        tools.forEach(function(tool){
-            tool._ui_selected_message_count = 0;
-        });
-        rules.forEach(function(rule){
-            rule._ui_selected_message_count = 0;
-        });
-        properties.forEach(function(property){
-            property._ui_selected_message_count = 0;
-        });
-        ranking.forEach(function(rank){
-            rank._ui_selected_message_count = 0;
-        });
-        review.forEach(function(rev){
-            rev._ui_selected_message_count = 0;
-        });
-        this.reportService.message.sources.forEach(function(source){
-            source._ui_total_message_count = 0;
-        });
+        if (tools){
+            tools.forEach(function(tool){
+               tool._ui_selected_message_count = 0;
+            });
+        }
+
+        if (tools){
+            rules.forEach(function(rule){
+                rule._ui_selected_message_count = 0;
+            });
+        }
+
+        if (properties){
+            properties.forEach(function(property){
+                property._ui_selected_message_count = 0;
+            });
+        }
+
+        if (ranking){
+            ranking.forEach(function(rank){
+                rank._ui_selected_message_count = 0;
+            });
+        }
+
+        if (review){
+            review.forEach(function(rev){
+                rev._ui_selected_message_count = 0;
+            });
+        }
+
+        if (this.reportService && this.reportService.message && this.reportService.message.sources){
+            this.reportService.message.sources.forEach(function(source){
+                source._ui_total_message_count;
+            });
+        }
 
         this.reportService.code.modules.forEach(function(myModule){
             myModule._ui_total_message_count = 0;
@@ -177,6 +199,8 @@ export class FilterPanelComponent {
                     this.reportService.message.sources.forEach(function(source){
                         if (source.filename === codeSource.filename &&
                             source.messages != null){
+                            source._ui_total_message_count = 0;
+
                             source.messages.forEach(function(message){
                                 const toolId = message.rule.tool_id;
                                 const ruleId = message.rule.id;

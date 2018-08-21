@@ -54,6 +54,8 @@ export class SharedReport {
   public showReviews: boolean = true;
   public showCoverage: boolean = false;
   public isReportFetchError: boolean = false;
+  public codepeerReviewError: boolean = false;
+  public isFilter: boolean = true;
   public projectName: string;
   public _ui_total_message_count: number = -1;
 
@@ -85,6 +87,9 @@ export class SharedReport {
         this.orderRanking();
         this.projectName = this.filter.project;
         this.getCodepeerCode();
+        if (this.filter.tools == null) {
+            this.isFilter = false;
+        }
       }, error => {
         console.log("[Error] get filter : ", error);
         this.gnathub.getFilter().subscribe(
@@ -211,14 +216,8 @@ export class SharedReport {
         this.addUserReview(messages);
       }, error => {
         console.log("[Error] get codepeer_review : ", error);
-        this.gnathub.getReview().subscribe(
-          object => {
-            this.codepeer_review = object;
-            this.addUserReview(messages);
-          }, error => {
-            this.isReportFetchError = true;
-          }
-        );
+        this.addUserReview(messages);
+        this.codepeerReviewError = true;
       }
     );
   }

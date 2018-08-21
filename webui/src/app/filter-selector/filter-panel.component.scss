@@ -54,9 +54,14 @@
         animation-duration: 2s;
     }
 
-    .option-selectors {
+    .option-selectors, .no-filter-span {
         height: calc(100% - 80px);
         overflow: auto;
+    }
+
+    .no-filter-span {
+        text-align: center;
+        padding-top: 65px;
     }
 
 }
@@ -72,7 +77,7 @@
         animation-duration: 2s;
     }
 
-    .option-selectors {
+    .option-selectors, .no-filter-span {
         display: none;
     }
 

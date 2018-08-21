@@ -57,7 +57,7 @@ export class GNAThubService {
             if (error) {
                 console.log("[Error] convertToJson : Problem to parse :", error);
             } else {
-                if (result.audit_trail.message.length > 0){
+                if (result && result.audit_trail && result.audit_trail.message && result.audit_trail.message.length > 0){
                     result.audit_trail.message.forEach(function(review){
 
                         let myReview = [];
