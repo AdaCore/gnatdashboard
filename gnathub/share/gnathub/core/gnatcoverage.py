@@ -61,9 +61,9 @@ class GNATcoverage(Plugin, Reporter):
 
         bulk_messages = []
 
-        def add_message(rule, message, line_no, column_no):
+        def add_message(rule, message, ranking, line_no, column_no):
             bulk_messages.append([
-                GNAThub.Message(rule, message),
+                GNAThub.Message(rule, message, ranking=ranking),
                 line_no, column_no, column_no,
             ])
 
@@ -87,7 +87,6 @@ class GNATcoverage(Plugin, Reporter):
 
                 if m:
                     line_no = int(m.group('line_no'))
-                    cov_char = m.group('cov_char')
                 else:
                     m = self.COV_SLOC_RE.match(line)
                     assert m
@@ -99,8 +98,13 @@ class GNATcoverage(Plugin, Reporter):
                         'decision':  'decision',
                         'condition': 'mcdc',
                     }[m.group('cov_level')]
+                    ranking = {
+                        'statement': GNAThub.RANKING_HIGH,
+                        'decision': GNAThub.RANKING_MEDIUM,
+                        'condition': GNAThub.RANKING_LOW
+                    }[m.group('cov_level')]
                     add_message(self.issue_rules[cov_level], message_label,
-                                line_no, column_no)
+                                ranking, line_no, column_no)
 
         # Preparing list for tool level insertion of resources messages
         resources_messages.append([resource, bulk_messages])

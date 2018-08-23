@@ -33,7 +33,7 @@ class GNATmetric(Plugin, Runner, Reporter):
 
     # GNATmetric exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
-    RANKING = GNAThub.RANKING_UNSPECIFIED
+    RANKING = GNAThub.RANKING_INFO
 
     def __init__(self):
         super(GNATmetric, self).__init__()
