@@ -21,9 +21,7 @@ EXTERNAL_CALL = [
 ]
 
 ENTRY_POINT = [
-    "Entry point", ('The estimated call stack size for the entry ' +
-                    'point "Main" is 352 and the callchain is:' +
-                    '\nMain\nTest_Case\nFoo\nImage_Integer')
+    "Entry point", ('Main\nTest_Case\nFoo\nImage_Integer')
 ]
 
 METRICS_SIMPLE_4_1 = {
@@ -60,9 +58,9 @@ class TestGNATstackSupport(TestCase):
 
         self.assertTrue(parser.has_option(B_SIMPLE_ADB[0], ENTRY_POINT[0]),
                         "Entry point not found")
-        self.assertEqual(parser.get(B_SIMPLE_ADB[0], ENTRY_POINT[0]),
-                         ENTRY_POINT[1],
-                         'unexpected value for the entry point')
+        self.assertTrue(parser.get(B_SIMPLE_ADB[0],
+                                   ENTRY_POINT[0]).endswith(ENTRY_POINT[1]),
+                        'unexpected value for the entry point')
 
         for metric, value in METRICS_SIMPLE_4_1.iteritems():
             self.assertTrue(
