@@ -66,6 +66,10 @@ class Project(object):
         return Project('coverage_exhaustive', dst)
 
     @staticmethod
+    def gcov_multi_object_dir(dst=os.getcwd()):
+        return Project('gcov_multi_object_dir', dst)
+
+    @staticmethod
     def disabled(dst=os.getcwd()):
         return Project('disabled', dst)
 

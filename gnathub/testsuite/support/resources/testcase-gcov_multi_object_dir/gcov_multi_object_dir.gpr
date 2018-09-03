@@ -1,0 +1,29 @@
+with "projects/prj2";
+
+project Gcov_Multi_Object_Dir is
+
+   for Languages use ("Ada");
+   for Source_Dirs use ("common", "struct");
+   for Main use ("sdc.adb");
+
+   for Object_Dir use "obj";
+
+   package Compiler is
+      for Default_Switches ("Ada") use
+        ("-O2", "-gnatn", "-gnatwe", "-gnaty", "-gnatp",
+         "-ftest-coverage", "-fprofile-arcs");
+   end Compiler;
+
+   package Binder is
+      for Default_Switches ("Ada") use ("-static");
+   end Binder;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-fprofile-generate");
+   end Linker;
+
+   package Check is
+       for Default_Switches ("Ada") use ("-rules", "-from=gnatcheck.rules");
+   end Check;
+
+end Gcov_Multi_Object_Dir;

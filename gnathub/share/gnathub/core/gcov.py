@@ -102,11 +102,26 @@ class Gcov(Plugin, Reporter):
 
         self.info('parse coverage reports (%s)' % self.GCOV_EXT)
 
-        # Fetch all files in project object directory and retrieve only
-        # .gcov files, absolute path
-        files = [os.path.join(GNAThub.Project.object_dir(), filename)
-                 for filename in os.listdir(GNAThub.Project.object_dir())
-                 if filename.endswith(self.GCOV_EXT)]
+        # Handle multiple object directories
+        if GNAThub.Project.object_dirs():
+            # If there are object directories defined in the project tree, look
+            # for .gcov files there.
+
+            files = []
+            for obj_dir in GNAThub.Project.object_dirs():
+                # Fetch all files in project object directories and retrieve
+                # only .gcov files, absolute path
+                for filename in os.listdir(obj_dir):
+                    if filename.endswith(self.GCOV_EXT):
+                        files.append(os.path.join(obj_dir, filename))
+
+        else:
+            # If any object directory is defined in .gpr, fetch all files in
+            # default project object directory and retrieve only .gcov files,
+            # absolute path
+            files = [os.path.join(GNAThub.Project.object_dir(), filename)
+                     for filename in os.listdir(GNAThub.Project.object_dir())
+                     if filename.endswith(self.GCOV_EXT)]
 
         # If no .gcov file found, plugin returns on failure
         if not files:
@@ -126,6 +141,7 @@ class Gcov(Plugin, Reporter):
             for index, filename in enumerate(files, start=1):
                 # Retrieve source fullname (`filename` is the *.gcov report
                 # file).
+
                 base, _ = os.path.splitext(os.path.basename(filename))
                 src = GNAThub.Project.source_file(base)
 

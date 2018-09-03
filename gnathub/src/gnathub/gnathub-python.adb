@@ -14,7 +14,6 @@
 -- COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy --
 -- of the license.                                                          --
 ------------------------------------------------------------------------------
-
 with Ada.Strings.Unbounded;         use Ada.Strings.Unbounded;
 
 with GNAT.OS_Lib;                   use GNAT.OS_Lib;
@@ -56,6 +55,7 @@ package body GNAThub.Python is
    Project_Target_Method             : constant String := "target";
    Project_Runtime_Method            : constant String := "runtime";
    Project_Object_Dir_Method         : constant String := "object_dir";
+   Project_Object_Dirs_Method        : constant String := "object_dirs";
    Project_Source_Dirs_Method        : constant String := "source_dirs";
    Project_Source_File_Method        : constant String := "source_file";
    Project_Source_Files_Method       : constant String := "source_files";
@@ -291,6 +291,13 @@ package body GNAThub.Python is
 
       Repository.Register_Command
         (Command       => Project_Source_Dirs_Method,
+         Params        => No_Params,
+         Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Object_Dirs_Method,
          Params        => No_Params,
          Handler       => Project_Class_Accessors_Handler'Access,
          Class         => Project_Class,
@@ -554,6 +561,14 @@ package body GNAThub.Python is
             end loop;
 
             Set_Return_Value_Key (Data, Project.Name);
+         end loop;
+
+      elsif Command = Project_Object_Dirs_Method then
+         Set_Return_Value_As_List (Data);
+         for Project of GNAThub.Project.All_Projects loop
+            if Project.Has_Attribute (GNATCOLL.Projects.Obj_Dir_Attribute) then
+               Set_Return_Value (Data, Project.Object_Dir.Display_Full_Name);
+            end if;
          end loop;
 
       elsif Command = Scenario_Switches_Method then

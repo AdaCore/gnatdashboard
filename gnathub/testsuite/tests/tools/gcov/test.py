@@ -8,12 +8,12 @@ from unittest import TestCase
 from support.mock import GNAThub, Project, Script
 
 
-class TestSimpleExample(TestCase):
+class TestGcovMultiObjectDirExample(TestCase):
     def setUp(self):
         self.longMessage = True
 
         # Import the project, build it and run it
-        self.project = Project.simple()
+        self.project = Project.gcov_multi_object_dir()
         self.project.build()
         self.project.run()
 
@@ -43,8 +43,10 @@ class TestSimpleExample(TestCase):
     def testDatabaseContent(self):
         # Test that gcov has been run and that GNAThub found coverage data to
         # collect
-        self.assertTrue(not self.parser.has_option('f.ads', 'coverage'))
+        self.assertTrue(not self.parser.has_option('sdc.ads', 'coverage'))
 
-        self.assertEqual(len(self.getCoverage('simple.adb')), 18)
-        self.assertEqual(len(self.getCoverage('f.adb')), 6)
-        self.assertEqual(len(self.getCoverage('f.ads')), 0)
+        self.assertEqual(len(self.getCoverage('sdc.adb')), 15)
+        self.assertEqual(len(self.getCoverage('values.adb')), 11)
+        self.assertEqual(len(self.getCoverage('stack.ads')), 4)
+        self.assertEqual(len(self.getCoverage('src2.ads')), 0)
+        self.assertEqual(len(self.getCoverage('src3.adb')), 1)

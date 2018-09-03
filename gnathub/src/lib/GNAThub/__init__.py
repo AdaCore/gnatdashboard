@@ -346,6 +346,15 @@ class Project(object):
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
+    def object_dirs():
+        """Return the list of object directories in the project tree.
+
+        :return: the list of object directories for the current project
+        :rtype: dict[str, list[str]]
+        """
+        return NotImplemented   # Implemented in Ada
+
+    @staticmethod
     def source_dirs():
         """Return the list of source directories for each project.
 
@@ -359,7 +368,7 @@ class Project(object):
         """Return the list of source files for each project.
 
         :return: the list of all sources files per project
-        :rtype: dict[str, list[str]]
+        :rtype: list[str]
         """
         return NotImplemented   # Implemented in Ada
 

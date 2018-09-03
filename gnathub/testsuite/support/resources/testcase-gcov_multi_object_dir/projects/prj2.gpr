@@ -1,0 +1,15 @@
+with "prj3";
+with "prj4";
+
+project Prj2 is
+
+   for Source_Dirs use ("prj2");
+   for Object_Dir use "../obj/obj2";
+
+   package Compiler is
+      for Default_Switches ("Ada") use
+        ("-O2", "-gnatn", "-gnatwe", "-gnaty", "-gnatp",
+         "-ftest-coverage", "-fprofile-arcs");
+   end Compiler;
+
+end Prj2;
