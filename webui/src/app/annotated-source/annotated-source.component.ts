@@ -18,11 +18,12 @@ import { Subscription } from 'rxjs';
 
 import { SharedReport } from '../main-responder.service';
 
-import { DialogsService } from './dialog.service'
+import { DialogsService } from './dialog.service';
 
 import {
     IAnnotatedSourceFile,
     IAnnotatedSourceMessage,
+    IReviewFilter
 } from 'gnat';
 
 type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
@@ -253,6 +254,28 @@ export class AnnotatedSourceComponent
         this.dialog.reviewHistory().subscribe((data:any) => {});
     }
 
+    private refreshFilter() {
+        let userReviewFilter: [IReviewFilter];
+
+        if (this.reportService.checkArray(this.reportService.message.sources,
+                                          "annotated-source.component",
+                                          "refreshFilter", "reportService.message.sources")) {
+            this.reportService.message.sources.forEach(function(source){
+                if (source.messages){
+                    source.messages.forEach(function(message){
+                        if (message.user_review){
+                            userReviewFilter = this.reportService.putInFilter(message.user_review.status, userReviewFilter);
+                        }
+                    }.bind(this))
+                }
+
+            }.bind(this));
+        }
+        this.reportService.putInFilter('UNCATEGORIZED', userReviewFilter);
+        this.reportService.countUncategorized(userReviewFilter, this.reportService.filter._total_message_count);
+        this.reportService.filter.review_status = userReviewFilter;
+    }
+
     public addDynamicReview(new_review) {
         if (this.reportService.checkArray(this.reportService.message.sources,
                                           "annotated-source.component",
@@ -270,6 +293,7 @@ export class AnnotatedSourceComponent
                     })
                 }
             });
+            this.refreshFilter();
         }
     }
 

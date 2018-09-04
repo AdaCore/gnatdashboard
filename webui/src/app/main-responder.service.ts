@@ -88,7 +88,7 @@ export class SharedReport {
         this.projectName = this.filter.project;
         this.getCodepeerCode();
         if (this.filter.tools == null) {
-            this.isFilter = false;
+          this.isFilter = false;
         }
       }, error => {
         console.log("[Error] get filter : ", error);
@@ -222,7 +222,7 @@ export class SharedReport {
     );
   }
 
-  private countUncategorized(filter, total_count) {
+  public countUncategorized(filter, total_count) {
     let count = 0;
     if (this.checkArray(filter, "main-responder.service",
                         "countUncategorized", "filter")){
@@ -240,7 +240,7 @@ export class SharedReport {
     }
   }
 
-  private putInFilter(status, filter): [IReviewFilter] {
+  public putInFilter(status, filter): [IReviewFilter] {
     let stop = false;
     let newIdx = 1;
     if (this.checkArray(filter, "main-responder.service",
@@ -293,11 +293,9 @@ export class SharedReport {
         }
       }.bind(this));
     }
-    if (this.filter){
-      this.putInFilter('UNCATEGORIZED', this.userReviewFilter);
-      this.countUncategorized(this.userReviewFilter, this.filter._total_message_count);
-      this.filter.review_status = this.userReviewFilter;
-    }
+    this.putInFilter('UNCATEGORIZED', this.userReviewFilter);
+    this.countUncategorized(this.userReviewFilter, this.filter._total_message_count);
+    this.filter.review_status = this.userReviewFilter;
   }
 
   public sendUserReview(xml) {
