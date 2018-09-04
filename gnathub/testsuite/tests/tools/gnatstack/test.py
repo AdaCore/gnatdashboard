@@ -24,10 +24,10 @@ ENTRY_POINT = [
     "Entry point", ('Main\nTest_Case\nFoo\nImage_Integer')
 ]
 
-METRICS_SIMPLE_4_1 = {
-    "Unknown Global Stack Usage": 288,
-    "Static Local Stack Usage": 176
-}
+METRICS_SIMPLE_4_1 = [
+    "Unknown Global Stack Usage",
+    "Static Local Stack Usage"
+]
 
 
 class TestGNATstackSupport(TestCase):
@@ -62,10 +62,8 @@ class TestGNATstackSupport(TestCase):
                                    ENTRY_POINT[0]).endswith(ENTRY_POINT[1]),
                         'unexpected value for the entry point')
 
-        for metric, value in METRICS_SIMPLE_4_1.iteritems():
+        for metric in METRICS_SIMPLE_4_1:
             self.assertTrue(
                 parser.has_option(SIMPLE_4_1[0], metric),
                 'missing entry for "%s"' % metric)
-            self.assertEqual(
-                parser.getfloat(SIMPLE_4_1[0], metric), value,
-                'unexpected value for "%s"' % metric)
+            # Don't check the values: they are computer dependent
