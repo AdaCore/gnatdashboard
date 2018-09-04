@@ -33,7 +33,7 @@ class GNATstack(Plugin, Runner, Reporter):
 
     # GNATstack exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
-    RANKING = GNAThub.RANKING_UNSPECIFIED
+    RANKING = GNAThub.RANKING_INFO
 
     def __init__(self):
         super(GNATstack, self).__init__()
@@ -173,14 +173,18 @@ class GNATstack(Plugin, Runner, Reporter):
                         metric = unknown_global
                     else:
                         metric = static_global
-                    global_metric = GNAThub.Message(metric, size)
+                    global_metric = GNAThub.Message(metric,
+                                                    size,
+                                                    ranking=GNATstack.RANKING)
 
                     size = local_usage.attrib.get('size')
                     if local_usage.attrib.get('qualifier') == "UNKNOWN":
                         metric = unknown_local
                     else:
                         metric = static_local
-                    local_metric = GNAThub.Message(metric, size)
+                    local_metric = GNAThub.Message(metric,
+                                                   size,
+                                                   ranking=GNATstack.RANKING)
 
                     entities_messages_map[subprogram_id] = (
                         [[global_metric, 0, 1, 1], [local_metric, 0, 1, 1]])
@@ -211,7 +215,9 @@ class GNATstack(Plugin, Runner, Reporter):
                             continue
                     if pos != -1:
                         indirect_loc_list.pop(pos)
-                    message = GNAThub.Message(indirect_rule, 'indirect call')
+                    message = GNAThub.Message(indirect_rule,
+                                              'indirect call',
+                                              ranking=GNATstack.RANKING)
                     entities_messages_map[indirect_id].append([message,
                                                                int(line),
                                                                int(column),
@@ -228,7 +234,9 @@ class GNATstack(Plugin, Runner, Reporter):
                 subprogram_id = node.attrib.get('id')
                 if subprogram_id not in self.subprograms:
                     continue
-                message = GNAThub.Message(external_rule, "external call")
+                message = GNAThub.Message(external_rule,
+                                          "external call",
+                                          ranking=GNATstack.RANKING)
                 entities_messages_map[subprogram_id].append([message, 0, 1, 1])
 
             # Analyse the potential cycle
@@ -248,7 +256,8 @@ class GNATstack(Plugin, Runner, Reporter):
                 cycle_list.append(self.subprograms[subprogram_id].name)
                 message = GNAThub.Message(cycle_rule,
                                           "potential cycle detected:\n\t\t" +
-                                          "\n\t\t".join(cycle_list))
+                                          "\n\t\t".join(cycle_list),
+                                          ranking=GNATstack.RANKING)
                 entities_messages_map[subprogram_id].append([message, 0, 1, 1])
 
             # Analyse the unbounded frames
@@ -263,7 +272,8 @@ class GNATstack(Plugin, Runner, Reporter):
                 subprogram_id = node.attrib.get('id')
                 if subprogram_id in self.subprograms:
                     message = GNAThub.Message(unbounded_rule,
-                                              "This frame is unbounded")
+                                              "This frame is unbounded",
+                                              ranking=GNATstack.RANKING)
                     entities_messages_map[subprogram_id].append([message,
                                                                  0, 1, 1])
 
@@ -297,7 +307,9 @@ class GNATstack(Plugin, Runner, Reporter):
                     callchain_list.append(self.subprograms[chain_id].name)
                 text += (" and the callchain is:\n\t\t%s" %
                          "\n\t\t".join(callchain_list))
-                message = GNAThub.Message(entry_rule, text)
+                message = GNAThub.Message(entry_rule,
+                                          text,
+                                          ranking=GNATstack.RANKING)
                 entities_messages_map[subprogram_id].append([message, 0, 1, 1])
 
             # Project message explaining the accuracy of the metrics
@@ -313,9 +325,10 @@ class GNATstack(Plugin, Runner, Reporter):
                         ("unbounded frames/" if unboundeds else "") +
                         ("external calls" if externals else ""))
                 text = text[:-1] if text[-1] == '/' else text
-                resources_messages.append([project,
-                                           [[GNAThub.Message(rule, text),
-                                             0, 1, 1]]])
+                message = GNAThub.Message(rule,
+                                          text,
+                                          ranking=GNATstack.RANKING)
+                resources_messages.append([project, [[message, 0, 1, 1]]])
 
             # Insert the messages and the metrics
             for key, value in entities_messages_map.iteritems():
