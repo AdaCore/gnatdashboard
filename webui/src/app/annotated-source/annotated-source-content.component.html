@@ -3,22 +3,18 @@
         <template ngFor let-line [ngForOf]="lines" class="col-lg-12 col-sm-12 col-md-12 col-xs-12 no-pad">
             <annotated-source-line id="L{{ line.number }}"
                                    class="col-lg-12 col-sm-12 col-md-12 col-xs-12 no-pad"
-                                   [ngClass]="{ selected: selectedLine == line.number }"
+                                   [ngClass]="{ selected: source.selectedLine == line.number }"
                                    [line]="line"
                                    [coverage]="coverage[line.number]">
             </annotated-source-line>
             <span class="inline-comments col-lg-12 col-sm-12 col-md-12 col-xs-12"
-                  *ngIf="displayMessages && ( inlineAnnotations[line.number] || inlineMessages[line.number] )">
+                  *ngIf="displayMessages && inlineAnnotations[line.number]">
                 <inline-annotations class="col-lg-12 col-sm-12 col-md-12 col-xs-12 no-pad"
                                     [annotations]="inlineAnnotations[line.number]"
                                     [line]="line.number"
                                     *ngIf="inlineAnnotations[line.number]">
                 </inline-annotations>
-                <inline-messages class="col-lg-12 col-sm-12 col-md-12 col-xs-12 no-pad"
-                                 [tools]="tools"
-                                 [messages]="inlineMessages[line.number]"
-                                 *ngIf="inlineMessages[line.number]">
-                </inline-messages>
+
             </span>
         </template>
     </tbody>

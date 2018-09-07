@@ -189,7 +189,8 @@ def _encode_message(message, rule, tool, extra=None):
             _encode_property(prop, tool) for prop in message.get_properties()],
         'ranking': _encode_ranking(message, tool),
         'name': message.data,
-        'tool_msg_id': message.tool_msg_id
+        'tool_msg_id': message.tool_msg_id,
+        'tool': tool.name
     }, extra)
 
 

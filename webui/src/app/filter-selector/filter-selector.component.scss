@@ -52,6 +52,20 @@
       }
     }
 
+    border-left: 10px solid;
+    border-left-color: transparent;
+    &.codepeer {
+      border-left-color: #337ab7;
+    }
+
+    &.spark {
+      border-left-color: pink;
+    }
+
+    &.gnatcheck {
+      border-left-color: #29a229;
+    }
+
   }
   label.option:hover, input[type=checkbox]:not(:checked) + label.option:hover {
     background-color: var(--elem-hover);

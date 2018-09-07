@@ -3,6 +3,22 @@
     <span  class="title-review col-lg-12 col-md-12 col-sm-12 col-xs-12">
         User review history
     </span>
+
+    <span class="message-reminder col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
+                {{message.line}}:{{message.col_begin}}
+            </span>
+            <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
+                <span [ngClass]="message.ranking.name">{{message.ranking.name}}</span>
+                <span>{{message.user_review ? message.user_review.status.charAt(0).toUpperCase() + message.user_review.status.slice(1).toLowerCase() : 'Uncategorized'}}</span>
+            </span>
+            <span class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                {{message.name}}
+            </span>
+        </span>
+    </span>
+
     <span class="all-review col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <span *ngFor="let review of history" class="line-review col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
 

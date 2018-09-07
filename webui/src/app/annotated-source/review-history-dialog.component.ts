@@ -12,12 +12,14 @@ import { SharedReport } from '../main-responder.service';
 export class ReviewHistoryDialog {
 
     public history: any;
+    public message: any;
 
     constructor(public dialogRef: MdDialogRef<ReviewHistoryDialog>,
                 private reportService: SharedReport) {}
 
     ngOnInit() {
-        this.history = this.reportService.history;
+        this.history = this.reportService.history.reviews;
+        this.message = this.reportService.history.message;
     }
 
     public close() {

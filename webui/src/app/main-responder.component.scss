@@ -207,6 +207,27 @@ filter-selector.tool-selector .filter-selector {
                 right: 10px
             }
         }
+
+        .Info {
+            padding: 5px;
+            background-color: var(--Info);
+        }
+        .Unspecified {
+            padding: 5px;
+            background-color: var(--Unspecified);
+        }
+        .Medium {
+            padding: 5px;
+            background-color: var(--Medium);
+        }
+        .Low {
+            padding: 5px;
+            background-color: var(--Low);
+        }
+        .High {
+            padding: 5px;
+            background-color: var(--High);
+        }
     }
 
     review-history-dialog {

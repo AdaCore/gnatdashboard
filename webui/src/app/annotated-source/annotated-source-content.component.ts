@@ -7,6 +7,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+import { AnnotatedSourceComponent } from './annotated-source.component'
+
 import {
     IAnnotatedSourceLine,
     IAnnotatedSourceMessage,
@@ -25,18 +27,20 @@ export class AnnotatedSourceContentComponent implements OnDestroy, OnInit {
     @Input() public lines: IAnnotatedSourceLine[];
     @Input() public tools: { [toolId: number]: ITool };
     @Input() public coverage: { [line: number]: ICoverage };
-    @Input() public inlineMessages: { [line: number]: MessagesByToolId };
     @Input() public inlineAnnotations: { [line: number]: MessagesByToolId };
     @Input() public displayMessages;
 
     public selectedLine: number;
     private paramSubscription: Subscription;
 
-    constructor(private route: ActivatedRoute) {}
+    constructor(private route: ActivatedRoute,
+                private source: AnnotatedSourceComponent) {}
 
     public ngOnInit() {
         this.paramSubscription = this.route.params.subscribe(params => {
-            this.selectedLine = +params['line'];
+            if (+params['line']){
+                this.selectedLine = +params['line'];
+            }
         });
     }
 

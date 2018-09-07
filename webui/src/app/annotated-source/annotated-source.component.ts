@@ -17,8 +17,10 @@ import { PageScrollInstance, PageScrollService } from 'ng2-page-scroll';
 import { Subscription } from 'rxjs';
 
 import { SharedReport } from '../main-responder.service';
-
 import { DialogsService } from './dialog.service';
+import { GNAThubService } from '../gnathub.service';
+
+import { AnnotatedSourceViewComponent } from './annotated-source-view.component';
 
 import {
     IAnnotatedSourceFile,
@@ -42,14 +44,13 @@ export class AnnotatedSourceComponent
     public displayMessages: boolean = true;
     @HostBinding('class.with-coverage') public displayCoverage: boolean = true;
     public showMessageList: boolean = true;
-    public inlineMessages: { [line: number]: MessagesByToolId };
-    public inlineMessagesShownCount: number = 0;
     public inlineAnnotations: { [line: number]: IAnnotatedSourceMessage[] };
     public tabOpen = 'message';
     public checked_msg: Array<number> = [];
     public selected_msg: Array<number> = [];
     private last_selected_msg: number = -1;
     private sub: Subscription;
+    public selectedLine: number;
 
     @ViewChild('scrollView') private scrollView: ElementRef;
 
@@ -59,40 +60,55 @@ export class AnnotatedSourceComponent
      private route: ActivatedRoute,
      private router: Router,
      public reportService: SharedReport,
-     public dialog: DialogsService) {}
+     public dialog: DialogsService,
+     private sourceView: AnnotatedSourceViewComponent,
+     private gnathub: GNAThubService) {}
 
     /** @override */
     public ngOnInit() {
 
+
+        this.sub = this.route.params.subscribe(params => {
+            let filename = params['filename'];
+            let line = params['line'];
+            let id = params['id'];
+
+            this.reportService.page = filename;
+            if (filename && filename != this.sourceView.filename){
+                this.reloadFile(filename, line, id);
+            } else {
+                this.processSource(line, id);
+            }
+        });
+    }
+
+
+
+    private reloadFile(filename, line, id){
+        this.gnathub.getSource(filename).subscribe(
+            blob => {
+                this.source = blob;
+                this.processSource(line, id);
+            },
+            error => console.log("[Error] reloadFile :", error));
+    }
+
+    private processSource(line, id){
         this.source.coverage = this.source.coverage || {};
         this.source.messages = this.source.messages || [];
-        this.source.annotations = this.source.annotations || [];
-
-        // Prepare inline messages.
-        this.inlineMessages = {};
-        if (this.source) {
-            if (this.reportService.checkArray(this.source.messages,
-                                              "annotated-source.component",
-                                              "inlineMessages", "source.messages")) {
-                this.source.messages.forEach(function(message){
-                    const toolId = message.rule.tool_id;
-                    const line = message.line;
-                    if (!this.inlineMessages.hasOwnProperty(line)) {
-                        this.inlineMessages[line] = {};
-                    }
-                    if (!this.inlineMessages[line].hasOwnProperty(toolId)) {
-                        this.inlineMessages[line][toolId] = new Set();
-                    }
-                    this.inlineMessages[line][toolId].add(message);
-                    this.inlineMessagesShownCount++;
-                }.bind(this));
-            }
-        } else {
-            console.log("[Error] annotated-source.component:inlineMessages : source doesn't exist.");
+        this.createInlineAnnotations();
+        if (line){
+            this.goToLine(line);
         }
+        if (id){
+            this.initSelectMsg(id);
+        }
+    }
 
+    private createInlineAnnotations(){
         // Prepare inline annotations.
         this.inlineAnnotations = {};
+        this.source.annotations = this.source.annotations || [];
         if (this.source) {
             if (this.reportService.checkArray(this.source.annotations,
                                               "annotated-source.component",
@@ -109,11 +125,6 @@ export class AnnotatedSourceComponent
         } else {
             console.log("[Error] annotated-source.component:inlineAnnotations : source doesn't exist.");
         }
-
-        this.sub = this.route.params.subscribe(params => {
-            this.goToLine(+params['line']);
-            this.initSelectMsg(+params['id']);
-        });
     }
 
     /** @override */
@@ -152,6 +163,8 @@ export class AnnotatedSourceComponent
      */
     private goToLine(line: number) {
         if (line) {
+            this.selectedLine = line;
+
             line = line - 10 > 0 ? line - 10 : 1;
             let scroll: PageScrollInstance =
                 PageScrollInstance.simpleInlineInstance(
@@ -166,25 +179,27 @@ export class AnnotatedSourceComponent
         elem.classList.toggle('open');
     }
 
-    public changeFile(filename: string, file_line: number) {
-        this.router.navigate(['/source', filename, { line: file_line }]);
-        window.location.reload();
+    public changeFile(filename: string, file_line: number, id: number) {
+        this.router.navigate(['/source', filename, { line: file_line, id: id }]);
+        /*window.location.reload();*/
+        /*refresh file*/
     }
 
     public checkMessage(message: any) {
-
-        let isCodepeerMsg = (this.reportService.codepeer_code == message.rule.tool_id ? true : false);
-        if (isCodepeerMsg){
-            if (this.checked_msg.length == 0) {
-                this.reportService.selectedMessage = [];
-            }
-            let index = this.checked_msg.indexOf(message.tool_msg_id);
-            if (index != -1) {
-                this.checked_msg.splice(index, 1);
-                this.reportService.selectedMessage.splice(index, 1);
-            } else {
-                this.checked_msg.push(message.tool_msg_id);
-                this.reportService.selectedMessage.push(message);
+        if (message){
+            let isCodepeerMsg = (this.reportService.codepeer_code == message.rule.tool_id ? true : false);
+            if (isCodepeerMsg){
+                if (this.checked_msg.length == 0) {
+                    this.reportService.selectedMessage = [];
+                }
+                let index = this.checked_msg.indexOf(message.tool_msg_id);
+                if (index != -1) {
+                    this.checked_msg.splice(index, 1);
+                    this.reportService.selectedMessage.splice(index, 1);
+                } else {
+                    this.checked_msg.push(message.tool_msg_id);
+                    this.reportService.selectedMessage.push(message);
+                }
             }
         }
     }
@@ -209,7 +224,8 @@ export class AnnotatedSourceComponent
     }
 
     public selectMessage( message: any, event: KeyboardEvent) {
-        if (event && event.ctrlKey && event.shiftKey && this.last_selected_msg != -1){
+        /* Keep these lines for future activation of the feature */
+        /*if (event && event.ctrlKey && event.shiftKey && this.last_selected_msg != -1){
             if (this.reportService.checkArray(this.reportService.message.sources,
                                               "annotated-source.component",
                                               "selectMessage", "reportService.message.sources")) {
@@ -230,7 +246,7 @@ export class AnnotatedSourceComponent
                     }
                 }.bind(this));
             }
-        } else if (event && event.ctrlKey) {
+        } else*/ if (event && event.ctrlKey && message) {
             this.toggleSelectedMsg(message.id);
             this.checkMessage(message);
         } else {
@@ -238,19 +254,24 @@ export class AnnotatedSourceComponent
             this.selected_msg = [];
             this.reportService.selectedMessage = [];
             this.checkMessage(message);
-            this.goToLine(message.line);
-            this.toggleSelectedMsg(message.id);
+            if (message){
+                this.goToLine(message.line);
+                this.toggleSelectedMsg(message.id);
+            }
         }
-        this.last_selected_msg = message.id;
+        if (message){
+            this.last_selected_msg = message.id;
+        }
     }
 
     public showReviewsChanges() {
         this.reportService.showReviews = !this.reportService.showReviews
     }
 
-    public ShowReviewHistory(review_history: any) {
+    public ShowReviewHistory(message: any) {
 
-        this.reportService.history = review_history;
+        this.reportService.history.reviews = message.review_history;
+        this.reportService.history.message = message;
         this.dialog.reviewHistory().subscribe((data:any) => {});
     }
 

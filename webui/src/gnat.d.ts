@@ -135,6 +135,7 @@ declare module 'gnat' {
         rule: IRule;
         ranking: IRanking;
         tool_msg_id: number;
+        tool: string;
         user_review: IReviewUser;
         review_history: IReviewUser[];
     }

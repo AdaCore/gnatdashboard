@@ -31,14 +31,6 @@
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</md-icon>
                     </span>
                 </span>
-                <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','name')">
-                    <span>Messages</span>
-                    <span class="header-icon"
-                          *ngIf="reportService.messageFilter.newSort == '_ui_total_message_count'">
-                        <md-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</md-icon>
-                        <md-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</md-icon>
-                    </span>
-                </span>
                 <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
                       (click)="sortModules('ranking','')">
                     <span>Ranking</span>
@@ -47,6 +39,17 @@
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</md-icon>
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</md-icon>
                     </span>
+                </span>
+                <span class="center col-lg-1 col-md-1 col-sm-1 col-xs-1 click" (click)="sortModules('_ui_total_message_count','name')">
+                    <span>Messages</span>
+                    <span class="header-icon"
+                          *ngIf="reportService.messageFilter.newSort == '_ui_total_message_count'">
+                        <md-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</md-icon>
+                        <md-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</md-icon>
+                    </span>
+                </span>
+                <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 noclick">
+                    <span>Review Status</span>
                 </span>
             </span>
         </span>
@@ -66,7 +69,8 @@
                                 <span class="project-name"> {{source.projectName}}</span>
                                 <span class="file-name">{{source.filename}}</span>
                             </span>
-                            <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
+                            <span class="center col-lg-1 col-md-1 col-sm-1 col-xs-1">
                                 {{
                                 source._ui_total_message_count != null ?
                                 source._ui_total_message_count :
@@ -82,18 +86,20 @@
                                   [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
                                 <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [routerLink]="['/source', source.filename, { line: message.line, id: message.id }]"
-                                      [ngClass]="message.ranking.name">
+                                      [ngClass]="message.ranking.name + ' ' + message.tool">
                                     <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                                         <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                                             {{message.line}}:{{message.col_begin}}
                                         </span>
-                                        <span class="col-lg-7 col-md-7 col-sm-7 col-xs-7">{{message.name}}</span>
-                                        <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                                            {{ message.user_review ? message.user_review.status.toUpperCase() : 'UNCATEGORIZED'}}
-                                        </span>
+                                        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{message.name}}</span>
                                         <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ranking">
                                             {{ message.ranking.name }}
                                         </span>
+                                        <span class="center col-lg-1 col-md-1 col-sm-1 col-xs-1"></span>
+                                        <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                            {{message.user_review ? message.user_review.status.charAt(0).toUpperCase() + message.user_review.status.slice(1).toLowerCase() : 'Uncategorized'}}
+                                        </span>
+
                                     </span>
                                 </span>
                             </span>

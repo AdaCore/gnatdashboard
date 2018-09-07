@@ -66,7 +66,10 @@ export class SharedReport {
   private api_port: number = this.client_port + 1;
   private url: string = this.client_host.replace(String(this.client_port), String(this.api_port)+"/");
 
-  public history = [];
+  public history = {
+    message: {},
+    reviews: []
+  };
   public codepeer_code = -1;
   public selectedMessage = [];
 
@@ -76,7 +79,6 @@ export class SharedReport {
      * This part is for the connection with the server
      * If server not running or responding, use the old get
      */
-
     console.log("Designated API Url :", this.url)
 
     let url = this.url + "json/";

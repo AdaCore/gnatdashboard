@@ -121,6 +121,20 @@
             background-color: var(--medium-shade);
             padding: 2px 0px;
             margin-bottom: 1px;
+
+            border-left: 10px solid;
+            border-left-color: transparent;
+            &.codepeer {
+                border-left-color: #337ab7;
+            }
+
+            &.spark {
+                border-left-color: pink;
+            }
+
+            &.gnatcheck {
+                border-left-color: #29a229;
+            }
         }
         .message-line:hover {
             background-color: var(--strong-shade);
@@ -147,6 +161,20 @@
             position: absolute;
             left: -5px;
             top: -1px;
+        }
+
+
+        .history-span {
+            text-align: right;
+
+            md-icon {
+                position: absolute;
+                right: 0px;
+                font-size: 18px;
+                top: 8px;
+                line-height: 0;
+                height: auto;
+            }
         }
 
         .review-line {

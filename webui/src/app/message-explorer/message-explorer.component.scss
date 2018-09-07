@@ -20,7 +20,7 @@
         }
 
         .tab-header.right {
-             text-align: right;
+            text-align: right;
         }
 
         .tab-header {
@@ -42,7 +42,7 @@
                 text-decoration: underline;
                 cursor: pointer;
             }
-            .click {
+            .click, .noclick {
                 padding-top: 5px;
                 padding-bottom: 5px;
             }
@@ -93,6 +93,21 @@
                     background-color: var(--medium-shade);
                     padding: 2px 0px;
                     margin-bottom: 1px;
+
+                    border-left: 10px solid;
+                    border-left-color: transparent;
+                    &.codepeer {
+                        border-left-color: #337ab7;
+                    }
+
+                    &.spark {
+                        border-left-color: pink;
+                    }
+
+                    &.gnatcheck {
+                        border-left-color: #29a229;
+                    }
+
                 }
                 .message-line:hover {
                     background-color: var(--strong-shade);
