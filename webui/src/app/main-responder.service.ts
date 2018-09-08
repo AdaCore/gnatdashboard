@@ -4,6 +4,8 @@ import { IFilterIndex, ICodeIndex, IMessageIndex, IReviewFilter, IRankingFilter 
 import { sortCodeArray, sortMessageArray } from './utils/sortArray';
 import { Http, Response } from '@angular/http';
 
+import { updateFilter } from './utils/refreshFilter'
+
 export type InteralStateType = {
   [key: string]: any
 };
@@ -73,7 +75,7 @@ export class SharedReport {
   public codepeer_code = -1;
   public selectedMessage = [];
 
-  constructor( private gnathub: GNAThubService, private http: Http ) {
+  constructor( private gnathub: GNAThubService, private http: Http) {
 
     /*
      * This part is for the connection with the server
@@ -86,19 +88,25 @@ export class SharedReport {
       .subscribe(
       data => {
         this.filter = JSON.parse(JSON.parse(data['_body']));
-        this.orderRanking();
+        this.initFilter();
         this.projectName = this.filter.project;
         this.getCodepeerCode();
         if (this.filter.tools == null) {
           this.isFilter = false;
         }
+        this.refreshFilter()
       }, error => {
         console.log("[Error] get filter : ", error);
         this.gnathub.getFilter().subscribe(
           filter => {
             this.filter = filter;
+            this.initFilter();
             this.projectName = filter.project;
             this.getCodepeerCode();
+            if (this.filter.tools == null) {
+              this.isFilter = false;
+            }
+            this.refreshFilter()
           }, error => {
             this.isReportFetchError = true;
           }
@@ -113,6 +121,7 @@ export class SharedReport {
         this.code.modules = sortCodeArray(
           this.codeFilter,
           this.codeFilter, this.code.modules);
+        this.refreshFilter()
       }, error => {
         console.log("[Error] get code : ", error);
         this.gnathub.getCode().subscribe(
@@ -121,6 +130,7 @@ export class SharedReport {
             this.code.modules = sortCodeArray(
               this.codeFilter,
               this.codeFilter, object.modules);
+            this.refreshFilter()
           }, error => {
             this.isReportFetchError = true;
           }
@@ -133,6 +143,7 @@ export class SharedReport {
       data => {
         this.message = JSON.parse(JSON.parse(data['_body']));
         this.getUserReview(this.message);
+        this.refreshFilter()
       }, error => {
         console.log("[Error] get message : ", error);
         this.gnathub.getMessage().subscribe(
@@ -141,6 +152,7 @@ export class SharedReport {
             this.message.sources = sortMessageArray(
               this.messageFilter,
               this.messageFilter, messages.sources);
+            this.refreshFilter()
             //this.getUserReview(object);
           }, error => {
             this.isReportFetchError = true;
@@ -150,25 +162,89 @@ export class SharedReport {
     );
   }
 
-  private orderRanking() {
-    let order = ['Info', 'Low', 'Medium', 'High', 'Unspecified'];
-    let newOrder: [IRankingFilter] ;
+  private getUserReview(messages) {
+    let url = this.url + 'get-review/';
+    this.http.get(url + 'codepeer_review.xml')
+      .subscribe(
+      data => {
+        this.codepeer_review = this.gnathub.convertToJson(data);
+        this.addUserReview(messages);
+        this.initReview();
+        this.refreshFilter();
+      }, error => {
+        console.log("[Error] get codepeer_review : ", error);
+        this.addUserReview(messages);
+        this.codepeerReviewError = true;
+        this.refreshFilter();
+      }
+    );
+  }
 
-    order.forEach(function(status){
-      if (this.checkArray(this.filter.ranking, "main-responder.service",
-                          "orderRanking", "filter.ranking")){
-        this.filter.ranking.forEach(function(rank){
+  private refreshFilter() {
+    if (this.code && this.filter && this.message && this.filter.review_status){
+      updateFilter(this);
+    }
+  }
+
+  private initFilter() {
+    this.initHistory();
+    this.initRanking();
+  }
+
+  private initHistory() {
+    let unselected = ['Removed'];
+    this.unselectFilter(this.filter.properties, unselected);
+  }
+
+  private initReview() {
+    let unselected = ['FALSE_POSITIVE','INTENTIONAL', 'NOT_A_BUG'];
+    this.unselectFilter(this.filter.review_status, unselected);
+  }
+
+  private initRanking() {
+    let order = ['Info', 'Low', 'Medium', 'High', 'Unspecified'];
+    let unselected = ['Info','Low'];
+
+    this.orderFilter(this.filter.ranking, order);
+    this.unselectFilter(this.filter.ranking, unselected);
+  }
+
+  private orderFilter(myArray: any, orderArray: string[]){
+    let newOrder: [any] ;
+
+    orderArray.forEach(function(status){
+      if (this.checkArray(myArray, "main-responder.service",
+                          "initFilter", "myArray")){
+        myArray.forEach(function(rank){
+
           if (newOrder && rank.name == status) {
             newOrder.push(rank);
           } else if (rank.name == status) {
             newOrder = [rank];
           }
+
         })
       }
-
     }.bind(this));
+    myArray = newOrder;
+  }
 
-    this.filter.ranking = newOrder;
+  private unselectFilter(myArray: any, unselectArray: string[]){
+    let newFilter: any ;
+
+    if (this.checkArray(myArray, "main-responder.service",
+                        "initFilter", "myArray")){
+      myArray.forEach(function(rank){
+
+        unselectArray.forEach(function(unselect){
+          if (rank.name == unselect){
+            rank._ui_unselected = true;
+          }
+        });
+
+      })
+    }
+    myArray = newFilter;
   }
 
   private checkCoverage() {
@@ -209,21 +285,6 @@ export class SharedReport {
     }
   }
 
-  private getUserReview(messages) {
-    let url = this.url + 'get-review/';
-    this.http.get(url + 'codepeer_review.xml')
-      .subscribe(
-      data => {
-        this.codepeer_review = this.gnathub.convertToJson(data);
-        this.addUserReview(messages);
-      }, error => {
-        console.log("[Error] get codepeer_review : ", error);
-        this.addUserReview(messages);
-        this.codepeerReviewError = true;
-      }
-    );
-  }
-
   public countUncategorized(filter, total_count) {
     let count = 0;
     if (this.checkArray(filter, "main-responder.service",
@@ -242,7 +303,7 @@ export class SharedReport {
     }
   }
 
-  public putInFilter(status, filter): [IReviewFilter] {
+  public putInFilter(status, display_name, filter): [IReviewFilter] {
     let stop = false;
     let newIdx = 1;
     if (this.checkArray(filter, "main-responder.service",
@@ -261,6 +322,7 @@ export class SharedReport {
       let tmp = {
         id : newIdx,
         name : status,
+        display_name: display_name,
         _message_count : 1
       };
       if (!filter){
@@ -289,13 +351,13 @@ export class SharedReport {
               message.review_history = this.codepeer_review[message.tool_msg_id].review_history;
               message.user_review = this.codepeer_review[message.tool_msg_id].user_review;
 
-              this.userReviewFilter = this.putInFilter(message.user_review.status, this.userReviewFilter);
+              this.userReviewFilter = this.putInFilter(message.user_review.status, message.user_review.display_name, this.userReviewFilter);
             }
           }.bind(this));
         }
       }.bind(this));
     }
-    this.putInFilter('UNCATEGORIZED', this.userReviewFilter);
+    this.putInFilter('UNCATEGORIZED', 'Uncategorized',this.userReviewFilter);
     this.countUncategorized(this.userReviewFilter, this.filter._total_message_count);
     this.filter.review_status = this.userReviewFilter;
   }

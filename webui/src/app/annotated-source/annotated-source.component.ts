@@ -292,7 +292,7 @@ export class AnnotatedSourceComponent
 
             }.bind(this));
         }
-        this.reportService.putInFilter('UNCATEGORIZED', userReviewFilter);
+        this.reportService.putInFilter('UNCATEGORIZED', 'Uncategorized', userReviewFilter);
         this.reportService.countUncategorized(userReviewFilter, this.reportService.filter._total_message_count);
         this.reportService.filter.review_status = userReviewFilter;
     }

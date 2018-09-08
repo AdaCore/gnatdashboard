@@ -86,7 +86,7 @@
                                                 {{message.name}}
                                             </span>
                                             <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
-                                                {{message.user_review ? message.user_review.status.charAt(0).toUpperCase() + message.user_review.status.slice(1).toLowerCase() : 'Uncategorized'}}
+                                                {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
 
                                                 <span *ngIf="message.review_history" >
                                                     <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
@@ -146,7 +146,7 @@
                                                     {{message.name}}
                                                 </span>
                                                 <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
-                                                    {{message.user_review ? message.user_review.status.charAt(0).toUpperCase() + message.user_review.status.slice(1).toLowerCase() : 'Uncategorized'}}
+                                                    {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
                                                 </span>
                                                 <span *ngIf="message.review_history" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
                                                     <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"

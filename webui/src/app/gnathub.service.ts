@@ -10,6 +10,8 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class GNAThubService {
+    public name: string = 'test';
+
     constructor(private http: Http) {}
 
     public getFilter(): Observable<IFilterIndex> {
@@ -51,6 +53,16 @@ export class GNAThubService {
         return Observable.throw(errMsg);
     }
 
+    private createDisplayName(name){
+        let myArray = name.split('_');
+        let display_name = '';
+        myArray.forEach(function(word, idx){
+            display_name += word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            if (idx < myArray.length - 1){ display_name += ' ';}
+        });
+        return display_name;
+    }
+
     public convertToJson(res: any) {
         let user_review = [];
         xml2js.parseString(res._body, { explicitArray: false }, (error, result) => {
@@ -59,14 +71,14 @@ export class GNAThubService {
             } else {
                 if (result && result.audit_trail && result.audit_trail.message && result.audit_trail.message.length > 0){
                     result.audit_trail.message.forEach(function(review){
-
                         let myReview = [];
                         let lastReview = {
                             author : '',
                             status: '',
                             date: 0,
                             from_source: '',
-                            message: ''
+                            message: '',
+                            display_name: ''
                         };
                         if (review.audit.$){
                             let tmpReview = {
@@ -74,26 +86,26 @@ export class GNAThubService {
                                 status: review.audit.$.status,
                                 date: review.audit.$.timestamp,
                                 from_source: review.audit.$.from_source,
-                                message: review.audit._
+                                message: review.audit._,
+                                display_name: this.createDisplayName(review.audit.$.status)
                             };
                             myReview.push(tmpReview)
                             lastReview = tmpReview;
                         } else if (review.audit[0].$) {
-
                             review.audit.forEach(function(tmp){
-
                                 let tmpReview = {
                                     author : tmp.$.approved,
                                     status: tmp.$.status,
                                     date: tmp.$.timestamp,
                                     from_source: tmp.$.from_source,
-                                    message: tmp._
+                                    message: tmp._,
+                                    display_name: this.createDisplayName(tmp.$.status)
                                 };
                                 myReview.push(tmpReview)
                                 if (lastReview.date < tmpReview.date) {
                                     lastReview = tmpReview;
                                 }
-                            });
+                            }.bind(this));
 
 
                         } else {
@@ -106,7 +118,7 @@ export class GNAThubService {
 
                         user_review[review.$.identifier] = tmp;
 
-                    });
+                    }.bind(this));
                 } else {
                     console.log("[Error] gnathub.service:convertToJson : result.audit_trail.message should not be empty.");
                 }
