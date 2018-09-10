@@ -1,14 +1,14 @@
 <div class="main-responder-page col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
     <header class="main-responder-header top col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" role="header">
         <span>{{reportService.projectName}}</span>
-           <span class="navig-button">
-            <button [ngClass]="this.reportService.page == 'code-explorer' ? 'active' : '' " id="ProjectButton" class="project-button"
-                    [routerLink]="['./code-explorer']">
-                Code
-            </button>
-            <button [ngClass]="this.reportService.page == 'message-explorer' ? 'active' : '' " id="ErrorButton" class="error-button"
+        <span class="navig-button">
+            <button [ngClass]="{active: this.reportService.page == 'message-explorer'}" id="ErrorButton" class="error-button"
                     [routerLink]="['./message-explorer']">
                 Messages
+            </button>
+             <button [ngClass]="{active: this.reportService.page == 'code-explorer'}" id="ProjectButton" class="project-button"
+                    [routerLink]="['./code-explorer']">
+                Projects
             </button>
         </span>
         <!--<span [routerLink]="['./preferences']">Preferences</span>-->

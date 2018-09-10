@@ -75,20 +75,22 @@
                                       [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) || (!reportService.showReviews && !message.user_review) ? 'hideIt' : ''">
                                     <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                           [ngClass]="(selected_msg.indexOf(message.id) != -1 ? 'selected' : '') + ' ' + message.tool">
-                                        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="selectMessage(message, $event)">
+                                        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="selectMessage(message, $event)">
                                             <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
                                                 {{message.line}}:{{message.col_begin}}
                                             </span>
-                                            <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
+                                            <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad ellipsis">
                                                 {{message.ranking.name}}
                                             </span>
                                             <span class="col-lg-9 col-md-9 col-sm-9 col-xs-9 no-pad" >
                                                 {{message.name}}
                                             </span>
-                                            <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
-                                                {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
+                                            <span class="col-lg-1 col-md-1 col-sm-1 col-xs-2 no-pad">
 
-                                                <span *ngIf="message.review_history" >
+                                                <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad ellipsis">
+                                                    {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
+                                                </span>
+                                                <span  class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad" *ngIf="message.review_history" >
                                                     <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
                                                           (click)="ShowReviewHistory(message)">
                                                         <md-icon>history</md-icon>
@@ -135,26 +137,27 @@
                                           [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
                                         <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"   [ngClass]="((selectedLine == message.line && source.filename == mySource.filename) ? 'selected': '') + ' ' + message.tool"
                                               [routerLink]="['/source', mySource.filename, { line: message.line, id: message.id }]">
-                                            <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                                                 <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
                                                     {{message.line}}:{{message.col_begin}}
                                                 </span>
-                                                <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
+                                                <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad ellipsis">
                                                     {{message.ranking.name}}
                                                 </span>
-                                                <span class="col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad" >
+                                                <span class="col-lg-9 col-md-9 col-sm-9 col-xs-9 no-pad" >
                                                     {{message.name}}
                                                 </span>
-                                                <span class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
-                                                    {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
-                                                </span>
-                                                <span *ngIf="message.review_history" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
-                                                    <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                                                          (click)="ShowReviewHistory(message.review_history)">
-                                                        <md-icon>history</md-icon>
+                                                <span class="col-lg-1 col-md-1 col-sm-1 col-xs-2 no-pad">
+                                                    <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad ellipsis">
+                                                        {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
+                                                    </span>
+                                                    <span  class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad" *ngIf="message.review_history" >
+                                                        <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
+                                                              (click)="ShowReviewHistory(message)">
+                                                            <md-icon>history</md-icon>
+                                                        </span>
                                                     </span>
                                                 </span>
-
                                             </span>
                                         </span>
                                     </span>

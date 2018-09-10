@@ -101,7 +101,7 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write("No such file")
-            self._log_api_error(filepath + " : file doesn't exist")
+            self.log_message(filepath + " : file doesn't exist")
 
     def _get_review(self):
         filename = 'codepeer_review.xml'
@@ -134,6 +134,8 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self._log_api_error(filepath + " : file doesn't exist")
 
     def _export_codeper_bridge(self, filename):
+        print "Export info into codepeer_bridge"
+        self.log_message("Export info into codepeer_bridge")
         cmd = ('codepeer_bridge'
                + ' --output-dir=' + GNAThub.output_dir()
                + ' --db-dir=' + GNAThub.db_dir()
@@ -141,6 +143,7 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                + os.path.join(GNAThub.Project.object_dir(),
                               'gnathub', 'html-report', 'data', filename)
                + ' >> ' + API_SERVER_LOG + ' 2>&1')
+        self.log_message(cmd)
         os.system(cmd)
 
     def _post_review(self):
@@ -162,12 +165,15 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.wfile.write("OK")
 
     def _import_codepeer_bridge(self, filename):
+        print "Import info into codepeer_bridge"
+        self.log_message("Import info into codepeer_bridge")
         cmd = ('codepeer_bridge'
                + ' --output-dir=' + GNAThub.output_dir()
                + ' --db-dir=' + GNAThub.db_dir()
                + ' --import-reviews='
                + filename
                + ' >> ' + API_SERVER_LOG + ' 2>&1')
+        self.log_message(cmd)
         os.system(cmd)
 
     def do_GET(self, **args):
@@ -209,9 +215,7 @@ class Launch_Server(Plugin, Reporter):
 
         api_port = port + 1
 
-        print("Launched GNAThub API server on port {}".format(api_port))
         thread.start_new_thread(self.launch_api_server, (api_port,))
-        print("Launched GNAThub client server on port {}".format(port))
         self.set_client_server(port)
 
     def set_client_server(self, port):
@@ -278,7 +282,9 @@ def launch_client_server(port, HandlerClass=RootedHTTPRequestHandler,
                         HandlerClass)
 
     sa = httpd.socket.getsockname()
-    print "Serving HTTP on ", sa[0], "port", sa[1], "..."
+    print "Launched GNAThub client server on port ", sa[1], "..."
+    print "The API server logs are in {}".format(API_SERVER_LOG)
+    print "The Client server logs are in {}".format(CLIENT_SERVER_LOG)
 
     try:
         httpd.serve_forever()

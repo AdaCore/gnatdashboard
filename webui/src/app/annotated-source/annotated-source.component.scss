@@ -119,7 +119,7 @@
     .all-messages-line {
         .message-line {
             background-color: var(--medium-shade);
-            padding: 2px 0px;
+            padding: 2px 5px;
             margin-bottom: 1px;
 
             border-left: 10px solid;
@@ -226,7 +226,7 @@
 
 .scrollable-content.expanded {
     overflow: auto;
-    height: calc(100vh - 6vh - 6vh - 20vh);
+    height: calc(100vh - 6vh - 6vh - 20vh - 4vh);
 }
 .scrollable-content.reduce {
     overflow: auto;

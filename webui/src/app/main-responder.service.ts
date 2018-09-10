@@ -60,6 +60,7 @@ export class SharedReport {
   public isFilter: boolean = true;
   public projectName: string;
   public _ui_total_message_count: number = -1;
+  private activeFilter: boolean = false;
 
   private userReviewFilter: [IReviewFilter];
 
@@ -152,8 +153,8 @@ export class SharedReport {
             this.message.sources = sortMessageArray(
               this.messageFilter,
               this.messageFilter, messages.sources);
+            this.getUserReview(this.message);
             this.refreshFilter()
-            //this.getUserReview(object);
           }, error => {
             this.isReportFetchError = true;
           }
@@ -169,13 +170,10 @@ export class SharedReport {
       data => {
         this.codepeer_review = this.gnathub.convertToJson(data);
         this.addUserReview(messages);
-        this.initReview();
-        this.refreshFilter();
       }, error => {
         console.log("[Error] get codepeer_review : ", error);
         this.addUserReview(messages);
         this.codepeerReviewError = true;
-        this.refreshFilter();
       }
     );
   }
@@ -194,11 +192,6 @@ export class SharedReport {
   private initHistory() {
     let unselected = ['Removed'];
     this.unselectFilter(this.filter.properties, unselected);
-  }
-
-  private initReview() {
-    let unselected = ['FALSE_POSITIVE','INTENTIONAL', 'NOT_A_BUG'];
-    this.unselectFilter(this.filter.review_status, unselected);
   }
 
   private initRanking() {
@@ -303,9 +296,28 @@ export class SharedReport {
     }
   }
 
-  public putInFilter(status, display_name, filter): [IReviewFilter] {
+  private isActiveFilter(status): boolean {
+    let unselected = ['FALSE_POSITIVE','INTENTIONAL', 'NOT_A_BUG'];
+    this.activeFilter =  unselected.indexOf(status) == -1 ? false :  true;
+
+    if (this.checkArray(this.filter.review_status, "main-responder.service",
+                        "isActiveFilter", "this.filter.review_status")){
+      this.filter.review_status.forEach(function(status, unselected, review, idx){
+
+        if (review.name == status){
+          this.activeFilter = review._ui_unselected;
+        }
+      }.bind(this, status, unselected));
+    }
+    return this.activeFilter;
+  }
+
+  public putInFilter(review, filter): [IReviewFilter] {
     let stop = false;
     let newIdx = 1;
+    let status = review.status;
+    let display_name = review.display_name;
+
     if (this.checkArray(filter, "main-responder.service",
                         "putInFilter", "filter")){
       filter.forEach(function(reviewStatus){
@@ -319,11 +331,13 @@ export class SharedReport {
       });
     }
     if (!stop) {
+      let active = this.isActiveFilter(status);
       let tmp = {
         id : newIdx,
         name : status,
         display_name: display_name,
-        _message_count : 1
+        _message_count : 1,
+        _ui_unselected : active
       };
       if (!filter){
         filter = [tmp];
@@ -350,16 +364,20 @@ export class SharedReport {
             if (this.codepeer_review[message.tool_msg_id]) {
               message.review_history = this.codepeer_review[message.tool_msg_id].review_history;
               message.user_review = this.codepeer_review[message.tool_msg_id].user_review;
-
-              this.userReviewFilter = this.putInFilter(message.user_review.status, message.user_review.display_name, this.userReviewFilter);
+              this.userReviewFilter = this.putInFilter(message.user_review, this.userReviewFilter);
             }
           }.bind(this));
         }
       }.bind(this));
     }
-    this.putInFilter('UNCATEGORIZED', 'Uncategorized',this.userReviewFilter);
+    let tmp_review = {
+      status: "UNCATEGORIZED",
+      display_name: "Uncategorized"
+    };
+    this.userReviewFilter = this.putInFilter(tmp_review ,this.userReviewFilter);
     this.countUncategorized(this.userReviewFilter, this.filter._total_message_count);
     this.filter.review_status = this.userReviewFilter;
+    this.refreshFilter();
   }
 
   public sendUserReview(xml) {

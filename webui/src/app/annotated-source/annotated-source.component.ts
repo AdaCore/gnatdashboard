@@ -22,6 +22,8 @@ import { GNAThubService } from '../gnathub.service';
 
 import { AnnotatedSourceViewComponent } from './annotated-source-view.component';
 
+import { updateFilter } from '../utils/refreshFilter'
+
 import {
     IAnnotatedSourceFile,
     IAnnotatedSourceMessage,
@@ -285,16 +287,22 @@ export class AnnotatedSourceComponent
                 if (source.messages){
                     source.messages.forEach(function(message){
                         if (message.user_review){
-                            userReviewFilter = this.reportService.putInFilter(message.user_review.status, userReviewFilter);
+                            userReviewFilter = this.reportService.putInFilter(message.user_review, userReviewFilter);
                         }
                     }.bind(this))
                 }
 
             }.bind(this));
         }
-        this.reportService.putInFilter('UNCATEGORIZED', 'Uncategorized', userReviewFilter);
+
+        let tmp_review = {
+            status: "UNCATEGORIZED",
+            display_name: "Uncategorized"
+        };
+        this.reportService.putInFilter(tmp_review, userReviewFilter);
         this.reportService.countUncategorized(userReviewFilter, this.reportService.filter._total_message_count);
         this.reportService.filter.review_status = userReviewFilter;
+        updateFilter(this.reportService);
     }
 
     public addDynamicReview(new_review) {
@@ -316,6 +324,17 @@ export class AnnotatedSourceComponent
             });
             this.refreshFilter();
         }
+    }
+
+    private formatName(name:string): string {
+        let myArray = name.split('_');
+        let display_name = '';
+        myArray.forEach(function(word, idx){
+            display_name += word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            if (idx < myArray.length - 1){ display_name += ' ';}
+        });
+
+        return display_name;
     }
 
     public writeReview() {
@@ -345,6 +364,7 @@ export class AnnotatedSourceComponent
                     if (data.status) {
                         xml += 'status="' + data.status + '" ';
                         new_review[id].status = data.status;
+                        new_review[id].display_name = this.formatName(data.status);
                     }
                     if (data.username) {
                         xml += 'approved="' + data.username + '" ';
@@ -357,7 +377,7 @@ export class AnnotatedSourceComponent
                     }
                     xml += '</audit>\n</message>\n';
 
-                });
+                }.bind(this));
             }
             xml += '</audit_trail>';
 

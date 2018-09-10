@@ -24,7 +24,7 @@
             </span>
             <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                 <span class="col-lg-7 col-md-7 col-sm-7 col-xs-7 click" (click)="sortModules('filename', 'line')">
-                    <span>Name</span>
+                    <span class="ellipsis">Name</span>
                     <span class="header-icon"
                           *ngIf="reportService.messageFilter.newSort == 'name'">
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</md-icon>
@@ -33,7 +33,7 @@
                 </span>
                 <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
                       (click)="sortModules('ranking','')">
-                    <span>Ranking</span>
+                    <span class="ellipsis">Ranking</span>
                     <span class="header-icon"
                           *ngIf="reportService.messageFilter.newSort == 'ranking'">
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</md-icon>
@@ -41,7 +41,7 @@
                     </span>
                 </span>
                 <span class="center col-lg-1 col-md-1 col-sm-1 col-xs-1 click" (click)="sortModules('_ui_total_message_count','name')">
-                    <span>Messages</span>
+                    <span class="ellipsis">Messages</span>
                     <span class="header-icon"
                           *ngIf="reportService.messageFilter.newSort == '_ui_total_message_count'">
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</md-icon>
@@ -49,7 +49,7 @@
                     </span>
                 </span>
                 <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 noclick">
-                    <span>Review Status</span>
+                    <span class="ellipsis">Review Status</span>
                 </span>
             </span>
         </span>
@@ -92,11 +92,11 @@
                                             {{message.line}}:{{message.col_begin}}
                                         </span>
                                         <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{message.name}}</span>
-                                        <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ranking">
+                                        <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ranking ellipsis">
                                             {{ message.ranking.name }}
                                         </span>
                                         <span class="center col-lg-1 col-md-1 col-sm-1 col-xs-1"></span>
-                                        <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 ellipsis">
                                             {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
                                         </span>
 

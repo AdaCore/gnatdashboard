@@ -27,7 +27,7 @@
             <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                 <span class="click" (click)="sortModules('filename', 'line')"
                       [ngClass]="reportService.showCoverage ? 'col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'col-lg-7 col-md-7 col-sm-7 col-xs-7'">
-                    <span>Name</span>
+                    <span class="ellipsis">Name</span>
                     <span class="header-icon"
                           *ngIf="reportService.codeFilter.newSort == 'name'">
                         <md-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</md-icon>
@@ -36,7 +36,7 @@
                 </span>
                 <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
                 <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','name')">
-                    <span>Messages</span>
+                    <span class="ellipsis">Messages</span>
                     <span class="header-icon"
                           *ngIf="reportService.codeFilter.newSort == '_ui_total_message_count'">
                         <md-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</md-icon>
@@ -44,7 +44,7 @@
                     </span>
                 </span>
                 <span *ngIf="reportService.showCoverage" class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 click" (click)="sortModules('coverage','')">
-                    <span>Coverage</span>
+                    <span class="ellipsis">Coverage</span>
                     <span class="header-icon"
                           *ngIf="reportService.codeFilter.newSort == 'coverage'">
                         <md-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</md-icon>

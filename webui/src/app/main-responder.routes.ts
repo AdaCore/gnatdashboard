@@ -7,7 +7,7 @@ import { CodeExplorerComponent } from './code-explorer';
 import { MessageExplorerComponent } from './message-explorer';
 
 export const ROUTES: Routes = [
-    { path: '', redirectTo: '/code-explorer', pathMatch: 'full' },
+    { path: '', redirectTo: '/message-explorer', pathMatch: 'full' },
     { path: 'code-explorer', component: CodeExplorerComponent },
     { path: 'code-explorer/:project', component: CodeExplorerComponent },
     { path: 'code-explorer/:project/:directory',

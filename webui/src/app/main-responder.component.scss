@@ -300,3 +300,8 @@ filter-selector.tool-selector .filter-selector {
         border: 1px var(--elem-border) solid;
     }
 }
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
