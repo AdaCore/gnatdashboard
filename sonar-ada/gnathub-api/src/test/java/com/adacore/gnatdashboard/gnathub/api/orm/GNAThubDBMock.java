@@ -19,12 +19,13 @@ package com.adacore.gnatdashboard.gnathub.api.orm;
 import java.io.File;
 
 class GNAThubDBMock {
-  private static final String GNATHUB_TEST_DB = "gnathub_sdc_20180725.db";
+  private static final String GNATHUB_TEST_DB = "gnathub_sdc_20180912.db";
 
   //  This needs to be sync with the file path which is present in resources table of the
   //  GNATHUB_TEST_DB database
   private static final String GNATHUB_SOURCE_DIR =
-          "C:\\gnatmail\\ancr\\install\\gnatdashboard\\share\\examples\\gnatdashboard\\sdc\\";
+         "C:\\gnatmail\\ancr\\install\\gnatdashboard\\share\\examples\\gnatdashboard\\multi_obj_dir\\";
+
   public static final String GNATHUB_MAIN = GNATHUB_SOURCE_DIR + "common\\sdc.adb";
 
   public static File getGNAThubTestDB() {

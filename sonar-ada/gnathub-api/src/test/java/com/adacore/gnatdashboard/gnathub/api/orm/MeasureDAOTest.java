@@ -37,12 +37,12 @@ public class MeasureDAOTest {
     final FileMeasures measures = measureDAO.getMeasuresForFile(GNAThubDBMock.GNATHUB_MAIN);
     assertThat(measures).isNotNull();
     assertThat(measures.path).isEqualTo(GNAThubDBMock.GNATHUB_MAIN);
-    assertThat(measures.asInt(GNATmetricMetrics.ALL_LINES)).isEqualTo(50);
+    assertThat(measures.asInt(GNATmetricMetrics.ALL_LINES)).isEqualTo(53);
     assertThat(measures.asInt(GNATmetricMetrics.BLANK_LINES)).isEqualTo(12);
-    assertThat(measures.asInt(GNATmetricMetrics.CODE_LINES)).isEqualTo(36);
+    assertThat(measures.asInt(GNATmetricMetrics.CODE_LINES)).isEqualTo(39);
     assertThat(measures.asInt(GNATmetricMetrics.EOL_COMMENTS)).isEqualTo(0);
     assertThat(measures.asInt(GNATmetricMetrics.COMMENT_LINES)).isEqualTo(2);
-    assertThat(measures.asDouble(GNATmetricMetrics.COMMENT_PERCENTAGE)).isEqualTo(5.26);
+    assertThat(measures.asDouble(GNATmetricMetrics.COMMENT_PERCENTAGE)).isEqualTo(4.87);
     assertThat(measures.asDouble(GNATmetricMetrics.CYCLOMATIC_COMPLEXITY)).isEqualTo(2.00);
     assertThat(measures.asDouble(GNATmetricMetrics.ESSENTIAL_COMPLEXITY)).isEqualTo(1.00);
     assertThat(measures.asDouble(GNATmetricMetrics.STATEMENT_COMPLEXITY)).isEqualTo(2.00);
