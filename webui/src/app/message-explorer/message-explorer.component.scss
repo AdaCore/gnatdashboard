@@ -88,6 +88,24 @@
                 transform: rotate(90deg);
             }
 
+            .source-line .header-line {
+                span.High {
+                    color: var(--High-font)
+                }
+                span.Medium {
+                    color: var(--Medium-font)
+                }
+                span.Low {
+                    color: var(--Low-font)
+                }
+                span.Info {
+                    color: var(--Info-font)
+                }
+                span.Unspecified {
+                    color: var(--Unspecified-font)
+                }
+            }
+
             .all-messages-line {
                 .message-line {
                     background-color: var(--medium-shade);

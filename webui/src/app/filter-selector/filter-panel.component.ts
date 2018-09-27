@@ -6,10 +6,10 @@ import {
     IRuleFilter,
     IToolFilter,
     IRankingFilter,
-   IReviewFilter
+    IReviewFilter
 } from 'gnat';
 import { updateFilter } from '../utils/refreshFilter'
-
+import { sortMessageArray, sortCodeArray } from '../utils/sortArray'
 
 @Component({
     selector: 'filter-panel',
@@ -21,6 +21,9 @@ export class FilterPanelComponent {
     public filterOpen: boolean = true;
     public isReportFetchError: boolean = false;
     public change: number;
+
+    private codeFilter = this.reportService.codeFilter;
+    private messageFilter = this.reportService.messageFilter;
 
     constructor( public reportService: SharedReport) {}
 
@@ -37,6 +40,13 @@ export class FilterPanelComponent {
         this.filterOpen = !this.filterOpen;
     }
 
+    private refreshSorting(){
+        let codeFilter = this.reportService.codeFilter;
+        let messageFilter = this.reportService.messageFilter;
+        sortMessageArray(this.messageFilter, this.messageFilter, this.reportService.message.sources);
+        sortCodeArray(this.codeFilter, this.codeFilter, this.reportService.code.modules)
+    }
+
     /*
      * Checkbox handled for the tool filters.
      *
@@ -46,6 +56,7 @@ export class FilterPanelComponent {
         const tool = <IToolFilter> event.option;
         this.reportService.filter.tools[event.id]._ui_unselected = !event.checked;
         updateFilter(this.reportService);
+        this.refreshSorting();
     }
 
     /*
@@ -57,6 +68,7 @@ export class FilterPanelComponent {
         const rule = <IRuleFilter> event.option;
         this.reportService.filter.rules[event.id]._ui_unselected = !event.checked;
         updateFilter(this.reportService);
+        this.refreshSorting();
     }
 
     /*
@@ -68,6 +80,7 @@ export class FilterPanelComponent {
         const property = <IPropertyFilter> event.option;
         this.reportService.filter.properties[event.id]._ui_unselected = !event.checked;
         updateFilter(this.reportService);
+        this.refreshSorting();
     }
 
     /*
@@ -79,9 +92,10 @@ export class FilterPanelComponent {
         const rank = <IRankingFilter> event.option;
         this.reportService.filter.ranking[event.id]._ui_unselected = !event.checked;
         updateFilter(this.reportService);
+        this.refreshSorting();
     }
 
-     /*
+    /*
      * Checkbox handled for the ranking filters.
      *
      * @param event Event fired by <filter-selector> on checkbox status change.
@@ -90,6 +104,7 @@ export class FilterPanelComponent {
         const review = <IReviewFilter> event.option;
         this.reportService.filter.review_status[event.id]._ui_unselected = !event.checked;
         updateFilter(this.reportService);
+        this.refreshSorting();
     }
 
 }

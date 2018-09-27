@@ -76,18 +76,17 @@ function checkProperty(myArray, newFilter) {
     let property = myArray[0][newFilter.newSort] != null ?
         newFilter.newSort : (myArray[0][newFilter.otherSort] != null ?
                              newFilter.otherSort : null);
-    if (property == null) {
-
-        if (newFilter.newSort == '_ui_total_message_count'){
-            newFilter.newSort = '_total_message_count';
-        } else if (newFilter.otherSort == '_ui_total_message_count'){
-            newFilter.otherSort = '_total_message_count';
-        }
-        property = myArray[0][newFilter.newSort] != null ?
-            newFilter.newSort : (myArray[0][newFilter.otherSort] != null ?
-                                 newFilter.otherSort : null);
-    }
     return property;
+}
+
+function sortRanking(a, b){
+    let tmp = 0;
+    if (a < b){
+        tmp = -1;
+    } else if(a > b){
+        tmp = 1;
+    }
+    return tmp;
 }
 
 /*
@@ -95,6 +94,7 @@ function checkProperty(myArray, newFilter) {
  *  for message navigation according to the given filter
  */
 export function sortMessageArray(newFilter, oldFilter, sourceArray) {
+
     if ((oldFilter.newSort === newFilter.newSort
          || oldFilter.otherSort === newFilter.otherSort) && !newFilter.order) {
         newFilter.order = oldFilter.order * -1;
@@ -105,8 +105,24 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
     }
 
     let property = checkProperty(sourceArray, newFilter);
-
-    if (property != null) {
+    if (property == "countRanking"){
+        sourceArray.sort((a: any, b: any) => {
+            let tmp = sortRanking(a.countRanking.High,b.countRanking.High);
+            if (tmp == 0){
+                tmp = sortRanking(a.countRanking.Medium,b.countRanking.Medium);
+                if (tmp == 0){
+                    tmp = sortRanking(a.countRanking.Low,b.countRanking.Low);
+                    if (tmp == 0){
+                        tmp = sortRanking(a.countRanking.Info,b.countRanking.Info);
+                        if (tmp == 0){
+                            tmp = sortRanking(a.countRanking.Unspecified,b.countRanking.Unspecified);
+                        }
+                    }
+                }
+            }
+            return tmp * newFilter.order;
+        });
+    } else if (property != null) {
         sourceArray.sort((a: any, b: any) => {
             if (a[property] < b[property]) {
                 return -1 * newFilter.order;

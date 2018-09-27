@@ -26,13 +26,13 @@
                 <span class="col-lg-7 col-md-7 col-sm-7 col-xs-7 click" (click)="sortModules('filename', 'line')">
                     <span class="ellipsis">Name</span>
                     <span class="header-icon"
-                          *ngIf="reportService.messageFilter.newSort == 'name'">
+                          *ngIf="reportService.messageFilter.newSort == 'filename'">
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</md-icon>
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</md-icon>
                     </span>
                 </span>
                 <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
-                      (click)="sortModules('ranking','')">
+                      (click)="sortModules('ranking','countRanking')">
                     <span class="ellipsis">Ranking</span>
                     <span class="header-icon"
                           *ngIf="reportService.messageFilter.newSort == 'ranking'">
@@ -40,7 +40,7 @@
                         <md-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</md-icon>
                     </span>
                 </span>
-                <span class="center col-lg-1 col-md-1 col-sm-1 col-xs-1 click" (click)="sortModules('_ui_total_message_count','name')">
+                <span class="center col-lg-1 col-md-1 col-sm-1 col-xs-1 click" (click)="sortModules('_ui_total_message_count','')">
                     <span class="ellipsis">Messages</span>
                     <span class="header-icon"
                           *ngIf="reportService.messageFilter.newSort == '_ui_total_message_count'">
@@ -69,7 +69,19 @@
                                 <span class="project-name"> {{source.projectName}}</span>
                                 <span class="file-name">{{source.filename}}</span>
                             </span>
-                            <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
+                            <span class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                <span *ngIf="source.countRanking">
+                                    <span class="High">{{source.countRanking.High}}</span>
+                                    <span> / </span>
+                                    <span class="Medium">{{source.countRanking.Medium}}</span>
+                                    <span> / </span>
+                                    <span class="Low">{{source.countRanking.Low}}</span>
+                                    <span> / </span>
+                                    <span class="Info">{{source.countRanking.Info}}</span>
+                                    <span> / </span>
+                                    <span class="Unspecified">{{source.countRanking.Unspecified}}</span>
+                                </span>
+                            </span>
                             <span class="center col-lg-1 col-md-1 col-sm-1 col-xs-1">
                                 {{
                                 source._ui_total_message_count != null ?

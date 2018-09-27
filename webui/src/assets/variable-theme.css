@@ -25,14 +25,19 @@
     /* Colors for Ranking */
     --Info: #ddddff;
     --Info-hover: #b0b0ff;
+    --Info-font: #6a6afb;
     --Unspecified: rgba(0,0,0,0.1);
     --Unspecified-hover: rgba(0, 0, 0, .15);
+    --Unspecified-font: rgba(0, 0, 0, .60);
     --Low: #ffffb5;
     --Low-hover: #ffff4e;
+    --Low-font: #d6c717;
     --Medium: #ffe0a7;
     --Medium-hover: #ffcb6b;
+    --Medium-font: #ffa500;
     --High: #ffb0b0;
     --High-hover: #ff8080;
+    --High-font: #f52e2e;
 }
 
 /* Declaration of variable for Dark Theme */

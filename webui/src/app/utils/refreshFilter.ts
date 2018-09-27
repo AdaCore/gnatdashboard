@@ -49,6 +49,16 @@ function reviewSelected(name: string, array: any): boolean {
     return isSelected;
 }
 
+function initCountRanking() {
+    return {
+        High: 0,
+        Medium: 0,
+        Low: 0,
+        Info: 0,
+        Unspecified : 0
+    };
+}
+
 export function updateFilter(reportService) {
     const tools = reportService.filter.tools;
     const rules = reportService.filter.rules;
@@ -103,8 +113,17 @@ export function updateFilter(reportService) {
                 codeSource._ui_total_message_count = 0;
 
                 reportService.message.sources.forEach(function(source){
+
+                    if (!source.countRanking) {
+                        source.countRanking = initCountRanking();
+                    }
+                    if (!source._ui_total_message_count){
+                        source._ui_total_message_count = 0;
+                    }
+
                     if (source.filename === codeSource.filename &&
                         source.messages != null){
+                        source.countRanking = initCountRanking();
                         source._ui_total_message_count = 0;
 
                         source.messages.forEach(function(message){
@@ -145,6 +164,8 @@ export function updateFilter(reportService) {
                                         incMessageCount(property.id, properties);
                                     }
                                 }.bind(this));
+
+                                source.countRanking[message.ranking.name] += 1;
 
                                 message.hide = true;
                                 source._ui_total_message_count ++;
