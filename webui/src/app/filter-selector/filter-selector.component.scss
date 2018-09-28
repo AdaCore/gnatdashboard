@@ -1,183 +1,184 @@
 .filter-selector {
 
-   .filter-header {
-      border-bottom: 1px solid var(--elem-border);
-      color: #333;
-      padding: 8px 10px;
-      font-weight: bold;
-      text-align: left;
-      margin-bottom: 2px;
-   }
+    .filter-header {
+        border-bottom: 1px solid var(--elem-border);
+        color: #333;
+        padding: 8px 10px;
+        font-weight: bold;
+        text-align: left;
+        margin-bottom: 2px;
+    }
 
-   input[type=checkbox] {
-      display: none;
-   }
+    input[type=checkbox] {
+        display: none;
+    }
 
-   label.option {
-      margin: 1px 0px;
-      background-color: var(--elem-color);
-      div.count{
-         text-align: right;
-         float: right;
-      }
+    label.option {
+        margin: 1px 0px;
+        background-color: var(--elem-color);
+        div.count{
+            text-align: right;
+            float: right;
+        }
 
-      .Info {
-         background-color: var(--Info);
-         &:hover {
-            background-color: var(--Info-hover);
-         }
-      }
-      .Unspecified {
-         background-color: var(--Unspecified);
-         &:hover {
-            background-color: var(--Unspecified-hover);
-         }
-      }
-      .Medium {
-         background-color: var(--Medium);
-         &:hover {
-            background-color: var(--Medium-hover);
-         }
-      }
-      .Low {
-         background-color: var(--Low);
-         &:hover {
-            background-color: var(--Low-hover);
-         }
-      }
-      .High {
-         background-color: var(--High);
-         &:hover {
-            background-color: var(--High-hover);
-         }
-      }
-   }
-   label.option:hover, input[type=checkbox]:not(:checked) + label.option:hover {
-      background-color: var(--elem-hover);
-   }
+        &.message {
+            .Info {
+                background-color: var(--Info);
+                &:hover {
+                    background-color: var(--Info-hover);
+                }
+            }
+            .Unspecified {
+                background-color: var(--Unspecified);
+                &:hover {
+                    background-color: var(--Unspecified-hover);
+                }
+            }
+            .Medium {
+                background-color: var(--Medium);
+                &:hover {
+                    background-color: var(--Medium-hover);
+                }
+            }
+            .Low {
+                background-color: var(--Low);
+                &:hover {
+                    background-color: var(--Low-hover);
+                }
+            }
+            .High {
+                background-color: var(--High);
+                &:hover {
+                    background-color: var(--High-hover);
+                }
+            }
+        }
+    }
+    label.option:hover, input[type=checkbox]:not(:checked) + label.option:hover {
+        background-color: var(--elem-hover);
+    }
 
-   input[type=checkbox]:not(:checked) + label.option {
-      opacity: 0.5;
-      background-color: var(--elem-unchecked);
-   }
+    input[type=checkbox]:not(:checked) + label.option {
+        opacity: 0.5;
+        background-color: var(--elem-unchecked);
+    }
 
-   i.arrow {
-      position: absolute;
-      right: 0px;
-   }
-   i.arrow:hover {
-      background-color: var(--elem-unchecked);
-   }
-   .select {
-      font-weight: 200;
-      text-align: right;
-      right: 25px;
-      position: absolute;
+    i.arrow {
+        position: absolute;
+        right: 0px;
+    }
+    i.arrow:hover {
+        background-color: var(--elem-unchecked);
+    }
+    .select {
+        font-weight: 200;
+        text-align: right;
+        right: 15px;
 
-      span:hover {
-         text-decoration: underline;
-         cursor: pointer;
-      }
-   }
+        span:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
 }
 
 filter-selector.tool-selector {
 
-   .filter-selector {
-      margin-top: 40px;
-   }
+    .filter-selector {
+        margin-top: 40px;
+    }
 
 }
 
 .filter-selector.open {
-   .filter-body {
-      display: inline-block;
+    .filter-body {
+        display: inline-block;
 
-      .hide {
-         display: none;
-      }
+        .hide {
+            display: none;
+        }
 
-   }
+    }
 }
 
 .filter-selector.reduce {
-   .filter-body {
-      display: none;
-   }
-   i.arrow {
-      transform: rotate(180deg);
-   }
+    .filter-body {
+        display: none;
+    }
+    i.arrow {
+        transform: rotate(180deg);
+    }
 }
 
 filter-selector.tool-selector .filter-selector {
-   margin-top: 40px;
+    margin-top: 40px;
 }
 
 .option {
-   .background-pad {
-      padding: 5px;
+    .background-pad {
+        padding: 5px;
 
-      border-left: 10px solid;
-      border-left-color: transparent;
-      &.codepeer {
-         border-left-color: #337ab7;
-      }
+        border-left: 10px solid;
+        border-left-color: transparent;
+        &.codepeer {
+            border-left-color: #337ab7;
+        }
 
-      &.spark {
-         border-left-color: pink;
-      }
+        &.spark {
+            border-left-color: pink;
+        }
 
-      &.gnatcheck {
-         border-left-color: #29a229;
-      }
-   }
+        &.gnatcheck {
+            border-left-color: #29a229;
+        }
+    }
 }
 
 .no-message {
-   background: repeating-linear-gradient(
-      43deg,
-      rgba(255,255,255,0.5),
-      rgba(255,255,255,0.5) 10px,
-      var(--elem-color) 10px,
-      var(--elem-color) 20px
-   ) !important;
+    background: repeating-linear-gradient(
+        43deg,
+        rgba(255,255,255,0.5),
+        rgba(255,255,255,0.5) 10px,
+        var(--elem-color) 10px,
+        var(--elem-color) 20px
+    ) !important;
 
-   &.Info {
-      background: repeating-linear-gradient(
-         43deg,
-         rgba(255,255,255,0.5),
-         rgba(255,255,255,0.5) 10px,
-         var(--Info-hover) 10px,
-         var(--Info-hover) 20px
-      ) !important;
-   }
-   &.Medium {
-      background: repeating-linear-gradient(
-         43deg,
-         rgba(255,255,255,0.5),
-         rgba(255,255,255,0.5) 10px,
-         var(--Medium-hover) 10px,
-         var(--Medium-hover) 20px
-      ) !important;
-   }
-   &.Low {
-      background: repeating-linear-gradient(
-         43deg,
-         rgba(255,255,255,0.5),
-         rgba(255,255,255,0.5) 10px,
-         var(--Low-hover) 10px,
-         var(--Low-hover) 20px
-      ) !important;
-   }
-   &.High {
-      background: repeating-linear-gradient(
-         43deg,
-         rgba(255,255,255,0.5),
-         rgba(255,255,255,0.5) 10px,
-         var(--High-hover) 10px,
-         var(--High-hover) 20px
-      ) !important;
-   }
+    &.Info {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Info-hover) 10px,
+            var(--Info-hover) 20px
+        ) !important;
+    }
+    &.Medium {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Medium-hover) 10px,
+            var(--Medium-hover) 20px
+        ) !important;
+    }
+    &.Low {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Low-hover) 10px,
+            var(--Low-hover) 20px
+        ) !important;
+    }
+    &.High {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--High-hover) 10px,
+            var(--High-hover) 20px
+        ) !important;
+    }
 
 
 }

@@ -7,7 +7,8 @@ import {
     Input,
     OnDestroy,
     OnInit,
-    ViewChild
+    ViewChild,
+    ChangeDetectorRef
 } from '@angular/core';
 import { DOCUMENT } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -53,6 +54,7 @@ export class AnnotatedSourceComponent
     private last_selected_msg: number = -1;
     private sub: Subscription;
     public selectedLine: number;
+    public selectedId: number;
 
     @ViewChild('scrollView') private scrollView: ElementRef;
 
@@ -64,7 +66,8 @@ export class AnnotatedSourceComponent
      public reportService: SharedReport,
      public dialog: DialogsService,
      private sourceView: AnnotatedSourceViewComponent,
-     private gnathub: GNAThubService) {}
+     private gnathub: GNAThubService,
+     private cdRef: ChangeDetectorRef) {}
 
     /** @override */
     public ngOnInit() {
@@ -75,11 +78,14 @@ export class AnnotatedSourceComponent
             let line = params['line'];
             let id = params['id'];
 
+            this.selectedLine = line;
+            this.selectedId = id;
+
             this.reportService.page = filename;
             if (filename && filename != this.sourceView.filename){
                 this.reloadFile(filename, line, id);
             } else {
-                this.processSource(line, id);
+                this.processSource();
             }
         });
     }
@@ -90,15 +96,21 @@ export class AnnotatedSourceComponent
         this.gnathub.getSource(filename).subscribe(
             blob => {
                 this.source = blob;
-                this.processSource(line, id);
+                console.log(this.source);
+                this.sourceView.filename = filename;
+                this.processSource();
             },
             error => console.log("[Error] reloadFile :", error));
     }
 
-    private processSource(line, id){
+    private processSource(){
         this.source.coverage = this.source.coverage || {};
         this.source.messages = this.source.messages || [];
         this.createInlineAnnotations();
+        this.afterInitProcess(this.selectedLine, this.selectedId);
+    }
+
+    private afterInitProcess(line, id) {
         if (line){
             this.goToLine(line);
         }
@@ -131,7 +143,19 @@ export class AnnotatedSourceComponent
 
     /** @override */
     public ngAfterViewInit() {
-
+        switch (document.readyState) {
+            case 'incomplete':
+                console.log("[Error] annotated-source : afterViewInit : Document not loaded : scrolling to line impossible");
+                break;
+            case 'interactive':
+                console.log("[Warning] annotated-source : afterViewInit : Document still loading : scrolling can fail");
+                this.afterInitProcess(this.selectedLine, this.selectedId);
+                break;
+            case 'complete':
+                this.afterInitProcess(this.selectedLine, this.selectedId);
+                break;
+        }
+        this.cdRef.detectChanges();
     }
 
     /** @override */
@@ -183,8 +207,6 @@ export class AnnotatedSourceComponent
 
     public changeFile(filename: string, file_line: number, id: number) {
         this.router.navigate(['/source', filename, { line: file_line, id: id }]);
-        /*window.location.reload();*/
-        /*refresh file*/
     }
 
     public checkMessage(message: any) {
