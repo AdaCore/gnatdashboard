@@ -38,4 +38,8 @@ export class FilterSelectorComponent {
             this.toggle.emit({ option: opt, checked: false, id: idx });
         }.bind(this));
     }
+
+    public trackOption(index, option) {
+        return option ? option.id : undefined;
+    }
 }

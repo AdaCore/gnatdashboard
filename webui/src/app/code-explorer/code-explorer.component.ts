@@ -65,4 +65,16 @@ export class CodeExplorerComponent implements OnInit, OnDestroy {
         this.reportService.showFiles = !this.reportService.showFiles;
     }
 
+    public trackProject(index, project) {
+        return project ? project.name : undefined;
+    }
+
+    public trackFolder(index, folder) {
+        return folder ? folder.name : undefined;
+    }
+
+    public trackFile(index, file) {
+        return file ? file.filename : undefined;
+    }
+
 }

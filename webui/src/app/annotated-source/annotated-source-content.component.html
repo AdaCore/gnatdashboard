@@ -1,6 +1,6 @@
 <table class="file-line-container col-lg-12 col-sm-12 col-md-12 col-xs-12 no-pad">
     <tbody class="col-lg-12 col-sm-12 col-md-12 col-xs-12 no-pad">
-        <template ngFor let-line [ngForOf]="lines" class="col-lg-12 col-sm-12 col-md-12 col-xs-12 no-pad">
+        <template ngFor let-line [ngForOf]="lines" [ngForTrackBy]="trackLine" class="col-lg-12 col-sm-12 col-md-12 col-xs-12 no-pad">
             <annotated-source-line id="L{{ line.number }}"
                                    class="col-lg-12 col-sm-12 col-md-12 col-xs-12 no-pad"
                                    [ngClass]="{ selected: source.selectedLine == line.number }"

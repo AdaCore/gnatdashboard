@@ -44,4 +44,12 @@ export class MessageExplorerComponent implements OnInit {
         this.reportService.showFiles = !this.reportService.showFiles;
     }
 
+    public trackMsg(index, message){
+        return message ? message.id: undefined;
+    }
+
+    public trackSrc(index, source){
+        return source ? source.filename: undefined;
+    }
+
 }

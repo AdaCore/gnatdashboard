@@ -37,7 +37,7 @@ export class ReviewDialog {
         }];
 
     constructor(public dialogRef: MdDialogRef<ReviewDialog>,
-                public reportService: SharedReport) {}
+                 public reportService: SharedReport) {}
 
     public cancel() {
         this.dialogRef.close();
@@ -60,5 +60,9 @@ export class ReviewDialog {
     public showError() {
         let elem = document.getElementById('dialogError');
         elem.classList.add('show');
+    }
+
+    public trackMsg(index, msg) {
+        return msg ? msg.id : undefined;
     }
 }

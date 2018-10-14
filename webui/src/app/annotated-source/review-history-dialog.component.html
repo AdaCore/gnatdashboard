@@ -20,7 +20,7 @@
     </span>
 
     <span class="all-review col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-        <span *ngFor="let review of history" class="line-review col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <span *ngFor="let review of history;trackBy: trackReview" class="line-review col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
 
             <span class="date-review col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
                 {{review.date | date : 'yyyy-MM-dd HH:mm'}}

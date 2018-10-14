@@ -96,7 +96,6 @@ export class AnnotatedSourceComponent
         this.gnathub.getSource(filename).subscribe(
             blob => {
                 this.source = blob;
-                console.log(this.source);
                 this.sourceView.filename = filename;
                 this.processSource();
             },
@@ -406,6 +405,14 @@ export class AnnotatedSourceComponent
             this.reportService.sendUserReview(xml);
             this.addDynamicReview(new_review);
         });
+    }
+
+    public trackMsg(index, message){
+        return message ? message.id: undefined;
+    }
+
+    public trackSrc(index, source){
+        return source ? source.filename: undefined;
     }
 
 }

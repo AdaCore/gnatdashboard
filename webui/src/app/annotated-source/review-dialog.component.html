@@ -5,7 +5,7 @@
     </span>
 
     <span class="message-reminder col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-        <span *ngFor="let message of reportService.selectedMessage" class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <span *ngFor="let message of reportService.selectedMessage;trackBy: trackMsg" class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
             <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                 <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
                     {{reportService.page}}:{{message.line}}:{{message.col_begin}}
