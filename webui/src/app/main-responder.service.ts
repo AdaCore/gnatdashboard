@@ -148,17 +148,14 @@ export class SharedReport {
             .subscribe(
             data => {
                 this.message = JSON.parse(JSON.parse(data['_body']));
-                this.getUserReview(this.message);
+                this.getUserReview();
                 this.refreshFilter()
             }, error => {
                 console.log("[Error] get message : ", error);
                 this.gnathub.getMessage().subscribe(
                     messages => {
                         this.message = messages;
-                        this.message.sources = sortMessageArray(
-                            this.messageFilter,
-                            this.messageFilter, messages.sources);
-                        this.getUserReview(this.message);
+                        this.getUserReview();
                         this.refreshFilter()
                     }, error => {
                         this.isReportFetchError = true;
@@ -168,24 +165,32 @@ export class SharedReport {
         );
     }
 
-    private getUserReview(messages) {
+    private getUserReview() {
         let url = this.url + 'get-review/';
         this.http.get(url + 'codepeer_review.xml')
             .subscribe(
             data => {
                 this.codepeer_review = this.gnathub.convertToJson(data);
-                this.addUserReview(messages);
+                this.addUserReview();
             }, error => {
                 console.log("[Error] get codepeer_review : ", error);
-                this.addUserReview(messages);
+                this.addUserReview();
                 this.codepeerReviewError = true;
             }
         );
     }
 
+    /* This function is called each time a set of data is loaded.
+     * It will verify if all the set of data are loaded.
+     * If there are, it will launch the global function to refresh the filter properly.
+     */
     private refreshFilter() {
         if (this.code && this.filter && this.message && this.filter.review_status){
             updateFilter(this);
+            this.messageFilter = {newSort: 'ranking', otherSort: 'countRanking', order: -1};
+            this.message.sources = sortMessageArray(
+                            this.messageFilter,
+                            this.messageFilter, this.message.sources);
         }
     }
 
@@ -353,12 +358,7 @@ export class SharedReport {
         return filter;
     }
 
-    private addUserReview(messages) {
-        this.message = messages;
-        this.message.sources = sortMessageArray(
-            this.messageFilter,
-            this.messageFilter, messages.sources);
-
+    private addUserReview() {
         if (this.checkArray(this.message.sources, "main-responder.service",
                             "addUserReview", "message.sources")){
             this.message.sources.forEach(function(source){
