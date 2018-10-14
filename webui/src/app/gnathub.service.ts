@@ -63,6 +63,54 @@ export class GNAThubService {
         return display_name;
     }
 
+    private createReview(review){
+        let myReview = [];
+        let lastReview = {
+            author : '',
+            status: '',
+            date: 0,
+            from_source: '',
+            message: '',
+            display_name: ''
+        };
+        if (review.audit.$){
+            let tmpReview = {
+                author : review.audit.$.approved,
+                status: review.audit.$.status,
+                date: review.audit.$.timestamp,
+                from_source: review.audit.$.from_source,
+                message: review.audit._,
+                display_name: this.createDisplayName(review.audit.$.status)
+            };
+            myReview.push(tmpReview)
+            lastReview = tmpReview;
+        } else if (review.audit[0].$) {
+            review.audit.forEach(function(tmp){
+                let tmpReview = {
+                    author : tmp.$.approved,
+                    status: tmp.$.status,
+                    date: tmp.$.timestamp,
+                    from_source: tmp.$.from_source,
+                    message: tmp._,
+                    display_name: this.createDisplayName(tmp.$.status)
+                };
+                myReview.push(tmpReview)
+                if (lastReview.date < tmpReview.date) {
+                    lastReview = tmpReview;
+                }
+            }.bind(this));
+
+
+        } else {
+            console.log("[Error] convertToJson : Problem to add this user_review : ", review);
+        }
+        let tmp = {
+            review_history: myReview,
+            user_review: lastReview
+        };
+        return tmp;
+    }
+
     public convertToJson(res: any) {
         let user_review = [];
         xml2js.parseString(res._body, { explicitArray: false }, (error, result) => {
@@ -71,54 +119,12 @@ export class GNAThubService {
             } else {
                 if (result && result.audit_trail && result.audit_trail.message && result.audit_trail.message.length > 0){
                     result.audit_trail.message.forEach(function(review){
-                        let myReview = [];
-                        let lastReview = {
-                            author : '',
-                            status: '',
-                            date: 0,
-                            from_source: '',
-                            message: '',
-                            display_name: ''
-                        };
-                        if (review.audit.$){
-                            let tmpReview = {
-                                author : review.audit.$.approved,
-                                status: review.audit.$.status,
-                                date: review.audit.$.timestamp,
-                                from_source: review.audit.$.from_source,
-                                message: review.audit._,
-                                display_name: this.createDisplayName(review.audit.$.status)
-                            };
-                            myReview.push(tmpReview)
-                            lastReview = tmpReview;
-                        } else if (review.audit[0].$) {
-                            review.audit.forEach(function(tmp){
-                                let tmpReview = {
-                                    author : tmp.$.approved,
-                                    status: tmp.$.status,
-                                    date: tmp.$.timestamp,
-                                    from_source: tmp.$.from_source,
-                                    message: tmp._,
-                                    display_name: this.createDisplayName(tmp.$.status)
-                                };
-                                myReview.push(tmpReview)
-                                if (lastReview.date < tmpReview.date) {
-                                    lastReview = tmpReview;
-                                }
-                            }.bind(this));
-
-
-                        } else {
-                            console.log("[Error] convertToJson : Problem to add this user_review : ", review);
-                        }
-                        let tmp = {
-                            review_history: myReview,
-                            user_review: lastReview
-                        };
-
+                        let tmp = this.createReview(review);
                         user_review[review.$.identifier] = tmp;
-
                     }.bind(this));
+                } else if (result && result.audit_trail && result.audit_trail.message && result.audit_trail.message.audit) {
+                    let tmp = this.createReview(result.audit_trail.message);
+                    user_review[result.audit_trail.message.$.identifier] = tmp;
                 } else {
                     console.log("[Error] gnathub.service:convertToJson : result.audit_trail.message should not be empty.");
                 }
