@@ -87,10 +87,10 @@
                                             </span>
                                             <span class="col-lg-1 col-md-1 col-sm-1 col-xs-2 no-pad">
 
-                                                <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad ellipsis">
+                                                <span class="col-lg-10 col-md-10 col-sm-6 col-xs-6 no-pad ellipsis">
                                                     {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
                                                 </span>
-                                                <span  class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad" *ngIf="message.review_history" >
+                                                <span  class="col-lg-2 col-md-2 col-sm-6 col-xs-6 no-pad" *ngIf="message.review_history" >
                                                     <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
                                                           (click)="ShowReviewHistory(message)">
                                                         <md-icon>history</md-icon>
@@ -148,10 +148,10 @@
                                                     {{message.name}}
                                                 </span>
                                                 <span class="col-lg-1 col-md-1 col-sm-1 col-xs-2 no-pad">
-                                                    <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad ellipsis">
+                                                    <span class="col-lg-10 col-md-10 col-sm-6 col-xs-6 no-pad ellipsis">
                                                         {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
                                                     </span>
-                                                    <span  class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad" *ngIf="message.review_history" >
+                                                    <span  class="col-lg-2 col-md-2 col-sm-6 col-xs-6 no-pad" *ngIf="message.review_history" >
                                                         <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
                                                               (click)="ShowReviewHistory(message)">
                                                             <md-icon>history</md-icon>
