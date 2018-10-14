@@ -14,11 +14,12 @@
                 <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
                 {{ annotation.rule.name }}
             </span>
-            <span class="annotation-properties" *ngIf="annotation.properties | dshNotEmpty">
+            <span class="annotation-text">{{ annotation.name }}</span>
+
+             <span class="annotation-properties" *ngIf="annotation.properties | dshNotEmpty">
                 <md-icon class="tags" md-tooltip="Annotation properties">local_offer</md-icon>
                 {{ formatAnnotationProperties(annotation) }}
             </span>
-            <span class="annotation-text">{{ annotation.name }}</span>
         </div>
     </div>
 </span>
