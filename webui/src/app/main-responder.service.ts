@@ -189,8 +189,8 @@ export class SharedReport {
             updateFilter(this);
             this.messageFilter = {newSort: 'ranking', otherSort: 'countRanking', order: -1};
             this.message.sources = sortMessageArray(
-                            this.messageFilter,
-                            this.messageFilter, this.message.sources);
+                this.messageFilter,
+                this.messageFilter, this.message.sources);
         }
     }
 
@@ -205,10 +205,10 @@ export class SharedReport {
     }
 
     private initRanking() {
-        let order = ['Info', 'Low', 'Medium', 'High', 'Unspecified'];
+        let order = ['High', 'Medium', 'Low', 'Info', 'Unspecified'];
         let unselected = ['Info','Low'];
 
-        this.orderFilter(this.filter.ranking, order);
+        this.filter.ranking = this.orderFilter(this.filter.ranking, order);
         this.unselectFilter(this.filter.ranking, unselected);
     }
 
@@ -219,7 +219,6 @@ export class SharedReport {
             if (this.checkArray(myArray, "main-responder.service",
                                 "initFilter", "myArray")){
                 myArray.forEach(function(rank){
-
                     if (newOrder && rank.name == status) {
                         newOrder.push(rank);
                     } else if (rank.name == status) {
@@ -230,6 +229,7 @@ export class SharedReport {
             }
         }.bind(this));
         myArray = newOrder;
+        return newOrder;
     }
 
     private unselectFilter(myArray: any, unselectArray: string[]){
