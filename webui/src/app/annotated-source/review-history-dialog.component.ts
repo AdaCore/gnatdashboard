@@ -15,7 +15,7 @@ export class ReviewHistoryDialog {
     public message: any;
 
     constructor(public dialogRef: MdDialogRef<ReviewHistoryDialog>,
-                private reportService: SharedReport) {}
+                 private reportService: SharedReport) {}
 
     ngOnInit() {
         this.history = this.reportService.history.reviews;
@@ -24,5 +24,9 @@ export class ReviewHistoryDialog {
 
     public close() {
         this.dialogRef.close();
+    }
+
+    public trackReview(index, review) {
+        return review ? review.date : undefined;
     }
 }

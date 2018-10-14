@@ -58,7 +58,7 @@
 
         <span class="all-projects-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
               *ngIf="reportService && reportService.code">
-            <span *ngFor="let project of reportService.code.modules"
+            <span *ngFor="let project of reportService.code.modules;trackBy: trackProject"
                   class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                   [ngClass]="(!this.reportService.showFiles && (project._ui_total_message_count == 0 || ( project._ui_total_message_count == null && project._total_message_count == 0))) ? 'hideIt' : ''">
 
@@ -85,7 +85,7 @@
 
                 <span id="{{project.name}}" class="all-folders-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="project.expand ? 'open': 'reduce'"
                       *ngIf="project">
-                    <span *ngFor="let folder of project.source_dirs"
+                    <span *ngFor="let folder of project.source_dirs;trackBy: trackFolder"
                           class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                           [ngClass]="(!this.reportService.showFiles && (folder._ui_total_message_count == 0 || ( folder._ui_total_message_count == null && folder._total_message_count == 0))) ? 'hideIt' : ''">
                         <span class="folder-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(folder)">
@@ -112,7 +112,7 @@
 
                         <span id="{{folder.name}}" class="all-files-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="folder.expand ? 'open': 'reduce'"
                               *ngIf="folder">
-                            <span *ngFor="let file of folder.sources"
+                            <span *ngFor="let file of folder.sources;trackBy: trackFile"
                                   class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                   [ngClass]="(!this.reportService.showFiles && (file._ui_total_message_count == 0 || ( file._ui_total_message_count == null && file._total_message_count == 0))) ? 'hideIt' : ''">
                                 <span class="file-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [routerLink]="['/source', file.filename]">

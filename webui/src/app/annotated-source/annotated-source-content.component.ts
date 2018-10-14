@@ -34,7 +34,7 @@ export class AnnotatedSourceContentComponent implements OnDestroy, OnInit {
     private paramSubscription: Subscription;
 
     constructor(private route: ActivatedRoute,
-                private source: AnnotatedSourceComponent) {}
+                 private source: AnnotatedSourceComponent) {}
 
     public ngOnInit() {
         this.paramSubscription = this.route.params.subscribe(params => {
@@ -48,5 +48,9 @@ export class AnnotatedSourceContentComponent implements OnDestroy, OnInit {
         if (this.paramSubscription) {
             this.paramSubscription.unsubscribe();
         }
+    }
+
+    public trackLine(index, line){
+        return line ? line.number : undefined;
     }
 }

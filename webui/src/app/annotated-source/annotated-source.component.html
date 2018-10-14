@@ -66,11 +66,11 @@
                 <table *ngIf="tabOpen == 'message'" class="file-line-container col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                     <span *ngIf="reportService.message" class="all-sources-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
 
-                        <span *ngFor="let mySource of reportService.message.sources"
+                        <span *ngFor="let mySource of reportService.message.sources;trackBy: trackSrc"
                               class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                               [ngClass]="mySource.filename === source.filename ? '' : 'hideIt'">
                             <span id="{{mySource.filename}}" class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open" *ngIf="mySource && (mySource._total_message_count > 0 || !mySource._total_message_count)" >
-                                <span *ngFor="let message of mySource.messages"
+                                <span *ngFor="let message of mySource.messages;trackBy: trackMsg"
                                       class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) || (!reportService.showReviews && !message.user_review) ? 'hideIt' : ''">
                                     <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
@@ -109,7 +109,7 @@
                 <table *ngIf="tabOpen == 'messages'" class="file-line-container col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                     <span class="all-sources-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                           *ngIf="reportService.message && reportService.message._ui_total_message_count > 0 || !reportService.message._ui_total_message_count">
-                        <span *ngFor="let mySource of reportService.message.sources"
+                        <span *ngFor="let mySource of reportService.message.sources;trackBy: trackSrc"
                               class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                               [ngClass]="(!this.reportService.showFiles && (mySource._ui_total_message_count == 0 || ( mySource._ui_total_message_count == null && mySource._total_message_count == 0))) ? 'hideIt' : ''">
                             <span id="{{mySource.filename}}" class="source-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open">
@@ -132,7 +132,7 @@
 
                                 <span class="all-messages-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       *ngIf="mySource">
-                                    <span *ngFor="let message of mySource.messages"
+                                    <span *ngFor="let message of mySource.messages;trackBy: trackMsg"
                                           class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                           [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
                                         <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"   [ngClass]="((selectedLine == message.line && source.filename == mySource.filename) ? 'selected': '') + ' ' + message.tool"

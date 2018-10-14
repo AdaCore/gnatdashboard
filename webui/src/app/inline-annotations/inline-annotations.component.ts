@@ -24,4 +24,9 @@ export class InlineAnnotationsComponent {
         let elem = document.getElementById(id);
         elem.classList.toggle('expand');
     }
+
+    public trackAnnotation(index, annotation) {
+        return index
+        //return annotation ? annotation.id : undefined;
+    }
 }

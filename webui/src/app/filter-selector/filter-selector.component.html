@@ -16,7 +16,7 @@
     </div>
 
     <div class="filter-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <span *ngFor="let option of options; let idx = index">
+        <span *ngFor="let option of options; let idx = index;trackBy: trackOption">
             <input
                    #checkbox
                    type="checkbox"

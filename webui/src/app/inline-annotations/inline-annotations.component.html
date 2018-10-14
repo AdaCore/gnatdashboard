@@ -9,7 +9,7 @@
         </span>
     </div>
     <div id="{{line}}" class="annotations-list col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad expand">
-        <div class="annotations-list-item col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let annotation of annotations">
+        <div class="annotations-list-item col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let annotation of annotations;trackBy: trackAnnotation">
             <span class="rule-identifier">
                 <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
                 {{ annotation.rule.name }}

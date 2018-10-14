@@ -6,6 +6,7 @@
   "private": true,
   "homepage": "https://docs.adacore.com/gnatdashboard-docs/",
   "dependencies": {
+    "@angular/cli": "^6.2.4",
     "@angular/common": "~2.4.3",
     "@angular/compiler": "~2.4.3",
     "@angular/compiler-cli": "2.4.7",
