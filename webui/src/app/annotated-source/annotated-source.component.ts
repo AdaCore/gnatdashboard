@@ -272,6 +272,7 @@ export class AnnotatedSourceComponent
         } else*/ if (event && event.ctrlKey && message) {
             this.toggleSelectedMsg(message.id);
             this.checkMessage(message);
+            this.selectedLine = -1;
         } else {
             this.checked_msg = [];
             this.selected_msg = [];
