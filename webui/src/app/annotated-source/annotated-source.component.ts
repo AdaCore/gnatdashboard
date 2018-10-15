@@ -316,12 +316,16 @@ export class AnnotatedSourceComponent
             }.bind(this));
         }
 
-        let tmp_review = {
-            status: "UNCATEGORIZED",
-            display_name: "Uncategorized"
-        };
-        this.reportService.putInFilter(tmp_review, userReviewFilter);
-        this.reportService.countUncategorized(userReviewFilter, this.reportService.filter._total_message_count);
+        let count = this.reportService.countUncategorized(userReviewFilter, this.reportService.filter._total_message_count);
+        if (count > 0){
+            let tmp_review = {
+                status: "UNCATEGORIZED",
+                display_name: "Uncategorized"
+            };
+            this.reportService.putInFilter(tmp_review, userReviewFilter);
+            this.reportService.countUncategorized(userReviewFilter, this.reportService.filter._total_message_count);
+        }
+
         this.reportService.filter.review_status = userReviewFilter;
         updateFilter(this.reportService);
     }
