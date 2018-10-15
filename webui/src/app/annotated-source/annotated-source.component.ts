@@ -409,6 +409,10 @@ export class AnnotatedSourceComponent
 
             this.reportService.sendUserReview(xml);
             this.addDynamicReview(new_review);
+            this.selectedLine = -1;
+            this.checked_msg = [];
+            this.selected_msg = [];
+            this.reportService.selectedMessage = [];
         });
     }
 
