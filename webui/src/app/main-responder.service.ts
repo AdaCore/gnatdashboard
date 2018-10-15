@@ -304,6 +304,7 @@ export class SharedReport {
                 }
             });
         }
+        return count;
     }
 
     private isActiveFilter(status): boolean {
@@ -375,12 +376,16 @@ export class SharedReport {
                 }
             }.bind(this));
         }
-        let tmp_review = {
-            status: "UNCATEGORIZED",
-            display_name: "Uncategorized"
-        };
-        this.userReviewFilter = this.putInFilter(tmp_review ,this.userReviewFilter);
-        this.countUncategorized(this.userReviewFilter, this.filter._total_message_count);
+
+        let count = this.countUncategorized(this.userReviewFilter, this.filter._total_message_count);
+        if (count > 0){
+            let tmp_review = {
+                status: "UNCATEGORIZED",
+                display_name: "Uncategorized"
+            };
+            this.userReviewFilter = this.putInFilter(tmp_review ,this.userReviewFilter);
+            this.countUncategorized(this.userReviewFilter, this.filter._total_message_count);
+        }
         this.filter.review_status = this.userReviewFilter;
         this.refreshFilter();
     }
