@@ -24,6 +24,7 @@ import { GNAThubService } from '../gnathub.service';
 import { AnnotatedSourceViewComponent } from './annotated-source-view.component';
 
 import { updateFilter } from '../utils/refreshFilter'
+import { sortMessageArray } from '../utils/sortArray';
 
 import {
     IAnnotatedSourceFile,
@@ -422,6 +423,13 @@ export class AnnotatedSourceComponent
 
     public trackSrc(index, source){
         return source ? source.filename: undefined;
+    }
+
+    public sortModules(firstSort: string, secondSort: string) {
+        this.reportService.message.sources = sortMessageArray(
+            {newSort: firstSort, otherSort: secondSort},
+            this.reportService.messageFilter,
+            this.reportService.message.sources);
     }
 
 }

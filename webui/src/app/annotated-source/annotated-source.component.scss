@@ -257,7 +257,7 @@
     position: absolute;
 
     .location-view-list.expanded {
-        height: 20vh;
+        height: 19vh;
         overflow: auto;
     }
 
@@ -275,8 +275,37 @@
         font-size: 12px;
         line-height: 24px;
         font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-        height: 4vh;
+        height: 3vh;
         min-height: 34px;
+    }
+
+    &-filter {
+        display: flex;
+        background-color: var(--header-color);
+        border-top: 1px solid var(--header-border);
+        border-bottom: 1px solid var(--header-border);
+        color: #333;
+        cursor: default;
+        font-size: 12px;
+        line-height: 24px;
+        font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        height: 3vh;
+        min-height: 34px;
+
+        .click{
+            text-align: center;
+            line-height: 3vh;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        .click:hover{
+            background-color:rgba(0, 0, 0, 0.2);
+            cursor: pointer
+        }
+
+        .header-icon {
+            margin: 5px;
+            position: absolute;
+        }
     }
 
     &-collapse-btn {
