@@ -67,7 +67,7 @@ public final class GNAThubMetrics implements Metrics {
       ).setDescription("Number of lines containing end-of-line comments")
           .setDirection(Metric.DIRECTION_BETTER)
           .setQualitative(false)
-          .setDomain(CoreMetrics.DOMAIN_DOCUMENTATION)
+          .setDomain(CoreMetrics.DOMAIN_SIZE)
           .create();
 
   public static final Metric<Double> COMMENT_PERCENTAGE =
@@ -78,7 +78,7 @@ public final class GNAThubMetrics implements Metrics {
       ).setDescription("Comment density per file")
           .setDirection(Metric.DIRECTION_BETTER)
           .setQualitative(true)
-          .setDomain(CoreMetrics.DOMAIN_DOCUMENTATION)
+          .setDomain(CoreMetrics.DOMAIN_SIZE)
           .create();
 
   public static final Metric<Double> FILE_CYCLOMATIC_COMPLEXITY =

@@ -25,4 +25,8 @@ import lombok.ToString;
 class Measure {
   @Getter private String key;
   @Getter private String rawValue;
+
+  public String toString (){
+    return this.key + " - " + this.rawValue;
+  }
 }

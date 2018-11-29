@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2016-2018, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -38,40 +38,50 @@ public class GNAThubMetricsSensor extends MainFilesSensor {
   }
 
   @Override
-  public void forInputFile(final SensorContext context, final GNAThub gnathub, final InputFile file)
-  {
+  public void forInputFile(final SensorContext context, final GNAThub gnathub, final InputFile file) {
     final FileMeasures measures = gnathub.getMeasures().forFile(file.absolutePath());
+
     if (measures == null) {
       return;
     }
     final BiConsumer<String, Metric<Integer>> saveAsInt =
-        (gnathubMetric, sonarMetric) ->
-            Optional.ofNullable(measures.asInt(gnathubMetric))
-                .ifPresent(value -> context.<Integer>newMeasure().on(file)
-                    .withValue(value).forMetric(sonarMetric).save());
+            (gnathubMetric, sonarMetric) ->
+                    Optional.ofNullable(measures.asInt(gnathubMetric))
+                            .ifPresent(value -> context.<Integer>newMeasure().on(file)
+                                    .withValue(value).forMetric(sonarMetric).save());
+
     final BiConsumer<String, Metric<Double>> saveAsDouble =
-        (gnathubMetric, sonarMetric) ->
-            Optional.ofNullable(measures.asDouble(gnathubMetric))
-                .ifPresent(value -> context.<Double>newMeasure().on(file)
-                    .withValue(value).forMetric(sonarMetric).save());
+            (gnathubMetric, sonarMetric) ->
+                    Optional.ofNullable(measures.asDouble(gnathubMetric))
+                            .ifPresent(value -> context.<Double>newMeasure().on(file)
+                                    .withValue(value).forMetric(sonarMetric).save());
 
     saveAsInt.accept(GNATmetricMetrics.ALL_LINES, CoreMetrics.LINES);
     saveAsInt.accept(GNATmetricMetrics.CODE_LINES, CoreMetrics.NCLOC); // TODO(delay): See P511-010.
     saveAsInt.accept(GNATmetricMetrics.COMMENT_LINES, CoreMetrics.COMMENT_LINES);
     saveAsInt.accept(GNATmetricMetrics.EOL_COMMENTS, GNAThubMetrics.EOL_COMMENTS);
     saveAsInt.accept(GNATmetricMetrics.BLANK_LINES, GNAThubMetrics.BLANK_LINES);
-    // NOTE: Duplicate SonarQube's "Complexity / File" to force its display on the GUI.
     saveAsDouble.accept(
-        GNATmetricMetrics.COMMENT_PERCENTAGE, GNAThubMetrics.COMMENT_PERCENTAGE);
+            GNATmetricMetrics.COMMENT_PERCENTAGE, GNAThubMetrics.COMMENT_PERCENTAGE);
+
+    //  Save cyclomatic complexity value as float in custom file complexity metric
     saveAsDouble.accept(
-        GNATmetricMetrics.CYCLOMATIC_COMPLEXITY, GNAThubMetrics.FILE_CYCLOMATIC_COMPLEXITY);
+            GNATmetricMetrics.CYCLOMATIC_COMPLEXITY, GNAThubMetrics.FILE_CYCLOMATIC_COMPLEXITY);
     saveAsDouble.accept(
-        GNATmetricMetrics.STATEMENT_COMPLEXITY, GNAThubMetrics.FILE_STATEMENT_COMPLEXITY);
+            GNATmetricMetrics.STATEMENT_COMPLEXITY, GNAThubMetrics.FILE_STATEMENT_COMPLEXITY);
     saveAsDouble.accept(
-        GNATmetricMetrics.EXPRESSION_COMPLEXITY, GNAThubMetrics.FILE_EXPRESSION_COMPLEXITY);
+            GNATmetricMetrics.EXPRESSION_COMPLEXITY, GNAThubMetrics.FILE_EXPRESSION_COMPLEXITY);
     saveAsDouble.accept(
-        GNATmetricMetrics.ESSENTIAL_COMPLEXITY, GNAThubMetrics.FILE_ESSENTIAL_COMPLEXITY);
+            GNATmetricMetrics.ESSENTIAL_COMPLEXITY, GNAThubMetrics.FILE_ESSENTIAL_COMPLEXITY);
     saveAsDouble.accept(
-        GNATmetricMetrics.MAX_LOOP_NESTING, GNAThubMetrics.FILE_MAX_LOOP_NESTING);
+            GNATmetricMetrics.MAX_LOOP_NESTING, GNAThubMetrics.FILE_MAX_LOOP_NESTING);
+
+    //  Save computed cyclomatic complexity value as integer in SonarQube complexity metric
+    //  (the result is obtained by summing file methods cyclomatic complexity values)
+    context.<Integer>newMeasure()
+            .on(file)
+            .forMetric(CoreMetrics.COMPLEXITY)
+            .withValue(measures.complexity)
+            .save();
   }
 }

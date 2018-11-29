@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2016-2018, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -43,4 +43,11 @@ public class Measures {
     }
     return Double.valueOf(this.measures.get(key));
   }
+
+  public void Dump (){
+    for( Map.Entry<String, String> e : this.measures.entrySet() ) {
+      System.out.println(e.getKey() + " : " + e.getValue());
+    }
+  }
+
 }

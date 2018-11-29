@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2016-2018, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -24,9 +24,13 @@ import java.util.List;
 @AllArgsConstructor
 public class FileMeasures {
   public final String path;
+  public final int complexity;
   @Delegate public final Measures measures;
 
-  public FileMeasures(final String path, final List<Measure> measures) {
-    this(path, new Measures(measures));
+  public FileMeasures(final String path,
+                      final Integer complexity,
+                      final List<Measure> measures)
+  {
+    this(path, complexity, new Measures(measures));
   }
 }
