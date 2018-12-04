@@ -696,9 +696,11 @@ class Entity(object):
 
     """An Entity object, representing an entity in the database."""
 
-    __slots__ = ('id', 'name', 'line', 'col_begin', 'col_end', 'resource_id')
+    __slots__ = ('id', 'name', 'kind',
+                 'line', 'col_begin', 'col_end',
+                 'resource_id')
 
-    def __init__(self, name, line, col_begin, col_end, resource):
+    def __init__(self, name, kind, line, col_begin, col_end, resource):
         """Return the entity of the given properties, creating it if necessary.
 
         :param str name: the name of the entity

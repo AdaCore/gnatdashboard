@@ -38,6 +38,7 @@
 | TABLE         | entities                          | entity            |   | Entity                                                                        |
 | id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
 | name          | TEXT                              | NOT NULL          |   | Entitie's name                                                                |
+| kind          | TEXT                              | NOT NULL          |   | Entitie's kind (ex.: package, package body, procedure, function, ...)         |
 | line          | INTEGER                           | NOT NULL          |   | Entitie's line begin                                                          |
 | col_begin     | INTEGER                           | NOT NULL          |   | Entitie's column begin                                                        |
 | col_end       | INTEGER                           | NOT NULL          |   | Entitie's column end                                                          |

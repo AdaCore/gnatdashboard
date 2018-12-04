@@ -160,7 +160,10 @@ class GNATstack(Plugin, Runner, Reporter):
                     else:
                         resource = GNAThub.Resource(file, GNAThub.FILE_KIND)
                         self.resources[file] = resource
-                    entity = GNAThub.Entity(name, int(line), int(column),
+
+                    # entities default value for kind is set to "porcedure"
+                    entity = GNAThub.Entity(name, "action",
+                                            int(line), int(column),
                                             int(column), resource)
                     # Only link the id to the first location of the entity
                     if subprogram_id not in self.subprograms:

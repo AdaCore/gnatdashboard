@@ -210,6 +210,7 @@ package body GNAThub.Python.Database is
      (Entity_Inst : Class_Instance;
       Id           : Integer;
       Name         : String;
+      Kind         : String;
       Line         : Integer := -1;
       Col_Begin    : Integer := -1;
       Col_End      : Integer := -1;
@@ -1217,6 +1218,7 @@ package body GNAThub.Python.Database is
      (Entity_Inst : Class_Instance;
       Id           : Integer;
       Name         : String;
+      Kind         : String;
       Line         : Integer := -1;
       Col_Begin    : Integer := -1;
       Col_End      : Integer := -1;
@@ -1227,6 +1229,7 @@ package body GNAThub.Python.Database is
                 Entity_Property_Record'(Id => Id));
       Set_Property (Entity_Inst, "id", Id);
       Set_Property (Entity_Inst, "name", Name);
+      Set_Property (Entity_Inst, "kind", Kind);
 
       if Line /= -1 then
          Set_Property (Entity_Inst, "line", Line);
@@ -1256,10 +1259,11 @@ package body GNAThub.Python.Database is
       if Command = Constructor_Method then
          declare
             Name        : constant String := Nth_Arg (Data, 2);
-            Line        : constant Integer := Nth_Arg (Data, 3);
-            Col_Begin   : constant Integer := Nth_Arg (Data, 4);
-            Col_End     : constant Integer := Nth_Arg (Data, 5);
-            Resource    : constant Class_Instance := Nth_Arg (Data, 6);
+            Kind        : constant String := Nth_Arg (Data, 3);
+            Line        : constant Integer := Nth_Arg (Data, 4);
+            Col_Begin   : constant Integer := Nth_Arg (Data, 5);
+            Col_End     : constant Integer := Nth_Arg (Data, 6);
+            Resource    : constant Class_Instance := Nth_Arg (Data, 7);
             Resource_Id : constant Integer := Resource_Property
               (Get_Data (Resource, Resource_Class_Name)).Id;
 
@@ -1271,6 +1275,7 @@ package body GNAThub.Python.Database is
               (To_List ((0 => +D.Entities.Id)),
                From  => D.Entities,
                Where => (D.Entities.Name = Name) and
+                   (D.Entities.Kind = Kind) and
                    (D.Entities.Line = Line) and
                    (D.Entities.Col_Begin = Col_Begin) and
                    (D.Entities.Col_End = Col_End) and
@@ -1288,6 +1293,7 @@ package body GNAThub.Python.Database is
                Id := DB.Insert_And_Get_PK
                  (SQL_Insert (
                   (D.Entities.Name = Name) &
+                   (D.Entities.Kind = Kind) &
                    (D.Entities.Line = Line) &
                    (D.Entities.Col_Begin = Col_Begin) &
                    (D.Entities.Col_End = Col_End) &
@@ -1299,6 +1305,7 @@ package body GNAThub.Python.Database is
             Set_Entity_Fields (Entity_Inst => Entity_Inst,
                                Id          => Id,
                                Name        => Name,
+                               Kind        => Kind,
                                Line        => Line,
                                Col_Begin   => Col_Begin,
                                Col_End     => Col_End,
@@ -1315,10 +1322,11 @@ package body GNAThub.Python.Database is
             Q := SQL_Select
               (To_List ((0 => +D.Entities.Id,
                          1 => +D.Entities.Name,
-                         2 => +D.Entities.Line,
-                         3 => +D.Entities.Col_Begin,
+                         2 => +D.Entities.Kind,
+                         3 => +D.Entities.Line,
                          4 => +D.Entities.Col_Begin,
-                         5 => +D.Entities.Resource_Id)),
+                         5 => +D.Entities.Col_Begin,
+                         6 => +D.Entities.Resource_Id)),
                From  => D.Entities);
             R.Fetch (DB, Q);
 
@@ -1328,10 +1336,11 @@ package body GNAThub.Python.Database is
                  (Entity_Inst => Entity_Inst,
                   Id          => R.Integer_Value (0),
                   Name        => R.Value (1),
-                  Line        => R.Integer_Value (2),
-                  Col_Begin   => R.Integer_Value (3),
-                  Col_End     => R.Integer_Value (4),
-                  Resource_Id => R.Integer_Value (5));
+                  Kind        => R.Value (2),
+                  Line        => R.Integer_Value (3),
+                  Col_Begin   => R.Integer_Value (4),
+                  Col_End     => R.Integer_Value (5),
+                  Resource_Id => R.Integer_Value (6));
                Set_Return_Value (Data, Entity_Inst);
 
                R.Next;
@@ -1600,6 +1609,7 @@ package body GNAThub.Python.Database is
         (Command => Constructor_Method,
          Params  =>
            (Param ("name"),
+            Param ("kind"),
             Param ("line",      Optional => True),
             Param ("col_begin", Optional => True),
             Param ("col_end",   Optional => True),

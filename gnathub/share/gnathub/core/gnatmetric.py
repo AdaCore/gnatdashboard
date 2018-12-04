@@ -42,6 +42,7 @@ class GNATmetric(Plugin, Runner, Reporter):
         self.output = os.path.join(GNAThub.Project.object_dir(), 'metrix.xml')
         self.rules = {}
         self.messages = {}
+        self.firstunit = False
 
     @property
     def name(self):
@@ -130,11 +131,22 @@ class GNATmetric(Plugin, Runner, Reporter):
         for unit in node.findall('./unit'):
 
             ename = unit.attrib.get('name')
+
+            ekind = unit.attrib.get('kind')
+            if self.firstunit:
+                ekind = "compilation unit"
+                self.firstunit = False
+            else:
+                if ekind.startswith('procedure'):
+                    ekind = ekind.replace("procedure", "action")
+                elif ekind.startswith('function'):
+                    ekind = ekind.replace("function", "action")
+
             eline = unit.attrib.get('line')
             ecol = unit.attrib.get('col')
 
             # A resource can have multiple entities with the same name
-            entity = GNAThub.Entity(ename, int(eline),
+            entity = GNAThub.Entity(ename, ekind, int(eline),
                                     int(ecol), int(ecol),
                                     resource)
 
@@ -177,6 +189,8 @@ class GNATmetric(Plugin, Runner, Reporter):
                     self.warn('skip "%s" message (file not found)' %
                               node.attrib.get('name'))
                     continue
+
+                self.firstunit = True
 
                 resources_messages.append([resource, self.parse_metrics(node)])
 
