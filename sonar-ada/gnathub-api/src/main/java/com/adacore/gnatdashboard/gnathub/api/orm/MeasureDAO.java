@@ -60,6 +60,37 @@ public class MeasureDAO {
           "  AND messages.rule_id = rules.id",
           "  AND rules.identifier = \"cyclomatic_complexity\"",
           "  AND resources.name = ?");
+
+  //  File package level LSLOC computation query
+  private static final String SQLPckgLSLOC = String.join(" ",
+          "SELECT",
+          "  messages.data as value",
+          "FROM",
+          "  entities, resources, entities_messages, messages, rules",
+          "WHERE",
+          "  entities.resource_id = resources.id",
+          "  AND entities_messages.entity_id = entities.id",
+          "  AND messages.id = entities_messages.message_id",
+          "  AND messages.rule_id = rules.id",
+          "  AND entities.kind = \"compilation unit\"",
+          "  AND rules.identifier = \"lsloc\"",
+          "  AND resources.name = ?");
+
+  //  File package level all_stmts computation query
+  private static final String SQLPckgAllStmts = String.join(" ",
+          "SELECT",
+          "  messages.data as value",
+          "FROM",
+          "  entities, resources, entities_messages, messages, rules",
+          "WHERE",
+          "  entities.resource_id = resources.id",
+          "  AND entities_messages.entity_id = entities.id",
+          "  AND messages.id = entities_messages.message_id",
+          "  AND messages.rule_id = rules.id",
+          "  AND entities.kind = \"compilation unit\"",
+          "  AND rules.identifier = \"all_stmts\"",
+          "  AND resources.name = ?");
+
   /**
    * Fetch metrics associated to a file.
    *
@@ -75,6 +106,25 @@ public class MeasureDAO {
     ResultSet rsComplexity = statementComplexity.executeQuery();
     Integer complexityVal = rsComplexity.getInt("complexity");
 
+    Integer lslocVal = 0;
+    Integer allstmtsVal = 0;
+
+    //  Execute SQL query on DB to get the lsloc metric on package entity
+    @Cleanup final PreparedStatement statementLSLOC = connector.createStatement(SQLPckgLSLOC);
+    statementLSLOC.setString(1, path);
+    ResultSet rsLSLOC = statementLSLOC.executeQuery();
+    if (rsLSLOC.next()) {
+      lslocVal = rsLSLOC.getInt("value");
+    }
+
+    //  Execute SQL query on DB to get the all_stmts metric on package entity
+    @Cleanup final PreparedStatement statementALLSTMTS = connector.createStatement(SQLPckgAllStmts);
+    statementALLSTMTS.setString(1, path);
+    ResultSet rsALLSTMTS = statementALLSTMTS.executeQuery();
+    if (rsALLSTMTS.next()) {
+      allstmtsVal = rsALLSTMTS.getInt("value");
+    }
+
     //  Fetch and store metrics associated to the file
     @Cleanup final PreparedStatement statement = connector.createStatement(SQL);
     statement.setInt(1, DEFAULT_METRIC_LINE_NO);
@@ -82,8 +132,10 @@ public class MeasureDAO {
     statement.setInt(3, RuleKind.MEASURE.img);
     statement.setString(4, path);
 
-    return new FileMeasures(path, complexityVal, connector.query(
-            statement,
-            resultSet -> new Measure(resultSet.getString("key"), resultSet.getString("value"))));
+    return new FileMeasures(
+            path, complexityVal, lslocVal, allstmtsVal,
+            connector.query(
+                    statement,
+                    resultSet -> new Measure(resultSet.getString("key"), resultSet.getString("value"))));
   }
 }

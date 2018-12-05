@@ -25,12 +25,17 @@ import java.util.List;
 public class FileMeasures {
   public final String path;
   public final int complexity;
+  public final int GNATmetricPckgLSLOC;
+  public final int GNATmetricPckgAllStmts;
+
   @Delegate public final Measures measures;
 
   public FileMeasures(final String path,
                       final Integer complexity,
+                      final Integer GNATmetricPckgLSLOC,
+                      final Integer GNATmetricPckgAllStmts,
                       final List<Measure> measures)
   {
-    this(path, complexity, new Measures(measures));
+    this(path, complexity, GNATmetricPckgLSLOC, GNATmetricPckgAllStmts, new Measures(measures));
   }
 }

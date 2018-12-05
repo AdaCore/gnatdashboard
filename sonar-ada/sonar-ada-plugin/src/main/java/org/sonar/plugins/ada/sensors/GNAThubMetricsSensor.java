@@ -57,7 +57,6 @@ public class GNAThubMetricsSensor extends MainFilesSensor {
                                     .withValue(value).forMetric(sonarMetric).save());
 
     saveAsInt.accept(GNATmetricMetrics.ALL_LINES, CoreMetrics.LINES);
-    saveAsInt.accept(GNATmetricMetrics.CODE_LINES, CoreMetrics.NCLOC); // TODO(delay): See P511-010.
     saveAsInt.accept(GNATmetricMetrics.COMMENT_LINES, CoreMetrics.COMMENT_LINES);
     saveAsInt.accept(GNATmetricMetrics.EOL_COMMENTS, GNAThubMetrics.EOL_COMMENTS);
     saveAsInt.accept(GNATmetricMetrics.BLANK_LINES, GNAThubMetrics.BLANK_LINES);
@@ -82,6 +81,13 @@ public class GNAThubMetricsSensor extends MainFilesSensor {
             .on(file)
             .forMetric(CoreMetrics.COMPLEXITY)
             .withValue(measures.complexity)
+            .save();
+
+    //  Save package level all_stmts metric as SonarQube LSLOC
+    context.<Integer>newMeasure()
+            .on(file)
+            .forMetric(CoreMetrics.NCLOC)
+            .withValue(measures.GNATmetricPckgAllStmts)
             .save();
   }
 }
