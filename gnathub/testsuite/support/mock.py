@@ -70,6 +70,10 @@ class Project(object):
         return Project('gcov_multi_object_dir', dst)
 
     @staticmethod
+    def aggregate_prj (dst=os.getcwd()):
+        return Project('aggregate_prj', dst)
+
+    @staticmethod
     def disabled(dst=os.getcwd()):
         return Project('disabled', dst)
 
