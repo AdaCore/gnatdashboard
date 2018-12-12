@@ -18,9 +18,9 @@ import sys
 DOCS = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 TOP = os.path.dirname(DOCS)
 
-VERSION_PATTERN = (r'^(?P<major>[0-9]+)\.(?P<minor>[0-9]+)'
+VERSION_PATTERN = (r'^(?P<major>[0-9]+)(\.(?P<minor>[0-9]+))?'
                    r'(\.(?P<patch>[0-9]+))?'
-                   r'(?P<tag>(alpha|beta|rc|w)([0-9]+)?)?$')
+                   r'(?P<tag>(alpha|beta|rc|lts|w)([0-9]+)?)?$')
 VERSION_RE = re.compile(VERSION_PATTERN)
 
 # If extensions (or modules to document with autodoc) are in another directory,
