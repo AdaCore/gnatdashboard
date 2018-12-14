@@ -52,12 +52,12 @@ def print_current_rule():
             <type>{}</type>
             <tag>{}</tag>
             <tag>{}</tag>
-            </rule>""".format(current_rule_label.lower(),
-                              current_rule_label,
-                              current_rule_text,
-                              current_rule_type,
-                              current_tool_name,
-                              current_rule_category)
+          </rule>""".format(current_rule_label.lower(),
+                            current_rule_label,
+                            current_rule_text,
+                            current_rule_type,
+                            current_tool_name,
+                            current_rule_category)
         else:
             print """    <rule>
             <key>{}</key>
@@ -65,11 +65,11 @@ def print_current_rule():
             <description>{}</description>
             <tag>{}</tag>
             <tag>{}</tag>
-            </rule>""".format(current_rule_label.lower(),
-                              current_rule_label,
-                              current_rule_text,
-                              current_tool_name,
-                              current_rule_category)
+          </rule>""".format(current_rule_label.lower(),
+                            current_rule_label,
+                            current_rule_text,
+                            current_tool_name,
+                            current_rule_category)
 
 
 for j in sys.stdin.readlines():

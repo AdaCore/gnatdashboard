@@ -13,11 +13,16 @@ CODEPEER_SVN_USERS_GUIDE   := $(CODEPEER_SVN_REPOSITORY)/$(CODEPEER_USERS_GUIDE)
 
 RULES_DEFINITIONS := $(SONAR_ADA_PLUGIN_RESOURCES)/codepeer.xml \
 	$(SONAR_ADA_PLUGIN_RESOURCES)/gnatcheck.xml \
-	$(SONAR_ADA_PLUGIN_RESOURCES)/gnatcoverage.xml
+	$(SONAR_ADA_PLUGIN_RESOURCES)/gnatcoverage.xml \
+	$(SONAR_ADA_PLUGIN_RESOURCES)/spark2014.xml
 
 all: ada_rules_profile
 
 ada_rules_profile: $(SONAR_ADA_PLUGIN_RESOURCES)/default-profile.xml
+
+ada_rules_profile_definition:
+	python $(TOP)/scripts/generate_ada_default_profile.py $(RULES_DEFINITIONS) >  \
+         $(SONAR_ADA_PLUGIN_RESOURCES)/default-profile.xml
 
 codepeer_rules_definition:
 	codepeer --list-categories 2>&1 | python $(TOP)/scripts/generate_codepeer_rules.py > \
@@ -26,10 +31,6 @@ codepeer_rules_definition:
 gnatcheck_rules_definition:
 	gnatcheck -h 2>&1 | python $(TOP)/scripts/generate_gnatcheck_rules.py > \
          $(SONAR_ADA_PLUGIN_RESOURCES)/gnatcheck.xml
-
-$(SONAR_ADA_PLUGIN_RESOURCES)/default-profile.xml: $(RULES_DEFINITIONS)
-	PYTHONPATH=$(TOP)/$(PYTHONPATH) \
-		python $(TOP)/scripts/generate-ada-default-profile -o $@ $^
 
 $(BUILD_DIR)/$(CODEPEER_DOC):
 	mkdir -p $(BUILD_DIR)

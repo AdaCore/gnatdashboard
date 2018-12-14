@@ -17,18 +17,42 @@
 """Generate :file:`default-profile.xml` containing the rules profile for Ada
 
 SonarQube's plugin `sonar-ada-plugin` loads the Ada rules profile by reading
-the XML file in which the rules are listed. This script generates such XML
+the XML files in which the rules are listed. This script generates such XML
 file from the various input rules definition XML files.
 """
 
 import logging
-import os
 import sys
 from argparse import ArgumentParser, FileType
 
-from sonarqube.rule import (
-    RulesDefinition, RulesDefinitionXmlReader, RulesProfileXmlWriter
-)
+from xml.etree import ElementTree
+from xml.etree.ElementTree import ParseError
+
+Tools = ['gnatcheck', 'codepeer', 'gnatcoverage', 'spark2014']
+
+
+def __print_header(language, name):
+    # Print the header
+    print """<?xml version='1.0' encoding='UTF-8'?>
+
+<profile>
+   <name>{}</name>
+   <language>{}</language>
+   <rules>""".format(name, language.lower())
+
+
+def __print_footer():
+    # Print the footer
+    print """   </rules>
+</profile>"""
+
+
+def __print_rule(def_profile_rule):
+    print """      <rule>
+        <key>{}</key>
+        <repositoryKey>{}</repositoryKey>
+      </rule>""".format(def_profile_rule['key'],
+                        def_profile_rule['repositoryKey'])
 
 
 def __load_rules(rules_definition_files):
@@ -36,16 +60,30 @@ def __load_rules(rules_definition_files):
 
     :param rules_definition_files: the files containing rules definitions
     :type rules_definition_files: list[str]
-    :rtype: tuple[RulesDefinition]
+    :rtype: ada_default_rules: list[{str, str}]
     """
-    reader = RulesDefinitionXmlReader()
-    rules_definitions = []
+
     for filename in rules_definition_files:
-        repository_key, _ = os.path.splitext(os.path.basename(filename))
-        rules_definition = RulesDefinition(repository_key)
-        reader.load(rules_definition, filename)
-        rules_definitions.append(rules_definition)
-    return tuple(rules_definitions)
+        try:
+            tree = ElementTree.parse(filename).getroot()
+
+            # Fetch all rules and fill default rule information
+            for rule in tree.findall('./rule'):
+                default_rule = {
+                    'key': None,
+                    'repositoryKey': None
+                }
+
+                for child in rule:
+                    if child.tag == 'key':
+                        default_rule['key'] = child.text
+                    else:
+                        if (child.tag == 'tag' and child.text in Tools):
+                            default_rule['repositoryKey'] = child.text
+                __print_rule(default_rule)
+
+        except ParseError:
+            logging.INFO('failed to parse XML file %s' % filename)
 
 
 def generate_ada_rules_profile():
@@ -62,9 +100,9 @@ def generate_ada_rules_profile():
         type=FileType('w'), help='Output file')
     params = cmdline.parse_args()
 
-    RulesProfileXmlWriter.write(
-        params.language, params.name, __load_rules(params.rules),
-        stream=params.outfile)
+    __print_header(params.language, params.name)
+    __load_rules(params.rules)
+    __print_footer()
     return 0
 
 
