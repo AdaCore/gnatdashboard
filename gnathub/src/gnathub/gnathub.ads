@@ -21,6 +21,7 @@ package GNAThub is
 
    Fatal_Error  : exception;
    Silent_Error : exception;
+   Exit_Success : exception;
 
    Console_Prefix : constant String := "gnathub";
 

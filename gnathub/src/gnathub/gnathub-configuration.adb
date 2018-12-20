@@ -567,8 +567,8 @@ package body GNAThub.Configuration is
 
    exception
       when GNAT.Command_Line.Exit_From_Command_Line =>
-         --  Help is already displayed
-         raise Silent_Error;
+         --  used by --version switch
+         raise Exit_Success;
 
       when GNAT.Command_Line.Invalid_Switch =>
          --  Error message is already displayed

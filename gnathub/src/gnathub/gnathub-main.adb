@@ -282,6 +282,9 @@ begin
    return Ada.Command_Line.Success;
 
 exception
+   when Exit_Success =>
+      return Ada.Command_Line.Success;
+
    when Silent_Error =>
       Finalize_Application;
 
