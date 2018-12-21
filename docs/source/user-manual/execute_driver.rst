@@ -207,6 +207,8 @@ You can specify switches on the command line to tune each execution of the
 driver. Please use :command:`gnathub --help` to see the full list of
 supported switches.
 
+.. _--plugins:
+
 :command:`--plugins`
 ^^^^^^^^^^^^^^^^^^^^
 

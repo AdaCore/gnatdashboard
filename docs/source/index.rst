@@ -37,6 +37,15 @@
     sonar-ada-plugin/index
     sonar-ada-plugin/faq
 
+|GNATdashboard| WebUI, the web interface
+========================================
+
+.. toctree::
+    :numbered:
+    :maxdepth: 3
+
+    webui/presentation
+
 |GNATdashboard| Developer's Manual
 ==================================
 
