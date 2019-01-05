@@ -27,7 +27,9 @@ import {
 } from './annotated-source';
 import { ReviewDialog } from './annotated-source/review-dialog.component'
 import { ReviewHistoryDialog } from './annotated-source/review-history-dialog.component'
+import { CodepeerRunInfoDialog } from './codepeer-run-dialog/codepeer-run-info-dialog.component'
 import { DialogsService } from './annotated-source/dialog.service'
+import { CodepeerDialogsService } from './codepeer-run-dialog/codepeer-dialog.service'
 import { CountPipe } from './count.pipe';
 import { FilterSelectorComponent } from './filter-selector';
 import { FilterPanelComponent } from './filter-selector';
@@ -88,7 +90,8 @@ type StoreType = {
         MessageExplorerComponent,
         SpinnerComponent,
         ReviewDialog,
-        ReviewHistoryDialog
+        ReviewHistoryDialog,
+        CodepeerRunInfoDialog
     ],
     imports: [
         BrowserModule,
@@ -106,7 +109,7 @@ type StoreType = {
         APP_PROVIDERS,
         ENV_PROVIDERS
     ],
-    entryComponents: [ReviewDialog, ReviewHistoryDialog]
+    entryComponents: [ReviewDialog, ReviewHistoryDialog, CodepeerRunInfoDialog]
 })
 export class AppModule {
     constructor(public appRef: ApplicationRef, public appState: AppState) {}

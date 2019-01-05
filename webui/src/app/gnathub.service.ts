@@ -41,6 +41,10 @@ export class GNAThubService {
             .catch(this.handleError);
     }
 
+    public getCodepeerRun(): Observable<any> {
+        return this.http.get('data/codepeer_run');
+    }
+
     private handleResults(res: Response) {
         return res.json() || {};
     }

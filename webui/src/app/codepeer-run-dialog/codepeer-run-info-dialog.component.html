@@ -1,0 +1,13 @@
+<span class="form-back col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="close()"></span>
+<span class="form-box col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <span  class="title-codepeer-info col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        CodePeer Run Information
+    </span>
+    <span class="all-codepeer-info col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <span *ngFor="let field of info" class="line-codepeer-info col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <span class="col-lg-3 col-md-3 col-sm-4 col-xs-6"> {{field.name}} </span>
+            <span class="col-lg-9 col-md-9 col-sm-8 col-xs-6"> {{field.value}} </span>
+        </span>
+    </span>
+    <button md-raised-button (click)="close()"> Close </button>
+</span>
