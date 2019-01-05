@@ -136,17 +136,17 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self._log_api_error(filepath + " : file doesn't exist")
 
     def _export_codeper_bridge(self, filename):
-        print "Export info into codepeer_bridge"
-        self.log_message("Export info into codepeer_bridge")
-        cmd = ('codepeer_bridge'
-               + ' --output-dir=' + GNAThub.output_dir()
-               + ' --db-dir=' + GNAThub.db_dir()
-               + ' --export-reviews='
-               + os.path.join(GNAThub.Project.object_dir(),
-                              'gnathub', 'html-report', 'data', filename)
-               + ' >> ' + API_SERVER_LOG + ' 2>&1')
-        self.log_message(cmd)
-        os.system(cmd)
+        print "Export info from codepeer_bridge"
+        self.log_message("Export info from codepeer_bridge")
+        name = 'codepeer_bridge'
+        cmd = ['codepeer_bridge',
+               '--output-dir=' + GNAThub.output_dir(),
+               '--db-dir=' + GNAThub.db_dir(),
+               '--export-reviews=' + os.path.join(
+                   GNAThub.Project.object_dir(),
+                   'gnathub', 'html-report',
+                   'data', filename)]
+        GNAThub.Run(name, cmd, out=API_SERVER_LOG)
 
     def _post_review(self):
         temp_filename = 'user_review_temp.xml'
@@ -196,14 +196,12 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def _import_codepeer_bridge(self, filename):
         print "Import info into codepeer_bridge"
         self.log_message("Import info into codepeer_bridge")
-        cmd = ('codepeer_bridge'
-               + ' --output-dir=' + GNAThub.output_dir()
-               + ' --db-dir=' + GNAThub.db_dir()
-               + ' --import-reviews='
-               + filename
-               + ' >> ' + API_SERVER_LOG + ' 2>&1')
-        self.log_message(cmd)
-        os.system(cmd)
+        name = 'codepeer_bridge'
+        cmd = ['codepeer_bridge',
+               '--output-dir=' + GNAThub.output_dir(),
+               '--db-dir=' + GNAThub.db_dir(),
+               ' --import-reviews=' + filename]
+        GNAThub.Run(name, cmd, out=API_SERVER_LOG)
 
     def do_GET(self, **args):
         print "received the following GET request: {}".format(self.path)
@@ -214,6 +212,10 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self._get_review()
         elif self.post_review_pattern.match(self.path):
             self._post_review()
+        elif self.get_online_pattern.match(self.path):
+            self._get_online()
+        elif self.get_codepeer_pattern.match(self.path):
+            self._get_codepeer()
         else:
             self._error_not_found()
 
