@@ -42,6 +42,8 @@ export class AppState {
 
 @Injectable()
 export class SharedReport {
+    public isOnline: boolean = false;
+
     /* Correspond to the data extracted from the gnathub database*/
     public filter: IFilterIndex;
     public code: ICodeIndex;
@@ -71,6 +73,7 @@ export class SharedReport {
     public showFiles: boolean = false;
     public showCoverage: boolean = false;
     public isReportFetchError: boolean = false;
+
     public isFilter: boolean = true;
     public _ui_total_message_count: number = -1;
 
@@ -94,9 +97,59 @@ export class SharedReport {
      * If server not running or responding, use the old get
      */
         console.log("Designated API Url :", this.url)
+        this.initApp();
+    }
 
-        let url = this.url + "json/";
-        this.http.get(url + 'filter.json')
+    private initApp() {
+        this.isServerOnline();
+        this.isCodepeerPassed();
+        this.getCodepeerRunInfo();
+    }
+
+    private isServerOnline() {
+        this.http.get(this.url + 'online-server')
+            .subscribe(
+            data => {
+                if (data.status == 200) {
+                    console.log("[Success] The server is online.");
+                    this.isOnline = true;
+                    this.getFilterOnline()
+                    this.getCodeOnline()
+                    this.getMessageOnline()
+                } else {
+                    this.serverOffline();
+                }
+            }, error => {
+                console.log("[Warning] main-responder.service:isServerOnline: ", error);
+                this.serverOffline();
+            }
+        );
+    }
+
+    private serverOffline() {
+        console.log("[Warning] The server is offline");
+        this.isOnline = false;
+        this.getFilterOffline()
+        this.getCodeOffline()
+        this.getMessageOffline()
+    }
+
+    private isCodepeerPassed() {
+        this.http.get(this.url + 'codepeer-passed')
+            .subscribe(
+            data => {
+                if (data.status == 200) {
+                    this.isCodepeer = true;
+                }
+            }, error => {
+                console.log("[Error] is codepeer passed : ", error);
+                this.isCodepeer = false;
+            }
+        );
+    }
+
+    private getFilterOnline(){
+        this.http.get(this.url + 'json/filter.json')
             .subscribe(
             data => {
                 this.filter = JSON.parse(JSON.parse(data['_body']));
@@ -109,24 +162,29 @@ export class SharedReport {
                 this.refreshFilter()
             }, error => {
                 console.log("[Error] get filter : ", error);
-                this.gnathub.getFilter().subscribe(
-                    filter => {
-                        this.filter = filter;
-                        this.initFilter();
-                        this.projectName = filter.project;
-                        this.getCodepeerCode();
-                        if (this.filter.tools == null) {
-                            this.isFilter = false;
-                        }
-                        this.refreshFilter()
-                    }, error => {
-                        this.isReportFetchError = true;
-                    }
-                );
+                this.getFilterOffline();
             }
         );
+    }
+    private getFilterOffline(){
+        this.gnathub.getFilter().subscribe(
+            filter => {
+                this.filter = filter;
+                this.initFilter();
+                this.projectName = filter.project;
+                this.getCodepeerCode();
+                if (this.filter.tools == null) {
+                    this.isFilter = false;
+                }
+                this.refreshFilter()
+            }, error => {
+                this.isReportFetchError = true;
+            }
+        );
+    }
 
-        this.http.get(url + 'code.json')
+    private getCodeOnline() {
+        this.http.get(this.url + 'json/code.json')
             .subscribe(
             data => {
                 this.code = JSON.parse(JSON.parse(data['_body']));
@@ -136,41 +194,51 @@ export class SharedReport {
                 this.refreshFilter()
             }, error => {
                 console.log("[Error] get code : ", error);
-                this.gnathub.getCode().subscribe(
-                    object => {
-                        this.code = object;
-                        this.code.modules = sortCodeArray(
-                            this.codeFilter,
-                            this.codeFilter, object.modules);
-                        this.refreshFilter()
-                    }, error => {
-                        this.isReportFetchError = true;
-                    }
-                );
+                this.getCodeOffline();
             }
         );
+    }
+    private getCodeOffline(){
+        this.gnathub.getCode().subscribe(
+            object => {
+                this.code = object;
+                this.code.modules = sortCodeArray(
+                    this.codeFilter,
+                    this.codeFilter, object.modules);
+                this.refreshFilter()
+            }, error => {
+                this.isReportFetchError = true;
+            }
+        );
+    }
 
-        this.http.get(url + 'message.json')
+    private getMessageOnline() {
+        this.http.get(this.url + 'json/message.json')
             .subscribe(
             data => {
                 this.message = JSON.parse(JSON.parse(data['_body']));
-                this.getUserReview();
+                if (this.isCodepeer){
+                    this.getUserReview();
+                }
                 this.refreshFilter()
             }, error => {
                 console.log("[Error] get message : ", error);
-                this.gnathub.getMessage().subscribe(
-                    messages => {
-                        this.message = messages;
-                        this.getUserReview();
-                        this.refreshFilter()
-                    }, error => {
-                        this.isReportFetchError = true;
-                    }
-                );
+                this.getMessageOffline();
             }
         );
-
-        this.getCodepeerRunInfo();
+    }
+    private getMessageOffline() {
+        this.gnathub.getMessage().subscribe(
+            messages => {
+                this.message = messages;
+                if (this.isCodepeer){
+                    this.getUserReview();
+                }
+                this.refreshFilter()
+            }, error => {
+                this.isReportFetchError = true;
+            }
+        );
     }
 
     private getCodepeerRunInfo() {
@@ -251,7 +319,7 @@ export class SharedReport {
 
         orderArray.forEach(function(status){
             if (this.checkArray(myArray, "main-responder.service",
-                                "initFilter", "myArray")){
+                                "orderFilter", "myArray")){
                 myArray.forEach(function(rank){
                     if (newOrder && rank.name == status) {
                         newOrder.push(rank);
@@ -270,7 +338,7 @@ export class SharedReport {
         let newFilter: any ;
 
         if (this.checkArray(myArray, "main-responder.service",
-                            "initFilter", "myArray")){
+                            "unselectFilter", "myArray")){
             myArray.forEach(function(rank){
 
                 unselectArray.forEach(function(unselect){
