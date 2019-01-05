@@ -49,6 +49,8 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     json_pattern = re.compile("^\/json\/[a-z]*.json")
     get_review_pattern = re.compile("^\/get-review\/")
     post_review_pattern = re.compile("^\/post-review\/")
+    get_online_pattern = re.compile("^\/online-server")
+    get_codepeer_pattern = re.compile("^\/codepeer-passed")
 
     # Error if not declared ?
     def __base__():
@@ -163,6 +165,33 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write("OK")
+
+    def _get_online(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/xml")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write('OK')
+
+    def _get_codepeer(self):
+        cmd = ('codepeer'
+               + ' -P' + GNAThub.Project.name().lower()
+               + ' -show-header-only'
+               + ' -output-msg-only > null')
+        ret = os.system(cmd)
+
+        if (ret == 0):
+            self.send_response(200)
+            self.send_header("Content-Type", "text/xml")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write('OK')
+        else:
+            self.send_response(204)
+            self.send_header("Content-Type", "text/xml")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write('NOT OK')
 
     def _import_codepeer_bridge(self, filename):
         print "Import info into codepeer_bridge"

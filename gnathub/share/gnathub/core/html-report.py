@@ -124,6 +124,35 @@ class HTMLReport(Plugin, Reporter):
             self.log.debug('code index saved as %s', dest)
             self.info('HTML report code generated in %s', dest)
 
+            # Call to codepeer_bridge for offline mode
+            self.log.debug("Export info from codepeer_bridge")
+            dest = os.path.join(GNAThub.Project.object_dir(),
+                                'gnathub', 'html-report',
+                                'data', 'codepeer_review.xml')
+            cmd = ('codepeer_bridge'
+                   + ' --output-dir=' + GNAThub.output_dir()
+                   + ' --db-dir=' + GNAThub.db_dir()
+                   + ' --export-reviews='
+                   + dest)
+            self.log.debug(cmd)
+            self.log.debug('Codepeer_bridge file generated in %s', dest)
+            self.info('Codepeer_bridge file generated in %s', dest)
+            os.system(cmd)
+
+            # Call to codepper with -show-header-only flag
+            self.log.debug("Export run info from codepeer")
+            dest = os.path.join(GNAThub.Project.object_dir(),
+                                'gnathub', 'html-report',
+                                'data', 'codepeer_run')
+            name = 'codepeer'
+            cmd = ['codepeer',
+                   '-P' + GNAThub.Project.name().lower(),
+                   '-show-header-only','-output-msg-only']
+            self.log.debug(cmd)
+            self.log.debug('Codepeer run info file generated in %s', dest)
+            self.info('Codepeer run info file generated in %s', dest)
+            GNAThub.Run(name, cmd, out= dest)
+
         except IOError as why:
             self.log.exception('failed to generate the HTML report')
             self.error(str(why))

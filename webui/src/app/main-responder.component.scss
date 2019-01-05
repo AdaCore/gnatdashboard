@@ -27,19 +27,72 @@ body { overflow: hidden; }
 
     .main-responder-header {
         flex: 0 0 auto;
-        height: 6vh;
+        max-height: 6vh;
         line-height: 6vh;
-        /* background-color: #eee;
-        border-bottom: 1px solid #ddd;*/
         background-color: var(--header-color);
         border-bottom: 1px solid var(--header-border);
         padding-left: 20px;
 
-        span {
+        span.navig-button {
             color: black;
             font-size: 13px;
             padding: 10px;
-            margin-left: 15px;
+            height: 100%;
+            line-height: initial;
+
+            span {
+                padding: 0px 10px;
+            }
+        }
+
+        span.info-button {
+            color: black;
+            font-size: 13px;
+            height: 100%;
+            text-align: right;
+            line-height: initial;
+            padding: 5px;
+
+            .codepeer-run-info-button {
+                margin: 3px;
+                text-align: center;
+                background-color: var(--elem-color);
+                border: 1px #C4c4c5 solid;
+                width: 200px;
+                padding: 7px;
+                border-radius: 5px;
+                line-height: initial;
+            }
+
+            .online-offline-span {
+                display: inline-block;
+                margin: 3px;
+                text-align: center;
+                background-color: rgba(0, 0, 0, 0.05);
+                border: 1px #c4c4c594 solid;
+                padding: 7px;
+                border-radius: 2px;
+
+                md-icon {
+                    display: inline-block;
+                    position: absolute;
+                    right: 15px;
+                    top: 10px;
+
+                    &.offline {
+                        color: firebrick;
+                    }
+                    &.online {
+                        color: green;
+                    }
+                }
+
+                span {
+                    display: inline-block;
+                    padding-right: 30px;
+                }
+            }
+
         }
 
     }
@@ -130,7 +183,7 @@ filter-selector.tool-selector .filter-selector {
         max-width: 100%;
     }
 
-    review-dialog, review-history-dialog {
+    review-dialog, review-history-dialog, codepeer-run-info-dialog {
 
         display: inline-block;
         width: 100%;
@@ -230,21 +283,21 @@ filter-selector.tool-selector .filter-selector {
         }
     }
 
-    review-history-dialog {
+    review-history-dialog, codepeer-run-info-dialog {
 
-        .title-review {
+        .title-review, .title-codepeer-info {
             padding-top: 10px;
             padding-bottom: 10px;
             font-size: 20px;
             text-align: center;
         }
 
-        .all-review {
+        .all-review, .all-codepeer-info {
             height: calc(470px - 105px - 80px);
             overflow-y: auto;
             padding-right: 5px;
 
-            .line-review {
+            .line-review, .line-codepeer-info {
                 padding: 5px 10px;
                 margin: 6px 0px;
                 border-radius: 5px;
@@ -271,6 +324,11 @@ filter-selector.tool-selector .filter-selector {
             }
 
         }
+
+        .all-codepeer-info {
+            height: 370px;
+        }
+
     }
 }
 

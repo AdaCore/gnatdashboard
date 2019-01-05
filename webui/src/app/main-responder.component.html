@@ -1,17 +1,32 @@
 <div class="main-responder-page col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
     <header class="main-responder-header top col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" role="header">
-        <span>{{reportService.projectName}}</span>
-        <span class="navig-button">
+        <span class="navig-button col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+            <span>{{reportService.projectName}}</span>
             <button [ngClass]="{active: this.reportService.page == 'message-explorer'}" id="ErrorButton" class="error-button"
                     [routerLink]="['./message-explorer']">
                 Messages
             </button>
-             <button [ngClass]="{active: this.reportService.page == 'code-explorer'}" id="ProjectButton" class="project-button"
+            <button [ngClass]="{active: this.reportService.page == 'code-explorer'}" id="ProjectButton" class="project-button"
                     [routerLink]="['./code-explorer']">
                 Projects
             </button>
         </span>
         <!--<span [routerLink]="['./preferences']">Preferences</span>-->
+        <span class="info-button col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+
+            <button *ngIf="this.reportService.isCodepeer" class="codepeer-run-info-button" (click)='showCodepeerRunInfo()'>
+                CodePeer run id: {{reportService.codepeerCurrentRun}}
+            </button>
+
+            <span class="online-offline-span" >
+                <md-icon [ngClass]="this.reportService.isOnline ? 'online': 'offline'">fiber_manual_record</md-icon>
+                <span>
+                    {{ (this.reportService.isOnline ? 'Online mode': 'Offline mode') }}
+                </span>
+
+            </span>
+
+        </span>
     </header>
 
     <section id="filterPanel" class="main-responder-body open col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">

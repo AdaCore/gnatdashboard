@@ -47,6 +47,14 @@ export class SharedReport {
     public code: ICodeIndex;
     public message: IMessageIndex;
 
+    /* Correspond to the data extracted from the codepeer tool*/
+    public isCodepeer: boolean = false;
+    public codepeerRunInfo: any;
+    public codepeerCurrentRun: number = 0;
+    public codepeer_code = -1;
+    public codepeerReviewError: boolean = false;
+    private codepeer_review: any;
+
     /* Corresponds to the sorting state of code and message navigation*/
     public codeFilter = {newSort: 'name', otherSort: 'filename', order: 1};
     public messageFilter = {newSort: 'filename', otherSort: 'line', order: 1};
@@ -58,12 +66,11 @@ export class SharedReport {
         message: {},
         reviews: []
     };
-    public codepeer_code = -1;
+
     public selectedMessage = [];
     public showFiles: boolean = false;
     public showCoverage: boolean = false;
     public isReportFetchError: boolean = false;
-    public codepeerReviewError: boolean = false;
     public isFilter: boolean = true;
     public _ui_total_message_count: number = -1;
 
@@ -71,7 +78,6 @@ export class SharedReport {
     public showReviews: boolean = true;
 
     /* Corresponds to the variable needed to initiate filter */
-    private codepeer_review: any;
     private activeFilter: boolean = false;
     private userReviewFilter: [IReviewFilter];
 
@@ -161,6 +167,34 @@ export class SharedReport {
                         this.isReportFetchError = true;
                     }
                 );
+            }
+        );
+
+        this.getCodepeerRunInfo();
+    }
+
+    private getCodepeerRunInfo() {
+        this.gnathub.getCodepeerRun().subscribe(
+            run_info => {
+                this.codepeerRunInfo = run_info._body.split('\n');
+                var tmp = [];
+                this.codepeerRunInfo.forEach(function(info){
+                    var tmp_name = info.split(':')[0].trim();
+                    var tmp_value = info.substring(info.indexOf(':')+1).trim();
+                    if (tmp_name != ''){
+                        var obj = {
+                            name: tmp_name,
+                            value: tmp_value
+                        };
+                        tmp.push(obj);
+                        if (obj.name == 'current run number'){
+                            this.codepeerCurrentRun = obj.value;
+                        }
+                    }
+                }.bind(this));
+                this.codepeerRunInfo = tmp;
+            }, error => {
+                this.isReportFetchError = true;
             }
         );
     }
