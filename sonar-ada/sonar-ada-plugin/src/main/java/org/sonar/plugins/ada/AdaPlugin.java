@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2017, AdaCore
+ * Copyright (C) 2017-2019, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -59,7 +59,8 @@ public final class AdaPlugin implements Plugin {
         // Ada highlighting (comments, keywords and strings delimited by "")
         AdaHighlightingSensor.class,
 
-        AdaDefaultProfile.class,
+        // Register quality profiles
+        AdaProfileDefinition.class,
 
         // Register custom metrics.
         CountMetrics.class,

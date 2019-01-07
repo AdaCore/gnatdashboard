@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2016-2019, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -31,7 +31,10 @@ import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.squidbridge.ProgressReport;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.io.File;
 
 @Slf4j
 abstract class MainFilesSensor implements Sensor {
@@ -50,15 +53,18 @@ abstract class MainFilesSensor implements Sensor {
 
   @Override
   public void execute(final SensorContext context) {
-    final GNAThub gnathub = new GNAThub(context.settings());
+    final GNAThub gnathub = new GNAThub(context.config());
     final FileSystem fs = context.fileSystem();
     final FilePredicate mainFilePredicate = fs.predicates().and(
         fs.predicates().hasType(InputFile.Type.MAIN),
         fs.predicates().hasLanguage(Ada.KEY));
+
     // Integration with SonarQube progress reporter.
     final ProgressReport progress = new ProgressReport(
         String.format("%s Reporter", getName()), TimeUnit.SECONDS.toMillis(10));
-    progress.start(Lists.newArrayList(fs.files(mainFilePredicate)));
+
+    List<InputFile> files = Lists.newArrayList(fs.inputFiles(mainFilePredicate));
+    progress.start(files.stream().map(InputFile::file).collect(Collectors.toList()));
 
     try {
       @Cleanup("closeConnection") final Connector connector = gnathub.getConnector();

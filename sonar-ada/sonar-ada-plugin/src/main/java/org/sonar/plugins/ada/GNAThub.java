@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2016 - 2019, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -22,8 +22,8 @@ import com.adacore.gnatdashboard.gnathub.api.Measures;
 import com.adacore.gnatdashboard.gnathub.api.SourceMapper;
 import com.adacore.gnatdashboard.gnathub.api.orm.Connector;
 import lombok.Getter;
-import org.sonar.api.batch.BatchSide;
-import org.sonar.api.config.Settings;
+import org.sonar.api.batch.ScannerSide;
+import org.sonar.api.config.Configuration;
 import org.sonar.squidbridge.api.AnalysisException;
 
 import java.io.FileInputStream;
@@ -31,16 +31,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-@BatchSide
+@ScannerSide
 public class GNAThub {
   @Getter private final Connector connector;
   @Getter private final Coverage coverage;
   @Getter private final Measures measures;
   @Getter private final Issues issues;
 
-  public GNAThub(final Settings settings) {
-    final String dbUri = settings.getString(AdaPlugin.GNATHUB_DB_KEY);
-    final String srcMappingUri = settings.getString(AdaPlugin.GNATHUB_SRC_MAPPING_KEY);
+  public GNAThub(final Configuration config) {
+    final String dbUri = config.get(AdaPlugin.GNATHUB_DB_KEY).orElse(null);
+    final String srcMappingUri = config.get(AdaPlugin.GNATHUB_SRC_MAPPING_KEY).orElse(null);
 
     if (dbUri == null) {
       throw new AnalysisException(String.format(

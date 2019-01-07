@@ -39,7 +39,7 @@ public class GNAThubMetricsSensor extends MainFilesSensor {
 
   @Override
   public void forInputFile(final SensorContext context, final GNAThub gnathub, final InputFile file) {
-    final FileMeasures measures = gnathub.getMeasures().forFile(file.absolutePath());
+    final FileMeasures measures = gnathub.getMeasures().forFile(file.uri().getPath());
 
     if (measures == null) {
       return;

@@ -42,7 +42,7 @@ public class AdaHighlightingSensor implements Sensor {
      * @param context sensor context parameter
      */
     private void processFileHighlighting(InputFile inputFile, SensorContext context) {
-        final String FILENAME = inputFile.absolutePath();
+        final String FILENAME = inputFile.uri().getPath();
         try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
             NewHighlighting highlighting = context.newHighlighting().onFile(inputFile);
 

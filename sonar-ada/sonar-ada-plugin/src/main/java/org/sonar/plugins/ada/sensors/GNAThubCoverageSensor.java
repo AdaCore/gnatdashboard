@@ -38,7 +38,7 @@ public class GNAThubCoverageSensor extends MainFilesSensor {
   {
     // Collect and save the input file coverage information
     final NewCoverage newCoverage = context.newCoverage().onFile(file).ofType(CoverageType.UNIT);
-    Optional.ofNullable(gnathub.getCoverage().forFile(file.absolutePath()))
+    Optional.ofNullable(gnathub.getCoverage().forFile(file.uri().getPath()))
         .ifPresent(coverage -> coverage.hits
             .forEach(hits -> newCoverage.lineHits(hits.line, hits.count)));
     newCoverage.save();

@@ -45,8 +45,6 @@ public class AdaDefaultProfile extends ProfileDefinition {
         AdaDefaultProfile.class.getResourceAsStream(RULES_PROFILE_FILE));
 
     final RulesProfile adaProfile = xmlLoader.parse(reader, messages);
-    adaProfile.setDefaultProfile(true);
-
     return adaProfile;
   }
 }

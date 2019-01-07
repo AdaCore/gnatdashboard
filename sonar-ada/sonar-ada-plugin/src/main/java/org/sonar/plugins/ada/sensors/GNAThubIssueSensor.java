@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2017, AdaCore
+ * Copyright (C) 2017-2019, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -93,10 +93,11 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   @Override
   public void forInputFile(final SensorContext context, final GNAThub gnathub, final InputFile file)
   {
-    final FileIssues issues = gnathub.getIssues().forFile(file.absolutePath());
+    final FileIssues issues = gnathub.getIssues().forFile(file.uri().getPath());
+
     // Defensive programming
     if (issues == null) {
-      log.warn("Skipping: {}", file.absolutePath());
+      log.warn("Skipping: {}", file.uri().getPath());
       return;
     }
     for (final Issue issue : issues.getIssues()) {

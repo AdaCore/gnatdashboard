@@ -61,5 +61,6 @@ public class AreResourcesAvailableTest {
     @Test
     public void existsAdaXMLRulesProfile() throws URISyntaxException {
         existsResource(AdaDefaultProfile.RULES_PROFILE_FILE);
+        existsResource(AdaProfileDefinition.DEFAULT_PROFILE_FILE);
     }
 }
