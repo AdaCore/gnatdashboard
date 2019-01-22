@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2017, AdaCore
+# Copyright (C) 2013-2019, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -36,11 +36,34 @@ class GNATcheck(Plugin, Runner, Reporter):
     """
 
     # Regex to identify lines that contain messages
+    ''' Pattern to match common rules like:
+      p.adb:45:12: positional parameter association [Positional_Parameters]
+      Format is [SLOC] [message] [rule_id]
+    '''
     _RULE_PATTERN = r'(?P<message>.+)\s\[(?P<rule_id>[A-Za-z_:]+)\]$'
+
+    ''' Pattern to match specific rules that are checked inside
+        expanded generic instantiations
+      p_g.adb:14:04 instance at p.ads:11:04:
+      function returns unconstrained array [Unconstrained_Array_Returns]
+
+        Ada allows unlimited depth of generic instantiations, so these rules
+        can generate diagnoses with unlimited length of the SLOCs chain:
+
+      p_g.adb:20:04 instance at p_g_g.ads:9:04 instance at p.ads:13:04:
+      function returns unconstrained array [Unconstrained_Array_Returns]
+    '''
+    _RULE_PATTERN_INST = \
+        (r'((?P<instance>[a-zA-Z-_.0-9 ]+:?([0-9]+):([0-9]+)?:?'
+         r'\s))?(?P<message>.+)\s\[(?P<rule_id>[A-Za-z_]+):?'
+         r'(?P<rule_info>[A-Za-z_:]+)?\]$')
 
     # Regular expression to match GNATcheck output and extract all relevant
     # information stored in it.
     _MESSAGE = re.compile(r'%s:\s%s' % (SLOC_PATTERN, _RULE_PATTERN))
+
+    _MESSAGE_INST = re.compile(
+         r'%s:?\s%s' % (SLOC_PATTERN, _RULE_PATTERN_INST))
 
     # GNATcheck exits with an error code of 1 even on a successful run
     VALID_EXIT_CODES = (0, 1)
@@ -143,6 +166,12 @@ class GNATcheck(Plugin, Runner, Reporter):
                     if match:
                         self.log.debug('matched: %s', str(match.groups()))
                         self.__parse_line(match)
+                    else:
+                        match2 = self._MESSAGE_INST.match(line)
+                        if match2:
+                            self.log.debug('matched 2: %s',
+                                           str(match2.groups()))
+                            self.__parse_line_inst(match2)
 
                     Console.progress(index, total, new_line=(index == total))
 
@@ -185,6 +214,42 @@ class GNATcheck(Plugin, Runner, Reporter):
         rule_id = regex.group('rule_id').lower()
 
         self.__add_message(src, line, column, rule_id, message)
+
+    def __parse_line_inst(self, regex):
+        """Parse a GNATcheck instance message line.
+
+        Adds the formatted instance message to the current database session.
+
+        Retrieves following information:
+
+            * source basename
+            * line in source
+            * rule identification
+            * instance + message description
+
+        :param re.RegexObject regex: the result of the _MESSAGE_INST regex
+        """
+
+        # The following Regex results are explained using this example.
+        # 'p_g.adb:20:04 instance at p_g_g.ads:9:04 instance at p.ads:13:04:
+        #   function returns unconstrained array [Unconstrained_Array_Returns]'
+
+        # Extract each component from the message:
+        #     ('p_g.adb', '20', '04', 'instance at p_g_g.ads', '9', '04',
+        #      'instance at p.ads:13:04: function returns unconstrained array',
+        #      'Unconstrained_Array_Returns')
+
+        base = regex.group('file')
+        src = GNAThub.Project.source_file(base)
+        line = regex.group('line')
+        column = regex.group('column')
+        instance = regex.group('instance')
+        message = regex.group('message')
+        rule_id = regex.group('rule_id').lower()
+
+        # Build message including instance information
+        new_msg = instance + message
+        self.__add_message(src, line, column, rule_id, new_msg)
 
     def __add_message(self, src, line, column, rule_id, msg):
         """Add GNATcheck message to current session database.

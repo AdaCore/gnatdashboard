@@ -74,6 +74,10 @@ class Project(object):
         return Project('aggregate_prj', dst)
 
     @staticmethod
+    def simple_gnatcheck (dst=os.getcwd()):
+        return Project('simple_gnatcheck', dst)
+
+    @staticmethod
     def disabled(dst=os.getcwd()):
         return Project('disabled', dst)
 
