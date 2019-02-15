@@ -94,7 +94,7 @@ class CodePeer(Plugin, Runner, Reporter):
         return cmd_line + GNAThub.Project.scenario_switches()
 
     @staticmethod
-    def __msg_reader_cmd_line():
+    def __msg_reader_cmd_line(report):
         """Create CodePeer Message Reader command line arguments list.
 
         :return: the CodePeer message reader command line
@@ -107,9 +107,10 @@ class CodePeer(Plugin, Runner, Reporter):
         cmd_start.extend([ToolArgsPlaceholder('codepeer')])
 
         cmd_end = [
-                   '-output-msg-only', '-csv',
+                   '-output-msg-only', '-csv', '-out', report,
                    ToolArgsPlaceholder('codepeer_msg_reader')
                   ]
+
         return cmd_start + GNAThub.Project.scenario_switches() + cmd_end
 
     def run(self):
@@ -138,15 +139,14 @@ class CodePeer(Plugin, Runner, Reporter):
         self.info('clear existing results if any')
         GNAThub.Tool.clear_references(self.name)
 
-        self.info('extract results with msg_reader')
+        self.info('extract results with msg_reader to %s' % self.csv_report)
         proc = GNAThub.Run(
-            self.output_dir, self.__msg_reader_cmd_line(),
-            out=self.csv_report, capture_stderr=False)
+            self.output_dir, self.__msg_reader_cmd_line(self.csv_report))
 
         if proc.status != 0:
             return GNAThub.EXEC_FAILURE
 
-        self.info('analyse CSV report')
+        self.info('analyse CSV report form %s' % self.csv_report)
         self.tool = GNAThub.Tool(self.name)
 
         self.log.debug('parse report: %s', self.csv_report)
