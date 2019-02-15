@@ -22,8 +22,8 @@ class TestCodePeerSupport(TestCase):
     def setUp(self):
         self.longMessage = True
         self.gnathub = GNAThub(
-            Project.simple(), plugins=['codepeer'],
-            mocks=[CodePeerExecutable])
+            Project.simple(), plugins=['codepeer'])
+            # mocks=[CodePeerExecutable])
 
     def testDatabaseContent(self):
         script_output_file = os.path.abspath('script.out')

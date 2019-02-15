@@ -19,4 +19,8 @@ project Simple is
       for Default_Switches ("Ada") use ("-rules", "-from=gnatcheck.rules");
    end Check;
 
+   package CodePeer is
+      for Switches use ("-level", "3");
+   end CodePeer;
+
 end Simple;
