@@ -23,7 +23,7 @@ class TestCodePeerSupport(TestCase):
         self.longMessage = True
         self.gnathub = GNAThub(
             Project.simple(), plugins=['codepeer'])
-            # mocks=[CodePeerExecutable])
+#            mocks=[CodePeerExecutable])
 
     def testDatabaseContent(self):
         script_output_file = os.path.abspath('script.out')
