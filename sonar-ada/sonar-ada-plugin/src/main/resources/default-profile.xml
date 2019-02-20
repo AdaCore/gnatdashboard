@@ -1,727 +1,1464 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!--
-  ~ GNATdashboard
-  ~ Copyright (C) 2016, AdaCore
-  ~
-  ~ This is free software;  you can redistribute it  and/or modify it  under
-  ~ terms of the  GNU General Public License as published  by the Free Soft-
-  ~ ware  Foundation;  either version 3,  or (at your option) any later ver-
-  ~ sion.  This software is distributed in the hope  that it will be useful,
-  ~ but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN-
-  ~ TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
-  ~ License for  more details.  You should have  received  a copy of the GNU
-  ~ General  Public  License  distributed  with  this  software;   see  file
-  ~ COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy
-  ~ of the license.
-  -->
 
 <profile>
-  <name>GNATdashboard way</name>
-  <language>ada</language>
-  <rules>
-    <rule>
-      <key>precondition</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>discriminant_check</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>validity_check</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>loop_does_not_complete_normally</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>unprotected_access</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>subp_always_fails</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>array_index_check</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>tag_check</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>module_not_analyzed</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>access_check</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>overflow_check</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>user_precondition</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>divide_by_zero</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>unassigned_parameter</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>aliasing_check</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>suspicious_input</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>assertion</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>conditional_check</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>subp_never_returns</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>test_always_true</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>mismatched_protected_access</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>subp_not_available</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>test_predetermined</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>range_check</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>unused_out_parameter</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>call_too_complex</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>postcondition</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>unused_assignment</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>raise_exception</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>test_always_false</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>unprotected_shared_access</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>suspicious_constant_operation</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>unread_parameter</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>useless_self_assignment</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>condition_predetermined</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>subp_not_analyzed</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>unused_assignment_to_global</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>dead_code</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>module_analyzed</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>suspicious_precondition</key>
-      <repositoryKey>codepeer</repositoryKey>
-    </rule>
-    <rule>
-      <key>unconstrained_array_returns</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>metrics_cyclomatic_complexity</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>deeply_nested_inlining</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>unassigned_out_parameters</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_casing:exclude</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>raising_predefined_exceptions</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>overloaded_operators</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>parameters_out_of_order</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>function_style_procedures</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_suffixes:constant_suffix</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>boolean_relational_operators</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>implicit_in_mode_parameters</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>positional_components</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>multiple_entries_in_protected_definitions</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>forbidden_pragmas:gnat</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_casing:exception</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>uncommented_begin_in_package_bodies</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>forbidden_attributes:all</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>complex_inlined_subprograms</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_casing:enum</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>declarations_in_blocks</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_prefixes:concurrent</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>positional_actuals_for_defaulted_parameters</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>non_tagged_derived_types</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>enumeration_ranges_in_case_statements</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>outer_loop_exits</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>misnamed_controlling_parameters</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>forbidden_pragmas</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_prefixes:exclusive</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>direct_calls_to_primitives</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>forbidden_pragmas:all</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_suffixes:default</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_suffixes:type_suffix</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>anonymous_arrays</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>positional_actuals_for_defaulted_generic_parameters</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_prefixes:type</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>library_level_subprograms</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>separate_numeric_error_handlers</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_casing:others</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>no_scalar_storage_order_specified</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>unnamed_blocks_and_loops</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>others_in_case_statements</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>goto_statements</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>predefined_numeric_types</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>annotated_comments</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>exits_from_conditional_loops</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>implicit_small_for_fixed_point_types</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>float_equality_checks</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>discriminated_records</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>slices</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_prefixes:constant</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>abstract_type_declarations</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>overly_nested_control_structures</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>metrics_lsloc</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_prefixes:derived</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>explicit_full_discrete_ranges</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>volatile_objects_without_address_clauses</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>local_packages</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>expanded_loop_exit_names</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>visible_components</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>raising_external_exceptions</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_casing:type</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>non_spark_attributes</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_prefixes:exception</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>positional_generic_parameters</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_suffixes:access_suffix</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>anonymous_subtypes</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_prefixes:access</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_prefixes:subprogram_access</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>positional_parameters</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>non_qualified_aggregates</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_prefixes:class_access</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>others_in_aggregates</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>recursive_subprograms</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>non_short_circuit_operators</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>forbidden_attributes:gnat</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>numeric_literals</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>generics_in_subprograms</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>universal_ranges</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>metrics_essential_complexity</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>non_visible_exceptions</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>deep_inheritance_hierarchies</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>use_package_clauses</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>deeply_nested_generics</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>improper_returns</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_prefixes:enum</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>controlled_type_declarations</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>blocks</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>improperly_located_instantiations</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>forbidden_attributes</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>unconditional_exits</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_suffixes:renaming_suffix</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>too_many_parents</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>name_clashes</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>identifier_casing:constant</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>default_parameters</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>numeric_literals:statements_only</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>others_in_exception_handlers</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>exceptions_as_control_flow</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>exit_statements_with_no_loop_name</key>
-      <repositoryKey>gnatcheck</repositoryKey>
-    </rule>
-    <rule>
-      <key>decision</key>
-      <repositoryKey>gnatcoverage</repositoryKey>
-    </rule>
-    <rule>
-      <key>stmt</key>
-      <repositoryKey>gnatcoverage</repositoryKey>
-    </rule>
-    <rule>
-      <key>mcdc</key>
-      <repositoryKey>gnatcoverage</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_division_check</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_index_check</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_overflow_check</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_fp_overflow_check</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_range_check</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_predicate_check</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_predicate_check_on_default_value</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_length_check</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_discriminant_check</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_tag_check</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_ceiling_interrupt</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_interrupt_reserved</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_ceiling_priority_protocol</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_task_termination</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_initial_condition</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_default_initial_condition</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_precondition</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_precondition_main</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_postcondition</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_refined_post</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_contract_case</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_disjoint_contract_cases</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_complete_contract_cases</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_loop_invariant_init</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_loop_invariant_preserv</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_loop_variant</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_assert</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_raise</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_weaker_pre</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_trivial_weaker_pre</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_stronger_post</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_weaker_classwide_pre</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-    <rule>
-      <key>vc_stronger_classwide_post</key>
-      <repositoryKey>spark2014</repositoryKey>
-    </rule>
-  </rules>
+   <name>GNATdashboard way</name>
+   <language>ada</language>
+   <rules>
+      <rule>
+        <key>precondition</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>postcondition</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>user precondition</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>validity check</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>access check</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>divide by zero</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>aliasing check</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>raise exception</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>conditional check</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>array index check</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>assertion</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>overflow check</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>range check</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>discriminant check</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>tag check</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>suspicious precondition</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>suspicious input</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>suspicious constant operation</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unread parameter</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unassigned parameter</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unused assignment</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unused out parameter</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unused assignment to global</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>useless self assignment</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>dead code</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>loop does not complete normally</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>test predetermined</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>test always true</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>test always false</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>condition predetermined</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>subp never returns</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>subp always fails</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unprotected access</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unprotected shared access</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>mismatched protected access</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>call too complex</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>subp not available</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>dead code continues</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>module analyzed</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>module not analyzed</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>subp not analyzed</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>subp incompletely analyzed</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>default gnat warnings (-gnatwn)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>assertion failure (-gnatw.a)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>bad fixed value (-gnatwb)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>biased representation (-gnatw.b)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>constant conditional (-gnatwc)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unrepped components (-gnatw.c)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>implicit dereference (-gnatwd)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unreferenced formal (-gnatwf)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>suspicious subprogram access (-gnatw.f)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unrecognized pragma (-gnatwg)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>hiding declarations (-gnatwh)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>record holes (-gnatw.h)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>implementation unit (-gnatwi)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>overlapping actuals (-gnatw.i)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>obsolescent feature (-gnatwj)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>late dispatching primitives (-gnatw.j)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>constant variable (-gnatwk)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>standard redefinition (-gnatw.k)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>elaboration problems (-gnatwl)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unused assignment (-gnatwm)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>suspicious modulus value (-gnatw.m)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>address clause overlay (-gnatwo)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unused out parameter assignment (-gnatw.o)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>ineffective inline (-gnatwp)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>suspicious parameter order (-gnatw.p)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>missing parenthesis (-gnatwq)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>questionable layout (-gnatw.q)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>redundant construct (-gnatwr)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>object renaming function (-gnatw.r)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>overridden size clause (-gnatw.s)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>dead code (-gnatwt)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>suspicious contract (-gnatw.t)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unused entity (-gnatwu)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unordered enumeration (-gnatw.u)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unassigned variable (-gnatwv)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>low bound assumption (-gnatww)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>ineffective warnings off (-gnatw.w)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>export/import mismatch (-gnatwx)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>non-local exception (-gnatw.x)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>ada compatibility (-gnatwy)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>suspicious unchecked conversion (-gnatwz)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>size/alignment mismatch (-gnatw.z)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>abort_statements (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>abstract_type_declarations (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>address_specifications_for_initialized_objects (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>address_specifications_for_local_objects (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>annotated_comments (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>anonymous_arrays (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>anonymous_subtypes (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>binary_case_statements (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>bit_records_without_layout_definition (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>blocks (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>boolean_relational_operators (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>complex_inlined_subprograms (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>conditional_expressions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>constructors (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>controlled_type_declarations (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>declarations_in_blocks (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>deep_inheritance_hierarchies (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>deeply_nested_generics (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>deep_library_hierarchy (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>deeply_nested_inlining (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>default_parameters (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>default_values_for_record_components (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>deriving_from_predefined_type (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>direct_calls_to_primitives (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>discriminated_records (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>downward_view_conversions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>enumeration_ranges_in_case_statements (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>enumeration_representation_clauses (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>exceptions_as_control_flow (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>exits_from_conditional_loops (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>exit_statements_with_no_loop_name (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>expanded_loop_exit_names (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>explicit_full_discrete_ranges (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>expression_functions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>fixed_equality_checks (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>float_equality_checks (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>forbidden_attributes (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>forbidden_pragmas (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>function_style_procedures (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>generics_in_subprograms (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>global_variables (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>goto_statements (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>identifier_casing (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>identifier_suffixes (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>identifier_prefixes (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>implicit_in_mode_parameters (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>implicit_small_for_fixed_point_types (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>improper_returns (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>improperly_located_instantiations (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>incomplete_representation_specifications (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>library_level_subprograms (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>local_packages (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>local_use_clauses (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>max_identifier_length (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>metrics_cyclomatic_complexity (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>metrics_essential_complexity (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>metrics_lsloc (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>maximum_parameters (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>membership_tests (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>misnamed_controlling_parameters (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>misplaced_representation_items (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>multiple_entries_in_protected_definitions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>name_clashes (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>nested_subprograms (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>no_inherited_classwide_pre (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>no_explicit_real_range (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>no_scalar_storage_order_specified (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_qualified_aggregates (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_short_circuit_operators (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_spark_attributes (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_tagged_derived_types (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_visible_exceptions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>null_paths (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>number_declarations (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>numeric_indexing (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>numeric_literals (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>object_declarations_out_of_order (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>objects_of_anonymous_types (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>one_construct_per_line (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>others_in_aggregates (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>others_in_case_statements (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>others_in_exception_handlers (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>outbound_protected_assignments (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>outer_loop_exits (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>overloaded_operators (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>overly_nested_control_structures (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>parameters_out_of_order (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>positional_actuals_for_defaulted_generic_parameters (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>positional_actuals_for_defaulted_parameters (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>pos_on_enumeration_types (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>positional_components (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>positional_generic_parameters (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>positional_parameters (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>predefined_numeric_types (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>predicate_testing (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>printable_ascii (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>quantified_expressions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>raising_external_exceptions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>raising_predefined_exceptions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>recursive_subprograms (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>relative_delay_statements (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>representation_specifications (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>separate_numeric_error_handlers (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>single_value_enumeration_types (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>slices (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>specific_parent_type_invariant (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>specific_pre_post (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>specific_type_invariants (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>subprogram_access (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>too_many_dependencies (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>too_many_parents (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>too_many_primitives (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unassigned_out_parameters (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unchecked_address_conversions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unchecked_conversions_as_actuals (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>uncommented_begin_in_package_bodies (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unconstrained_array_returns (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unconditional_exits (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unconstrained_arrays (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>uninitialized_global_variables (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>universal_ranges (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>unnamed_blocks_and_loops (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>use_package_clauses (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>visible_components (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>volatile_objects_without_address_clauses (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>warnings (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>style_checks (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>restrictions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>same operands (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>code duplicated (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>test always false (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>discriminant check (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>test always true (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>contract check (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>access check (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>abstract_type_declarations</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>annotated_comments</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>anonymous_arrays</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>anonymous_subtypes</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>binary_case_statements</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>blocks</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>boolean_relational_operators</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>complex_inlined_subprograms</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>conditional_expressions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>constructors</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>controlled_type_declarations</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>declarations_in_blocks</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>deep_inheritance_hierarchies</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>deeply_nested_generics</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>deep_library_hierarchy</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>deeply_nested_inlining</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>default_parameters</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>default_values_for_record_components</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>deriving_from_predefined_type</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>direct_calls_to_primitives</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>discriminated_records</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>downward_view_conversions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>enumeration_ranges_in_case_statements</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>enumeration_representation_clauses</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>exceptions_as_control_flow</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>exits_from_conditional_loops</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>exit_statements_with_no_loop_name</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>expanded_loop_exit_names</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>explicit_full_discrete_ranges</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>expression_functions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>fixed_equality_checks</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>float_equality_checks</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>forbidden_attributes</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>forbidden_pragmas</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>function_style_procedures</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>generics_in_subprograms</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>global_variables</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>goto_statements</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>identifier_casing</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>identifier_suffixes</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>identifier_prefixes</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>implicit_in_mode_parameters</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>implicit_small_for_fixed_point_types</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>improper_returns</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>improperly_located_instantiations</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>library_level_subprograms</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>local_packages</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>metrics_cyclomatic_complexity</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>metrics_essential_complexity</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>metrics_lsloc</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>maximum_parameters</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>membership_tests</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>misnamed_controlling_parameters</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>multiple_entries_in_protected_definitions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>name_clashes</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>nested_subprograms</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>no_inherited_classwide_pre</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>no_scalar_storage_order_specified</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_qualified_aggregates</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_short_circuit_operators</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_spark_attributes</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_tagged_derived_types</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_visible_exceptions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>null_paths</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>numeric_indexing</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>numeric_literals</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>objects_of_anonymous_types</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>others_in_aggregates</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>others_in_case_statements</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>others_in_exception_handlers</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>outer_loop_exits</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>overloaded_operators</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>overly_nested_control_structures</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>parameters_out_of_order</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>positional_actuals_for_defaulted_generic_parameters</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>positional_actuals_for_defaulted_parameters</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>pos_on_enumeration_types</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>positional_components</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>positional_generic_parameters</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>positional_parameters</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>predefined_numeric_types</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>predicate_testing</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>printable_ascii</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>quantified_expressions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>raising_external_exceptions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>raising_predefined_exceptions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>recursive_subprograms</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>representation_specifications</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>separate_numeric_error_handlers</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>slices</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>specific_parent_type_invariant</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>specific_pre_post</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>specific_type_invariants</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>subprogram_access</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>too_many_dependencies</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>too_many_parents</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>too_many_primitives</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>unassigned_out_parameters</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>unchecked_address_conversions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>unchecked_conversions_as_actuals</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>uncommented_begin_in_package_bodies</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>unconstrained_array_returns</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>unconditional_exits</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>uninitialized_global_variables</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>universal_ranges</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>unnamed_blocks_and_loops</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>use_package_clauses</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>visible_components</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>volatile_objects_without_address_clauses</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>stmt</key>
+        <repositoryKey>gnatcoverage</repositoryKey>
+      </rule>
+      <rule>
+        <key>decision</key>
+        <repositoryKey>gnatcoverage</repositoryKey>
+      </rule>
+      <rule>
+        <key>mcdc</key>
+        <repositoryKey>gnatcoverage</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_division_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_index_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_overflow_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_fp_overflow_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_range_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_predicate_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_predicate_check_on_default_value</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_length_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_discriminant_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_tag_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_ceiling_interrupt</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_interrupt_reserved</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_ceiling_priority_protocol</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_task_termination</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_initial_condition</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_default_initial_condition</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_precondition</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_precondition_main</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_postcondition</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_refined_post</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_contract_case</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_disjoint_contract_cases</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_complete_contract_cases</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_loop_invariant_init</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_loop_invariant_preserv</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_loop_variant</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_assert</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_raise</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_weaker_pre</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_trivial_weaker_pre</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_stronger_post</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_weaker_classwide_pre</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_stronger_classwide_post</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+   </rules>
 </profile>
