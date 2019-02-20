@@ -40,6 +40,8 @@ current_rule_label = ""
 current_rule_type = ""
 current_rule_category = ""
 
+lal_checkers = False
+
 
 def print_current_rule():
     """Print the current rule"""
@@ -73,10 +75,6 @@ def print_current_rule():
 
 
 for j in sys.stdin.readlines():
-    if j.startswith("[ GNAT warnings"):
-        # This is the terminator for Codepeer rules categories
-        break
-
     if j.startswith("[ CodePeer Backend"):
         current_tool_name = "codepeer"
         # Ignore
@@ -102,6 +100,25 @@ for j in sys.stdin.readlines():
             current_rule_category = "informational"
             current_rule_type = None
 
+    elif j.startswith("[ GNAT warnings"):
+        current_tool_name = "codepeer"
+        current_rule_category = "warning"
+        current_rule_type = "CODE_SMELL"
+        continue
+
+    elif j.startswith("[ GNATcheck "):
+        current_tool_name = "codepeer"
+        current_rule_category = "warning"
+        current_rule_type = "CODE_SMELL"
+        continue
+
+    elif j.startswith("[ LAL-checkers"):
+        lal_checkers = True
+        current_tool_name = "codepeer"
+        current_rule_category = "warning"
+        current_rule_type = "CODE_SMELL"
+        continue
+
     else:
         if j.startswith("  "):
             # This is the continuation of the previous rule
@@ -109,6 +126,11 @@ for j in sys.stdin.readlines():
         else:
             # This is the definition of a rule
             current_rule_label, current_rule_text = j.strip().split(" - ", 1)
+
+            # LAL checkers: keep only significant information
+            if lal_checkers:
+                current_rule_text, dummy = current_rule_text.split(" - ", 1)
+
             print_current_rule()
 
 # Print the footer
