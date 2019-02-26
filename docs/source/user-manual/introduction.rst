@@ -71,10 +71,25 @@ package using your |GNATtracker| account.
 
 On Windows, run the graphical installer. On other platforms, un-zip the
 downloaded archive and install it on your system (usually at some location
-such as :file:`/usr/local/gnatpro`).
+such as :file:`/usr/local/gnatpro`) under a new folder. In order to be able
+to use it, you should add to your :envvar:`$PATH` the :file:`/bin/` folder
+of your |GNATdashboard| installation.
 
 The |SonarQube| plug-in is located in the directory
 :file:`<install_prefix>/share/sonar`. This needs to be installed manually.
+In order to do that, you should
+
+  * stop the |SonarQube| server
+  * copy the Sonar Ada plugin from |GNATdashboard| installation repository
+    subfolder :file:`/share/sonar/extensions/plugins/` into the |SonarQube|
+    installation repository under :file:`/extensions/plugins/`
+  * restart the |SonarQube| server.
+
+.. note::
+   It is very important that only one |Sonar Ada plugin| be present in this
+   repository and it needs to match the |GNATdashboard| version that you just
+   installed. Any older version of this plugin must be removed before restarting
+   |SonarQube| server.
 
 Setting your environment
 ------------------------
