@@ -137,9 +137,10 @@ class SPARK2014(Plugin, Runner, Reporter):
             * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
-
-        self.info('clear existing results if any')
-        GNAThub.Tool.clear_references(self.name)
+        # Clear existing references only if not incremental run
+        if not GNAThub.incremental():
+            self.info('clear existing results if any')
+            GNAThub.Tool.clear_references(self.name)
 
         self.info('extract results with msg_reader')
         proc = GNAThub.Run(

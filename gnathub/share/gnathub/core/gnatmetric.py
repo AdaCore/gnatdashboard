@@ -163,8 +163,10 @@ class GNATmetric(Plugin, Runner, Reporter):
             * ``GNAThub.EXEC_FAILURE``: error while parsing the xml report
         """
 
-        self.info('clear existing results if any')
-        GNAThub.Tool.clear_references(self.name)
+        # Clear existing references only if not incremental run
+        if not GNAThub.incremental():
+            self.info('clear existing results if any')
+            GNAThub.Tool.clear_references(self.name)
 
         self.info('analyse report')
 

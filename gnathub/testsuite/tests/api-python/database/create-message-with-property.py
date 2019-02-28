@@ -21,13 +21,17 @@ prop0 = GNAThub.Property('test-prop-0', 'test-prop-name-0')
 assertIsNotNone(prop0)
 prop1 = GNAThub.Property('test-prop-1', 'test-prop-name-1')
 assertIsNotNone(prop1)
+
 msg0 = GNAThub.Message(rule, 'test message', properties=None)
 assertIsNotNone(msg0)
+assertEmpty(msg0.get_properties())
+
 msg1 = GNAThub.Message(rule, 'test message', properties=[prop0, prop1])
 assertIsNotNone(msg1)
+
 for msg in msg0, msg1:
     resource.add_message(msg)
-assertEmpty(msg0.get_properties())
+
 assertNotEmpty(msg1.get_properties())
 msg1_prop0 = msg1.get_properties()[0]
 assertEqual(prop0.name, msg1_prop0.name)

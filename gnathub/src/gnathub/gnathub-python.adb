@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2018, AdaCore                     --
+--                     Copyright (C) 2013-2019, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -73,6 +73,7 @@ package body GNAThub.Python is
    Verbose_Function           : aliased constant String := "verbose";
    Plugins_Function           : aliased constant String := "plugins";
    Subdirs_Function           : aliased constant String := "subdirs";
+   Incremental_Function       : aliased constant String := "incremental";
 
    --  Keeping this for later implemntation of -U main switch
    --     U_Main_Function            : aliased constant String := "u_main";
@@ -92,7 +93,7 @@ package body GNAThub.Python is
    Codepeer_DB_Dir_Function     : aliased constant String := "db_dir";
 
    No_Args_Root_Module_Functions :
-     constant array (1 .. 19) of access constant String :=
+     constant array (1 .. 20) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         HTML_Data_Function'Access,
@@ -102,6 +103,7 @@ package body GNAThub.Python is
         Verbose_Function'Access,
         Plugins_Function'Access,
         Subdirs_Function'Access,
+        Incremental_Function'Access,
         -- U_Main_Function'Access,
         U_Process_All_Function'Access,
         Database_Function'Access,
@@ -730,6 +732,9 @@ package body GNAThub.Python is
 
       elsif Command = Subdirs_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Subdirs);
+
+      elsif Command = Incremental_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Incremental);
 
       --  Keeping this for later implementation of -U main switch
       --        elsif Command = U_Main_Function then

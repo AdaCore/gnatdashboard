@@ -136,8 +136,10 @@ class CodePeer(Plugin, Runner, Reporter):
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
 
-        self.info('clear existing results if any')
-        GNAThub.Tool.clear_references(self.name)
+        # Clear existing references only if not incremental run
+        if not GNAThub.incremental():
+            self.info('clear existing results if any')
+            GNAThub.Tool.clear_references(self.name)
 
         self.info('extract results with msg_reader to %s' % self.csv_report)
         proc = GNAThub.Run(
@@ -271,7 +273,7 @@ class CodePeer(Plugin, Runner, Reporter):
 
         # Add the message to the given resource
         self.bulk_data[src].append(
-            [message, int(line), int(column), int(column)])
+                [message, int(line), int(column), int(column)])
 
     def __do_bulk_insert(self):
         """Insert the codepeer messages in bulk on each resource."""

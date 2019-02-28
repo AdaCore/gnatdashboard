@@ -204,6 +204,9 @@ class GNAThub(object):
         if kwargs.get('verbose', False):
             argv.append('--verbose')
 
+        if kwargs.get('incremental', False):
+            argv.append('--incremental')
+
         if kwargs.get('dry_run', False):
             argv.append('--dry-run')
 

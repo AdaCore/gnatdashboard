@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2014-2018, AdaCore                     --
+--                     Copyright (C) 2014-2019, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -327,7 +327,6 @@ package body GNAThub.Python.Database is
                      Messages_Data : constant List_Instance :=
                        List.Nth_Arg (2);
                   begin
-
                      for R2 in 1 .. Messages_Data.Number_Of_Arguments loop
                         declare
                            Messages_List : constant List_Instance
@@ -335,8 +334,10 @@ package body GNAThub.Python.Database is
 
                            Message      : constant Class_Instance
                              := Messages_List.Nth_Arg (1);
+
                            Message_Id   : constant Integer := Message_Property
                              (Get_Data (Message, Message_Class_Name)).Id;
+
                            Line         : constant Integer
                              := Messages_List.Nth_Arg (2);
                            Col_Begin    : constant Integer
@@ -431,9 +432,9 @@ package body GNAThub.Python.Database is
    begin
       Fetch
         (Results, DB, SQL_Select
-          (To_List ((0 => +D.Tools.Id)),
-           From  => D.Tools,
-           Where => D.Tools.Name = Tool_Name));
+           (To_List ((0 => +D.Tools.Id)),
+            From  => D.Tools,
+            Where => D.Tools.Name = Tool_Name));
 
       if not Results.Has_Row then
          --  No tool with that name has been found, nothing to do
@@ -792,9 +793,11 @@ package body GNAThub.Python.Database is
             R.Fetch (DB, Q);
 
             if R.Has_Row then
-               --  A Message has been found with this name: return it
+               --  A Message has been found: return it
                Id := R.Integer_Value (0);
 
+               --  Add new message properties if there are new ones associated
+               --  with this message
                declare
                   Props        : constant List_Instance := Nth_Arg (Data, 6);
                   Length       : constant Natural := Props.Number_Of_Arguments;
@@ -802,34 +805,46 @@ package body GNAThub.Python.Database is
                   Unused_PK    : Integer;
                begin
                   if Length > 0 then
-
-                     --  Create new message
-                     Id := DB.Insert_And_Get_PK
-                       (SQL_Insert (((D.Messages.Rule_Id = Rule_Id) &
-                                     (D.Messages.Data = Message_Data) &
-                                     (D.Messages.Ranking = Ranking) &
-                                     (D.Messages.Tool_Msg_Id = Tool_Msg_Id))),
-                        PK => D.Messages.Id);
-
-                     --  Set properties for new message
                      for N in 1 .. Length loop
-                        Prop_Id := Property_Property
-                          (Get_Data
-                             (Props.Nth_Arg (N), Property_Class_Name)).Id;
-                        Unused_PK := DB.Insert_And_Get_PK
-                          (SQL_Insert
-                             (((D.Messages_Properties.Message_Id = Id) &
-                              (D.Messages_Properties.Property_Id = Prop_Id)
-                             )),
-                           PK => D.Messages_Properties.Id);
-                     end loop;
+                        declare
+                           PQ           : SQL_Query;
+                           PR           : Forward_Cursor;
+                        begin
+                           Prop_Id := Property_Property
+                             (Get_Data
+                                (Props.Nth_Arg (N), Property_Class_Name)).Id;
 
+                           --  Check if the property is already inserted in the
+                           --  Messages_Properties table and add it if it is
+                           --  not present
+                           PQ := SQL_Select
+                             (To_List ((0 => +D.Messages_Properties.Id)),
+                              From  => D.Messages_Properties,
+                              Where => D.Messages_Properties.Message_Id = Id
+                              and
+                                D.Messages_Properties.Property_Id = Prop_Id);
+                           PR.Fetch (DB, PQ);
+
+                           if PR.Has_Row then
+                              --  Nothing to do since already inserted
+                              null;
+                           else
+                              Unused_PK := DB.Insert_And_Get_PK
+                                (SQL_Insert
+                                   (((D.Messages_Properties.Message_Id = Id) &
+                                    (D.Messages_Properties.Property_Id
+                                       = Prop_Id)
+                                   )),
+                                 PK => D.Messages_Properties.Id);
+                           end if;
+                        end;
+                     end loop;
                      DB.Commit;
                   end if;
                end;
 
             else
-               --  No Message with that name has been found: create one
+               --  No Message has been found: create one
                Id := DB.Insert_And_Get_PK (SQL_Insert
                     (((D.Messages.Rule_Id = Rule_Id) &
                       (D.Messages.Data = Message_Data) &
