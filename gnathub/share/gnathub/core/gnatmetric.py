@@ -104,6 +104,7 @@ class GNATmetric(Plugin, Runner, Reporter):
 
         for metric in node.findall('./metric'):
             name = metric.attrib.get('name')
+
             if name in self.rules:
                 rule = self.rules[name]
             else:
@@ -154,6 +155,30 @@ class GNATmetric(Plugin, Runner, Reporter):
             entities_messages += self.parse_units(unit, resource)
         return entities_messages
 
+    def parse_config(self, tree):
+        """Parse the config block to create the GNAThub rules, if any"""
+
+        config_node = tree.find('./config')
+
+        if config_node is not None:
+            return
+
+        self.info('retrieving metrics configuration')
+
+        for metric in config_node.findall('./metric'):
+            name = metric.attrib.get('name')
+            display_name = metric.attrib.get('display_name')
+
+            if not display_name:
+                display_name = name
+
+            if name in self.rules:
+                rule = self.rules[name]
+            else:
+                rule = GNAThub.Rule(
+                    display_name, name, GNAThub.METRIC_KIND, self.tool)
+                self.rules[name] = rule
+
     def report(self):
         """Parse GNATmetric XML report and save data to the database.
 
@@ -175,6 +200,9 @@ class GNATmetric(Plugin, Runner, Reporter):
 
         try:
             tree = ElementTree.parse(self.output)
+
+            # Parse the config first to create the GNAThub rules
+            self.parse_config(tree)
 
             # Fetch all files
             files = tree.findall('./file')
