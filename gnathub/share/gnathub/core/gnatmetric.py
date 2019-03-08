@@ -160,7 +160,7 @@ class GNATmetric(Plugin, Runner, Reporter):
 
         config_node = tree.find('./config')
 
-        if config_node is not None:
+        if config_node is None:
             return
 
         self.info('retrieving metrics configuration')
