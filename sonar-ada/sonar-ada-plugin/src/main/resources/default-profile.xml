@@ -881,7 +881,19 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
+        <key>abort_statements</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
         <key>abstract_type_declarations</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>address_specifications_for_initialized_objects</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>address_specifications_for_local_objects</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -898,6 +910,10 @@
       </rule>
       <rule>
         <key>binary_case_statements</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>bit_records_without_layout_definition</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -1061,11 +1077,23 @@
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
+        <key>incomplete_representation_specifications</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
         <key>library_level_subprograms</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
         <key>local_packages</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>local_use_clauses</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>max_identifier_length</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -1093,6 +1121,10 @@
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
+        <key>misplaced_representation_items</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
         <key>multiple_entries_in_protected_definitions</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
@@ -1106,6 +1138,10 @@
       </rule>
       <rule>
         <key>no_inherited_classwide_pre</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>no_explicit_real_range</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -1137,6 +1173,10 @@
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
+        <key>number_declarations</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
         <key>numeric_indexing</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
@@ -1145,7 +1185,15 @@
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
+        <key>object_declarations_out_of_order</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
         <key>objects_of_anonymous_types</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>one_construct_per_line</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -1158,6 +1206,10 @@
       </rule>
       <rule>
         <key>others_in_exception_handlers</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>outbound_protected_assignments</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -1229,11 +1281,19 @@
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
+        <key>relative_delay_statements</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
         <key>representation_specifications</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
         <key>separate_numeric_error_handlers</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>single_value_enumeration_types</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -1290,6 +1350,10 @@
       </rule>
       <rule>
         <key>unconditional_exits</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>unconstrained_arrays</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>

@@ -2,9 +2,27 @@
 <rules>
 
     <rule>
+      <key>abort_statements</key>
+      <name>abort statements</name>
+      <description>abort statements</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
       <key>abstract_type_declarations</key>
       <name>abstract types</name>
       <description>abstract types</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>address_specifications_for_initialized_objects</key>
+      <name>address specifications for initialized objects</name>
+      <description>address specifications for initialized objects</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>address_specifications_for_local_objects</key>
+      <name>address specifications for local objects</name>
+      <description>address specifications for local objects</description>
       <tag>gnatcheck</tag>
     </rule>
     <rule>
@@ -29,6 +47,12 @@
       <key>binary_case_statements</key>
       <name>CASE statements that can be replaced with IF statements</name>
       <description>CASE statements that can be replaced with IF statements</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>bit_records_without_layout_definition</key>
+      <name>record with modular component without representation clause</name>
+      <description>record with modular component without representation clause</description>
       <tag>gnatcheck</tag>
     </rule>
     <rule>
@@ -272,6 +296,12 @@
       <tag>gnatcheck</tag>
     </rule>
     <rule>
+      <key>incomplete_representation_specifications</key>
+      <name>record types with layout specification but without size and pack specification</name>
+      <description>record types with layout specification but without size and pack specification</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
       <key>library_level_subprograms</key>
       <name>library level subprograms</name>
       <description>library level subprograms</description>
@@ -281,6 +311,18 @@
       <key>local_packages</key>
       <name>local packages</name>
       <description>local packages</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>local_use_clauses</key>
+      <name>local use clauses</name>
+      <description>local use clauses</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>max_identifier_length</key>
+      <name>maximal identifier length</name>
+      <description>maximal identifier length</description>
       <tag>gnatcheck</tag>
     </rule>
     <rule>
@@ -320,6 +362,12 @@
       <tag>gnatcheck</tag>
     </rule>
     <rule>
+      <key>misplaced_representation_items</key>
+      <name>represemtation items out of order</name>
+      <description>represemtation items out of order</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
       <key>multiple_entries_in_protected_definitions</key>
       <name>protected definitions with more than one entry</name>
       <description>protected definitions with more than one entry</description>
@@ -341,6 +389,12 @@
       <key>no_inherited_classwide_pre</key>
       <name>overridden operation has no Pre'Class</name>
       <description>overridden operation has no Pre'Class</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>no_explicit_real_range</key>
+      <name>real types with no range definition</name>
+      <description>real types with no range definition</description>
       <tag>gnatcheck</tag>
     </rule>
     <rule>
@@ -386,6 +440,12 @@
       <tag>gnatcheck</tag>
     </rule>
     <rule>
+      <key>number_declarations</key>
+      <name>number declarations</name>
+      <description>number declarations</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
       <key>numeric_indexing</key>
       <name>use integer literals as indexes</name>
       <description>use integer literals as indexes</description>
@@ -398,9 +458,21 @@
       <tag>gnatcheck</tag>
     </rule>
     <rule>
+      <key>object_declarations_out_of_order</key>
+      <name>object declarations should presed program unit declarations</name>
+      <description>object declarations should presed program unit declarations</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
       <key>objects_of_anonymous_types</key>
       <name>data objects of anonymous types</name>
       <description>data objects of anonymous types</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>one_construct_per_line</key>
+      <name>each statement or declaration should use separate code line</name>
+      <description>each statement or declaration should use separate code line</description>
       <tag>gnatcheck</tag>
     </rule>
     <rule>
@@ -419,6 +491,12 @@
       <key>others_in_exception_handlers</key>
       <name>OTHERS choices in exception handlers</name>
       <description>OTHERS choices in exception handlers</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>outbound_protected_assignments</key>
+      <name>assignments from protected bodiesto outside objects</name>
+      <description>assignments from protected bodiesto outside objects</description>
       <tag>gnatcheck</tag>
     </rule>
     <rule>
@@ -524,6 +602,12 @@
       <tag>gnatcheck</tag>
     </rule>
     <rule>
+      <key>relative_delay_statements</key>
+      <name>relative delay statements</name>
+      <description>relative delay statements</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
       <key>representation_specifications</key>
       <name>representation specification (clause, aspect or pragma)</name>
       <description>representation specification (clause, aspect or pragma)</description>
@@ -533,6 +617,12 @@
       <key>separate_numeric_error_handlers</key>
       <name>Numeric_Error and Constraint error are not handled together</name>
       <description>Numeric_Error and Constraint error are not handled together</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>single_value_enumeration_types</key>
+      <name>enumeration type definitions with a single enumeration literal</name>
+      <description>enumeration type definitions with a single enumeration literal</description>
       <tag>gnatcheck</tag>
     </rule>
     <rule>
@@ -617,6 +707,12 @@
       <key>unconditional_exits</key>
       <name>Exit statement with no condition</name>
       <description>Exit statement with no condition</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>unconstrained_arrays</key>
+      <name>unconstrained array definitions</name>
+      <description>unconstrained array definitions</description>
       <tag>gnatcheck</tag>
     </rule>
     <rule>
