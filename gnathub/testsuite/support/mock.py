@@ -81,6 +81,10 @@ class Project(object):
     def disabled(dst=os.getcwd()):
         return Project('disabled', dst)
 
+    @staticmethod
+    def simple_with_spaces(dst=os.getcwd()):
+        return Project('simple with spaces', dst)
+
 
 class MockedExecutable(object):
 
