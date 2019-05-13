@@ -1381,6 +1381,18 @@
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
+        <key>warnings</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>style_checks</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>restrictions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
         <key>stmt</key>
         <repositoryKey>gnatcoverage</repositoryKey>
       </rule>

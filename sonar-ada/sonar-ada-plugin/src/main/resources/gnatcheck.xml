@@ -751,4 +751,22 @@
       <description>volatile objects with no address clause</description>
       <tag>gnatcheck</tag>
     </rule>
+    <rule>
+      <key>warnings</key>
+      <name>compiler warnings</name>
+      <description>compiler warnings</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>style_checks</key>
+      <name>compiler style checks</name>
+      <description>compiler style checks</description>
+      <tag>gnatcheck</tag>
+    </rule>
+    <rule>
+      <key>restrictions</key>
+      <name>checks made by pragma Restriction_Warnings</name>
+      <description>checks made by pragma Restriction_Warnings</description>
+      <tag>gnatcheck</tag>
+    </rule>
 </rules>
