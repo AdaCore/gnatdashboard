@@ -39,7 +39,7 @@ def print_current_rule():
       <description>{}</description>
       <tag>gnatcheck</tag>
     </rule>""".format(current_rule_label.lower(),
-                      current_rule_text,
+                      current_rule_label,
                       current_rule_text)
 
 

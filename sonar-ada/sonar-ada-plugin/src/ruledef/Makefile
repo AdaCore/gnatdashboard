@@ -28,8 +28,18 @@ codepeer_rules_definition:
 	codepeer --list-categories 2>&1 | python $(TOP)/scripts/generate_codepeer_rules.py > \
          $(SONAR_ADA_PLUGIN_RESOURCES)/codepeer.xml
 
+#   Temporary switch used to have technical debts listed for codepeer rules
+codepeer_rules_definition_with_technical_debt:
+	codepeer --list-categories-with-debts 2>&1 | python $(TOP)/scripts/generate_codepeer_rules_with_debt.py > \
+         $(SONAR_ADA_PLUGIN_RESOURCES)/codepeer.xml
+
 gnatcheck_rules_definition:
 	gnatcheck -h 2>&1 | python $(TOP)/scripts/generate_gnatcheck_rules.py > \
+         $(SONAR_ADA_PLUGIN_RESOURCES)/gnatcheck.xml
+
+#   Temporary switch used to have technical debts listed for gnatcheck rules
+gnatcheck_rules_definition_with_technical_debt:
+	gnatcheck -dR -h 2>&1 | python $(TOP)/scripts/generate_gnatcheck_rules_with_debt.py > \
          $(SONAR_ADA_PLUGIN_RESOURCES)/gnatcheck.xml
 
 $(BUILD_DIR)/$(CODEPEER_DOC):
