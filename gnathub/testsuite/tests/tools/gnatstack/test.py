@@ -7,7 +7,7 @@ from ConfigParser import SafeConfigParser
 from unittest import TestCase
 from support.mock import GNAThub, Project, Script
 
-TEXT_IO = ["a-textio.ads 263:14"]
+TEXT_IO = ["a-textio.ads 508:14"]
 F_ADB = ["f.adb", "f.adb 9:4", "f.adb 21:1"]
 F_ADS = ["f.ads"]
 SIMPLE_ADB = ["simple.adb", "simple.adb 19:4", "simple.adb 28:4",

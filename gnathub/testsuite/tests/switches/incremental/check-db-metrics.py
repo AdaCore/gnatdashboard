@@ -65,4 +65,4 @@ assertEqual(len(rules), 41)
 
 # Messages from DB
 messages = {msg.id: msg for msg in GNAThub.Message.list()}
-assertEqual(len(messages), 91)
+assertEqual(len(messages), 96)
