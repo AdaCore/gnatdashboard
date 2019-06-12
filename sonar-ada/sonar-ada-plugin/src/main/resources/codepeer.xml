@@ -9,7 +9,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>postcondition</key>
@@ -19,7 +19,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>user precondition</key>
@@ -29,7 +29,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>validity check</key>
@@ -39,7 +39,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>access check</key>
@@ -49,7 +49,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>divide by zero</key>
@@ -59,7 +59,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>aliasing check</key>
@@ -69,7 +69,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>raise exception</key>
@@ -79,7 +79,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>conditional check</key>
@@ -99,7 +99,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>assertion</key>
@@ -109,7 +109,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>overflow check</key>
@@ -119,7 +119,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>range check</key>
@@ -129,7 +129,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>discriminant check</key>
@@ -139,7 +139,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>tag check</key>
@@ -149,7 +149,7 @@
             <tag>codepeer</tag>
             <tag>check</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>suspicious precondition</key>
@@ -159,7 +159,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>suspicious input</key>
@@ -169,7 +169,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>suspicious constant operation</key>
@@ -179,7 +179,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>unread parameter</key>
@@ -229,7 +229,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>useless self assignment</key>
@@ -239,7 +239,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>dead code</key>
@@ -259,7 +259,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>test predetermined</key>
@@ -269,7 +269,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>test always true</key>
@@ -279,7 +279,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>test always false</key>
@@ -289,7 +289,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>condition predetermined</key>
@@ -299,7 +299,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>subp never returns</key>
@@ -309,7 +309,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>subp always fails</key>
@@ -319,7 +319,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>unprotected access</key>
@@ -329,7 +329,7 @@
             <tag>codepeer</tag>
             <tag>race-condition</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>unprotected shared access</key>
@@ -339,7 +339,7 @@
             <tag>codepeer</tag>
             <tag>race-condition</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>mismatched protected access</key>
@@ -349,7 +349,7 @@
             <tag>codepeer</tag>
             <tag>race-condition</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>call too complex</key>
@@ -358,7 +358,7 @@
             <tag>codepeer</tag>
             <tag>informational</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>subp not available</key>
@@ -367,7 +367,7 @@
             <tag>codepeer</tag>
             <tag>informational</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>dead code continues</key>
@@ -376,7 +376,7 @@
             <tag>codepeer</tag>
             <tag>informational</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>module analyzed</key>
@@ -385,7 +385,7 @@
             <tag>codepeer</tag>
             <tag>informational</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>module not analyzed</key>
@@ -394,7 +394,7 @@
             <tag>codepeer</tag>
             <tag>informational</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>subp not analyzed</key>
@@ -403,7 +403,7 @@
             <tag>codepeer</tag>
             <tag>informational</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>subp incompletely analyzed</key>
@@ -412,7 +412,7 @@
             <tag>codepeer</tag>
             <tag>informational</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>default gnat warnings (-gnatwn)</key>
@@ -482,7 +482,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>unreferenced formal (-gnatwf)</key>
@@ -512,7 +512,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>hiding declarations (-gnatwh)</key>
@@ -652,7 +652,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>suspicious parameter order (-gnatw.p)</key>
@@ -802,7 +802,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>ada compatibility (-gnatwy)</key>
@@ -832,7 +832,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>abort_statements (gnatcheck)</key>
@@ -842,7 +842,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>abstract_type_declarations (gnatcheck)</key>
@@ -852,7 +852,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>address_specifications_for_initialized_objects (gnatcheck)</key>
@@ -862,7 +862,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>address_specifications_for_local_objects (gnatcheck)</key>
@@ -872,7 +872,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>annotated_comments (gnatcheck)</key>
@@ -892,7 +892,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>anonymous_subtypes (gnatcheck)</key>
@@ -902,7 +902,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>binary_case_statements (gnatcheck)</key>
@@ -912,7 +912,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>bit_records_without_layout_definition (gnatcheck)</key>
@@ -922,7 +922,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>blocks (gnatcheck)</key>
@@ -932,7 +932,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>boolean_relational_operators (gnatcheck)</key>
@@ -942,7 +942,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>complex_inlined_subprograms (gnatcheck)</key>
@@ -952,7 +952,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>conditional_expressions (gnatcheck)</key>
@@ -962,7 +962,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>constructors (gnatcheck)</key>
@@ -972,7 +972,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>controlled_type_declarations (gnatcheck)</key>
@@ -982,7 +982,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>declarations_in_blocks (gnatcheck)</key>
@@ -992,7 +992,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>deep_inheritance_hierarchies (gnatcheck)</key>
@@ -1002,7 +1002,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>deeply_nested_generics (gnatcheck)</key>
@@ -1012,7 +1012,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>deep_library_hierarchy (gnatcheck)</key>
@@ -1022,7 +1022,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>deeply_nested_inlining (gnatcheck)</key>
@@ -1032,7 +1032,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>default_parameters (gnatcheck)</key>
@@ -1042,7 +1042,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>default_values_for_record_components (gnatcheck)</key>
@@ -1052,7 +1052,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>deriving_from_predefined_type (gnatcheck)</key>
@@ -1062,7 +1062,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>direct_calls_to_primitives (gnatcheck)</key>
@@ -1072,7 +1072,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>discriminated_records (gnatcheck)</key>
@@ -1082,7 +1082,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>downward_view_conversions (gnatcheck)</key>
@@ -1092,7 +1092,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>enumeration_ranges_in_case_statements (gnatcheck)</key>
@@ -1102,7 +1102,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>enumeration_representation_clauses (gnatcheck)</key>
@@ -1112,7 +1112,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>exceptions_as_control_flow (gnatcheck)</key>
@@ -1122,7 +1122,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>exits_from_conditional_loops (gnatcheck)</key>
@@ -1132,7 +1132,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>exit_statements_with_no_loop_name (gnatcheck)</key>
@@ -1142,7 +1142,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>expanded_loop_exit_names (gnatcheck)</key>
@@ -1152,7 +1152,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>explicit_full_discrete_ranges (gnatcheck)</key>
@@ -1162,7 +1162,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>expression_functions (gnatcheck)</key>
@@ -1172,7 +1172,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>fixed_equality_checks (gnatcheck)</key>
@@ -1182,7 +1182,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>float_equality_checks (gnatcheck)</key>
@@ -1192,7 +1192,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>forbidden_attributes (gnatcheck)</key>
@@ -1202,7 +1202,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>forbidden_pragmas (gnatcheck)</key>
@@ -1212,7 +1212,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>function_style_procedures (gnatcheck)</key>
@@ -1222,7 +1222,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>generics_in_subprograms (gnatcheck)</key>
@@ -1232,7 +1232,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>global_variables (gnatcheck)</key>
@@ -1242,7 +1242,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>goto_statements (gnatcheck)</key>
@@ -1252,7 +1252,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>identifier_casing (gnatcheck)</key>
@@ -1292,7 +1292,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>implicit_small_for_fixed_point_types (gnatcheck)</key>
@@ -1302,7 +1302,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>improper_returns (gnatcheck)</key>
@@ -1312,7 +1312,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>improperly_located_instantiations (gnatcheck)</key>
@@ -1322,7 +1322,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>incomplete_representation_specifications (gnatcheck)</key>
@@ -1332,7 +1332,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>library_level_subprograms (gnatcheck)</key>
@@ -1342,7 +1342,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>local_packages (gnatcheck)</key>
@@ -1352,7 +1352,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>local_use_clauses (gnatcheck)</key>
@@ -1362,7 +1362,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>max_identifier_length (gnatcheck)</key>
@@ -1382,7 +1382,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>metrics_essential_complexity (gnatcheck)</key>
@@ -1392,7 +1392,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>metrics_lsloc (gnatcheck)</key>
@@ -1402,7 +1402,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>maximum_parameters (gnatcheck)</key>
@@ -1412,7 +1412,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>membership_tests (gnatcheck)</key>
@@ -1422,7 +1422,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>misnamed_controlling_parameters (gnatcheck)</key>
@@ -1442,7 +1442,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>multiple_entries_in_protected_definitions (gnatcheck)</key>
@@ -1452,7 +1452,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>name_clashes (gnatcheck)</key>
@@ -1462,7 +1462,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>nested_subprograms (gnatcheck)</key>
@@ -1472,7 +1472,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>no_inherited_classwide_pre (gnatcheck)</key>
@@ -1482,7 +1482,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>no_explicit_real_range (gnatcheck)</key>
@@ -1492,7 +1492,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>no_scalar_storage_order_specified (gnatcheck)</key>
@@ -1532,7 +1532,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>non_tagged_derived_types (gnatcheck)</key>
@@ -1542,7 +1542,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>non_visible_exceptions (gnatcheck)</key>
@@ -1552,7 +1552,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>null_paths (gnatcheck)</key>
@@ -1572,7 +1572,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>numeric_indexing (gnatcheck)</key>
@@ -1582,7 +1582,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>numeric_literals (gnatcheck)</key>
@@ -1592,7 +1592,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>object_declarations_out_of_order (gnatcheck)</key>
@@ -1652,7 +1652,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>outbound_protected_assignments (gnatcheck)</key>
@@ -1662,7 +1662,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>outer_loop_exits (gnatcheck)</key>
@@ -1672,7 +1672,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>overloaded_operators (gnatcheck)</key>
@@ -1682,7 +1682,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>overly_nested_control_structures (gnatcheck)</key>
@@ -1692,7 +1692,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>parameters_out_of_order (gnatcheck)</key>
@@ -1732,7 +1732,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>positional_components (gnatcheck)</key>
@@ -1772,17 +1772,17 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>predicate_testing (gnatcheck)</key>
             <name>Predicate_Testing (GNATCheck)</name>
-            <description>expressions need subtype predicateevaluation</description>
+            <description>expressions need subtype predicate evaluation</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>printable_ascii (gnatcheck)</key>
@@ -1802,7 +1802,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>raising_external_exceptions (gnatcheck)</key>
@@ -1812,7 +1812,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>raising_predefined_exceptions (gnatcheck)</key>
@@ -1822,7 +1822,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>recursive_subprograms (gnatcheck)</key>
@@ -1832,7 +1832,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>relative_delay_statements (gnatcheck)</key>
@@ -1842,7 +1842,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>representation_specifications (gnatcheck)</key>
@@ -1852,7 +1852,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>separate_numeric_error_handlers (gnatcheck)</key>
@@ -1862,7 +1862,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>single_value_enumeration_types (gnatcheck)</key>
@@ -1872,7 +1872,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>slices (gnatcheck)</key>
@@ -1882,7 +1882,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>specific_parent_type_invariant (gnatcheck)</key>
@@ -1892,7 +1892,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>specific_pre_post (gnatcheck)</key>
@@ -1902,7 +1902,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>specific_type_invariants (gnatcheck)</key>
@@ -1912,7 +1912,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>subprogram_access (gnatcheck)</key>
@@ -1922,7 +1922,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>too_many_dependencies (gnatcheck)</key>
@@ -1932,7 +1932,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>too_many_parents (gnatcheck)</key>
@@ -1942,7 +1942,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>too_many_primitives (gnatcheck)</key>
@@ -1952,7 +1952,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>unassigned_out_parameters (gnatcheck)</key>
@@ -1962,7 +1962,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>unchecked_address_conversions (gnatcheck)</key>
@@ -1972,7 +1972,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>unchecked_conversions_as_actuals (gnatcheck)</key>
@@ -1982,7 +1982,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>uncommented_begin_in_package_bodies (gnatcheck)</key>
@@ -2002,7 +2002,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>unconditional_exits (gnatcheck)</key>
@@ -2012,7 +2012,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>unconstrained_arrays (gnatcheck)</key>
@@ -2022,7 +2022,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>uninitialized_global_variables (gnatcheck)</key>
@@ -2032,7 +2032,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>universal_ranges (gnatcheck)</key>
@@ -2042,7 +2042,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>unnamed_blocks_and_loops (gnatcheck)</key>
@@ -2062,7 +2062,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>visible_components (gnatcheck)</key>
@@ -2072,7 +2072,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>volatile_objects_without_address_clauses (gnatcheck)</key>
@@ -2082,7 +2082,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>warnings (gnatcheck)</key>
@@ -2115,26 +2115,6 @@
             <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>code duplicated (lal checker)</key>
-            <name>code duplicated (LAL checker)</name>
-            <description>code is duplicated at several places.</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
-            <key>test always false (lal checker)</key>
-            <name>test always false (LAL checker)</name>
-            <description>test is always 'false'</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
             <key>test always true (lal checker)</key>
             <name>test always true (LAL checker)</name>
             <description>test is always 'true'</description>
@@ -2142,37 +2122,7 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
-            <key>contract check (lal checker)</key>
-            <name>contract check (LAL checker)</name>
-            <description>user contract (pragma Assert, pre/postcondition) could fail</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
-            <key>discriminant check (lal checker)</key>
-            <name>discriminant check (LAL checker)</name>
-            <description>a field for the wrong variant/discriminant is accessed</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
-            <key>access check (lal checker)</key>
-            <name>access check (LAL checker)</name>
-            <description>dereference of a possibly null reference</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>same operands (lal checker)</key>
@@ -2182,6 +2132,56 @@
             <tag>codepeer</tag>
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>access check (lal checker)</key>
+            <name>access check (LAL checker)</name>
+            <description>dereference of a possibly null reference</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>test always false (lal checker)</key>
+            <name>test always false (LAL checker)</name>
+            <description>test is always 'false'</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>code duplicated (lal checker)</key>
+            <name>code duplicated (LAL checker)</name>
+            <description>code is duplicated at several places.</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>discriminant check (lal checker)</key>
+            <name>discriminant check (LAL checker)</name>
+            <description>a field for the wrong variant/discriminant is accessed</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>contract check (lal checker)</key>
+            <name>contract check (LAL checker)</name>
+            <description>user contract (pragma Assert, pre/postcondition) could fail</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
 </rules>

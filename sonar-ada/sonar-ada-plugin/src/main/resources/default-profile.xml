@@ -853,23 +853,11 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>code duplicated (lal checker)</key>
-        <repositoryKey>codepeer</repositoryKey>
-      </rule>
-      <rule>
-        <key>test always false (lal checker)</key>
-        <repositoryKey>codepeer</repositoryKey>
-      </rule>
-      <rule>
         <key>test always true (lal checker)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>contract check (lal checker)</key>
-        <repositoryKey>codepeer</repositoryKey>
-      </rule>
-      <rule>
-        <key>discriminant check (lal checker)</key>
+        <key>same operands (lal checker)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -877,7 +865,19 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>same operands (lal checker)</key>
+        <key>test always false (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>code duplicated (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>discriminant check (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>contract check (lal checker)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
