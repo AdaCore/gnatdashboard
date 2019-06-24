@@ -197,7 +197,7 @@ The following tools are currently supported by the |GNAThub|'s core plugins:
 
 An additional :command:`[global]` repository is available for the user to store
 plugins.  |GNAThub| searches this directory looking for additional plugins
-to load. This directory is never be overridden by an update, making it a
+to load. This directory is never overwritten by an update, making it a
 good place to store custom plug-ins.
 
 |GNAThub|'s command line
