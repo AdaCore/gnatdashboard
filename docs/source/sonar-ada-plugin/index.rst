@@ -5,7 +5,7 @@ Sonar Ada Plugin
 
 This SonarQube plugin loads the analysis of Ada projects by GNATdashboard.
 
-ChangeLog 18.x
+ChangeLog 19.x
 --------------
 
 The Sonar Ada Plugin shipped with GNATdashboard now supports |SonarQube|
