@@ -1,7 +1,7 @@
-<div id="{{title}}" class="filter-selector col-lg-12 col-md-12 col-sm-12 col-xs-12 open">
-    <div class="filter-header col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <span class="col-lg-5 col-md-6 col-sm-12 col-xs-12 no-pad"> {{ title }} </span>
-        <span class="select col-lg-7 col-md-6 col-sm-12 col-xs-12 no-pad">
+<div id="{{title}}" class="filter-selector d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 open">
+    <div class="filter-header d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span class="d-inline-block col-lg-5 col-md-6 col-sm-12 col-xs-12 no-pad"> {{ title }} </span>
+        <span class="select d-inline-block col-lg-7 col-md-6 col-sm-12 col-xs-12 no-pad">
             <span (click)="selectAll(options)">
                 select all
             </span>
@@ -15,7 +15,7 @@
         </i>
     </div>
 
-    <div class="filter-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="filter-body d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <span *ngFor="let option of options; let idx = index;trackBy: trackOption">
             <input
                    #checkbox
@@ -23,12 +23,12 @@
                    id="{{option.name}}"
                    [ngModel]="!option._ui_unselected"
                    (click)="toggle.emit({ option: option, checked: checkbox.checked, id: idx })"/>
-            <label class="option col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" for="{{option.name}}"
+            <label class="option d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" for="{{option.name}}"
                    [ngClass]="option._ui_selected_message_count == 0 ? 'no-message ' + option.name : 'message' ">
-                <span class="background-pad col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                <span class="background-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                       [ngClass]=" option.name ">
-                    <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">{{ option.display_name ? option.display_name : option.name }}</span>
-                    <div class="count col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                    <span class="d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">{{ option.display_name ? option.display_name : option.name }}</span>
+                    <div class="count d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
                         {{ option._ui_selected_message_count != null ? option._ui_selected_message_count : option._message_count }} / {{option._message_count}}
                     </div>
                 </span>

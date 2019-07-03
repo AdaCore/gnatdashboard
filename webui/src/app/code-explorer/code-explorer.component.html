@@ -4,10 +4,10 @@
          caption="Loading report...">
 </spinner>
 <!-- Report display -->
-<div *ngIf="reportService.code" class="layout-page col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad">
-    <main class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-            <span class="tab-header right col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<div *ngIf="reportService.code" class="layout-page d-inline-block col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad">
+    <main class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <span class="tab-header right d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
                 <span class="expand-collapse">
                     <span (click)="expandCollapseAll(true)" class="expandCollapse">expand all  </span>
@@ -24,112 +24,112 @@
                 </span>
 
             </span>
-            <span class="tab-header col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <span class="tab-header d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                 <span class="click" (click)="sortModules('filename', 'line')"
-                      [ngClass]="reportService.showCoverage ? 'col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'col-lg-7 col-md-7 col-sm-7 col-xs-7'">
+                      [ngClass]="reportService.showCoverage ? 'd-inline-block col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'd-inline-block col-lg-7 col-md-7 col-sm-7 col-xs-7'">
                     <span class="ellipsis">Name</span>
                     <span class="header-icon"
                           *ngIf="reportService.codeFilter.newSort == 'name'">
-                        <md-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</md-icon>
-                        <md-icon class="md-18" *ngIf="reportService.codeFilter.order == -1">arrow_upward</md-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
-                <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
-                <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','name')">
+                <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
+                <span class="center d-inline-block col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','name')">
                     <span class="ellipsis">Messages</span>
                     <span class="header-icon"
                           *ngIf="reportService.codeFilter.newSort == '_ui_total_message_count'">
-                        <md-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</md-icon>
-                        <md-icon class="md-18" *ngIf="reportService.codeFilter.order == -1">arrow_upward</md-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
-                <span *ngIf="reportService.showCoverage" class="center col-lg-2 col-md-2 col-sm-2 col-xs-2 click" (click)="sortModules('coverage','')">
+                <span *ngIf="reportService.showCoverage" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click" (click)="sortModules('coverage','')">
                     <span class="ellipsis">Coverage</span>
                     <span class="header-icon"
                           *ngIf="reportService.codeFilter.newSort == 'coverage'">
-                        <md-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</md-icon>
-                        <md-icon class="md-18" *ngIf="reportService.codeFilter.order == -1">arrow_upward</md-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
             </span>
         </span>
         <!-- Error handling -->
-        <missing-report-error *ngIf="reportService.isReportFetchError" clas="col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad"></missing-report-error>
+        <missing-report-error *ngIf="reportService.isReportFetchError" clas="d-inline-block col-lg-9 col-md-9 col-sm-8 col-xs-8 no-pad"></missing-report-error>
 
-        <span class="all-projects-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+        <span class="all-projects-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
               *ngIf="reportService && reportService.code">
             <span *ngFor="let project of reportService.code.modules;trackBy: trackProject"
-                  class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                  class=" d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                   [ngClass]="(!this.reportService.showFiles && (project._ui_total_message_count == 0 || ( project._ui_total_message_count == null && project._total_message_count == 0))) ? 'hideIt' : ''">
 
-                <span class="project-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(project)">
+                <span class="project-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(project)">
                     <span class=""
-                          [ngClass]="reportService.showCoverage ? 'col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'col-lg-7 col-md-7 col-sm-7 col-xs-7'">
-                        <md-icon class="md-18 project-tree" [ngClass]="project.expand ? 'open': ''">chevron_right</md-icon>
+                          [ngClass]="reportService.showCoverage ? 'd-inline-block col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'd-inline-block col-lg-7 col-md-7 col-sm-7 col-xs-7'">
+                        <mat-icon class="md-18 project-tree" [ngClass]="project.expand ? 'open': ''">chevron_right</mat-icon>
                         {{project.name}}
                     </span>
-                    <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2">
                         {{ project.source_dirs | dshCount }} folders
                     </span>
-                    <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                    <span class="center d-inline-block col-lg-3 col-md-3 col-sm-3 col-xs-3">
                         {{
                         project._ui_total_message_count != null ?
                         project._ui_total_message_count :
                         project._total_message_count
                         }}
                     </span>
-                    <span *ngIf="reportService.showCoverage" class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <span *ngIf="reportService.showCoverage" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2">
                         {{project.coverage != null ? project.coverage : 0}} %
                     </span>
                 </span>
 
-                <span id="{{project.name}}" class="all-folders-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="project.expand ? 'open': 'reduce'"
+                <span id="{{project.name}}" class="all-folders-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="project.expand ? 'open': 'reduce'"
                       *ngIf="project">
                     <span *ngFor="let folder of project.source_dirs;trackBy: trackFolder"
-                          class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                          class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                           [ngClass]="(!this.reportService.showFiles && (folder._ui_total_message_count == 0 || ( folder._ui_total_message_count == null && folder._total_message_count == 0))) ? 'hideIt' : ''">
-                        <span class="folder-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(folder)">
+                        <span class="folder-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(folder)">
                             <span style="text-indent:15px;"
                                   class=""
-                                  [ngClass]="reportService.showCoverage ? 'col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'col-lg-7 col-md-7 col-sm-7 col-xs-7'">
-                                <md-icon class="md-18 folder-tree">folder_open</md-icon>
+                                  [ngClass]="reportService.showCoverage ? 'd-inline-block col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'd-inline-block col-lg-7 col-md-7 col-sm-7 col-xs-7'">
+                                <mat-icon class="md-18 folder-tree">folder_open</mat-icon>
                                 {{folder.name}}
                             </span>
-                            <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                 {{ folder.sources | dshCount }} files
                             </span>
-                            <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <span class="center d-inline-block col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 {{
                                 folder._ui_total_message_count != null ?
                                 folder._ui_total_message_count :
                                 folder._total_message_count
                                 }}
                             </span>
-                            <span *ngIf="reportService.showCoverage" class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <span *ngIf="reportService.showCoverage" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                 {{folder.coverage != null ? folder.coverage : 0}} %
                             </span>
                         </span>
 
-                        <span id="{{folder.name}}" class="all-files-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="folder.expand ? 'open': 'reduce'"
+                        <span id="{{folder.name}}" class="all-files-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="folder.expand ? 'open': 'reduce'"
                               *ngIf="folder">
                             <span *ngFor="let file of folder.sources;trackBy: trackFile"
-                                  class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                                  class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                   [ngClass]="(!this.reportService.showFiles && (file._ui_total_message_count == 0 || ( file._ui_total_message_count == null && file._total_message_count == 0))) ? 'hideIt' : ''">
-                                <span class="file-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [routerLink]="['/source', file.filename]">
+                                <span class="file-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [routerLink]="['/source', file.filename]">
                                     <span style="text-indent:35px;"
                                           class=""
-                                          [ngClass]="reportService.showCoverage ? 'col-lg-7 col-md-7 col-sm-7 col-xs-7' : 'col-lg-9 col-md-9 col-sm-9 col-xs-9'">
-                                        <md-icon class="md-18 file-tree">insert_drive_file</md-icon>
+                                          [ngClass]="reportService.showCoverage ? 'd-inline-block col-lg-7 col-md-7 col-sm-7 col-xs-7' : 'd-inline-block col-lg-9 col-md-9 col-sm-9 col-xs-9'">
+                                        <mat-icon class="md-18 file-tree">insert_drive_file</mat-icon>
                                         {{file.filename}}
                                     </span>
-                                    <span class="center col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                    <span class="center d-inline-block col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                         {{
                                         file._ui_total_message_count != null ?
                                         file._ui_total_message_count :
                                         file._total_message_count
                                         }}
                                     </span>
-                                    <span *ngIf="reportService.showCoverage" class="center col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                    <span *ngIf="reportService.showCoverage" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                         {{file.coverage != null ? file.coverage : 0}} %
                                     </span>
                                 </span>
@@ -138,7 +138,7 @@
                     </span>
                 </span>
             </span>
-            <span class="info-span col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="reportService._ui_total_message_count == 0"> There are no messages corresponding to the selected filters</span>
+            <span class="info-span d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="reportService._ui_total_message_count == 0"> There are no messages corresponding to the selected filters</span>
         </span>
     </main>
 </div>

@@ -1,16 +1,16 @@
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { CodepeerRunInfoDialog } from './codepeer-run-info-dialog.component';
 
-import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
+import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class CodepeerDialogsService {
 
-    constructor(private dialog: MdDialog) {}
+    constructor(private dialog: MatDialog) {}
 
     public codepeerRunInfo(): Observable<boolean> {
-        let dialogRef: MdDialogRef<CodepeerRunInfoDialog>;
+        let dialogRef: MatDialogRef<CodepeerRunInfoDialog>;
 
         dialogRef = this.dialog.open(CodepeerRunInfoDialog);
 
