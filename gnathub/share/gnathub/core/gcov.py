@@ -97,8 +97,10 @@ class Gcov(Plugin, Reporter):
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
 
-        self.log.info('clear existing results if any')
-        GNAThub.Tool.clear_references(self.name)
+        # Clear existing references only if not incremental run
+        if not GNAThub.incremental():
+            self.log.info('clear existing results if any')
+            GNAThub.Tool.clear_references(self.name)
 
         self.info('parse coverage reports (%s)' % self.GCOV_EXT)
 

@@ -8,7 +8,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>postcondition</key>
             <name>postcondition</name>
@@ -16,7 +18,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>user precondition</key>
             <name>user precondition</name>
@@ -24,7 +28,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>validity check</key>
             <name>validity check</name>
@@ -32,7 +38,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>access check</key>
             <name>access check</name>
@@ -40,7 +48,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>divide by zero</key>
             <name>divide by zero</name>
@@ -48,7 +58,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>aliasing check</key>
             <name>aliasing check</name>
@@ -56,7 +68,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>raise exception</key>
             <name>raise exception</name>
@@ -64,7 +78,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>conditional check</key>
             <name>conditional check</name>
@@ -72,7 +88,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>array index check</key>
             <name>array index check</name>
@@ -80,7 +98,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>assertion</key>
             <name>assertion</name>
@@ -88,7 +108,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>overflow check</key>
             <name>overflow check</name>
@@ -96,7 +118,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>range check</key>
             <name>range check</name>
@@ -104,7 +128,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>discriminant check</key>
             <name>discriminant check</name>
@@ -112,7 +138,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>tag check</key>
             <name>tag check</name>
@@ -120,7 +148,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>suspicious precondition</key>
             <name>suspicious precondition</name>
@@ -128,7 +158,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>suspicious input</key>
             <name>suspicious input</name>
@@ -136,7 +168,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>suspicious constant operation</key>
             <name>suspicious constant operation</name>
@@ -144,7 +178,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>unread parameter</key>
             <name>unread parameter</name>
@@ -152,7 +188,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>unassigned parameter</key>
             <name>unassigned parameter</name>
@@ -160,7 +198,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>unused assignment</key>
             <name>unused assignment</name>
@@ -168,7 +208,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>unused out parameter</key>
             <name>unused out parameter</name>
@@ -176,7 +218,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>unused assignment to global</key>
             <name>unused assignment to global</name>
@@ -184,7 +228,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>useless self assignment</key>
             <name>useless self assignment</name>
@@ -192,7 +238,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>dead code</key>
             <name>dead code</name>
@@ -200,7 +248,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>loop does not complete normally</key>
             <name>loop does not complete normally</name>
@@ -208,7 +258,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>test predetermined</key>
             <name>test predetermined</name>
@@ -216,7 +268,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>test always true</key>
             <name>test always true</name>
@@ -224,7 +278,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>test always false</key>
             <name>test always false</name>
@@ -232,7 +288,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>condition predetermined</key>
             <name>condition predetermined</name>
@@ -240,7 +298,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>subp never returns</key>
             <name>subp never returns</name>
@@ -248,7 +308,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>subp always fails</key>
             <name>subp always fails</name>
@@ -256,7 +318,9 @@
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>unprotected access</key>
             <name>unprotected access</name>
@@ -264,7 +328,9 @@
             <type>BUG</type>
             <tag>codepeer</tag>
             <tag>race-condition</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>unprotected shared access</key>
             <name>unprotected shared access</name>
@@ -272,7 +338,9 @@
             <type>BUG</type>
             <tag>codepeer</tag>
             <tag>race-condition</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>mismatched protected access</key>
             <name>mismatched protected access</name>
@@ -280,54 +348,1840 @@
             <type>BUG</type>
             <tag>codepeer</tag>
             <tag>race-condition</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>call too complex</key>
             <name>call too complex</name>
             <description>subprogram skipped to avoid exhausting resources</description>
             <tag>codepeer</tag>
             <tag>informational</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>subp not available</key>
             <name>subp not available</name>
             <description>subprogram not available, call not analyzed</description>
             <tag>codepeer</tag>
             <tag>informational</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>dead code continues</key>
             <name>dead code continues</name>
             <description>continuation of dead code</description>
             <tag>codepeer</tag>
             <tag>informational</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>module analyzed</key>
             <name>module analyzed</name>
             <description>module included in analysis</description>
             <tag>codepeer</tag>
             <tag>informational</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>module not analyzed</key>
             <name>module not analyzed</name>
             <description>module not included due to CodePeer limitation</description>
             <tag>codepeer</tag>
             <tag>informational</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>subp not analyzed</key>
             <name>subp not analyzed</name>
             <description>subprogram not included due to CodePeer limitation</description>
             <tag>codepeer</tag>
             <tag>informational</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
     <rule>
             <key>subp incompletely analyzed</key>
             <name>subp incompletely analyzed</name>
             <description>incomplete analysis</description>
             <tag>codepeer</tag>
             <tag>informational</tag>
-            </rule>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>default gnat warnings (-gnatwn)</key>
+            <name>default GNAT warnings (-gnatwn)</name>
+            <description>normal warning mode (cancels -gnatws/-gnatwe)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>assertion failure (-gnatw.a)</key>
+            <name>assertion failure (-gnatw.a)</name>
+            <description>turn on warnings for failing assertion</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>bad fixed value (-gnatwb)</key>
+            <name>bad fixed value (-gnatwb)</name>
+            <description>turn on warnings for bad fixed value (not multiple of small)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>biased representation (-gnatw.b)</key>
+            <name>biased representation (-gnatw.b)</name>
+            <description>turn on warnings for biased representation</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>constant conditional (-gnatwc)</key>
+            <name>constant conditional (-gnatwc)</name>
+            <description>turn on warnings for constant conditional</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unrepped components (-gnatw.c)</key>
+            <name>unrepped components (-gnatw.c)</name>
+            <description>turn on warnings for unrepped components</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>implicit dereference (-gnatwd)</key>
+            <name>implicit dereference (-gnatwd)</name>
+            <description>turn on warnings for implicit dereference</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unreferenced formal (-gnatwf)</key>
+            <name>unreferenced formal (-gnatwf)</name>
+            <description>turn on warnings for unreferenced formal</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>suspicious subprogram access (-gnatw.f)</key>
+            <name>suspicious subprogram access (-gnatw.f)</name>
+            <description>turn on warnings for suspicious Subp'Access</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unrecognized pragma (-gnatwg)</key>
+            <name>unrecognized pragma (-gnatwg)</name>
+            <description>turn on warnings for unrecognized pragma</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>hiding declarations (-gnatwh)</key>
+            <name>hiding declarations (-gnatwh)</name>
+            <description>turn on warnings for hiding declarations</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>record holes (-gnatw.h)</key>
+            <name>record holes (-gnatw.h)</name>
+            <description>turn on warnings for holes in records</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>implementation unit (-gnatwi)</key>
+            <name>implementation unit (-gnatwi)</name>
+            <description>turn on warnings for implementation unit</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>overlapping actuals (-gnatw.i)</key>
+            <name>overlapping actuals (-gnatw.i)</name>
+            <description>turn on warnings for overlapping actuals</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>obsolescent feature (-gnatwj)</key>
+            <name>obsolescent feature (-gnatwj)</name>
+            <description>turn on warnings for obsolescent (annex J) feature</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>late dispatching primitives (-gnatw.j)</key>
+            <name>late dispatching primitives (-gnatw.j)</name>
+            <description>turn on warnings for late dispatching primitives</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>constant variable (-gnatwk)</key>
+            <name>constant variable (-gnatwk)</name>
+            <description>turn on warnings on constant variable</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>standard redefinition (-gnatw.k)</key>
+            <name>standard redefinition (-gnatw.k)</name>
+            <description>turn on warnings for standard redefinition</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>elaboration problems (-gnatwl)</key>
+            <name>elaboration problems (-gnatwl)</name>
+            <description>turn on warnings for elaboration problems</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unused assignment (-gnatwm)</key>
+            <name>unused assignment (-gnatwm)</name>
+            <description>turn on warnings for variable assigned but not read</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>suspicious modulus value (-gnatw.m)</key>
+            <name>suspicious modulus value (-gnatw.m)</name>
+            <description>turn on warnings for suspicious modulus value</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>address clause overlay (-gnatwo)</key>
+            <name>address clause overlay (-gnatwo)</name>
+            <description>turn on warnings for address clause overlay</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unused out parameter assignment (-gnatw.o)</key>
+            <name>unused out parameter assignment (-gnatw.o)</name>
+            <description>turn on warnings for out parameters assigned but not read</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>ineffective inline (-gnatwp)</key>
+            <name>ineffective inline (-gnatwp)</name>
+            <description>turn on warnings for ineffective pragma Inline in frontend</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>suspicious parameter order (-gnatw.p)</key>
+            <name>suspicious parameter order (-gnatw.p)</name>
+            <description>turn on warnings for suspicious parameter order</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>missing parenthesis (-gnatwq)</key>
+            <name>missing parenthesis (-gnatwq)</name>
+            <description>turn on warnings for questionable missing parenthesis</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>questionable layout (-gnatw.q)</key>
+            <name>questionable layout (-gnatw.q)</name>
+            <description>turn on warnings for questionable layout of record types</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>redundant construct (-gnatwr)</key>
+            <name>redundant construct (-gnatwr)</name>
+            <description>turn on warnings for redundant construct</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>object renaming function (-gnatw.r)</key>
+            <name>object renaming function (-gnatw.r)</name>
+            <description>turn on warnings for object renaming function</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>overridden size clause (-gnatw.s)</key>
+            <name>overridden size clause (-gnatw.s)</name>
+            <description>turn on warnings for overridden size clause</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>dead code (-gnatwt)</key>
+            <name>dead code (-gnatwt)</name>
+            <description>turn on warnings for tracking deleted code</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>suspicious contract (-gnatw.t)</key>
+            <name>suspicious contract (-gnatw.t)</name>
+            <description>turn on warnings for suspicious contract</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unused entity (-gnatwu)</key>
+            <name>unused entity (-gnatwu)</name>
+            <description>turn on warnings for unused entity</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unordered enumeration (-gnatw.u)</key>
+            <name>unordered enumeration (-gnatw.u)</name>
+            <description>turn on warnings for unordered enumeration</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unassigned variable (-gnatwv)</key>
+            <name>unassigned variable (-gnatwv)</name>
+            <description>turn on warnings for unassigned variable</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>low bound assumption (-gnatww)</key>
+            <name>low bound assumption (-gnatww)</name>
+            <description>turn on warnings for wrong low bound assumption</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>ineffective warnings off (-gnatw.w)</key>
+            <name>ineffective Warnings Off (-gnatw.w)</name>
+            <description>turn on warnings on pragma Warnings Off</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>export/import mismatch (-gnatwx)</key>
+            <name>export/import mismatch (-gnatwx)</name>
+            <description>turn on warnings for export/import</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>non-local exception (-gnatw.x)</key>
+            <name>non-local exception (-gnatw.x)</name>
+            <description>turn on warnings for non-local exception</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>ada compatibility (-gnatwy)</key>
+            <name>Ada compatibility (-gnatwy)</name>
+            <description>turn on warnings for Ada compatibility issues</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>suspicious unchecked conversion (-gnatwz)</key>
+            <name>suspicious unchecked conversion (-gnatwz)</name>
+            <description>turn on warnings for suspicious unchecked conversion</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>size/alignment mismatch (-gnatw.z)</key>
+            <name>size/alignment mismatch (-gnatw.z)</name>
+            <description>turn on warnings for record size not a multiple of alignment</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>abort_statements (gnatcheck)</key>
+            <name>Abort_Statements (GNATCheck)</name>
+            <description>abort statements</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>abstract_type_declarations (gnatcheck)</key>
+            <name>Abstract_Type_Declarations (GNATCheck)</name>
+            <description>abstract types</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>address_specifications_for_initialized_objects (gnatcheck)</key>
+            <name>Address_Specifications_For_Initialized_Objects (GNATCheck)</name>
+            <description>address specifications for initialized objects</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>address_specifications_for_local_objects (gnatcheck)</key>
+            <name>Address_Specifications_For_Local_Objects (GNATCheck)</name>
+            <description>address specifications for local objects</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>annotated_comments (gnatcheck)</key>
+            <name>Annotated_Comments (GNATCheck)</name>
+            <description>use of comment annotations</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>anonymous_arrays (gnatcheck)</key>
+            <name>Anonymous_Arrays (GNATCheck)</name>
+            <description>anonymous array types</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>anonymous_subtypes (gnatcheck)</key>
+            <name>Anonymous_Subtypes (GNATCheck)</name>
+            <description>anonymous subtypes</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>binary_case_statements (gnatcheck)</key>
+            <name>Binary_Case_Statements (GNATCheck)</name>
+            <description>CASE statements that can be replaced with IF statements</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>bit_records_without_layout_definition (gnatcheck)</key>
+            <name>Bit_Records_Without_Layout_Definition (GNATCheck)</name>
+            <description>record with modular component without representation clause</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>blocks (gnatcheck)</key>
+            <name>Blocks (GNATCheck)</name>
+            <description>block statements</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>boolean_relational_operators (gnatcheck)</key>
+            <name>Boolean_Relational_Operators (GNATCheck)</name>
+            <description>comparisons of Boolean values</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>complex_inlined_subprograms (gnatcheck)</key>
+            <name>Complex_Inlined_Subprograms (GNATCheck)</name>
+            <description>complex inlined subprograms</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>conditional_expressions (gnatcheck)</key>
+            <name>Conditional_Expressions (GNATCheck)</name>
+            <description>Ada 2012 conditional expressions</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>constructors (gnatcheck)</key>
+            <name>Constructors (GNATCheck)</name>
+            <description>constructors</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>controlled_type_declarations (gnatcheck)</key>
+            <name>Controlled_Type_Declarations (GNATCheck)</name>
+            <description>controlled types</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>declarations_in_blocks (gnatcheck)</key>
+            <name>Declarations_In_Blocks (GNATCheck)</name>
+            <description>block statements with local declarations</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>deep_inheritance_hierarchies (gnatcheck)</key>
+            <name>Deep_Inheritance_Hierarchies (GNATCheck)</name>
+            <description>derivation tree is too deep</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>deeply_nested_generics (gnatcheck)</key>
+            <name>Deeply_Nested_Generics (GNATCheck)</name>
+            <description>deeply nested generic declarations</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>deep_library_hierarchy (gnatcheck)</key>
+            <name>Deep_Library_Hierarchy (GNATCheck)</name>
+            <description>deep library hierarchy</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>deeply_nested_inlining (gnatcheck)</key>
+            <name>Deeply_Nested_Inlining (GNATCheck)</name>
+            <description>deeply nested inlining (global check)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>default_parameters (gnatcheck)</key>
+            <name>Default_Parameters (GNATCheck)</name>
+            <description>declarations of default subprogram parameters</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>default_values_for_record_components (gnatcheck)</key>
+            <name>Default_Values_For_Record_Components (GNATCheck)</name>
+            <description>default values for record components</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>deriving_from_predefined_type (gnatcheck)</key>
+            <name>Deriving_From_Predefined_Type (GNATCheck)</name>
+            <description>types derived from predefined types</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>direct_calls_to_primitives (gnatcheck)</key>
+            <name>Direct_Calls_To_Primitives (GNATCheck)</name>
+            <description>non-dispatching calls to primitives</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>discriminated_records (gnatcheck)</key>
+            <name>Discriminated_Records (GNATCheck)</name>
+            <description>discriminated records</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>downward_view_conversions (gnatcheck)</key>
+            <name>Downward_View_Conversions (GNATCheck)</name>
+            <description>downward view conversions</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>enumeration_ranges_in_case_statements (gnatcheck)</key>
+            <name>Enumeration_Ranges_In_CASE_Statements (GNATCheck)</name>
+            <description>enumeration ranges as choices in case statements</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>enumeration_representation_clauses (gnatcheck)</key>
+            <name>Enumeration_Representation_Clauses (GNATCheck)</name>
+            <description>enumeration representation clauses</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>exceptions_as_control_flow (gnatcheck)</key>
+            <name>Exceptions_As_Control_Flow (GNATCheck)</name>
+            <description>exceptions for control flow</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>exits_from_conditional_loops (gnatcheck)</key>
+            <name>Exits_From_Conditional_Loops (GNATCheck)</name>
+            <description>exit from conditional loops</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>exit_statements_with_no_loop_name (gnatcheck)</key>
+            <name>EXIT_Statements_With_No_Loop_Name (GNATCheck)</name>
+            <description>exit statements with no loop name</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>expanded_loop_exit_names (gnatcheck)</key>
+            <name>Expanded_Loop_Exit_Names (GNATCheck)</name>
+            <description>expanded loop names in exit statements</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>explicit_full_discrete_ranges (gnatcheck)</key>
+            <name>Explicit_Full_Discrete_Ranges (GNATCheck)</name>
+            <description>explicit discrete ranges</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>expression_functions (gnatcheck)</key>
+            <name>Expression_Functions (GNATCheck)</name>
+            <description>expression function in package specifications</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>fixed_equality_checks (gnatcheck)</key>
+            <name>Fixed_Equality_Checks (GNATCheck)</name>
+            <description>equality for fixed values</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>float_equality_checks (gnatcheck)</key>
+            <name>Float_Equality_Checks (GNATCheck)</name>
+            <description>equality for float values</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>forbidden_attributes (gnatcheck)</key>
+            <name>Forbidden_Attributes (GNATCheck)</name>
+            <description>usage of specified attributes</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>forbidden_pragmas (gnatcheck)</key>
+            <name>Forbidden_Pragmas (GNATCheck)</name>
+            <description>usage of specified pragmas</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>function_style_procedures (gnatcheck)</key>
+            <name>Function_Style_Procedures (GNATCheck)</name>
+            <description>procedures looking like functions</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>generics_in_subprograms (gnatcheck)</key>
+            <name>Generics_In_Subprograms (GNATCheck)</name>
+            <description>definitions of generic units in  subprogram bodies</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>global_variables (gnatcheck)</key>
+            <name>Global_Variables (GNATCheck)</name>
+            <description>declarations of global variables</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>goto_statements (gnatcheck)</key>
+            <name>GOTO_Statements (GNATCheck)</name>
+            <description>goto statements</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>identifier_casing (gnatcheck)</key>
+            <name>Identifier_Casing (GNATCheck)</name>
+            <description>casing of defining names</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>identifier_suffixes (gnatcheck)</key>
+            <name>Identifier_Suffixes (GNATCheck)</name>
+            <description>suffixes in defining names</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>identifier_prefixes (gnatcheck)</key>
+            <name>Identifier_Prefixes (GNATCheck)</name>
+            <description>prefixes in defining names</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>implicit_in_mode_parameters (gnatcheck)</key>
+            <name>Implicit_IN_Mode_Parameters (GNATCheck)</name>
+            <description>implicit IN mode in parameter specifications</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>implicit_small_for_fixed_point_types (gnatcheck)</key>
+            <name>Implicit_SMALL_For_Fixed_Point_Types (GNATCheck)</name>
+            <description>fixed point type declarations with no 'Small clause</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>improper_returns (gnatcheck)</key>
+            <name>Improper_Returns (GNATCheck)</name>
+            <description>improper use of return statements</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>improperly_located_instantiations (gnatcheck)</key>
+            <name>Improperly_Located_Instantiations (GNATCheck)</name>
+            <description>instantiations that can cause problems</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>incomplete_representation_specifications (gnatcheck)</key>
+            <name>Incomplete_Representation_Specifications (GNATCheck)</name>
+            <description>record types with layout specification but without size and pack specification</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>library_level_subprograms (gnatcheck)</key>
+            <name>Library_Level_Subprograms (GNATCheck)</name>
+            <description>library level subprograms</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>local_packages (gnatcheck)</key>
+            <name>Local_Packages (GNATCheck)</name>
+            <description>local packages</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>local_use_clauses (gnatcheck)</key>
+            <name>Local_USE_Clauses (GNATCheck)</name>
+            <description>local use clauses</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>max_identifier_length (gnatcheck)</key>
+            <name>Max_Identifier_Length (GNATCheck)</name>
+            <description>maximal identifier length</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>metrics_cyclomatic_complexity (gnatcheck)</key>
+            <name>Metrics_Cyclomatic_Complexity (GNATCheck)</name>
+            <description>(metrics) high cyclomatic complexity</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>metrics_essential_complexity (gnatcheck)</key>
+            <name>Metrics_Essential_Complexity (GNATCheck)</name>
+            <description>(metrics) high essential complexity</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>metrics_lsloc (gnatcheck)</key>
+            <name>Metrics_LSLOC (GNATCheck)</name>
+            <description>(metrics) high LSLOC value</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>maximum_parameters (gnatcheck)</key>
+            <name>Maximum_Parameters (GNATCheck)</name>
+            <description>maximum number of subprogram parameters</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>membership_tests (gnatcheck)</key>
+            <name>Membership_Tests (GNATCheck)</name>
+            <description>membership test</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>misnamed_controlling_parameters (gnatcheck)</key>
+            <name>Misnamed_Controlling_Parameters (GNATCheck)</name>
+            <description>Badly formatted profile of a primitive operation</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>misplaced_representation_items (gnatcheck)</key>
+            <name>Misplaced_Representation_Items (GNATCheck)</name>
+            <description>representation items out of order</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>multiple_entries_in_protected_definitions (gnatcheck)</key>
+            <name>Multiple_Entries_In_Protected_Definitions (GNATCheck)</name>
+            <description>protected definitions with more than one entry</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>name_clashes (gnatcheck)</key>
+            <name>Name_Clashes (GNATCheck)</name>
+            <description>restrictions on name space</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>nested_subprograms (gnatcheck)</key>
+            <name>Nested_Subprograms (GNATCheck)</name>
+            <description>nested subprograms</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>no_inherited_classwide_pre (gnatcheck)</key>
+            <name>No_Inherited_Classwide_Pre (GNATCheck)</name>
+            <description>overridden operation has no Pre'Class</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>no_explicit_real_range (gnatcheck)</key>
+            <name>No_Explicit_Real_Range (GNATCheck)</name>
+            <description>real types with no range definition</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>no_scalar_storage_order_specified (gnatcheck)</key>
+            <name>No_Scalar_Storage_Order_Specified (GNATCheck)</name>
+            <description>a record/record extension type has record representation clause but no Scalar_Storage_Order attribute clause</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>non_qualified_aggregates (gnatcheck)</key>
+            <name>Non_Qualified_Aggregates (GNATCheck)</name>
+            <description>non-qualified aggregates</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>non_short_circuit_operators (gnatcheck)</key>
+            <name>Non_Short_Circuit_Operators (GNATCheck)</name>
+            <description>use of predefined AND and OR for boolean types</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>non_spark_attributes (gnatcheck)</key>
+            <name>Non_SPARK_Attributes (GNATCheck)</name>
+            <description>attributes that are not from the SPARK subset</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>non_tagged_derived_types (gnatcheck)</key>
+            <name>Non_Tagged_Derived_Types (GNATCheck)</name>
+            <description>derived types that are not type extensions</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>non_visible_exceptions (gnatcheck)</key>
+            <name>Non_Visible_Exceptions (GNATCheck)</name>
+            <description>potential propagations of non-visible exceptions</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>null_paths (gnatcheck)</key>
+            <name>Null_Paths (GNATCheck)</name>
+            <description>null paths in control statements</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>number_declarations (gnatcheck)</key>
+            <name>Number_Declarations (GNATCheck)</name>
+            <description>number declarations</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>numeric_indexing (gnatcheck)</key>
+            <name>Numeric_Indexing (GNATCheck)</name>
+            <description>use integer literals as indexes</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>numeric_literals (gnatcheck)</key>
+            <name>Numeric_Literals (GNATCheck)</name>
+            <description>numeric literals</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>object_declarations_out_of_order (gnatcheck)</key>
+            <name>Object_Declarations_Out_Of_Order (GNATCheck)</name>
+            <description>object declarations should precede program unit declarations</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>objects_of_anonymous_types (gnatcheck)</key>
+            <name>Objects_Of_Anonymous_Types (GNATCheck)</name>
+            <description>data objects of anonymous types</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>one_construct_per_line (gnatcheck)</key>
+            <name>One_Construct_Per_Line (GNATCheck)</name>
+            <description>each statement or declaration should use separate code line</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>others_in_aggregates (gnatcheck)</key>
+            <name>OTHERS_In_Aggregates (GNATCheck)</name>
+            <description>OTHERS choices in aggregates</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>others_in_case_statements (gnatcheck)</key>
+            <name>OTHERS_In_CASE_Statements (GNATCheck)</name>
+            <description>OTHERS choices in case statements</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>others_in_exception_handlers (gnatcheck)</key>
+            <name>OTHERS_In_Exception_Handlers (GNATCheck)</name>
+            <description>OTHERS choices in exception handlers</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>outbound_protected_assignments (gnatcheck)</key>
+            <name>Outbound_Protected_Assignments (GNATCheck)</name>
+            <description>assignments from protected bodiesto outside objects</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>outer_loop_exits (gnatcheck)</key>
+            <name>Outer_Loop_Exits (GNATCheck)</name>
+            <description>exiting more than one loop at once</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>overloaded_operators (gnatcheck)</key>
+            <name>Overloaded_Operators (GNATCheck)</name>
+            <description>operator overloading</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>overly_nested_control_structures (gnatcheck)</key>
+            <name>Overly_Nested_Control_Structures (GNATCheck)</name>
+            <description>deep nesting level of control structures</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>parameters_out_of_order (gnatcheck)</key>
+            <name>Parameters_Out_Of_Order (GNATCheck)</name>
+            <description>formal parameters ordering</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>positional_actuals_for_defaulted_generic_parameters (gnatcheck)</key>
+            <name>Positional_Actuals_For_Defaulted_Generic_Parameters (GNATCheck)</name>
+            <description>positional generic actuals for defaulted generic parameters</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>positional_actuals_for_defaulted_parameters (gnatcheck)</key>
+            <name>Positional_Actuals_For_Defaulted_Parameters (GNATCheck)</name>
+            <description>positional actuals for defaulted parameters</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>pos_on_enumeration_types (gnatcheck)</key>
+            <name>POS_On_Enumeration_Types (GNATCheck)</name>
+            <description>attribute 'POS applied to enumeration types</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>positional_components (gnatcheck)</key>
+            <name>Positional_Components (GNATCheck)</name>
+            <description>positional components associations in aggregates</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>positional_generic_parameters (gnatcheck)</key>
+            <name>Positional_Generic_Parameters (GNATCheck)</name>
+            <description>positional generic associations</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>positional_parameters (gnatcheck)</key>
+            <name>Positional_Parameters (GNATCheck)</name>
+            <description>positional associations in subprogram and entry calls</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>predefined_numeric_types (gnatcheck)</key>
+            <name>Predefined_Numeric_Types (GNATCheck)</name>
+            <description>explicit references to predefined numeric subtypes</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>predicate_testing (gnatcheck)</key>
+            <name>Predicate_Testing (GNATCheck)</name>
+            <description>expressions need subtype predicate evaluation</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>printable_ascii (gnatcheck)</key>
+            <name>Printable_ASCII (GNATCheck)</name>
+            <description>non-printable characters</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>quantified_expressions (gnatcheck)</key>
+            <name>Quantified_Expressions (GNATCheck)</name>
+            <description>Ada 2012 quantified expressions</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>raising_external_exceptions (gnatcheck)</key>
+            <name>Raising_External_Exceptions (GNATCheck)</name>
+            <description>visibility of exceptions raised by routines declared in library package</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>raising_predefined_exceptions (gnatcheck)</key>
+            <name>Raising_Predefined_Exceptions (GNATCheck)</name>
+            <description>explicit raise of predefined exceptions</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>recursive_subprograms (gnatcheck)</key>
+            <name>Recursive_Subprograms (GNATCheck)</name>
+            <description>recursion (call graph cycles)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>relative_delay_statements (gnatcheck)</key>
+            <name>Relative_Delay_Statements (GNATCheck)</name>
+            <description>relative delay statements</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>representation_specifications (gnatcheck)</key>
+            <name>Representation_Specifications (GNATCheck)</name>
+            <description>representation specification (clause, aspect or pragma)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>separate_numeric_error_handlers (gnatcheck)</key>
+            <name>Separate_Numeric_Error_Handlers (GNATCheck)</name>
+            <description>Numeric_Error and Constraint error are not handled together</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>single_value_enumeration_types (gnatcheck)</key>
+            <name>Single_Value_Enumeration_Types (GNATCheck)</name>
+            <description>enumeration type definitions with a single enumeration literal</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>slices (gnatcheck)</key>
+            <name>Slices (GNATCheck)</name>
+            <description>slices</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>specific_parent_type_invariant (gnatcheck)</key>
+            <name>Specific_Parent_Type_Invariant (GNATCheck)</name>
+            <description>derivation from a type with specific Type_Invariant aspect</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>specific_pre_post (gnatcheck)</key>
+            <name>Specific_Pre_Post (GNATCheck)</name>
+            <description>definition of non class-wide Pre and Post aspects for tagged type primitives</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>specific_type_invariants (gnatcheck)</key>
+            <name>Specific_Type_Invariants (GNATCheck)</name>
+            <description>non class-wide Type_Invariant aspect</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>subprogram_access (gnatcheck)</key>
+            <name>Subprogram_Access (GNATCheck)</name>
+            <description>access to subprogram definition</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>too_many_dependencies (gnatcheck)</key>
+            <name>Too_Many_Dependencies (GNATCheck)</name>
+            <description>compilation unit has too many dependencies</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>too_many_parents (gnatcheck)</key>
+            <name>Too_Many_Parents (GNATCheck)</name>
+            <description>type/object has too many parents</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>too_many_primitives (gnatcheck)</key>
+            <name>Too_Many_Primitives (GNATCheck)</name>
+            <description>tagged type has too many primitives</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unassigned_out_parameters (gnatcheck)</key>
+            <name>Unassigned_OUT_Parameters (GNATCheck)</name>
+            <description>OUT parameters do not get values in procedure bodies</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unchecked_address_conversions (gnatcheck)</key>
+            <name>Unchecked_Address_Conversions (GNATCheck)</name>
+            <description>unchecked conversions from System.Address into access type</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unchecked_conversions_as_actuals (gnatcheck)</key>
+            <name>Unchecked_Conversions_As_Actuals (GNATCheck)</name>
+            <description>passing instance of Unchecked_Conversion as actual</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>uncommented_begin_in_package_bodies (gnatcheck)</key>
+            <name>Uncommented_BEGIN_In_Package_Bodies (GNATCheck)</name>
+            <description>BEGIN keywords in package bodies non-marked with comment with package name</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unconstrained_array_returns (gnatcheck)</key>
+            <name>Unconstrained_Array_Returns (GNATCheck)</name>
+            <description>functions returning unconstrained arrays</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unconditional_exits (gnatcheck)</key>
+            <name>Unconditional_Exits (GNATCheck)</name>
+            <description>Exit statement with no condition</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unconstrained_arrays (gnatcheck)</key>
+            <name>Unconstrained_Arrays (GNATCheck)</name>
+            <description>unconstrained array definitions</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>uninitialized_global_variables (gnatcheck)</key>
+            <name>Uninitialized_Global_Variables (GNATCheck)</name>
+            <description>uninitialized variables in packages</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>universal_ranges (gnatcheck)</key>
+            <name>Universal_Ranges (GNATCheck)</name>
+            <description>ranges with universal integer bounds</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>unnamed_blocks_and_loops (gnatcheck)</key>
+            <name>Unnamed_Blocks_And_Loops (GNATCheck)</name>
+            <description>compound statements naming</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>use_package_clauses (gnatcheck)</key>
+            <name>USE_PACKAGE_Clauses (GNATCheck)</name>
+            <description>use clause for packages</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>visible_components (gnatcheck)</key>
+            <name>Visible_Components (GNATCheck)</name>
+            <description>Types with publicly accessible components</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>volatile_objects_without_address_clauses (gnatcheck)</key>
+            <name>Volatile_Objects_Without_Address_Clauses (GNATCheck)</name>
+            <description>volatile objects with no address clause</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>warnings (gnatcheck)</key>
+            <name>Warnings (GNATCheck)</name>
+            <description>compiler warnings</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>style_checks (gnatcheck)</key>
+            <name>Style_Checks (GNATCheck)</name>
+            <description>compiler style checks</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>restrictions (gnatcheck)</key>
+            <name>Restrictions (GNATCheck)</name>
+            <description>checks made by pragma Restriction_Warnings</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>test always true (lal checker)</key>
+            <name>test always true (LAL checker)</name>
+            <description>test is always 'true'</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>same operands (lal checker)</key>
+            <name>same operands (LAL checker)</name>
+            <description>a binary operation uses the same two operands</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>access check (lal checker)</key>
+            <name>access check (LAL checker)</name>
+            <description>dereference of a possibly null reference</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>test always false (lal checker)</key>
+            <name>test always false (LAL checker)</name>
+            <description>test is always 'false'</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>code duplicated (lal checker)</key>
+            <name>code duplicated (LAL checker)</name>
+            <description>code is duplicated at several places.</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>discriminant check (lal checker)</key>
+            <name>discriminant check (LAL checker)</name>
+            <description>a field for the wrong variant/discriminant is accessed</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>contract check (lal checker)</key>
+            <name>contract check (LAL checker)</name>
+            <description>user contract (pragma Assert, pre/postcondition) could fail</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
 </rules>

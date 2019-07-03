@@ -1,4 +1,4 @@
-project Simple is
+project Simple_With_Spaces is
 
    for Object_Dir use "obj";
    for Source_Dirs use ("src");
@@ -23,4 +23,4 @@ project Simple is
       for Switches use ("-level", "3");
    end CodePeer;
 
-end Simple;
+end Simple_With_Spaces;

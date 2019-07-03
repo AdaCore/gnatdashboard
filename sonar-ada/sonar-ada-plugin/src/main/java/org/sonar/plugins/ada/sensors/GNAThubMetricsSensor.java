@@ -83,10 +83,17 @@ public class GNAThubMetricsSensor extends MainFilesSensor {
             .withValue(measures.complexity)
             .save();
 
-    //  Save package level all_stmts metric as SonarQube LSLOC
+    //  Save package level LSLOC metric as SonarQube LSLOC
     context.<Integer>newMeasure()
             .on(file)
             .forMetric(CoreMetrics.NCLOC)
+            .withValue(measures.GNATmetricPckgLSLOC)
+            .save();
+
+    //  Save package level all_stmts metric as SonarQube Statements
+    context.<Integer>newMeasure()
+            .on(file)
+            .forMetric(CoreMetrics.STATEMENTS)
             .withValue(measures.GNATmetricPckgAllStmts)
             .save();
   }

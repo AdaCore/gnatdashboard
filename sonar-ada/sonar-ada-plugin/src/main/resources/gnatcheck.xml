@@ -2,657 +2,1027 @@
 <rules>
 
     <rule>
+      <key>abort_statements</key>
+      <name>Abort_Statements</name>
+      <description>abort statements</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
       <key>abstract_type_declarations</key>
-      <name>abstract types</name>
+      <name>Abstract_Type_Declarations</name>
       <description>abstract types</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>address_specifications_for_initialized_objects</key>
+      <name>Address_Specifications_For_Initialized_Objects</name>
+      <description>address specifications for initialized objects</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>address_specifications_for_local_objects</key>
+      <name>Address_Specifications_For_Local_Objects</name>
+      <description>address specifications for local objects</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>annotated_comments</key>
-      <name>use of comment annotations</name>
+      <name>Annotated_Comments</name>
       <description>use of comment annotations</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>anonymous_arrays</key>
-      <name>anonymous array types</name>
+      <name>Anonymous_Arrays</name>
       <description>anonymous array types</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>anonymous_subtypes</key>
-      <name>anonymous subtypes</name>
+      <name>Anonymous_Subtypes</name>
       <description>anonymous subtypes</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>binary_case_statements</key>
-      <name>CASE statements that can be replaced with IF statements</name>
+      <name>Binary_Case_Statements</name>
       <description>CASE statements that can be replaced with IF statements</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>bit_records_without_layout_definition</key>
+      <name>Bit_Records_Without_Layout_Definition</name>
+      <description>record with modular component without representation clause</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>blocks</key>
-      <name>block statements</name>
+      <name>Blocks</name>
       <description>block statements</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>boolean_relational_operators</key>
-      <name>comparisons of Boolean values</name>
+      <name>Boolean_Relational_Operators</name>
       <description>comparisons of Boolean values</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>complex_inlined_subprograms</key>
-      <name>complex inlined subprograms</name>
+      <name>Complex_Inlined_Subprograms</name>
       <description>complex inlined subprograms</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>conditional_expressions</key>
-      <name>Ada 2012 conditional expressions</name>
+      <name>Conditional_Expressions</name>
       <description>Ada 2012 conditional expressions</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>constructors</key>
-      <name>constructors</name>
+      <name>Constructors</name>
       <description>constructors</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>controlled_type_declarations</key>
-      <name>controlled types</name>
+      <name>Controlled_Type_Declarations</name>
       <description>controlled types</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>declarations_in_blocks</key>
-      <name>block statements with local declarations</name>
+      <name>Declarations_In_Blocks</name>
       <description>block statements with local declarations</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>deep_inheritance_hierarchies</key>
-      <name>derivation tree is too deep</name>
+      <name>Deep_Inheritance_Hierarchies</name>
       <description>derivation tree is too deep</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>deeply_nested_generics</key>
-      <name>deeply nested generic declarations</name>
+      <name>Deeply_Nested_Generics</name>
       <description>deeply nested generic declarations</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>deep_library_hierarchy</key>
-      <name>deep library hierarchy</name>
+      <name>Deep_Library_Hierarchy</name>
       <description>deep library hierarchy</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>deeply_nested_inlining</key>
-      <name>deeply nested inlining (global check)</name>
+      <name>Deeply_Nested_Inlining</name>
       <description>deeply nested inlining (global check)</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>default_parameters</key>
-      <name>declarations of default subprogram parameters</name>
+      <name>Default_Parameters</name>
       <description>declarations of default subprogram parameters</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>default_values_for_record_components</key>
-      <name>default values for record components</name>
+      <name>Default_Values_For_Record_Components</name>
       <description>default values for record components</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>deriving_from_predefined_type</key>
-      <name>types derived from predefined types</name>
+      <name>Deriving_From_Predefined_Type</name>
       <description>types derived from predefined types</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>direct_calls_to_primitives</key>
-      <name>non-dispatching calls to primitives</name>
+      <name>Direct_Calls_To_Primitives</name>
       <description>non-dispatching calls to primitives</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>discriminated_records</key>
-      <name>discriminated records</name>
+      <name>Discriminated_Records</name>
       <description>discriminated records</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>downward_view_conversions</key>
-      <name>downward view conversions</name>
+      <name>Downward_View_Conversions</name>
       <description>downward view conversions</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>enumeration_ranges_in_case_statements</key>
-      <name>enumeration ranges as choices in case statements</name>
+      <name>Enumeration_Ranges_In_CASE_Statements</name>
       <description>enumeration ranges as choices in case statements</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>enumeration_representation_clauses</key>
-      <name>enumeration representation clauses</name>
+      <name>Enumeration_Representation_Clauses</name>
       <description>enumeration representation clauses</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>exceptions_as_control_flow</key>
-      <name>exceptions for control flow</name>
+      <name>Exceptions_As_Control_Flow</name>
       <description>exceptions for control flow</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>exits_from_conditional_loops</key>
-      <name>exit from conditional loops</name>
+      <name>Exits_From_Conditional_Loops</name>
       <description>exit from conditional loops</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>exit_statements_with_no_loop_name</key>
-      <name>exit statements with no loop name</name>
+      <name>EXIT_Statements_With_No_Loop_Name</name>
       <description>exit statements with no loop name</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>expanded_loop_exit_names</key>
-      <name>expanded loop names in exit statements</name>
+      <name>Expanded_Loop_Exit_Names</name>
       <description>expanded loop names in exit statements</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>explicit_full_discrete_ranges</key>
-      <name>explicit discrete ranges</name>
+      <name>Explicit_Full_Discrete_Ranges</name>
       <description>explicit discrete ranges</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>expression_functions</key>
-      <name>expression function in package specifications</name>
+      <name>Expression_Functions</name>
       <description>expression function in package specifications</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>fixed_equality_checks</key>
-      <name>equality for fixed values</name>
+      <name>Fixed_Equality_Checks</name>
       <description>equality for fixed values</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>float_equality_checks</key>
-      <name>equality for float values</name>
+      <name>Float_Equality_Checks</name>
       <description>equality for float values</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>forbidden_attributes</key>
-      <name>usage of specified attributes</name>
+      <name>Forbidden_Attributes</name>
       <description>usage of specified attributes</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>forbidden_pragmas</key>
-      <name>usage of specified pragmas</name>
+      <name>Forbidden_Pragmas</name>
       <description>usage of specified pragmas</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>function_style_procedures</key>
-      <name>procedures looking like functions</name>
+      <name>Function_Style_Procedures</name>
       <description>procedures looking like functions</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>generics_in_subprograms</key>
-      <name>definitions of generic units in  subprogram bodies</name>
+      <name>Generics_In_Subprograms</name>
       <description>definitions of generic units in  subprogram bodies</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>global_variables</key>
-      <name>declarations of global variables</name>
+      <name>Global_Variables</name>
       <description>declarations of global variables</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>goto_statements</key>
-      <name>goto statements</name>
+      <name>GOTO_Statements</name>
       <description>goto statements</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>identifier_casing</key>
-      <name>casing of defining names</name>
+      <name>Identifier_Casing</name>
       <description>casing of defining names</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>identifier_suffixes</key>
-      <name>suffixes in defining names</name>
+      <name>Identifier_Suffixes</name>
       <description>suffixes in defining names</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>identifier_prefixes</key>
-      <name>prefixes in defining names</name>
+      <name>Identifier_Prefixes</name>
       <description>prefixes in defining names</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>implicit_in_mode_parameters</key>
-      <name>implicit IN mode in parameter specifications</name>
+      <name>Implicit_IN_Mode_Parameters</name>
       <description>implicit IN mode in parameter specifications</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>implicit_small_for_fixed_point_types</key>
-      <name>fixed point type declarations with no 'Small clause</name>
+      <name>Implicit_SMALL_For_Fixed_Point_Types</name>
       <description>fixed point type declarations with no 'Small clause</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>improper_returns</key>
-      <name>improper use of return statements</name>
+      <name>Improper_Returns</name>
       <description>improper use of return statements</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>improperly_located_instantiations</key>
-      <name>instantiations that can cause problems</name>
+      <name>Improperly_Located_Instantiations</name>
       <description>instantiations that can cause problems</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>incomplete_representation_specifications</key>
+      <name>Incomplete_Representation_Specifications</name>
+      <description>record types with layout specification but without size and pack specification</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>library_level_subprograms</key>
-      <name>library level subprograms</name>
+      <name>Library_Level_Subprograms</name>
       <description>library level subprograms</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>local_packages</key>
-      <name>local packages</name>
+      <name>Local_Packages</name>
       <description>local packages</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>local_use_clauses</key>
+      <name>Local_USE_Clauses</name>
+      <description>local use clauses</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>max_identifier_length</key>
+      <name>Max_Identifier_Length</name>
+      <description>maximal identifier length</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>metrics_cyclomatic_complexity</key>
-      <name>(metrics) high cyclomatic complexity</name>
+      <name>Metrics_Cyclomatic_Complexity</name>
       <description>(metrics) high cyclomatic complexity</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>metrics_essential_complexity</key>
-      <name>(metrics) high essential complexity</name>
+      <name>Metrics_Essential_Complexity</name>
       <description>(metrics) high essential complexity</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>metrics_lsloc</key>
-      <name>(metrics) high LSLOC value</name>
+      <name>Metrics_LSLOC</name>
       <description>(metrics) high LSLOC value</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>maximum_parameters</key>
-      <name>maxumum number of subprogram parameters</name>
-      <description>maxumum number of subprogram parameters</description>
+      <name>Maximum_Parameters</name>
+      <description>maximum number of subprogram parameters</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>membership_tests</key>
-      <name>membership test</name>
+      <name>Membership_Tests</name>
       <description>membership test</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>misnamed_controlling_parameters</key>
-      <name>Badly formatted profile of a primitive operation</name>
+      <name>Misnamed_Controlling_Parameters</name>
       <description>Badly formatted profile of a primitive operation</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>misplaced_representation_items</key>
+      <name>Misplaced_Representation_Items</name>
+      <description>representation items out of order</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>multiple_entries_in_protected_definitions</key>
-      <name>protected definitions with more than one entry</name>
+      <name>Multiple_Entries_In_Protected_Definitions</name>
       <description>protected definitions with more than one entry</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>name_clashes</key>
-      <name>restrictions on name space</name>
+      <name>Name_Clashes</name>
       <description>restrictions on name space</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>nested_subprograms</key>
-      <name>nested subprograms</name>
+      <name>Nested_Subprograms</name>
       <description>nested subprograms</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>no_inherited_classwide_pre</key>
-      <name>overridden operation has no Pre'Class</name>
+      <name>No_Inherited_Classwide_Pre</name>
       <description>overridden operation has no Pre'Class</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>no_explicit_real_range</key>
+      <name>No_Explicit_Real_Range</name>
+      <description>real types with no range definition</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>no_scalar_storage_order_specified</key>
-      <name>a record/record extension type has record representation clause but no Scalar_Storage_Order attribute clause</name>
+      <name>No_Scalar_Storage_Order_Specified</name>
       <description>a record/record extension type has record representation clause but no Scalar_Storage_Order attribute clause</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>non_qualified_aggregates</key>
-      <name>non-qualified aggregates</name>
+      <name>Non_Qualified_Aggregates</name>
       <description>non-qualified aggregates</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>non_short_circuit_operators</key>
-      <name>use of predefined AND and OR for boolean types</name>
+      <name>Non_Short_Circuit_Operators</name>
       <description>use of predefined AND and OR for boolean types</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>non_spark_attributes</key>
-      <name>attributes that are not from the SPARK subset</name>
+      <name>Non_SPARK_Attributes</name>
       <description>attributes that are not from the SPARK subset</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>non_tagged_derived_types</key>
-      <name>derived types that are not type extensions</name>
+      <name>Non_Tagged_Derived_Types</name>
       <description>derived types that are not type extensions</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>non_visible_exceptions</key>
-      <name>potential propagations of non-visible exceptions</name>
+      <name>Non_Visible_Exceptions</name>
       <description>potential propagations of non-visible exceptions</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>null_paths</key>
-      <name>null paths in control statements</name>
+      <name>Null_Paths</name>
       <description>null paths in control statements</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>number_declarations</key>
+      <name>Number_Declarations</name>
+      <description>number declarations</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>numeric_indexing</key>
-      <name>use integer literals as indexes</name>
+      <name>Numeric_Indexing</name>
       <description>use integer literals as indexes</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>numeric_literals</key>
-      <name>numeric literals</name>
+      <name>Numeric_Literals</name>
       <description>numeric literals</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>object_declarations_out_of_order</key>
+      <name>Object_Declarations_Out_Of_Order</name>
+      <description>object declarations should precede program unit declarations</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>objects_of_anonymous_types</key>
-      <name>data objects of anonymous types</name>
+      <name>Objects_Of_Anonymous_Types</name>
       <description>data objects of anonymous types</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>one_construct_per_line</key>
+      <name>One_Construct_Per_Line</name>
+      <description>each statement or declaration should use separate code line</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>others_in_aggregates</key>
-      <name>OTHERS choices in aggregates</name>
+      <name>OTHERS_In_Aggregates</name>
       <description>OTHERS choices in aggregates</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>others_in_case_statements</key>
-      <name>OTHERS choices in case statements</name>
+      <name>OTHERS_In_CASE_Statements</name>
       <description>OTHERS choices in case statements</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>others_in_exception_handlers</key>
-      <name>OTHERS choices in exception handlers</name>
+      <name>OTHERS_In_Exception_Handlers</name>
       <description>OTHERS choices in exception handlers</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>outbound_protected_assignments</key>
+      <name>Outbound_Protected_Assignments</name>
+      <description>assignments from protected bodiesto outside objects</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>outer_loop_exits</key>
-      <name>exiting more than one loop at once</name>
+      <name>Outer_Loop_Exits</name>
       <description>exiting more than one loop at once</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>overloaded_operators</key>
-      <name>operator overloading</name>
+      <name>Overloaded_Operators</name>
       <description>operator overloading</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>overly_nested_control_structures</key>
-      <name>deep nesting level of control structures</name>
+      <name>Overly_Nested_Control_Structures</name>
       <description>deep nesting level of control structures</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>parameters_out_of_order</key>
-      <name>formal parameters ordering</name>
+      <name>Parameters_Out_Of_Order</name>
       <description>formal parameters ordering</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>positional_actuals_for_defaulted_generic_parameters</key>
-      <name>positional generic actuals for defaulted generic parameters</name>
+      <name>Positional_Actuals_For_Defaulted_Generic_Parameters</name>
       <description>positional generic actuals for defaulted generic parameters</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>positional_actuals_for_defaulted_parameters</key>
-      <name>positional actuals for defaulted parameters</name>
+      <name>Positional_Actuals_For_Defaulted_Parameters</name>
       <description>positional actuals for defaulted parameters</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>pos_on_enumeration_types</key>
-      <name>attribute 'POS applied to enumeration types</name>
+      <name>POS_On_Enumeration_Types</name>
       <description>attribute 'POS applied to enumeration types</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>positional_components</key>
-      <name>positional components associations in aggregates</name>
+      <name>Positional_Components</name>
       <description>positional components associations in aggregates</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>positional_generic_parameters</key>
-      <name>positional generic associations</name>
+      <name>Positional_Generic_Parameters</name>
       <description>positional generic associations</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>positional_parameters</key>
-      <name>positional associations in subprogram and entry calls</name>
+      <name>Positional_Parameters</name>
       <description>positional associations in subprogram and entry calls</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>predefined_numeric_types</key>
-      <name>explicit references to predefined numeric subtypes</name>
+      <name>Predefined_Numeric_Types</name>
       <description>explicit references to predefined numeric subtypes</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>predicate_testing</key>
-      <name>expressions need subtype predicateevaluation</name>
-      <description>expressions need subtype predicateevaluation</description>
+      <name>Predicate_Testing</name>
+      <description>expressions need subtype predicate evaluation</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>printable_ascii</key>
-      <name>non-printable characters</name>
+      <name>Printable_ASCII</name>
       <description>non-printable characters</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>quantified_expressions</key>
-      <name>Ada 2012 quantified expressions</name>
+      <name>Quantified_Expressions</name>
       <description>Ada 2012 quantified expressions</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>raising_external_exceptions</key>
-      <name>visibility of exceptions raised by routines declared in library package</name>
+      <name>Raising_External_Exceptions</name>
       <description>visibility of exceptions raised by routines declared in library package</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>raising_predefined_exceptions</key>
-      <name>explicit raise of predefined exceptions</name>
+      <name>Raising_Predefined_Exceptions</name>
       <description>explicit raise of predefined exceptions</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>recursive_subprograms</key>
-      <name>recursion (call graph cycles)</name>
+      <name>Recursive_Subprograms</name>
       <description>recursion (call graph cycles)</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>relative_delay_statements</key>
+      <name>Relative_Delay_Statements</name>
+      <description>relative delay statements</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>representation_specifications</key>
-      <name>representation specification (clause, aspect or pragma)</name>
+      <name>Representation_Specifications</name>
       <description>representation specification (clause, aspect or pragma)</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>separate_numeric_error_handlers</key>
-      <name>Numeric_Error and Constraint error are not handled together</name>
+      <name>Separate_Numeric_Error_Handlers</name>
       <description>Numeric_Error and Constraint error are not handled together</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>single_value_enumeration_types</key>
+      <name>Single_Value_Enumeration_Types</name>
+      <description>enumeration type definitions with a single enumeration literal</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>slices</key>
-      <name>slices</name>
+      <name>Slices</name>
       <description>slices</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>specific_parent_type_invariant</key>
-      <name>derivation from a type with specific Type_Invariant aspect</name>
+      <name>Specific_Parent_Type_Invariant</name>
       <description>derivation from a type with specific Type_Invariant aspect</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>specific_pre_post</key>
-      <name>definition of non class-wide Pre and Post aspects for tagged type primitives</name>
+      <name>Specific_Pre_Post</name>
       <description>definition of non class-wide Pre and Post aspects for tagged type primitives</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>specific_type_invariants</key>
-      <name>non class-wide Type_Invariant aspect</name>
+      <name>Specific_Type_Invariants</name>
       <description>non class-wide Type_Invariant aspect</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>subprogram_access</key>
-      <name>access to subprogram definition</name>
+      <name>Subprogram_Access</name>
       <description>access to subprogram definition</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>too_many_dependencies</key>
-      <name>compilation unit has too many dependencies</name>
+      <name>Too_Many_Dependencies</name>
       <description>compilation unit has too many dependencies</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>too_many_parents</key>
-      <name>type/object has too many parents</name>
+      <name>Too_Many_Parents</name>
       <description>type/object has too many parents</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>too_many_primitives</key>
-      <name>tagged type has too many primitives</name>
+      <name>Too_Many_Primitives</name>
       <description>tagged type has too many primitives</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>unassigned_out_parameters</key>
-      <name>OUT parameters do not get values in procedure bodies</name>
+      <name>Unassigned_OUT_Parameters</name>
       <description>OUT parameters do not get values in procedure bodies</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>unchecked_address_conversions</key>
-      <name>unchecked conversions from System.Address into access type</name>
+      <name>Unchecked_Address_Conversions</name>
       <description>unchecked conversions from System.Address into access type</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>unchecked_conversions_as_actuals</key>
-      <name>passing instance of Unchecked_Conversion as actual</name>
+      <name>Unchecked_Conversions_As_Actuals</name>
       <description>passing instance of Unchecked_Conversion as actual</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>uncommented_begin_in_package_bodies</key>
-      <name>BEGIN keywords in package bodies non-marked with comment with package name</name>
+      <name>Uncommented_BEGIN_In_Package_Bodies</name>
       <description>BEGIN keywords in package bodies non-marked with comment with package name</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>unconstrained_array_returns</key>
-      <name>functions returning unconstrained arrays</name>
+      <name>Unconstrained_Array_Returns</name>
       <description>functions returning unconstrained arrays</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>unconditional_exits</key>
-      <name>Exit statement with no condition</name>
+      <name>Unconditional_Exits</name>
       <description>Exit statement with no condition</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>unconstrained_arrays</key>
+      <name>Unconstrained_Arrays</name>
+      <description>unconstrained array definitions</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>uninitialized_global_variables</key>
-      <name>uninitialized variables in packages</name>
+      <name>Uninitialized_Global_Variables</name>
       <description>uninitialized variables in packages</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>universal_ranges</key>
-      <name>ranges with universal integer bounds</name>
+      <name>Universal_Ranges</name>
       <description>ranges with universal integer bounds</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>unnamed_blocks_and_loops</key>
-      <name>compound statements naming</name>
+      <name>Unnamed_Blocks_And_Loops</name>
       <description>compound statements naming</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>use_package_clauses</key>
-      <name>use clause for packages</name>
+      <name>USE_PACKAGE_Clauses</name>
       <description>use clause for packages</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>visible_components</key>
-      <name>Types with publicly accessible components</name>
+      <name>Visible_Components</name>
       <description>Types with publicly accessible components</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>volatile_objects_without_address_clauses</key>
-      <name>volatile objects with no address clause</name>
+      <name>Volatile_Objects_Without_Address_Clauses</name>
       <description>volatile objects with no address clause</description>
       <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>warnings</key>
+      <name>Warnings</name>
+      <description>compiler warnings</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>style_checks</key>
+      <name>Style_Checks</name>
+      <description>compiler style checks</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>restrictions</key>
+      <name>Restrictions</name>
+      <description>checks made by pragma Restriction_Warnings</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
 </rules>

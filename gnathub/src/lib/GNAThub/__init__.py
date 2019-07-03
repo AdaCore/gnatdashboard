@@ -103,6 +103,16 @@ def subdirs():
     """
     return NotImplemented   # Implemented in Ada
 
+
+def incremental():
+    """Whether the incremental switch was passed to the GNAThub driver or not.
+
+    :return: whether the incremental switch is passed or not
+    :rtype: bool
+    """
+    return NotImplemented   # Implemented in Ada
+
+
 # Keeping this for later implementation of -U main switch
 # def u_main():
 #     """Return the name of the main file provided with the switch.

@@ -27,6 +27,7 @@ print """<?xml version='1.0' encoding='UTF-8'?>
 
 current_rule_text = ""
 current_rule_label = ""
+extended_checks = False
 
 
 def print_current_rule():
@@ -38,21 +39,31 @@ def print_current_rule():
       <description>{}</description>
       <tag>gnatcheck</tag>
     </rule>""".format(current_rule_label.lower(),
-                      current_rule_text,
+                      current_rule_label,
                       current_rule_text)
 
 
 for j in sys.stdin.readlines():
     if j.startswith("gnatcheck allows activation"):
-        # This is the terminator for us
         print_current_rule()
-        break
+        # Ignore
+        continue
+    if j.startswith("using the same syntax"):
+        extended_checks = True
+        # Ignore
+        continue
     if j.startswith("gnatcheck"):
         # Ignore
         continue
     if j.startswith("  "):
-        # This is the continuation of the previous rule
-        current_rule_text += " " + j.strip()
+        if extended_checks:
+            # This is the definition of a rule
+            current_rule_label, current_rule_text = j.strip().split(" - ", 1)
+            current_rule_label = current_rule_label.strip()
+            print_current_rule()
+        else:
+            # This is the continuation of the previous rule
+            current_rule_text += " " + j.strip()
     else:
         # This is the definition of a rule
         print_current_rule()

@@ -200,7 +200,7 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         cmd = ['codepeer_bridge',
                '--output-dir=' + GNAThub.output_dir(),
                '--db-dir=' + GNAThub.db_dir(),
-               ' --import-reviews=' + filename]
+               '--import-reviews=' + filename]
         GNAThub.Run(name, cmd, out=API_SERVER_LOG)
 
     def do_GET(self, **args):

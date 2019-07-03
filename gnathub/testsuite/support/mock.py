@@ -81,6 +81,10 @@ class Project(object):
     def disabled(dst=os.getcwd()):
         return Project('disabled', dst)
 
+    @staticmethod
+    def simple_with_spaces(dst=os.getcwd()):
+        return Project('simple with spaces', dst)
+
 
 class MockedExecutable(object):
 
@@ -203,6 +207,9 @@ class GNAThub(object):
 
         if kwargs.get('verbose', False):
             argv.append('--verbose')
+
+        if kwargs.get('incremental', False):
+            argv.append('--incremental')
 
         if kwargs.get('dry_run', False):
             argv.append('--dry-run')

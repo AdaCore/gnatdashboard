@@ -7,7 +7,7 @@ Introduction
 projects.
 
 |GNATdashboard| fits naturally into a software development team's workflow
-by leveraging on project files to configure, run, and analyze the ouput from
+by leveraging on project files to configure, run, and analyze the output from
 |GNAT| tools. Its driver program processes data such as compiler warnings,
 |CodePeer| diagnostic messages, style check violations, and coverage data,
 and makes it available for reference and analysis through its local
@@ -16,7 +16,7 @@ database.
 |GNATdashboard| works as follows:
 
 * it runs tools from GNAT Pro tool suite such as |GNATcheck|, |GNATmetric|,
-  |GNATcoverage|, and |CodePeer|
+  |GNATcoverage| and additional tools like |CodePeer|
 
 * it processes the output from those tools and collects it in a database
 
@@ -25,7 +25,7 @@ database.
 
 |GNATdashboard| is available on the following platforms:
 
-* Windows (32-bits)
+* Windows (32-bits and 64-bits)
 * Linux (32-bits and 64-bits)
 * OS X 10.10 (64-bits)
 
@@ -66,15 +66,29 @@ The current version is |release|.
 Installation
 ------------
 
-Download |GNAThub| from |GNATtracker| as part of the |GNATdashboard|
-package using your |GNATtracker| account.
+Download the |GNATdashboard| package using your |GNATtracker| account.
 
 On Windows, run the graphical installer. On other platforms, un-zip the
 downloaded archive and install it on your system (usually at some location
-such as :file:`/usr/local/gnatpro`).
+such as :file:`/usr/local/gnatpro`) under a new folder. In order to be able
+to use it, you should add to your :envvar:`$PATH` the :file:`/bin/` folder
+of your |GNATdashboard| installation.
 
 The |SonarQube| plug-in is located in the directory
 :file:`<install_prefix>/share/sonar`. This needs to be installed manually.
+In order to do that, you should
+
+  * stop the |SonarQube| server
+  * copy the Sonar Ada plugin from |GNATdashboard| installation repository
+    subfolder :file:`/share/sonar/extensions/plugins/` into the |SonarQube|
+    installation repository under :file:`/extensions/plugins/`
+  * restart the |SonarQube| server.
+
+.. note::
+   It is very important that only one |Sonar Ada plugin| be present in this
+   repository and it needs to match the |GNATdashboard| version that you just
+   installed. Any older version of this plugin must be removed before restarting
+   |SonarQube| server.
 
 Setting your environment
 ------------------------

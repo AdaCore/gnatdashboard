@@ -23,40 +23,40 @@ SECTION = 'simple.adb'
 ESECTION = 'simple.adb 4:1'
 
 EXPECTED_METRICS = {
-    'all_lines': 51,
-    'code_lines': 28,
-    'comment_lines': 12,
-    'eol_comments': 0,
-    'comment_percentage': 30.00,
-    'blank_lines': 11,
-    'statement_complexity': 1.75,
-    'expression_complexity': 0.00,
-    'cyclomatic_complexity': 1.75,
-    'essential_complexity': 1.75,
-    'max_loop_nesting': 2.00
+    'all lines': 51,
+    'code lines': 28,
+    'comment lines': 12,
+    'end-of-line comments': 0,
+    'comment percentage': 30.00,
+    'blank lines': 11,
+    'statement complexity': 1.75,
+    'expression complexity': 0.00,
+    'cyclomatic complexity': 1.75,
+    'essential complexity': 1.75,
+    'maximum loop nesting': 2.00
 }
 
 EXPECTED_EMETRICS = {
-    'all_lines': 48,
-    'code_lines': 26,
-    'comment_lines': 12,
-    'eol_comments': 0,
-    'comment_percentage': 31.57,
-    'blank_lines': 10,
-    'public_subprograms': 1,
-    'all_subprograms': 4,
-    'all_stmts': 10,
-    'all_dcls': 9,
-    'lsloc': 19,
-    'unit_nesting': 1,
-    'construct_nesting': 5,
-    'all_parameters': 0,
-    'statement_complexity': 1,
-    'expression_complexity': 0,
-    'cyclomatic_complexity': 1,
-    'essential_complexity': 1,
-    'max_loop_nesting': 0,
-    'extra_exit_points': 0
+    'all lines': 48,
+    'code lines': 26,
+    'comment lines': 12,
+    'end-of-line comments': 0,
+    'comment percentage': 31.57,
+    'blank lines': 10,
+    'public subprograms': 1,
+    'all subprogram bodies': 4,
+    'all statements': 10,
+    'all declarations': 9,
+    'logical SLOC': 19,
+    'maximal unit nesting': 1,
+    'maximal construct nesting': 5,
+    'all parameters': 0,
+    'statement complexity': 1,
+    'expression complexity': 0,
+    'cyclomatic complexity': 1,
+    'essential complexity': 1,
+    'maximum loop nesting': 0,
+    'extra exit points': 0
 }
 
 class TestGNATmetricSupport(TestCase):
@@ -67,7 +67,7 @@ class TestGNATmetricSupport(TestCase):
     def testDatabaseContent(self):
         script_output_file = os.path.abspath('script.out')
         self.gnathub.run(script=Script.db2cfg(), output=script_output_file)
-        
+
         parser = SafeConfigParser()
         parser.optionxform = str
 
@@ -85,7 +85,7 @@ class TestGNATmetricSupport(TestCase):
         for emetric, value in EXPECTED_EMETRICS.iteritems():
             self.assertTrue(
                 parser.has_option(ESECTION, emetric),
-                'missing entry for "%s"' % metric)
+                'missing entry for "%s"' % emetric)
             self.assertEqual(
                 parser.getfloat(ESECTION, emetric), value,
                 'unexpected value for "%s"' % emetric)

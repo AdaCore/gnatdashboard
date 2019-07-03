@@ -45,8 +45,8 @@ class TestGcovMultiObjectDirExample(TestCase):
         # collect
         self.assertTrue(not self.parser.has_option('sdc.ads', 'coverage'))
 
-        self.assertEqual(len(self.getCoverage('sdc.adb')), 15)
+        self.assertEqual(len(self.getCoverage('sdc.adb')), 16)
         self.assertEqual(len(self.getCoverage('values.adb')), 11)
-        self.assertEqual(len(self.getCoverage('stack.adb')), 28)
+        self.assertEqual(len(self.getCoverage('stack.adb')), 31)
         self.assertEqual(len(self.getCoverage('src2.adb')), 2)
         self.assertEqual(len(self.getCoverage('src3.adb')), 1)

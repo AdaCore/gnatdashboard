@@ -4,7 +4,7 @@ A SonarQube plug-in can define one or more rules, stored in a rules repository,
 that can be later referenced and associated with issues.
 
 For example, the sonar-ada-plugin can register, during its execution, an Issue
-targetting a specific piece of code that violates a CodePeer given rule.
+targeting a specific piece of code that violates a CodePeer given rule.
 
 Those rules have to be defined by the plug-in and are registered during
 SonarQube startup.
@@ -34,14 +34,13 @@ tools documentation.
 
 ### codepeer.xml
 
-CodePeer rules definition file is generated from the CodePeer documentation file
-`messages_and_annotations.rst` using the `generate-codepeer-rules-definition`
-script.
+CodePeer rules definition file is generated using the CodePeer --list-categories
+switch output.
 
 ### gnatcheck.xml
 
-For the moment the GNATcheck rules definition file is manually maintained
-pending the transition of the documentation to the reST format.
+For the moment the GNATcheck rules definition file generated using GNATcheck --h
+switch output.
 
 ### gnatcoverage.xml
 
