@@ -1,20 +1,20 @@
-<span class="form-back col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="cancel()"></span>
-<span class="form-box col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    <span  class="form-title col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<span class="form-back d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="cancel()"></span>
+<span class="form-box d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <span  class="form-title d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
         Message Review
     </span>
 
-    <span class="message-reminder col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-        <span *ngFor="let message of reportService.selectedMessage;trackBy: trackMsg" class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-            <span class="message-line col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
+    <span class="message-reminder d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <span *ngFor="let message of reportService.selectedMessage;trackBy: trackMsg" class=" d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <span class="message-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
                     {{reportService.page}}:{{message.line}}:{{message.col_begin}}
                 </span>
-                <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
+                <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
                     <span [ngClass]="message.ranking.name">{{message.ranking.name}}</span>
                     <span>{{message.user_review ? message.user_review.status.charAt(0).toUpperCase() + message.user_review.status.slice(1).toLowerCase() : 'Uncategorized'}}</span>
                 </span>
-                <span class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8">
                     {{message.name}}
                 </span>
 
@@ -22,23 +22,23 @@
         </span>
     </span>
 
-    <span class="form-field col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <span class="col-lg-3 col-md-4 col-sm-12 col-xs-12"> New status: </span>
-        <select class="col-lg-9 col-md-8 col-sm-12 col-xs-12" [(ngModel)]="status">
+    <span class="form-field d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span class="d-inline-block col-lg-3 col-md-4 col-sm-12 col-xs-12"> New status: </span>
+        <select class="d-inline-block col-lg-9 col-md-8 col-sm-12 col-xs-12" [(ngModel)]="status">
             <option *ngFor="let opt of review_status" [ngValue]="opt.value" >{{opt.show}}</option>
         </select>
     </span>
-    <span class="form-field col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <span class="col-lg-3 col-md-4 col-sm-12 col-xs-12"> Approved by: </span>
-        <input type="text" class="col-lg-9 col-md-8 col-sm-12 col-xs-12" [(ngModel)]="username"/>
+    <span class="form-field d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span class="d-inline-block col-lg-3 col-md-4 col-sm-12 col-xs-12"> Approved by: </span>
+        <input type="text" class="d-inline-block col-lg-9 col-md-8 col-sm-12 col-xs-12" [(ngModel)]="username"/>
     </span>
-    <span class="form-field col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <span class="col-lg-3 col-md-4 col-sm-12 col-xs-12"> Comment: </span>
-        <textarea rows="10" class="col-lg-9 col-md-8 col-sm-12 col-xs-12" [(ngModel)]="review">
+    <span class="form-field d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span class="d-inline-block col-lg-3 col-md-4 col-sm-12 col-xs-12"> Comment: </span>
+        <textarea rows="10" class="d-inline-block col-lg-9 col-md-8 col-sm-12 col-xs-12" [(ngModel)]="review">
         </textarea>
     </span>
-    <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <span id='dialogError' class="dialog-error col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span id='dialogError' class="dialog-error d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
             You must choose a status
         </span>
     </span>

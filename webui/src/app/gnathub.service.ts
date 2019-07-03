@@ -1,12 +1,13 @@
+import {throwError as observableThrowError, Observable } from 'rxjs';
+import {map, catchError} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
 import xml2js from 'xml2js'
 
 import { IAnnotatedSourceFile, IFilterIndex, ICodeIndex, IMessageIndex } from 'gnat';
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+
+
 
 @Injectable()
 export class GNAThubService {
@@ -15,30 +16,30 @@ export class GNAThubService {
     constructor(private http: Http) {}
 
     public getFilter(): Observable<IFilterIndex> {
-        return this.http.get('data/filter.json')
-            .map(this.handleResults)
-            .catch(this.handleError);
+        return this.http.get('data/filter.json').pipe(
+            map(this.handleResults),
+            catchError(this.handleError),);
     }
     public getCode(): Observable<ICodeIndex> {
-        return this.http.get('data/code.json')
-            .map(this.handleResults)
-            .catch(this.handleError);
+        return this.http.get('data/code.json').pipe(
+            map(this.handleResults),
+            catchError(this.handleError),);
     }
     public getMessage(): Observable<IMessageIndex> {
-        return this.http.get('data/message.json')
-            .map(this.handleResults)
-            .catch(this.handleError);
+        return this.http.get('data/message.json').pipe(
+            map(this.handleResults),
+            catchError(this.handleError),);
     }
     public getReview(): Observable<any> {
-        return this.http.get('data/codepeer_review.xml')
-            .map(this.convertToJson)
-            .catch(this.handleError);
+        return this.http.get('data/codepeer_review.xml').pipe(
+            map(this.convertToJson),
+            catchError(this.handleError),);
     }
 
     public getSource(filename): Observable<IAnnotatedSourceFile> {
-        return this.http.get(`data/src/${filename}.json`)
-            .map(this.handleResults)
-            .catch(this.handleError);
+        return this.http.get(`data/src/${filename}.json`).pipe(
+            map(this.handleResults),
+            catchError(this.handleError),);
     }
 
     public getCodepeerRun(): Observable<any> {
@@ -54,7 +55,7 @@ export class GNAThubService {
             error.message : error.status ?
             `${error.status} - ${error.statusText}` : 'Server error';
         console.error(errMsg);
-        return Observable.throw(errMsg);
+        return observableThrowError(errMsg);
     }
 
     private createDisplayName(name){
