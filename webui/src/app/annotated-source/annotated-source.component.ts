@@ -144,7 +144,7 @@ export class AnnotatedSourceComponent
     /** @override */
     public ngAfterViewInit() {
         switch (document.readyState) {
-/*            case 'incomplete':
+                /*            case 'incomplete':
                 console.log("[Error] annotated-source : afterViewInit : Document not loaded : scrolling to line impossible");
                 break;*/
             case 'interactive':
@@ -190,17 +190,12 @@ export class AnnotatedSourceComponent
     private goToLine(line: number) {
         if (line) {
             this.selectedLine = line;
-
             line = line - 10 > 0 ? line - 10 : 1;
-            /*let scroll: PageScrollInstance =
-                PageScrollInstance.simpleInlineInstance(
-                    this.document, `#L${line}`, this.scrollView.nativeElement);*/
 
             this.pageScrollService.scroll({
                 document: this.document,
                 scrollTarget: `#L${line}`
             });
-            /*this.pageScrollService.start(scroll);*/
         }
     };
 
