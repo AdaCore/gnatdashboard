@@ -2,7 +2,8 @@ import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { MatDialogModule, MatTooltipModule, MatIconModule } from '@angular/material';
+import { MaterialModule } from '@angular/material'
+import { MdDialogModule } from '@angular/material'
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import {
     removeNgStyles, createNewHosts, createInputTransfer
@@ -46,7 +47,7 @@ import { MessageExplorerComponent } from './message-explorer';
 import { SpinnerComponent } from './spinner';
 
 import { GNAThubService } from './gnathub.service';
-import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
+import { Ng2PageScrollModule } from 'ng2-page-scroll';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -96,10 +97,9 @@ type StoreType = {
         BrowserModule,
         FormsModule,
         HttpModule,
-        MatDialogModule,
-        MatTooltipModule,
-        MatIconModule,
-        NgxPageScrollCoreModule,
+        MaterialModule.forRoot(),
+        MdDialogModule.forRoot(),
+        Ng2PageScrollModule.forRoot(),
         RouterModule.forRoot(ROUTES, {
             useHash: true,
             preloadingStrategy: PreloadAllModules

@@ -111,7 +111,7 @@ export class SharedReport {
             .subscribe(
             data => {
                 if (data.status == 200) {
-                    console.log("[Success] The server is online. test");
+                    console.log("[Success] The server is online.");
                     this.isOnline = true;
                     this.getFilterOnline()
                     this.getCodeOnline()
@@ -287,16 +287,12 @@ export class SharedReport {
      * If there are, it will launch the global function to refresh the filter properly.
      */
     private refreshFilter() {
-        console.log("refreshFilter");
         if (this.code && this.filter && this.message && this.filter.review_status){
             updateFilter(this);
             this.messageFilter = {newSort: 'ranking', otherSort: 'countRanking', order: -1};
             this.message.sources = sortMessageArray(
                 this.messageFilter,
                 this.messageFilter, this.message.sources);
-            console.log("this.code", this.code);
-            console.log("this.filter", this.filter);
-            console.log("this.message", this.message);
         }
     }
 
