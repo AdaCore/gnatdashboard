@@ -1,23 +1,23 @@
-<span class="annotations d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-    <div class="annotations-tool d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad click"
+<span class="annotations col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+    <div class="annotations-tool col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad click"
          (click)="openClose(line)" >
         <span>
             Annotations ( {{annotations.size}} )
         </span>
         <span class="annotation-icon">
-            <mat-icon>keyboard_arrow_down</mat-icon>
+            <md-icon>keyboard_arrow_down</md-icon>
         </span>
     </div>
-    <div id="{{line}}" class="annotations-list d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad expand">
-        <div class="annotations-list-item d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let annotation of annotations;trackBy: trackAnnotation">
+    <div id="{{line}}" class="annotations-list col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad expand">
+        <div class="annotations-list-item col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let annotation of annotations;trackBy: trackAnnotation">
             <span class="rule-identifier">
-                <mat-icon class="tags" md-tooltip="Rule identifier">label</mat-icon>
+                <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
                 {{ annotation.rule.name }}
             </span>
             <span class="annotation-text">{{ annotation.name }}</span>
 
              <span class="annotation-properties" *ngIf="annotation.properties | dshNotEmpty">
-                <mat-icon class="tags" md-tooltip="Annotation properties">local_offer</mat-icon>
+                <md-icon class="tags" md-tooltip="Annotation properties">local_offer</md-icon>
                 {{ formatAnnotationProperties(annotation) }}
             </span>
         </div>

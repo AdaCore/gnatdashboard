@@ -293,7 +293,7 @@ module.exports = function (env) {
           },
 
         }
-      })
+      }),
 
       /**
        * Plugin: BundleAnalyzerPlugin
