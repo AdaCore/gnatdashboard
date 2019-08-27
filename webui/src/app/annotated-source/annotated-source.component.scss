@@ -167,7 +167,7 @@
         .history-span {
             text-align: right;
 
-            mat-icon {
+            md-icon {
                 position: absolute;
                 right: 0px;
                 font-size: 18px;
@@ -179,13 +179,13 @@
 
         .review-line {
 
-            mat-icon {
+            md-icon {
                 position: absolute;
                 font-size: 20px;
                 right: 15px;
                 cursor: pointer;
             }
-            mat-icon.inactive {
+            md-icon.inactive {
                 color: darkgrey;
             }
         }
@@ -317,7 +317,7 @@
         right: 15px;
         position: absolute;
 
-        mat-icon.expanded { transform: rotate(180deg); }
+        md-icon.expanded { transform: rotate(180deg); }
     }
 
     &-review-btn {

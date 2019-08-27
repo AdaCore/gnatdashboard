@@ -2,18 +2,18 @@
 <spinner
          *ngIf="!this.reportService.filter && !isReportFetchError"
          caption="Loading report..."
-         class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+         class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
 </spinner>
 <!-- Error handling -->
 <missing-report-error
                       *ngIf="isReportFetchError"
-                      class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                      class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
 </missing-report-error>
 <!-- When everything works fine -->
-<nav id="filterBar" *ngIf="this.reportService.filter" class="filter-panel open d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+<nav id="filterBar" *ngIf="this.reportService.filter" class="filter-panel open col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
 
 
-    <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+    <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <!-- Button open/close filters -->
         <button id="chrevonButton" class="arrow-button open"
                 (click)="openCloseFilterTab()">
@@ -23,22 +23,22 @@
         <span *ngIf="!filterOpen" class="filter-span">Filters</span>
     </span>
     <!-- If there is no filter and so no messages -->
-    <span  class="no-filter-span d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+    <span  class="no-filter-span col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
            *ngIf="reportService.isFilter == false">
-        <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           There are no messages in the gnathub databases.
         </span>
-        <span  class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span  class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           So there are no filters.
         </span>
-        <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           To see files anyway in the navigation view, please activate "Show all files" in the head bar.
         </span>
     </span>
 
     <!-- Show all the filters according to the report.json -->
-    <ng-template [ngIf]="(this.reportService.filter.tools || this.reportService.filter.rules || this.reportService.filter.properties) | dshNotEmpty" class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-        <div class="option-selectors d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+    <template [ngIf]="(this.reportService.filter.tools || this.reportService.filter.rules || this.reportService.filter.properties) | dshNotEmpty" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <div class="option-selectors col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
             <filter-selector class="tool-selector" title="Tools"
                              *ngIf="this.reportService.filter.tools | dshNotEmpty"
                              [options]="this.reportService.filter.tools | dshMapValues"
@@ -69,5 +69,5 @@
                              (toggle)="onReviewFilterToggle($event)">
             </filter-selector>
         </div>
-    </ng-template>
+    </template>
 </nav>

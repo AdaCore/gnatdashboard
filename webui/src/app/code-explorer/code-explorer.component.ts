@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SharedReport } from '../main-responder.service';

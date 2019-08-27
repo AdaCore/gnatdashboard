@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { MatDialogRef} from '@angular/material'
+import { MdDialogRef} from '@angular/material'
 import { SharedReport } from '../main-responder.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class ReviewHistoryDialog {
     public history: any;
     public message: any;
 
-    constructor(public dialogRef: MatDialogRef<ReviewHistoryDialog>,
+    constructor(public dialogRef: MdDialogRef<ReviewHistoryDialog>,
                  private reportService: SharedReport) {}
 
     ngOnInit() {

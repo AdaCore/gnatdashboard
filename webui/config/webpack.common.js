@@ -12,14 +12,14 @@ const helpers = require('./helpers');
 const AssetsPlugin = require('assets-webpack-plugin');
 const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
-/*const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');*/
+const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const HtmlElementsPlugin = require('./html-elements-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-/*const ngcWebpack = require('ngc-webpack');*/
+const ngcWebpack = require('ngc-webpack');
 
 /*
  * Webpack Constants
@@ -40,7 +40,7 @@ const METADATA = {
 module.exports = function (options) {
   isProd = options.env === 'production';
   return {
-    mode: 'production',
+
     /*
      * Cache generated modules and chunks to improve performance for multiple incremental builds.
      * This is enabled by default in watch mode.
@@ -63,23 +63,6 @@ module.exports = function (options) {
 
     },
 
-    optimization: {
-      splitChunks: {
-        cacheGroups: {
-          commons: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendor',
-            chunks: 'all'
-          }
-        }
-      }
-    },
-
-    performance: {
-      hints: false,
-      maxEntrypointSize: 512000,
-      maxAssetSize: 512000
-    },
     /*
      * Options affecting the resolving of modules.
      *
@@ -215,24 +198,20 @@ module.exports = function (options) {
        * See: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
        * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
        */
-      /* new CommonsChunkPlugin({
+      new CommonsChunkPlugin({
         name: 'polyfills',
         chunks: ['polyfills']
-      }),*/
-
-
+      }),
       // This enables tree shaking of the vendor modules
-      /* new CommonsChunkPlugin({
+      new CommonsChunkPlugin({
         name: 'vendor',
         chunks: ['main'],
         minChunks: module => /node_modules\//.test(module.resource)
-      }),*/
-
-
+      }),
       // Specify the correct order the scripts will be injected in
-      /*new CommonsChunkPlugin({
+      new CommonsChunkPlugin({
         name: ['polyfills', 'vendor'].reverse()
-      }),*/
+      }),
 
       /**
        * Plugin: ContextReplacementPlugin
@@ -348,11 +327,11 @@ module.exports = function (options) {
         helpers.root('node_modules/@angular/core/src/facade/math.js')
       ),
 
-      /* new ngcWebpack.NgcWebpackPlugin({
+      new ngcWebpack.NgcWebpackPlugin({
         disabled: !AOT,
         tsConfig: helpers.root('tsconfig.webpack.json'),
         resourceOverride: helpers.root('config/resource-override.js')
-      })*/
+      })
 
     ],
 

@@ -19,8 +19,8 @@ HtmlElementsPlugin.prototype.apply = function(compiler) {
         });
       }
 
-      return htmlPluginData;
-      /*callback(null, htmlPluginData);*/
+
+      callback(null, htmlPluginData);
     });
   });
 
