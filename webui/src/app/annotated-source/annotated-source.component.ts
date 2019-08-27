@@ -10,11 +10,11 @@ import {
     ViewChild,
     ChangeDetectorRef
 } from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
-import { PageScrollInstance, PageScrollService } from 'ng2-page-scroll';
+import { PageScrollInstance, PageScrollService } from 'ngx-page-scroll-core';
 import { Subscription } from 'rxjs';
 
 import { SharedReport } from '../main-responder.service';
@@ -57,7 +57,7 @@ export class AnnotatedSourceComponent
     public selectedLine: number;
     public selectedId: number;
 
-    @ViewChild('scrollView') private scrollView: ElementRef;
+    @ViewChild('scrollView', {static: true}) private scrollView: ElementRef;
 
     constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -144,9 +144,9 @@ export class AnnotatedSourceComponent
     /** @override */
     public ngAfterViewInit() {
         switch (document.readyState) {
-            case 'incomplete':
+                /*            case 'incomplete':
                 console.log("[Error] annotated-source : afterViewInit : Document not loaded : scrolling to line impossible");
-                break;
+                break;*/
             case 'interactive':
                 console.log("[Warning] annotated-source : afterViewInit : Document still loading : scrolling can fail");
                 this.afterInitProcess(this.selectedLine, this.selectedId);
@@ -190,12 +190,12 @@ export class AnnotatedSourceComponent
     private goToLine(line: number) {
         if (line) {
             this.selectedLine = line;
-
             line = line - 10 > 0 ? line - 10 : 1;
-            let scroll: PageScrollInstance =
-                PageScrollInstance.simpleInlineInstance(
-                    this.document, `#L${line}`, this.scrollView.nativeElement);
-            this.pageScrollService.start(scroll);
+
+            this.pageScrollService.scroll({
+                document: this.document,
+                scrollTarget: `#L${line}`
+            });
         }
     };
 

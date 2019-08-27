@@ -3,7 +3,9 @@ import {
     Component,
     HostBinding,
     Input,
-    OnInit
+    OnInit,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -15,7 +17,7 @@ import { IAnnotatedSourceLine, ICoverage } from 'gnat';
     styleUrls: [ 'annotated-source-line.component.scss' ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AnnotatedSourceLineComponent implements OnInit {
+export class AnnotatedSourceLineComponent implements OnInit, OnChanges {
     @Input() public line: IAnnotatedSourceLine;
     @Input() public coverage: ICoverage;
     public safeHtml: SafeHtml;
@@ -36,5 +38,14 @@ export class AnnotatedSourceLineComponent implements OnInit {
             this.isCovered = status === 'covered';
             this.isNotCovered = status === 'not_covered';
         }
+    }
+
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.line && !changes.line.firstChange){
+            this.line = changes.line.currentValue;
+        }else if (changes.coverage && !changes.coverage.firstChange){
+            this.coverage = changes.coverage.currentValue;
+        }
+        this.ngOnInit();
     }
 }

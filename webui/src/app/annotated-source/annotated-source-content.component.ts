@@ -2,7 +2,9 @@ import {
     Component,
     Input,
     OnDestroy,
-    OnInit
+    OnInit,
+    SimpleChanges,
+    OnChanges
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -23,7 +25,7 @@ type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
     templateUrl: './annotated-source-content.component.html',
     styleUrls: [ 'annotated-source-content.component.scss' ]
 })
-export class AnnotatedSourceContentComponent implements OnDestroy, OnInit {
+export class AnnotatedSourceContentComponent implements OnDestroy, OnInit, OnChanges {
     @Input() public lines: IAnnotatedSourceLine[];
     @Input() public tools: { [toolId: number]: ITool };
     @Input() public coverage: { [line: number]: ICoverage };
@@ -42,6 +44,22 @@ export class AnnotatedSourceContentComponent implements OnDestroy, OnInit {
                 this.selectedLine = +params['line'];
             }
         });
+    }
+
+    public ngOnChanges(changes: SimpleChanges) {
+
+        if (changes.lines && !changes.lines.firstChange){
+            this.lines = changes.lines.currentValue;
+        }else if (changes.tools && !changes.tools.firstChange){
+            this.tools = changes.tools.currentValue;
+        }else if (changes.inlineAnnotations && !changes.inlineAnnotations.firstChange){
+            this.inlineAnnotations = changes.inlineAnnotations.currentValue;
+        }else if (changes.displayMessages && !changes.displayMessages.firstChange){
+            this.displayMessages = changes.displayMessages.currentValue;
+        }else if (changes.coverage && !changes.coverage.firstChange){
+            this.coverage = changes.coverage.currentValue;
+        }
+
     }
 
     public ngOnDestroy() {

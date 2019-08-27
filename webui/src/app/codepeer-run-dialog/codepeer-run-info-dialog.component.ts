@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { MdDialogRef} from '@angular/material'
+import { MatDialogRef} from '@angular/material'
 import { SharedReport } from '../main-responder.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class CodepeerRunInfoDialog {
 
     public info: any;
 
-    constructor(public dialogRef: MdDialogRef<CodepeerRunInfoDialog>,
+    constructor(public dialogRef: MatDialogRef<CodepeerRunInfoDialog>,
                  private reportService: SharedReport) {}
 
     ngOnInit() {
