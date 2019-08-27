@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 
 export type Option = {
     id: number,

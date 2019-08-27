@@ -1,19 +1,19 @@
-<div class="messages col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let toolId of messages | dshMapKeys">
-    <div class="messages-tool col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">{{ getToolName(toolId) }}</div>
-    <div class="messages-list col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-        <div class="messages-list-item col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let message of messages[toolId]">
-            <span class="message-text col-lg-8 col-md-8 col-sm-8 col-xs-8">{{ message.name }}</span>
-            <span class="identifier col-lg-4 col-md-4 col-sm-4 col-xs-4">
+<div class="messages d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let toolId of messages | dshMapKeys">
+    <div class="messages-tool d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">{{ getToolName(toolId) }}</div>
+    <div class="messages-list d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <div class="messages-list-item d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngFor="let message of messages[toolId]">
+            <span class="message-text d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8">{{ message.name }}</span>
+            <span class="identifier d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4">
                 <span class="rule-identifier">
-                    <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
+                    <mat-icon class="tags" md-tooltip="Rule identifier">label</mat-icon>
                     {{ message.rule.name }}
                 </span>
                 <span class="message-properties" *ngIf="message.properties | dshNotEmpty">
-                    <md-icon class="tags" md-tooltip="Message properties">local_offer</md-icon>
+                    <mat-icon class="tags" md-tooltip="Message properties">local_offer</mat-icon>
                     {{ formatMessageProperties(message) }}
                 </span>
                 <span class="review-identifier">
-                    <md-icon class="tags" md-tooltip="Rule identifier">label</md-icon>
+                    <mat-icon class="tags" md-tooltip="Rule identifier">label</mat-icon>
                     {{ message.user_review ? message.user_review.status.toUpperCase() : 'UNCATEGORIZED' }}
                 </span>
             </span>
