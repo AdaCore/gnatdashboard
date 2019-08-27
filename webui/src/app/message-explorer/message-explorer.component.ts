@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { SharedReport } from '../main-responder.service';
 import { sortMessageArray } from '../utils/sortArray';
 
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({
     selector: 'message-explorer',

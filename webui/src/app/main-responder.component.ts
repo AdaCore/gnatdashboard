@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { PageScrollConfig } from 'ngx-page-scroll-core';
+import { PageScrollConfig } from 'ng2-page-scroll';
 import { SharedReport } from './main-responder.service';
 import { CodepeerDialogsService } from './codepeer-run-dialog/codepeer-dialog.service'
 
@@ -17,7 +17,9 @@ import { CodepeerDialogsService } from './codepeer-run-dialog/codepeer-dialog.se
 })
 export class MainResponderComponent {
     constructor(public reportService: SharedReport,
-                private dialog: CodepeerDialogsService) {}
+                private dialog: CodepeerDialogsService) {
+        PageScrollConfig.defaultDuration = 0;
+    }
 
     public showCodepeerRunInfo() {
         this.dialog.codepeerRunInfo().subscribe((data:any) => {});

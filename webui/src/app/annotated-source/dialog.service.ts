@@ -1,17 +1,17 @@
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Rx';
 import { ReviewDialog } from './review-dialog.component';
 import { ReviewHistoryDialog } from './review-history-dialog.component';
 
-import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
+import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class DialogsService {
 
-    constructor(private dialog: MatDialog) {}
+    constructor(private dialog: MdDialog) {}
 
     public review(): Observable<boolean> {
-        let dialogRef: MatDialogRef<ReviewDialog>;
+        let dialogRef: MdDialogRef<ReviewDialog>;
 
         dialogRef = this.dialog.open(ReviewDialog);
 
@@ -19,7 +19,7 @@ export class DialogsService {
     }
 
     public reviewHistory(): Observable<boolean> {
-        let dialogRef: MatDialogRef<ReviewHistoryDialog>;
+        let dialogRef: MdDialogRef<ReviewHistoryDialog>;
 
         dialogRef = this.dialog.open(ReviewHistoryDialog);
 

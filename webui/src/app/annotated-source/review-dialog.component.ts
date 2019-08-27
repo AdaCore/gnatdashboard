@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { MatDialogRef } from '@angular/material';
+import { MdDialogRef } from '@angular/material';
 import { SharedReport } from '../main-responder.service';
 
 @Component({
@@ -36,7 +36,7 @@ export class ReviewDialog {
             value: 'BUG'
         }];
 
-    constructor(public dialogRef: MatDialogRef<ReviewDialog>,
+    constructor(public dialogRef: MdDialogRef<ReviewDialog>,
                  public reportService: SharedReport) {}
 
     public cancel() {
