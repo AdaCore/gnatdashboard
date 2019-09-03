@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { IAnnotatedSourceMessage, ITool } from 'gnat';
 import { SharedReport } from '../main-responder.service'
 
@@ -9,7 +9,7 @@ type InlineAnnotations = IAnnotatedSourceMessage[];
     templateUrl: 'inline-annotations.component.html',
     styleUrls: [ 'inline-annotations.component.scss' ]
 })
-export class InlineAnnotationsComponent {
+export class InlineAnnotationsComponent implements OnChanges {
     @Input() public annotations: InlineAnnotations[];
     @Input() public line: number;
 
@@ -28,5 +28,13 @@ export class InlineAnnotationsComponent {
     public trackAnnotation(index, annotation) {
         return index
         //return annotation ? annotation.id : undefined;
+    }
+
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.line && !changes.line.firstChange){
+            this.line = changes.line.currentValue;
+        }else if (changes.annotations && !changes.annotations.firstChange){
+            this.annotations = changes.annotations.currentValue;
+        }
     }
 }

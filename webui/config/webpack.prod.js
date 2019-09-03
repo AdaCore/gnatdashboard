@@ -15,7 +15,7 @@ const IgnorePlugin = require('webpack/lib/IgnorePlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
 const ProvidePlugin = require('webpack/lib/ProvidePlugin');
-const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const V8LazyParseWebpackPlugin = require('v8-lazy-parse-webpack-plugin');
 /**
@@ -293,7 +293,7 @@ module.exports = function (env) {
           },
 
         }
-      }),
+      })
 
       /**
        * Plugin: BundleAnalyzerPlugin

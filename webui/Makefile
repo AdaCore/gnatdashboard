@@ -66,7 +66,7 @@ installdirs:
 # Custom targets for this project
 $(builddir)/dist/index.html: $(rootdir)/package.json $(SOURCES) \
 		$(srcdir)/index.html $(rootdir)/node_modules/.installed
-	BUILD_DIR=$(builddir) $(NPM) run build:$(BUILD_MODE)
+	BUILD_DIR=$(builddir) $(NPM) run build:dev
 
 install-node-modules: $(rootdir)/node_modules/.installed
 
