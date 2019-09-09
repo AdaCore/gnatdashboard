@@ -49,16 +49,6 @@
                     </mat-icon>
                 </button>
             </div>
-            <div class="location-view-filter d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                <span (click)="sortModules('line', '')" class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad click">
-                    Line
-                    <span class="header-icon"
-                          *ngIf="reportService.messageFilter.newSort == 'line'">
-                        <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</mat-icon>
-                        <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</mat-icon>
-                    </span>
-                </span>
-            </div>
             <div class="location-view-list d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
                 <table *ngIf="tabOpen == 'metric'" class="file-line-container d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <span *ngIf="source.metrics && source.metrics.length > 0">
