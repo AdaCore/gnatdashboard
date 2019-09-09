@@ -65,19 +65,8 @@ body { overflow: hidden; }
             }
 
             .online-offline-span {
-                display: inline-block;
-                margin: 3px;
-                text-align: center;
-                background-color: rgba(0, 0, 0, 0.05);
-                border: 1px #c4c4c594 solid;
-                padding: 7px;
-                border-radius: 2px;
 
                 mat-icon {
-                    display: inline-block;
-                    position: absolute;
-                    right: 15px;
-                    top: 10px;
 
                     &.offline {
                         color: firebrick;
