@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2018, AdaCore                     --
+--                     Copyright (C) 2013-2019, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -314,6 +314,11 @@ package body GNAThub.Project is
       Project_File : constant Virtual_File := GNATCOLL.VFS.Create (+Path);
    begin
       Trace (Me, "Load project file " & Path);
+
+      if GNAThub.Configuration.Target /= "" then
+         Project_Env.Set_Target_And_Runtime
+           (Target => GNAThub.Configuration.Target);
+      end if;
 
       Project_Tree.Load
         (Root_Project_Path => Project_File,
