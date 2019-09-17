@@ -66,9 +66,10 @@ There are two kinds of log file:
 (provided that it was invoked from |GNAThub|). These files are generated if you
 invoke the tool using the API function :meth:`GNAThub.Run()`.
 
-(2) GNAThub uses the same log mechanism as |GPS|: the output behavior can be
-customized through a configuration file. See the `GNATcoll Traces documentation
-<http://docs.adacore.com/gnatcoll-docs/traces.html>`_ for more information.
+(2) GNAThub uses the same log mechanism as |GNATStudio|: the output behavior
+can be customized through a configuration file. See the `GNATcoll Traces
+documentation <http://docs.adacore.com/gnatcoll-docs/traces.html>`_ for more
+information.
 
 Project file attributes
 -----------------------
@@ -323,6 +324,4 @@ server.
 ^^^^^^^^^^^^^
 
 Display progress for use in IDEs. This command is mainly intended for
-integration in IDEs, e.g. GPS.
-
-
+integration in IDEs, e.g. GNAT Studio.
