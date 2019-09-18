@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { ReviewDialog } from './review-dialog.component';
 import { ReviewHistoryDialog } from './review-history-dialog.component';
-
+import { BrowserAnimationsModule } from  '@angular/platform-browser/animations';
 import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Injectable } from '@angular/core';
 

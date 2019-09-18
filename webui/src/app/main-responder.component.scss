@@ -9,6 +9,7 @@ body,
 .main-responder-page,
 .main-responder-body {
     height: 100%; /* needed for proper layout */
+    width: 100%;
     background-color: var(--main-color);
     color: var(--main-font-color);
     display: inline-block;
@@ -28,7 +29,6 @@ body { overflow: hidden; }
 
     .main-responder-header {
         flex: 0 0 auto;
-        max-height: 6vh;
         line-height: 6vh;
         background-color: var(--header-color);
         border-bottom: 1px solid var(--header-border);
@@ -161,11 +161,19 @@ filter-selector.tool-selector .filter-selector {
         top: 0;
     }
 
-    .cdk-overlay-pane, .md-dialog-container,
+    .cdk-overlay-pane, .mat-dialog-container,
     cdk-focus-trap, .cdk-focus-trap-content, review-dialog {
         width: 100%;
         height: 100%;
         display: inline-block;
+    }
+
+    .mat-dialog-container {
+        overflow: hidden;
+    }
+
+    .cdk-overlay-pane {
+        max-width: 100% !important;
     }
 
     md-dialog-container {

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { CodepeerRunInfoDialog } from './codepeer-run-info-dialog.component';
-
+import { BrowserAnimationsModule } from  '@angular/platform-browser/animations';
 import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Injectable } from '@angular/core';
 

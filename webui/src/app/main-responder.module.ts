@@ -2,6 +2,7 @@ import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { BrowserAnimationsModule } from  '@angular/platform-browser/animations';
 import { MatDialogModule, MatTooltipModule, MatIconModule } from '@angular/material';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import {
@@ -96,6 +97,7 @@ type StoreType = {
         BrowserModule,
         FormsModule,
         HttpModule,
+        BrowserAnimationsModule,
         MatDialogModule,
         MatTooltipModule,
         MatIconModule,
