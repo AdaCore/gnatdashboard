@@ -49,7 +49,7 @@ module.exports = function (options) {
      * See: http://webpack.github.io/docs/configuration.html#cache
      */
     //cache: false,
-
+      stats: {'children':false, 'warnings': false},
     /*
      * The entry point for the bundle
      * Our Angular.js app
@@ -105,7 +105,6 @@ module.exports = function (options) {
      * See: http://webpack.github.io/docs/configuration.html#module
      */
     module: {
-
       rules: [
 
         /*
@@ -175,7 +174,6 @@ module.exports = function (options) {
           use: 'raw-loader',
           exclude: [helpers.root('src/index.html')]
         },
-
         /* File loader for supporting images, for example, in CSS files.
          */
         {
@@ -265,7 +263,6 @@ module.exports = function (options) {
         { from: 'src/mocks', to: 'data' },
         { from: 'src/meta' }
       ]),
-
       /*
        * Plugin: HtmlWebpackPlugin
        * Description: Simplifies creation of HTML files to serve your webpack bundles.
@@ -275,13 +272,12 @@ module.exports = function (options) {
        * See: https://github.com/ampedandwired/html-webpack-plugin
        */
       new HtmlWebpackPlugin({
-        template: 'src/index.html',
+          template: 'src/index.html',
         title: METADATA.title,
         chunksSortMode: 'dependency',
         metadata: METADATA,
-        inject: 'head'
+          inject: 'head'
       }),
-
       /*
        * Plugin: ScriptExtHtmlWebpackPlugin
        * Description: Enhances html-webpack-plugin functionality

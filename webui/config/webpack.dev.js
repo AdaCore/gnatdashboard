@@ -1,11 +1,13 @@
 /**
  * @author: @AngularClass
  */
-
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const helpers = require('./helpers');
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
 const webpackMergeDll = webpackMerge.strategy({plugins: 'replace'});
 const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
+const path = require('path');
 
 /**
  * Webpack Plugins
@@ -60,7 +62,7 @@ module.exports = function (options) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-path
        */
-      path: helpers.root('dist'),
+      path: helpers.build('dist'),
 
       /**
        * Specifies the name of each output file on disk.
@@ -140,40 +142,6 @@ module.exports = function (options) {
           'HMR': METADATA.HMR,
         }
       }),
-
-      new DllBundlesPlugin({
-        bundles: {
-          polyfills: [
-            'core-js',
-            {
-              name: 'zone.js',
-              path: 'zone.js/dist/zone.js'
-            },
-            {
-              name: 'zone.js',
-              path: 'zone.js/dist/long-stack-trace-zone.js'
-            },
-            'ts-helpers',
-          ],
-          vendor: [
-            '@angular/platform-browser',
-            '@angular/platform-browser-dynamic',
-            '@angular/core',
-            '@angular/common',
-            '@angular/forms',
-            '@angular/http',
-            '@angular/router',
-            '@angularclass/hmr',
-            'rxjs',
-          ]
-        },
-        dllDir: helpers.root('dll'),
-        webpackConfig: webpackMergeDll(commonConfig({env: ENV}), {
-          devtool: 'cheap-module-source-map',
-          plugins: []
-        })
-      }),
-
       /**
        * Plugin: AddAssetHtmlPlugin
        * Description: Adds the given JS or CSS file to the files
@@ -182,11 +150,6 @@ module.exports = function (options) {
        *
        * See: https://github.com/SimenB/add-asset-html-webpack-plugin
        */
-      new AddAssetHtmlPlugin([
-        { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('polyfills')}`) },
-        { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('vendor')}`) }
-      ]),
-
       /**
        * Plugin: NamedModulesPlugin (experimental)
        * Description: Uses file names as module name.
@@ -205,8 +168,7 @@ module.exports = function (options) {
         options: {
 
         }
-      }),
-
+      })
     ],
 
     /**
@@ -221,6 +183,7 @@ module.exports = function (options) {
       port: METADATA.port,
       host: METADATA.host,
       historyApiFallback: true,
+        publicPath: '/',
       watchOptions: {
         aggregateTimeout: 300,
         poll: 1000
