@@ -111,7 +111,7 @@ export class SharedReport {
             .subscribe(
             data => {
                 if (data.status == 200) {
-                    console.log("[Success] The server is online. test");
+                    console.log("[Success] The server is online.");
                     this.isOnline = true;
                     this.getFilterOnline()
                     this.getCodeOnline()
@@ -287,7 +287,6 @@ export class SharedReport {
      * If there are, it will launch the global function to refresh the filter properly.
      */
     private refreshFilter() {
-        console.log("refreshFilter");
         if (this.code && this.filter && this.message && this.filter.review_status){
             updateFilter(this);
             this.messageFilter = {newSort: 'ranking', otherSort: 'countRanking', order: -1};
@@ -340,7 +339,6 @@ export class SharedReport {
 
     private unselectFilter(myArray: any, unselectArray: string[]){
         let newFilter: any ;
-
         if (this.checkArray(myArray, "main-responder.service",
                             "unselectFilter", "myArray")){
             myArray.forEach(function(rank){
@@ -416,7 +414,6 @@ export class SharedReport {
     private isActiveFilter(status): boolean {
         let unselected = ['FALSE_POSITIVE','INTENTIONAL', 'NOT_A_BUG'];
         this.activeFilter =  unselected.indexOf(status) == -1 ? false :  true;
-
         if (this.checkArray(this.filter.review_status, "main-responder.service",
                             "isActiveFilter", "this.filter.review_status")){
             this.filter.review_status.forEach(function(status, unselected, review, idx){
@@ -472,7 +469,6 @@ export class SharedReport {
                 source.expand = false;
                 if (source.messages){
                     source.messages.forEach(function(message){
-
                         if (this.codepeer_review[message.tool_msg_id]) {
                             message.review_history = this.codepeer_review[message.tool_msg_id].review_history;
                             message.user_review = this.codepeer_review[message.tool_msg_id].user_review;
@@ -482,9 +478,8 @@ export class SharedReport {
                 }
             }.bind(this));
         }
-
         let count = this.countUncategorized(this.userReviewFilter, this.filter._total_message_count);
-        if (count > 0){
+        if (count > 0 || this.userReviewFilter == undefined){
             let tmp_review = {
                 status: "UNCATEGORIZED",
                 display_name: "Uncategorized"

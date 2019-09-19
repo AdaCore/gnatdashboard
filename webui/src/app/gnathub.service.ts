@@ -132,6 +132,7 @@ export class GNAThubService {
                     user_review[result.audit_trail.message.$.identifier] = tmp;
                 } else {
                     console.log("[Error] gnathub.service:convertToJson : result.audit_trail.message should not be empty.");
+                    console.log("Please see result : ", result);
                 }
             }
         });
