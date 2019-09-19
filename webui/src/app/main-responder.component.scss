@@ -196,7 +196,7 @@ filter-selector.tool-selector .filter-selector {
         }
 
         .message-reminder {
-            padding: 5px 10px;
+            padding: 5px;
             border: 1px solid rgba(0, 0, 0, .2);
             border-radius: 5px;
             margin-bottom: 15px;
@@ -206,9 +206,14 @@ filter-selector.tool-selector .filter-selector {
 
             .message-line {
                 background-color: rgba(0, 0, 0, .05);
-                margin-bottom: 2px;
-                padding: 2px 10px;
+                padding: 2px 5px;
                 border-radius: 5px;
+                overflow-wrap: break-word;
+
+                span {
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
             }
         }
 
@@ -260,24 +265,29 @@ filter-selector.tool-selector .filter-selector {
         }
 
         .Info {
-            padding: 5px;
+            /* padding: 5px;*/
             background-color: var(--Info);
+            text-align: center;
         }
         .Unspecified {
-            padding: 5px;
+            /*   padding: 5px;*/
             background-color: var(--Unspecified);
+            text-align: center;
         }
         .Medium {
-            padding: 5px;
+            /*  padding: 5px;*/
             background-color: var(--Medium);
+            text-align: center;
         }
         .Low {
-            padding: 5px;
+            /*   padding: 5px;*/
             background-color: var(--Low);
+            text-align: center;
         }
         .High {
-            padding: 5px;
+            /*  padding: 5px;*/
             background-color: var(--High);
+            text-align: center;
         }
     }
 

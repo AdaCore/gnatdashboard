@@ -45,7 +45,7 @@
                         matTooltipPosition="left"
                         (click)="showMessageList = !showMessageList">
                     <mat-icon class="md-18" [ngClass]="{ expanded: showMessageList }">
-                        keyboard_capslock
+                        keyboard_arrow_down
                     </mat-icon>
                 </button>
             </div>
@@ -74,28 +74,24 @@
                                       class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) || (!reportService.showReviews && !message.user_review) ? 'hideIt' : ''">
                                     <span class="message-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                                          [ngClass]="(selected_msg.indexOf(message.id) != -1 ? 'selected' : '') + ' ' + message.tool">
-                                        <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="selectMessage(message, $event)">
-                                            <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
-                                                {{message.line}}:{{message.col_begin}}
-                                            </span>
-                                            <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad ellipsis">
-                                                {{message.ranking.name}}
-                                            </span>
-                                            <span class="d-inline-block col-lg-9 col-md-9 col-sm-9 col-xs-9 no-pad" >
-                                                {{message.name}}
-                                            </span>
-                                            <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-2 no-pad">
-
-                                                <span class="d-inline-block col-lg-10 col-md-10 col-sm-6 col-xs-6 no-pad ellipsis">
-                                                    {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
-                                                </span>
-                                                <span  class="d-inline-block col-lg-2 col-md-2 col-sm-6 col-xs-6 no-pad" *ngIf="message.review_history" >
-                                                    <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
-                                                          (click)="ShowReviewHistory(message)">
-                                                        <mat-icon>history</mat-icon>
-                                                    </span>
-                                                </span>
+                                          [ngClass]="(selected_msg.indexOf(message.id) != -1 ? 'selected' : '') + ' ' + message.tool"
+                                          (click)="selectMessage(message, $event)">
+                                        <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
+                                            {{message.line}}:{{message.col_begin}}
+                                        </span>
+                                        <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad ellipsis">
+                                            {{message.ranking.name}}
+                                        </span>
+                                        <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad" >
+                                            {{message.name}}
+                                        </span>
+                                        <span class="user-review d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad" >
+                                            {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
+                                        </span>
+                                        <span  class="review-history d-inline-block" *ngIf="message.review_history" >
+                                            <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
+                                                  (click)="ShowReviewHistory(message)">
+                                                <mat-icon>history</mat-icon>
                                             </span>
                                         </span>
                                     </span>

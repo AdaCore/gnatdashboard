@@ -6,14 +6,12 @@
 
     <span class="message-reminder d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <span class="message-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-            <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
+            <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
                 {{message.line}}:{{message.col_begin}}
             </span>
-            <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">
-                <span [ngClass]="message.ranking.name">{{message.ranking.name}}</span>
-                <span>{{message.user_review ? message.user_review.status.charAt(0).toUpperCase() + message.user_review.status.slice(1).toLowerCase() : 'Uncategorized'}}</span>
-            </span>
-            <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <span [ngClass]="message.ranking.name" class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">{{message.ranking.name}}</span>
+            <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">{{message.user_review ? message.user_review.status.charAt(0).toUpperCase() + message.user_review.status.slice(1).toLowerCase() : 'Uncategorized'}}</span>
+            <span class="d-inline-block col-lg-7 col-md-7 col-sm-7 col-xs-7">
                 {{message.name}}
             </span>
         </span>

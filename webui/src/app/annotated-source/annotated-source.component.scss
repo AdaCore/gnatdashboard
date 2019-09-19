@@ -135,6 +135,21 @@
             &.gnatcheck {
                 border-left-color: #29a229;
             }
+
+            span {
+                padding-right: 5px !important;
+
+                &.user-review {
+                    padding-right: 20px !important;
+                    overflow-wrap: break-word;
+                }
+            }
+
+            .review-history {
+                position: absolute;
+                right: 5px;
+                top: 3px;
+            }
         }
         .message-line:hover {
             background-color: var(--strong-shade);
@@ -317,12 +332,13 @@
         right: 15px;
         position: absolute;
 
-        mat-icon.expanded { transform: rotate(180deg); }
+        mat-icon.expanded {
+            position: initial;
+        }
     }
 
     &-review-btn {
         border: 0;
-        padding: 3px 10px;
         height: 24px ;
         border-radius: 2px;
         right: 60px;

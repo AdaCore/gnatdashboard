@@ -72,6 +72,7 @@
                 }
                 .file-name {
                     font-weight: bold;
+                    padding-left: 5px;
                 }
             }
             .header-line:hover {
@@ -188,6 +189,7 @@
         display: inline-block;
         width: 40px;
         height: 20px;
+        margin-right: 5px;
     }
     .slider {
         position: absolute;
