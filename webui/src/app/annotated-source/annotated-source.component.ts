@@ -390,6 +390,7 @@ export class AnnotatedSourceComponent
 
                     if (data.status) {
                         xml += 'status="' + data.status + '" ';
+                        xml += 'status_category="' + data.category + '" ';
                         new_review[id].status = data.status;
                         new_review[id].display_name = this.formatName(data.status);
                     }

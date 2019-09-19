@@ -413,7 +413,7 @@ export class SharedReport {
 
     private isActiveFilter(status): boolean {
         let unselected = ['FALSE_POSITIVE','INTENTIONAL', 'NOT_A_BUG'];
-        this.activeFilter =  unselected.indexOf(status) == -1 ? false :  true;
+        this.activeFilter =  unselected.indexOf(status.toUpperCase()) == -1 ? false :  true;
         if (this.checkArray(this.filter.review_status, "main-responder.service",
                             "isActiveFilter", "this.filter.review_status")){
             this.filter.review_status.forEach(function(status, unselected, review, idx){
