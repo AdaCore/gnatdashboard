@@ -129,7 +129,7 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 self.wfile.write(data)
         else:
             self.send_response(404)
-            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Type", "text/plain")
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write("No such file")
@@ -161,14 +161,14 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self._import_codepeer_bridge(temp_filename)
 
         self.send_response(200)
-        self.send_header("Content-Type", "text/xml")
+        self.send_header("Content-Type", "text/plain")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write("OK")
 
     def _get_online(self):
         self.send_response(200)
-        self.send_header("Content-Type", "text/xml")
+        self.send_header("Content-Type", "text/plain")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write('OK')
@@ -182,13 +182,13 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
         if (ret == 0):
             self.send_response(200)
-            self.send_header("Content-Type", "text/xml")
+            self.send_header("Content-Type", "text/plain")
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write('OK')
         else:
             self.send_response(204)
-            self.send_header("Content-Type", "text/xml")
+            self.send_header("Content-Type", "text/plain")
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write('NOT OK')
