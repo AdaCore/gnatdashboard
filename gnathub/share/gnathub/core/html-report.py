@@ -145,8 +145,9 @@ class HTMLReport(Plugin, Reporter):
                                 'data', 'codepeer_run')
             name = 'codepeer'
             cmd = ['codepeer',
-                   '-P' + GNAThub.Project.name().lower(),
+                   '-P' + GNAThub.Project.path(),
                    '-show-header-only', '-output-msg-only']
+
             self.log.debug(cmd)
             self.log.debug('Codepeer run info file generated in %s', dest)
             self.info('Codepeer run info file generated in %s', dest)

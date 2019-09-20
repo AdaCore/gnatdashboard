@@ -175,7 +175,7 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
     def _get_codepeer(self):
         cmd = ('codepeer'
-               + ' -P' + GNAThub.Project.name().lower()
+               + ' -P' + GNAThub.Project.path()
                + ' -show-header-only'
                + ' -output-msg-only > null')
         ret = os.system(cmd)
