@@ -371,7 +371,29 @@ export class AnnotatedSourceComponent
 
             if (!data) {return }
 
-            let date = Date.now();
+            /*Timestamp format must be YYYY-MM-jj HH:mm:ss*/
+            let now = new Date();
+            var year = now.getFullYear().toString();
+            var month = "";
+            if (now.getMonth() < 10){
+                month = '0'+ now.getMonth().toString();
+            } else {
+                month = now.getMonth().toString();
+            }
+            var day = "";
+            if (now.getDate() < 10){
+                day = '0'+ now.getDate().toString();
+            } else {
+                day = now.getDate().toString();
+            }
+            var hour = now.getHours().toString();
+            var minutes = now.getMinutes().toString();
+            var seconds = now.getSeconds().toString();
+
+            let date = year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+            console.log("date", date);
+
+            /*Now create xml*/
             let xml = '<?xml version="1.0" encoding="utf-8"?>\n<audit_trail format="6">\n';
             let new_review = [];
 
