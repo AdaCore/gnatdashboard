@@ -1,5 +1,4 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { PageScrollConfig } from 'ngx-page-scroll-core';
 import { SharedReport } from './main-responder.service';
 import { CodepeerDialogsService } from './codepeer-run-dialog/codepeer-dialog.service'
 

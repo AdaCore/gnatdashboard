@@ -13,8 +13,6 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
-
-import { PageScrollInstance, PageScrollService } from 'ngx-page-scroll-core';
 import { Subscription } from 'rxjs';
 
 import { SharedReport } from '../main-responder.service';
@@ -23,8 +21,10 @@ import { GNAThubService } from '../gnathub.service';
 
 import { AnnotatedSourceViewComponent } from './annotated-source-view.component';
 
-import { updateFilter } from '../utils/refreshFilter'
+import { updateFilter } from '../utils/refreshFilter';
 import { sortMessageArray } from '../utils/sortArray';
+import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scroll-to';
+
 
 import {
     IAnnotatedSourceFile,
@@ -61,7 +61,7 @@ export class AnnotatedSourceComponent
 
     constructor(
     @Inject(DOCUMENT) private document: Document,
-     private pageScrollService: PageScrollService,
+     private scrollToService: ScrollToService,
      private route: ActivatedRoute,
      private router: Router,
      public reportService: SharedReport,
@@ -72,7 +72,6 @@ export class AnnotatedSourceComponent
 
     /** @override */
     public ngOnInit() {
-
 
         this.sub = this.route.params.subscribe(params => {
             let filename = params['filename'];
@@ -191,11 +190,12 @@ export class AnnotatedSourceComponent
         if (line) {
             this.selectedLine = line;
             line = line - 10 > 0 ? line - 10 : 1;
+            let id = "L"+line;
 
-            this.pageScrollService.scroll({
-                document: this.document,
-                scrollTarget: `#L${line}`
-            });
+            const config: ScrollToConfigOptions = {
+                target: id
+            };
+            this.scrollToService.scrollTo(config);
         }
     };
 

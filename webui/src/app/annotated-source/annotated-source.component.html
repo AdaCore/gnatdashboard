@@ -32,10 +32,10 @@
                     File Metrics
                 </span>
                 <span class="location-view-title" (click)="tabOpen = 'message'; thisFile = true" [ngClass]="tabOpen == 'message' ? 'selected': ''">
-                    File messages
+                    File Messages
                 </span>
                 <span class="location-view-title" (click)="tabOpen = 'messages'; thisFile = false" [ngClass]="tabOpen == 'messages' ? 'selected': ''">
-                    All messages
+                    All Messages
                 </span>
                 <button *ngIf="reportService.isOnline" (click)="writeReview()" class="location-view-review-btn" [disabled]="!checked_msg || checked_msg.length == 0 || tabOpen != 'message'">
                     <span>Add review</span>

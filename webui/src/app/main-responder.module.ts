@@ -47,7 +47,7 @@ import { MessageExplorerComponent } from './message-explorer';
 import { SpinnerComponent } from './spinner';
 
 import { GNAThubService } from './gnathub.service';
-import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
+import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -101,7 +101,7 @@ type StoreType = {
         MatDialogModule,
         MatTooltipModule,
         MatIconModule,
-        NgxPageScrollCoreModule,
+        ScrollToModule.forRoot(),
         RouterModule.forRoot(ROUTES, {
             useHash: true,
             preloadingStrategy: PreloadAllModules
