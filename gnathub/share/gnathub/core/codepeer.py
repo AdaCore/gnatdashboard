@@ -106,9 +106,14 @@ class CodePeer(Plugin, Runner, Reporter):
 
         cmd_start.extend([ToolArgsPlaceholder('codepeer')])
 
+        dest = os.path.join(
+             GNAThub.Project.object_dir(), 'codepeer',
+             'codepeer_run')
+
         cmd_end = [
                    '-output-msg-only', '-csv', '-out', report,
-                   ToolArgsPlaceholder('codepeer_msg_reader')
+                   ToolArgsPlaceholder('codepeer_msg_reader'),
+                   '-db-info', dest
                   ]
 
         return cmd_start + GNAThub.Project.scenario_switches() + cmd_end

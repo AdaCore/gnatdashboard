@@ -56,6 +56,7 @@ export class SharedReport {
     public codepeer_code = -1;
     public codepeerReviewError: boolean = false;
     private codepeer_review: any;
+    private codepeer_history: any;
 
     /* Corresponds to the sorting state of code and message navigation*/
     public codeFilter = {newSort: 'name', otherSort: 'filename', order: 1};
@@ -244,25 +245,51 @@ export class SharedReport {
     private getCodepeerRunInfo() {
         this.gnathub.getCodepeerRun().subscribe(
             run_info => {
-                this.codepeerRunInfo = run_info._body.split('\n');
+                this.codepeer_history = run_info.history;
+                this.codepeerCurrentRun = run_info.current_run_number;
+
                 var tmp = [];
-                this.codepeerRunInfo.forEach(function(info){
-                    var tmp_name = info.split(':')[0].trim();
-                    var tmp_value = info.substring(info.indexOf(':')+1).trim();
-                    if (tmp_name != ''){
-                        var obj = {
-                            name: tmp_name,
-                            value: tmp_value
-                        };
-                        tmp.push(obj);
-                        if (obj.name == 'current run number'){
-                            this.codepeerCurrentRun = obj.value;
-                        }
-                    }
-                }.bind(this));
+                tmp.push({
+                    name: 'date',
+                    value: run_info.date
+                });
+                tmp.push({
+                    name: 'codepeer version',
+                    value: run_info.codepeer_version
+                });
+                tmp.push({
+                    name: 'host',
+                    value: run_info.host
+                });
+                tmp.push({
+                    name: 'command line',
+                    value: run_info.command_line
+                });
+                tmp.push({
+                    name: 'codepeer switches ',
+                    value: run_info.codepeer_switches
+                });
+                tmp.push({
+                    name: 'base run number',
+                    value: run_info.base_run_number
+                });
+                tmp.push({
+                    name: 'current run number',
+                    value: run_info.current_run_number
+                });
+                let temp_value = "";
+                run_info.excluded_files.forEach(function(file) {
+                    temp_value += file + "";
+                });
+                tmp.push({
+                    name: 'excluded files',
+                    value: temp_value
+                });
+
                 this.codepeerRunInfo = tmp;
             }, error => {
                 this.isReportFetchError = true;
+                console.log("[Error] get codepeer_run : ", error);
             }
         );
     }

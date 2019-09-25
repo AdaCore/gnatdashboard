@@ -39,11 +39,13 @@ export class GNAThubService {
     public getSource(filename): Observable<IAnnotatedSourceFile> {
         return this.http.get(`data/src/${filename}.json`).pipe(
             map(this.handleResults),
-            catchError(this.handleError),);
+            catchError(this.handleError));
     }
 
     public getCodepeerRun(): Observable<any> {
-        return this.http.get('data/codepeer_run');
+        return this.http.get('data/codepeer_run').pipe(
+            map(this.handleResults),
+            catchError(this.handleError));
     }
 
     private handleResults(res: Response) {

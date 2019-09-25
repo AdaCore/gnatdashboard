@@ -138,20 +138,17 @@ class HTMLReport(Plugin, Reporter):
             self.info('Codepeer_bridge file generated in %s', dest)
             GNAThub.Run(name, cmd)
 
-            # Call to codepper with -show-header-only flag
-            self.log.debug("Export run info from codepeer")
+            # Get codepeer_run file
+            copy_file = os.path.join(
+             GNAThub.Project.object_dir(), 'codepeer',
+             'codepeer_run')
             dest = os.path.join(GNAThub.Project.object_dir(),
                                 'gnathub', 'html-report',
-                                'data', 'codepeer_run')
-            name = 'codepeer'
-            cmd = ['codepeer',
-                   '-P' + GNAThub.Project.path(),
-                   '-show-header-only', '-output-msg-only']
-
-            self.log.debug(cmd)
-            self.log.debug('Codepeer run info file generated in %s', dest)
-            self.info('Codepeer run info file generated in %s', dest)
-            GNAThub.Run(name, cmd, out=dest)
+                                'data')
+            cmd = ['cp', copy_file, dest]
+            self.log.debug('Codepeer_run file copied in %s', dest)
+            self.info('Codepeer_run file copied in %s', dest)
+            GNAThub.Run(name, cmd)
 
         except IOError as why:
             self.log.exception('failed to generate the HTML report')
