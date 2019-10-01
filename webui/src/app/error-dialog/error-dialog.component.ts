@@ -4,20 +4,20 @@ import { MatDialogRef} from '@angular/material';
 import { SharedReport } from '../main-responder.service';
 
 @Component({
-    selector: 'codepeer-run-info-dialog',
-    templateUrl: './codepeer-run-info-dialog.component.html',
-    styleUrls: [ 'codepeer-run-info-dialog.component.scss' ]
+    selector: 'error-dialog',
+    templateUrl: './error-dialog.component.html',
+    styleUrls: [ 'error-dialog.component.scss' ]
 })
 
-export class CodepeerRunInfoDialog {
+export class ErrorDialog {
 
-    public info: any;
+    public error: any;
 
-    constructor(public dialogRef: MatDialogRef<CodepeerRunInfoDialog>,
+    constructor(public dialogRef: MatDialogRef<ErrorDialog>,
                  private reportService: SharedReport) {}
 
     ngOnInit() {
-        this.info = this.reportService.codepeerRunInfo;
+        this.error = this.reportService.errorToShow;
     }
 
     public close() {

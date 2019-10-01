@@ -27,9 +27,11 @@ import {
 } from './annotated-source';
 import { ReviewDialog } from './annotated-source/review-dialog.component'
 import { ReviewHistoryDialog } from './annotated-source/review-history-dialog.component'
-import { CodepeerRunInfoDialog } from './codepeer-run-dialog/codepeer-run-info-dialog.component'
 import { DialogsService } from './annotated-source/dialog.service'
+import { CodepeerRunInfoDialog } from './codepeer-run-dialog/codepeer-run-info-dialog.component'
 import { CodepeerDialogsService } from './codepeer-run-dialog/codepeer-dialog.service'
+import { ErrorDialog } from './error-dialog/error-dialog.component'
+import { ErrorDialogsService } from './error-dialog/error-dialog.service'
 import { CountPipe } from './count.pipe';
 import { FilterSelectorComponent } from './filter-selector';
 import { FilterPanelComponent } from './filter-selector';
@@ -91,7 +93,8 @@ type StoreType = {
         SpinnerComponent,
         ReviewDialog,
         ReviewHistoryDialog,
-        CodepeerRunInfoDialog
+        CodepeerRunInfoDialog,
+        ErrorDialog
     ],
     imports: [
         BrowserModule,
@@ -111,7 +114,7 @@ type StoreType = {
         APP_PROVIDERS,
         ENV_PROVIDERS
     ],
-    entryComponents: [ReviewDialog, ReviewHistoryDialog, CodepeerRunInfoDialog]
+    entryComponents: [ReviewDialog, ReviewHistoryDialog, CodepeerRunInfoDialog, ErrorDialog]
 })
 export class AppModule {
     constructor(public appRef: ApplicationRef, public appState: AppState) {}

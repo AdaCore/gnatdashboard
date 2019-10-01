@@ -63,6 +63,9 @@ body { overflow: hidden; }
                 border-radius: 5px;
                 line-height: initial;
             }
+            .error-button {
+                display: none;
+            }
 
             .online-offline-span {
 
@@ -181,7 +184,7 @@ filter-selector.tool-selector .filter-selector {
         max-width: 100%;
     }
 
-    review-dialog, review-history-dialog, codepeer-run-info-dialog {
+    review-dialog, review-history-dialog, codepeer-run-info-dialog, error-dialog {
 
         display: inline-block;
         width: 100%;
@@ -291,16 +294,21 @@ filter-selector.tool-selector .filter-selector {
         }
     }
 
-    review-history-dialog, codepeer-run-info-dialog {
+    review-history-dialog, codepeer-run-info-dialog, error-dialog {
 
-        .title-review, .title-codepeer-info {
+        .title-review, .title-codepeer-info, .title-error {
             padding-top: 10px;
             padding-bottom: 10px;
             font-size: 20px;
             text-align: center;
         }
 
-        .all-review, .all-codepeer-info {
+        .title-error {
+            background-color: crimson;
+            color: white;
+        }
+
+        .all-review, .all-codepeer-info, .all-error {
             height: calc(470px - 105px - 80px);
             overflow-y: auto;
             padding-right: 5px;
@@ -331,6 +339,12 @@ filter-selector.tool-selector .filter-selector {
 
             }
 
+        }
+
+        .all-error {
+            text-align: center;
+            padding-top: 20px;
+            font-size: large;
         }
 
         .all-codepeer-info {

@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { GNAThubService } from './gnathub.service';
 import { IFilterIndex, ICodeIndex, IMessageIndex, IReviewFilter, IRankingFilter } from 'gnat';
 import { sortCodeArray, sortMessageArray } from './utils/sortArray';
 import { Http, Response } from '@angular/http';
 import { updateFilter } from './utils/refreshFilter';
+import { DOCUMENT } from '@angular/common';
 
 export type InteralStateType = {
     [key: string]: any
@@ -74,6 +75,7 @@ export class SharedReport {
     public showFiles: boolean = false;
     public showCoverage: boolean = false;
     public isReportFetchError: boolean = false;
+    public errorToShow: string[] = [];
 
     public isFilter: boolean = true;
     public _ui_total_message_count: number = -1;
@@ -89,9 +91,13 @@ export class SharedReport {
     private client_host: string = window.location.origin;
     private client_port: number = Number(window.location.port);
     private api_port: number = this.client_port + 1;
-    private url: string = this.client_host.replace(String(this.client_port), String(this.api_port)+"/");
+    public url: string = this.client_host.replace(String(this.client_port), String(this.api_port)+"/");
 
-    constructor( private gnathub: GNAThubService, private http: Http) {
+
+
+    constructor( @Inject(DOCUMENT) private document: Document,
+                  private gnathub: GNAThubService,
+                  private http: Http) {
 
         /*
      * This part is for the connection with the server
@@ -518,14 +524,30 @@ export class SharedReport {
         this.refreshFilter();
     }
 
-    public sendUserReview(xml) {
-        let url = this.url + "post-review/";
 
-        this.http.post(url, xml)
-            .subscribe(data => {
-        }, error => {
-            console.log("[Error] sendUserReview :", error);
-        });
+    private triggerError() {
+        let elem = this.document.getElementById('ErrorButton');
+        elem.click();
+    }
+
+    public verifyServerStatus() {
+        this.http.get(this.url + 'online-server')
+            .subscribe(
+            data => {
+                if (data.status == 200) {
+                    this.errorToShow.push("Please contact support.");
+                } else {
+                    this.errorToShow.push("The server doesn't seem to be running.");
+                    this.isOnline = false;
+                }
+                this.triggerError();
+            }, error => {
+                console.warn("[Warning] main-responder.service:isServerOnline: ", error);
+                this.errorToShow.push("The server doesn't seem to be running.");
+                this.isOnline = false;
+                this.triggerError();
+            }
+        );
     }
 
     public checkArray(array, file, func_name, name): boolean {

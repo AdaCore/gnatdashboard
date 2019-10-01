@@ -2,7 +2,7 @@
     <header class="main-responder-header top d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" role="header">
         <span class="navig-button d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
             <span>{{reportService.projectName}}</span>
-            <button [class.active]="this.reportService.page == 'message-explorer'" id="ErrorButton" class="error-button"
+            <button [class.active]="this.reportService.page == 'message-explorer'" id="MessageButton" class="message-button"
                     [routerLink]="['./message-explorer']">
                 Messages
             </button>
@@ -16,6 +16,9 @@
 
             <button *ngIf="this.reportService.isCodepeer" class="codepeer-run-info-button" (click)='showCodepeerRunInfo()'>
                 CodePeer run id: {{reportService.codepeerCurrentRun}}
+            </button>
+            <button id="ErrorButton" class="error-button" (click)='showError()'>
+                show error
             </button>
 
             <span class="online-offline-span" >

@@ -10,6 +10,7 @@ import {
     ViewChild,
     ChangeDetectorRef
 } from '@angular/core';
+import { Http, Response } from '@angular/http';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -68,7 +69,8 @@ export class AnnotatedSourceComponent
      public dialog: DialogsService,
      private sourceView: AnnotatedSourceViewComponent,
      private gnathub: GNAThubService,
-     private cdRef: ChangeDetectorRef) {}
+     private cdRef: ChangeDetectorRef,
+     private http: Http) {}
 
     /** @override */
     public ngOnInit() {
@@ -431,12 +433,23 @@ export class AnnotatedSourceComponent
             }
             xml += '</audit_trail>';
 
-            this.reportService.sendUserReview(xml);
-            this.addDynamicReview(new_review);
+            this.sendUserReview(xml, new_review);
             this.selectedLine = -1;
             this.checked_msg = [];
             this.selected_msg = [];
             this.reportService.selectedMessage = [];
+        });
+    }
+
+    public sendUserReview(xml, new_review) {
+        let url = this.reportService.url + "post-review/";
+        this.http.post(url, xml)
+            .subscribe(data => {
+            this.addDynamicReview(new_review);
+        }, error => {
+            console.error("[Error] sendUserReview :", error);
+            this.reportService.errorToShow.push("Error when trying to add a review.");
+            this.reportService.verifyServerStatus();
         });
     }
 

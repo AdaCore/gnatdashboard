@@ -1,0 +1,12 @@
+<span class="form-back d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="close()"></span>
+<span class="form-box d-inline-block no-pad col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <span  class="title-error d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        An error occured
+    </span>
+    <span class="all-error d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+        <span *ngFor="let message of error" class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            {{message}}
+        </span>
+    </span>
+    <button md-raised-button (click)="close()"> Close </button>
+</span>
