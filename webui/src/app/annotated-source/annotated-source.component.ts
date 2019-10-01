@@ -366,6 +366,10 @@ export class AnnotatedSourceComponent
         return display_name;
     }
 
+    private formatDate(int: number): string {
+        return int < 10 ? '0' + int.toString() : int.toString();
+    }
+
     public writeReview() {
 
         if (!this.checked_msg || this.checked_msg.length == 0) {return }
@@ -376,24 +380,13 @@ export class AnnotatedSourceComponent
             /*Timestamp format must be YYYY-MM-jj HH:mm:ss*/
             let now = new Date();
             var year = now.getFullYear().toString();
-            var month = "";
-            if (now.getMonth() < 10){
-                month = '0'+ now.getMonth().toString();
-            } else {
-                month = now.getMonth().toString();
-            }
-            var day = "";
-            if (now.getDate() < 10){
-                day = '0'+ now.getDate().toString();
-            } else {
-                day = now.getDate().toString();
-            }
-            var hour = now.getHours().toString();
-            var minutes = now.getMinutes().toString();
-            var seconds = now.getSeconds().toString();
+            var month = this.formatDate(now.getMonth());
+            var day = this.formatDate(now.getDate());
+            var hour = this.formatDate(now.getHours());
+            var minutes = this.formatDate(now.getMinutes());
+            var seconds = this.formatDate(now.getSeconds());
 
             let date = year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
-            console.log("date", date);
 
             /*Now create xml*/
             let xml = '<?xml version="1.0" encoding="utf-8"?>\n<audit_trail format="6">\n';
