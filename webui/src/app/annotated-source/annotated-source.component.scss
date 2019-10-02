@@ -334,6 +334,7 @@
 
         mat-icon.expanded {
             position: initial;
+            transform: rotate(180deg);
         }
     }
 
@@ -342,6 +343,14 @@
         height: 24px ;
         border-radius: 2px;
         right: 60px;
+        position: absolute;
+    }
+
+    &-refresh-btn {
+        border: 0;
+        height: 24px;
+        border-radius: 2px;
+        right: 152px;
         position: absolute;
     }
 

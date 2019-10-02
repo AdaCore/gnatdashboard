@@ -265,6 +265,9 @@ filter-selector.tool-selector .filter-selector {
                 position: absolute;
                 right: 10px
             }
+            [md-raised-button].refresh-btn {
+                right: 62px;
+            }
         }
 
         .Info {

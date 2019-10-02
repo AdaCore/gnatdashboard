@@ -315,6 +315,12 @@ export class SharedReport {
         );
     }
 
+    public refreshUserReview() {
+        this.filter.review_status = undefined;
+        this.userReviewFilter = undefined;
+        this.getUserReview();
+    }
+
     /* This function is called each time a set of data is loaded.
      * It will verify if all the set of data are loaded.
      * If there are, it will launch the global function to refresh the filter properly.

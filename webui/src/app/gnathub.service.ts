@@ -75,7 +75,7 @@ export class GNAThubService {
         let lastReview = {
             author : '',
             status: '',
-            date: 0,
+            date: '',
             from_source: '',
             message: '',
             display_name: ''
@@ -106,8 +106,6 @@ export class GNAThubService {
                     lastReview = tmpReview;
                 }
             }.bind(this));
-
-
         } else {
             console.log("[Error] convertToJson : Problem to add this user_review : ", review);
         }

@@ -40,6 +40,9 @@
             You must choose a status
         </span>
     </span>
+    <button md-raised-button id="ErrorButton" class="refresh-btn" (click)='reportService.refreshUserReview()'>
+        <span>Refresh review</span>
+    </button>
     <button md-raised-button (click)="submit()"> Save </button>
     <button md-button (click)="cancel()"> Cancel </button>
 </span>

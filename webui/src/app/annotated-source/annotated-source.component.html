@@ -37,6 +37,9 @@
                 <span class="location-view-title" (click)="tabOpen = 'messages'; thisFile = false" [ngClass]="tabOpen == 'messages' ? 'selected': ''">
                     All Messages
                 </span>
+                <button id="ErrorButton" class="location-view-refresh-btn" (click)='reportService.refreshUserReview()'>
+                    <span>Refresh review</span>
+                </button>
                 <button *ngIf="reportService.isOnline" (click)="writeReview()" class="location-view-review-btn" [disabled]="!checked_msg || checked_msg.length == 0 || tabOpen != 'message'">
                     <span>Add review</span>
                 </button>
