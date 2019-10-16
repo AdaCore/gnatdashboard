@@ -168,6 +168,27 @@
                         background-color: var(--High);
                     }
                 }
+
+                .Not_A_Bug, .NOT_A_BUG,
+                .False_Positive, .FALSE_POSITIVE,
+                .Intentional, .INTENTIONAL {
+                    .review {
+                        background-color: var(--Not-A-Bug);
+                    }
+                }
+
+                .Pending, .PENDING {
+                    .review {
+                        background-color: var(--Pending);
+                    }
+                }
+
+                .Bug, .BUG {
+                    .review {
+                        background-color: var(--Bug);
+                    }
+                }
+
             }
 
             .source-line.reduce .all-messages-line {

@@ -1,6 +1,11 @@
 <div id="{{title}}" class="filter-selector d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 open">
     <div class="filter-header d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <span class="d-inline-block col-lg-5 col-md-6 col-sm-12 col-xs-12 no-pad"> {{ title }} </span>
+        <span class="filter-title d-inline-block u col-lg-5 col-md-6 col-sm-12 col-xs-12 no-pad" (click)="openClose(title)">
+            <i class="arrow material-icons">
+                keyboard_arrow_down
+            </i>
+            <span class="filter-header-title"> {{ title }} </span>
+        </span>
         <span class="select d-inline-block col-lg-7 col-md-6 col-sm-12 col-xs-12 no-pad">
             <span (click)="selectAll(options)">
                 select all
@@ -10,9 +15,6 @@
                 unselect all
             </span>
         </span>
-        <i class="arrow material-icons" (click)="openClose(title)">
-            keyboard_arrow_down
-        </i>
     </div>
 
     <div class="filter-body d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">

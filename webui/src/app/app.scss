@@ -1,4 +1,4 @@
-/*@import '~@angular/material/core/theming/all-theme';*/
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 body {
   font-kerning: normal;
@@ -13,6 +13,12 @@ body {
 .layout-page {
   height: 100%;
   display: block;
+}
+
+.online-offline-tooltip {
+  position: fixed;
+  top: 10px;
+  right: 3px;
 }
 
 /* Common styles */

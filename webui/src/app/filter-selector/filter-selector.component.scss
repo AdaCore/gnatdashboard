@@ -7,6 +7,23 @@
         font-weight: bold;
         text-align: left;
         margin-bottom: 2px;
+
+        .filter-title {
+            min-height: 20px;
+        }
+
+        .filter-header-title {
+            display: inline-block;
+            position: absolute;
+            left: 24px;
+            top: 0px;
+        }
+
+        i.arrow {
+            position: absolute;
+            left: 0px;
+            top: -2px;
+        }
     }
 
     input[type=checkbox] {
@@ -52,6 +69,29 @@
                     background-color: var(--High-hover);
                 }
             }
+
+            .Not_A_Bug, .NOT_A_BUG,
+            .False_Positive, .FALSE_POSITIVE,
+            .Intentional, .INTENTIONAL {
+                background-color: var(--Not-A-Bug);
+                &:hover {
+                    background-color: var(--Not-A-Bug-hover);
+                }
+            }
+
+            .Pending, .PENDING {
+                background-color: var(--Pending);
+                &:hover {
+                    background-color: var(--Pending-hover);
+                }
+            }
+
+            .Bug, .BUG {
+                background-color: var(--Bug);
+                &:hover {
+                    background-color: var(--Bug-hover);
+                }
+            }
         }
     }
     label.option:hover, input[type=checkbox]:not(:checked) + label.option:hover {
@@ -63,13 +103,6 @@
         background-color: var(--elem-unchecked);
     }
 
-    i.arrow {
-        position: absolute;
-        right: 0px;
-    }
-    i.arrow:hover {
-        background-color: var(--elem-unchecked);
-    }
     .select {
         font-weight: 200;
         text-align: right;
@@ -180,5 +213,36 @@ filter-selector.tool-selector .filter-selector {
         ) !important;
     }
 
+    &.Not_A_Bug, &.NOT_A_BUG,
+    &.False_Positive, &.FALSE_POSITIVE,
+    &.Intentional, &.INTENTIONAL {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Not-A-Bug-hover) 10px,
+            var(--Not-A-Bug-hover) 20px
+        ) !important;
+    }
+
+    &.Pending, &.PENDING {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Pending-hover) 10px,
+            var(--Pending-hover) 20px
+        ) !important;
+    }
+
+    &.Bug, &.BUG {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Bug-hover) 10px,
+            var(--Bug-hover) 20px
+        ) !important;
+    }
 
 }

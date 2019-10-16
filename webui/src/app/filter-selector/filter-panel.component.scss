@@ -28,9 +28,9 @@
 
     .arrow-button.open {
         padding: 1px 0px;
-        background-color: var(--elem-hover);
-        border: 1px var(--elem-border) solid;
-        line-height: 1;
+        border: 0px;
+        border-radius: 2px;
+        line-height: 0;
         position: absolute;
         right: 15px;
         top: 15px;
@@ -85,11 +85,13 @@
     .arrow-button.reduce {
         padding: 1px 0px;
         background-color: var(--elem-hover);
-        border: 1px var(--elem-border) solid;
+        border: 0px;
+        border-radius: 2px;
+        line-height: 0;
         position: absolute;
-        line-height: 1;
         right: 15px;
         top: 15px;
+        cursor: pointer;
 
         .right {
             opacity: 0;

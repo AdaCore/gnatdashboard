@@ -21,7 +21,7 @@
                 show error
             </button>
 
-            <span class="online-offline-span" >
+            <span [matTooltip]="this.reportService.isOnline ? 'Server is online' : 'Server is offline'" matTooltipClass="online-offline-tooltip" matToolTipPosition='below' class="online-offline-span" >
                 <mat-icon [ngClass]="this.reportService.isOnline ? 'online': 'offline'">fiber_manual_record</mat-icon>
             </span>
 
