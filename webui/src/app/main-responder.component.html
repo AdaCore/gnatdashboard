@@ -1,7 +1,6 @@
 <div class="main-responder-page d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
     <header class="main-responder-header top d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" role="header">
-        <span class="navig-button d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
-            <span>{{reportService.projectName}}</span>
+         <span class="navig-button d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
             <button [class.active]="this.reportService.page == 'message-explorer'" id="MessageButton" class="message-button"
                     [routerLink]="['./message-explorer']">
                 Messages
@@ -11,8 +10,9 @@
                 Projects
             </button>
         </span>
+        <span class="navig-button project-name d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">Project: {{reportService.projectName}}</span>
         <!--<span [routerLink]="['./preferences']">Preferences</span>-->
-        <span class="info-button d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+        <span class="info-button d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
 
             <button *ngIf="this.reportService.isCodepeer" class="codepeer-run-info-button" (click)='showCodepeerRunInfo()'>
                 CodePeer run id: {{reportService.codepeerCurrentRun}}
@@ -21,7 +21,7 @@
                 show error
             </button>
 
-            <span class="online-offline-span" >
+            <span [matTooltip]="this.reportService.isOnline ? 'Server is online' : 'Server is offline'" matTooltipClass="online-offline-tooltip" matToolTipPosition='below' class="online-offline-span" >
                 <mat-icon [ngClass]="this.reportService.isOnline ? 'online': 'offline'">fiber_manual_record</mat-icon>
             </span>
 

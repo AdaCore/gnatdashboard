@@ -331,6 +331,7 @@
         font-size: 0;
         right: 15px;
         position: absolute;
+        transform: rotate(180deg);
 
         mat-icon.expanded {
             position: initial;

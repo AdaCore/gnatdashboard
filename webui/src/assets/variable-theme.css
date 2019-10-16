@@ -38,6 +38,14 @@
     --High: #ffb0b0;
     --High-hover: #ff8080;
     --High-font: #f52e2e;
+
+    /* Colors for Review */
+    --Not-A-Bug: #b5daf9;
+    --Not-A-Bug-hover: #88beec;
+    --Bug: #ffb0b0;
+    --Bug-hover: #ff8080;
+    --Pending: #ddddff;
+    --Pending-hover: #b0b0ff;
 }
 
 /* Declaration of variable for Dark Theme */

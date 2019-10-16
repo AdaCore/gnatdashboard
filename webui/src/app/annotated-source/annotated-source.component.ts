@@ -74,7 +74,6 @@ export class AnnotatedSourceComponent
 
     /** @override */
     public ngOnInit() {
-
         this.sub = this.route.params.subscribe(params => {
             let filename = params['filename'];
             let line = params['line'];
@@ -191,13 +190,18 @@ export class AnnotatedSourceComponent
     private goToLine(line: number) {
         if (line) {
             this.selectedLine = line;
-            line = line - 10 > 0 ? line - 10 : 1;
             let id = "L"+line;
 
             const config: ScrollToConfigOptions = {
-                target: id
+                target: id,
+                offset: -270,
+                duration: 200
             };
-            this.scrollToService.scrollTo(config);
+
+            let ret = this.scrollToService.scrollTo(config);
+            if (ret.source == undefined){
+                console.error("[Error] annotated-source.component:goToLine: scrollToService failed.", ret)
+            }
         }
     };
 

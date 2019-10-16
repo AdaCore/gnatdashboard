@@ -43,6 +43,12 @@ body { overflow: hidden; }
             span {
                 padding: 0px 10px;
             }
+
+            &.project-name {
+                text-align: center;
+                font-size: 1.3em;
+                line-height: 1.6;
+            }
         }
 
         span.info-button {
@@ -58,16 +64,22 @@ body { overflow: hidden; }
                 text-align: center;
                 background-color: var(--elem-color);
                 border: 1px #C4c4c5 solid;
-                width: 200px;
+                width: 150px;
                 padding: 7px;
                 border-radius: 5px;
                 line-height: initial;
+                position: absolute;
+                right: 34px;
             }
             .error-button {
                 display: none;
             }
 
             .online-offline-span {
+                display: inline-block;
+                position: absolute;
+                right: 5px;
+                top: 12px;
 
                 mat-icon {
 
