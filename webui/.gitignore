@@ -7,6 +7,8 @@
 /src/*.css
 /src/maps/
 /dll
+package-lock.json
+webui_node_modules.tgz
 
 npm-debug.log
 /.idea/

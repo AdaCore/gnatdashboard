@@ -241,6 +241,7 @@
     "json-stable-stringify": "1.0.1",
     "json3": "3.3.2",
     "json5": "0.5.1",
+    "karma-adacore": "file:karma-adacore-reporter",
     "kind-of": "3.2.2",
     "lazy-req": "1.1.0",
     "load-json-file": "1.1.0",
