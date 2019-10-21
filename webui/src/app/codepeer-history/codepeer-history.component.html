@@ -1,0 +1,129 @@
+<!-- Spinner animation -->
+<spinner
+         *ngIf="!reportService.codepeer_history && !isReportFetchError"
+         caption="Loading report...">
+</spinner>
+<!-- Error handling -->
+<missing-report-error *ngIf="isReportFetchError"></missing-report-error>
+<!-- About display -->
+<div *ngIf="reportService.codepeer_history" class="layout-page d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+         <main class="codepeer-history d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+
+                  <span class="change-section-button">
+                           Go to...
+                           <button (click)="changeSection('runInfo')">Run information</button>
+                           <button (click)="changeSection('chart')">History chart</button>
+                           <button (click)="changeSection('table')">History table</button>
+                  </span>
+
+                  <span  class="codepeer-history-title d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" id='runInfo'>
+                           CodePeer Run Information
+                  </span>
+                  <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+
+                           <span class="d-inline-block col-lg-3 col-md-3 col-sm-2 col-xs-0 no-pad">
+                           </span>
+                           <table class="d-inline-block col-lg-6 col-md-6 col-sm-8 col-xs-12 no-pad">
+
+                                    <tr *ngFor="let field of reportService.codepeerRunInfo; let idx = index" class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                                        [ngClass]="idx % 2 == 0 ? 'run1' : 'run2'">
+                                             <th class="d-inline-block col-lg-3 col-md-3 col-sm-4 col-xs-6"> {{field.name}} </th>
+                                             <th class="d-inline-block col-lg-9 col-md-9 col-sm-8 col-xs-6"> {{field.value}} </th>
+                                    </tr>
+                           </table>
+                  </span>
+
+                  <span class="codepeer-history-title d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" id='chart'>
+                           History Of Total Messages
+                  </span>
+                  <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                           <span class="run-filter d-inline-block col-lg-1 col-md-1 col-sm-0 col-xs-0 no-pad">
+                           </span>
+                           <span class="run-filter d-inline-block col-lg-5 col-md-5 col-sm-6 col-xs-6 no-pad">
+                                    <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                                             Show run between
+                                             <input min="{{min_run}}" max="{{max_run_filter}}" type="number" [(ngModel)]="min_run_filter">
+                                             and
+                                             <input min="{{min_run_filter}}" max="{{max_run}}" type="number" [(ngModel)]="max_run_filter">
+                                             <button (click)="applyRunFilter()">
+                                                      Validate
+                                             </button>
+                                    </span>
+                           </span>
+                           <span class="date-filter d-inline-block col-lg-5 col-md-5 col-sm-6 col-xs-6 no-pad">
+                                    <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                                             Show run between
+                                             <input min="{{min_date}}" max="{{max_date_filter}}" type="date" [(ngModel)]="min_date_filter">
+                                             and
+                                             <input min="{{min_date_filter}}" max="{{max_date}}" type="date" [(ngModel)]="max_date_filter">
+                                             <button (click)="applyDateFilter()">
+                                                      Validate
+                                             </button>
+                                    </span>
+                           </span>
+                           <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" style="margin-bottom: 20px">
+                                    <ngx-charts-area-chart-stacked class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                                                                   [scheme]="colorScheme"
+                                                                   [results]="chart_data"
+                                                                   [gradient]="gradient"
+                                                                   [xAxis]="showXAxis"
+                                                                   [yAxis]="showYAxis"
+                                                                   [legend]="showLegend"
+                                                                   [showXAxisLabel]="showXAxisLabel"
+                                                                   [showYAxisLabel]="showYAxisLabel"
+                                                                   [xAxisLabel]="xAxisLabel"
+                                                                   [yAxisLabel]="yAxisLabel"
+                                                                   (select)="onSelect($event)">
+                                             <ng-template #tooltipTemplate let-model="model" class="ngx-charts-tooltip-content position-top type-tooltip animate">
+                                                      <div class="tooltip-content">
+                                                               <div class="area-tooltip-container">
+                                                                        <div class="tooltip-item" style="text-align: center">Run {{model.name}} - {{model.series}}</div>
+                                                                        <div class="tooltip-item" style="text-align: center">{{model.value}}</div>
+                                                               </div>
+                                                      </div>
+                                             </ng-template>
+                                    </ngx-charts-area-chart-stacked>
+                           </span>
+                  </span>
+
+                  <span class="codepeer-history-title d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" id='table'>
+                           Message History Report
+                  </span>
+
+                  <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+
+                           <span class="d-inline-block col-lg-3 col-md-3 col-sm-3 col-xs-3 no-pad"></span>
+                           <table class="d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                                    <tr class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                                             <th class="header col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">Runs</th>
+                                             <th class="header col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">Total Messages</th>
+                                    </tr>
+                                    <tr class="header d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                                             <th class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                                                      <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">Id</span>
+                                                      <span class="col-lg-10 col-md-10 col-sm-10 col-xs-10 no-pad">Date</span>
+                                             </th>
+                                             <th class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                                                      <span class="col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">high</span>
+                                                      <span class="col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">medium</span>
+                                                      <span class="col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">low</span>
+                                             </th>
+                                    </tr>
+                                    <tr *ngFor="let run of reportService.codepeer_history; let idx = index"
+                                        class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
+                                        id="Run{{ run.id }}"
+                                        [ngClass]="(selectedRun === run.id ? 'selected' : (idx % 2 == 0 ? 'run1' : 'run2'))">
+                                             <th class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                                                      <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad">#{{run.id}}</span>
+                                                      <span class="col-lg-10 col-md-10 col-sm-10 col-xs-10 no-pad">{{run.date}}</span>
+                                             </th>
+                                             <th class="col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                                                      <span class="high col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">{{run.series[0].value}}</span>
+                                                      <span class="medium col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">{{run.series[1].value}}</span>
+                                                      <span class="low col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">{{run.series[2].value}}</span>
+                                             </th>
+                                    </tr>
+                           </table>
+                  </span>
+         </main>
+</div>

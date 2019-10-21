@@ -6,7 +6,7 @@ body {
   font-feature-settings: "kern", "liga", "clig", "calt";
 
   font-family: -apple-system, "Helvetica Neue", "Segoe UI", Helvetica, Arial,
-               sans-serif;
+    sans-serif;
   font-size: 13px;
 }
 
@@ -82,3 +82,18 @@ annotated-source.with-coverage annotated-source-line {
 /* Rules for using icons as white on a dark background. */
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+
+.ngx-charts-outer.ng-trigger.ng-trigger-animationState {
+  width: 100% !important;
+}
+svg.ngx-charts {
+  padding-left: 15px;
+  width: 85vw !important;
+}
+ngx-charts-legend.chart-legend {
+  height: 400px;
+}
+ngx-charts-legend.chart-legend div {
+  width: 10vw !important;
+}
