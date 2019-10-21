@@ -8,7 +8,7 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import {
     removeNgStyles, createNewHosts, createInputTransfer
 } from '@angularclass/hmr';
-
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 /*
  * Platform and Environment providers/directives/pipes
  */
@@ -28,8 +28,6 @@ import {
 import { ReviewDialog } from './annotated-source/review-dialog.component'
 import { ReviewHistoryDialog } from './annotated-source/review-history-dialog.component'
 import { DialogsService } from './annotated-source/dialog.service'
-import { CodepeerRunInfoDialog } from './codepeer-run-dialog/codepeer-run-info-dialog.component'
-import { CodepeerDialogsService } from './codepeer-run-dialog/codepeer-dialog.service'
 import { ErrorDialog } from './error-dialog/error-dialog.component'
 import { ErrorDialogsService } from './error-dialog/error-dialog.service'
 import { CountPipe } from './count.pipe';
@@ -46,6 +44,7 @@ import { NoContentComponent } from './no-content';
 import { NotEmptyPipe } from './not-empty.pipe';
 import { CodeExplorerComponent } from './code-explorer';
 import { MessageExplorerComponent } from './message-explorer';
+import { CodepeerHistoryComponent } from './codepeer-history';
 import { SpinnerComponent } from './spinner';
 
 import { GNAThubService } from './gnathub.service';
@@ -90,10 +89,10 @@ type StoreType = {
         NotEmptyPipe,
         CodeExplorerComponent,
         MessageExplorerComponent,
+        CodepeerHistoryComponent,
         SpinnerComponent,
         ReviewDialog,
         ReviewHistoryDialog,
-        CodepeerRunInfoDialog,
         ErrorDialog
     ],
     imports: [
@@ -104,6 +103,7 @@ type StoreType = {
         MatDialogModule,
         MatTooltipModule,
         MatIconModule,
+        NgxChartsModule,
         ScrollToModule.forRoot(),
         RouterModule.forRoot(ROUTES, {
             useHash: true,
@@ -114,7 +114,7 @@ type StoreType = {
         APP_PROVIDERS,
         ENV_PROVIDERS
     ],
-    entryComponents: [ReviewDialog, ReviewHistoryDialog, CodepeerRunInfoDialog, ErrorDialog]
+    entryComponents: [ReviewDialog, ReviewHistoryDialog, ErrorDialog]
 })
 export class AppModule {
     constructor(public appRef: ApplicationRef, public appState: AppState) {}

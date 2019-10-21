@@ -57,7 +57,7 @@ export class SharedReport {
     public codepeer_code = -1;
     public codepeerReviewError: boolean = false;
     private codepeer_review: any;
-    private codepeer_history: any;
+    public codepeer_history: any;
 
     /* Corresponds to the sorting state of code and message navigation*/
     public codeFilter = {newSort: 'name', otherSort: 'filename', order: 1};
@@ -248,10 +248,57 @@ export class SharedReport {
         );
     }
 
+    private formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    private buildCodepeerHistory(history){
+        let new_history: any[] = [];
+        history.forEach(function(run){
+
+            let ran1 = Math.floor(Math.random() * Math.floor(10));
+            let ran2 = Math.floor(Math.random() * Math.floor(10));
+            let ran3 = Math.floor(Math.random() * Math.floor(10));
+
+            var tmp = {
+                "date": run.date,
+                "format_date": this.formatDate(run.date),
+                "id": run.inspection_id,
+                "name": run.inspection_id,
+                "series": [
+                    {
+                        "name": "high",
+                        "value": run.high + ran1
+                    },
+                    {
+                        "name": "medium",
+                        "value": run.medium + ran2
+                    },
+                    {
+                        "name": "low",
+                        "value": run.low + ran3
+                    }
+                ]
+            };
+            new_history.push(tmp);
+        }.bind(this));
+        return new_history;
+    }
+
     private getCodepeerRunInfo() {
         this.gnathub.getCodepeerRun().subscribe(
             run_info => {
-                this.codepeer_history = run_info.history;
+                this.codepeer_history = this.buildCodepeerHistory(run_info.history);
                 this.codepeerCurrentRun = run_info.current_run_number;
 
                 var tmp = [];

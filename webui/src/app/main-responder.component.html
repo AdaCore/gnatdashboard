@@ -1,7 +1,6 @@
 <div class="main-responder-page d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
     <header class="main-responder-header top d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" role="header">
-        <span class="navig-button d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
-            <span>{{reportService.projectName}}</span>
+        <span class="navig-button d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
             <button [class.active]="this.reportService.page == 'message-explorer'" id="MessageButton" class="message-button"
                     [routerLink]="['./message-explorer']">
                 Messages
@@ -11,11 +10,12 @@
                 Projects
             </button>
         </span>
+        <span class="navig-button project-name d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">Project: {{reportService.projectName}} Run #{{reportService.codepeerCurrentRun}}</span>
         <!--<span [routerLink]="['./preferences']">Preferences</span>-->
-        <span class="info-button d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
-
-            <button *ngIf="this.reportService.isCodepeer" class="codepeer-run-info-button" (click)='showCodepeerRunInfo()'>
-                CodePeer run id: {{reportService.codepeerCurrentRun}}
+        <span class="info-button d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
+            <button *ngIf="this.reportService.isCodepeer" [class.active]="this.reportService.page == 'codepeer-history'" id="HistoryButton" class="codepeer-run-info-button"
+                    [routerLink]="['./codepeer-history']">
+                CodePeer history
             </button>
             <button id="ErrorButton" class="error-button" (click)='showError()'>
                 show error
@@ -29,7 +29,7 @@
     </header>
 
     <section id="filterPanel" class="main-responder-body open d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-        <filter-panel class="d-inline-block col-lg-3 col-md-3 col-sm-4 col-xs-4 no-pad"></filter-panel>
+        <filter-panel *ngIf="this.reportService.page != 'codepeer-history'"  class="d-inline-block col-lg-3 col-md-3 col-sm-4 col-xs-4 no-pad"></filter-panel>
         <router-outlet></router-outlet>
     </section>
 </div>
