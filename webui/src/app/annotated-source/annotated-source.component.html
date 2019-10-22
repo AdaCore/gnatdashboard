@@ -2,8 +2,8 @@
     <!-- Annotated source -->
     <div class="annotated-source-body d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <nav class="file-header d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-            <span>{{ source.project }}</span>
-            <span  class="path-divider">/</span>
+            <span class="folder-span">{{ source.source_dir }}</span>
+            <span class="path-divider">/</span>
             <strong>{{ source.filename }}</strong>
         </nav>
         <main #scrollView class="scrollable-content d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
