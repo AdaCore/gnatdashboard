@@ -88,7 +88,24 @@
     }
 }
 
+
+
 .all-sources-line {
+
+    .tab-header {
+        background-color: #f7f7f7;
+        padding: 2px 5px 2px 15px;
+        border-bottom: 1px solid #eaeaea;
+        span {
+            padding-right: 5px !important;
+        }
+
+        click {
+            cursor: pointer;
+        }
+
+        .material-icons { position: absolute; }
+    }
 
     .header-line {
         padding-bottom: 2px;
@@ -241,7 +258,7 @@
 
 .scrollable-content.expanded {
     overflow: auto;
-    height: calc(100vh - 6vh - 6vh - 20vh - 4vh);
+    height: calc(100vh - 6vh - 6vh - 25vh - 4vh);
 }
 .scrollable-content.reduce {
     overflow: auto;
@@ -272,7 +289,7 @@
     position: absolute;
 
     .location-view-list.expanded {
-        height: 19vh;
+        height: 25vh;
         overflow: auto;
     }
 
