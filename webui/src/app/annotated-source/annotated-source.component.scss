@@ -263,6 +263,10 @@
     border-bottom: solid 1px var(--strong-border);
     height: 6vh;
     min-height: 50px;
+
+    .folder-span {
+        color: rgba(0, 0, 0, 0.4);
+    }
 }
 
 .location-view {
