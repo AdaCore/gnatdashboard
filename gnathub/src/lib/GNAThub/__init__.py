@@ -1016,7 +1016,7 @@ class Run(object):
     """Class to handle processes."""
 
     def __init__(self, name, argv, env=None, workdir=None, out=None,
-                 capture_stderr=True):
+                 capture_stderr=True, append_out=False):
         """Spawn the process.
 
         Use subprocess.Popen to spawn a process and returns its exit code.
@@ -1028,6 +1028,8 @@ class Run(object):
         :param str workdir: the directory in which to execute the process. If
             ``None``, use the current directory.
         :param str out: the log file to use
+        :param bool append_out: whether to use 'a' or 'w' flag to open log
+            file
         :param bool capture_stderr: whether to capture the standard error
             in the log file
         """
@@ -1036,6 +1038,7 @@ class Run(object):
         self.status = 127
         self.pid = -1
         self.out = out
+        self.append_out = append_out
         self.log = logging.getLogger(self.__class__.__name__)
 
         self.log.debug(
@@ -1045,8 +1048,9 @@ class Run(object):
         if verbose():
             Console.info(self.cmdline_image())
 
+        write_mode = 'a' if self.append_out else 'w'
         try:
-            with open(self.output(), 'w') as output:
+            with open(self.output(), write_mode) as output:
                 self.inferior = Popen(
                     self.argv, env=env, stdin=None, stdout=output,
                     stderr=STDOUT if capture_stderr else None,

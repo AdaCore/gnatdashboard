@@ -146,7 +146,7 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                    GNAThub.Project.object_dir(),
                    'gnathub', 'html-report',
                    'data', filename)]
-        GNAThub.Run(name, cmd, out=API_SERVER_LOG)
+        GNAThub.Run(name, cmd, out=API_SERVER_LOG, append_out=True)
 
     def _post_review(self):
         temp_filename = 'user_review_temp.xml'
@@ -201,7 +201,7 @@ class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                '--output-dir=' + GNAThub.output_dir(),
                '--db-dir=' + GNAThub.db_dir(),
                '--import-reviews=' + filename]
-        GNAThub.Run(name, cmd, out=API_SERVER_LOG)
+        GNAThub.Run(name, cmd, out=API_SERVER_LOG, append_out=True)
 
     def do_GET(self, **args):
         print "received the following GET request: {}".format(self.path)
@@ -254,13 +254,22 @@ class Launch_Server(Plugin, Reporter):
 
     def launch_api_server(self, api_port):
 
-        # Define the server for the Web API
-        httpd_api = SocketServer.TCPServer(("", api_port), My_Request_Handler)
-
         try:
+            # Define the server for the Web API
+            SocketServer.TCPServer.allow_reuse_address = True
+            httpd_api = SocketServer.TCPServer(("", api_port),
+                                               My_Request_Handler)
             httpd_api.serve_forever()
         except KeyboardInterrupt:
+            print "KeyboardInterruption...Closing API server."
+        except socket.error:
+            print "Port already in use. Please relaunch with a free port."
+        except Exception as e:
+            print "Exception caught."
+            print e
+        finally:
             httpd_api.shutdown()
+            httpd_api.server_close()
 
     def find_free_port(self):
         tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -305,22 +314,27 @@ class RootedHTTPRequestHandler(SimpleHTTPRequestHandler):
 
 def launch_client_server(port, HandlerClass=RootedHTTPRequestHandler,
                          ServerClass=RootedHTTPServer):
-
-    server_address = ('', port)
-    httpd = ServerClass(os.path.join(GNAThub.Project.object_dir(),
-                                     'gnathub', 'html-report'),
-                        server_address,
-                        HandlerClass)
-
-    sa = httpd.socket.getsockname()
-    print "Launched GNAThub client server on port ", sa[1], "..."
-    print "The API server logs are in {}".format(API_SERVER_LOG)
-    print "The Client server logs are in {}".format(CLIENT_SERVER_LOG)
-
     try:
+        server_address = ('', port)
+        httpd = ServerClass(os.path.join(GNAThub.Project.object_dir(),
+                                         'gnathub', 'html-report'),
+                            server_address,
+                            HandlerClass)
+        sa = httpd.socket.getsockname()
+        print "Launched GNAThub client server on port ", sa[1], "..."
+        print "The API server logs are in {}".format(API_SERVER_LOG)
+        print "The Client server logs are in {}".format(CLIENT_SERVER_LOG)
         httpd.serve_forever()
     except KeyboardInterrupt:
+        print "KeyboardInterruption...Closing client server."
+    except socket.error:
+        print "Port already in use. Please relaunch with a free port."
+    except Exception as e:
+        print "Exception caught."
+        print e
+    finally:
         httpd.shutdown()
+        httpd.server_close()
 
 
 # Script entry point
