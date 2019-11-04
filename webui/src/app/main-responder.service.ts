@@ -558,6 +558,7 @@ export class SharedReport {
                         if (this.codepeer_review[message.tool_msg_id]) {
                             message.review_history = this.codepeer_review[message.tool_msg_id].review_history;
                             message.user_review = this.codepeer_review[message.tool_msg_id].user_review;
+                            message.status_type = message.user_review.status_type;
                             this.userReviewFilter = this.putInFilter(message.user_review, this.userReviewFilter);
                         }
                     }.bind(this));

@@ -137,10 +137,9 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
     }
 
     sourceArray.forEach(function(source){
-        if (source.messages){
+        if (source.messages && newFilter.newSort != "status_type"){
             let messageArray =  source.messages;
             property = checkProperty(messageArray, newFilter);
-
             if (property == "ranking") {
                 messageArray.sort((a: any, b: any) => {
                     if (a['ranking']['id'] < b['ranking']['id']) { return -1 * newFilter.order; }
@@ -154,6 +153,17 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
                     return 0;
                 });
             }
+            source.messages = messageArray;
+        } else if (source.messages
+                   && newFilter.newSort == "status_type") {
+            let messageArray =  source.messages;
+            messageArray.sort((a: any, b: any) => {
+                var typeA = a['status_type'] ? a['status_type'] : 0;
+                var typeB = b['status_type'] ? b['status_type'] : 0;
+                if (typeA < typeB) { return -1 * newFilter.order; }
+                if (typeA > typeB) { return 1 * newFilter.order; }
+                return 0;
+            });
             source.messages = messageArray;
         }
     });

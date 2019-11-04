@@ -40,9 +40,18 @@
                         <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
-                <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 noclick">
+                <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
+                      (click)="sortModules('status_type','')">
                     <span class="ellipsis">Review Status</span>
+                    <span class="header-icon"
+                          *ngIf="reportService.messageFilter.newSort == 'status_type'">
+                        <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</mat-icon>
+                    </span>
                 </span>
+              <!--  <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 noclick">
+                    <span class="ellipsis">Review Status</span>
+                </span>-->
             </span>
         </span>
         <!-- Error handling -->

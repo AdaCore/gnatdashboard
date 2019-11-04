@@ -72,18 +72,30 @@ export class GNAThubService {
 
     private createReview(review){
         let myReview = [];
+        let statusPriority = {
+            'Bug': 5,
+            'Pending': 4,
+            'Intentional': 3,
+            'False_Positive': 2,
+            'Not_A_Bug': 1
+        };
+
         let lastReview = {
-            author : '',
+            author: '',
             status: '',
+            status_type: 0,
             date: '',
             from_source: '',
             message: '',
             display_name: ''
         };
         if (review.audit.$){
+            let statusType = review.audit.$.status && statusPriority[review.audit.$.status] ? statusPriority[review.audit.$.status] : 0;
+
             let tmpReview = {
-                author : review.audit.$.approved,
+                author: review.audit.$.approved,
                 status: review.audit.$.status,
+                status_type: statusType,
                 date: review.audit.$.timestamp,
                 from_source: review.audit.$.from_source,
                 message: review.audit._,
@@ -93,9 +105,12 @@ export class GNAThubService {
             lastReview = tmpReview;
         } else if (review.audit[0].$) {
             review.audit.forEach(function(tmp){
+                let statusType = tmp.$.status && statusPriority[tmp.$.status] ? statusPriority[tmp.$.status] : 0;
+
                 let tmpReview = {
-                    author : tmp.$.approved,
+                    author: tmp.$.approved,
                     status: tmp.$.status,
+                    status_type: statusType,
                     date: tmp.$.timestamp,
                     from_source: tmp.$.from_source,
                     message: tmp._,
