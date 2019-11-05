@@ -242,12 +242,21 @@ class Launch_Server(Plugin, Reporter):
         port = DEFAULT_PORT
 
         if GNAThub.port():
-            port = GNAThub.port()
+            port = self.verify_port(GNAThub.port())
 
         api_port = port + 1
 
         thread.start_new_thread(self.launch_api_server, (api_port,))
         self.set_client_server(port)
+
+    def verify_port(self, port):
+        if port > 1024:
+            return port
+        else:
+            print "{} is a system reserved port.".format(port)
+            print "The chosen port should be above 1024."
+            print "Please relaunch with another port."
+            os._exit(1)
 
     def set_client_server(self, port):
         launch_client_server(port)
