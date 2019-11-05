@@ -167,13 +167,71 @@ filter-selector.tool-selector .filter-selector {
     }
 }
 
-.no-message {
+// INACTIVE < 0
+input[type=checkbox]:not(:checked) + label.option.no-message {
+    .Info {
+        background-color: var(--Info);
+        &:hover {
+            background-color: var(--Info-hover);
+        }
+    }
+    .Unspecified {
+        background-color: var(--Unspecified);
+        &:hover {
+            background-color: var(--Unspecified-hover);
+        }
+    }
+    .Medium {
+        background-color: var(--Medium);
+        &:hover {
+            background-color: var(--Medium-hover);
+        }
+    }
+    .Low {
+        background-color: var(--Low);
+        &:hover {
+            background-color: var(--Low-hover);
+        }
+    }
+    .High {
+        background-color: var(--High);
+        &:hover {
+            background-color: var(--High-hover);
+        }
+    }
+
+    .Not_A_Bug, .NOT_A_BUG,
+    .False_Positive, .FALSE_POSITIVE,
+    .Intentional, .INTENTIONAL {
+        background-color: var(--Not-A-Bug);
+        &:hover {
+            background-color: var(--Not-A-Bug-hover);
+        }
+    }
+
+    .Pending, .PENDING {
+        background-color: var(--Pending);
+        &:hover {
+            background-color: var(--Pending-hover);
+        }
+    }
+
+    .Bug, .BUG {
+        background-color: var(--Bug);
+        &:hover {
+            background-color: var(--Bug-hover);
+        }
+    }
+}
+
+// ACTIVE < 0
+input[type=checkbox]:checked + label.option.no-message:hover {
     background: repeating-linear-gradient(
         43deg,
         rgba(255,255,255,0.5),
         rgba(255,255,255,0.5) 10px,
-        var(--elem-color) 10px,
-        var(--elem-color) 20px
+        var(--elem-hover) 10px,
+        var(--elem-hover) 20px
     ) !important;
 
     &.Info {
@@ -244,5 +302,83 @@ filter-selector.tool-selector .filter-selector {
             var(--Bug-hover) 20px
         ) !important;
     }
+}
 
+input[type=checkbox]:checked + label.option.no-message {
+    background: repeating-linear-gradient(
+        43deg,
+        rgba(255,255,255,0.5),
+        rgba(255,255,255,0.5) 10px,
+        var(--elem-color) 10px,
+        var(--elem-color) 20px
+    ) !important;
+
+    &.Info {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Info) 10px,
+            var(--Info) 20px
+        ) !important;
+    }
+    &.Medium {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Medium) 10px,
+            var(--Medium) 20px
+        ) !important;
+    }
+    &.Low {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Low) 10px,
+            var(--Low) 20px
+        ) !important;
+    }
+    &.High {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--High) 10px,
+            var(--High) 20px
+        ) !important;
+    }
+
+    &.Not_A_Bug, &.NOT_A_BUG,
+    &.False_Positive, &.FALSE_POSITIVE,
+    &.Intentional, &.INTENTIONAL {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Not-A-Bug) 10px,
+            var(--Not-A-Bug) 20px
+        ) !important;
+    }
+
+    &.Pending, &.PENDING {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Pending) 10px,
+            var(--Pending) 20px
+        ) !important;
+    }
+
+    &.Bug, &.BUG {
+        background: repeating-linear-gradient(
+            43deg,
+            rgba(255,255,255,0.5),
+            rgba(255,255,255,0.5) 10px,
+            var(--Bug) 10px,
+            var(--Bug) 20px
+        ) !important;
+    }
 }
