@@ -265,11 +265,6 @@ export class SharedReport {
     private buildCodepeerHistory(history){
         let new_history: any[] = [];
         history.forEach(function(run){
-
-            let ran1 = Math.floor(Math.random() * Math.floor(10));
-            let ran2 = Math.floor(Math.random() * Math.floor(10));
-            let ran3 = Math.floor(Math.random() * Math.floor(10));
-
             var tmp = {
                 "date": run.date,
                 "format_date": this.formatDate(run.date),
@@ -278,15 +273,15 @@ export class SharedReport {
                 "series": [
                     {
                         "name": "high",
-                        "value": run.high + ran1
+                        "value": run.high
                     },
                     {
                         "name": "medium",
-                        "value": run.medium + ran2
+                        "value": run.medium
                     },
                     {
                         "name": "low",
-                        "value": run.low + ran3
+                        "value": run.low
                     }
                 ]
             };

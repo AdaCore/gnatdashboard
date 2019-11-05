@@ -42,9 +42,9 @@
                            <span class="run-filter d-inline-block col-lg-5 col-md-5 col-sm-6 col-xs-6 no-pad">
                                     <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                                              Show run between
-                                             <input min="{{min_run}}" max="{{max_run_filter}}" type="number" [(ngModel)]="min_run_filter">
+                                             <input min="{{min_run}}" max="{{max_run_filter-1}}" type="number" [(ngModel)]="min_run_filter">
                                              and
-                                             <input min="{{min_run_filter}}" max="{{max_run}}" type="number" [(ngModel)]="max_run_filter">
+                                             <input min="{{min_run_filter+1}}" max="{{max_run}}" type="number" [(ngModel)]="max_run_filter">
                                              <button (click)="applyRunFilter()">
                                                       Validate
                                              </button>
