@@ -30,6 +30,7 @@ INSTALL = install
 INSTALL_PROGRAM = $(INSTALL)
 INSTALL_DATA = ${INSTALL} -m 644
 NPM = npm
+PYTHON = python
 
 BUILD_MODE = dev
 SOURCES := $(shell find $(srcdir) \
@@ -69,6 +70,9 @@ $(builddir)/dist/index.html: $(rootdir)/package.json $(SOURCES) \
 	BUILD_DIR=$(builddir) $(NPM) run build:dev
 
 install-node-modules: $(rootdir)/node_modules/.installed
+
+thirdparty: $(rootdir)/create_webui_thirdparty.py
+	$(PYTHON) $(rootdir)/create_webui_thirdparty.py
 
 $(rootdir)/node_modules/.installed: $(rootdir)/package.json
 	(cd $(rootdir) && $(NPM) install && touch $@)
