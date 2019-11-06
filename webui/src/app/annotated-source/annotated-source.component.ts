@@ -24,6 +24,7 @@ import { AnnotatedSourceViewComponent } from './annotated-source-view.component'
 
 import { updateFilter } from '../utils/refreshFilter';
 import { sortMessageArray } from '../utils/sortArray';
+import { storeMessageSort } from '../utils/dataStorage';
 import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scroll-to';
 
 
@@ -459,10 +460,12 @@ export class AnnotatedSourceComponent
     }
 
     public sortModules(firstSort: string, secondSort: string) {
+        let newFilter = {newSort: firstSort, otherSort: secondSort};
         this.reportService.message.sources = sortMessageArray(
-            {newSort: firstSort, otherSort: secondSort},
-            this.reportService.messageFilter,
+            newFilter,
+            this.reportService.messageSort,
             this.reportService.message.sources);
+        storeMessageSort(newFilter);
     }
 
 }

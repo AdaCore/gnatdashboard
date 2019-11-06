@@ -29,26 +29,26 @@
                       [ngClass]="reportService.showCoverage ? 'd-inline-block col-lg-5 col-md-5 col-sm-5 col-xs-5' : 'd-inline-block col-lg-7 col-md-7 col-sm-7 col-xs-7'">
                     <span class="ellipsis">Name</span>
                     <span class="header-icon"
-                          *ngIf="reportService.codeFilter.newSort == 'name'">
-                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</mat-icon>
-                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == -1">arrow_upward</mat-icon>
+                          *ngIf="reportService.projectSort.newSort == 'name'">
+                        <mat-icon class="md-18" *ngIf="reportService.projectSort.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.projectSort.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
                 <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
                 <span class="center d-inline-block col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','name')">
                     <span class="ellipsis">Messages</span>
                     <span class="header-icon"
-                          *ngIf="reportService.codeFilter.newSort == '_ui_total_message_count'">
-                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</mat-icon>
-                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == -1">arrow_upward</mat-icon>
+                          *ngIf="reportService.projectSort.newSort == '_ui_total_message_count'">
+                        <mat-icon class="md-18" *ngIf="reportService.projectSort.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.projectSort.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
                 <span *ngIf="reportService.showCoverage" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click" (click)="sortModules('coverage','')">
                     <span class="ellipsis">Coverage</span>
                     <span class="header-icon"
-                          *ngIf="reportService.codeFilter.newSort == 'coverage'">
-                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == 1">arrow_downward</mat-icon>
-                        <mat-icon class="md-18" *ngIf="reportService.codeFilter.order == -1">arrow_upward</mat-icon>
+                          *ngIf="reportService.projectSort.newSort == 'coverage'">
+                        <mat-icon class="md-18" *ngIf="reportService.projectSort.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.projectSort.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
             </span>

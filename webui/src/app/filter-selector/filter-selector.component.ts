@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { storeFilterItem } from '../utils/dataStorage'
 
 export type Option = {
     id: number,
@@ -28,14 +29,19 @@ export class FilterSelectorComponent {
         elem.classList.toggle('open');
     }
 
+    public clickOption(opt, isChecked, idx){
+        storeFilterItem(opt.name, !isChecked);
+        this.toggle.emit({ option: opt, checked: isChecked, id: idx });
+    }
+
     public selectAll(options) {
         options.forEach(function(opt, idx){
-            this.toggle.emit({ option: opt, checked: true, id: idx });
+            this.clickOption(opt, true, idx);
         }.bind(this));
     }
     public unselectAll(options) {
         options.forEach(function(opt, idx){
-            this.toggle.emit({ option: opt, checked: false, id: idx });
+            this.clickOption(opt, false, idx);
         }.bind(this));
     }
 

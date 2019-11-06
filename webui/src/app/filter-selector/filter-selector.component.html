@@ -24,7 +24,7 @@
                    type="checkbox"
                    id="{{option.name}}"
                    [ngModel]="!option._ui_unselected"
-                   (click)="toggle.emit({ option: option, checked: checkbox.checked, id: idx })"/>
+                   (click)="clickOption(option, checkbox.checked, idx)"/>
             <label class="option d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" for="{{option.name}}"
                    [ngClass]="option._ui_selected_message_count == 0 ? 'no-message ' + option.name : 'message' ">
                 <span class="background-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"

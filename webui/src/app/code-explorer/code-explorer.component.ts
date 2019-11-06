@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SharedReport } from '../main-responder.service';
 import { sortCodeArray } from '../utils/sortArray';
+import { storeProjectSort } from '../utils/dataStorage'
 
 @Component({
     selector: 'code-explorer',
@@ -25,6 +26,7 @@ export class CodeExplorerComponent implements OnInit, OnDestroy {
             this.project = params['project'];
         });
         this.reportService.page = 'code-explorer';
+        localStorage.setItem('defaultMain', '/code-explorer');
     }
 
     /** @override */
@@ -33,10 +35,12 @@ export class CodeExplorerComponent implements OnInit, OnDestroy {
     }
 
     public sortModules(firstSort: string, secondSort: string) {
+        let newFilter = {newSort: firstSort, otherSort: secondSort};
         this.reportService.code.modules =
-            sortCodeArray({newSort: firstSort, otherSort: secondSort},
-                          this.reportService.codeFilter,
+            sortCodeArray(newFilter,
+                          this.reportService.projectSort,
                           this.reportService.code.modules);
+        storeProjectSort(newFilter);
     }
 
     public expandCollapseAll(myValue:boolean) {

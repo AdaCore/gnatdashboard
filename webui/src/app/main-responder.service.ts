@@ -4,6 +4,9 @@ import { IFilterIndex, ICodeIndex, IMessageIndex, IReviewFilter, IRankingFilter 
 import { sortCodeArray, sortMessageArray } from './utils/sortArray';
 import { Http, Response } from '@angular/http';
 import { updateFilter } from './utils/refreshFilter';
+import { storeFilterItem, getFilterItem,
+         getStoredFilter, getStoredMessageSort,
+         getStoredProjectSort } from './utils/dataStorage';
 import { DOCUMENT } from '@angular/common';
 
 export type InteralStateType = {
@@ -60,8 +63,8 @@ export class SharedReport {
     public codepeer_history: any;
 
     /* Corresponds to the sorting state of code and message navigation*/
-    public codeFilter = {newSort: 'name', otherSort: 'filename', order: 1};
-    public messageFilter = {newSort: 'filename', otherSort: 'line', order: 1};
+    public projectSort = getStoredProjectSort();
+    public messageSort = getStoredMessageSort();
 
     /* Corresponds to the gloal info needed in the web navigation */
     public page: string;
@@ -108,9 +111,21 @@ export class SharedReport {
     }
 
     private initApp() {
+        this.initLocalStorage();
         this.isServerOnline();
         this.isCodepeerPassed();
         this.getCodepeerRunInfo();
+    }
+
+    private initLocalStorage() {
+        if (localStorage.length == 0){
+            storeFilterItem('Low', true);
+            storeFilterItem('Info', true);
+            storeFilterItem('Removed', true);
+            storeFilterItem('False_Positive', true);
+            storeFilterItem('Intentional', true);
+            storeFilterItem('Not_A_Bug', true);
+        }
     }
 
     private isServerOnline() {
@@ -147,6 +162,7 @@ export class SharedReport {
             data => {
                 if (data.status == 200) {
                     this.isCodepeer = true;
+                    this.getUserReview();
                 }
             }, error => {
                 console.log("[Error] is codepeer passed : ", error);
@@ -196,8 +212,8 @@ export class SharedReport {
             data => {
                 this.code = JSON.parse(JSON.parse(data['_body']));
                 this.code.modules = sortCodeArray(
-                    this.codeFilter,
-                    this.codeFilter, this.code.modules);
+                    this.projectSort,
+                    this.projectSort, this.code.modules);
                 this.refreshFilter()
             }, error => {
                 console.log("[Error] get code : ", error);
@@ -210,8 +226,8 @@ export class SharedReport {
             object => {
                 this.code = object;
                 this.code.modules = sortCodeArray(
-                    this.codeFilter,
-                    this.codeFilter, object.modules);
+                    this.projectSort,
+                    this.projectSort, object.modules);
                 this.refreshFilter()
             }, error => {
                 this.isReportFetchError = true;
@@ -224,9 +240,7 @@ export class SharedReport {
             .subscribe(
             data => {
                 this.message = JSON.parse(JSON.parse(data['_body']));
-                if (this.isCodepeer){
-                    this.getUserReview();
-                }
+                this.isCodepeerPassed();
                 this.refreshFilter()
             }, error => {
                 console.log("[Error] get message : ", error);
@@ -369,11 +383,13 @@ export class SharedReport {
      */
     private refreshFilter() {
         if (this.code && this.filter && this.message && this.filter.review_status){
+            if (localStorage.length > 0){
+                getStoredFilter(this.filter);
+            }
             updateFilter(this);
-            this.messageFilter = {newSort: 'ranking', otherSort: 'countRanking', order: -1};
             this.message.sources = sortMessageArray(
-                this.messageFilter,
-                this.messageFilter, this.message.sources);
+                this.messageSort,
+                this.messageSort, this.message.sources);
             console.log("this.code", this.code);
             console.log("this.filter", this.filter);
             console.log("this.message", this.message);
@@ -381,21 +397,13 @@ export class SharedReport {
     }
 
     private initFilter() {
-        this.initHistory();
         this.initRanking();
-    }
-
-    private initHistory() {
-        let unselected = ['Removed'];
-        this.unselectFilter(this.filter.properties, unselected);
     }
 
     private initRanking() {
         let order = ['High', 'Medium', 'Low', 'Info', 'Unspecified'];
-        let unselected = ['Info','Low'];
 
         this.filter.ranking = this.orderFilter(this.filter.ranking, order);
-        this.unselectFilter(this.filter.ranking, unselected);
     }
 
     private orderFilter(myArray: any, orderArray: string[]){
@@ -416,23 +424,6 @@ export class SharedReport {
         }.bind(this));
         myArray = newOrder;
         return newOrder;
-    }
-
-    private unselectFilter(myArray: any, unselectArray: string[]){
-        let newFilter: any ;
-        if (this.checkArray(myArray, "main-responder.service",
-                            "unselectFilter", "myArray")){
-            myArray.forEach(function(rank){
-
-                unselectArray.forEach(function(unselect){
-                    if (rank.name == unselect){
-                        rank._ui_unselected = true;
-                    }
-                });
-
-            })
-        }
-        myArray = newFilter;
     }
 
     private checkCoverage() {
@@ -492,21 +483,6 @@ export class SharedReport {
         return count;
     }
 
-    private isActiveFilter(status): boolean {
-        let unselected = ['FALSE_POSITIVE','INTENTIONAL', 'NOT_A_BUG'];
-        this.activeFilter =  unselected.indexOf(status.toUpperCase()) == -1 ? false :  true;
-        if (this.checkArray(this.filter.review_status, "main-responder.service",
-                            "isActiveFilter", "this.filter.review_status")){
-            this.filter.review_status.forEach(function(status, unselected, review, idx){
-
-                if (review.name == status){
-                    this.activeFilter = review._ui_unselected;
-                }
-            }.bind(this, status, unselected));
-        }
-        return this.activeFilter;
-    }
-
     public putInFilter(review, filter): [IReviewFilter] {
         let stop = false;
         let newIdx = 1;
@@ -526,7 +502,7 @@ export class SharedReport {
             });
         }
         if (!stop) {
-            let active = this.isActiveFilter(status);
+            let active = getFilterItem(display_name);
             let tmp = {
                 id : newIdx,
                 name : status,

@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { SharedReport } from '../main-responder.service';
 import { sortMessageArray } from '../utils/sortArray';
-
+import { storeMessageSort } from '../utils/dataStorage'
 import { DOCUMENT } from '@angular/common';
 
 @Component({
@@ -16,13 +16,16 @@ export class MessageExplorerComponent implements OnInit {
     /** @override */
     public ngOnInit() {
         this.reportService.page = 'message-explorer';
+        localStorage.setItem('defaultMain', '/message-explorer');
     }
 
     public sortModules(firstSort: string, secondSort: string) {
+        let newFilter = {newSort: firstSort, otherSort: secondSort};
         this.reportService.message.sources = sortMessageArray(
-            {newSort: firstSort, otherSort: secondSort},
-            this.reportService.messageFilter,
+            newFilter,
+            this.reportService.messageSort,
             this.reportService.message.sources);
+        storeMessageSort(newFilter);
     }
 
     public expandCollapseAll(myValue:boolean) {
@@ -31,13 +34,13 @@ export class MessageExplorerComponent implements OnInit {
                                           "expandCollapseAll",
                                           "reportService.message.sources")) {
             this.reportService.message.sources.forEach(function(source){
-                source.expand = myValue;
+                this.openClose(source, myValue);
             }.bind(this));
         }
     }
 
-    public openClose(source) {
-        source.expand = !source.expand;
+    public openClose(source, isOpen) {
+        source.expand = isOpen;
     }
 
     public showFilesChanges() {

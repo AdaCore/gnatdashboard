@@ -26,32 +26,29 @@
                 <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 click" (click)="sortModules('filename', 'line')">
                     <span class="ellipsis">Name</span>
                     <span class="header-icon"
-                          *ngIf="reportService.messageFilter.newSort == 'filename'">
-                        <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</mat-icon>
-                        <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</mat-icon>
+                          *ngIf="reportService.messageSort.newSort == 'filename'">
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
                 <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
                       (click)="sortModules('ranking','countRanking')">
                     <span class="ellipsis">Ranking</span>
                     <span class="header-icon"
-                          *ngIf="reportService.messageFilter.newSort == 'ranking'">
-                        <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</mat-icon>
-                        <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</mat-icon>
+                          *ngIf="reportService.messageSort.newSort == 'ranking'">
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
                 <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
                       (click)="sortModules('status_type','')">
                     <span class="ellipsis">Review Status</span>
                     <span class="header-icon"
-                          *ngIf="reportService.messageFilter.newSort == 'status_type'">
-                        <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == 1">arrow_downward</mat-icon>
-                        <mat-icon class="md-18" *ngIf="reportService.messageFilter.order == -1">arrow_upward</mat-icon>
+                          *ngIf="reportService.messageSort.newSort == 'status_type'">
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
-              <!--  <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 noclick">
-                    <span class="ellipsis">Review Status</span>
-                </span>-->
             </span>
         </span>
         <!-- Error handling -->
@@ -64,7 +61,7 @@
                       class=" d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                       [ngClass]="(!this.reportService.showFiles && (source._ui_total_message_count == 0 || ( source._ui_total_message_count == null && source._total_message_count == 0))) ? 'hideIt' : ''">
                     <span id="{{source.filename}}" class="source-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="source.expand ? 'open' : 'reduce'">
-                        <span class="header-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(source)">
+                        <span class="header-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" (click)="openClose(source, !source.expand)">
                             <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                 <mat-icon *ngIf="!(source._ui_total_message_count == 0 || ( source._ui_total_message_count == null && source._total_message_count == 0))" class="md-18 source-tree">chevron_right</mat-icon>
                                 <span class="project-name"> {{source.projectName}}</span>

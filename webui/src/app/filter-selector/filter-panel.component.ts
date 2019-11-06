@@ -22,8 +22,8 @@ export class FilterPanelComponent {
     public isReportFetchError: boolean = false;
     public change: number;
 
-    private codeFilter = this.reportService.codeFilter;
-    private messageFilter = this.reportService.messageFilter;
+    private projectSort = this.reportService.projectSort;
+    private messageSort = this.reportService.messageSort;
 
     constructor( public reportService: SharedReport) {}
 
@@ -41,10 +41,10 @@ export class FilterPanelComponent {
     }
 
     private refreshSorting(){
-        let codeFilter = this.reportService.codeFilter;
-        let messageFilter = this.reportService.messageFilter;
-        sortMessageArray(this.messageFilter, this.messageFilter, this.reportService.message.sources);
-        sortCodeArray(this.codeFilter, this.codeFilter, this.reportService.code.modules)
+        let projectSort = this.reportService.projectSort;
+        let messageSort = this.reportService.messageSort;
+        sortMessageArray(this.messageSort, this.messageSort, this.reportService.message.sources);
+        sortCodeArray(this.projectSort, this.projectSort, this.reportService.code.modules)
     }
 
     /*
