@@ -10,7 +10,6 @@
          <main class="codepeer-history d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
 
                   <span class="change-section-button">
-                           Go to...
                            <button (click)="changeSection('runInfo')">Run information</button>
                            <button (click)="changeSection('chart')">History chart</button>
                            <button (click)="changeSection('table')">History table</button>
@@ -80,6 +79,23 @@
                                                                         <div class="tooltip-item" style="text-align: center">Run {{model.name}} - {{model.series}}</div>
                                                                         <div class="tooltip-item" style="text-align: center">{{model.value}}</div>
                                                                </div>
+                                                      </div>
+                                             </ng-template>
+                                             <ng-template #seriesTooltipTemplate let-model="model">
+                                                      <div style="text-align: center">
+                                                               Run {{model[0].name}}
+                                                      </div>
+                                                      <div style="text-align: left">
+                                                               <span class="tooltip-item-color" [ngStyle]="{'background-color': model[0].color}"></span>
+                                                               {{model[0].series}} : {{model[0].value}}
+                                                      </div>
+                                                      <div style="text-align: left">
+                                                               <span class="tooltip-item-color" [ngStyle]="{'background-color': model[1].color}"></span>
+                                                               {{model[1].series}} : {{model[1].value}}
+                                                      </div>
+                                                      <div style="text-align: left">
+                                                               <span class="tooltip-item-color" [ngStyle]="{'background-color': model[2].color}"></span>
+                                                               {{model[2].series}} : {{model[2].value}}
                                                       </div>
                                              </ng-template>
                                     </ngx-charts-area-chart-stacked>
