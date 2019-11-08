@@ -94,7 +94,6 @@ export class CodepeerHistoryComponent implements DoCheck {
     private goToLine(line: number) {
         if (line) {
             let id = "Run"+line;
-            console.log("Goto :", id);
             const config: ScrollToConfigOptions = {
                 target: id,
                 offset: -270,

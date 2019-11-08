@@ -10,7 +10,12 @@
                 Projects
             </button>
         </span>
-        <span class="navig-button project-name d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">Project: {{reportService.projectName}} Run #{{reportService.codepeerCurrentRun}}</span>
+        <span class="navig-button project-name d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
+            Project: {{reportService.projectName}}
+            <span *ngIf="this.reportService.isCodepeer" >
+                Run #{{reportService.codepeerCurrentRun}}
+            </span>
+        </span>
         <!--<span [routerLink]="['./preferences']">Preferences</span>-->
         <span class="info-button d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
             <button *ngIf="this.reportService.isCodepeer" [class.active]="this.reportService.page == 'codepeer-history'" id="HistoryButton" class="codepeer-run-info-button"
