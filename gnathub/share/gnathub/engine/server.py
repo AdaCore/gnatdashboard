@@ -15,337 +15,201 @@
 """GNAThub plug-in for launching the WebUI server.
 
 """
+from flask import Flask, request, make_response
+from logging.config import dictConfig
+
 import GNAThub
-from GNAThub import Plugin, Reporter
-
-import SimpleHTTPServer
-import SocketServer
-import json
-import re
 import os
-import socket
 
-import thread
-import posixpath
-import urllib
-
-from SimpleHTTPServer import SimpleHTTPRequestHandler
-from BaseHTTPServer import HTTPServer
-
-# Defining a default value for client server port
-DEFAULT_PORT = 8080
-
+# GLOBAL VARIABLE
 # The repository where .json files are supposed to be located
 SERVER_DIR_PATH = GNAThub.html_data()
 
+OUTPUT_DIR = GNAThub.output_dir()
+DB_DIR = GNAThub.db_dir()
+OBJECT_DIR = GNAThub.Project.object_dir()
+PROJECT_PATH = GNAThub.Project.path()
+
 # The info for the logs
 GNATHUB_LOG = GNAThub.logs()
-API_SERVER_LOG = os.path.join(GNATHUB_LOG, "webui_api_server.log")
-CLIENT_SERVER_LOG = os.path.join(GNATHUB_LOG, "webui_client_server.log")
+SERVER_LOG = os.path.join(GNATHUB_LOG, "webui_server.log")
+
+STATIC_FOLDER = os.environ.get('WEBUI_HTML_FOLDER')
+DEFAULT_PORT = 8080
+
+# Create logging handlers
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s: %(message)s',
+    }},
+    'handlers': {
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': SERVER_LOG,
+            'mode': 'a',
+            'level': 'DEBUG',
+            'formatter': 'default'
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+            'formatter': 'default',
+            'stream': 'ext://sys.stdout'
+            }
+    },
+    'loggers': {
+        'console': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': 'no'},
+        'file': {
+            'level': 'DEBUG',
+            'handlers': ['file'],
+            'propagate': 'no'
+            }
+    },
+    'root': {
+        'level': 'DEBUG',
+        'handlers': ['console', 'file']
+    }
+})
 
 
-class My_Request_Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
-
-    json_pattern = re.compile("^\/json\/[a-z]*.json")
-    get_review_pattern = re.compile("^\/get-review\/")
-    post_review_pattern = re.compile("^\/post-review\/")
-    get_online_pattern = re.compile("^\/online-server")
-    get_codepeer_pattern = re.compile("^\/codepeer-passed")
-
-    # Error if not declared ?
-    def __base__():
-        print ""
-
-    def log_message(self, format, *args):
-        with open(API_SERVER_LOG, 'a') as file_descriptor:
-            file_descriptor.write("%s - - [%s] %s\n" %
-                                  (self.client_address[0],
-                                   self.log_date_time_string(),
-                                   format % args))
-
-    def _log_api_error(self, error):
-        print "[ERROR] {}".format(error)
-        with open(CLIENT_SERVER_LOG, 'a') as file_descriptor:
-            msg = "[ERROR] " + error
-            file_descriptor.write(msg)
-
-    def _error_not_found(self):
-        # the headers
-        self.send_response(404)
-        self.send_header("Content-Type", "text/html")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.end_headers()
-        self.wfile.write("<html><body>This url doesn't exist</body></html>")
-        self._log_api_error(self.path + " : url doesn't exist")
-
-    def _get_json(self):
-        filename = self.path.replace('/json/', '')
-        path = SERVER_DIR_PATH
-        serverpath = os.path.join(os.getcwd(), path)
-        filepath = ''
-
-        # Find the path to the asked file
-        for root, dirs, files in os.walk(serverpath):
-            if filename in files:
-                filepath = os.path.join(root, filename)
-
-        if os.path.isfile(filepath):
-            with open(filepath, 'r') as myFile:
-                data = myFile.read()
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps(data))
-        else:
-            self.send_response(404)
-            self.send_header("Content-Type", "application/json")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            self.wfile.write("No such file")
-            self.log_message(filepath + " : file doesn't exist")
-
-    def _get_review(self):
-        filename = 'codepeer_review.xml'
-
-        self._export_codeper_bridge(filename)
-
-        path = SERVER_DIR_PATH
-        serverpath = os.path.join(os.getcwd(), path)
-        filepath = ''
-
-        # Find the path to the asked file
-        for root, dirs, files in os.walk(serverpath):
-            if filename in files:
-                filepath = os.path.join(root, filename)
-
-        if os.path.isfile(filepath):
-            with open(filepath, 'r') as myFile:
-                data = myFile.read()
-                self.send_response(200)
-                self.send_header("Content-Type", "text/xml")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(data)
-        else:
-            self.send_response(404)
-            self.send_header("Content-Type", "text/plain")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            self.wfile.write("No such file")
-            self._log_api_error(filepath + " : file doesn't exist")
-
-    def _export_codeper_bridge(self, filename):
-        print "Export info from codepeer_bridge"
-        self.log_message("Export info from codepeer_bridge")
-        name = 'codepeer_bridge'
-        cmd = ['codepeer_bridge',
-               '--output-dir=' + GNAThub.output_dir(),
-               '--db-dir=' + GNAThub.db_dir(),
-               '--export-reviews=' + os.path.join(
-                   GNAThub.Project.object_dir(),
-                   'gnathub', 'html-report',
-                   'data', filename)]
-        GNAThub.Run(name, cmd, out=API_SERVER_LOG, append_out=True)
-
-    def _post_review(self):
-        temp_filename = 'user_review_temp.xml'
-
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-
-        tempFile = open(temp_filename, "w+")
-        tempFile.write(post_data)
-        tempFile.close()
-
-        self._import_codepeer_bridge(temp_filename)
-
-        self.send_response(200)
-        self.send_header("Content-Type", "text/plain")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.end_headers()
-        self.wfile.write("OK")
-
-    def _get_online(self):
-        self.send_response(200)
-        self.send_header("Content-Type", "text/plain")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.end_headers()
-        self.wfile.write('OK')
-
-    def _get_codepeer(self):
-        cmd = ('codepeer'
-               + ' -P' + GNAThub.Project.path()
-               + ' -show-header-only'
-               + ' -output-msg-only > null')
-        ret = os.system(cmd)
-
-        if (ret == 0):
-            self.send_response(200)
-            self.send_header("Content-Type", "text/plain")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            self.wfile.write('OK')
-        else:
-            self.send_response(204)
-            self.send_header("Content-Type", "text/plain")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            self.wfile.write('NOT OK')
-
-    def _import_codepeer_bridge(self, filename):
-        print "Import info into codepeer_bridge"
-        self.log_message("Import info into codepeer_bridge")
-        name = 'codepeer_bridge'
-        cmd = ['codepeer_bridge',
-               '--output-dir=' + GNAThub.output_dir(),
-               '--db-dir=' + GNAThub.db_dir(),
-               '--import-reviews=' + filename]
-        GNAThub.Run(name, cmd, out=API_SERVER_LOG, append_out=True)
-
-    def do_GET(self, **args):
-        print "received the following GET request: {}".format(self.path)
-
-        if self.json_pattern.match(self.path):
-            self._get_json()
-        elif self.get_review_pattern.match(self.path):
-            self._get_review()
-        elif self.post_review_pattern.match(self.path):
-            self._post_review()
-        elif self.get_online_pattern.match(self.path):
-            self._get_online()
-        elif self.get_codepeer_pattern.match(self.path):
-            self._get_codepeer()
-        else:
-            self._error_not_found()
-
-    def do_POST(self, **args):
-        print "received the following POST request: {}".format(self.path)
-
-        if self.post_review_pattern.match(self.path):
-            self._post_review()
-        else:
-            self._error_not_found()
+app = Flask(__name__, static_url_path='', static_folder=STATIC_FOLDER)
 
 
-class Launch_Server(Plugin, Reporter):
-
-    @property
-    def name(self):
-        return 'server'
-
-    def __init__(self):
-        super(Launch_Server, self).__init__()
-
-    def launch_server(self):
-
-        port = DEFAULT_PORT
-
-        if GNAThub.port():
-            port = self.verify_port(GNAThub.port())
-
-        api_port = port + 1
-
-        thread.start_new_thread(self.launch_api_server, (api_port,))
-        self.set_client_server(port)
-
-    def verify_port(self, port):
-        if port > 1024:
-            return port
-        else:
-            print "{} is a system reserved port.".format(port)
-            print "The chosen port should be above 1024."
-            print "Please relaunch with another port."
-            os._exit(1)
-
-    def set_client_server(self, port):
-        launch_client_server(port)
-
-    def launch_api_server(self, api_port):
-
-        try:
-            # Define the server for the Web API
-            SocketServer.TCPServer.allow_reuse_address = True
-            httpd_api = SocketServer.TCPServer(("", api_port),
-                                               My_Request_Handler)
-            httpd_api.serve_forever()
-        except KeyboardInterrupt:
-            print "KeyboardInterruption...Closing API server."
-        except socket.error:
-            print "Port already in use. Please relaunch with a free port."
-        except Exception as e:
-            print "Exception caught."
-            print e
-        finally:
-            httpd_api.shutdown()
-            httpd_api.server_close()
-
-    def find_free_port(self):
-        tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        tcp.bind(('', 0))
-        addr, port = tcp.getsockname()
-        tcp.close()
-        return port
-
-    def report(self):
-        return GNAThub.EXEC_SUCCESS
+@app.route('/')
+def root():
+    return app.send_static_file('index.html')
 
 
-class RootedHTTPServer(HTTPServer):
+@app.route('/json/<filename>', methods=['GET'])
+def get_json(filename):
+    path = SERVER_DIR_PATH
+    serverpath = os.path.join(os.getcwd(), path)
+    filepath = ''
 
-    def __init__(self, base_path, *args, **kwargs):
-        HTTPServer.__init__(self, *args, **kwargs)
-        self.RequestHandlerClass.base_path = base_path
+    # Find the path to the asked file
+    for root, dirs, files in os.walk(serverpath):
+        if filename in files:
+            filepath = os.path.join(root, filename)
 
-
-class RootedHTTPRequestHandler(SimpleHTTPRequestHandler):
-
-    def log_message(self, format, *args):
-        with open(CLIENT_SERVER_LOG, 'a') as file_descriptor:
-            file_descriptor.write("%s - - [%s] %s\n" %
-                                  (self.client_address[0],
-                                   self.log_date_time_string(),
-                                   format % args))
-
-    def translate_path(self, path):
-        path = posixpath.normpath(urllib.unquote(path))
-        words = path.split('/')
-        words = filter(None, words)
-        path = self.base_path
-        for word in words:
-            drive, word = os.path.splitdrive(word)
-            head, word = os.path.split(word)
-            if word in (os.curdir, os.pardir):
-                continue
-            path = os.path.join(path, word)
-        return path
+    if os.path.isfile(filepath):
+        with open(filepath, 'r') as myFile:
+            data = myFile.read()
+            return data
+    else:
+        resp = make_response(404)
+        return resp
 
 
-def launch_client_server(port, HandlerClass=RootedHTTPRequestHandler,
-                         ServerClass=RootedHTTPServer):
-    try:
-        server_address = ('', port)
-        httpd = ServerClass(os.path.join(GNAThub.Project.object_dir(),
-                                         'gnathub', 'html-report'),
-                            server_address,
-                            HandlerClass)
-        sa = httpd.socket.getsockname()
-        print "Launched GNAThub client server on port ", sa[1], "..."
-        print "The API server logs are in {}".format(API_SERVER_LOG)
-        print "The Client server logs are in {}".format(CLIENT_SERVER_LOG)
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print "KeyboardInterruption...Closing client server."
-    except socket.error:
-        print "Port already in use. Please relaunch with a free port."
-    except Exception as e:
-        print "Exception caught."
-        print e
-    finally:
-        httpd.shutdown()
-        httpd.server_close()
+@app.route('/get-review/<filename>', methods=['GET'])
+def _get_review(filename):
+    _export_codeper_bridge(filename)
+
+    path = SERVER_DIR_PATH
+    serverpath = os.path.join(os.getcwd(), path)
+    filepath = ''
+
+    # Find the path to the asked file
+    for root, dirs, files in os.walk(serverpath):
+        if filename in files:
+            filepath = os.path.join(root, filename)
+
+    if os.path.isfile(filepath):
+        with open(filepath, 'r') as myFile:
+            data = myFile.read()
+            return data
+    else:
+        resp = make_response("Not Found", 404)
+        return resp
 
 
-# Script entry point
+def _export_codeper_bridge(filename):
+    app.logger.info("Export info from codepeer_bridge")
+    name = 'codepeer_bridge'
+    cmd = ['codepeer_bridge',
+           '--output-dir=' + OUTPUT_DIR,
+           '--db-dir=' + DB_DIR,
+           '--export-reviews=' + os.path.join(
+               GNAThub.Project.object_dir(),
+               'gnathub', 'html-report',
+               'data', filename)]
+    GNAThub.Run(name, cmd, out=SERVER_LOG, append_out=True)
+
+
+@app.route('/online-server', methods=['GET'])
+def _get_online():
+    app.logger.info("Flask server is online and reachable")
+    resp = make_response("OK", 200)
+    return resp
+
+
+@app.route('/codepeer-passed', methods=['GET'])
+def _get_codepeer():
+    cmd = ('codepeer'
+           + ' -P' + PROJECT_PATH
+           + ' -show-header-only'
+           + ' -output-msg-only > /dev/null')
+    ret = os.system(cmd)
+
+    if (ret == 0):
+        app.logger.debug("Codepeer executable found")
+        resp = make_response("OK", 200)
+        return resp
+    else:
+        app.logger.debug("Codepeer executable not found")
+        resp = make_response("NOT OK", 204)
+        return resp
+
+
+@app.route('/post-review/', methods=['POST'])
+def _post_review():
+    temp_filename = 'user_review_temp.xml'
+    post_data = request.data
+    app.logger.info(post_data)
+
+    app.logger.info("Create user_review_temp.xml")
+    tempFile = open(temp_filename, "wb")
+    tempFile.write(post_data)
+    tempFile.close()
+
+    _import_codepeer_bridge(temp_filename)
+
+    app.logger.info("Remove user_review_temp.xml")
+    os.remove(temp_filename)
+
+    resp = make_response("OK", 200)
+    return resp
+
+
+def _import_codepeer_bridge(filename):
+    app.logger.info("Import info into codepeer_bridge")
+    name = 'codepeer_bridge'
+    cmd = ['codepeer_bridge',
+           '--output-dir=' + OUTPUT_DIR,
+           '--db-dir=' + DB_DIR,
+           '--import-reviews=' + filename]
+    GNAThub.Run(name, cmd, out=SERVER_LOG, append_out=True)
+
+
+@app.route('/<path:other>')
+def fallback(other):
+    app.logger.error("Bad request used.")
+    app.logger.error(other)
+    return make_response("Wrong request", 404)
+
+
 if __name__ == '__main__':
-    Launch_Server().launch_server()
+    flask_port = GNAThub.port() if GNAThub.port() else DEFAULT_PORT
+
+    if flask_port > 1024:
+        print "Launching flask server on port {}".format(flask_port)
+        print "Logs redirected to {}".format(SERVER_LOG)
+        # TODO : Error occur when lauching with debug=True
+        # app.run(port=flask_port, debug=True)
+        app.run(port=flask_port)
+    else:
+        app.logger.error("Bad port used. Please relauch with port above 1024.")
+        print "Please use a port above 1024"

@@ -5,8 +5,8 @@ import { sortCodeArray, sortMessageArray } from './utils/sortArray';
 import { Http, Response } from '@angular/http';
 import { updateFilter } from './utils/refreshFilter';
 import { storeFilterItem, getFilterItem,
-         getStoredFilter, getStoredMessageSort,
-         getStoredProjectSort } from './utils/dataStorage';
+        getStoredFilter, getStoredMessageSort,
+        getStoredProjectSort } from './utils/dataStorage';
 import { DOCUMENT } from '@angular/common';
 
 export type InteralStateType = {
@@ -91,22 +91,19 @@ export class SharedReport {
     private userReviewFilter: [IReviewFilter];
 
     /* Correspond to the information needed to contact the API */
-    private client_host: string = window.location.origin;
-    private client_port: number = Number(window.location.port);
-    private api_port: number = this.client_port + 1;
-    public url: string = this.client_host.replace(String(this.client_port), String(this.api_port)+"/");
-
-
+    private server_host = window.location.origin;
+    private server_port = Number(window.location.port);
+    public url = this.server_host + '/';
 
     constructor( @Inject(DOCUMENT) private document: Document,
                   private gnathub: GNAThubService,
                   private http: Http) {
 
-        /*
+    /*
      * This part is for the connection with the server
      * If server not running or responding, use the old get
      */
-        console.log("Designated API Url :", this.url)
+        console.log("Designated API Url :", this.url);
         this.initApp();
     }
 
@@ -175,7 +172,7 @@ export class SharedReport {
         this.http.get(this.url + 'json/filter.json')
             .subscribe(
             data => {
-                this.filter = JSON.parse(JSON.parse(data['_body']));
+                this.filter = JSON.parse(data['_body']);
                 this.initFilter();
                 this.projectName = this.filter.project;
                 this.getCodepeerCode();
@@ -210,7 +207,7 @@ export class SharedReport {
         this.http.get(this.url + 'json/code.json')
             .subscribe(
             data => {
-                this.code = JSON.parse(JSON.parse(data['_body']));
+                this.code = JSON.parse(data['_body']);
                 this.code.modules = sortCodeArray(
                     this.projectSort,
                     this.projectSort, this.code.modules);
@@ -239,7 +236,7 @@ export class SharedReport {
         this.http.get(this.url + 'json/message.json')
             .subscribe(
             data => {
-                this.message = JSON.parse(JSON.parse(data['_body']));
+                this.message = JSON.parse(data['_body']);
                 this.isCodepeerPassed();
                 this.refreshFilter()
             }, error => {
@@ -379,7 +376,8 @@ export class SharedReport {
 
     /* This function is called each time a set of data is loaded.
      * It will verify if all the set of data are loaded.
-     * If there are, it will launch the global function to refresh the filter properly.
+     * If there are, it will launch the global function to refresh
+     * the filter properly.
      */
     private refreshFilter() {
         if (this.code && this.filter && this.message && this.filter.review_status){
