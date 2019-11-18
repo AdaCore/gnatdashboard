@@ -54,11 +54,14 @@ else:
                 port = DEFAULT_PORT
                 if GNAThub.port():
                     port = GNAThub.port()
-
                 msg_exec = 'execute ' + SCRIPT_NAME
                 msg_exec = msg_exec + ' (PORT NUMBER: ' + str(port) + ')'
                 Console.info(msg_exec, prefix=MODULE)
+                html_dir = os.path.join(GNAThub.root(), 'html-report')
+                os.environ["FLASK_RUN_PORT"] = str(port)
+                os.environ["WEBUI_HTML_FOLDER"] = html_dir
                 execfile(server_script_path)
+
             except Exception as why:
                 msg_excpt = 'failed to load script: ' + server_script_path
                 msg_err = msg_excpt + ' ' + str(why)
