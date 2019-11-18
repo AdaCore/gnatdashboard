@@ -17,11 +17,16 @@ function getStoredFilterItems(items) {
 }
 
 export function getStoredFilter(filter) {
-    getStoredFilterItems(filter.tools);
-    getStoredFilterItems(filter.rules);
-    getStoredFilterItems(filter.properties);
-    getStoredFilterItems(filter.ranking);
-    getStoredFilterItems(filter.review_status);
+    if (filter.tools)
+        getStoredFilterItems(filter.tools);
+    if (filter.rules)
+        getStoredFilterItems(filter.rules);
+    if (filter.properties)
+        getStoredFilterItems(filter.properties);
+    if (filter.ranking)
+        getStoredFilterItems(filter.ranking);
+    if (filter.review_status)
+        getStoredFilterItems(filter.review_status);
 }
 
 export function storeFilterItem(name, itemState) {
