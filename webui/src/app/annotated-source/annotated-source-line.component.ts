@@ -21,10 +21,12 @@ export class AnnotatedSourceLineComponent implements OnInit, OnChanges {
     @Input() public line: IAnnotatedSourceLine;
     @Input() public coverage: ICoverage;
     public safeHtml: SafeHtml;
+    public char: String = '';
 
     @HostBinding('class.no_code') private isNoCode: boolean = false;
     @HostBinding('class.covered') private isCovered: boolean = false;
     @HostBinding('class.not_covered') private isNotCovered: boolean = false;
+    @HostBinding('class.partially_covered') private isPartiallyCovered: boolean = false;
 
     constructor(private sanitizer: DomSanitizer) {}
 
@@ -37,6 +39,8 @@ export class AnnotatedSourceLineComponent implements OnInit, OnChanges {
             this.isNoCode = status === 'no_code';
             this.isCovered = status === 'covered';
             this.isNotCovered = status === 'not_covered';
+            this.isPartiallyCovered = status === 'partially_covered';
+            this.char = this.coverage.char;
         }
     }
 

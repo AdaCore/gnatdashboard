@@ -1,0 +1,311 @@
+<?xml version="1.0" ?>
+<!DOCTYPE source SYSTEM "annotations-xml.dtd">
+<source file="test_decision.adb" coverage_level="stmt+mcdc">
+ <src_mapping coverage=".">
+  <src>
+   <line num="1" exempted="FALSE" src="with Do_Nothing;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="2" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="3" exempted="FALSE" src="procedure Test_Decision (Switch_1, Switch_2 : Boolean) is"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="4" exempted="FALSE" src="begin"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="5" exempted="FALSE" src="   --  Test for outcome FALSE never exercised"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="!">
+  <src>
+   <line num="6" exempted="FALSE" src="   if Switch_1 then"/>
+  </src>
+
+  <statement id="10" text="if Switch..." coverage="+">
+   <src>
+    <line num="6" column_begin="4" column_end="4" src="   if Switch_1"/>
+   </src>
+
+  </statement>
+
+  <decision id="11" text="Switch_1" coverage="-">
+   <src>
+    <line num="6" column_begin="7" column_end="7" src="      Switch_1"/>
+   </src>
+
+   <condition id="12" text="Switch_1" coverage=".">
+    <src>
+     <line num="6" column_begin="7" column_end="7" src="      Switch_1"/>
+    </src>
+
+   </condition>
+
+  </decision>
+
+  <message kind="violation" SCO="SCO #11: DECISION" message="outcome FALSE never exercised"/>
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="7" exempted="FALSE" src="      Do_Nothing;"/>
+  </src>
+
+  <statement id="13" text="Do_Nothin..." coverage="+">
+   <src>
+    <line num="7" column_begin="7" column_end="7" src="      Do_Nothing"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="8" exempted="FALSE" src="   end if;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="9" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="10" exempted="FALSE" src="   --  Test for outcome TRUE never exercised"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="!">
+  <src>
+   <line num="11" exempted="FALSE" src="   if not Switch_1 then"/>
+  </src>
+
+  <statement id="14" text="if not Sw..." coverage="+">
+   <src>
+    <line num="11" column_begin="4" column_end="4" src="   if not Switch_1"/>
+   </src>
+
+  </statement>
+
+  <decision id="15" text="Switch_1" coverage="-">
+   <src>
+    <line num="11" column_begin="11" column_end="11" src="          Switch_1"/>
+   </src>
+
+   <condition id="17" text="Switch_1" coverage=".">
+    <src>
+     <line num="11" column_begin="11" column_end="11" src="          Switch_1"/>
+    </src>
+
+   </condition>
+
+  </decision>
+
+  <message kind="violation" SCO="SCO #15: DECISION" message="outcome TRUE never exercised"/>
+ </src_mapping>
+
+ <src_mapping coverage="-">
+  <src>
+   <line num="12" exempted="FALSE" src="      Do_Nothing;"/>
+  </src>
+
+  <statement id="18" text="Do_Nothin..." coverage="-">
+   <src>
+    <line num="12" column_begin="7" column_end="7" src="      Do_Nothing"/>
+   </src>
+
+  </statement>
+
+  <message kind="violation" SCO="SCO #18: STATEMENT" message="not executed"/>
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="13" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="14" exempted="FALSE" src="      --  Test for no outcome exercised"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="-">
+  <src>
+   <line num="15" exempted="FALSE" src="      if Switch_2 then"/>
+  </src>
+
+  <statement id="19" text="if Switch..." coverage="-">
+   <src>
+    <line num="15" column_begin="7" column_end="7" src="      if Switch_2"/>
+   </src>
+
+  </statement>
+
+  <decision id="20" text="Switch_2" coverage="-">
+   <src>
+    <line num="15" column_begin="10" column_end="10" src="         Switch_2"/>
+   </src>
+
+   <condition id="21" text="Switch_2" coverage=".">
+    <src>
+     <line num="15" column_begin="10" column_end="10" src="         Switch_2"/>
+    </src>
+
+   </condition>
+
+  </decision>
+
+  <message kind="violation" SCO="SCO #19: STATEMENT" message="not executed"/>
+ </src_mapping>
+
+ <src_mapping coverage="-">
+  <src>
+   <line num="16" exempted="FALSE" src="         Do_Nothing;"/>
+  </src>
+
+  <statement id="22" text="Do_Nothin..." coverage="-">
+   <src>
+    <line num="16" column_begin="10" column_end="10" src="         Do_Nothing"/>
+   </src>
+
+  </statement>
+
+  <message kind="violation" SCO="SCO #22: STATEMENT" message="not executed"/>
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="17" exempted="FALSE" src="      end if;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="18" exempted="FALSE" src="   end if;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="19" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="20" exempted="FALSE" src="   for I in False .. True loop"/>
+  </src>
+
+  <statement id="23" text="I in Fals..." coverage="+">
+   <src>
+    <line num="20" column_begin="8" column_end="8" src="       I in False .. True"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="21" exempted="FALSE" src="      --  Test for both outcome exercised"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="22" exempted="FALSE" src="      if I then"/>
+  </src>
+
+  <statement id="24" text="if I" coverage="+">
+   <src>
+    <line num="22" column_begin="7" column_end="7" src="      if I"/>
+   </src>
+
+  </statement>
+
+  <decision id="25" text="I" coverage="+">
+   <src>
+    <line num="22"/>
+   </src>
+
+   <condition id="26" text="I" coverage="+">
+    <src>
+     <line num="22"/>
+    </src>
+
+   </condition>
+
+  </decision>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="23" exempted="FALSE" src="         Do_Nothing;"/>
+  </src>
+
+  <statement id="27" text="Do_Nothin..." coverage="+">
+   <src>
+    <line num="23" column_begin="10" column_end="10" src="         Do_Nothing"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="24" exempted="FALSE" src="      end if;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="25" exempted="FALSE" src="   end loop;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="26" exempted="FALSE" src="end Test_Decision;"/>
+  </src>
+
+ </src_mapping>
+
+</source>
+

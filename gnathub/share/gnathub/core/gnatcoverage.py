@@ -20,7 +20,7 @@ module and load it as part of the GNAThub default execution.
 """
 
 import os
-import re
+from xml.dom import minidom
 
 import GNAThub
 from GNAThub import Console, Plugin, Reporter
@@ -32,13 +32,8 @@ class GNATcoverage(Plugin, Reporter):
     Retrieves .xcov generated files from the project root object directory,
     parses them and feeds the database with the data collected from each files.
     """
-
-    GNATCOV_EXT = '.xcov'
-    COV_LINE_RE = re.compile(r' *(?P<line_no>\d+) (?P<cov_char>[.0+!-]):.*')
-    COV_SLOC_RE = re.compile(
-        r'^(?P<cov_level>\w+) ".*" at (?P<line_no>\d+):(?P<col_no>\d+)'
-        r' (?P<message>[^"]+)$'
-    )
+    GNATCOVERAGE_OUTPUT = os.path.join(GNAThub.Project.object_dir())
+    XML_EXT = '.xml'
 
     def __init__(self):
         super(GNATcoverage, self).__init__()
@@ -46,11 +41,6 @@ class GNATcoverage(Plugin, Reporter):
         self.tool = None
         # Mapping: coverage level -> issue rule for this coverage.
         self.issue_rules = {}
-
-        # A dictionary containing all messages, to allow bulk insertion in the
-        # database: key is an string representing the number of hits,
-        # value is the corresponding Message instance.
-        self.hits = {}
 
     def __process_file(self, resource, filename, resources_messages):
         """Processe one file, adding in bulk all coverage info found.
@@ -60,6 +50,8 @@ class GNATcoverage(Plugin, Reporter):
         """
 
         bulk_messages = []
+        file_path = os.path.join(self.GNATCOVERAGE_OUTPUT,
+                                 filename) + self.XML_EXT
 
         def add_message(rule, message, ranking, line_no, column_no):
             bulk_messages.append([
@@ -67,44 +59,44 @@ class GNATcoverage(Plugin, Reporter):
                 line_no, column_no, column_no,
             ])
 
-        with open(filename, 'r') as gnatcov_file:
-            # Retrieve information for every source line.
-            lines_iter = iter(gnatcov_file)
+        file_xml = minidom.parse(file_path)
+        lines = file_xml.getElementsByTagName('src_mapping')
 
-            # Skip the first 3 lines (they specify source file path, coverage
-            # ratio and coverage level).
-            for _ in range(3):
-                next(lines_iter)
+        for index, line in enumerate(lines, start=1):
+            cov_rule = self.issue_rules['coverage']
+            cov_char = line.attributes['coverage'].value
+            cov_status = {
+                    '.': 'NO_CODE',
+                    '+': 'COVERED',
+                    '-': 'NOT_COVERED',
+                    '!': 'PARTIALLY_COVERED'
+                 }[cov_char]
+            line_info = line.getElementsByTagName('line')
+            line_no = int(line_info[0].attributes['num'].value)
+            if line_info.length > 1:
+                column_no = int(line_info[1].
+                                attributes['column_begin'].value)
+            add_message(cov_rule, cov_status,
+                        GNAThub.RANKING_LOW, line_no, 0)
 
-            line_no = None
-            column_no = None
-
-            for line in lines_iter:
-                line = line.rstrip()
-                m = self.COV_LINE_RE.match(line)
-
-                column_no = None
-
-                if m:
-                    line_no = int(m.group('line_no'))
-                else:
-                    m = self.COV_SLOC_RE.match(line)
-                    assert m
-                    assert int(m.group('line_no')) == line_no
-                    column_no = int(m.group('col_no'))
-                    message_label = m.group('message')
-                    cov_level = {
-                        'statement': 'stmt',
-                        'decision':  'decision',
-                        'condition': 'mcdc',
-                    }[m.group('cov_level')]
-                    ranking = {
-                        'statement': GNAThub.RANKING_HIGH,
-                        'decision': GNAThub.RANKING_MEDIUM,
-                        'condition': GNAThub.RANKING_LOW
-                    }[m.group('cov_level')]
-                    add_message(self.issue_rules[cov_level], message_label,
-                                ranking, line_no, column_no)
+            message_info = line.getElementsByTagName('message')
+            if message_info.length > 0:
+                sco = message_info[0].attributes['SCO'].value.split(' ')[2]
+                cov_level = {
+                    'STATEMENT': 'statement',
+                    'DECISION':  'decision',
+                    'CONDITION': 'condition',
+                }[sco]
+                ranking = {
+                    'statement': GNAThub.RANKING_HIGH,
+                    'decision': GNAThub.RANKING_MEDIUM,
+                    'condition': GNAThub.RANKING_LOW
+                }[cov_level]
+                cov_rule = self.issue_rules[cov_level]
+                message_label = message_info[0].attributes['message'].value
+                message_label = cov_level + " " + message_label
+                add_message(cov_rule, message_label,
+                            ranking, line_no, column_no)
 
         # Preparing list for tool level insertion of resources messages
         resources_messages.append([resource, bulk_messages])
@@ -124,38 +116,37 @@ class GNATcoverage(Plugin, Reporter):
             self.log.info('clear existing results if any')
             GNAThub.Tool.clear_references(self.name)
 
-        self.info('parse coverage reports (%s)' % self.GNATCOV_EXT)
-
-        # Fetch all files in project object directory and retrieve only
-        # .xcov files, absolute path
-        files = [os.path.join(GNAThub.Project.object_dir(), filename)
-                 for filename in os.listdir(GNAThub.Project.object_dir())
-                 if filename.endswith(self.GNATCOV_EXT)]
-
-        # If no .xcov file found, plugin returns on failure
-        if not files:
-            self.error('no %s file in object directory' % self.GNATCOV_EXT)
+        # Check if gnatcoverage output folder exist
+        if not os.path.exists(self.GNATCOVERAGE_OUTPUT):
+            self.log.info('No gnatcoverage folder in object directory')
             return GNAThub.EXEC_FAILURE
 
+        self.info('parse coverage reports (%s)' % self.XML_EXT)
+        # Fetch all files in project object directory and retrieve only
+        # .xml files, absolute path
+        file_path = os.path.join(self.GNATCOVERAGE_OUTPUT, 'index.xml')
+        index_xml = minidom.parse(file_path)
+        if not index_xml:
+            self.error('no %s file in object directory' % self.XML_EXT)
+            return GNAThub.EXEC_FAILURE
+
+        files = index_xml.getElementsByTagName('file')
         self.tool = GNAThub.Tool(self.name)
-        for cov_level in ('stmt', 'decision', 'mcdc'):
+        for cov_level in ('statement', 'decision', 'condition', 'coverage'):
             self.issue_rules[cov_level] = GNAThub.Rule(
                 cov_level, cov_level, GNAThub.RULE_KIND, self.tool)
 
-        total = len(files)
+        total = files.length
 
         # List of resource messages suitable for tool level bulk insertion
         resources_messages = []
 
         try:
-            for index, filename in enumerate(files, start=1):
-                # Retrieve source fullname (`filename` is the *.xcov report
-                # file).
-                base, _ = os.path.splitext(os.path.basename(filename))
-                src = GNAThub.Project.source_file(base)
-
+            for index, file in enumerate(files, start=1):
+                # Retrieve source fullname
+                filename = file.attributes['name'].value
+                src = GNAThub.Project.source_file(filename)
                 resource = GNAThub.Resource.get(src)
-
                 if resource:
                     self.__process_file(resource, filename, resources_messages)
 

@@ -16,26 +16,115 @@ class TestCoverageExhaustiveExample(TestCase):
                                 'file rule line column message')
 
     EXPECTED_COVERAGE = {
+        'do_nothing.adb':  {
+            1: Violation('coverage', 0,  'NO_CODE'),
+            2: Violation('coverage', 0,  'NO_CODE'),
+            3: Violation('coverage', 0,  'COVERED'),
+            4: Violation('coverage', 0,  'NO_CODE')
+        },
+        'main.adb':  {
+            1: Violation('coverage', 0,  'NO_CODE'),
+            2: Violation('coverage', 0,  'NO_CODE'),
+            3: Violation('coverage', 0,  'NO_CODE'),
+            4: Violation('coverage', 0,  'NO_CODE'),
+            5: Violation('coverage', 0,  'NO_CODE'),
+            6: Violation('coverage', 0,  'NO_CODE'),
+            7: Violation('coverage', 0,  'COVERED'),
+            8: Violation('coverage', 0,  'COVERED'),
+            9: Violation('coverage', 0,  'COVERED'),
+            10: Violation('coverage', 0,  'COVERED'),
+            11: Violation('coverage', 0,  'NO_CODE')
+        },
         'test_stmt.adb':  {
-            10: Violation('stmt', 7,  'not executed'),
-            14: Violation('stmt', 42, 'not executed'),
-            18: [
-                Violation('stmt', 7,  'not executed'),
-                Violation('stmt', 19, 'not executed')
+            1: Violation('coverage', 0,  'NO_CODE'),
+            2: Violation('coverage', 0,  'NO_CODE'),
+            3: Violation('coverage', 0,  'NO_CODE'),
+            4: Violation('coverage', 0,  'NO_CODE'),
+            5: Violation('coverage', 0,  'NO_CODE'),
+            6: Violation('coverage', 0,  'COVERED'),
+            7: Violation('coverage', 0,  'NO_CODE'),
+            8: Violation('coverage', 0,  'COVERED'),
+            9: Violation('coverage', 0,  'NO_CODE'),
+            10: [
+                Violation('statement', 7,  'statement not executed'),
+                Violation('coverage', 0,  'NOT_COVERED')
             ],
+            11: Violation('coverage', 0,  'NO_CODE'),
+            12: Violation('coverage', 0,  'NO_CODE'),
+            13: Violation('coverage', 0,  'NO_CODE'),
+            14: [
+                Violation('statement', 4, 'statement not executed'),
+                Violation('coverage', 0,  'PARTIALLY_COVERED')
+            ],
+            15: Violation('coverage', 0,  'NO_CODE'),
+            16: Violation('coverage', 0,  'NO_CODE'),
+            17: Violation('coverage', 0,  'COVERED'),
+            18: [
+                Violation('statement', 7,  'statement not executed'),
+                Violation('coverage', 0,  'NOT_COVERED')
+            ],
+            19: Violation('coverage', 0,  'NO_CODE'),
+            20: Violation('coverage', 0,  'NO_CODE')
         },
         'test_decision.adb': {
-            6:  Violation('decision', 7,  'outcome FALSE never exercised'),
-            11: Violation('decision', 11, 'outcome TRUE never exercised'),
-            12: Violation('stmt', 7,  'not executed'),
-            15: Violation('stmt', 7,  'not executed'),
-            16: Violation('stmt', 10, 'not executed'),
+            1: Violation('coverage', 0,  'NO_CODE'),
+            2: Violation('coverage', 0,  'NO_CODE'),
+            3: Violation('coverage', 0,  'NO_CODE'),
+            4: Violation('coverage', 0,  'NO_CODE'),
+            5: Violation('coverage', 0,  'NO_CODE'),
+            6: [
+                Violation('decision', 4,  'decision outcome FALSE never exercised'),
+                Violation('coverage', 0,  'PARTIALLY_COVERED')
+            ],
+            7: Violation('coverage', 0,  'COVERED'),
+            8: Violation('coverage', 0,  'NO_CODE'),
+            9: Violation('coverage', 0,  'NO_CODE'),
+            10: Violation('coverage', 0,  'NO_CODE'),
+            11: [
+                Violation('decision', 4, 'decision outcome TRUE never exercised'),
+                Violation('coverage', 0,  'PARTIALLY_COVERED'),
+            ],
+            12: [
+                Violation('statement', 7,  'statement not executed'),
+                Violation('coverage', 0,  'NOT_COVERED')
+            ],
+            13: Violation('coverage', 0,  'NO_CODE'),
+            14: Violation('coverage', 0,  'NO_CODE'),
+            15: [
+                Violation('statement', 7,  'statement not executed'),
+                Violation('coverage', 0,  'NOT_COVERED')
+            ],
+            16: [
+                Violation('statement', 10, 'statement not executed'),
+                Violation('coverage', 0,  'NOT_COVERED')
+            ],
+            17: Violation('coverage', 0,  'NO_CODE'),
+            18: Violation('coverage', 0,  'NO_CODE'),
+            19: Violation('coverage', 0,  'NO_CODE'),
+            20: Violation('coverage', 0,  'COVERED'),
+            21: Violation('coverage', 0,  'NO_CODE'),
+            22: Violation('coverage', 0,  'COVERED'),
+            23: Violation('coverage', 0,  'COVERED'),
+            24: Violation('coverage', 0,  'NO_CODE'),
+            25: Violation('coverage', 0,  'NO_CODE'),
+            26: Violation('coverage', 0,  'NO_CODE')
         },
         'test_mcdc.adb': {
-            6:  Violation(
-                    'mcdc', 7,
-                    'has no independent influence pair, MC/DC not achieved'
-                )
+            1: Violation('coverage', 0,  'NO_CODE'),
+            2: Violation('coverage', 0,  'NO_CODE'),
+            3: Violation('coverage', 0,  'NO_CODE'),
+            4: Violation('coverage', 0,  'NO_CODE'),
+            5: Violation('coverage', 0,  'NO_CODE'),
+            6: [
+                Violation(
+                    'condition', 4,
+                    'condition has no independent influence pair, MC/DC not achieved'
+                ),
+                Violation('coverage', 0,  'PARTIALLY_COVERED')
+            ],
+            7: Violation('coverage', 0,  'COVERED'),
+            8: Violation('coverage', 0,  'NO_CODE'),
+            9: Violation('coverage', 0,  'NO_CODE')
         },
     }
 

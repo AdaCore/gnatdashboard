@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<!DOCTYPE source SYSTEM "annotations-xml.dtd">
+<source file="do_nothing.adb" coverage_level="stmt+mcdc">
+ <src_mapping coverage=".">
+  <src>
+   <line num="1" exempted="FALSE" src="procedure Do_Nothing is"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="2" exempted="FALSE" src="begin"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="3" exempted="FALSE" src="   null;"/>
+  </src>
+
+  <statement id="32" text="null" coverage="+">
+   <src>
+    <line num="3" column_begin="4" column_end="4" src="   null"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="4" exempted="FALSE" src="end Do_Nothing;"/>
+  </src>
+
+ </src_mapping>
+
+</source>
+

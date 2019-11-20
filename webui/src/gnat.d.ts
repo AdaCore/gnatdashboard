@@ -8,7 +8,7 @@ declare module 'gnat' {
     type CoverageStatus = string;
 
     export interface ICoverage {
-        hits: number;
+        char: string;
         status: CoverageStatus;
     }
 

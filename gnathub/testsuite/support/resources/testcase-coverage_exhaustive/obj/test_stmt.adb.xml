@@ -1,0 +1,212 @@
+<?xml version="1.0" ?>
+<!DOCTYPE source SYSTEM "annotations-xml.dtd">
+<source file="test_stmt.adb" coverage_level="stmt+mcdc">
+ <src_mapping coverage=".">
+  <src>
+   <line num="1" exempted="FALSE" src="with Do_Nothing;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="2" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="3" exempted="FALSE" src="procedure Test_Stmt (Length : Natural) is"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="4" exempted="FALSE" src="begin"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="5" exempted="FALSE" src="   --  Test for covered statement"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="6" exempted="FALSE" src="   Do_Nothing;"/>
+  </src>
+
+  <statement id="1" text="Do_Nothin..." coverage="+">
+   <src>
+    <line num="6" column_begin="4" column_end="4" src="   Do_Nothing"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="7" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="8" exempted="FALSE" src="   for I in 1 .. Length loop"/>
+  </src>
+
+  <statement id="2" text="I in 1 ....." coverage="+">
+   <src>
+    <line num="8" column_begin="8" column_end="8" src="       I in 1 .. Length"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="9" exempted="FALSE" src="      --  Test for uncovered statement"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="-">
+  <src>
+   <line num="10" exempted="FALSE" src="      Do_Nothing;"/>
+  </src>
+
+  <statement id="3" text="Do_Nothin..." coverage="-">
+   <src>
+    <line num="10" column_begin="7" column_end="7" src="      Do_Nothing"/>
+   </src>
+
+  </statement>
+
+  <message kind="violation" SCO="SCO #3: STATEMENT" message="not executed"/>
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="11" exempted="FALSE" src="   end loop;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="12" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="13" exempted="FALSE" src="   --  Test for both covered and uncovered statement on the same line"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="!">
+  <src>
+   <line num="14" exempted="FALSE" src="   Do_Nothing; for I in 1 .. Length loop Do_Nothing; end loop;"/>
+  </src>
+
+  <statement id="4" text="Do_Nothin..." coverage="+">
+   <src>
+    <line num="14" column_begin="4" column_end="4" src="   Do_Nothing"/>
+   </src>
+
+  </statement>
+
+  <statement id="5" text="I in 1 ....." coverage="+">
+   <src>
+    <line num="14" column_begin="20" column_end="20" src="                   I in 1 .. Length"/>
+   </src>
+
+  </statement>
+
+  <statement id="6" text="Do_Nothin..." coverage="-">
+   <src>
+    <line num="14" column_begin="42" column_end="42" src="                                         Do_Nothing"/>
+   </src>
+
+  </statement>
+
+  <message kind="violation" SCO="SCO #6: STATEMENT" message="not executed"/>
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="15" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="16" exempted="FALSE" src="   --  Test for two uncovered statements on the same line"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="17" exempted="FALSE" src="   for I in 1 .. Length loop"/>
+  </src>
+
+  <statement id="7" text="I in 1 ....." coverage="+">
+   <src>
+    <line num="17" column_begin="8" column_end="8" src="       I in 1 .. Length"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage="-">
+  <src>
+   <line num="18" exempted="FALSE" src="      Do_Nothing; Do_Nothing;"/>
+  </src>
+
+  <statement id="8" text="Do_Nothin..." coverage="-">
+   <src>
+    <line num="18" column_begin="7" column_end="7" src="      Do_Nothing"/>
+   </src>
+
+  </statement>
+
+  <statement id="9" text="Do_Nothin..." coverage="-">
+   <src>
+    <line num="18" column_begin="19" column_end="19" src="                  Do_Nothing"/>
+   </src>
+
+  </statement>
+
+  <message kind="violation" SCO="SCO #8: STATEMENT" message="not executed"/>
+  <message kind="violation" SCO="SCO #9: STATEMENT" message="not executed"/>
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="19" exempted="FALSE" src="   end loop;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="20" exempted="FALSE" src="end Test_Stmt;"/>
+  </src>
+
+ </src_mapping>
+
+</source>
+

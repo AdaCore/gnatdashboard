@@ -216,30 +216,38 @@ def _get_coverage(message, tool):
 
     :param GNAThub.Message message: the message to encode
     :param GNAThub.Tool tool: the coverage tool that generated this message
-    :return: the number of hits for that line and the coverage status
-    :rtype: int, CoverageStatus
+    :return: the char for that line and the coverage status
+    :rtype: string, CoverageStatus
     """
-    hits, status = -1, CoverageStatus.NO_CODE
-    if tool.name == 'gcov':
-        hits = int(message.data)
-        status = (
-            CoverageStatus.COVERED if hits else CoverageStatus.NOT_COVERED)
-    # TODO: augment with support for GNATcoverage
-    return hits, status
+    char, status = -1, CoverageStatus.NO_CODE
+    if tool.name == 'gnatcoverage':
+        char = {
+            'NO_CODE': '.',
+            'COVERED': '+',
+            'NOT_COVERED': '-',
+            'PARTIALLY_COVERED': '!'
+        }[message.data]
+        status = {
+            'NO_CODE': CoverageStatus.NO_CODE,
+            'COVERED': CoverageStatus.COVERED,
+            'NOT_COVERED': CoverageStatus.NOT_COVERED,
+            'PARTIALLY_COVERED': CoverageStatus.PARTIALLY_COVERED
+        }[message.data]
+    return char, status
 
 
-def _encode_coverage(hits, status, extra=None):
+def _encode_coverage(char, status, extra=None):
     """JSON-encode coverage information.
 
-    :param int hits: ???
-    :param CoverageStatus status: ???
+    :param string char: the char corresponding to status
+    :param CoverageStatus status: the coverage status
     :param extra: extra fields to decorate the encoded object with
     :type extra: dict or None
     :rtype: dict[str, *]
     """
     return _decorate_dict({
         'status': status.name,
-        'hits': hits
+        'char': char
     }, extra)
 
 

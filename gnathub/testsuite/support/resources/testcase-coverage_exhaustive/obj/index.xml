@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE document SYSTEM "annotations-xml.dtd">
+<document xmlns:xi="http://www.w3.org/2001/XInclude">
+ <coverage_report coverage_level="stmt+mcdc">
+  <coverage_info>
+   <xi:include parse="xml" href="trace.xml"/>
+  </coverage_info>
+
+  <coverage_summary>
+   <metric kind="total_lines_of_relevance" count="22"/>
+   <metric kind="fully_covered" count="13" ratio="59"/>
+   <metric kind="partially_covered" count="4" ratio="18"/>
+   <metric kind="not_covered" count="5" ratio="23"/>
+   <metric kind="exempted_no_violation" count="0" ratio="0"/>
+   <metric kind="exempted" count="0" ratio="0"/>
+   <file name="do_nothing.adb">
+    <metric kind="total_lines_of_relevance" count="1"/>
+    <metric kind="fully_covered" count="1" ratio="100"/>
+    <metric kind="partially_covered" count="0" ratio="0"/>
+    <metric kind="not_covered" count="0" ratio="0"/>
+    <metric kind="exempted_no_violation" count="0" ratio="0"/>
+    <metric kind="exempted" count="0" ratio="0"/>
+   </file>
+
+   <file name="main.adb">
+    <metric kind="total_lines_of_relevance" count="4"/>
+    <metric kind="fully_covered" count="4" ratio="100"/>
+    <metric kind="partially_covered" count="0" ratio="0"/>
+    <metric kind="not_covered" count="0" ratio="0"/>
+    <metric kind="exempted_no_violation" count="0" ratio="0"/>
+    <metric kind="exempted" count="0" ratio="0"/>
+   </file>
+
+   <file name="test_decision.adb">
+    <metric kind="total_lines_of_relevance" count="9"/>
+    <metric kind="fully_covered" count="4" ratio="44"/>
+    <metric kind="partially_covered" count="2" ratio="22"/>
+    <metric kind="not_covered" count="3" ratio="33"/>
+    <metric kind="exempted_no_violation" count="0" ratio="0"/>
+    <metric kind="exempted" count="0" ratio="0"/>
+   </file>
+
+   <file name="test_mcdc.adb">
+    <metric kind="total_lines_of_relevance" count="2"/>
+    <metric kind="fully_covered" count="1" ratio="50"/>
+    <metric kind="partially_covered" count="1" ratio="50"/>
+    <metric kind="not_covered" count="0" ratio="0"/>
+    <metric kind="exempted_no_violation" count="0" ratio="0"/>
+    <metric kind="exempted" count="0" ratio="0"/>
+   </file>
+
+   <file name="test_stmt.adb">
+    <metric kind="total_lines_of_relevance" count="6"/>
+    <metric kind="fully_covered" count="3" ratio="50"/>
+    <metric kind="partially_covered" count="1" ratio="17"/>
+    <metric kind="not_covered" count="2" ratio="33"/>
+    <metric kind="exempted_no_violation" count="0" ratio="0"/>
+    <metric kind="exempted" count="0" ratio="0"/>
+   </file>
+
+  </coverage_summary>
+
+  <sources>
+   <xi:include parse="xml" href="do_nothing.adb.xml"/>
+   <xi:include parse="xml" href="main.adb.xml"/>
+   <xi:include parse="xml" href="test_decision.adb.xml"/>
+   <xi:include parse="xml" href="test_mcdc.adb.xml"/>
+   <xi:include parse="xml" href="test_stmt.adb.xml"/>
+  </sources>
+
+ </coverage_report>
+
+</document>
+

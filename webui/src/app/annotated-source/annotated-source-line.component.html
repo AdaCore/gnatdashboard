@@ -1,5 +1,6 @@
 <td class="line-number">
     <a [routerLink]="['.', { line: line.number }]"
        [attr.data-line-number]="line.number">&nbsp;</a>
+    <span>{{char}}</span>
 </td>
 <td class="line-content" [innerHTML]="safeHtml"></td>

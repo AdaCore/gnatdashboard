@@ -119,7 +119,9 @@ export class SharedReport {
         this.getCustomReview();
         this.isServerOnline();
         this.isCodepeerPassed();
-        this.getCodepeerRunInfo();
+        if (this.isCodepeer) {
+            this.getCodepeerRunInfo();
+        }
     }
 
     private initLocalStorage(): void {
@@ -184,6 +186,7 @@ export class SharedReport {
                         // If version of WebUI doesn't match version of Codepeer
                         if (data.status === 202) {
                             this.CodepeerVersionError();
+                            this.isCodepeer = false;
                         }
                         this.getUserReview();
                     }
@@ -432,6 +435,7 @@ export class SharedReport {
     }
 
     private getUserReview(): void {
+        if (this.isCodepeer) {
         let url: string = this.url + 'get-review/';
         this.http.get(url + 'codepeer_review.xml')
             .subscribe(
@@ -444,6 +448,7 @@ export class SharedReport {
                     this.codepeerReviewError = true;
                 }
             );
+        }
     }
 
     public refreshUserReview(): void {

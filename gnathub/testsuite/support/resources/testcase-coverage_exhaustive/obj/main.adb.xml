@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE source SYSTEM "annotations-xml.dtd">
+<source file="main.adb" coverage_level="stmt+mcdc">
+ <src_mapping coverage=".">
+  <src>
+   <line num="1" exempted="FALSE" src="with Test_Stmt;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="2" exempted="FALSE" src="with Test_Decision;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="3" exempted="FALSE" src="with Test_MCDC;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="4" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="5" exempted="FALSE" src="procedure Main is"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="6" exempted="FALSE" src="begin"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="7" exempted="FALSE" src="   Test_Stmt (0);"/>
+  </src>
+
+  <statement id="28" text="Test_Stmt..." coverage="+">
+   <src>
+    <line num="7" column_begin="4" column_end="4" src="   Test_Stmt (0"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="8" exempted="FALSE" src="   Test_Decision (True, False);"/>
+  </src>
+
+  <statement id="29" text="Test_Deci..." coverage="+">
+   <src>
+    <line num="8" column_begin="4" column_end="4" src="   Test_Decision (True, False"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="9" exempted="FALSE" src="   Test_MCDC (True, False);"/>
+  </src>
+
+  <statement id="30" text="Test_MCDC..." coverage="+">
+   <src>
+    <line num="9" column_begin="4" column_end="4" src="   Test_MCDC (True, False"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="10" exempted="FALSE" src="   Test_MCDC (True, True);"/>
+  </src>
+
+  <statement id="31" text="Test_MCDC..." coverage="+">
+   <src>
+    <line num="10" column_begin="4" column_end="4" src="   Test_MCDC (True, True"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="11" exempted="FALSE" src="end Main;"/>
+  </src>
+
+ </src_mapping>
+
+</source>
+

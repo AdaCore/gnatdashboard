@@ -161,6 +161,10 @@ filter-selector.tool-selector .filter-selector {
             border-left-color: pink;
         }
 
+        &.gnatcoverage {
+            border-left-color: #905cc7;
+        }
+
         &.gnatcheck {
             border-left-color: #29a229;
         }

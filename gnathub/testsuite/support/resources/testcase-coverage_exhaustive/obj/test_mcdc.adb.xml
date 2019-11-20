@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<!DOCTYPE source SYSTEM "annotations-xml.dtd">
+<source file="test_mcdc.adb" coverage_level="stmt+mcdc">
+ <src_mapping coverage=".">
+  <src>
+   <line num="1" exempted="FALSE" src="with Do_Nothing;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="2" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="3" exempted="FALSE" src="procedure Test_MCDC (Switch_1, Switch_2 : Boolean) is"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="4" exempted="FALSE" src="begin"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="5" exempted="FALSE" src="   --  Test for missing independent influence pair"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="!">
+  <src>
+   <line num="6" exempted="FALSE" src="   if Switch_1 and then Switch_2 then"/>
+  </src>
+
+  <statement id="33" text="if Switch..." coverage="+">
+   <src>
+    <line num="6" column_begin="4" column_end="4" src="   if Switch_1 and then Switch_2"/>
+   </src>
+
+  </statement>
+
+  <decision id="34" text="Switch_1 ..." coverage="!">
+   <src>
+    <line num="6" column_begin="7" column_end="7" src="      Switch_1 and then Switch_2"/>
+   </src>
+
+   <condition id="36" text="Switch_1" coverage="-">
+    <src>
+     <line num="6" column_begin="7" column_end="7" src="      Switch_1"/>
+    </src>
+
+   </condition>
+
+   <condition id="37" text="Switch_2" coverage="+">
+    <src>
+     <line num="6" column_begin="25" column_end="25" src="                        Switch_2"/>
+    </src>
+
+   </condition>
+
+  </decision>
+
+  <message kind="violation" SCO="SCO #36: CONDITION" message="has no independent influence pair, MC/DC not achieved"/>
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="7" exempted="FALSE" src="      Do_Nothing;"/>
+  </src>
+
+  <statement id="38" text="Do_Nothin..." coverage="+">
+   <src>
+    <line num="7" column_begin="7" column_end="7" src="      Do_Nothing"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="8" exempted="FALSE" src="   end if;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="9" exempted="FALSE" src="end Test_MCDC;"/>
+  </src>
+
+ </src_mapping>
+
+</source>
+
