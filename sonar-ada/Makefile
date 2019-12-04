@@ -9,15 +9,15 @@ MVN_TEST_OPTS  :=
 .PHONY: build
 
 build:
-	MAVEN_OPTS="$(MVN_OPTS)" $(MVN) $(MVN_BUILD_OPTS) package
+	MAVEN_OPTS="$(MVN_OPTS)" $(MVN) $(MVN_BUILD_OPTS) $(MAVEN_ANOD_OPTS) package
 
 set-version:
-	MAVEN_OPTS="$(MVN_OPTS)" $(MVN) versions:set "-DnewVersion=$(SONAR_ADA_PLUGIN_VERSION)"
+	MAVEN_OPTS="$(MVN_OPTS)" $(MVN) $(MAVEN_ANOD_OPTS) versions:set "-DnewVersion=$(SONAR_ADA_PLUGIN_VERSION)"
 
 test:
 	# The maven command can fail because of the tests, but we want the report to
 	# be generated afterward.
-	-MAVEN_OPTS="$(MVN_OPTS)" $(MVN) $(MVN_TEST_OPTS) package
+	-MAVEN_OPTS="$(MVN_OPTS)" $(MVN) $(MVN_TEST_OPTS) $(MAVEN_ANOD_OPTS) package
 	python surefire-to-gnatpython-report.py \
 		-i $(BUILD_DIR)/surefire-reports \
 		-o $(RESULTS_DIR)
