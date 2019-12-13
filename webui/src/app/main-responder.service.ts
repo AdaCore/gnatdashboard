@@ -237,7 +237,6 @@ export class SharedReport {
             .subscribe(
             data => {
                 this.message = JSON.parse(data['_body']);
-                this.isCodepeerPassed();
                 this.refreshFilter()
             }, error => {
                 console.log("[Error] get message : ", error);
@@ -380,6 +379,7 @@ export class SharedReport {
      * the filter properly.
      */
     private refreshFilter() {
+
         if (this.code && this.filter && this.message && this.filter.review_status){
             if (localStorage.length > 0){
                 getStoredFilter(this.filter);
@@ -416,7 +416,6 @@ export class SharedReport {
                     } else if (rank.name == status) {
                         newOrder = [rank];
                     }
-
                 })
             }
         }.bind(this));
@@ -493,7 +492,7 @@ export class SharedReport {
                 if (reviewStatus.id >= newIdx){
                     newIdx = reviewStatus.id + 1;
                 }
-                if (!stop && reviewStatus.name == status){
+                if (!stop && reviewStatus.name.toUpperCase() == status.toUpperCase()){
                     reviewStatus._message_count += 1;
                     stop = true;
                 }

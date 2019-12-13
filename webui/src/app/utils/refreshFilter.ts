@@ -9,7 +9,7 @@ function incMessageCount(id: number, array: any){
 function incRevMessageCount(name: string, array: any){
     if (array){
         array.forEach(function(cell){
-            if (cell.name === name){
+            if (cell.name.toUpperCase() === name.toUpperCase()){
                 cell._ui_selected_message_count += 1;
             }
         });
@@ -35,7 +35,7 @@ function reviewSelected(name: string, array: any): boolean {
     let isSelected: boolean;
     if (array){
         array.forEach(function(cell){
-            if (cell.name === name){
+            if (cell.name.toUpperCase() === name.toUpperCase()){
                 if (cell._ui_unselected) {
                     isSelected = !cell._ui_unselected;
                 } else {
@@ -121,7 +121,7 @@ export function updateFilter(reportService) {
                         source._ui_total_message_count = 0;
                     }
 
-                    if (source.filename === codeSource.filename &&
+                    if (source.filename.toUpperCase() === codeSource.filename.toUpperCase() &&
                         source.messages != null){
                         source.countRanking = initCountRanking();
                         source._ui_total_message_count = 0;
