@@ -170,31 +170,31 @@ filter-selector.tool-selector .filter-selector {
 // INACTIVE < 0
 input[type=checkbox]:not(:checked) + label.option.no-message {
     .Info {
-        background-color: var(--Info);
+        background-color: var(--elem-color);
         &:hover {
             background-color: var(--Info-hover);
         }
     }
     .Unspecified {
-        background-color: var(--Unspecified);
+        background-color: var(--elem-color);
         &:hover {
             background-color: var(--Unspecified-hover);
         }
     }
     .Medium {
-        background-color: var(--Medium);
+        background-color: var(--elem-color);
         &:hover {
             background-color: var(--Medium-hover);
         }
     }
     .Low {
-        background-color: var(--Low);
+        background-color: var(--elem-color);
         &:hover {
             background-color: var(--Low-hover);
         }
     }
     .High {
-        background-color: var(--High);
+        background-color: var(--elem-color);
         &:hover {
             background-color: var(--High-hover);
         }
@@ -203,21 +203,21 @@ input[type=checkbox]:not(:checked) + label.option.no-message {
     .Not_A_Bug, .NOT_A_BUG,
     .False_Positive, .FALSE_POSITIVE,
     .Intentional, .INTENTIONAL {
-        background-color: var(--Not-A-Bug);
+        background-color: var(--elem-color);
         &:hover {
             background-color: var(--Not-A-Bug-hover);
         }
     }
 
     .Pending, .PENDING {
-        background-color: var(--Pending);
+        background-color: var(--elem-color);
         &:hover {
             background-color: var(--Pending-hover);
         }
     }
 
     .Bug, .BUG {
-        background-color: var(--Bug);
+        background-color: var(--elem-color);
         &:hover {
             background-color: var(--Bug-hover);
         }
@@ -226,159 +226,58 @@ input[type=checkbox]:not(:checked) + label.option.no-message {
 
 // ACTIVE < 0
 input[type=checkbox]:checked + label.option.no-message:hover {
-    background: repeating-linear-gradient(
-        43deg,
-        rgba(255,255,255,0.5),
-        rgba(255,255,255,0.5) 10px,
-        var(--elem-hover) 10px,
-        var(--elem-hover) 20px
-    ) !important;
+    opacity: 1;
+    background-color: var(--elem-color);
 
-    &.Info {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Info-hover) 10px,
-            var(--Info-hover) 20px
-        ) !important;
+    .Info {
+        &:hover {
+            background-color: var(--Info-hover);
+        }
     }
-    &.Medium {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Medium-hover) 10px,
-            var(--Medium-hover) 20px
-        ) !important;
+    .Unspecified {
+        &:hover {
+            background-color: var(--Unspecified-hover);
+        }
     }
-    &.Low {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Low-hover) 10px,
-            var(--Low-hover) 20px
-        ) !important;
+    .Medium {
+        &:hover {
+            background-color: var(--Medium-hover);
+        }
     }
-    &.High {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--High-hover) 10px,
-            var(--High-hover) 20px
-        ) !important;
+    .Low {
+        &:hover {
+            background-color: var(--Low-hover);
+        }
+    }
+    .High {
+        &:hover {
+            background-color: var(--High-hover);
+        }
     }
 
-    &.Not_A_Bug, &.NOT_A_BUG,
-    &.False_Positive, &.FALSE_POSITIVE,
-    &.Intentional, &.INTENTIONAL {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Not-A-Bug-hover) 10px,
-            var(--Not-A-Bug-hover) 20px
-        ) !important;
+    .Not_A_Bug, .NOT_A_BUG,
+    .False_Positive, .FALSE_POSITIVE,
+    .Intentional, .INTENTIONAL {
+        &:hover {
+            background-color: var(--Not-A-Bug-hover);
+        }
     }
 
-    &.Pending, &.PENDING {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Pending-hover) 10px,
-            var(--Pending-hover) 20px
-        ) !important;
+    .Pending, .PENDING {
+        &:hover {
+            background-color: var(--Pending-hover);
+        }
     }
 
-    &.Bug, &.BUG {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Bug-hover) 10px,
-            var(--Bug-hover) 20px
-        ) !important;
+    .Bug, .BUG {
+        &:hover {
+            background-color: var(--Bug-hover);
+        }
     }
+
 }
 
 input[type=checkbox]:checked + label.option.no-message {
-    background: repeating-linear-gradient(
-        43deg,
-        rgba(255,255,255,0.5),
-        rgba(255,255,255,0.5) 10px,
-        var(--elem-color) 10px,
-        var(--elem-color) 20px
-    ) !important;
-
-    &.Info {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Info) 10px,
-            var(--Info) 20px
-        ) !important;
-    }
-    &.Medium {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Medium) 10px,
-            var(--Medium) 20px
-        ) !important;
-    }
-    &.Low {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Low) 10px,
-            var(--Low) 20px
-        ) !important;
-    }
-    &.High {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--High) 10px,
-            var(--High) 20px
-        ) !important;
-    }
-
-    &.Not_A_Bug, &.NOT_A_BUG,
-    &.False_Positive, &.FALSE_POSITIVE,
-    &.Intentional, &.INTENTIONAL {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Not-A-Bug) 10px,
-            var(--Not-A-Bug) 20px
-        ) !important;
-    }
-
-    &.Pending, &.PENDING {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Pending) 10px,
-            var(--Pending) 20px
-        ) !important;
-    }
-
-    &.Bug, &.BUG {
-        background: repeating-linear-gradient(
-            43deg,
-            rgba(255,255,255,0.5),
-            rgba(255,255,255,0.5) 10px,
-            var(--Bug) 10px,
-            var(--Bug) 20px
-        ) !important;
-    }
+    opacity: 0.5;
+    background-color: var(--elem-color);
 }

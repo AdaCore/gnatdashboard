@@ -28,15 +28,15 @@
     <footer class="layout-page-footer location-view d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" *ngIf="displayMessages">
         <div class="location-view-flex d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
             <div class="location-view-header d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                <span class="location-view-title" (click)="tabOpen = 'metric'" [ngClass]="tabOpen == 'metric' ? 'selected': ''" *ngIf="source.metrics">
-                    File Metrics
-                </span>
-                <span class="location-view-title" (click)="tabOpen = 'message'; thisFile = true" [ngClass]="tabOpen == 'message' ? 'selected': ''">
-                    File Messages
-                </span>
-                <span class="location-view-title" (click)="tabOpen = 'messages'; thisFile = false" [ngClass]="tabOpen == 'messages' ? 'selected': ''">
-                    All Messages
-                </span>
+                <button class="location-view-title" (click)="tabOpen = 'metric'" [ngClass]="tabOpen == 'metric' ? 'selected': ''" *ngIf="source.metrics">
+                    <span>File Metrics</span>
+                </button>
+                <button class="location-view-title" (click)="tabOpen = 'message'; thisFile = true" [ngClass]="tabOpen == 'message' ? 'selected': ''">
+                    <span>File Messages</span>
+                </button>
+                <button class="location-view-title" (click)="tabOpen = 'messages'; thisFile = false" [ngClass]="tabOpen == 'messages' ? 'selected': ''">
+                    <span>All Messages</span>
+                </button>
                 <button id="ErrorButton" class="location-view-refresh-btn" (click)='reportService.refreshUserReview()'>
                     <span>Refresh review</span>
                 </button>
@@ -52,6 +52,37 @@
                     </mat-icon>
                 </button>
             </div>
+            <div *ngIf="tabOpen != 'metric'" class="location-view-sort d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 click no-pad" (click)="sortModules('line', '')">
+                    <span class="ellipsis">{{tabOpen == 'message' ? 'Line' : 'Name'}}</span>
+                    <span class="header-icon"
+                          *ngIf="reportService.messageSort.newSort == 'line'">
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
+                    </span>
+                </span>
+                <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 click no-pad"
+                      (click)="sortModules('ranking','countRanking')">
+                    <span class="ellipsis">Ranking</span>
+                    <span class="header-icon"
+                          *ngIf="reportService.messageSort.newSort == 'ranking'">
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
+                    </span>
+                </span>
+                <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad" >
+                </span>
+                <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
+                      (click)="sortModules('status_type','')">
+                    <span class="ellipsis">Review Status</span>
+                    <span class="header-icon"
+                          *ngIf="reportService.messageSort.newSort == 'status_type'">
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
+                    </span>
+                </span>
+            </div>
+
             <div class="location-view-list d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
                 <table *ngIf="tabOpen == 'metric'" class="file-line-container d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <span *ngIf="source.metrics && source.metrics.length > 0">
@@ -68,36 +99,6 @@
 
                 <table *ngIf="tabOpen == 'message'" class="file-line-container d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                     <span *ngIf="reportService.message" class="all-sources-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                        <span class="tab-header d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                            <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 click no-pad" (click)="sortModules('line', '')">
-                                <span class="ellipsis">Line</span>
-                                <span class="header-icon"
-                                      *ngIf="reportService.messageSort.newSort == 'line'">
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
-                                </span>
-                            </span>
-                            <span class="center d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 click no-pad"
-                                  (click)="sortModules('ranking','countRanking')">
-                                <span class="ellipsis">Ranking</span>
-                                <span class="header-icon"
-                                      *ngIf="reportService.messageSort.newSort == 'ranking'">
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
-                                </span>
-                            </span>
-                            <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 click no-pad" >
-                            </span>
-                            <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
-                                  (click)="sortModules('status_type','')">
-                                <span class="ellipsis">Review Status</span>
-                                <span class="header-icon"
-                                      *ngIf="reportService.messageSort.newSort == 'status_type'">
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
-                                </span>
-                            </span>
-                        </span>
 
                         <span *ngFor="let mySource of reportService.message.sources;trackBy: trackSrc"
                               class=" d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
@@ -112,19 +113,22 @@
                                         <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
                                             {{message.line}}:{{message.col_begin}}
                                         </span>
-                                        <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad ellipsis">
+                                        <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad ellipsis" [ngClass]="message.ranking.name">
                                             {{message.ranking.name}}
                                         </span>
                                         <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad" >
                                             {{message.name}}
                                         </span>
                                         <span class="user-review d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad" >
-                                            {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
-                                        </span>
-                                        <span  class="review-history d-inline-block" *ngIf="message.review_history" >
-                                            <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
-                                                  (click)="ShowReviewHistory(message)">
-                                                <mat-icon>history</mat-icon>
+                                            <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="message.user_review ? message.user_review.status : ''">
+                                                {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
+                                            </span>
+
+                                            <span  class="review-history d-inline-block" *ngIf="message.review_history" >
+                                                <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
+                                                      (click)="ShowReviewHistory(message)">
+                                                    <mat-icon>history</mat-icon>
+                                                </span>
                                             </span>
                                         </span>
                                     </span>
@@ -138,37 +142,6 @@
                 <table *ngIf="tabOpen == 'messages'" class="file-line-container d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                     <span class="all-sources-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                           *ngIf="reportService.message && reportService.message._ui_total_message_count > 0 || !reportService.message._ui_total_message_count">
-
-                        <span class="tab-header d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                            <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 click no-pad" (click)="sortModules('line', '')">
-                                <span class="ellipsis">Name</span>
-                                <span class="header-icon"
-                                      *ngIf="reportService.messageSort.newSort == 'line'">
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
-                                </span>
-                            </span>
-                            <span class="center d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 click no-pad"
-                                  (click)="sortModules('ranking','countRanking')">
-                                <span class="ellipsis">Ranking</span>
-                                <span class="header-icon"
-                                      *ngIf="reportService.messageSort.newSort == 'ranking'">
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
-                                </span>
-                            </span>
-                            <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 click no-pad">
-                            </span>
-                            <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
-                                  (click)="sortModules('status_type','')">
-                                <span class="ellipsis">Review Status</span>
-                                <span class="header-icon"
-                                      *ngIf="reportService.messageSort.newSort == 'status_type'">
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
-                                    <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
-                                </span>
-                            </span>
-                        </span>
 
                         <span *ngFor="let mySource of reportService.message.sources;trackBy: trackSrc"
                               class=" d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
@@ -201,21 +174,25 @@
                                             <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
                                                 {{message.line}}:{{message.col_begin}}
                                             </span>
-                                            <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad ellipsis">
+                                            <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad ellipsis" [ngClass]="message.ranking.name">
                                                 {{message.ranking.name}}
                                             </span>
                                             <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad" >
                                                 {{message.name}}
                                             </span>
                                             <span class="user-review d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad" >
-                                                {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
-                                            </span>
-                                            <span  class="review-history d-inline-block" *ngIf="message.review_history" >
-                                                <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
-                                                      (click)="ShowReviewHistory(message)">
-                                                    <mat-icon>history</mat-icon>
+                                                <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="message.user_review ? message.user_review.status : ''">
+                                                    {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
+                                                </span>
+
+                                                <span  class="review-history d-inline-block" *ngIf="message.review_history" >
+                                                    <span [ngClass]="message.review_history.length == 0 ? 'inactive' : ''" class="history-span"
+                                                          (click)="ShowReviewHistory(message)">
+                                                        <mat-icon>history</mat-icon>
+                                                    </span>
                                                 </span>
                                             </span>
+
                                         </span>
                                     </span>
                                 </span>

@@ -185,6 +185,7 @@ filter-selector.tool-selector .filter-selector {
 
     .mat-dialog-container {
         overflow: hidden;
+        background: transparent;
     }
 
     .cdk-overlay-pane {
@@ -283,27 +284,22 @@ filter-selector.tool-selector .filter-selector {
         }
 
         .Info {
-            /* padding: 5px;*/
             background-color: var(--Info);
             text-align: center;
         }
         .Unspecified {
-            /*   padding: 5px;*/
             background-color: var(--Unspecified);
             text-align: center;
         }
         .Medium {
-            /*  padding: 5px;*/
             background-color: var(--Medium);
             text-align: center;
         }
         .Low {
-            /*   padding: 5px;*/
             background-color: var(--Low);
             text-align: center;
         }
         .High {
-            /*  padding: 5px;*/
             background-color: var(--High);
             text-align: center;
         }
