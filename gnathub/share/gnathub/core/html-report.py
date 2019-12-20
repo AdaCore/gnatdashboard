@@ -124,31 +124,34 @@ class HTMLReport(Plugin, Reporter):
             self.log.debug('code index saved as %s', dest)
             self.info('HTML report code generated in %s', dest)
 
-            # Call to codepeer_bridge for offline mode
-            self.log.debug("Export info from codepeer_bridge")
-            dest = os.path.join(GNAThub.Project.object_dir(),
-                                'gnathub', 'html-report',
-                                'data', 'codepeer_review.xml')
-            name = 'codepeer_bridge'
-            cmd = ['codepeer_bridge',
-                   '--output-dir=' + GNAThub.output_dir(),
-                   '--db-dir=' + GNAThub.db_dir(),
-                   '--export-reviews=' + dest]
-            self.log.debug('Codepeer_bridge file generated in %s', dest)
-            self.info('Codepeer_bridge file generated in %s', dest)
-            GNAThub.Run(name, cmd)
+            codepeer_obj_dir = os.path.join(GNAThub.Project.object_dir(),
+                                            'codepeer')
+            if os.path.isdir(codepeer_obj_dir):
+                # Call to codepeer_bridge for offline mode
+                self.log.debug("Export info from codepeer_bridge")
+                dest = os.path.join(GNAThub.Project.object_dir(),
+                                    'gnathub', 'html-report',
+                                    'data', 'codepeer_review.xml')
+                name = 'codepeer_bridge'
+                cmd = ['codepeer_bridge',
+                       '--output-dir=' + GNAThub.output_dir(),
+                       '--db-dir=' + GNAThub.db_dir(),
+                       '--export-reviews=' + dest]
+                self.log.debug('Codepeer_bridge file generated in %s', dest)
+                self.info('Codepeer_bridge file generated in %s', dest)
+                GNAThub.Run(name, cmd)
 
-            # Get codepeer_run file
-            copy_file = os.path.join(
-             GNAThub.Project.object_dir(), 'codepeer',
-             'codepeer_run')
-            dest = os.path.join(GNAThub.Project.object_dir(),
-                                'gnathub', 'html-report',
-                                'data')
-            cmd = ['cp', copy_file, dest]
-            self.log.debug('Codepeer_run file copied in %s', dest)
-            self.info('Codepeer_run file copied in %s', dest)
-            GNAThub.Run(name, cmd)
+                # Get codepeer_run file
+                copy_file = os.path.join(GNAThub.Project.object_dir(),
+                                         'codepeer',
+                                         'codepeer_run')
+                dest = os.path.join(GNAThub.Project.object_dir(),
+                                    'gnathub', 'html-report',
+                                    'data')
+                cmd = ['cp', copy_file, dest]
+                self.log.debug('Codepeer_run file copied in %s', dest)
+                self.info('Codepeer_run file copied in %s', dest)
+                GNAThub.Run(name, cmd)
 
         except IOError as why:
             self.log.exception('failed to generate the HTML report')

@@ -157,8 +157,17 @@ export class SharedReport {
         this.http.get(this.url + 'codepeer-passed')
             .subscribe(
             data => {
-                if (data.status == 200) {
+                if (data.status != 204) {
                     this.isCodepeer = true;
+
+                    // If version of WebUI doesn't match version of Codepeer
+                    if (data.status == 202) {
+                            this.errorToShow.push("You are running an old html interface with new codepeer results.");
+                            this.errorToShow.push("This could trigger some error in the web interface.");
+                            this.errorToShow.push("To ensure the best experience,");
+                            this.errorToShow.push(" please re-run codepeer with the -html or -html-only flag");
+                            this.triggerError()
+                    }
                     this.getUserReview();
                 }
             }, error => {

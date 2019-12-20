@@ -23,6 +23,8 @@ import collections
 import csv
 import os
 import os.path
+import subprocess
+import re
 
 import GNAThub
 from GNAThub import Console, Plugin, Reporter, Runner, ToolArgsPlaceholder
@@ -140,6 +142,21 @@ class CodePeer(Plugin, Runner, Reporter):
             * ``GNAThub.EXEC_SUCCESS``: on successful execution and analysis
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
+
+        # Get codepeer version
+        dest = os.path.join(self.output_dir, 'version.txt')
+        cmd = 'codepeer -v'
+        output = subprocess.check_output(cmd, shell=True)
+        version = ""
+        try:
+            version = re.match(".* ([0-9]+\.[0-9]+[w]?) .*",
+                               output).groups()[0]
+        except Exception as e:
+            print e
+        self.log.debug('Codepeer version put in %s', dest)
+        self.info('Codepeer version put in %s', dest)
+        with open(dest, 'w') as fd:
+            fd.write(version)
 
         # Clear existing references only if not incremental run
         if not GNAThub.incremental():

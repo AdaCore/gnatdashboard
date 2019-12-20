@@ -20,6 +20,8 @@ from logging.config import dictConfig
 
 import GNAThub
 import os
+import subprocess
+import re
 
 # GLOBAL VARIABLE
 # The repository where .json files are supposed to be located
@@ -29,6 +31,7 @@ OUTPUT_DIR = GNAThub.output_dir()
 DB_DIR = GNAThub.db_dir()
 OBJECT_DIR = GNAThub.Project.object_dir()
 PROJECT_PATH = GNAThub.Project.path()
+CODEPEER_OBJ_DIR = os.path.join(GNAThub.Project.object_dir(), 'codepeer')
 
 # The info for the logs
 GNATHUB_LOG = GNAThub.logs()
@@ -146,17 +149,37 @@ def _get_online():
     return resp
 
 
+def getCodepeerVersion(data):
+    tmp = ""
+    try:
+        tmp = re.match(".* ([0-9]+\.[0-9]+[w]?) .*", data).groups()[0]
+    except Exception as e:
+        print e
+    return tmp
+
+
 @app.route('/codepeer-passed', methods=['GET'])
 def _get_codepeer():
-    cmd = ('codepeer'
-           + ' -P' + PROJECT_PATH
-           + ' -show-header-only'
-           + ' -output-msg-only > /dev/null')
-    ret = os.system(cmd)
+    cmd = 'codepeer' + ' -v'
+    output = subprocess.check_output(cmd, shell=True)
+    actual_version = getCodepeerVersion(output)
+    old_version = ""
 
-    if (ret == 0):
-        app.logger.debug("Codepeer executable found")
+    version_path = os.path.join(CODEPEER_OBJ_DIR, 'version.txt')
+
+    if os.path.isfile(version_path):
+        with open(version_path, 'r') as myFile:
+            old_version = myFile.read()
+    else:
+        app.logger.error("File version.txt not found.")
+
+    if (actual_version != "" and actual_version == old_version):
+        app.logger.debug("Codepeer executable found and good version used")
         resp = make_response("OK", 200)
+        return resp
+    elif (actual_version != ""):
+        app.logger.debug("Codepeer executable found but bad version used")
+        resp = make_response("OK", 202)
         return resp
     else:
         app.logger.debug("Codepeer executable not found")
