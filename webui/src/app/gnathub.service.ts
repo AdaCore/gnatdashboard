@@ -2,12 +2,10 @@ import {throwError as observableThrowError, Observable } from 'rxjs';
 import {map, catchError} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import xml2js from 'xml2js'
+import xml2js from 'xml2js';
 
-import { IAnnotatedSourceFile, IFilterIndex, ICodeIndex, IMessageIndex } from 'gnat';
-
-
-
+import { IAnnotatedSourceFile, IFilterIndex, ICodeIndex,
+         IMessageIndex, IReviewUser } from 'gnat';
 
 @Injectable()
 export class GNAThubService {
@@ -18,25 +16,25 @@ export class GNAThubService {
     public getFilter(): Observable<IFilterIndex> {
         return this.http.get('data/filter.json').pipe(
             map(this.handleResults),
-            catchError(this.handleError),);
+            catchError(this.handleError), );
     }
     public getCode(): Observable<ICodeIndex> {
         return this.http.get('data/code.json').pipe(
             map(this.handleResults),
-            catchError(this.handleError),);
+            catchError(this.handleError), );
     }
     public getMessage(): Observable<IMessageIndex> {
         return this.http.get('data/message.json').pipe(
             map(this.handleResults),
-            catchError(this.handleError),);
+            catchError(this.handleError), );
     }
     public getReview(): Observable<any> {
         return this.http.get('data/codepeer_review.xml').pipe(
             map(this.convertToJson),
-            catchError(this.handleError),);
+            catchError(this.handleError), );
     }
 
-    public getSource(filename): Observable<IAnnotatedSourceFile> {
+    public getSource(filename: string): Observable<IAnnotatedSourceFile> {
         return this.http.get(`data/src/${filename}.json`).pipe(
             map(this.handleResults),
             catchError(this.handleError));
@@ -48,39 +46,39 @@ export class GNAThubService {
             catchError(this.handleError));
     }
 
-    private handleResults(res: Response) {
+    private handleResults(res: Response): any {
         return res.json() || {};
     }
 
-    private handleError(error: any) {
-        let errMsg = (error.message) ?
+    private handleError(error: any): any {
+        let errMsg: string = (error.message) ?
             error.message : error.status ?
             `${error.status} - ${error.statusText}` : 'Server error';
         console.error(errMsg);
         return observableThrowError(errMsg);
     }
 
-    private createDisplayName(name){
-        let myArray = name.split('_');
-        let display_name = '';
-        myArray.forEach(function(word, idx){
-            display_name += word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-            if (idx < myArray.length - 1){ display_name += ' ';}
+    private createDisplayName(name: string): string {
+        let myArray: string[] = name.split('_');
+        let displayName: string = '';
+        myArray.forEach(function(word: string, idx: number): void{
+            displayName += word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            if (idx < myArray.length - 1){ displayName += ' '; }
         });
-        return display_name;
+        return displayName;
     }
 
-    private createReview(review){
-        let myReview = [];
-        let statusPriority = {
-            'Bug': 5,
-            'Pending': 4,
-            'Intentional': 3,
-            'False_Positive': 2,
-            'Not_A_Bug': 1
+    private createReview(review: any): any {
+        let myReview: IReviewUser[] = [];
+        let statusPriority: any = {
+            Bug: 5,
+            Pending: 4,
+            Intentional: 3,
+            False_Positive: 2,
+            Not_A_Bug: 1
         };
 
-        let lastReview = {
+        let lastReview: IReviewUser = {
             author: '',
             status: '',
             status_type: 0,
@@ -90,9 +88,11 @@ export class GNAThubService {
             display_name: ''
         };
         if (review.audit.$){
-            let statusType = review.audit.$.status && statusPriority[review.audit.$.status] ? statusPriority[review.audit.$.status] : 0;
+            let statusType: number = review.audit.$.status
+                                     && statusPriority[review.audit.$.status] ?
+                                     statusPriority[review.audit.$.status] : 0;
 
-            let tmpReview = {
+            let tmpReview: IReviewUser = {
                 author: review.audit.$.approved,
                 status: review.audit.$.status,
                 status_type: statusType,
@@ -101,13 +101,14 @@ export class GNAThubService {
                 message: review.audit._,
                 display_name: this.createDisplayName(review.audit.$.status)
             };
-            myReview.push(tmpReview)
+            myReview.push(tmpReview);
             lastReview = tmpReview;
         } else if (review.audit[0].$) {
-            review.audit.forEach(function(tmp){
-                let statusType = tmp.$.status && statusPriority[tmp.$.status] ? statusPriority[tmp.$.status] : 0;
+            review.audit.forEach(function(tmp: any): void {
+                let statusType: number = tmp.$.status && statusPriority[tmp.$.status] ?
+                                         statusPriority[tmp.$.status] : 0;
 
-                let tmpReview = {
+                let tmpReview: IReviewUser = {
                     author: tmp.$.approved,
                     status: tmp.$.status,
                     status_type: statusType,
@@ -116,41 +117,44 @@ export class GNAThubService {
                     message: tmp._,
                     display_name: this.createDisplayName(tmp.$.status)
                 };
-                myReview.push(tmpReview)
+                myReview.push(tmpReview);
                 if (lastReview.date < tmpReview.date) {
                     lastReview = tmpReview;
                 }
             }.bind(this));
         } else {
-            console.log("[Error] convertToJson : Problem to add this user_review : ", review);
+            console.log('[Error] convertToJson : Problem to add this user_review : ', review);
         }
-        let tmp = {
+        let tmp: any = {
             review_history: myReview,
             user_review: lastReview
         };
         return tmp;
     }
 
-    public convertToJson(res: any) {
-        let user_review = [];
+    public convertToJson(res: any): IReviewUser[] {
+        let userReview: IReviewUser[] = [];
         xml2js.parseString(res._body, { explicitArray: false }, (error, result) => {
             if (error) {
-                console.log("[Error] convertToJson : Problem to parse :", error);
+                console.log('[Error] convertToJson : Problem to parse :', error);
             } else {
-                if (result && result.audit_trail && result.audit_trail.message && result.audit_trail.message.length > 0){
-                    result.audit_trail.message.forEach(function(review){
-                        let tmp = this.createReview(review);
-                        user_review[review.$.identifier] = tmp;
+                if (result && result.audit_trail && result.audit_trail.message
+                    && result.audit_trail.message.length > 0){
+                    result.audit_trail.message.forEach(function(review: any): void {
+                        let tmp: any = this.createReview(review);
+                        userReview[review.$.identifier] = tmp;
                     }.bind(this));
-                } else if (result && result.audit_trail && result.audit_trail.message && result.audit_trail.message.audit) {
-                    let tmp = this.createReview(result.audit_trail.message);
-                    user_review[result.audit_trail.message.$.identifier] = tmp;
+                } else if (result && result.audit_trail && result.audit_trail.message
+                           && result.audit_trail.message.audit) {
+                    let tmp: any = this.createReview(result.audit_trail.message);
+                    userReview[result.audit_trail.message.$.identifier] = tmp;
                 } else {
-                    console.log("[Error] gnathub.service:convertToJson : result.audit_trail.message should not be empty.");
-                    console.log("Please see result : ", result);
+                    console.log('[Error] gnathub.service:convertToJson : '
+                                + 'result.audit_trail.message should not be empty.');
+                    console.log('Please see result : ', result);
                 }
             }
         });
-        return user_review;
+        return userReview;
     }
 }

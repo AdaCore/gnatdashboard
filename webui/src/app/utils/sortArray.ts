@@ -1,8 +1,13 @@
+import { ICodeIndex, IModule, ISourceDir,
+         ISourceNav, ISource, IMessageIndex,
+         IMessage, ISort } from 'gnat';
+
 /*
  *  Sort the array containing all the information
  *  for code navigation according to the given filter
  */
-export function sortCodeArray(newFilter, oldFilter, projectArray) {
+export function sortCodeArray(newFilter: ISort, oldFilter: ISort,
+                              projectArray: [IModule]): [IModule] {
     if ((oldFilter.newSort === newFilter.newSort
          || oldFilter.otherSort === newFilter.otherSort) && !newFilter.order) {
         newFilter.order = oldFilter.order * -1;
@@ -12,7 +17,7 @@ export function sortCodeArray(newFilter, oldFilter, projectArray) {
         newFilter.order = 1;
     }
 
-    let property = checkProperty(projectArray, newFilter);
+    let property: string = checkProperty(projectArray, newFilter);
 
     if (property != null) {
         projectArray.sort((a: any, b: any) => {
@@ -25,8 +30,8 @@ export function sortCodeArray(newFilter, oldFilter, projectArray) {
     }
 
     // Map of folders to array of folders
-    projectArray.forEach(function(project){
-        let folderArray =  project.source_dirs;
+    projectArray.forEach(function(project: IModule): void {
+        let folderArray: [ ISourceDir ] =  project.source_dirs;
 
         property = checkProperty(folderArray, newFilter);
 
@@ -41,13 +46,12 @@ export function sortCodeArray(newFilter, oldFilter, projectArray) {
         }
 
         // Map of files to array of files
-        folderArray.forEach(function(folder){
-            let fileArray = folder.sources;
+        folderArray.forEach(function(folder: ISourceDir): void {
+            let fileArray: [ ISource ] = folder.sources;
             folder.name =
-                (folder.name != project._source_dirs_common_prefix ?
+                (folder.name !== project._source_dirs_common_prefix ?
                  folder.name.replace(project._source_dirs_common_prefix, '')
                  : '.');
-
 
             property = checkProperty(fileArray, newFilter);
 
@@ -72,18 +76,18 @@ export function sortCodeArray(newFilter, oldFilter, projectArray) {
     return projectArray;
 }
 
-function checkProperty(myArray, newFilter) {
-    let property = myArray[0][newFilter.newSort] != null ?
+function checkProperty(myArray: any, newFilter: ISort): string {
+    let property: string = myArray[0][newFilter.newSort] != null ?
         newFilter.newSort : (myArray[0][newFilter.otherSort] != null ?
                              newFilter.otherSort : null);
     return property;
 }
 
-function sortRanking(a, b){
-    let tmp = 0;
+function sortRanking(a: number, b: number): number{
+    let tmp: number = 0;
     if (a < b){
         tmp = -1;
-    } else if(a > b){
+    } else if (a > b){
         tmp = 1;
     }
     return tmp;
@@ -93,7 +97,8 @@ function sortRanking(a, b){
  *  Sort the array containing all the information
  *  for message navigation according to the given filter
  */
-export function sortMessageArray(newFilter, oldFilter, sourceArray) {
+export function sortMessageArray(newFilter: ISort, oldFilter: ISort,
+                                 sourceArray: [ISourceNav]): [ISourceNav] {
 
     if ((oldFilter.newSort === newFilter.newSort
          || oldFilter.otherSort === newFilter.otherSort) && !newFilter.order) {
@@ -104,18 +109,19 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
         newFilter.order = 1;
     }
 
-    let property = checkProperty(sourceArray, newFilter);
-    if (property == "countRanking"){
-        sourceArray.sort((a: any, b: any) => {
-            let tmp = sortRanking(a.countRanking.High,b.countRanking.High);
-            if (tmp == 0){
-                tmp = sortRanking(a.countRanking.Medium,b.countRanking.Medium);
-                if (tmp == 0){
-                    tmp = sortRanking(a.countRanking.Low,b.countRanking.Low);
-                    if (tmp == 0){
-                        tmp = sortRanking(a.countRanking.Info,b.countRanking.Info);
-                        if (tmp == 0){
-                            tmp = sortRanking(a.countRanking.Unspecified,b.countRanking.Unspecified);
+    let property: string = checkProperty(sourceArray, newFilter);
+    if (property === 'countRanking'){
+        sourceArray.sort((a: ISourceNav, b: ISourceNav) => {
+            let tmp: number = sortRanking(a.countRanking.High, b.countRanking.High);
+            if (tmp === 0){
+                tmp = sortRanking(a.countRanking.Medium, b.countRanking.Medium);
+                if (tmp === 0){
+                    tmp = sortRanking(a.countRanking.Low, b.countRanking.Low);
+                    if (tmp === 0){
+                        tmp = sortRanking(a.countRanking.Info, b.countRanking.Info);
+                        if (tmp === 0){
+                            tmp = sortRanking(a.countRanking.Unspecified,
+                                              b.countRanking.Unspecified);
                         }
                     }
                 }
@@ -123,7 +129,7 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
             return tmp * newFilter.order;
         });
     } else if (property != null) {
-        sourceArray.sort((a: any, b: any) => {
+        sourceArray.sort((a: ISourceNav, b: ISourceNav) => {
             if (a[property] < b[property]) {
                 return -1 * newFilter.order;
             }
@@ -132,22 +138,22 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
             }
             return 0;
         });
-    } else if (newFilter.otherSort != '') {
+    } else if (newFilter.otherSort !== '') {
         console.log('bad filter', newFilter, sourceArray);
     }
 
-    sourceArray.forEach(function(source){
-        if (source.messages && newFilter.newSort != "status_type"){
-            let messageArray =  source.messages;
+    sourceArray.forEach(function(source: ISourceNav): void {
+        if (source.messages && newFilter.newSort !== 'status_type'){
+            let messageArray: [IMessage] =  source.messages;
             property = checkProperty(messageArray, newFilter);
-            if (property == "ranking") {
-                messageArray.sort((a: any, b: any) => {
+            if (property === 'ranking') {
+                messageArray.sort((a: IMessage, b: IMessage) => {
                     if (a['ranking']['id'] < b['ranking']['id']) { return -1 * newFilter.order; }
                     if (a['ranking']['id'] > b['ranking']['id']) { return 1 * newFilter.order; }
                     return 0;
                 });
             } else if (property != null) {
-                messageArray.sort((a: any, b: any) => {
+                messageArray.sort((a: IMessage, b: IMessage) => {
                     if (a[property] < b[property]) { return -1 * newFilter.order; }
                     if (a[property] > b[property]) { return 1 * newFilter.order; }
                     return 0;
@@ -155,11 +161,11 @@ export function sortMessageArray(newFilter, oldFilter, sourceArray) {
             }
             source.messages = messageArray;
         } else if (source.messages
-                   && newFilter.newSort == "status_type") {
-            let messageArray =  source.messages;
+                   && newFilter.newSort === 'status_type') {
+            let messageArray: [IMessage] =  source.messages;
             messageArray.sort((a: any, b: any) => {
-                var typeA = a['status_type'] ? a['status_type'] : 0;
-                var typeB = b['status_type'] ? b['status_type'] : 0;
+                let typeA: number = a['status_type'] ? a['status_type'] : 0;
+                let typeB: number = b['status_type'] ? b['status_type'] : 0;
                 if (typeA < typeB) { return -1 * newFilter.order; }
                 if (typeA > typeB) { return 1 * newFilter.order; }
                 return 0;

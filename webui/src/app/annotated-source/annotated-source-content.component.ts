@@ -9,7 +9,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { AnnotatedSourceComponent } from './annotated-source.component'
+import { AnnotatedSourceComponent } from './annotated-source.component';
 
 import {
     IAnnotatedSourceLine,
@@ -30,15 +30,15 @@ export class AnnotatedSourceContentComponent implements OnDestroy, OnInit, OnCha
     @Input() public tools: { [toolId: number]: ITool };
     @Input() public coverage: { [line: number]: ICoverage };
     @Input() public inlineAnnotations: { [line: number]: MessagesByToolId };
-    @Input() public displayMessages;
+    @Input() public displayMessages: any[];
 
     public selectedLine: number;
     private paramSubscription: Subscription;
 
     constructor(private route: ActivatedRoute,
-                 private source: AnnotatedSourceComponent) {}
+                private source: AnnotatedSourceComponent) {}
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.paramSubscription = this.route.params.subscribe(params => {
             if (+params['line']){
                 this.selectedLine = +params['line'];
@@ -46,7 +46,7 @@ export class AnnotatedSourceContentComponent implements OnDestroy, OnInit, OnCha
         });
     }
 
-    public ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges): void {
 
         if (changes.lines && !changes.lines.firstChange){
             this.lines = changes.lines.currentValue;
@@ -62,13 +62,13 @@ export class AnnotatedSourceContentComponent implements OnDestroy, OnInit, OnCha
 
     }
 
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         if (this.paramSubscription) {
             this.paramSubscription.unsubscribe();
         }
     }
 
-    public trackLine(index, line){
+    public trackLine(index: number, line: any): number {
         return line ? line.number : undefined;
     }
 }

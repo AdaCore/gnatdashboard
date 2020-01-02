@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
     styleUrls: [ 'errors.scss' ]
 })
 export class MissingSourceErrorComponent {
-    @Input() public filename;
+    @Input() public filename: string;
 }

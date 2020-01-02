@@ -29,18 +29,18 @@ export class AnnotatedSourceLineComponent implements OnInit, OnChanges {
     constructor(private sanitizer: DomSanitizer) {}
 
     /** @override */
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.safeHtml =
             this.sanitizer.bypassSecurityTrustHtml(this.line.html_content);
         if (this.coverage) {
-            const status = this.coverage.status.toLowerCase();
+            const status: string = this.coverage.status.toLowerCase();
             this.isNoCode = status === 'no_code';
             this.isCovered = status === 'covered';
             this.isNotCovered = status === 'not_covered';
         }
     }
 
-    public ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges): void {
         if (changes.line && !changes.line.firstChange){
             this.line = changes.line.currentValue;
         }else if (changes.coverage && !changes.coverage.firstChange){

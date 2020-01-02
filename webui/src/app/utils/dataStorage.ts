@@ -1,51 +1,58 @@
-var filterName = "filter-";
-var messageSortName = "messageExplorer-sort";
-var projectSortName = "projectExplorer-sort";
+import { IFilterIndex, ISort } from 'gnat';
 
-export function getFilterItem(item): Boolean {
-    let itemName = filterName + item.name;
-    let itemValue = localStorage.getItem(itemName);
+const filterName: string = 'filter-';
+const messageSortName: string = 'messageExplorer-sort';
+const projectSortName: string = 'projectExplorer-sort';
+
+export function getFilterItem(item: any): boolean {
+    let itemName: string = filterName + item.name;
+    let itemValue: string = localStorage.getItem(itemName);
     return JSON.parse(itemValue);
 }
 
-function getStoredFilterItems(items) {
-    items.forEach(function(item){
-        let itemName = filterName + item.name;
-        let itemValue = localStorage.getItem(itemName);
+function getStoredFilterItems(items: [any]): void {
+    items.forEach(function(item: any): void {
+        let itemName: string = filterName + item.name;
+        let itemValue: string = localStorage.getItem(itemName);
         item._ui_unselected = JSON.parse(itemValue);
     });
 }
 
-export function getStoredFilter(filter) {
-    if (filter.tools)
+export function getStoredFilter(filter: IFilterIndex): void {
+    if (filter.tools){
         getStoredFilterItems(filter.tools);
-    if (filter.rules)
+    }
+    if (filter.rules){
         getStoredFilterItems(filter.rules);
-    if (filter.properties)
+    }
+    if (filter.properties){
         getStoredFilterItems(filter.properties);
-    if (filter.ranking)
+    }
+    if (filter.ranking){
         getStoredFilterItems(filter.ranking);
-    if (filter.review_status)
+    }
+    if (filter.review_status){
         getStoredFilterItems(filter.review_status);
+    }
 }
 
-export function storeFilterItem(name, itemState) {
-    let itemName = filterName + name;
+export function storeFilterItem(name: string, itemState: boolean): void {
+    let itemName: string = filterName + name;
     if (itemState){
-        localStorage.setItem(itemName, itemState);
+        localStorage.setItem(itemName, itemState.toString());
     } else {
         localStorage.removeItem(itemName);
     }
 
 }
 
-export function storeMessageSort(value) {
-    let itemValue = JSON.stringify(value);
+export function storeMessageSort(value: ISort): void {
+    let itemValue: string  = JSON.stringify(value);
     localStorage.setItem(messageSortName, itemValue);
 }
 
-export function getStoredMessageSort(): Object {
-    let itemValue = localStorage.getItem(messageSortName);
+export function getStoredMessageSort(): ISort {
+    let itemValue: string  = localStorage.getItem(messageSortName);
     if (itemValue != null){
         return JSON.parse(itemValue);
     } else {
@@ -53,13 +60,13 @@ export function getStoredMessageSort(): Object {
     }
 }
 
-export function storeProjectSort(value) {
-    let itemValue = JSON.stringify(value);
+export function storeProjectSort(value: ISort): void {
+    let itemValue: string  = JSON.stringify(value);
     localStorage.setItem(projectSortName, itemValue);
 }
 
-export function getStoredProjectSort(): Object {
-    let itemValue = localStorage.getItem(projectSortName);
+export function getStoredProjectSort(): ISort {
+    let itemValue: string  = localStorage.getItem(projectSortName);
     if (itemValue != null){
         return JSON.parse(itemValue);
     } else {

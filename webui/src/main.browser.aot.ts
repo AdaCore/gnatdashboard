@@ -19,7 +19,7 @@ export function main(): Promise<any> {
     .catch((err) => console.error(err));
 }
 
-export function bootstrapDomReady() {
+export function bootstrapDomReady(): void {
   document.addEventListener('DOMContentLoaded', main);
 }
 

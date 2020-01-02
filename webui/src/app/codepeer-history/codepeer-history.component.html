@@ -1,12 +1,12 @@
 <!-- Spinner animation -->
 <spinner
-         *ngIf="!reportService.codepeer_history && !isReportFetchError"
+         *ngIf="!reportService.codepeerHistory && !isReportFetchError"
          caption="Loading report...">
 </spinner>
 <!-- Error handling -->
 <missing-report-error *ngIf="isReportFetchError"></missing-report-error>
 <!-- About display -->
-<div *ngIf="reportService.codepeer_history" class="layout-page d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+<div *ngIf="reportService.codepeerHistory" class="layout-page d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
          <main class="codepeer-history d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
 
                   <span class="change-section-button">
@@ -41,9 +41,9 @@
                            <span class="run-filter d-inline-block col-lg-5 col-md-5 col-sm-6 col-xs-6 no-pad">
                                     <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                                              Show run between
-                                             <input min="{{min_run}}" max="{{max_run_filter-1}}" type="number" [(ngModel)]="min_run_filter">
+                                             <input min="{{minRun}}" max="{{maxRunFilter-1}}" type="number" [(ngModel)]="minRunFilter">
                                              and
-                                             <input min="{{min_run_filter+1}}" max="{{max_run}}" type="number" [(ngModel)]="max_run_filter">
+                                             <input min="{{minRunFilter+1}}" max="{{maxRun}}" type="number" [(ngModel)]="maxRunFilter">
                                              <button (click)="applyRunFilter()">
                                                       Validate
                                              </button>
@@ -52,9 +52,9 @@
                            <span class="date-filter d-inline-block col-lg-5 col-md-5 col-sm-6 col-xs-6 no-pad">
                                     <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                                              Show run between
-                                             <input min="{{min_date}}" max="{{max_date_filter}}" type="date" [(ngModel)]="min_date_filter">
+                                             <input min="{{minDate}}" max="{{maxDateFilter}}" type="date" [(ngModel)]="minDateFilter">
                                              and
-                                             <input min="{{min_date_filter}}" max="{{max_date}}" type="date" [(ngModel)]="max_date_filter">
+                                             <input min="{{minDateFilter}}" max="{{maxDate}}" type="date" [(ngModel)]="maxDateFilter">
                                              <button (click)="applyDateFilter()">
                                                       Validate
                                              </button>
@@ -63,7 +63,7 @@
                            <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" style="margin-bottom: 20px">
                                     <ngx-charts-area-chart-stacked class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                                                    [scheme]="colorScheme"
-                                                                   [results]="chart_data"
+                                                                   [results]="chartData"
                                                                    [gradient]="gradient"
                                                                    [xAxis]="showXAxis"
                                                                    [yAxis]="showYAxis"
@@ -125,7 +125,7 @@
                                                       <span class="col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">low</span>
                                              </th>
                                     </tr>
-                                    <tr *ngFor="let run of reportService.codepeer_history; let idx = index"
+                                    <tr *ngFor="let run of reportService.codepeerHistory; let idx = index"
                                         class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                         id="Run{{ run.id }}"
                                         [ngClass]="(selectedRun === run.id ? 'selected' : (idx % 2 == 0 ? 'run1' : 'run2'))">

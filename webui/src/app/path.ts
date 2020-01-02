@@ -15,12 +15,12 @@ export function commonprefix(paths: string[]): string {
 
     // |concat()| creates a copy of the array and returns it, and |sort()| works
     // in place (on the copy) and returns the input array.
-    let A = paths.concat().sort();
+    let A: string[] = paths.concat().sort();
 
     // Compare the first and last string now that the array is sorted.
-    let i = 0;
-    let a1 = A[0];
-    let a2 = A[A.length - 1];
+    let i: number = 0;
+    let a1: string = A[0];
+    let a2: string = A[A.length - 1];
     for (; i < a1.length && a1.charAt(i) === a2.charAt(i); i++) {
         // Loop until exit
     }

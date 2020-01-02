@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { ErrorDialog } from './error-dialog.component';
+import { ErrorDialogComponent } from './error-dialog.component';
 import { BrowserAnimationsModule } from  '@angular/platform-browser/animations';
 import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Injectable } from '@angular/core';
@@ -10,9 +10,9 @@ export class ErrorDialogsService {
     constructor(private dialog: MatDialog) {}
 
     public showError(): Observable<boolean> {
-        let dialogRef: MatDialogRef<ErrorDialog>;
+        let dialogRef: MatDialogRef<ErrorDialogComponent>;
 
-        dialogRef = this.dialog.open(ErrorDialog);
+        dialogRef = this.dialog.open(ErrorDialogComponent);
 
         return dialogRef.afterClosed();
     }

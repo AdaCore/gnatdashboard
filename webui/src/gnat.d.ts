@@ -20,7 +20,7 @@ declare module 'gnat' {
     export interface IFilter {
         _message_count: number;
         _ui_unselected?: boolean;
-        _ui_selected_message_count: number;
+        _ui_selected_message_count?: number;
     }
 
     // Create the property for the tool filter
@@ -50,10 +50,11 @@ declare module 'gnat' {
         tool_id: number;
     }
 
-    //Create the review for the review filter
+    // Create the review for the review filter
     export interface IReview {
         id: number;
         name: string;
+        display_name: string;
     }
 
     // Now concats the propert for filters and for specific filter
@@ -97,6 +98,7 @@ declare module 'gnat' {
         _total_message_count: number;
         _ui_total_message_count?: number;
         sources: [ ISource ];
+        expand?: boolean;
     }
 
     export interface IModule {
@@ -107,6 +109,7 @@ declare module 'gnat' {
         _source_dirs_common_prefix: string;
         coverage?: number;
         source_dirs: [ ISourceDir ];
+        expand?: boolean;
     }
 
     export interface ICodeIndex {
@@ -117,12 +120,22 @@ declare module 'gnat' {
     //  Part for the message.json (message-navigation)
     // **
 
+    export interface ICountRanking {
+        High: number;
+        Medium: number;
+        Low: number;
+        Info: number;
+        Unspecified: number;
+    }
+
     export interface IReviewUser {
-        author : string;
+        author: string;
         status: string;
+        status_type: number;
         date: string;
         from_source: string;
         message: string;
+        display_name: string;
     }
 
     export interface IMessage {
@@ -131,13 +144,15 @@ declare module 'gnat' {
         col_end: number;
         line: number;
         name: string;
-        properties: IProperty[];
+        status_type: number;
+        properties: [IProperty];
         rule: IRule;
         ranking: IRanking;
         tool_msg_id: number;
         tool: string;
         user_review: IReviewUser;
         review_history: IReviewUser[];
+        hide?: boolean;
     }
 
     export interface ISourceNav {
@@ -146,10 +161,12 @@ declare module 'gnat' {
         full_path: string;
         coverage?: number;
         message_count?: { [toolId: number]: number };
-        messages?: IMessage[];
-        annotations?: IMessage[];
+        messages?: [IMessage];
+        annotations?: [IMessage];
+        countRanking?: ICountRanking;
         _total_message_count: number;
         _ui_total_message_count?: number;
+        expand?: boolean;
     }
 
     export interface IMessageIndex {
@@ -173,7 +190,7 @@ declare module 'gnat' {
         end: number;
         rule: IRule;
         line: number;
-        properties: IProperty[];
+        properties: [IProperty];
         text: string;
         _ui_hidden?: boolean;
     }
@@ -189,11 +206,18 @@ declare module 'gnat' {
         filename: string;
         source_dir: string;
         full_path: string;
-        lines: IAnnotatedSourceLine[];
+        lines: [IAnnotatedSourceLine];
         metrics?: Array<{ [metricId: number]: IMetric }>;
         coverage?: { [line: number]: ICoverage };
         messages?: IAnnotatedSourceMessage[];
         annotations?: IAnnotatedSourceMessage[];
+    }
+
+    // Interface for the sorting instance
+    export interface ISort {
+        otherSort: string;
+        newSort: string;
+        order?: number;
     }
 
 }

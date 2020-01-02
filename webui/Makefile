@@ -51,6 +51,9 @@ install-strip:
 test: $(rootdir)/package.json
 	$(NPM) run test
 
+lint: $(rootdir)/package.json
+	$(NPM) run lint
+
 clean:
 	-$(RMDIR) $(rootdir)/typings
 	-$(RMDIR) $(rootdir)/coverage

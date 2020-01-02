@@ -6,10 +6,11 @@ import {
     IRuleFilter,
     IToolFilter,
     IRankingFilter,
-    IReviewFilter
+    IReviewFilter,
+    ISort
 } from 'gnat';
-import { updateFilter } from '../utils/refreshFilter'
-import { sortMessageArray, sortCodeArray } from '../utils/sortArray'
+import { updateFilter } from '../utils/refreshFilter';
+import { sortMessageArray, sortCodeArray } from '../utils/sortArray';
 
 @Component({
     selector: 'filter-panel',
@@ -22,29 +23,29 @@ export class FilterPanelComponent {
     public isReportFetchError: boolean = false;
     public change: number;
 
-    private projectSort = this.reportService.projectSort;
-    private messageSort = this.reportService.messageSort;
+    private projectSort: ISort = this.reportService.projectSort;
+    private messageSort: ISort = this.reportService.messageSort;
 
     constructor( public reportService: SharedReport) {}
 
-    public openCloseFilterTab() {
-        let button = document.getElementById('chrevonButton');
+    public openCloseFilterTab(): void {
+        let button: HTMLElement = document.getElementById('chrevonButton');
         button.classList.toggle('reduce');
         button.classList.toggle('open');
-        let filter = document.getElementById('filterBar');
+        let filter: HTMLElement = document.getElementById('filterBar');
         filter.classList.toggle('reduce');
         filter.classList.toggle('open');
-        let panel = document.getElementById('filterPanel');
+        let panel: HTMLElement = document.getElementById('filterPanel');
         panel.classList.toggle('reduce');
         panel.classList.toggle('open');
         this.filterOpen = !this.filterOpen;
     }
 
-    private refreshSorting(){
-        let projectSort = this.reportService.projectSort;
-        let messageSort = this.reportService.messageSort;
+    private refreshSorting(): void {
+        let projectSort: ISort = this.reportService.projectSort;
+        let messageSort: ISort = this.reportService.messageSort;
         sortMessageArray(this.messageSort, this.messageSort, this.reportService.message.sources);
-        sortCodeArray(this.projectSort, this.projectSort, this.reportService.code.modules)
+        sortCodeArray(this.projectSort, this.projectSort, this.reportService.code.modules);
     }
 
     /*
@@ -52,8 +53,8 @@ export class FilterPanelComponent {
      *
      * @param event Event fired by <filter-selector> on checkbox status change.
      */
-    public onToolFilterToggle(event: FilterEvent) {
-        const tool = <IToolFilter> event.option;
+    public onToolFilterToggle(event: FilterEvent): void {
+        const tool: IToolFilter = <IToolFilter> event.option;
         this.reportService.filter.tools[event.id]._ui_unselected = !event.checked;
         updateFilter(this.reportService);
         this.refreshSorting();
@@ -64,8 +65,8 @@ export class FilterPanelComponent {
      *
      * @param event Event fired by <filter-selector> on checkbox status change.
      */
-    public onRuleFilterToggle(event: FilterEvent) {
-        const rule = <IRuleFilter> event.option;
+    public onRuleFilterToggle(event: FilterEvent): void {
+        const rule: IRuleFilter = <IRuleFilter> event.option;
         this.reportService.filter.rules[event.id]._ui_unselected = !event.checked;
         updateFilter(this.reportService);
         this.refreshSorting();
@@ -76,8 +77,8 @@ export class FilterPanelComponent {
      *
      * @param event Event fired by <filter-selector> on checkbox status change.
      */
-    public onPropertyFilterToggle(event: FilterEvent) {
-        const property = <IPropertyFilter> event.option;
+    public onPropertyFilterToggle(event: FilterEvent): void {
+        const property: IPropertyFilter = <IPropertyFilter> event.option;
         this.reportService.filter.properties[event.id]._ui_unselected = !event.checked;
         updateFilter(this.reportService);
         this.refreshSorting();
@@ -88,8 +89,8 @@ export class FilterPanelComponent {
      *
      * @param event Event fired by <filter-selector> on checkbox status change.
      */
-    public onRankingFilterToggle(event: FilterEvent) {
-        const rank = <IRankingFilter> event.option;
+    public onRankingFilterToggle(event: FilterEvent): void {
+        const rank: IRankingFilter = <IRankingFilter> event.option;
         this.reportService.filter.ranking[event.id]._ui_unselected = !event.checked;
         updateFilter(this.reportService);
         this.refreshSorting();
@@ -100,8 +101,8 @@ export class FilterPanelComponent {
      *
      * @param event Event fired by <filter-selector> on checkbox status change.
      */
-    public onReviewFilterToggle(event: FilterEvent) {
-        const review = <IReviewFilter> event.option;
+    public onReviewFilterToggle(event: FilterEvent): void {
+        const review: IReviewFilter = <IReviewFilter> event.option;
         this.reportService.filter.review_status[event.id]._ui_unselected = !event.checked;
         updateFilter(this.reportService);
         this.refreshSorting();

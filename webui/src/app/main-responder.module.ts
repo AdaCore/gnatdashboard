@@ -25,11 +25,11 @@ import {
     AnnotatedSourceLineComponent,
     AnnotatedSourceViewComponent
 } from './annotated-source';
-import { ReviewDialog } from './annotated-source/review-dialog.component'
-import { ReviewHistoryDialog } from './annotated-source/review-history-dialog.component'
-import { DialogsService } from './annotated-source/dialog.service'
-import { ErrorDialog } from './error-dialog/error-dialog.component'
-import { ErrorDialogsService } from './error-dialog/error-dialog.service'
+import { ReviewDialogComponent } from './annotated-source/review-dialog.component';
+import { ReviewHistoryDialogComponent } from './annotated-source/review-history-dialog.component';
+import { DialogsService } from './annotated-source/dialog.service';
+import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
+import { ErrorDialogsService } from './error-dialog/error-dialog.service';
 import { CountPipe } from './count.pipe';
 import { FilterSelectorComponent } from './filter-selector';
 import { FilterPanelComponent } from './filter-selector';
@@ -51,7 +51,7 @@ import { GNAThubService } from './gnathub.service';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 // Application wide providers
-const APP_PROVIDERS = [
+const APP_PROVIDERS: any[] = [
     ...APP_RESOLVER_PROVIDERS,
     GNAThubService,
     AppState,
@@ -91,9 +91,9 @@ type StoreType = {
         MessageExplorerComponent,
         CodepeerHistoryComponent,
         SpinnerComponent,
-        ReviewDialog,
-        ReviewHistoryDialog,
-        ErrorDialog
+        ReviewDialogComponent,
+        ReviewHistoryDialogComponent,
+        ErrorDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -114,19 +114,19 @@ type StoreType = {
         APP_PROVIDERS,
         ENV_PROVIDERS
     ],
-    entryComponents: [ReviewDialog, ReviewHistoryDialog, ErrorDialog]
+    entryComponents: [ReviewDialogComponent, ReviewHistoryDialogComponent, ErrorDialogComponent]
 })
 export class AppModule {
     constructor(public appRef: ApplicationRef, public appState: AppState) {}
 
-    public hmrOnInit(store: StoreType) {
+    public hmrOnInit(store: StoreType): void {
         if (!store || !store.state) {
             return;
         }
         console.log('HMR store', JSON.stringify(store, null, 2));
         this.appState._state = store.state;
         if ('restoreInputValues' in store) {
-            let restoreInputValues = store.restoreInputValues;
+            let restoreInputValues: any = store.restoreInputValues;
             setTimeout(restoreInputValues);
         }
         this.appRef.tick();
@@ -134,11 +134,11 @@ export class AppModule {
         delete store.restoreInputValues;
     }
 
-    public hmrOnDestroy(store: StoreType) {
-        const cmpLocation = this.appRef.components.map(
+    public hmrOnDestroy(store: StoreType): void {
+        const cmpLocation: any = this.appRef.components.map(
             cmp => cmp.location.nativeElement);
         // recreate elements
-        const state = this.appState._state;
+        const state: InteralStateType = this.appState._state;
         store.state = state;
         store.disposeOldHosts = createNewHosts(cmpLocation);
         store.restoreInputValues = createInputTransfer();
@@ -146,7 +146,7 @@ export class AppModule {
         removeNgStyles();
     }
 
-    public hmrAfterDestroy(store: StoreType) {
+    public hmrAfterDestroy(store: StoreType): void {
         // display new elements
         store.disposeOldHosts();
         delete store.disposeOldHosts;

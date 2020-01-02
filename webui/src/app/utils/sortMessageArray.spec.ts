@@ -1,7 +1,8 @@
 import { sortMessageArray } from './sortArray';
+import { ISourceNav, IMessage, ISort } from 'gnat';
 import * as _ from 'lodash';
 
-const message = {
+const message: ISourceNav = {
     sources: [
         {
             filename: 'code1.adb',
@@ -64,11 +65,11 @@ const message = {
 
 describe('sortMessageArray()', () => {
 
-    const oldFilter = {newSort: 'name', otherSort: 'filename', order: -1};
+    const oldFilter: ISort = {newSort: 'name', otherSort: 'filename', order: -1};
 
     // ascendent name
-    let newFilter = {newSort: 'name', otherSort: 'filename'};
-    const testSort1 = sortMessageArray(newFilter, oldFilter,
+    let newFilter: ISort = {newSort: 'name', otherSort: 'filename'};
+    const testSort1: [IMessage] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
     it('sortMessageArray() by name/filename ascendant', () => {
         expect(testSort1[0].filename).toEqual('code1.adb');
@@ -81,7 +82,7 @@ describe('sortMessageArray()', () => {
 
     // descendent name
     newFilter = {newSort: 'name', otherSort: 'filename'};
-    const testSort2 = sortMessageArray(newFilter, oldFilter,
+    const testSort2: [IMessage] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
     it('sortMessageArray() by name/filename descendant', () => {
         expect(testSort2[0].filename).toEqual('code2.adb');
@@ -94,7 +95,7 @@ describe('sortMessageArray()', () => {
 
     // ascendent message_count
     newFilter = {newSort: '_total_message_count', otherSort: 'line'};
-    const testSort3 = sortMessageArray(newFilter, oldFilter,
+    const testSort3: [IMessage] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
 
     it('sortMessageArray() by _total_message_count/line ascendant', () => {
@@ -108,7 +109,7 @@ describe('sortMessageArray()', () => {
 
     // ascendent message_count
     newFilter = {newSort: '_total_message_count', otherSort: 'line'};
-    const testSort4 = sortMessageArray(newFilter, oldFilter,
+    const testSort4: [IMessage] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
 
     it('sortMessageArray() by _total_message_count/line descendant', () => {
@@ -121,8 +122,8 @@ describe('sortMessageArray()', () => {
     });
 
     // test with full filter on, same as the old one
-    let completeFilter = oldFilter;
-    const testSort5 = sortMessageArray(completeFilter, oldFilter,
+    let completeFilter: ISort = oldFilter;
+    const testSort5: [IMessage] = sortMessageArray(completeFilter, oldFilter,
                                        _.cloneDeep(message.sources));
     it('sortMessageArray() only refresh', () => {
         expect(testSort5[0]._total_message_count).toEqual(16);
@@ -135,7 +136,7 @@ describe('sortMessageArray()', () => {
 
     // test with full filter on, a whle new filter
     completeFilter = {newSort: 'name', otherSort: 'filename', order: -1};
-    const testSort6 = sortMessageArray(completeFilter, oldFilter,
+    const testSort6: [IMessage] = sortMessageArray(completeFilter, oldFilter,
                                        _.cloneDeep(message.sources));
     it('sortMessageArray() whole newFilter', () => {
         expect(testSort6[0].filename).toEqual('code2.adb');

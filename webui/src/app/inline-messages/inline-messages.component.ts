@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IAnnotatedSourceMessage, ITool } from 'gnat';
-import { SharedReport } from '../main-responder.service'
+import { SharedReport } from '../main-responder.service';
 
 type InlineMessages = { [toolId: number]: Set<IAnnotatedSourceMessage> };
 
@@ -19,21 +19,22 @@ export class InlineMessagesComponent {
         return message.properties.map(prop => prop.name).join(', ');
     }
 
-    public getToolName(id: number) {
-        let toolName: string = "";
+    public getToolName(id: number): string {
+        let toolName: string = '';
 
         if (this.reportService.filter) {
             if (this.reportService.checkArray(this.reportService.filter.tools,
-                                              "inline-messages.component",
-                                              "getToolName", "reportService.filter.tools")) {
-                this.reportService.filter.tools.forEach(function(tool){
-                    if(tool.id == id){
+                                              'inline-messages.component',
+                                              'getToolName', 'reportService.filter.tools')) {
+                this.reportService.filter.tools.forEach(function(tool: ITool): void {
+                    if (tool.id === id){
                         toolName = tool.name;
                     }
                 });
             }
         } else {
-            console.log("[Error] inline-messages.component:getToolName : reportService.filter doesn't exist.");
+            console.log('[Error] inline-messages.component:getToolName : '
+                        + "reportService.filter doesn't exist.");
         }
         return toolName;
     }

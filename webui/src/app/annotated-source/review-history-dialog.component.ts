@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BrowserAnimationsModule } from  '@angular/platform-browser/animations';
-import { MatDialogRef} from '@angular/material'
+import { MatDialogRef} from '@angular/material';
 import { SharedReport } from '../main-responder.service';
 
 @Component({
@@ -9,24 +9,24 @@ import { SharedReport } from '../main-responder.service';
     styleUrls: [ 'review-history-dialog.component.scss' ]
 })
 
-export class ReviewHistoryDialog {
+export class ReviewHistoryDialogComponent {
 
     public history: any;
     public message: any;
 
-    constructor(public dialogRef: MatDialogRef<ReviewHistoryDialog>,
-                 private reportService: SharedReport) {}
+    constructor(public dialogRef: MatDialogRef<ReviewHistoryDialogComponent>,
+                private reportService: SharedReport) {}
 
-    ngOnInit() {
+    public ngOnInit(): void {
         this.history = this.reportService.history.reviews;
         this.message = this.reportService.history.message;
     }
 
-    public close() {
+    public close(): void {
         this.dialogRef.close();
     }
 
-    public trackReview(index, review) {
+    public trackReview(index: number, review: any): void {
         return review ? review.date : undefined;
     }
 }

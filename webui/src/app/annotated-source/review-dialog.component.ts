@@ -9,13 +9,13 @@ import { SharedReport } from '../main-responder.service';
     styleUrls: [ 'review-dialog.component.scss' ]
 })
 
-export class ReviewDialog {
+export class ReviewDialogComponent {
 
     public username: string;
     public review: string;
     public status: string;
     public category: string;
-    public review_status = [
+    public reviewStatus: any = [
         {
             show: 'Pending',
             value: 'PENDING',
@@ -42,45 +42,45 @@ export class ReviewDialog {
             category: 'BUG'
         }];
 
-    constructor(public dialogRef: MatDialogRef<ReviewDialog>,
-                 public reportService: SharedReport) {}
+    constructor(public dialogRef: MatDialogRef<ReviewDialogComponent>,
+                public reportService: SharedReport) {}
 
-    public cancel() {
+    public cancel(): void {
         this.dialogRef.close();
     }
 
-    public submit() {
+    public submit(): void {
         if (!this.status) {
             this.showError();
             return;
         }
 
         this.category = this.getCategory(this.status);
-        let data = {
-            username : this.username,
-            review : this.review,
-            status  :this.status,
-            category  :this.category
+        let data: any = {
+            username: this.username,
+            review: this.review,
+            status: this.status,
+            category: this.category
         };
         this.dialogRef.close(data);
     }
 
-    private getCategory(my_status): string {
-        let category: string = ''
-        this.review_status.forEach(function(status){
-             if (status.value == my_status){
+    private getCategory(myStatus: string): string {
+        let category: string = '';
+        this.reviewStatus.forEach(function(status: any): void {
+             if (status.value === myStatus){
                 category = status.category;
             }
-        })
+        });
         return category;
     }
 
-    public showError() {
-        let elem = document.getElementById('dialogError');
+    public showError(): void {
+        let elem: HTMLElement = document.getElementById('dialogError');
         elem.classList.add('show');
     }
 
-    public trackMsg(index, msg) {
+    public trackMsg(index: number, msg: any): number {
         return msg ? msg.id : undefined;
     }
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { storeFilterItem } from '../utils/dataStorage'
+import { storeFilterItem } from '../utils/dataStorage';
 
 export type Option = {
     id: number,
@@ -9,7 +9,7 @@ export type Option = {
     _ui_selected_message_count?: number,
 };
 
-export type FilterEvent = { option: Option; checked: boolean; id: number;};
+export type FilterEvent = { option: Option; checked: boolean; id: number; };
 
 @Component({
     selector: 'filter-selector',
@@ -19,33 +19,34 @@ export type FilterEvent = { option: Option; checked: boolean; id: number;};
 export class FilterSelectorComponent {
     @Input() public title: string;
     @Input() public options: Option[];
-    @Output() public toggle = new EventEmitter<FilterEvent>();
+    @Output() public toggle: any = new EventEmitter<FilterEvent>();
 
     constructor( @Inject(DOCUMENT) private document: Document) {}
 
-    public openClose(id: string) {
-        let elem = this.document.getElementById(id);
+    public openClose(id: string): void {
+        let elem: HTMLElement = this.document.getElementById(id);
         elem.classList.toggle('reduce');
         elem.classList.toggle('open');
     }
 
-    public clickOption(opt, isChecked, idx){
+    public clickOption(opt: Option, isChecked: boolean, idx: number): void {
         storeFilterItem(opt.name, !isChecked);
         this.toggle.emit({ option: opt, checked: isChecked, id: idx });
     }
 
-    public selectAll(options) {
-        options.forEach(function(opt, idx){
+    public selectAll(options: Option[]): void {
+        options.forEach(function(opt: Option, idx: number): void {
             this.clickOption(opt, true, idx);
         }.bind(this));
     }
-    public unselectAll(options) {
-        options.forEach(function(opt, idx){
+
+    public unselectAll(options: Option[]): void {
+        options.forEach(function(opt: Option, idx: number): void {
             this.clickOption(opt, false, idx);
         }.bind(this));
     }
 
-    public trackOption(index, option) {
+    public trackOption(index: number, option: Option): number {
         return option ? option.id : undefined;
     }
 }

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { ReviewDialog } from './review-dialog.component';
-import { ReviewHistoryDialog } from './review-history-dialog.component';
+import { ReviewDialogComponent } from './review-dialog.component';
+import { ReviewHistoryDialogComponent } from './review-history-dialog.component';
 import { BrowserAnimationsModule } from  '@angular/platform-browser/animations';
 import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Injectable } from '@angular/core';
@@ -11,17 +11,17 @@ export class DialogsService {
     constructor(private dialog: MatDialog) {}
 
     public review(): Observable<boolean> {
-        let dialogRef: MatDialogRef<ReviewDialog>;
+        let dialogRef: MatDialogRef<ReviewDialogComponent>;
 
-        dialogRef = this.dialog.open(ReviewDialog);
+        dialogRef = this.dialog.open(ReviewDialogComponent);
 
         return dialogRef.afterClosed();
     }
 
     public reviewHistory(): Observable<boolean> {
-        let dialogRef: MatDialogRef<ReviewHistoryDialog>;
+        let dialogRef: MatDialogRef<ReviewHistoryDialogComponent>;
 
-        dialogRef = this.dialog.open(ReviewHistoryDialog);
+        dialogRef = this.dialog.open(ReviewHistoryDialogComponent);
 
         return dialogRef.afterClosed();
     }

@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { IAnnotatedSourceMessage, ITool } from 'gnat';
-import { SharedReport } from '../main-responder.service'
+import { SharedReport } from '../main-responder.service';
 
 type InlineAnnotations = IAnnotatedSourceMessage[];
 
@@ -20,17 +20,17 @@ export class InlineAnnotationsComponent implements OnChanges {
         return annotation.properties.map(prop => prop.name).join(', ');
     }
 
-    public openClose(id: string) {
-        let elem = document.getElementById(id);
+    public openClose(id: string): void {
+        let elem: HTMLElement = document.getElementById(id);
         elem.classList.toggle('expand');
     }
 
-    public trackAnnotation(index, annotation) {
-        return index
-        //return annotation ? annotation.id : undefined;
+    public trackAnnotation(index: number, annotation: InlineAnnotations): number {
+        return index;
+        // return annotation ? annotation.id : undefined;
     }
 
-    public ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges): void {
         if (changes.line && !changes.line.firstChange){
             this.line = changes.line.currentValue;
         }else if (changes.annotations && !changes.annotations.firstChange){

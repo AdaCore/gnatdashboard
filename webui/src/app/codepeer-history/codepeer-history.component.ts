@@ -25,130 +25,131 @@ export class CodepeerHistoryComponent implements DoCheck {
     private colorScheme: Object = {
         domain: ['#ff8080', '#ffcb6b', '#ffff4e' , '#AAAAAA']
     };
-    private chart_data: any[] = [];
+    private chartData: any[] = [];
 
-    // Declare variable to limit filter chart_data
-    private min_date: Date;
-    private max_date: Date;
-    private min_run: Number = 1;
-    private max_run: Number;
+    // Declare variable to limit filter chartData
+    private minDate: Date;
+    private maxDate: Date;
+    private minRun: number = 1;
+    private maxRun: number = this.reportService.codepeerCurrentRun;
 
-    //Declare variable to get filter data
-    private max_run_filter: Number = 0;
-    private min_run_filter: Number = 1;
-    private max_date_filter: Date;
-    private min_date_filter: Date;
+    // Declare variable to get filter data
+    private maxRunFilter: number = 0;
+    private minRunFilter: number = 1;
+    private maxDateFilter: Date;
+    private minDateFilter: Date;
 
     constructor(public reportService: SharedReport,
-                 private scrollToService: ScrollToService) {
+                private scrollToService: ScrollToService) {
         this.reportService.page = 'codepeer-history';
     }
 
-    public ngDoCheck() {
-        if (this.max_run_filter === 0 && this.reportService.codepeerCurrentRun > 0){
+    public ngDoCheck(): void {
+        if (this.maxRunFilter === 0 && this.reportService.codepeerCurrentRun > 0){
             this.initFilterValues();
-            this.buildChartData('id', this.min_run_filter, this.max_run_filter);
+            this.buildChartData('id', this.minRunFilter, this.maxRunFilter);
         }
     }
 
-    onSelect(event) {
+    public onSelect(event: any): void {
         this.selectedRun = event.name;
         this.goToLine(event.name);
     }
 
-    private initFilterValues() {
-        this.max_run_filter = this.reportService.codepeerCurrentRun;
-        this.max_run = this.reportService.codepeerCurrentRun;
+    private initFilterValues(): void {
+        this.maxRunFilter = this.reportService.codepeerCurrentRun;
 
-        this.reportService.codepeer_history.forEach(function(run, idx){
+        this.reportService.codepeerHistory.forEach(function(run: any, idx: number): void {
             if (idx === 0){
-                this.min_date_filter = run.format_date;
-                this.min_date = run.format_date;
+                this.minDateFilter = run.format_date;
+                this.minDate = run.format_date;
             }
-            if (idx === this.max_run - 1){
-                this.max_date_filter = run.format_date;
-                this.max_date = run.format_date;
+            if (idx === this.maxRun - 1){
+                this.maxDateFilter = run.format_date;
+                this.maxDate = run.format_date;
             }
-        }.bind(this))
+        }.bind(this));
     }
 
-    private applyRunFilter(min, max){
-        this.buildChartData('id', this.min_run_filter, this.max_run_filter);
+    private applyRunFilter(min: number, max: number): void {
+        this.buildChartData('id', this.minRunFilter, this.maxRunFilter);
     }
-    private applyDateFilter(min, max){
-        this.buildChartData('date', this.min_date_filter, this.max_date_filter);
+    private applyDateFilter(min: number, max: number): void {
+        this.buildChartData('date', this.minDateFilter, this.maxDateFilter);
     }
 
-    private changeSection(section){
+    private changeSection(section: string): void {
         const config: ScrollToConfigOptions = {
             target: section,
             offset: 0,
             duration: 200
         };
-        let ret = this.scrollToService.scrollTo(config);
-        if (ret.source == undefined){
-            console.error("[Error] annotated-source.component:goToLine: scrollToService failed.", ret)
+        let ret: any = this.scrollToService.scrollTo(config);
+        if (ret.source === undefined){
+            console.error('[Error] annotated-source.component:goToLine:'
+                          + ' scrollToService failed.', ret);
         }
     }
 
-    private goToLine(line: number) {
+    private goToLine(line: number): void {
         if (line) {
-            let id = "Run"+line;
+            let id: string = 'Run' + line;
             const config: ScrollToConfigOptions = {
                 target: id,
                 offset: -270,
                 duration: 200
             };
 
-            let ret = this.scrollToService.scrollTo(config);
-            if (ret.source == undefined){
-                console.error("[Error] annotated-source.component:goToLine: scrollToService failed.", ret)
+            let ret: any = this.scrollToService.scrollTo(config);
+            if (ret.source === undefined){
+                console.error('[Error] annotated-source.component:goToLine:'
+                              + ' scrollToService failed.', ret);
             }
         }
     };
 
-    private buildChartData(type, min, max){
-        let new_high = {
-            "name": "high",
-            "series": []
+    private buildChartData(type: string, min: any, max: any): void {
+        let newHigh: any = {
+            name: 'high',
+            series: []
         };
-        let new_medium = {
-            "name": "medium",
-            "series": []
+        let newMedium: any = {
+            name: 'medium',
+            series: []
         };
-        let new_low = {
-            "name": "low",
-            "series": []
+        let newLow: any = {
+            name: 'low',
+            series: []
         };
 
-        this.reportService.codepeer_history.forEach(
-            function(run){
-                let comparedValue = (type === 'id' ? run.id : run.format_date);
+        this.reportService.codepeerHistory.forEach(
+            function(run: any): void {
+                let comparedValue: number = (type === 'id' ? run.id : run.format_date);
                 if (comparedValue >= min
                     && comparedValue <= max){
-                    new_high.series.push(
+                    newHigh.series.push(
                         {
-                            "name": run.id,
-                            "value": run.series[0].value
+                            name: run.id,
+                            value: run.series[0].value
                         });
-                    new_medium.series.push(
+                    newMedium.series.push(
                         {
-                            "name": run.id,
-                            "value": run.series[1].value
+                            name: run.id,
+                            value: run.series[1].value
                         });
-                    new_low.series.push(
+                    newLow.series.push(
                         {
-                            "name": run.id,
-                            "value": run.series[2].value
+                            name: run.id,
+                            value: run.series[2].value
                         });
                 }
             }.bind(this)
         );
 
-        this.chart_data = [];
-        this.chart_data.push(new_high);
-        this.chart_data.push(new_medium);
-        this.chart_data.push(new_low);
+        this.chartData = [];
+        this.chartData.push(newHigh);
+        this.chartData.push(newMedium);
+        this.chartData.push(newLow);
     }
 
 }

@@ -9,18 +9,18 @@ import { SharedReport } from '../main-responder.service';
     styleUrls: [ 'error-dialog.component.scss' ]
 })
 
-export class ErrorDialog {
+export class ErrorDialogComponent {
 
     public error: any;
 
-    constructor(public dialogRef: MatDialogRef<ErrorDialog>,
-                 private reportService: SharedReport) {}
+    constructor(public dialogRef: MatDialogRef<ErrorDialogComponent>,
+                private reportService: SharedReport) {}
 
-    ngOnInit() {
+    private ngOnInit(): void {
         this.error = this.reportService.errorToShow;
     }
 
-    public close() {
+    public close(): void {
         this.dialogRef.close();
     }
 
