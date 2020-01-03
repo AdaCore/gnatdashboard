@@ -385,7 +385,7 @@ export class AnnotatedSourceComponent
             /*Timestamp format must be YYYY-MM-jj HH:mm:ss*/
             let now = new Date();
             var year = now.getFullYear().toString();
-            var month = this.formatDate(now.getMonth());
+            var month = this.formatDate(now.getMonth() + 1);
             var day = this.formatDate(now.getDate());
             var hour = this.formatDate(now.getHours());
             var minutes = this.formatDate(now.getMinutes());
