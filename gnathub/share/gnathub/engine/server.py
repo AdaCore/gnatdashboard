@@ -21,6 +21,11 @@ from logging.config import dictConfig
 import GNAThub
 import os
 
+# To hide server banner, and so production warning.
+import sys
+cli = sys.modules['flask.cli']
+cli.show_server_banner = lambda *x: None
+
 # GLOBAL VARIABLE
 # The repository where .json files are supposed to be located
 SERVER_DIR_PATH = GNAThub.html_data()
@@ -209,7 +214,7 @@ if __name__ == '__main__':
         print "Logs redirected to {}".format(SERVER_LOG)
         # TODO : Error occur when lauching with debug=True
         # app.run(port=flask_port, debug=True)
-        app.run(port=flask_port)
+        app.run(port=flask_port, threaded=True)
     else:
         app.logger.error("Bad port used. Please relauch with port above 1024.")
         print "Please use a port above 1024"
