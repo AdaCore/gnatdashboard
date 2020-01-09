@@ -7,7 +7,6 @@ function writeOutput(config, output, helper, logger) {
     if (config.dir) {
 
         let output_json = config.dir + '/output.json';
-        let results = config.dir + '/results';
 
         //write the json file
         helper.mkdirIfNotExists(path.dirname(output_json), function() {
@@ -22,35 +21,6 @@ function writeOutput(config, output, helper, logger) {
                 }
             });
         });
-
-        //write results
-        helper.mkdirIfNotExists(path.dirname(results), function() {
-            let myResults = '';
-            output.browsers.forEach(function(browser) {
-                browser.results.forEach(function(result) {
-                    myResults += '[' + result.suite[0] + '] ' +
-                        result.description + ':';
-                    myResults += (result.success ? 'OK:' : 'FAIL:');
-                    result.log.forEach(function(myLog) {
-                        if (myLog.split(' ')[0] === 'Expected') {
-                            myResults += myLog;
-                        }
-                    });
-                    myResults += '\n';
-                });
-            });
-
-            fs.writeFile(results, myResults, function(err) {
-                if (err) {
-                    log.warn('Cannot write test results to JSON file\n\t' +
-                             err.message);
-                } else {
-                    log.debug('Test results were written to JSON file ' +
-                              config.dir);
-                }
-            });
-        });
-
     } else {
         process.stdout.write(JSON.stringify(output));
     }
@@ -63,8 +33,31 @@ var AdacoreReporter = function(baseReporterDecorator,
 
     baseReporterDecorator(self);
 
-    function logMessageFormater(error) {
-        return formatError(error);
+    function resultsFormatter(gaia_results, resultsArray) {
+        resultsArray.forEach(function(result) {
+            var myDiff = '';
+            var myStatus = result.success ? 'OK' : 'FAIL';
+            if (result.description.match('XFAIL')) {
+                myStatus = 'XFAIL';
+            }
+            var myComment = (myStatus === 'XFAIL' ?
+                             'This test is bad on purpose' : '');
+
+            if (result.log) {
+                result.log.forEach(function(message) {
+                    myDiff += message + '\n';
+                });
+            }
+
+            var gaia_object = {
+                status: myStatus,
+                diff: myDiff,
+                comment: myComment
+            };
+            gaia_results[result.description] = gaia_object;
+        });
+
+        return gaia_results;
     };
 
     function getBrowser(browser) {
@@ -102,18 +95,20 @@ var AdacoreReporter = function(baseReporterDecorator,
     };
 
     self.onRunComplete = function(browsers, summary) {
-        var browserResults = [];
+        var comment = '';
+        var gaia_results = {};
 
         for (var browserId in self.browsers) {
             var browser = self.browsers[browserId];
-            browser.errors = browser.errors.map(logMessageFormater);
-            browserResults.push(browser);
+            gaia_results = resultsFormatter(gaia_results, browser.results);
+            comment += browser.browser.fullName;
         }
 
         var output = {
-            summary: summary,
-            browsers: browserResults
+            comments: comment,
+            tests: gaia_results
         };
+
         writeOutput(config, output, helper, logger);
         self.clear();
     };

@@ -1,8 +1,8 @@
 import { sortMessageArray } from './sortArray';
-import { ISourceNav, IMessage, ISort } from 'gnat';
+import { ISourceNav, IMessageIndex, ISort } from 'gnat';
 import * as _ from 'lodash';
 
-const message: ISourceNav = {
+const message: IMessageIndex = {
     sources: [
         {
             filename: 'code1.adb',
@@ -17,17 +17,73 @@ const message: ISourceNav = {
                 {
                     line: 10,
                     col_begin: 30,
-                    col_den: 30,
+                    col_end: 30,
                     name: 'precondition1',
-                    value: 'precondition : this is an error',
-                    id: 100
+                    id: 100,
+                    status_priority: 1,
+                    properties: [{
+                        id: 2,
+                        name: 'property 1',
+                        tool_id: 1
+                    }],
+                    rule: {
+                        id: 2,
+                        name: 'rule1',
+                        tool_id: 1
+                    },
+                    ranking: {
+                        id: 3,
+                        name: 'ranking1',
+                        tool_id: 1
+                    },
+                    tool_msg_id: 1,
+                    tool: 'tool1',
+                    user_review: undefined,
+                    review_history: [{
+                        author: 'author',
+                        status: 'status',
+                        status_priority: 2,
+                        status_kind: 'status_kind',
+                        date: 'date',
+                        from_source: 'from_source',
+                        message: 'message',
+                        display_name: 'display_name'
+                    }]
                 }, {
                     line: 25,
                     col_begin: 60,
-                    col_den: 60,
+                    col_end: 60,
                     name: 'precondition2',
-                    value: 'precondition : this is a second error',
-                    id: 101
+                    id: 101,
+                    status_priority: 2,
+                    properties: [{
+                        id: 3,
+                        name: 'property 1',
+                        tool_id: 2
+                    }],
+                    rule: {
+                        id: 3,
+                        name: 'rule2',
+                        tool_id: 2
+                    },
+                    ranking: {
+                        id: 3,
+                        name: 'ranking2',
+                        tool_id: 2
+                    },
+                    tool_msg_id: 2,
+                    tool: 'tool2',
+                    user_review: undefined,
+                    review_history: [{
+                        author: 'author',
+                        status: 'status',
+                        status_priority: 3,
+                        status_kind: 'status_kind',
+                        date: 'date',
+                        from_source: 'from_source',
+                        message: 'message',
+                        display_name: 'display_name'
+                    }]
                 }
             ],
             _total_message_count: 16,
@@ -44,17 +100,73 @@ const message: ISourceNav = {
                 {
                     line: 10,
                     col_begin: 30,
-                    col_den: 30,
+                    col_end: 30,
                     name: 'precondition2',
-                    value: 'precondition : this is an error',
-                    id: 100
+                    id: 100,
+                    status_priority: 1,
+                    properties: [{
+                        id: 2,
+                        name: 'property 1',
+                        tool_id: 1
+                    }],
+                    rule: {
+                        id: 2,
+                        name: 'rule1',
+                        tool_id: 1
+                    },
+                    ranking: {
+                        id: 3,
+                        name: 'ranking1',
+                        tool_id: 1
+                    },
+                    tool_msg_id: 1,
+                    tool: 'tool1',
+                    user_review: undefined,
+                    review_history: [{
+                        author: 'author',
+                        status: 'status',
+                        status_priority: 0,
+                        status_kind: 'status_kind',
+                        date: 'date',
+                        from_source: 'from_source',
+                        message: 'message',
+                        display_name: 'display_name'
+                    }]
                 }, {
                     line: 25,
                     col_begin: 60,
-                    col_den: 60,
+                    col_end: 60,
                     name: 'precondition1',
-                    value: 'precondition : this is a second error',
-                    id: 101
+                    id: 101,
+                    status_priority: 2,
+                    properties: [{
+                        id: 2,
+                        name: 'property 1',
+                        tool_id: 1
+                    }],
+                    rule: {
+                        id: 3,
+                        name: 'rule2',
+                        tool_id: 2
+                    },
+                    ranking: {
+                        id: 3,
+                        name: 'ranking2',
+                        tool_id: 2
+                    },
+                    tool_msg_id: 2,
+                    tool: 'tool2',
+                    user_review: undefined,
+                    review_history: [{
+                        author: 'author',
+                        status: 'status',
+                        status_priority: 1,
+                        status_kind: 'status_kind',
+                        date: 'date',
+                        from_source: 'from_source',
+                        message: 'message',
+                        display_name: 'display_name'
+                    }]
                 }
             ],
             _total_message_count: 15,
@@ -69,7 +181,7 @@ describe('sortMessageArray()', () => {
 
     // ascendent name
     let newFilter: ISort = {newSort: 'name', otherSort: 'filename'};
-    const testSort1: [IMessage] = sortMessageArray(newFilter, oldFilter,
+    const testSort1: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
     it('sortMessageArray() by name/filename ascendant', () => {
         expect(testSort1[0].filename).toEqual('code1.adb');
@@ -82,7 +194,7 @@ describe('sortMessageArray()', () => {
 
     // descendent name
     newFilter = {newSort: 'name', otherSort: 'filename'};
-    const testSort2: [IMessage] = sortMessageArray(newFilter, oldFilter,
+    const testSort2: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
     it('sortMessageArray() by name/filename descendant', () => {
         expect(testSort2[0].filename).toEqual('code2.adb');
@@ -95,7 +207,7 @@ describe('sortMessageArray()', () => {
 
     // ascendent message_count
     newFilter = {newSort: '_total_message_count', otherSort: 'line'};
-    const testSort3: [IMessage] = sortMessageArray(newFilter, oldFilter,
+    const testSort3: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
 
     it('sortMessageArray() by _total_message_count/line ascendant', () => {
@@ -109,7 +221,7 @@ describe('sortMessageArray()', () => {
 
     // ascendent message_count
     newFilter = {newSort: '_total_message_count', otherSort: 'line'};
-    const testSort4: [IMessage] = sortMessageArray(newFilter, oldFilter,
+    const testSort4: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
 
     it('sortMessageArray() by _total_message_count/line descendant', () => {
@@ -123,7 +235,7 @@ describe('sortMessageArray()', () => {
 
     // test with full filter on, same as the old one
     let completeFilter: ISort = oldFilter;
-    const testSort5: [IMessage] = sortMessageArray(completeFilter, oldFilter,
+    const testSort5: ISourceNav[] = sortMessageArray(completeFilter, oldFilter,
                                        _.cloneDeep(message.sources));
     it('sortMessageArray() only refresh', () => {
         expect(testSort5[0]._total_message_count).toEqual(16);
@@ -136,7 +248,7 @@ describe('sortMessageArray()', () => {
 
     // test with full filter on, a whle new filter
     completeFilter = {newSort: 'name', otherSort: 'filename', order: -1};
-    const testSort6: [IMessage] = sortMessageArray(completeFilter, oldFilter,
+    const testSort6: ISourceNav[] = sortMessageArray(completeFilter, oldFilter,
                                        _.cloneDeep(message.sources));
     it('sortMessageArray() whole newFilter', () => {
         expect(testSort6[0].filename).toEqual('code2.adb');
@@ -145,6 +257,10 @@ describe('sortMessageArray()', () => {
         expect(testSort6[1].filename).toEqual('code1.adb');
         expect(testSort6[1].messages[0].name).toEqual('precondition2');
         expect(testSort6[1].messages[1].name).toEqual('precondition1');
+    });
+
+    it('sortMessageArray() should have XFAIL', () => {
+        expect(testSort6[0].filename).toEqual('code2.adb');
     });
 
 });

@@ -21,14 +21,23 @@
       "hammerjs",
       "jasmine",
       "node",
-      "source-map",
       "uglify-js",
-      "webpack"
+      "webpack",
+      "events",
+      "glob",
+      "minimatch",
+      "q",
+      "tapable",
+      "xml2js"
     ]
   },
   "exclude": [
     "node_modules",
     "dist"
+  ],
+  "files": [
+    "./node_modules/@types/tapable/index.d.ts"
+    "./src/gnat.d.ts"
   ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,

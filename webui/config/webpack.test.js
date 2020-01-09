@@ -32,6 +32,7 @@ module.exports = function (options) {
      * Do not change, leave as is or it wont work.
      * See: https://github.com/webpack/karma-webpack#source-maps
      */
+    mode: 'development',
     devtool: 'inline-source-map',
 
     /**
@@ -173,7 +174,10 @@ module.exports = function (options) {
           exclude: [
             /\.(e2e|spec)\.ts$/,
             /node_modules/
-          ]
+          ],
+          options: {
+           esModules: true
+          }
         }
 
       ]

@@ -7,7 +7,7 @@ import { ICodeIndex, IModule, ISourceDir,
  *  for code navigation according to the given filter
  */
 export function sortCodeArray(newFilter: ISort, oldFilter: ISort,
-                              projectArray: [IModule]): [IModule] {
+                              projectArray: IModule[]): IModule[] {
     if ((oldFilter.newSort === newFilter.newSort
          || oldFilter.otherSort === newFilter.otherSort) && !newFilter.order) {
         newFilter.order = oldFilter.order * -1;
@@ -31,7 +31,7 @@ export function sortCodeArray(newFilter: ISort, oldFilter: ISort,
 
     // Map of folders to array of folders
     projectArray.forEach(function(project: IModule): void {
-        let folderArray: [ ISourceDir ] =  project.source_dirs;
+        let folderArray: ISourceDir[] =  project.source_dirs;
 
         property = checkProperty(folderArray, newFilter);
 
@@ -47,7 +47,7 @@ export function sortCodeArray(newFilter: ISort, oldFilter: ISort,
 
         // Map of files to array of files
         folderArray.forEach(function(folder: ISourceDir): void {
-            let fileArray: [ ISource ] = folder.sources;
+            let fileArray: ISource[] = folder.sources;
             folder.name =
                 (folder.name !== project._source_dirs_common_prefix ?
                  folder.name.replace(project._source_dirs_common_prefix, '')
@@ -98,7 +98,7 @@ function sortRanking(a: number, b: number): number{
  *  for message navigation according to the given filter
  */
 export function sortMessageArray(newFilter: ISort, oldFilter: ISort,
-                                 sourceArray: [ISourceNav]): [ISourceNav] {
+                                 sourceArray: ISourceNav[]): ISourceNav[] {
 
     if ((oldFilter.newSort === newFilter.newSort
          || oldFilter.otherSort === newFilter.otherSort) && !newFilter.order) {
@@ -144,7 +144,7 @@ export function sortMessageArray(newFilter: ISort, oldFilter: ISort,
 
     sourceArray.forEach(function(source: ISourceNav): void {
         if (source.messages && newFilter.newSort !== 'status_priority'){
-            let messageArray: [IMessage] =  source.messages;
+            let messageArray: IMessage[] =  source.messages;
             property = checkProperty(messageArray, newFilter);
             if (property === 'ranking') {
                 messageArray.sort((a: IMessage, b: IMessage) => {
@@ -162,7 +162,7 @@ export function sortMessageArray(newFilter: ISort, oldFilter: ISort,
             source.messages = messageArray;
         } else if (source.messages
                    && newFilter.newSort === 'status_priority') {
-            let messageArray: [IMessage] =  source.messages;
+            let messageArray: IMessage[] =  source.messages;
             messageArray.sort((a: any, b: any) => {
                 let typeA: number = a['status_priority'] ? a['status_priority'] : 0;
                 let typeB: number = b['status_priority'] ? b['status_priority'] : 0;

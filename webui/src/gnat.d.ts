@@ -89,7 +89,7 @@ declare module 'gnat' {
         message_count?: { [toolId: number]: number };
         _total_message_count: number;
         _ui_total_message_count?: number;
-        expand: boolean;
+        expand?: boolean;
     }
 
     export interface ISourceDir {
@@ -98,7 +98,7 @@ declare module 'gnat' {
         coverage?: number;
         _total_message_count: number;
         _ui_total_message_count?: number;
-        sources: [ ISource ];
+        sources: ISource[];
         expand?: boolean;
     }
 
@@ -109,12 +109,12 @@ declare module 'gnat' {
         _ui_total_message_count?: number;
         _source_dirs_common_prefix: string;
         coverage?: number;
-        source_dirs: [ ISourceDir ];
+        source_dirs: ISourceDir[];
         expand?: boolean;
     }
 
     export interface ICodeIndex {
-        modules: [ IModule ];
+        modules: IModule[];
     }
 
     // **
@@ -163,7 +163,7 @@ declare module 'gnat' {
         full_path: string;
         coverage?: number;
         message_count?: { [toolId: number]: number };
-        messages?: [IMessage];
+        messages?: IMessage[];
         annotations?: [IMessage];
         countRanking?: ICountRanking;
         _total_message_count: number;
@@ -172,7 +172,7 @@ declare module 'gnat' {
     }
 
     export interface IMessageIndex {
-        sources: [ ISourceNav ];
+        sources: ISourceNav[];
         _ui_total_message_count?: number;
     }
 

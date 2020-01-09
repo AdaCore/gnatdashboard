@@ -54,6 +54,9 @@ test: $(rootdir)/package.json
 lint: $(rootdir)/package.json
 	$(NPM) run lint
 
+karma: $(rootdir)/package.json
+	$(NPM) run karma
+
 clean:
 	-$(RMDIR) $(rootdir)/typings
 	-$(RMDIR) $(rootdir)/coverage
