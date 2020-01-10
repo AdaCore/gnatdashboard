@@ -55,6 +55,7 @@ declare module 'gnat' {
         id: number;
         name: string;
         display_name: string;
+        kind: string;
     }
 
     // Now concats the propert for filters and for specific filter
@@ -131,7 +132,8 @@ declare module 'gnat' {
     export interface IReviewUser {
         author: string;
         status: string;
-        status_type: number;
+        status_priority: number;
+        status_kind: string;
         date: string;
         from_source: string;
         message: string;
@@ -144,7 +146,7 @@ declare module 'gnat' {
         col_end: number;
         line: number;
         name: string;
-        status_type: number;
+        status_priority: number;
         properties: [IProperty];
         rule: IRule;
         ranking: IRanking;

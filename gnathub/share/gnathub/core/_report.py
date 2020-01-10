@@ -25,6 +25,7 @@ import json
 import logging
 import os
 import time
+import re
 
 from enum import Enum
 from itertools import chain
@@ -757,6 +758,35 @@ class IndexBuilder(object):
             'review_status': self.review_status or None
         }
         _write_json(path, tmp, indent=2)
+
+    def custom_review_to_json(self, path):
+        """Create and fill an object,
+        then create the JSON file to the given path
+
+        This one is for custom review status
+
+        :param path string: the path to create the file
+        """
+        try:
+            tmp_NOT_A_BUG = []
+            tmp_PENDING = []
+            tmp_BUG = []
+            with open(GNAThub.Project.path(), 'r') as file:
+                for line in file.readlines():
+                    if line.find('Not_A_Bug_Status') != -1:
+                        tmp_NOT_A_BUG = re.findall(r'"(.*?)"', line)
+                    elif line.find('Pending_Status') != -1:
+                        tmp_PENDING = re.findall(r'"(.*?)"', line)
+                    elif line.find('Bug_Status') != -1:
+                        tmp_BUG = re.findall(r'"(.*?)"', line)
+            tmp = {
+                'BUG': tmp_BUG,
+                'PENDING': tmp_PENDING,
+                'NOT_A_BUG': tmp_NOT_A_BUG
+            }
+            _write_json(path, tmp, indent=2)
+        except Exception as e:
+            print e
 
 
 class ReportBuilder(object):

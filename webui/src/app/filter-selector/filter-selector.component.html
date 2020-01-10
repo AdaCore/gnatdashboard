@@ -28,7 +28,7 @@
             <label class="option d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" for="{{option.name}}"
                    [ngClass]="option._ui_selected_message_count == 0 ? 'no-message ' + option.name : 'message' ">
                 <span class="background-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                      [ngClass]=" option.name ">
+                      [ngClass]=" option.kind ? option.kind : option.name ">
                     <span class="d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">{{ option.display_name ? option.display_name : option.name }}</span>
                     <div class="count d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
                         {{ option._ui_selected_message_count != null ? option._ui_selected_message_count : option._message_count }} / {{option._message_count}}

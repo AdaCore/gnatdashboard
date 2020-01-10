@@ -23,7 +23,7 @@
     <span class="form-field d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <span class="d-inline-block col-lg-3 col-md-4 col-sm-12 col-xs-12"> New status: </span>
         <select class="d-inline-block col-lg-9 col-md-8 col-sm-12 col-xs-12" [(ngModel)]="status">
-            <option *ngFor="let opt of reviewStatus" [ngValue]="opt.value" >{{opt.show}}</option>
+            <option *ngFor="let opt of reviewStatus" [ngValue]="opt.value" >{{opt.display_name}}</option>
         </select>
     </span>
     <span class="form-field d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">

@@ -41,10 +41,10 @@
                     </span>
                 </span>
                 <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
-                      (click)="sortModules('status_type','')">
+                      (click)="sortModules('status_priority','')">
                     <span class="ellipsis">Review Status</span>
                     <span class="header-icon"
-                          *ngIf="reportService.messageSort.newSort == 'status_type'">
+                          *ngIf="reportService.messageSort.newSort == 'status_priority'">
                         <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
                         <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
                     </span>
@@ -92,7 +92,7 @@
                                   [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
                                 <span class="message-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [routerLink]="['/source', source.filename, { line: message.line, id: message.id }]"
-                                      [ngClass]="message.ranking.name + ' ' + message.tool + ' ' + (message.user_review ? message.user_review.status : '' )">
+                                      [ngClass]="message.ranking.name + ' ' + message.tool + ' ' + (message.user_review ? message.user_review.status_kind : '' )">
                                     <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                                         <span class="d-inline-block col-lg-1 col-md-1 col-sm-2 col-xs-2">
                                             {{message.line}}:{{message.col_begin}}

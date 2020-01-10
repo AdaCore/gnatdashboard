@@ -432,6 +432,7 @@ export class AnnotatedSourceComponent
                         xml += "status_category='" + data.category + "' ";
                         newReview[id].status = data.status;
                         newReview[id].display_name = this.formatName(data.status);
+                        newReview[id].status_kind = data.category;
                     }
                     if (data.username) {
                         xml += "approved='" + data.username + "' ";

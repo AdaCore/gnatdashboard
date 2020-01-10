@@ -15,35 +15,12 @@ export class ReviewDialogComponent {
     public review: string;
     public status: string;
     public category: string;
-    public reviewStatus: any = [
-        {
-            show: 'Pending',
-            value: 'PENDING',
-            category: 'PENDING'
-        },
-        {
-            show: 'Not a bug',
-            value: 'NOT_A_BUG',
-            category: 'NOT_A_BUG'
-        },
-        {
-            show: 'False positive',
-            value: 'FALSE_POSITIVE',
-            category: 'NOT_A_BUG'
-        },
-        {
-            show: 'Intentional',
-            value: 'INTENTIONAL',
-            category: 'NOT_A_BUG'
-        },
-        {
-            show: 'Bug',
-            value: 'BUG',
-            category: 'BUG'
-        }];
+    public reviewStatus: any = [];
 
     constructor(public dialogRef: MatDialogRef<ReviewDialogComponent>,
-                public reportService: SharedReport) {}
+                public reportService: SharedReport) {
+        this.reviewStatus = this.reportService.globalReviewStatus;
+    }
 
     public cancel(): void {
         this.dialogRef.close();
@@ -69,7 +46,7 @@ export class ReviewDialogComponent {
         let category: string = '';
         this.reviewStatus.forEach(function(status: any): void {
              if (status.value === myStatus){
-                category = status.category;
+                category = status.kind;
             }
         });
         return category;

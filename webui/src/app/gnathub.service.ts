@@ -5,7 +5,8 @@ import { Http, Response } from '@angular/http';
 import xml2js from 'xml2js';
 
 import { IAnnotatedSourceFile, IFilterIndex, ICodeIndex,
-         IMessageIndex, IReviewUser } from 'gnat';
+        IMessageIndex, IReviewUser } from 'gnat';
+import { createDisplayName } from './utils/createDisplayName';
 
 @Injectable()
 export class GNAThubService {
@@ -58,64 +59,47 @@ export class GNAThubService {
         return observableThrowError(errMsg);
     }
 
-    private createDisplayName(name: string): string {
-        let myArray: string[] = name.split('_');
-        let displayName: string = '';
-        myArray.forEach(function(word: string, idx: number): void{
-            displayName += word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-            if (idx < myArray.length - 1){ displayName += ' '; }
-        });
-        return displayName;
-    }
-
     private createReview(review: any): any {
         let myReview: IReviewUser[] = [];
-        let statusPriority: any = {
-            Bug: 5,
-            Pending: 4,
-            Intentional: 3,
-            False_Positive: 2,
-            Not_A_Bug: 1
-        };
 
         let lastReview: IReviewUser = {
             author: '',
             status: '',
-            status_type: 0,
+            status_priority: 0,
+            status_kind: '',
             date: '',
             from_source: '',
             message: '',
             display_name: ''
         };
         if (review.audit.$){
-            let statusType: number = review.audit.$.status
-                                     && statusPriority[review.audit.$.status] ?
-                                     statusPriority[review.audit.$.status] : 0;
+            let displayName: string = createDisplayName(review.audit.$.status);
 
             let tmpReview: IReviewUser = {
                 author: review.audit.$.approved,
                 status: review.audit.$.status,
-                status_type: statusType,
+                status_priority: -1,
+                status_kind: review.audit.$.status_category,
                 date: review.audit.$.timestamp,
                 from_source: review.audit.$.from_source,
                 message: review.audit._,
-                display_name: this.createDisplayName(review.audit.$.status)
+                display_name: displayName
             };
             myReview.push(tmpReview);
             lastReview = tmpReview;
         } else if (review.audit[0].$) {
             review.audit.forEach(function(tmp: any): void {
-                let statusType: number = tmp.$.status && statusPriority[tmp.$.status] ?
-                                         statusPriority[tmp.$.status] : 0;
+                let displayName: string = createDisplayName(tmp.$.status);
 
                 let tmpReview: IReviewUser = {
                     author: tmp.$.approved,
                     status: tmp.$.status,
-                    status_type: statusType,
+                    status_priority: -1,
+                    status_kind: tmp.$.status_category,
                     date: tmp.$.timestamp,
                     from_source: tmp.$.from_source,
                     message: tmp._,
-                    display_name: this.createDisplayName(tmp.$.status)
+                    display_name: displayName
                 };
                 myReview.push(tmpReview);
                 if (lastReview.date < tmpReview.date) {

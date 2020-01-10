@@ -124,6 +124,12 @@ class HTMLReport(Plugin, Reporter):
             self.log.debug('code index saved as %s', dest)
             self.info('HTML report code generated in %s', dest)
 
+            # Generate the JSON-encoded report for custom review status.
+            dest = os.path.join(data_output_dir, 'custom_status.json')
+            report.index.custom_review_to_json(dest)
+            self.log.debug('custom review status saved as %s', dest)
+            self.info('HTML report custom review status generated in %s', dest)
+
             codepeer_obj_dir = os.path.join(GNAThub.Project.object_dir(),
                                             'codepeer')
             if os.path.isdir(codepeer_obj_dir):

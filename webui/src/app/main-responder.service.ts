@@ -6,6 +6,7 @@ import {
     IRankingFilter, ISort, ITool, IReviewUser, ISourceNav
 } from 'gnat';
 import { sortCodeArray, sortMessageArray } from './utils/sortArray';
+import { createDisplayName } from './utils/createDisplayName';
 import { Http, Response } from '@angular/http';
 import { updateFilter } from './utils/refreshFilter';
 import {
@@ -57,6 +58,7 @@ export class SharedReport {
     public filter: IFilterIndex;
     public code: ICodeIndex;
     public message: IMessageIndex;
+    public globalReviewStatus: any[] = [];
 
     /* Correspond to the data extracted from the codepeer tool*/
     public isCodepeer: boolean = false;
@@ -113,6 +115,7 @@ export class SharedReport {
 
     private initApp(): void {
         this.initLocalStorage();
+        this.getCustomReview();
         this.isServerOnline();
         this.isCodepeerPassed();
         this.getCodepeerRunInfo();
@@ -260,6 +263,7 @@ export class SharedReport {
                 }
             );
     }
+
     private getMessageOffline(): void {
         this.gnathub.getMessage().subscribe(
             messages => {
@@ -271,6 +275,55 @@ export class SharedReport {
             }, error => {
                 this.isReportFetchError = true;
             }
+        );
+    }
+
+    private sortReviewStatus(array: string[], myKind: string, priority: number): any {
+        let tmpArray: any[] = [];
+        array.sort((a, b) => (a > b ? -1 : 1));
+        array.forEach(function(status: string, index: number): void {
+            tmpArray.push({
+                display_name: createDisplayName(status),
+                value: status,
+                kind: myKind,
+                sortingPriority: priority
+            });
+            priority += 1;
+        }.bind(this));
+        return tmpArray;
+    }
+
+    private handleReviewStatus(data: any): void {
+        let defaultReviewStatus: any = {
+            BUG: ['BUG'],
+            PENDING: ['PENDING'],
+            NOT_A_BUG: ['NOT_A_BUG', 'FALSE_POSITIVE', 'INTENTIONNAL']
+        };
+        let minPriority: number = 0;
+        defaultReviewStatus.NOT_A_BUG = this.sortReviewStatus(defaultReviewStatus
+                                                              .NOT_A_BUG.concat(data.NOT_A_BUG),
+                                                              'NOT_A_BUG', minPriority);
+        minPriority += defaultReviewStatus.NOT_A_BUG.length;
+        defaultReviewStatus.PENDING = this.sortReviewStatus(defaultReviewStatus
+                                                            .PENDING.concat(data.PENDING),
+                                                            'PENDING', minPriority);
+        minPriority += defaultReviewStatus.PENDING.length;
+        defaultReviewStatus.BUG = this.sortReviewStatus(defaultReviewStatus
+                                                        .BUG.concat(data.BUG),
+                                                        'BUG', minPriority);
+        this.globalReviewStatus = defaultReviewStatus.NOT_A_BUG
+                                                     .concat(defaultReviewStatus.PENDING)
+                                                     .concat(defaultReviewStatus.BUG);
+    }
+
+    private getCustomReview(): void {
+        this.http.get(this.url + 'json/custom_status.json').subscribe(
+                data => {
+                    this.handleReviewStatus(JSON.parse(data['_body']));
+                }, error => {
+                    console.log('[Error] get custom review status : ', error);
+                    this.isReportFetchError = true;
+                }
         );
     }
 
@@ -502,6 +555,7 @@ export class SharedReport {
         let newIdx: number = 1;
         let status: string = review.status;
         let displayName: string = review.display_name;
+        let statusKind: string = review.status_kind;
 
         if (this.checkArray(filter, 'main-responder.service',
                 'putInFilter', 'filter')) {
@@ -520,6 +574,7 @@ export class SharedReport {
             let tmp: IReviewFilter = {
                 id: newIdx,
                 name: status,
+                kind: statusKind,
                 display_name: displayName,
                 _message_count: 1,
                 _ui_unselected: active
@@ -533,6 +588,21 @@ export class SharedReport {
         return filter;
     }
 
+    private getStatusPriority(status: string): number {
+        let tmpPriority: number = 0;
+
+        this.globalReviewStatus.forEach(function (reviewStatus: any): void {
+            if (reviewStatus.display_name.toUpperCase() === status.toUpperCase()){
+                tmpPriority = reviewStatus.sortingPriority;
+            }
+        });
+        if (tmpPriority === 0){
+            console.info('[WARNING] Review status (' + status +
+                         ') not referenced. Put on priority 0 by default');
+        }
+        return tmpPriority;
+    }
+
     private addUserReview(): void {
         if (this.checkArray(this.message.sources, 'main-responder.service',
                 'addUserReview', 'message.sources')) {
@@ -541,14 +611,19 @@ export class SharedReport {
                 if (source.messages) {
                     source.messages.forEach(function (message: IMessage): void {
                         if (this.codepeerReview[message.tool_msg_id]) {
+                            let statusPriority: number = this.getStatusPriority(
+                                                         this.codepeerReview[message.tool_msg_id]
+                                                         .user_review.display_name);
+                            this.codepeerReview[message.tool_msg_id]
+                                .user_review.status_priority = statusPriority;
                             message.review_history = this.codepeerReview[message.tool_msg_id]
-                                .review_history;
+                                                         .review_history;
                             message.user_review = this.codepeerReview[message.tool_msg_id]
-                                .user_review;
-                            message.status_type = message.user_review
-                                                         .status_type;
+                                                      .user_review;
+                            message.status_priority = message.user_review
+                                                             .status_priority;
                             this.userReviewFilter = this.putInFilter(message.user_review,
-                                             this.userReviewFilter);
+                                                                     this.userReviewFilter);
                         }
                     }.bind(this));
                 }

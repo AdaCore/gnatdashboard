@@ -73,10 +73,10 @@
                 <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad" >
                 </span>
                 <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
-                      (click)="sortModules('status_type','')">
+                      (click)="sortModules('status_priority','')">
                     <span class="ellipsis">Review Status</span>
                     <span class="header-icon"
-                          *ngIf="reportService.messageSort.newSort == 'status_type'">
+                          *ngIf="reportService.messageSort.newSort == 'status_priority'">
                         <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
                         <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
                     </span>
@@ -120,7 +120,7 @@
                                             {{message.name}}
                                         </span>
                                         <span class="user-review d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad" >
-                                            <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="message.user_review ? message.user_review.status : ''">
+                                            <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="message.user_review ? message.user_review.status_kind : ''">
                                                 {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
                                             </span>
 
@@ -181,7 +181,7 @@
                                                 {{message.name}}
                                             </span>
                                             <span class="user-review d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad" >
-                                                <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="message.user_review ? message.user_review.status : ''">
+                                                <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="message.user_review ? message.user_review.status_kind : ''">
                                                     {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
                                                 </span>
 

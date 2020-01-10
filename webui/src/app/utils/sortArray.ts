@@ -143,7 +143,7 @@ export function sortMessageArray(newFilter: ISort, oldFilter: ISort,
     }
 
     sourceArray.forEach(function(source: ISourceNav): void {
-        if (source.messages && newFilter.newSort !== 'status_type'){
+        if (source.messages && newFilter.newSort !== 'status_priority'){
             let messageArray: [IMessage] =  source.messages;
             property = checkProperty(messageArray, newFilter);
             if (property === 'ranking') {
@@ -161,11 +161,11 @@ export function sortMessageArray(newFilter: ISort, oldFilter: ISort,
             }
             source.messages = messageArray;
         } else if (source.messages
-                   && newFilter.newSort === 'status_type') {
+                   && newFilter.newSort === 'status_priority') {
             let messageArray: [IMessage] =  source.messages;
             messageArray.sort((a: any, b: any) => {
-                let typeA: number = a['status_type'] ? a['status_type'] : 0;
-                let typeB: number = b['status_type'] ? b['status_type'] : 0;
+                let typeA: number = a['status_priority'] ? a['status_priority'] : 0;
+                let typeB: number = b['status_priority'] ? b['status_priority'] : 0;
                 if (typeA < typeB) { return -1 * newFilter.order; }
                 if (typeA > typeB) { return 1 * newFilter.order; }
                 return 0;
