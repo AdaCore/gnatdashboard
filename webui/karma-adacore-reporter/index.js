@@ -7,11 +7,33 @@ function writeOutput(config, output, helper, logger) {
     if (config.dir) {
 
         let output_json = config.dir + '/output.json';
+        let results = config.dir + '/results';
 
         //write the json file
         helper.mkdirIfNotExists(path.dirname(output_json), function() {
             fs.writeFile(output_json, JSON.stringify(output, null, 4),
                          function(err) {
+                if (err) {
+                    log.warn('Cannot write test results to JSON file\n\t' +
+                             err.message);
+                } else {
+                    log.debug('Test results were written to JSON file ' +
+                              config.dir);
+                }
+            });
+        });
+
+        //write results
+        helper.mkdirIfNotExists(path.dirname(results), function() {
+            let myResults = '';
+
+            Object.keys(output.tests).forEach(function(key, idx) {
+                myResults += output.tests[key].key + ':';
+                myResults += output.tests[key].status + ':';
+                myResults += output.tests[key].comment + '\n';
+            });
+
+            fs.writeFile(results, myResults, function(err) {
                 if (err) {
                     log.warn('Cannot write test results to JSON file\n\t' +
                              err.message);
@@ -52,7 +74,8 @@ var AdacoreReporter = function(baseReporterDecorator,
             var gaia_object = {
                 status: myStatus,
                 diff: myDiff,
-                comment: myComment
+                comment: myComment,
+                key: result.description
             };
             gaia_results[result.description] = gaia_object;
         });
