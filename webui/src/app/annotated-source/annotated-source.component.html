@@ -38,7 +38,7 @@
                     All Messages
                 </span>
                 <button id="ErrorButton" class="location-view-refresh-btn" (click)='reportService.refreshUserReview()'>
-                    <span>Refresh review</span>
+                    <span>Refresh reviews</span>
                 </button>
                 <button *ngIf="reportService.isOnline" (click)="writeReview()" class="location-view-review-btn" [disabled]="!checked_msg || checked_msg.length == 0 || tabOpen != 'message'">
                     <span>Add review</span>
