@@ -6,14 +6,14 @@ const projectSortName: string = 'projectExplorer-sort';
 
 export function getFilterItem(item: any): boolean {
     let itemName: string = filterName + item.name;
-    let itemValue: string = localStorage.getItem(itemName);
+    let itemValue: string = localStorage.getItem(itemName.toUpperCase());
     return JSON.parse(itemValue);
 }
 
 function getStoredFilterItems(items: [any]): void {
     items.forEach(function(item: any): void {
         let itemName: string = filterName + item.name;
-        let itemValue: string = localStorage.getItem(itemName);
+        let itemValue: string = localStorage.getItem(itemName.toUpperCase());
         item._ui_unselected = JSON.parse(itemValue);
     });
 }
@@ -39,9 +39,9 @@ export function getStoredFilter(filter: IFilterIndex): void {
 export function storeFilterItem(name: string, itemState: boolean): void {
     let itemName: string = filterName + name;
     if (itemState){
-        localStorage.setItem(itemName, itemState.toString());
+        localStorage.setItem(itemName.toUpperCase(), itemState.toString());
     } else {
-        localStorage.removeItem(itemName);
+        localStorage.removeItem(itemName.toUpperCase());
     }
 
 }

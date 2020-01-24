@@ -59,6 +59,7 @@ export class SharedReport {
     public code: ICodeIndex;
     public message: IMessageIndex;
     public globalReviewStatus: any[] = [];
+    private isInitLocalStorage: boolean = false;
 
     /* Correspond to the data extracted from the codepeer tool*/
     public isCodepeer: boolean = false;
@@ -126,9 +127,15 @@ export class SharedReport {
             storeFilterItem('Low', true);
             storeFilterItem('Info', true);
             storeFilterItem('Removed', true);
-            storeFilterItem('False_Positive', true);
-            storeFilterItem('Intentional', true);
-            storeFilterItem('Not_A_Bug', true);
+            this.isInitLocalStorage = true;
+        }
+    }
+
+    private initCustomLocalStorage(customStatusArray: any[]): void {
+        if (this.isInitLocalStorage) {
+             customStatusArray.forEach(function(status: any): void {
+                storeFilterItem(status.value, true);
+             });
         }
     }
 
@@ -303,6 +310,7 @@ export class SharedReport {
         defaultReviewStatus.NOT_A_BUG = this.sortReviewStatus(defaultReviewStatus
                                                               .NOT_A_BUG.concat(data.NOT_A_BUG),
                                                               'NOT_A_BUG', minPriority);
+        this.initCustomLocalStorage(defaultReviewStatus.NOT_A_BUG);
         minPriority += defaultReviewStatus.NOT_A_BUG.length;
         defaultReviewStatus.PENDING = this.sortReviewStatus(defaultReviewStatus
                                                             .PENDING.concat(data.PENDING),
