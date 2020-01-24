@@ -462,6 +462,7 @@ export class AnnotatedSourceComponent
         this.http.post(url, xml)
             .subscribe(data => {
             this.addDynamicReview(newReview);
+            this.reportService.refreshUserReview();
         }, error => {
             console.error('[Error] sendUserReview :', error);
             this.reportService.errorToShow.push('Error when trying to add a review.');
