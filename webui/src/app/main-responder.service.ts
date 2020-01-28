@@ -306,7 +306,7 @@ export class SharedReport {
             PENDING: ['PENDING'],
             NOT_A_BUG: ['NOT_A_BUG', 'FALSE_POSITIVE', 'INTENTIONNAL']
         };
-        let minPriority: number = 0;
+        let minPriority: number = 1;
         defaultReviewStatus.NOT_A_BUG = this.sortReviewStatus(defaultReviewStatus
                                                               .NOT_A_BUG.concat(data.NOT_A_BUG),
                                                               'NOT_A_BUG', minPriority);
