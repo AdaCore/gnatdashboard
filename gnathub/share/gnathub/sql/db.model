@@ -1,64 +1,139 @@
-| TABLE         | tools                             | tool              |   | Tools that will be managed by GNAThub                                         |
-| id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
-| name          | TEXT                              | NOT NULL, NOCASE  |   | Tool's name                                                                   |
+| TABLE                  | tools                                 | tool                                 |   | Contains the tool managed by GNAThub. There is one entry per tool                          |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| name                   | STRING                                | NOT NULL                             |   | The tool's name                                                                            |
 
-| TABLE         | rules                             | rule              |   | The rules used for analysis                                                   |
-| id            | AUTOINCREMENT                     | PK                |   |                                                                               |
-| name          | TEXT                              | NOT NULL, NOCASE  |   | Rule's name                                                                   |
-| identifier    | TEXT                              |                   |   | Rule's unique identifier                                                      |
-| kind          | INTEGER                           | NOT NULL          | 0 | Whether it is a rule or a metric. 0 for rule, 1 for metric                    |
-| tool_id       | FK tools(tool_rules)              | NOT NULL          |   | Rule's related tool                                                           |
+| TABLE                  | resources                             | resource                             |   | Contains the resources in the project (project, directory or file)                         |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| kind                   | INTEGER                               | NOT NULL                             |   | The resource's kind: 0 - project, 1 - directory, 2 - file                                  |
+| name                   | TEXT                                  | NOT NULL                             |   | The resource's name given as a full path                                                   |
 
-| TABLE         | messages                          | message           |   | Messages from tools' output                                                   |
-| id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
-| rule_id       | FK rules(rule_messages)           | NOT NULL          |   | Messages' associated rule                                                     |
-| data          | TEXT                              |                   |   | Value associated with the message, possibly a numeric value for metrics       |
-| ranking       | INTEGER                           | NOT NULL          | 1 | Values : 0-Annotation, 1-Unspecified, 2-Info, 3-Low, 4-Medium, 5-High         |
-| tool_msg_id   | INTEGER                           | NOT NULL          | 0 | Stores original message id value issued from tools                            |
+| TABLE                  | rankings                              | ranking                              |   | Contains predefined ranking levels use to classify messages                                |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| ranking                | STRING                                | NOT NULL                             |   | These are predefined constant strings                                                      |
 
-| TABLE         | resources                         | resource          |   | Resource in the project, can be either a project, a directory or a file       |
-| id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
-| name          | TEXT                              | NOT NULL          |   | Resource's name                                                               |
-| kind          | INTEGER                           | NOT NULL          |   | Resource's kind: project, directory or file                                   |
-| timestamp     | TIMESTAMP                         |                   |   | Resource's timestamp                                                          |
+| TABLE                  | entities                              | entity                               |   | Contains the entities of the project after different tool's run                            |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| name                   | STRING                                | NOT NULL                             |   | The entitie's name                                                                         |
+| kind                   | STRING                                | NOT NULL                             |   | The entitie's kind (ex.: package, package body, procedure, function, ...)                  |
 
-| TABLE         | resource_trees                    | resource_tree     |   | Project resource tree                                                         |
-| id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
-| child_id      | FK resources(resource_children)   | NULL              |   | Resources as a child                                                          |
-| parent_id     | FK resources(resource_parent)     | NULL              |   | Resource as a parent                                                          |
+| TABLE                  | rules                                 | rule                                 |   | Contains the rules used for the analysis and corresponds to CodePeer message kinds         |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| tool_id                | FK tools(id)                          | NOT NULL                             |   | The rule's related tool id                                                                 |
+| name                   | STRING                                | NOT NULL, NOCASE                     |   | The rule's name                                                                            |
+| printable_name         | STRING                                | NOT NULL                             |   | The rule's printable name                                                                  |
 
-| TABLE         | resources_messages                | resource_message  |   | Association between messages and location in source (line, column)            |
-| id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
-| message_id    | FK messages(message)              | NOT NULL          |   | the associated message                                                        |
-| resource_id   | FK resources(resource)            | NOT NULL          |   | Corresponding resource for message                                            |
-| line          | INTEGER                           | NULL              |   | Corresponding line for message - zero means not associated to a line          |
-| col_begin     | INTEGER                           | NULL              |   | Line's column begin                                                           |
-| col_end       | INTEGER                           | NULL              |   | Line's column end                                                             |
+| TABLE                  | history_lines                         | history_line                         |   | Contains a set of successive inspections forming an history line                           |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| tool_id                | FK tools(id)                          | NOT NULL                             |   | The history line's related tool id                                                         |
+| identifier             | STRING                                | NOT NULL                             |   | An unique identifier for the history line                                                  |
 
-| TABLE         | entities                          | entity            |   | Entity                                                                        |
-| id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
-| name          | TEXT                              | NOT NULL          |   | Entitie's name                                                                |
-| kind          | TEXT                              | NOT NULL          |   | Entitie's kind (ex.: package, package body, procedure, function, ...)         |
-| line          | INTEGER                           | NOT NULL          |   | Entitie's line begin                                                          |
-| col_begin     | INTEGER                           | NOT NULL          |   | Entitie's column begin                                                        |
-| col_end       | INTEGER                           | NOT NULL          |   | Entitie's column end                                                          |
-| resource_id   | FK resources(resource)            | NOT NULL          |   | Entitie's associated ressource                                                |
+| TABLE                  | review_kinds                          | review_kind                          |   | Contains the review's kind to used to define a default behavior with an associated message |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| kind                   | INTEGER                               | NOT NULL                             |   | Theese a predefined constant strings like Bug, Pendign, Not_A_Bug...                       |
 
-| TABLE         | entities_messages                 | entity_message    |   | Association between messages and entities                                     |
-| id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
-| entity_id     | FK entities(entity_messages)      | NOT NULL          |   | Entitie's id                                                                  |
-| message_id    | FK messages(message_entities)     | NOT NULL          |   | Message's id                                                                  |
-| line          | INTEGER                           | NULL              |   | Corresponding line for message - zero means not associated to a line          |
-| col_begin     | INTEGER                           | NULL              |   | Line's column begin                                                           |
-| col_end       | INTEGER                           | NULL              |   | Line's column end                                                             |
+| TABLE                  | review_statuses                       | review_status                        |   | Contains the status of a message and each of them has associated a review kind             |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| status                 | STRING                                | NOT NULL                             |   | The status name                                                                            |
+| review_kind_id         | FK review_kinds(id)                   | NOT NULL                             |   | The status related review kind id                                                          |
 
+| TABLE                  | inspections                           | inspection                           |   | Contains information's related tool run; There is on entry per tool run                    |
+| id                     | INTEGER                               | PK                                   |   | LOOK A POWERPOINT                                                                          |
+| history_line_id        | FK history_lines(id)                  | NOT NULL                             |   | The inspection's related history line                                                      |
+| baseline_id            | INTEGER                               | NOT NULL                             |   | The associated baseline inspection, will define if message is New, Unchanged or Deleted    |
+| version                | STRING                                | NOT NULL                             |   | The inspection's related tool version                                                      |
+| start_time             | STRING                                | NOT NULL                             |   | The time stamp when the current inspection was started                                     |
 
-| TABLE         | properties                        | property          |   | Message property                                                              |
-| id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
-| identifier    | TEXT                              | NOT NULL          |   | Propertie's unique identifier                                                 |
-| name          | TEXT                              | NOT NULL          |   | Propertie's name                                                              |
+| TABLE                  | messages                              | message                              |   | Contains the message from tool's output; this information is not history dependent         |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| text                   | STRING                                | NOT NULL                             |   | The value associated to the message; could be a numerical value for the metrics            |
+| ranking_id             | FK rankings(id)                       | NOT NULL                             |   | The message's related ranking id                                                           |
+| rule_id                | FK ruls(id)                           | NOT NULL                             |   | The message's related rule id                                                              |
+| message_key            | INTEGER                               | NOT NULL                             |   | Unique id used to recognize one message from one run to another                            |
+| message_seq            | INTEGER                               | NOT NULL                             |   | Used to distinguish two messages with the same message_key                                 |
 
-| TABLE         | messages_properties               | message_property  |   | Association between messages and properties                                   |
-| id            | AUTOINCREMENT                     | PK                |   | Auto-generated id                                                             |
-| message_id    | FK messages(message_properties)   | NOT NULL          |   | Message's id                                                                  |
-| property_id   | FK properties(property_messages)  | NOT NULL          |   | Propertie's id                                                                |
+| TABLE                  | resources_history                     | resource_history                     |   | One entry links one resource to one inspection in a history line                           |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| inspection_id          | FK inspections(id)                    | NOT NULL                             |   | The resource history's related inspection id                                               |
+| resource_id            | FK resources(id)                      | NOT NULL                             |   | The resource history's related resource id                                                 |
+| resource_tstamp        | STRING                                | NOT NULL                             |   | The resource's relatid time stamp                                                          |
+
+| TABLE                  | messages_history                      | message_history                      |   | One entry links one message to one inspection in a history line                            |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| message_id             | FK messages(id)                       | NOT NULL                             |   | The message history's associated message id                                                |
+| resource_history_id    | FK rtesources_history(id)             | NOT NULL                             |   | The message history's associated resource history id                                       |
+| line                   | INTEGER                               | NOT NULL                             |   | The corresponding line for the entity; 0 means not associated to a line                    |
+| col_begin              | INTEGER                               | NOT NULL                             |   | The corresponding line's column begin                                                      |
+| col_end                | INTEGER                               | NOT NULL                             |   | The corresponding line's column end                                                        |
+
+| TABLE                  | entities_history                      | entity_history                       |   | One entry links one entity to one inspection in a history line                             |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| entity_id              | FK entities(id)                       | NOT NULL                             |   | The entity history's associated message id                                                 |
+| resource_history_id    | FK resources_history(id)              | NOT NULL                             |   | The message history's associated resource history id                                       |
+| line                   | INTEGER                               | NOT NULL                             |   | The corresponding line for the entity; 0 means not associated to a line                    |
+| line_begin             | INTEGER                               | NOT NULL                             |   | The corresponding first line for the entity                                                |
+| line_end               | INTEGER                               | NOT NULL                             |   | The corresponding last line for the entity                                                 |
+
+| TABLE                  | entities_messages_history             | entity_messages_history                   |   | One entry links one entity history to one message history                             |
+| id                     | AUTOINCREMENT                         | PK                                   |   | This is an auto-generated value                                                            |
+| entity_history_id      | FK entities_history(id)               | NOT NULL                             |   | The entity history's associated message id                                                 |
+| message_history_id     | FK messages_history(id)               | NOT NULL                             |   | The message history's associated resource history id                                       |
+
+| TABLE                  | reviews                               | review                               |   | Contains the review from a user linked to one message                                      |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| review_status_id       | FK review_statuses(id)                | NOT NULL                             |   | The review's associated review status id                                                   |
+| text                   | STRING                                | NOT NULL                             |   | The review's associated message                                                            |
+| author                 | STRING                                | NOT NULL                             |   | The review's author                                                                        |
+| timestamp              | STRING                                | NOT NULL                             |   | the review's timestamp                                                                     |
+| from_source            | BOOLEAN                               | NOT NULL                             |   | TRUE when the message comes from a pragma annotate                                         |
+| message_id             | FK messages(id)                       | NOT NULL                             |   | The review's associated message id                                                         |
+
+| TABLE                  | codepeer_messages                     | codepeer_message                     |   | Contains additional CodePeer specific information for messages                             |
+| message_id             | FK messages(id)                       | NOT NULL                             |   | The reference to the message from messages table                                           |
+| exc                    | STRING                                | NOT NULL                             |   | Excpetion raised at runtime by failure of check                                            |
+| attributes             | STRING                                | NOT NULL                             |   | A table of boolean used to determine the message level/if it should be suppressed          |
+| likelihood             | STRING                                | NOT NULL                             |   | Either "might fail" or "wil fail"                                                          |
+
+| TABLE                  | codepeer_inspections                  | codepeer_inspection                  |   | Contains additional CodePeer specific information for inspections                          |
+| inspection_id          | FK inspections(id)                    | NOT NULL                             |   | The reference to the inspection from inspections table                                     |
+| frame_id               | STRING                                | NOT NULL                             |   | A unique window id added to the name of popup window/frame                                 |
+| library_path           | STRING                                | NOT NULL                             |   | The path to the library file                                                               |
+| orig_library_path      | STRING                                | NOT NULL                             |   | Complementary path when analysis is partitioned                                            |
+| memory_usage           | INTEGER                               | NOT NULL                             |   | A high water mark for memory use                                                           |
+| num_class              | INTEGER                               | NOT NULL                             |   | The number of .scil files processed                                                        |
+| num_errors             | INTEGER                               | NOT NULL                             |   | The number of errors in the inspection                                                     |
+| num_lines              | INTEGER                               | NOT NULL                             |   | The number of source lines analyzed in the inspection                                      |
+| num_skips              | INTEGER                               | NOT NULL                             |   | The number of skipped files                                                                |
+| num_proc_skips         | INTEGER                               | NOT NULL                             |   | The number of skipped procedures                                                           |
+| cli                    | STRING                                | NOT NULL                             |   | The CodePeer driver's command line                                                         |
+| main_cli               | STRING                                | NOT NULL                             |   | The CodePeer's command line                                                                |
+| switches               | STRING                                | NOT NULL                             |   | The project switches                                                                       |
+
+| TABLE                  | codepeer_sources_history              | codepeer_source_history              |   | Contains additional CodePeer specific metrics attached to a resource (file)                |
+| resource_history_id    | FK resources_history(id)              | NOT NULL                             |   | The resource's associated history id                                                       |
+| checks                 | INTEGER                               | NOT NULL                             |   | Number of checks analyzed in the file                                                      |
+
+| TABLE                  | codepeer_check_kinds                  | codepeer_check_kind                  |   | Contains specific check kinds definition                                                   |
+| id                     | INTEGER                               | PK                                   |   | This is an auto-generated value                                                            |
+| kind                   | STRING                                | NOT NULL                             |   | The check kind's name                                                                      |
+
+| TABLE                  | codepeer_preconditions                | codepeer_precondition                |   | Contains message history completion for some of its message                                |
+| message_history_id     | FK messages_history(id)               | NOT NULL                             |   | The reference to the message history from Messages_history                                 |
+| precond_index          | INTEGER                               | NOT NULL                             |   | The callee precondition unique index                                                       |
+
+| TABLE                  | codepeer_precondition_checks          | codepeer_precondition_check          |   | Contains message history completion for some of its message                                |
+| message_history_id     |  FK messages_history(id)              | NOT NULL                             |   | The reference to the message history from Messages_history                                 |
+| callee_precond_index   | INTEGER                               | NOT NULL                             |   | The callee precondition unique index                                                       |
+| entity_id              |  FK entities(id)                      | NOT NULL                             |   | The identifier of the package containing the callee                                        |
+| callee_line            | INTEGER                               | NOT NULL                             |   | The Sloc.x of the callee                                                                   |
+
+| TABLE                  | codepeer_suspicious_precondition      | codepeer_suspicious_precondition     |   | Contains message history completion for some of its message                                |
+| message_history_id     | FK messages_history(id)               | NOT NULL                             |   | The reference to the message history from Messages_history                                 |
+| precond_index          | INTEGER                               | NOT NULL                             |   | The callee precondition unique index                                                       |
+
+| TABLE                  | codepeer_precondition_primary_checks  | codepeer_precondition_primary_check  |   | Contains message history completion for some of its message                                |
+| message_history_id     | FK messages_history(id)               | NOT NULL                             |   | The reference to the message history from Messages_history                                 |
+| codepeer_check_kind_id | FK codepeer_check_kinds(id)           | NOT NULL                             |   | The reference to the message history from codepeer_check_kinds table                       |
+
+| TABLE                  | codepeer_precondition_original_checks | codepeer_precondition_original_check |   | Contains message history completion for some of its message                                |
+| message_history_id     | FK messages_history(id)               | NOT NULL                             |   | The reference to the message history from Messages_history                                 |
+| codepeer_check_kind_id | FK codepeer_check_kinds(id)           | NOT NULL                             |   | The reference to the message history from codepeer_check_kinds table                       |
