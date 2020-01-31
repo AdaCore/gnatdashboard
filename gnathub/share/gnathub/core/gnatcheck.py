@@ -34,6 +34,12 @@ class GNATcheck(Plugin, Runner, Reporter):
 
     Configures and executes GNATcheck, then analyzes the output.
     """
+    # Regex to identify lines that contain sections titles
+    ''' Pattern to match common title like:
+      1. Summary
+      Format is [section_nb]. [section_title]
+    '''
+    _SECTION_TITLE_PATTERN = r'(?P<snumber>\d+(?:\.\d+)*)\. (?P<stitle>\w+)'
 
     # Regex to identify lines that contain messages
     ''' Pattern to match common rules like:
@@ -60,6 +66,8 @@ class GNATcheck(Plugin, Runner, Reporter):
 
     # Regular expression to match GNATcheck output and extract all relevant
     # information stored in it.
+    _TITLE = re.compile(r'%s' % (_SECTION_TITLE_PATTERN))
+
     _MESSAGE = re.compile(r'%s:\s%s' % (SLOC_PATTERN, _RULE_PATTERN))
 
     _MESSAGE_INST = re.compile(
@@ -159,20 +167,29 @@ class GNATcheck(Plugin, Runner, Reporter):
             with open(self.output, 'r') as output:
                 lines = output.readlines()
                 total = len(lines)
+                exempted_violation = False
 
                 for index, line in enumerate(lines, start=1):
                     self.log.debug('parse line: %s', line)
-                    match = self._MESSAGE.match(line)
 
-                    if match:
-                        self.log.debug('matched: %s', str(match.groups()))
-                        self.__parse_line(match)
-                    else:
-                        match2 = self._MESSAGE_INST.match(line)
-                        if match2:
-                            self.log.debug('matched 2: %s',
-                                           str(match2.groups()))
-                            self.__parse_line_inst(match2)
+                    # check if is a section title
+                    matchTitle = self._TITLE.match(line)
+                    if matchTitle:
+                        stitle = matchTitle.group('stitle')
+                        exempted_violation = stitle in ('Exempted', 'EXEMPTED')
+
+                    # filter messages if occurs in exempted violation section
+                    if not exempted_violation:
+                        match = self._MESSAGE.match(line)
+                        if match:
+                            self.log.debug('matched: %s', str(match.groups()))
+                            self.__parse_line(match)
+                        else:
+                            match2 = self._MESSAGE_INST.match(line)
+                            if match2:
+                                self.log.debug('matched 2: %s',
+                                               str(match2.groups()))
+                                self.__parse_line_inst(match2)
 
                     Console.progress(index, total, new_line=(index == total))
 
