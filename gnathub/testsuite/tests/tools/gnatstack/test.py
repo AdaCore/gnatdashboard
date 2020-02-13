@@ -40,7 +40,7 @@ B_SIMPLE_ADB = ["b__simple.adb", "b__simple.adb 179:27",
 SECTIONS = TEXT_IO + S_IMGINT + S_SECSTA + F_ADB + F_ADS + SIMPLE_ADB + SIMPLE_4_1 + B_SIMPLE_ADB
 
 EXTERNAL_CALL = [
-    "External Call", "external call"
+    "External Call", "[external call] Put_Line"
 ]
 
 ENTRY_POINT = [

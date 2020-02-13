@@ -48,6 +48,9 @@ class GNATstack(Plugin, Runner, Reporter):
         # Map of ID => entity
         self.subprograms = {}
 
+        # Map of ID => name
+        self.subprograms_without_location = {}
+
     def __cmd_line(self):
         """Create GNATstack command line arguments list.
 
@@ -58,8 +61,6 @@ class GNATstack(Plugin, Runner, Reporter):
         cmd_line = [
             'gnatstack', '-Q', '-x', '-Wa',
             '-P', GNAThub.Project.path()] + GNAThub.Project.scenario_switches()
-        if GNAThub.Project.target():
-            cmd_line[0] = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
         if GNAThub.Project.runtime():
             cmd_line.extend(('--RTS', GNAThub.Project.runtime()))
         if GNAThub.subdirs():
@@ -74,16 +75,18 @@ class GNATstack(Plugin, Runner, Reporter):
             * ``GNAThub.EXEC_SUCCESS``: on successful execution
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
-
         return GNAThub.EXEC_SUCCESS if GNAThub.Run(
             self.name, self.__cmd_line()
         ).status in GNATstack.VALID_EXIT_CODES else GNAThub.EXEC_FAILURE
 
-    def pretty_print_name(self, name):
+    def pp_name(self, name):
         if '<' in name:
             return name
         else:
             return name.split('.')[-1].title()
+
+    def pp_msg(self, id, msg):
+        return "[{}] {}".format(msg, self.subprograms[id].name)
 
     def report(self):
         """Parse GNATstack output file report.
@@ -151,7 +154,11 @@ class GNATstack(Plugin, Runner, Reporter):
                     indirect_loc_list.append([line, column])
                     continue
                 else:
-                    name = self.pretty_print_name(name)
+                    name = self.pp_name(name)
+
+                if not locations:
+                    if subprogram_id not in self.subprograms_without_location:
+                        self.subprograms_without_location[subprogram_id] = name
 
                 for loc in locations:
                     file = loc.attrib.get('file')
@@ -163,7 +170,7 @@ class GNATstack(Plugin, Runner, Reporter):
                         resource = GNAThub.Resource(file, GNAThub.FILE_KIND)
                         self.resources[file] = resource
 
-                    # entities default value for kind is set to "porcedure"
+                    # entities default value for kind is set to "procedure"
                     entity = GNAThub.Entity(name, "action",
                                             int(line), int(column),
                                             int(column), resource)
@@ -221,7 +228,8 @@ class GNATstack(Plugin, Runner, Reporter):
                     if pos != -1:
                         indirect_loc_list.pop(pos)
                     message = GNAThub.Message(indirect_rule,
-                                              'indirect call',
+                                              self.pp_msg(indirect_id,
+                                                          "indirect call"),
                                               ranking=GNATstack.RANKING)
                     entities_messages_map[indirect_id].append([message,
                                                                int(line),
@@ -240,7 +248,8 @@ class GNATstack(Plugin, Runner, Reporter):
                 if subprogram_id not in self.subprograms:
                     continue
                 message = GNAThub.Message(external_rule,
-                                          "external call",
+                                          self.pp_msg(subprogram_id,
+                                                      "external call"),
                                           ranking=GNATstack.RANKING)
                 entities_messages_map[subprogram_id].append([message, 0, 1, 1])
 
@@ -277,7 +286,8 @@ class GNATstack(Plugin, Runner, Reporter):
                 subprogram_id = node.attrib.get('id')
                 if subprogram_id in self.subprograms:
                     message = GNAThub.Message(unbounded_rule,
-                                              "This frame is unbounded",
+                                              self.pp_msg(subprogram_id,
+                                                          "unbounded frame"),
                                               ranking=GNATstack.RANKING)
                     entities_messages_map[subprogram_id].append([message,
                                                                  0, 1, 1])
@@ -309,7 +319,14 @@ class GNATstack(Plugin, Runner, Reporter):
                 callchain_list = []
                 for sub in node.find('./callchain').findall('./subprogram'):
                     chain_id = sub.attrib.get('id')
-                    callchain_list.append(self.subprograms[chain_id].name)
+                    if chain_id in self.subprograms:
+                        callchain_list.append(self.subprograms[chain_id].name)
+                    elif chain_id in self.subprograms_without_location:
+                        callchain_list.append(
+                            self.subprograms_without_location[chain_id])
+                    else:
+                        continue
+
                 text += (" and the callchain is:\n\t\t%s" %
                          "\n\t\t".join(callchain_list))
                 message = GNAThub.Message(entry_rule,
