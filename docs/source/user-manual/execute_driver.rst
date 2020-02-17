@@ -224,9 +224,12 @@ explicitly disabled plug-ins.
 :command:`--exec`
 ^^^^^^^^^^^^^^^^^
 
-Expects a Python file as argument. Executes the specified Python file. This
-allows for post-processing, possibly on the local database, using the exposed
-Python API. Implies :command:`--incremental` (retains any previous database).
+Expects a Python file as argument. Executes the specified Python file after that the
+database has been updated. This allows for post-processing, possibly on the local
+database, using the exposed Python API. This implies implicit :command:`--incremental`
+(retains any previous database) since a post-processing is performed on an already
+existing database and the incremental behavior will apply automatically when the
+:command:`--exec` switch is used.
 
 .. _gnathub-switch-incremental:
 
