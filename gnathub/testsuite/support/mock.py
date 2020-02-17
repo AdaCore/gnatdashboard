@@ -70,12 +70,16 @@ class Project(object):
         return Project('gcov_multi_object_dir', dst)
 
     @staticmethod
-    def aggregate_prj (dst=os.getcwd()):
+    def aggregate_prj(dst=os.getcwd()):
         return Project('aggregate_prj', dst)
 
     @staticmethod
-    def simple_gnatcheck (dst=os.getcwd()):
+    def simple_gnatcheck(dst=os.getcwd()):
         return Project('simple_gnatcheck', dst)
+
+    @staticmethod
+    def simple_gnatstack(dst=os.getcwd()):
+        return Project('simple_gnatstack', dst)
 
     @staticmethod
     def disabled(dst=os.getcwd()):
