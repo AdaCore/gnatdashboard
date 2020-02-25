@@ -40,7 +40,7 @@
                         <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
-                <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
+                <span *ngIf="reportService.isCodepeer" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
                       (click)="sortModules('status_priority','')">
                     <span class="ellipsis">Review Status</span>
                     <span class="header-icon"
@@ -48,6 +48,9 @@
                         <mat-icon class="md-18" *ngIf="reportService.messageSort.order == 1">arrow_downward</mat-icon>
                         <mat-icon class="md-18" *ngIf="reportService.messageSort.order == -1">arrow_upward</mat-icon>
                     </span>
+                </span>
+                <span *ngIf="!reportService.isCodepeer" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 noclick">
+                    <span class="ellipsis">Coverage</span>
                 </span>
             </span>
         </span>
@@ -75,11 +78,38 @@
                                     <span> / </span>
                                     <span class="Low">{{source.countRanking.Low}} </span>
                                     <span>
-                                         ({{
+                                        ({{
                                         source._ui_total_message_count != null ?
                                         source._ui_total_message_count :
                                         source._total_message_count
                                         }})
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="coverage center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                <span *ngIf="source.gnatcov_metric">
+                                    <span class="no-pad center d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <span *ngIf="source.gnatcov_metric.not_covered.value > 0"
+                                              class="not_covered"
+                                              [ngStyle]="{'width':source.gnatcov_metric.not_covered.ratio+'%'}"
+                                              [matTooltip]="source.gnatcov_metric.not_covered.value + ' line(s) not covered'"
+                                              matTooltipClass='coverage-tooltip'>
+                                            {{source.gnatcov_metric.not_covered.ratio}}%
+                                        </span>
+                                        <span *ngIf="source.gnatcov_metric.partially_covered.value > 0"
+                                              class="partially_covered"
+                                              [ngStyle]="{'width':source.gnatcov_metric.partially_covered.ratio+'%'}"
+                                              [matTooltip]="source.gnatcov_metric.partially_covered.value + ' line(s) partially covered'"
+                                              matTooltipClass='coverage-tooltip'>
+                                            {{source.gnatcov_metric.partially_covered.ratio}}%
+                                        </span>
+                                        <span *ngIf="source.gnatcov_metric.fully_covered.value > 0"
+                                              class="fully_covered"
+                                              [ngStyle]="{'width':source.gnatcov_metric.fully_covered.ratio+'%'}"
+                                              [matTooltip]="source.gnatcov_metric.fully_covered.value + ' line(s) fully covered'"
+                                              matTooltipClass='coverage-tooltip'>
+                                            {{source.gnatcov_metric.fully_covered.ratio}}%
+                                        </span>
                                     </span>
                                 </span>
                             </span>
@@ -92,16 +122,16 @@
                                   [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
                                 <span class="message-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [routerLink]="['/source', source.filename, { line: message.line, id: message.id }]"
-                                      [ngClass]="message.ranking.name + ' ' + message.tool + ' ' + (message.user_review ? message.user_review.status_kind : '' )">
+                                      [ngClass]="message.ranking.name + ' ' + message.tool + ' ' + (message.user_review ? message.user_review.status_kind : '' ) + ' ' + message.coverage">
                                     <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                                        <span class="d-inline-block col-lg-1 col-md-1 col-sm-2 col-xs-2">
+                                        <span class="line-column d-inline-block col-lg-1 col-md-1 col-sm-2 col-xs-2">
                                             {{message.line}}:{{message.col_begin}}
                                         </span>
                                         <span class="d-inline-block col-lg-7 col-md-7 col-sm-7 col-xs-7">{{message.name}}</span>
                                         <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 ranking ellipsis">
                                             {{ message.ranking.name }}
                                         </span>
-                                        <span class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 review ellipsis">
+                                        <span *ngIf="reportService.isCodepeer" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 review ellipsis">
                                             {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
                                         </span>
 

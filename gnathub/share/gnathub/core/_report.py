@@ -191,7 +191,8 @@ def _encode_message(message, rule, tool, extra=None):
         'ranking': _encode_ranking(message, tool),
         'name': message.data,
         'tool_msg_id': message.tool_msg_id,
-        'tool': tool.name
+        'tool': tool.name,
+        'coverage': message.coverage
     }, extra)
 
 
@@ -380,11 +381,12 @@ class SourceBuilder(object):
             '{}({})'.format(self.__class__.__name__, self.filename))
 
         self.tools, self.rules, self.props = {}, {}, {}
-        self.metrics, self.coverage = [], {}
+        self.metrics, self.coverage, self.message_coverage = [], {}, {}
         self.messages = collections.defaultdict(list)
         self.annotations = collections.defaultdict(list)
         self.message_count = collections.defaultdict(int)
         self.all_messages, self.all_annotations = [], []
+        self.gnatcov = []
         self.id_array = []
         self._process_messages()
 
@@ -412,7 +414,14 @@ class SourceBuilder(object):
                 # Only one coverage tool shall be used. The last entry
                 # overwrites previous ones.
                 self.coverage[message.line] = _get_coverage(message, tool)
+                self.message_coverage[message.line] = message.data
                 # Do not register message, rule or property for coverage.
+                continue
+
+            if rule.identifier == 'gnatcov':
+                self.gnatcov = eval(message.data)
+                for metric in self.gnatcov:
+                    self.gnatcov[metric] = eval(self.gnatcov[metric])
                 continue
 
             if message.line == 0:
@@ -427,6 +436,7 @@ class SourceBuilder(object):
                                prop, tool)
 
             if message.ranking != 0:  # If not an annotation then...
+                message.coverage = self.message_coverage[message.line]
                 self.messages[message.line].append((message, rule, tool))
                 self.message_count[tool.id] += 1
             else:
@@ -448,6 +458,7 @@ class SourceBuilder(object):
             'full_path': self.path,
             'messages': self.all_messages or None,
             'coverage': self.file_coverage,
+            'gnatcov_metric': self.gnatcov,
             'message_count': self.message_count,
             '_total_message_count': sum(self.message_count.itervalues())
         }
@@ -569,6 +580,25 @@ class SourceDirBuilder(object):
         self._coverage_avg = Average()
         self.message_count = collections.defaultdict(int)
 
+    def get_dir_coverage(self):
+        coverage = {}
+        for source in self.source_files:
+            for metric in source['gnatcov_metric']:
+                if metric not in coverage.keys():
+                    coverage[metric] = {
+                        'value': 0,
+                        'ratio': 0
+                    }
+                coverage[metric]['value'] += int(
+                    source['gnatcov_metric'][metric]['value'])
+
+        total_lines = float(coverage['total_lines_of_relevance']['value'])
+        for key in coverage:
+            coverage[key]['ratio'] = int(float(coverage[key]['value']) /
+                                         total_lines*100)
+
+        return coverage
+
     def add_source(self, source):
         """Record a new source file of the directory.
 
@@ -578,6 +608,7 @@ class SourceDirBuilder(object):
         self.source_files.append({
             'filename': source.filename,
             'coverage': file_coverage,
+            'gnatcov_metric': source.gnatcov,
             'message_count': source.message_count,
             '_total_message_count': sum(
                 len(messages) for messages in source.messages.itervalues())
@@ -596,6 +627,7 @@ class SourceDirBuilder(object):
             'sources': [
                 source for source in self.source_files
             ],
+            'coverage_dir': self.get_dir_coverage(),
             'coverage': self._coverage_avg.compute(),
             'message_count': self.message_count or None,
             '_total_message_count': sum(self.message_count.itervalues())
@@ -617,6 +649,26 @@ class ModuleBuilder(object):
 
         self._coverage_avg = Average()
         self.message_count = collections.defaultdict(int)
+
+    def get_project_coverage(self):
+        coverage = {}
+        for folder in self.source_dirs:
+            coverage_dir = self.source_dirs[folder].get_dir_coverage()
+
+            for metric in coverage_dir:
+                if metric not in coverage.keys():
+                    coverage[metric] = {
+                        'value': 0,
+                        'ratio': 0
+                    }
+                coverage[metric]['value'] += int(coverage_dir[metric]['value'])
+
+        total_lines = float(coverage['total_lines_of_relevance']['value'])
+        for key in coverage:
+            coverage[key]['ratio'] = int(float(coverage[key]['value']) /
+                                         total_lines*100)
+
+        return coverage
 
     def add_source(self, source):
         """Record a new source file of the module.
@@ -644,6 +696,7 @@ class ModuleBuilder(object):
                 source_dir.to_json()
                 for path, source_dir in self.source_dirs.iteritems()
             ],
+            'coverage_project': self.get_project_coverage(),
             'coverage': self._coverage_avg.compute(),
             'message_count': self.message_count or None,
             '_total_message_count': sum(self.message_count.itervalues()),

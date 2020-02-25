@@ -74,6 +74,24 @@
                     font-weight: bold;
                     padding-left: 5px;
                 }
+
+                .coverage {
+                    .not_covered, .partially_covered, .fully_covered {
+                        display: inline-block;
+                        height: 18px;
+                        line-height: 20px;
+                        font-size: 10px;
+                    }
+                    .not_covered {
+                        background-color: #fdd;
+                    }
+                    .partially_covered {
+                        background-color: #fbe597;
+                    }
+                    .fully_covered {
+                        background-color: #dbffdb;
+                    }
+                }
             }
             .header-line:hover {
                 background-color: var(--light-shade);
@@ -129,6 +147,19 @@
 
                     &.gnatcoverage {
                         border-left-color: #905cc7;
+
+                        &.PARTIALLY_COVERED .line-column {
+                            background-color: #fbe597;
+                        }
+                        &.NOT_COVERED .line-column{
+                            background-color: #fdd;
+                        }
+                        &.NO_CODE .line-column{
+                            background-color:  var(--medium-shade);
+                        }
+                        &.COVERED .line-column{
+                            background-color: #dbffdb;
+                        }
                     }
 
                 }
