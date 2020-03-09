@@ -20,7 +20,7 @@
         }
 
         .tab-header.right {
-            text-align: right;
+             text-align: right;
         }
 
         .tab-header {
@@ -43,7 +43,7 @@
                 cursor: pointer;
             }
 
-            .click, .noclick {
+            .click {
                 padding-top: 5px;
                 padding-bottom: 5px;
             }
@@ -81,24 +81,6 @@
                 transform: rotate(90deg);
             }
 
-            .coverage {
-                .not_covered, .partially_covered, .fully_covered {
-                    display: inline-block;
-                    height: 18px;
-                    line-height: 20px;
-                    font-size: 10px;
-                }
-                .not_covered {
-                    background-color: #fdd;
-                }
-                .partially_covered {
-                    background-color: #fbe597;
-                }
-                .fully_covered {
-                    background-color: #dbffdb;
-                }
-            }
-
             .all-folders-line {
                 .folder-line {
                     background-color: var(--medium-shade);
@@ -118,7 +100,6 @@
                 .all-files-line {
                     .file-line {
                         background-color: var(--elem-color);
-                        padding-top: 3px;
                     }
                     .file-line:hover {
                         background-color: var(--elem-hover);

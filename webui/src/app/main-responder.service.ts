@@ -463,12 +463,11 @@ export class SharedReport {
      * the filter properly.
      */
     private refreshFilter(): void {
-        if (this.code && this.filter && this.message
-             && ((this.filter.review_status && this.isCodepeer) || !this.isCodepeer)){
+
+        if (this.code && this.filter && this.message && this.filter.review_status) {
             if (localStorage.length > 0) {
                 getStoredFilter(this.filter);
             }
-            this.checkCoverage();
             updateFilter(this);
             this.message.sources = sortMessageArray(
                 this.messageSort,
@@ -526,11 +525,11 @@ export class SharedReport {
                                 if (source.coverage > 0) {
                                     this.showCoverage = true;
                                 }
-                            }.bind(this));
+                            });
                         }
-                    }.bind(this));
+                    });
                 }
-            }.bind(this));
+            });
         }
     }
 
@@ -570,6 +569,7 @@ export class SharedReport {
         let status: string = review.status;
         let displayName: string = review.display_name;
         let statusKind: string = review.status_kind;
+
         if (this.checkArray(filter, 'main-responder.service',
                 'putInFilter', 'filter')) {
             filter.forEach(function (reviewStatus: IReviewFilter): void {

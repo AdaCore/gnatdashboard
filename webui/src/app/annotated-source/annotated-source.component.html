@@ -37,10 +37,10 @@
                 <button class="location-view-title" (click)="tabOpen = 'messages'; thisFile = false" [ngClass]="tabOpen == 'messages' ? 'selected': ''">
                     <span>All Messages</span>
                 </button>
-                <button *ngIf="reportService.isCodepeer"  id="ErrorButton" class="location-view-refresh-btn" (click)='reportService.refreshUserReview()'>
+                <button id="ErrorButton" class="location-view-refresh-btn" (click)='reportService.refreshUserReview()'>
                     <span>Refresh reviews</span>
                 </button>
-                <button *ngIf="reportService.isOnline && reportService.isCodepeer" (click)="writeReview()" class="location-view-review-btn" [disabled]="!checkedMsg || checkedMsg.length == 0 || tabOpen != 'message'">
+                <button *ngIf="reportService.isOnline" (click)="writeReview()" class="location-view-review-btn" [disabled]="!checkedMsg || checkedMsg.length == 0 || tabOpen != 'message'">
                     <span>Add review</span>
                 </button>
                 <button class="location-view-collapse-btn"
@@ -72,7 +72,7 @@
                 </span>
                 <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad" >
                 </span>
-                <span *ngIf="reportService.isCodepeer" class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
+                <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click"
                       (click)="sortModules('status_priority','')">
                     <span class="ellipsis">Review Status</span>
                     <span class="header-icon"
@@ -108,7 +108,7 @@
                                       class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) || (!reportService.showReviews && !message.user_review) ? 'hideIt' : ''">
                                     <span class="message-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                                          [ngClass]="(selectedLine == message.line ? 'selected' : '') + ' ' + message.tool"
+                                          [ngClass]="(selectedMsg.indexOf(message.id) != -1 ? 'selected' : '') + ' ' + message.tool"
                                           (click)="selectMessage(message, $event)">
                                         <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 no-pad">
                                             {{message.line}}:{{message.col_begin}}
@@ -119,7 +119,7 @@
                                         <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad" >
                                             {{message.name}}
                                         </span>
-                                        <span *ngIf="reportService.isCodepeer" class="user-review d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad" >
+                                        <span class="user-review d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad" >
                                             <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="message.user_review ? message.user_review.status_kind : ''">
                                                 {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
                                             </span>
@@ -180,7 +180,7 @@
                                             <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad" >
                                                 {{message.name}}
                                             </span>
-                                            <span *ngIf="reportService.isCodepeer" class="user-review d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad" >
+                                            <span class="user-review d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 no-pad" >
                                                 <span class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="message.user_review ? message.user_review.status_kind : ''">
                                                     {{message.user_review ? message.user_review.display_name : 'Uncategorized'}}
                                                 </span>

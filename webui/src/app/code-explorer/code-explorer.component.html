@@ -34,7 +34,7 @@
                         <mat-icon class="md-18" *ngIf="reportService.projectSort.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
-                <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 noclick"></span>
+                <span class="d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
                 <span class="center d-inline-block col-lg-3 col-md-3 col-sm-3 col-xs-3 click" (click)="sortModules('_ui_total_message_count','name')">
                     <span class="ellipsis">Messages</span>
                     <span class="header-icon"
@@ -43,8 +43,13 @@
                         <mat-icon class="md-18" *ngIf="reportService.projectSort.order == -1">arrow_upward</mat-icon>
                     </span>
                 </span>
-                <span *ngIf="reportService.showCoverage" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 noclick">
+                <span *ngIf="reportService.showCoverage" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2 click" (click)="sortModules('coverage','')">
                     <span class="ellipsis">Coverage</span>
+                    <span class="header-icon"
+                          *ngIf="reportService.projectSort.newSort == 'coverage'">
+                        <mat-icon class="md-18" *ngIf="reportService.projectSort.order == 1">arrow_downward</mat-icon>
+                        <mat-icon class="md-18" *ngIf="reportService.projectSort.order == -1">arrow_upward</mat-icon>
+                    </span>
                 </span>
             </span>
         </span>
@@ -74,29 +79,7 @@
                         }}
                     </span>
                     <span *ngIf="reportService.showCoverage" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                        <span class="coverage no-pad center d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <span *ngIf="project.coverage_project.not_covered.value > 0"
-                                  class="not_covered"
-                                  [ngStyle]="{'width':project.coverage_project.not_covered.ratio+'%'}"
-                                  [matTooltip]="project.coverage_project.not_covered.value + ' line(s) not covered'"
-                                  matTooltipClass='coverage-tooltip'>
-                                {{project.coverage_project.not_covered.ratio}}%
-                            </span>
-                            <span *ngIf="project.coverage_project.partially_covered.value > 0"
-                                  class="partially_covered"
-                                  [ngStyle]="{'width':project.coverage_project.partially_covered.ratio+'%'}"
-                                  [matTooltip]="project.coverage_project.partially_covered.value + ' line(s) partially covered'"
-                                  matTooltipClass='coverage-tooltip'>
-                                {{project.coverage_project.partially_covered.ratio}}%
-                            </span>
-                            <span *ngIf="project.coverage_project.fully_covered.value > 0"
-                                  class="fully_covered"
-                                  [ngStyle]="{'width':project.coverage_project.fully_covered.ratio+'%'}"
-                                  [matTooltip]="project.coverage_project.fully_covered.value + ' line(s) fully covered'"
-                                  matTooltipClass='coverage-tooltip'>
-                                {{project.coverage_project.fully_covered.ratio}}%
-                            </span>
-                        </span>
+                        {{project.coverage != null ? project.coverage : 0}} %
                     </span>
                 </span>
 
@@ -123,29 +106,7 @@
                                 }}
                             </span>
                             <span *ngIf="reportService.showCoverage" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                                <span class="coverage no-pad center d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <span *ngIf="folder.coverage_dir.not_covered.value > 0"
-                                          class="not_covered"
-                                          [ngStyle]="{'width':folder.coverage_dir.not_covered.ratio+'%'}"
-                                          [matTooltip]="folder.coverage_dir.not_covered.value + ' line(s) not covered'"
-                                          matTooltipClass='coverage-tooltip'>
-                                        {{folder.coverage_dir.not_covered.ratio}}%
-                                    </span>
-                                    <span *ngIf="folder.coverage_dir.partially_covered.value > 0"
-                                          class="partially_covered"
-                                          [ngStyle]="{'width':folder.coverage_dir.partially_covered.ratio+'%'}"
-                                          [matTooltip]="folder.coverage_dir.partially_covered.value + ' line(s) partially covered'"
-                                          matTooltipClass='coverage-tooltip'>
-                                        {{folder.coverage_dir.partially_covered.ratio}}%
-                                    </span>
-                                    <span *ngIf="folder.coverage_dir.fully_covered.value > 0"
-                                          class="fully_covered"
-                                          [ngStyle]="{'width':folder.coverage_dir.fully_covered.ratio+'%'}"
-                                          [matTooltip]="folder.coverage_dir.fully_covered.value + ' line(s) fully covered'"
-                                          matTooltipClass='coverage-tooltip'>
-                                        {{folder.coverage_dir.fully_covered.ratio}}%
-                                    </span>
-                                </span>
+                                {{folder.coverage != null ? folder.coverage : 0}} %
                             </span>
                         </span>
 
@@ -169,31 +130,7 @@
                                         }}
                                     </span>
                                     <span *ngIf="reportService.showCoverage" class="center d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                                        <span *ngIf="file.gnatcov_metric">
-                                            <span class="coverage no-pad center d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <span *ngIf="file.gnatcov_metric.not_covered.value > 0"
-                                                      class="not_covered"
-                                                      [ngStyle]="{'width':file.gnatcov_metric.not_covered.ratio+'%'}"
-                                                      [matTooltip]="file.gnatcov_metric.not_covered.value + ' line(s) not covered'"
-                                                      matTooltipClass='coverage-tooltip'>
-                                                    {{file.gnatcov_metric.not_covered.ratio}}%
-                                                </span>
-                                                <span *ngIf="file.gnatcov_metric.partially_covered.value > 0"
-                                                      class="partially_covered"
-                                                      [ngStyle]="{'width':file.gnatcov_metric.partially_covered.ratio+'%'}"
-                                                      [matTooltip]="file.gnatcov_metric.partially_covered.value + ' line(s) partially covered'"
-                                                      matTooltipClass='coverage-tooltip'>
-                                                    {{file.gnatcov_metric.partially_covered.ratio}}%
-                                                </span>
-                                                <span *ngIf="file.gnatcov_metric.fully_covered.value > 0"
-                                                      class="fully_covered"
-                                                      [ngStyle]="{'width':file.gnatcov_metric.fully_covered.ratio+'%'}"
-                                                      [matTooltip]="file.gnatcov_metric.fully_covered.value + ' line(s) fully covered'"
-                                                      matTooltipClass='coverage-tooltip'>
-                                                    {{file.gnatcov_metric.fully_covered.ratio}}%
-                                                </span>
-                                            </span>
-                                        </span>
+                                        {{file.coverage != null ? file.coverage : 0}} %
                                     </span>
                                 </span>
                             </span>
