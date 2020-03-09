@@ -191,8 +191,7 @@ def _encode_message(message, rule, tool, extra=None):
         'ranking': _encode_ranking(message, tool),
         'name': message.data,
         'tool_msg_id': message.tool_msg_id,
-        'tool': tool.name,
-        'coverage': message.coverage
+        'tool': tool.name
     }, extra)
 
 
