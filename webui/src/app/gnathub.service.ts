@@ -141,4 +141,118 @@ export class GNAThubService {
         });
         return userReview;
     }
+
+    private get_srcpos(access: any, objectName: string, entry: string,
+                       accessType: string, raceErrKind: string): any {
+        let tmpAccessMap: any = {
+            entry_point: entry,
+            access: accessType,
+            line: 0,
+            file: '',
+            err_kind: raceErrKind,
+            obj_name: objectName
+        };
+        let raceCondition: any = [];
+        if (access.srcpos.$) {
+            tmpAccessMap.line = access.srcpos.$.line;
+            tmpAccessMap.file = access.srcpos.$.file;
+            raceCondition.push(tmpAccessMap);
+        } else {
+            access.srcpos.forEach(function(fileInfo: any): void{
+                tmpAccessMap.line = fileInfo.$.line;
+                tmpAccessMap.file = fileInfo.$.file;
+                raceCondition.push(tmpAccessMap);
+            });
+        }
+        return raceCondition;
+    }
+
+    public getAccessMap(accessMap: any, objName: string, raceErrKind: string): any {
+        let entryPoint: string = accessMap.$.proc;
+        let accesObj: any = [];
+
+        if (accessMap.lock_access_entry.srcpos_set.$) {
+            let access: any = accessMap.lock_access_entry.srcpos_set;
+            let accessType: string = access.$.acc.replace(' access', '');
+            accesObj = accesObj.concat(this.get_srcpos(access, objName, entryPoint,
+                                                       accessType, raceErrKind));
+        } else {
+            accessMap.lock_access_entry.srcpos_set.forEach(function(access: any): void {
+                let accessType: string = access.$.acc.replace(' access', '');
+                accesObj = accesObj.concat(this.get_srcpos(access, objName, entryPoint,
+                                                           accessType, raceErrKind));
+            }.bind(this));
+        }
+        return accesObj;
+    }
+
+    private objInArray(object: any, arrayObject: any): boolean {
+        let isInArray: boolean = false;
+        arrayObject.forEach(function(refObject: any): void{
+           if (object.entry_point === refObject.entry_point
+              && object.line === refObject.line
+              && object.access === refObject.access
+              && object.err_kind === refObject.err_kind) {
+               isInArray = true;
+           }
+        });
+        return isInArray;
+    }
+
+    public raceToJson(raceXML: any): any {
+        let raceJSON: any = {};
+        xml2js.parseString(raceXML, { explicitArray: false }, (error, result) => {
+            if (error) {
+                console.log('[Error] raceToJson : Problem to parse :', error);
+            } else {
+
+                // Gather the information from the xml given by codepeer
+                // into one array
+                if (result && result.objs_in_trouble && result.objs_in_trouble.obj_race_info) {
+
+                    let raceCondition: any = [];
+                    result.objs_in_trouble.obj_race_info
+                        .forEach(function(raceInfo: any): void {
+                        let objName: string = raceInfo.$.obj_name;
+                        let raceErrKind: string = raceInfo.$.race_err_kind;
+
+                        if (raceInfo.lock_access_map.$) {
+                            raceCondition = raceCondition.concat(this.getAccessMap(
+                                            raceInfo.lock_access_map, objName, raceErrKind));
+                        } else {
+                            raceInfo.lock_access_map.forEach(function(accessMap: any): void {
+                                raceCondition = raceCondition.concat(this.getAccessMap(
+                                                accessMap, objName, raceErrKind));
+                            }.bind(this));
+                        }
+
+                    }.bind(this));
+
+                    // Parse the array, so we got
+                    // a list of entry per object per file
+                    raceCondition.forEach(function(obj: any): void{
+                        let filename: string = obj.file.replace('-frameset.html', '');
+                        let objName: string = obj.obj_name;
+                        let tmpObj: any = {
+                            entry_point : obj.entry_point,
+                            line: obj.line,
+                            access: obj.access,
+                            err_kind: obj.err_kind
+                        };
+                        if (!raceJSON[filename]) {
+                            raceJSON[filename] = {};
+                        }
+                        if (!raceJSON[filename][objName]) {
+                            raceJSON[filename][objName] = [];
+                        }
+                        if (!this.objInArray(tmpObj,
+                                            raceJSON[filename][objName])) {
+                            raceJSON[filename][objName].push(tmpObj);
+                        }
+                    }.bind(this));
+                }
+            }
+        });
+        return raceJSON;
+    }
 }

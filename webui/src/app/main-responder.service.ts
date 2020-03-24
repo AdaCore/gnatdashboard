@@ -69,6 +69,7 @@ export class SharedReport {
     public codepeerReviewError: boolean = false;
     private codepeerReview: any;
     public codepeerHistory: any;
+    public raceCondition: any;
 
     /* Corresponds to the sorting state of code and message navigation*/
     public projectSort: ISort = getStoredProjectSort();
@@ -189,6 +190,7 @@ export class SharedReport {
                             this.isCodepeer = false;
                         }
                         this.getUserReview();
+                        this.getRaceCondition();
                     }
                 }, error => {
                     console.log('[Error] is codepeer passed : ', error);
@@ -455,6 +457,21 @@ export class SharedReport {
         this.filter.review_status = undefined;
         this.userReviewFilter = undefined;
         this.getUserReview();
+    }
+
+    private getRaceCondition(): void {
+        if (this.isCodepeer) {
+        let url: string = this.url + 'get-race-condition';
+        this.http.get(url)
+            .subscribe(
+                data => {
+                    this.raceCondition = this.gnathub.raceToJson(data['_body']);
+                }, error => {
+                    this.isReportFetchError = true;
+                    console.log('[Error] get getRaceCondition : ', error);
+                }
+            );
+        }
     }
 
     /* This function is called each time a set of data is loaded.

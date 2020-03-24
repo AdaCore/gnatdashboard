@@ -61,6 +61,8 @@ export class AnnotatedSourceComponent
     private sub: Subscription;
     public selectedLine: number;
     public selectedId: number;
+    public raceEntry: any = [];
+    public raceSort: any = {};
 
     @ViewChild('scrollView', {static: true}) private scrollView: ElementRef;
 
@@ -195,7 +197,7 @@ export class AnnotatedSourceComponent
      *
      * @param line The number of the line to scroll to.
      */
-    private goToLine(line: number): void {
+    public goToLine(line: number): void {
         if (line) {
             this.selectedLine = line;
             let id: string = 'L' + line;
@@ -485,6 +487,34 @@ export class AnnotatedSourceComponent
             this.reportService.messageSort,
             this.reportService.message.sources);
         storeMessageSort(newFilter);
+    }
+
+    private compareValues(key: string, order: number): any {
+        return function innerSort(a: any, b: any): number {
+            const varA: string = a[key].toUpperCase();
+            const varB: string = b[key].toUpperCase();
+
+            let comparison: number = 0;
+            if (varA > varB) {
+                comparison = 1;
+            } else if (varA < varB) {
+                comparison = -1;
+            }
+            return comparison * order;
+        };
+    }
+
+    public sortRace(attr: string): void {
+        let order: number = 1;
+        let filename: string = this.source.filename;
+
+        if (this.raceSort.value === attr) {
+            order = this.raceSort.order * -1;
+        }
+        this.raceEntry.sort(this.compareValues(attr, order));
+
+        this.raceSort.value = attr;
+        this.raceSort.order = order;
     }
 
 }

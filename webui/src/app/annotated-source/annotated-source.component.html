@@ -31,6 +31,9 @@
                 <button class="location-view-title" (click)="tabOpen = 'metric'" [ngClass]="tabOpen == 'metric' ? 'selected': ''" *ngIf="source.metrics">
                     <span>File Metrics</span>
                 </button>
+                <button class="location-view-title" (click)="tabOpen = 'race'" [ngClass]="tabOpen == 'race' ? 'selected': ''" *ngIf="this.reportService.raceCondition">
+                    <span>Race Condition</span>
+                </button>
                 <button class="location-view-title" (click)="tabOpen = 'message'; thisFile = true" [ngClass]="tabOpen == 'message' ? 'selected': ''">
                     <span>File Messages</span>
                 </button>
@@ -52,7 +55,7 @@
                     </mat-icon>
                 </button>
             </div>
-            <div *ngIf="tabOpen != 'metric'" class="location-view-sort d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            <div *ngIf="tabOpen != 'metric' && tabOpen != 'race'" class="location-view-sort d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                 <span class="d-inline-block col-lg-1 col-md-1 col-sm-1 col-xs-1 click no-pad" (click)="sortModules('line', '')">
                     <span class="ellipsis">{{tabOpen == 'message' ? 'Line' : 'Name'}}</span>
                     <span class="header-icon"
@@ -82,8 +85,47 @@
                     </span>
                 </span>
             </div>
+            <div *ngIf="tabOpen == 'race'" class="location-view-sort d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                <span class="d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                    <span class="ellipsis">Object</span>
+                </span>
+                <span class="d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                    <span class="click col-lg-4 col-md-4 col-sm-4 col-xs-4" (click)="sortRace('entry_point')">
+                        <span class="ellipsis">Entry point</span>
+                        <span class="header-icon"
+                          *ngIf="raceSort.value == 'entry_point'">
+                            <mat-icon class="md-18" *ngIf="raceSort.order == -1">arrow_downward</mat-icon>
+                            <mat-icon class="md-18" *ngIf="raceSort.order == 1">arrow_upward</mat-icon>
+                        </span>
+                    </span>
+                    <span class="click ellipsis col-lg-2 col-md-2 col-sm-2 col-xs-2" (click)="sortRace('access')">
+                        <span class="ellipsis">Access</span>
+                        <span class="header-icon"
+                          *ngIf="raceSort.value == 'access'">
+                            <mat-icon class="md-18" *ngIf="raceSort.order == -1">arrow_downward</mat-icon>
+                            <mat-icon class="md-18" *ngIf="raceSort.order == 1">arrow_upward</mat-icon>
+                        </span>
+                    </span>
+                    <span class="click ellipsis col-lg-2 col-md-2 col-sm-2 col-xs-2" (click)="sortRace('line')">
+                    <span class="ellipsis">Line</span>
+                        <span class="header-icon"
+                          *ngIf="raceSort.value == 'line'">
+                            <mat-icon class="md-18" *ngIf="raceSort.order == -1">arrow_downward</mat-icon>
+                            <mat-icon class="md-18" *ngIf="raceSort.order == 1">arrow_upward</mat-icon>
+                        </span>
+                    </span>
+                    <span class="click ellipsis col-lg-4 col-md-4 col-sm-4 col-xs-4" (click)="sortRace('err_kind')">
+                        <span class="ellipsis">Error</span>
+                        <span class="header-icon"
+                          *ngIf="raceSort.value == 'err_kind'">
+                            <mat-icon class="md-18" *ngIf="raceSort.order == -1">arrow_downward</mat-icon>
+                            <mat-icon class="md-18" *ngIf="raceSort.order == 1">arrow_upward</mat-icon>
+                        </span>
+                    </span>
+                </span>
+            </div>
 
-            <div class="location-view-list d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
+            <div class="location-view-list whole-pannel d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
                 <table *ngIf="tabOpen == 'metric'" class="file-line-container d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <span *ngIf="source.metrics && source.metrics.length > 0">
                         <tbody *ngFor="let metric of source.metrics; let idx = index" [attr.data-index]="idx" class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'">
@@ -93,6 +135,35 @@
                     </span>
                     <span class="info-span d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="source.metrics.length == 0">
                         No metrics for this file.
+                    </span>
+                </table>
+
+                <table *ngIf="tabOpen == 'race'" class="race-condition file-line-container d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+                    <span *ngIf="reportService.raceCondition[source.filename]"
+                          class="no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                        <span class="race-condition-name col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                            <tbody *ngFor="let race of reportService.raceCondition[source.filename] | keyvalue; let idx = index" [attr.data-index]="idx" class="click d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12  no-pad" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'">
+                                <span class="no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="raceEntry = race.value; raceSort = {}">
+                                    {{race.key}}
+                                </span>
+                            </tbody>
+                        </span>
+                        <span class="race_condition_access ol-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                            <tbody *ngFor="let entry of raceEntry; let idx = index" [attr.data-index]="idx" class="no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12  no-pad click" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'" (click)="goToLine(entry.line)">
+                                <span class="no-pad d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4" >
+                                    {{entry.entry_point}}
+                                </span>
+                                <span class="no-pad d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2" >
+                                    {{entry.access.replace(' access', '')}}
+                                </span>
+                                <span class="no-pad d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2" >
+                                    {{entry.line}}
+                                </span>
+                                <span class="no-pad d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4" >
+                                    {{entry.err_kind}}
+                                </span>
+                            </tbody>
+                        </span>
                     </span>
                 </table>
 

@@ -159,6 +159,24 @@ class HTMLReport(Plugin, Reporter):
                 self.info('Codepeer_run file copied in %s', dest)
                 GNAThub.Run(name, cmd)
 
+                # Get race_condition file
+                copy_file = os.path.join(GNAThub.Project.object_dir(),
+                                         'codepeer',
+                                         GNAThub.Project.name().lower()
+                                         + '.output',
+                                         'race_conditions.xml')
+                dest = os.path.join(GNAThub.Project.object_dir(),
+                                    'gnathub', 'html-report',
+                                    'data')
+                cmd = ['cp', copy_file, dest]
+                self.log.debug('%s file copied in %s', copy_file, dest)
+                self.info('%s file copied in %s', copy_file, dest)
+                GNAThub.Run(name, cmd)
+
+        except Exception as why:
+            self.log.exception('failed to generate the HTML report')
+            self.error(str(why))
+            return GNAThub.EXEC_FAILURE
         except IOError as why:
             self.log.exception('failed to generate the HTML report')
             self.error(str(why))

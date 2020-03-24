@@ -94,8 +94,7 @@ def root():
 
 @app.route('/json/<filename>', methods=['GET'])
 def get_json(filename):
-    path = SERVER_DIR_PATH
-    serverpath = os.path.join(os.getcwd(), path)
+    serverpath = os.path.join(os.getcwd(), SERVER_DIR_PATH)
     filepath = ''
 
     # Find the path to the asked file
@@ -116,8 +115,27 @@ def get_json(filename):
 def _get_review(filename):
     _export_codeper_bridge(filename)
 
-    path = SERVER_DIR_PATH
-    serverpath = os.path.join(os.getcwd(), path)
+    serverpath = os.path.join(os.getcwd(), SERVER_DIR_PATH)
+    filepath = ''
+
+    # Find the path to the asked file
+    for root, dirs, files in os.walk(serverpath):
+        if filename in files:
+            filepath = os.path.join(root, filename)
+
+    if os.path.isfile(filepath):
+        with open(filepath, 'r') as myFile:
+            data = myFile.read()
+            return data
+    else:
+        resp = make_response("Not Found", 404)
+        return resp
+
+
+@app.route('/get-race-condition', methods=['GET'])
+def _get_race_condition():
+    serverpath = os.path.join(os.getcwd(), SERVER_DIR_PATH)
+    filename = 'race_conditions.xml'
     filepath = ''
 
     # Find the path to the asked file
