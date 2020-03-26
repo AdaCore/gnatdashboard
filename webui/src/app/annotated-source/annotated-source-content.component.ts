@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { AnnotatedSourceComponent } from './annotated-source.component';
+import { SharedReport } from '../main-responder.service';
 
 import {
     IAnnotatedSourceLine,
@@ -36,7 +37,8 @@ export class AnnotatedSourceContentComponent implements OnDestroy, OnInit, OnCha
     private paramSubscription: Subscription;
 
     constructor(private route: ActivatedRoute,
-                private source: AnnotatedSourceComponent) {}
+                private source: AnnotatedSourceComponent,
+                private reportService: SharedReport) {}
 
     public ngOnInit(): void {
         this.paramSubscription = this.route.params.subscribe(params => {

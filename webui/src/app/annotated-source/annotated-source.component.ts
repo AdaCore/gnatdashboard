@@ -130,6 +130,7 @@ export class AnnotatedSourceComponent
             if (this.reportService.checkArray(this.source.annotations,
                                               'annotated-source.component',
                                               'inlineAnnotations', 'source.annotations')) {
+                this.reportService.isAnnotations = true;
                 this.source.annotations.forEach(function(
                                                 annotation: IAnnotatedSourceMessage): void {
                     const toolId: number = annotation.rule.tool_id;
@@ -139,6 +140,8 @@ export class AnnotatedSourceComponent
                     }
                     this.inlineAnnotations[line].add(annotation);
                 }.bind(this));
+            } else {
+                this.reportService.isAnnotations = false;
             }
         } else {
             console.log('[Error] annotated-source.component:inlineAnnotations :'
@@ -515,6 +518,10 @@ export class AnnotatedSourceComponent
 
         this.raceSort.value = attr;
         this.raceSort.order = order;
+    }
+
+    public showAnnotationsChanges(): void {
+        this.reportService.showAnnotations = !this.reportService.showAnnotations;
     }
 
 }

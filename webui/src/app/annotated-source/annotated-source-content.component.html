@@ -8,7 +8,7 @@
                                    [coverage]="coverage[line.number]">
             </annotated-source-line>
             <span class="inline-comments d-inline-block col-lg-12 col-sm-12 col-md-12 col-xs-12"
-                  *ngIf="displayMessages && inlineAnnotations[line.number]">
+                  *ngIf="displayMessages && inlineAnnotations[line.number] && reportService.showAnnotations">
                 <inline-annotations class="d-inline-block col-lg-12 col-sm-12 col-md-12 col-xs-12 no-pad"
                                     [annotations]="inlineAnnotations[line.number]"
                                     [line]="line.number"

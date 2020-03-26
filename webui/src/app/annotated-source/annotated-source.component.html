@@ -2,9 +2,21 @@
     <!-- Annotated source -->
     <div class="annotated-source-body d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
         <nav class="file-header d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-            <span class="folder-span">{{ source.source_dir }}</span>
-            <span class="path-divider">/</span>
-            <strong>{{ source.filename }}</strong>
+            <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad">
+                <span class="folder-span">{{ source.source_dir }}</span>
+                <span class="path-divider">/</span>
+                <strong>{{ source.filename }}</strong>
+            </span>
+
+            <span *ngIf="reportService.isAnnotations" class="annotation-switch d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
+                <span class="hide-files">
+                    <label class="switch">
+                        <input #checkbox type="checkbox" [ngModel]="reportService.showAnnotations" (ngModelChange)="showAnnotationsChanges()"/>
+                        <span class="slider"></span>
+                    </label>
+                    <span>Show annotations</span>
+                </span>
+            </span>
         </nav>
         <main #scrollView class="scrollable-content d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
             <div class="missing-file-content" *ngIf="!source.lines">

@@ -70,6 +70,8 @@ export class SharedReport {
     private codepeerReview: any;
     public codepeerHistory: any;
     public raceCondition: any;
+    public isAnnotations: boolean = false;
+    public showAnnotations: boolean = true;
 
     /* Corresponds to the sorting state of code and message navigation*/
     public projectSort: ISort = getStoredProjectSort();
