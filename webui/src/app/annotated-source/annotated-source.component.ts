@@ -97,13 +97,16 @@ export class AnnotatedSourceComponent
     }
 
     private reloadFile(filename: string, line: number, id: number): void {
-        this.gnathub.getSource(filename).subscribe(
-            blob => {
-                this.source = blob;
+        const url: string = this.reportService.url + 'source/' +  filename + '.json';
+        this.http.get(url).subscribe(
+            data => {
+                this.source = JSON.parse(data['_body']);
                 this.sourceView.filename = filename;
                 this.processSource();
-            },
-            error => console.log('[Error] reloadFile :', error));
+            }, error => {
+                console.error('[Error] reloadFile :', error);
+            }
+        );
     }
 
     private processSource(): void {

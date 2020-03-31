@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { SharedReport } from '../main-responder.service';
 import { GNAThubService } from '../gnathub.service';
 import { IAnnotatedSourceFile } from 'gnat';
+import { Http, Response } from '@angular/http';
 
 @Component({
     selector: 'annotated-source-view',
@@ -15,13 +16,21 @@ export class AnnotatedSourceViewComponent implements OnInit {
 
     constructor(
         private gnathub: GNAThubService,
-        private route: ActivatedRoute) {}
+        private route: ActivatedRoute,
+        public reportService: SharedReport,
+        private http: Http) {}
 
     /** @override */
     public ngOnInit(): void {
         this.filename = this.route.snapshot.params['filename'];
-        this.gnathub.getSource(this.filename).subscribe(
-            blob => this.blob = blob,
-            error => this.isBlobFetchError = !!error);
+        const url: string = this.reportService.url + 'source/' +  this.filename + '.json';
+        this.http.get(url).subscribe(
+            data => {
+                this.blob = JSON.parse(data['_body']);
+            }, error => {
+                console.error('[Error] LoadFile: ', error);
+                this.isBlobFetchError = true;
+            }
+        );
     }
 }

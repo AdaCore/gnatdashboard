@@ -111,6 +111,23 @@ def get_json(filename):
         return resp
 
 
+@app.route('/source/<filename>', methods=['GET'])
+def get_source(filename):
+    serverpath = os.path.join(os.getcwd(), SERVER_DIR_PATH)
+    filepath = ''
+    # Find the path to the asked file
+    for root, dirs, files in os.walk(serverpath):
+        if filename in files:
+            filepath = os.path.join(root, filename)
+    if os.path.isfile(filepath):
+        with open(filepath, 'r') as myFile:
+            data = myFile.read()
+            return data
+    else:
+        resp = make_response(404)
+        return resp
+
+
 @app.route('/get-review/<filename>', methods=['GET'])
 def _get_review(filename):
     _export_codeper_bridge(filename)
@@ -148,8 +165,7 @@ def _get_race_condition():
             data = myFile.read()
             return data
     else:
-        resp = make_response("Not Found", 404)
-        return resp
+        return make_response("Not Found", 404)
 
 
 def _export_codeper_bridge(filename):
