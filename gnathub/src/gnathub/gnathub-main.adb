@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2018, AdaCore                     --
+--                     Copyright (C) 2013-2020, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -159,9 +159,17 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       --  specified on the command line.
       GNAThub.Python.Execute_File (Runner_Script, Had_Errors);
 
+      --  This is a main error got when one or more plugins are failing during
+      --  GNAThub run ==> raising Global_Run_Error to have non-zero
+      --  error code returned at the end of the plugin-runner execution
+      if not Had_Errors and then Global_Error then
+         raise Global_Run_Error;
+      end if;
+
       if Had_Errors then
          raise Fatal_Error with Runner_Script & ": unexpected errors";
       end if;
+
    end Execute_Plugin_Runner;
 
    -------------------------
@@ -286,6 +294,12 @@ exception
       return Ada.Command_Line.Success;
 
    when Silent_Error =>
+      Finalize_Application;
+
+      return Ada.Command_Line.Failure;
+
+   when Global_Run_Error =>
+      Trace (Me, "Execution completed");
       Finalize_Application;
 
       return Ada.Command_Line.Failure;

@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2018, AdaCore                     --
+--                     Copyright (C) 2013-2020, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -98,6 +98,9 @@ package body GNAThub is
    procedure Error (Message : String; Prefix : String := Console_Prefix) is
       Output : constant String := Format_Message ("error: " & Message, Prefix);
    begin
+      Global_Error :=
+        Message = "GNAThub error: one or more plugins failed to run!";
+
       Put_Line (Standard_Error, Output);
       Trace (Me, Output);
    end Error;

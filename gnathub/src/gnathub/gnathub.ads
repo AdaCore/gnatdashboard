@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2018, AdaCore                     --
+--                     Copyright (C) 2013-2020, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -19,11 +19,19 @@ with Ada.Exceptions;
 
 package GNAThub is
 
-   Fatal_Error  : exception;
-   Silent_Error : exception;
-   Exit_Success : exception;
+   Fatal_Error    : exception;
+   Silent_Error   : exception;
+   Exit_Success   : exception;
+   Global_Run_Error : exception;
 
    Console_Prefix : constant String := "gnathub";
+
+   Global_Error : Boolean := False;
+   --  This is a global boolean variable which is set at the end of plugin
+   --  runner execution if one or more plugins are failing during GNAThub run.
+   --  It's default value is set at False.
+   --  If its value is set at True a Global_Run_Error will be raised and a
+   --  non-zero error code is returned at the end of the GNAThub run.
 
    type Verbosity_Level is (Quiet, Default, Verbose);
    --  The three possible thresholds of verbosity for this application

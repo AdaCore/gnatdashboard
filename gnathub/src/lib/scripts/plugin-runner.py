@@ -5,7 +5,7 @@ spawning the main event loop.
 """
 
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2017, AdaCore
+# Copyright (C) 2013-2020, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -58,9 +58,9 @@ class GNAThubLoggingHandler(logging.Handler):
         try:
             message = self.format(record)
             logger.log(message)
-        except KeyboardInterrupt, SystemExit:
+        except KeyboardInterrupt:
             raise
-        except:
+        except Exception:
             self.handleError(record)
             return
 
@@ -409,6 +409,7 @@ class PluginRunner(object):
             return
 
         # Execute each plug-in in order
+        exec_failure = False
         try:
             for cls in self.plugins:
                 try:
@@ -431,6 +432,12 @@ class PluginRunner(object):
                             'success': (
                                 plugin.exec_status == GNAThub.EXEC_SUCCESS)
                         }))
+
+                        # Compute all plugins execution status
+                        exec_failure = (exec_failure or
+                                        (plugin.exec_status ==
+                                         GNAThub.EXEC_FAILURE))
+
         except KeyboardInterrupt:
             self.info(os.linesep + 'Interrupt caught...')
 
@@ -450,6 +457,9 @@ class PluginRunner(object):
                     Console.ok(plugin)
                 else:
                     Console.ko(plugin)
+
+        if exec_failure:
+            self.error('GNAThub error: one or more plugins failed to run!')
 
 
 # Script entry point

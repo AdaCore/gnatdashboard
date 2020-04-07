@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2014-2017, AdaCore
+# Copyright (C) 2014-2020, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -125,6 +125,10 @@ class GNATcoverage(Plugin, Reporter):
         # Fetch all files in project object directory and retrieve only
         # .xml files, absolute path
         file_path = os.path.join(self.GNATCOVERAGE_OUTPUT, 'index.xml')
+        if not os.path.exists(file_path):
+            self.error('no index.xml file in object directory')
+            return GNAThub.EXEC_FAILURE
+
         index_xml = minidom.parse(file_path)
         if not index_xml:
             self.error('no %s file in object directory' % self.XML_EXT)
