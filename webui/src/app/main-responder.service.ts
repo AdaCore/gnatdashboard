@@ -122,9 +122,6 @@ export class SharedReport {
         this.getCustomReview();
         this.isServerOnline();
         this.isCodepeerPassed();
-        if (this.isCodepeer) {
-            this.getCodepeerRunInfo();
-        }
     }
 
     private initLocalStorage(): void {
@@ -193,6 +190,7 @@ export class SharedReport {
                         }
                         this.getUserReview();
                         this.getRaceCondition();
+                        this.getCodepeerRunInfo();
                     }
                 }, error => {
                     console.log('[Error] is codepeer passed : ', error);
