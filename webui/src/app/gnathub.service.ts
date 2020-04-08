@@ -186,7 +186,8 @@ export class GNAThubService {
            if (object.entry_point === refObject.entry_point
               && object.line === refObject.line
               && object.access === refObject.access
-              && object.err_kind === refObject.err_kind) {
+              && object.err_kind === refObject.err_kind
+              && object.file === refObject.file) {
                isInArray = true;
            }
         });
@@ -231,17 +232,15 @@ export class GNAThubService {
                             entry_point : obj.entry_point,
                             line: obj.line,
                             access: obj.access,
-                            err_kind: obj.err_kind
+                            err_kind: obj.err_kind,
+                            file: filename
                         };
-                        if (!raceJSON[filename]) {
-                            raceJSON[filename] = {};
-                        }
-                        if (!raceJSON[filename][objName]) {
-                            raceJSON[filename][objName] = [];
+                        if (!raceJSON[objName]) {
+                            raceJSON[objName] = [];
                         }
                         if (!this.objInArray(tmpObj,
-                                            raceJSON[filename][objName])) {
-                            raceJSON[filename][objName].push(tmpObj);
+                                            raceJSON[objName])) {
+                            raceJSON[objName].push(tmpObj);
                         }
                     }.bind(this));
                 }

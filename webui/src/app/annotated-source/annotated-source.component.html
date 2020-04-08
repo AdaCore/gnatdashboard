@@ -98,10 +98,10 @@
                 </span>
             </div>
             <div *ngIf="tabOpen == 'race'" class="location-view-sort d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                <span class="d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                <span class="d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
                     <span class="ellipsis">Object</span>
                 </span>
-                <span class="d-inline-block col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
+                <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad">
                     <span class="click col-lg-4 col-md-4 col-sm-4 col-xs-4" (click)="sortRace('entry_point')">
                         <span class="ellipsis">Entry point</span>
                         <span class="header-icon"
@@ -110,18 +110,18 @@
                             <mat-icon class="md-18" *ngIf="raceSort.order == 1">arrow_upward</mat-icon>
                         </span>
                     </span>
-                    <span class="click ellipsis col-lg-2 col-md-2 col-sm-2 col-xs-2" (click)="sortRace('access')">
-                        <span class="ellipsis">Access</span>
+                    <span class="click ellipsis col-lg-3 col-md-3 col-sm-2 col-xs-2" (click)="sortRace('location')">
+                    <span class="ellipsis">Location</span>
                         <span class="header-icon"
-                          *ngIf="raceSort.value == 'access'">
+                          *ngIf="raceSort.value == 'location'">
                             <mat-icon class="md-18" *ngIf="raceSort.order == -1">arrow_downward</mat-icon>
                             <mat-icon class="md-18" *ngIf="raceSort.order == 1">arrow_upward</mat-icon>
                         </span>
                     </span>
-                    <span class="click ellipsis col-lg-2 col-md-2 col-sm-2 col-xs-2" (click)="sortRace('line')">
-                    <span class="ellipsis">Line</span>
+                    <span class="click ellipsis col-lg-1 col-md-1 col-sm-2 col-xs-2" (click)="sortRace('access')">
+                        <span class="ellipsis">Access</span>
                         <span class="header-icon"
-                          *ngIf="raceSort.value == 'line'">
+                          *ngIf="raceSort.value == 'access'">
                             <mat-icon class="md-18" *ngIf="raceSort.order == -1">arrow_downward</mat-icon>
                             <mat-icon class="md-18" *ngIf="raceSort.order == 1">arrow_upward</mat-icon>
                         </span>
@@ -151,27 +151,28 @@
                 </table>
 
                 <table *ngIf="tabOpen == 'race'" class="race-condition file-line-container d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                    <span *ngIf="reportService.raceCondition[source.filename]"
+                    <span *ngIf="reportService.raceCondition"
                           class="no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-                        <span class="race-condition-name col-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
-                            <tbody *ngFor="let race of reportService.raceCondition[source.filename] | keyvalue; let idx = index" [attr.data-index]="idx" class="click d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12  no-pad" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'">
-                                <span class="no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="raceEntry = race.value; raceSort = {}">
+                        <span class="race-condition-name col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
+                            <tbody *ngFor="let race of reportService.raceCondition | keyvalue; let idx = index" [attr.data-index]="idx" class="click d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12  no-pad" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'">
+                                <span class="wrap no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="raceEntry = race.value; raceSort = {}">
                                     {{race.key}}
                                 </span>
                             </tbody>
                         </span>
-                        <span class="race_condition_access ol-lg-6 col-md-6 col-sm-6 col-xs-6 no-pad">
-                            <tbody *ngFor="let entry of raceEntry; let idx = index" [attr.data-index]="idx" class="no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12  no-pad click" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'" (click)="goToLine(entry.line)">
-                                <span class="no-pad d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4" >
+                        <span class="race_condition_access ol-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad">
+                            <tbody *ngFor="let entry of raceEntry; let idx = index" [attr.data-index]="idx" class="no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12  no-pad click" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'"
+                                   [routerLink]="['/source', entry.file, { line: entry.line }]">
+                                <span class="wrap no-pad d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4" >
                                     {{entry.entry_point}}
                                 </span>
-                                <span class="no-pad d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2" >
+                                <span class=" wrap no-pad d-inline-block col-lg-3 col-md-3 col-sm-2 col-xs-2" >
+                                    {{entry.file}}:{{entry.line}}
+                                </span>
+                                <span class=" wrap no-pad d-inline-block col-lg-1 col-md-1 col-sm-2 col-xs-2" >
                                     {{entry.access.replace(' access', '')}}
                                 </span>
-                                <span class="no-pad d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2" >
-                                    {{entry.line}}
-                                </span>
-                                <span class="no-pad d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4" >
+                                <span class=" wrap no-pad d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4" >
                                     {{entry.err_kind}}
                                 </span>
                             </tbody>

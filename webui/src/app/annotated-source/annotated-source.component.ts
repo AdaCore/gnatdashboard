@@ -510,14 +510,38 @@ export class AnnotatedSourceComponent
         };
     }
 
+    private compareLocation(order: number): any {
+        return function innerSort(a: any, b: any): number {
+            const fileA: string = a.file.toUpperCase();
+            const fileB: string = b.file.toUpperCase();
+
+            let comparison: number = 0;
+            if (fileA > fileB) {
+                comparison = 1;
+            } else if (fileA < fileB) {
+                comparison = -1;
+            } else if (fileA === fileB) {
+                if (a.line > b.line) {
+                    comparison = 1;
+                } else if (a.line < b.line) {
+                    comparison = -1;
+                }
+            }
+            return comparison * order;
+        };
+    }
+
     public sortRace(attr: string): void {
         let order: number = 1;
-        let filename: string = this.source.filename;
 
         if (this.raceSort.value === attr) {
             order = this.raceSort.order * -1;
         }
-        this.raceEntry.sort(this.compareValues(attr, order));
+        if (attr === 'location'){
+            this.raceEntry.sort(this.compareLocation(order));
+        } else {
+            this.raceEntry.sort(this.compareValues(attr, order));
+        }
 
         this.raceSort.value = attr;
         this.raceSort.order = order;
