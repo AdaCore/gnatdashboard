@@ -58,6 +58,10 @@ class HTMLReport(Plugin, Reporter):
 
         return os.path.join(GNAThub.root(), self.name)
 
+    def verbose_info(self, message):
+        if (GNAThub.verbose()):
+            self.info(message)
+
     def report(self):
         """Generate JSON-encoded representation of the data collected."""
 
@@ -110,25 +114,26 @@ class HTMLReport(Plugin, Reporter):
             dest = os.path.join(data_output_dir, 'message.json')
             report.index.message_to_json(dest)
             self.log.debug('message index saved as %s', dest)
-            self.info('HTML report message generated in %s', dest)
+            self.verbose_info('HTML report message generated in ' + dest)
 
             # Generate the JSON-encoded report for filter panel.
             dest = os.path.join(data_output_dir, 'filter.json')
             report.index.filter_to_json(dest)
             self.log.debug('filter index saved as %s', dest)
-            self.info('HTML report filter generated in %s', dest)
+            self.verbose_info('HTML report filter generated in ' + dest)
 
             # Generate the JSON-encoded report for code navigation.
             dest = os.path.join(data_output_dir, 'code.json')
             report.index.code_to_json(dest)
             self.log.debug('code index saved as %s', dest)
-            self.info('HTML report code generated in %s', dest)
+            self.verbose_info('HTML report code generated in ' + dest)
 
             # Generate the JSON-encoded report for custom review status.
             dest = os.path.join(data_output_dir, 'custom_status.json')
             report.index.custom_review_to_json(dest)
             self.log.debug('custom review status saved as %s', dest)
-            self.info('HTML report custom review status generated in %s', dest)
+            self.verbose_info('HTML report custom review status generated in '
+                              + dest)
 
             codepeer_obj_dir = os.path.join(GNAThub.Project.object_dir(),
                                             'codepeer')
@@ -144,7 +149,7 @@ class HTMLReport(Plugin, Reporter):
                        '--db-dir=' + GNAThub.db_dir(),
                        '--export-reviews=' + dest]
                 self.log.debug('Codepeer_bridge file generated in %s', dest)
-                self.info('Codepeer_bridge file generated in %s', dest)
+                self.verbose_info('Codepeer_bridge file generated in ' + dest)
                 GNAThub.Run(name, cmd)
 
                 # Get codepeer_run file
@@ -156,7 +161,7 @@ class HTMLReport(Plugin, Reporter):
                                     'data')
                 cmd = ['cp', copy_file, dest]
                 self.log.debug('Codepeer_run file copied in %s', dest)
-                self.info('Codepeer_run file copied in %s', dest)
+                self.verbose_info('Codepeer_run file copied in ' + dest)
                 GNAThub.Run(name, cmd)
 
                 # Get race_condition file
@@ -170,7 +175,7 @@ class HTMLReport(Plugin, Reporter):
                                     'data')
                 cmd = ['cp', copy_file, dest]
                 self.log.debug('%s file copied in %s', copy_file, dest)
-                self.info('%s file copied in %s', copy_file, dest)
+                self.verbose_info(copy_file + ' file copied in ' + dest)
                 GNAThub.Run(name, cmd)
 
         except Exception as why:
