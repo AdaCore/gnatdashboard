@@ -43,7 +43,7 @@
                 <button class="location-view-title" (click)="tabOpen = 'metric'" [ngClass]="tabOpen == 'metric' ? 'selected': ''" *ngIf="source.metrics">
                     <span>File Metrics</span>
                 </button>
-                <button class="location-view-title" (click)="tabOpen = 'race'" [ngClass]="tabOpen == 'race' ? 'selected': ''" *ngIf="this.reportService.raceCondition">
+                <button class="location-view-title" (click)="tabOpen = 'race'" [ngClass]="tabOpen == 'race' ? 'selected': ''" *ngIf="this.reportService.showRace">
                     <span>Race Condition</span>
                 </button>
                 <button class="location-view-title" (click)="tabOpen = 'message'; thisFile = true" [ngClass]="tabOpen == 'message' ? 'selected': ''">
@@ -98,10 +98,10 @@
                 </span>
             </div>
             <div *ngIf="tabOpen == 'race'" class="location-view-sort d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-                <span class="d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
+                <span class="d-inline-block col-lg-3 col-md-3 col-sm-3 col-xs-3 no-pad">
                     <span class="ellipsis">Object</span>
                 </span>
-                <span class="d-inline-block col-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad">
+                <span class="d-inline-block col-lg-9 col-md-9 col-sm-9 col-xs-9 no-pad">
                     <span class="click col-lg-4 col-md-4 col-sm-4 col-xs-4" (click)="sortRace('entry_point')">
                         <span class="ellipsis">Entry point</span>
                         <span class="header-icon"
@@ -126,10 +126,18 @@
                             <mat-icon class="md-18" *ngIf="raceSort.order == 1">arrow_upward</mat-icon>
                         </span>
                     </span>
-                    <span class="click ellipsis col-lg-4 col-md-4 col-sm-4 col-xs-4" (click)="sortRace('err_kind')">
+                    <span class="click ellipsis col-lg-2 col-md-2 col-sm-2 col-xs-2" (click)="sortRace('err_kind')">
                         <span class="ellipsis">Error</span>
                         <span class="header-icon"
                           *ngIf="raceSort.value == 'err_kind'">
+                            <mat-icon class="md-18" *ngIf="raceSort.order == -1">arrow_downward</mat-icon>
+                            <mat-icon class="md-18" *ngIf="raceSort.order == 1">arrow_upward</mat-icon>
+                        </span>
+                    </span>
+                    <span class="click ellipsis col-lg-2 col-md-2 col-sm-2 col-xs-2" (click)="sortRace('lock_name')">
+                        <span class="ellipsis">Locks</span>
+                        <span class="header-icon"
+                          *ngIf="raceSort.value == 'lock_name'">
                             <mat-icon class="md-18" *ngIf="raceSort.order == -1">arrow_downward</mat-icon>
                             <mat-icon class="md-18" *ngIf="raceSort.order == 1">arrow_upward</mat-icon>
                         </span>
@@ -153,14 +161,14 @@
                 <table *ngIf="tabOpen == 'race'" class="race-condition file-line-container d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                     <span *ngIf="reportService.raceCondition"
                           class="no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-                        <span class="race-condition-name col-lg-4 col-md-4 col-sm-4 col-xs-4 no-pad">
-                            <tbody *ngFor="let race of reportService.raceCondition | keyvalue; let idx = index" [attr.data-index]="idx" class="click d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12  no-pad" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'">
-                                <span class="wrap no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="raceEntry = race.value; raceSort = {}">
+                        <span class="race-condition-name col-lg-3 col-md-3 col-sm-3 col-xs-3 no-pad">
+                            <tbody *ngFor="let race of reportService.raceCondition | keyvalue; let idx = index" [attr.data-index]="idx" class="click d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12  no-pad" [ngClass]="raceSelected == race.key ? 'selected' : (idx % 2 == 0 ? 'metric1' : 'metric2')">
+                                <span class="wrap no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" (click)="raceEntry = race.value; raceSelected = race.key; raceSort = {}">
                                     {{race.key}}
                                 </span>
                             </tbody>
                         </span>
-                        <span class="race_condition_access ol-lg-8 col-md-8 col-sm-8 col-xs-8 no-pad">
+                        <span class="race_condition_access col-lg-9 col-md-9 col-sm-9 col-xs-9 no-pad">
                             <tbody *ngFor="let entry of raceEntry; let idx = index" [attr.data-index]="idx" class="no-pad d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12  no-pad click" [ngClass]="idx % 2 == 0 ? 'metric1' : 'metric2'"
                                    [routerLink]="['/source', entry.file, { line: entry.line }]">
                                 <span class="wrap no-pad d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4" >
@@ -172,8 +180,11 @@
                                 <span class=" wrap no-pad d-inline-block col-lg-1 col-md-1 col-sm-2 col-xs-2" >
                                     {{entry.access.replace(' access', '')}}
                                 </span>
-                                <span class=" wrap no-pad d-inline-block col-lg-4 col-md-4 col-sm-4 col-xs-4" >
+                                <span class=" wrap no-pad d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2" >
                                     {{entry.err_kind}}
+                                </span>
+                                <span class=" wrap no-pad d-inline-block col-lg-2 col-md-2 col-sm-2 col-xs-2" >
+                                     {{entry.lock_name}}
                                 </span>
                             </tbody>
                         </span>

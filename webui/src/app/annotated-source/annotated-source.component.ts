@@ -63,6 +63,7 @@ export class AnnotatedSourceComponent
     public selectedId: number;
     public raceEntry: any = [];
     public raceSort: any = {};
+    public raceSelected: string = '';
 
     @ViewChild('scrollView', {static: true}) private scrollView: ElementRef;
 

@@ -123,9 +123,12 @@
     }
 
     .race-condition-name {
-        border-right: 1px grey solid;
+        border-right: 1px #d2d2d2 solid;
         overflow-y: auto;
         height: 25vh;
+    }
+    .selected {
+        background-color: #fff8dc;
     }
 
     .race_condition_access {
@@ -134,7 +137,11 @@
     }
 
     tbody {
-        padding: 3px 5px;
+        padding: 3px 0px;
+
+        span {
+            padding: 0px 3px;
+        }
     }
 
     .click {

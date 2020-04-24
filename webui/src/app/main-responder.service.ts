@@ -70,6 +70,7 @@ export class SharedReport {
     private codepeerReview: any;
     public codepeerHistory: any;
     public raceCondition: any;
+    public showRace: boolean = false;
     public isAnnotations: boolean = false;
     public showAnnotations: boolean = true;
 
@@ -466,6 +467,7 @@ export class SharedReport {
             .subscribe(
                 data => {
                     this.raceCondition = this.gnathub.raceToJson(data['_body']);
+                    this.showRace = Object.keys(this.raceCondition).length > 0;
                 }, error => {
                     this.isReportFetchError = true;
                     console.log('[Error] get getRaceCondition : ', error);

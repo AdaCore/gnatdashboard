@@ -137,47 +137,91 @@ export class GNAThubService {
     }
 
     private get_srcpos(access: any, objectName: string, entry: string,
-                       accessType: string, raceErrKind: string): any {
-        let tmpAccessMap: any = {
-            entry_point: entry,
-            access: accessType,
-            line: 0,
-            file: '',
-            err_kind: raceErrKind,
-            obj_name: objectName
-        };
+                       accessType: string, raceErrKind: string, lockName: string): any {
         let raceCondition: any = [];
-        if (access.srcpos.$) {
-            tmpAccessMap.line = access.srcpos.$.line;
-            tmpAccessMap.file = access.srcpos.$.file;
+        if (access && access.srcpos && access.srcpos.$) {
+            let tmpAccessMap: any = {
+                entry_point: entry,
+                access: accessType,
+                line: access.srcpos.$.line,
+                file: access.srcpos.$.file,
+                err_kind: raceErrKind,
+                obj_name: objectName,
+                lock_name: lockName
+            };
             raceCondition.push(tmpAccessMap);
-        } else {
+        } else if (access && access.srcpos ) {
             access.srcpos.forEach(function(fileInfo: any): void{
-                tmpAccessMap.line = fileInfo.$.line;
-                tmpAccessMap.file = fileInfo.$.file;
+                let tmpAccessMap: any = {
+                    entry_point: entry,
+                    access: accessType,
+                    line: fileInfo.$.line,
+                    file: fileInfo.$.file,
+                    err_kind: raceErrKind,
+                    obj_name: objectName,
+                    lock_name: lockName
+                };
                 raceCondition.push(tmpAccessMap);
             });
         }
         return raceCondition;
     }
 
-    public getAccessMap(accessMap: any, objName: string, raceErrKind: string): any {
+    private getLockNames(lockSet: any): string {
+        let lockName: string = '';
+
+        if (lockSet && lockSet.lock && lockSet.lock.$){
+            lockName = lockSet.lock.$.name;
+        } else if (lockSet && lockSet.lock){
+            lockSet.lock.forEach(function(lock: any, idx: number): void{
+                if (idx > 0) {
+                    lockName += ', ';
+                }
+                lockName += lock.$.name;
+            });
+        }
+        return lockName;
+    }
+
+    private getAccessMap(accessMap: any, objName: string, raceErrKind: string): any {
         let entryPoint: string = accessMap.$.proc;
         let accesObj: any = [];
 
-        if (accessMap.lock_access_entry.srcpos_set.$) {
+        if (accessMap && accessMap.lock_access_entry
+            && accessMap.lock_access_entry.srcpos_set
+            && accessMap.lock_access_entry.srcpos_set.$) {
             let access: any = accessMap.lock_access_entry.srcpos_set;
+            let lockName: string = this.getLockNames(accessMap.lock_access_entry.lock_set);
             let accessType: string = access.$.acc.replace(' access', '');
             accesObj = accesObj.concat(this.get_srcpos(access, objName, entryPoint,
-                                                       accessType, raceErrKind));
-        } else {
-            accessMap.lock_access_entry.srcpos_set.forEach(function(access: any): void {
-                let accessType: string = access.$.acc.replace(' access', '');
-                accesObj = accesObj.concat(this.get_srcpos(access, objName, entryPoint,
-                                                           accessType, raceErrKind));
+                                                       accessType, raceErrKind, lockName));
+        } else if (accessMap && accessMap.lock_access_entry){
+            accessMap.lock_access_entry.forEach(function(access: any): void {
+                let accessType: string = access.srcpos_set.$.acc.replace(' access', '');
+                let lockName: string = this.getLockNames(access.lock_set);
+                accesObj = accesObj.concat(this.get_srcpos(access.srcpos_set, objName, entryPoint,
+                                                           accessType, raceErrKind, lockName));
             }.bind(this));
         }
         return accesObj;
+    }
+
+    private getRaceCondition(raceInfo: any, raceCondition: any): any {
+        let objName: string = raceInfo.$.obj_name;
+        let raceErrKind: string = raceInfo.$.race_err_kind;
+        if (raceInfo
+            && raceInfo.lock_access_map
+            && raceInfo.lock_access_map.$) {
+            raceCondition = raceCondition.concat(this.getAccessMap(
+                                             raceInfo.lock_access_map, objName, raceErrKind));
+        } else if (raceInfo
+                && raceInfo.lock_access_map){
+            raceInfo.lock_access_map.forEach(function(accessMap: any): void {
+                raceCondition = raceCondition.concat(this.getAccessMap(
+                                                accessMap, objName, raceErrKind));
+            }.bind(this));
+        }
+        return raceCondition;
     }
 
     private objInArray(object: any, arrayObject: any): boolean {
@@ -187,7 +231,8 @@ export class GNAThubService {
               && object.line === refObject.line
               && object.access === refObject.access
               && object.err_kind === refObject.err_kind
-              && object.file === refObject.file) {
+              && object.file === refObject.file
+              && object.lock_name === refObject.lock_name) {
                isInArray = true;
            }
         });
@@ -200,50 +245,43 @@ export class GNAThubService {
             if (error) {
                 console.log('[Error] raceToJson : Problem to parse :', error);
             } else {
-
+                let raceCondition: any = [];
                 // Gather the information from the xml given by codepeer
                 // into one array
-                if (result && result.objs_in_trouble && result.objs_in_trouble.obj_race_info) {
-
-                    let raceCondition: any = [];
+                if (result && result.objs_in_trouble
+                    && result.objs_in_trouble.obj_race_info
+                    && result.objs_in_trouble.obj_race_info.$) {
+                    let raceInfo: any = result.objs_in_trouble.obj_race_info;
+                    raceCondition = this.getRaceCondition(raceInfo, raceCondition);
+                } else if (result && result.objs_in_trouble
+                           && result.objs_in_trouble.obj_race_info) {
                     result.objs_in_trouble.obj_race_info
                         .forEach(function(raceInfo: any): void {
-                        let objName: string = raceInfo.$.obj_name;
-                        let raceErrKind: string = raceInfo.$.race_err_kind;
-
-                        if (raceInfo.lock_access_map.$) {
-                            raceCondition = raceCondition.concat(this.getAccessMap(
-                                            raceInfo.lock_access_map, objName, raceErrKind));
-                        } else {
-                            raceInfo.lock_access_map.forEach(function(accessMap: any): void {
-                                raceCondition = raceCondition.concat(this.getAccessMap(
-                                                accessMap, objName, raceErrKind));
-                            }.bind(this));
-                        }
-
-                    }.bind(this));
-
-                    // Parse the array, so we got
-                    // a list of entry per object per file
-                    raceCondition.forEach(function(obj: any): void{
-                        let filename: string = obj.file.replace('-frameset.html', '');
-                        let objName: string = obj.obj_name;
-                        let tmpObj: any = {
-                            entry_point : obj.entry_point,
-                            line: obj.line,
-                            access: obj.access,
-                            err_kind: obj.err_kind,
-                            file: filename
-                        };
-                        if (!raceJSON[objName]) {
-                            raceJSON[objName] = [];
-                        }
-                        if (!this.objInArray(tmpObj,
-                                            raceJSON[objName])) {
-                            raceJSON[objName].push(tmpObj);
-                        }
+                        raceCondition = this.getRaceCondition(raceInfo, raceCondition);
                     }.bind(this));
                 }
+                // Parse the array, so we got
+                // a list of entry per object per file
+                raceCondition.forEach(function(obj: any): void{
+                    let filename: string = obj.file.replace('-frameset.html', '');
+                    let objName: string = obj.obj_name;
+                    let tmpObj: any = {
+                        entry_point : obj.entry_point,
+                        line: obj.line,
+                        access: obj.access,
+                        err_kind: obj.err_kind,
+                        file: filename,
+                        lock_name: obj.lock_name
+                    };
+                    if (!raceJSON[objName]) {
+                        raceJSON[objName] = [];
+                    }
+                    if (!this.objInArray(tmpObj,
+                                         raceJSON[objName])) {
+                        raceJSON[objName].push(tmpObj);
+                    }
+                }.bind(this));
+
             }
         });
         return raceJSON;
