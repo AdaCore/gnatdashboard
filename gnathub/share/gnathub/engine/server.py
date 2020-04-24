@@ -271,7 +271,7 @@ if __name__ == '__main__':
         print "Logs redirected to {}".format(SERVER_LOG)
         # TODO : Error occur when lauching with debug=True
         # app.run(port=flask_port, debug=True)
-        app.run(port=flask_port, threaded=True)
+        app.run(host='0.0.0.0', port=flask_port, threaded=True)
     else:
         app.logger.error("Bad port used. Please relauch with port above 1024.")
         print "Please use a port above 1024"
