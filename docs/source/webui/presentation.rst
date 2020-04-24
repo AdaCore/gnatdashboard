@@ -69,8 +69,8 @@ The difference between offline and online mode is the state of the API server.
 If the API server is not running (e.g. API server is down or a different HTML server is used.) then the WebUI interface will be offline.
 The offline mode doesn't allow you to do message review (Note: Posting review is a feature specific to CodePeer).
 
-If you are running CodePeer, an extra button `CodePeer run id: <number>` is displayed.
-This button will open a dialog displaying additional CodePeer run information.
+If you are running CodePeer, an extra button `CodePeer history` is displayed.
+This button will open a page displaying additional CodePeer run information and statisitcs
 
 .. _Filter:
 
@@ -83,8 +83,8 @@ It will allow you to filter the messages shown in all the views, by clicking on 
 There are three states for a span:
 
 * activated: the color is bright. You can deactivate it by clicking.
-* deactivated: the color is crosshatched. You can activate it by clicking.
-* No occurrence: the color is mostly transparent. It means that your choice of filters led to no messages of the given category.
+* deactivated: the color is transparent. You can activate it by clicking.
+* No occurrence: the number on the right is a 0.
 
 There is some color code that you will retrieve on the content page:
 
@@ -110,7 +110,7 @@ Message navigation
 
 This part allows you to see all the messages, grouped by files.
 
-You can order them by clicking on the table header (Name, Ranking, Message).
+You can order them by clicking on the table header (Name, Ranking, Message, Review status).
 
 .. _Project navigation:
 
@@ -122,7 +122,7 @@ Project navigation
 
 This part allows you to see all the files, grouped by folders, grouped by project. It is a very useful view when looking at a lot of projects.
 
-You can order them by clicking on the table header (Name, Ranking, Message).
+You can order them by clicking on the table header (Name, Message).
 
 Source view
 +++++++++++
@@ -151,7 +151,7 @@ You can see all the messages in the ``All messages`` tab.
 | The ``line`` button, allow you to order message by line.
 
 If GNATmetric is activated, you can see them in the ``File Metric`` tab.
-
+If there are Race condition, you can see them in the ``Race condition`` tab.
 .. _Add review:
 
 |  In the ``File message`` tab you can:
