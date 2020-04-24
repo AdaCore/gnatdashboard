@@ -32,11 +32,11 @@ const COMMON_PREFIXES: CommonPrefixTestCase[] = [
     }
 ];
 
-describe('path: path.commonprefix', () => {
+describe('path_path.commonprefix', () => {
     COMMON_PREFIXES.forEach((tc: CommonPrefixTestCase) => {
         const humanFriendlyExpected: string =
             tc.expected ? `"${tc.expected}"` : 'the empty string';
-        it(`path: path.commonprefix: returns ${humanFriendlyExpected}`, () => {
+        it(`path_path.commonprefix_returns_${humanFriendlyExpected}`, () => {
             expect(commonprefix(tc.input)).toEqual(tc.expected);
         });
     });

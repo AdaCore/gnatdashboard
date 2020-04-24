@@ -9,13 +9,13 @@ const VALID_CHANGE_IDS: string[] = [
 ];
 const INVALID_CHANGE_IDS: string[] = ['I256b85', 'I256b'];  // Too short
 
-describe('gerrit-utils: Change-ID regex', () => {
+describe('gerrit-utils_Change-ID_regex', () => {
     VALID_CHANGE_IDS.forEach((cid: string) => {
-        it(`gerrit-utils: matches ${cid}`, () => { expect(CHANGE_ID.test(cid)).toBe(true); });
+        it(`gerrit-utils_matches_${cid}`, () => { expect(CHANGE_ID.test(cid)).toBe(true); });
     });
 
     INVALID_CHANGE_IDS.forEach((cid: string) => {
-        it(`gerrit-utils: doesn't match ${cid}`, () => {
+        it(`gerrit-utils_doesn_t_match_${cid}`, () => {
             expect(CHANGE_ID.test(cid)).toBe(false);
         });
     });

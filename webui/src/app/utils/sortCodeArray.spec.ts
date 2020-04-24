@@ -136,7 +136,7 @@ const code: ICodeIndex = {
     ]
 };
 
-describe('sortCodeArray()', () => {
+describe('sortCodeArray', () => {
 
     const oldFilter: ISort = {newSort: 'name', otherSort: 'filename', order: -1};
 
@@ -144,7 +144,7 @@ describe('sortCodeArray()', () => {
     let newFilter: ISort = {newSort: 'name', otherSort: 'filename'};
     const testSortCode1: IModule[] = sortCodeArray(newFilter, oldFilter,
                                         _.cloneDeep(code.modules));
-    it('sortCodeArray() by name/filename ascendant', () => {
+    it('sortCodeArray_by_name_filename_ascendant', () => {
         expect(testSortCode1[0].name).toEqual('my_project1');
         expect(testSortCode1[0].source_dirs[0].name).toEqual('my_folder1');
         expect(testSortCode1[0].source_dirs[0].sources[0].filename).toEqual('code1.adb');
@@ -165,7 +165,7 @@ describe('sortCodeArray()', () => {
     newFilter = {newSort: 'name', otherSort: 'filename'};
     const testSortCode2: IModule[] = sortCodeArray(newFilter, oldFilter,
                                         _.cloneDeep(code.modules));
-    it('sortCodeArray() by name/filename descendant', () => {
+    it('sortCodeArray_by_name_filename_descendant', () => {
         expect(testSortCode2[0].name).toEqual('my_project2');
         expect(testSortCode2[0].source_dirs[0].name).toEqual('my_folder2');
         expect(testSortCode2[0].source_dirs[0].sources[0].filename).toEqual('code2.adb');
@@ -186,7 +186,7 @@ describe('sortCodeArray()', () => {
     newFilter = {newSort: '_ui_total_message_count', otherSort: '_total_message_count'};
     const testSortCode3: IModule[] = sortCodeArray(newFilter, oldFilter,
                                         _.cloneDeep(code.modules));
-    it('sortCodeArray() by _ui_total_message_count/_total_message_count ascendant', () => {
+    it('sortCodeArray_by_ui_total_message_count_total_message_count_ascendant', () => {
         expect(testSortCode3[0]._total_message_count).toEqual(27);
 
         expect(testSortCode3[0].source_dirs[0]._total_message_count).toEqual(12);
@@ -219,7 +219,7 @@ describe('sortCodeArray()', () => {
     newFilter = {newSort: '_ui_total_message_count', otherSort: '_total_message_count'};
     const testSortCode4: IModule[] = sortCodeArray(newFilter, oldFilter,
                                         _.cloneDeep(code.modules));
-    it('sortCodeArray() by _ui_total_message_count/_total_message_count descendant', () => {
+    it('sortCodeArray__ui_total_message_count_total_message_count_descendant', () => {
         expect(testSortCode4[0]._total_message_count).toEqual(30);
         expect(testSortCode4[0].source_dirs[0]._total_message_count)
             .toEqual(15);
@@ -249,7 +249,7 @@ describe('sortCodeArray()', () => {
     let completeFilter: ISort = oldFilter;
     const testSortCode5: IModule[] = sortCodeArray(completeFilter, oldFilter,
                                         _.cloneDeep(code.modules));
-    it('sortCodeArray() only refresh', () => {
+    it('sortCodeArray_only_refresh', () => {
         expect(testSortCode5[0]._total_message_count).toEqual(30);
         expect(testSortCode5[0].source_dirs[0]._total_message_count)
             .toEqual(15);
@@ -279,7 +279,7 @@ describe('sortCodeArray()', () => {
     completeFilter = {newSort: 'name', otherSort: 'filename', order: -1};
     const testSortCode6: IModule[] = sortCodeArray(completeFilter, oldFilter,
                                         _.cloneDeep(code.modules));
-    it('sortCodeArray() whole newFilter', () => {
+    it('sortCodeArray_whole_newFilter', () => {
         expect(testSortCode6[0].name).toEqual('my_project2');
         expect(testSortCode6[0].source_dirs[0].name).toEqual('my_folder2');
         expect(testSortCode6[0].source_dirs[0].sources[0].filename).toEqual('code2.adb');

@@ -175,7 +175,7 @@ const message: IMessageIndex = {
     ]
 };
 
-describe('sortMessageArray()', () => {
+describe('sortMessageArray', () => {
 
     const oldFilter: ISort = {newSort: 'name', otherSort: 'filename', order: -1};
 
@@ -183,7 +183,7 @@ describe('sortMessageArray()', () => {
     let newFilter: ISort = {newSort: 'name', otherSort: 'filename'};
     const testSort1: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
-    it('sortMessageArray() by name/filename ascendant', () => {
+    it('sortMessageArray_by name_filename_ascendant', () => {
         expect(testSort1[0].filename).toEqual('code1.adb');
         expect(testSort1[0].messages[0].name).toEqual('precondition1');
         expect(testSort1[0].messages[1].name).toEqual('precondition2');
@@ -196,7 +196,7 @@ describe('sortMessageArray()', () => {
     newFilter = {newSort: 'name', otherSort: 'filename'};
     const testSort2: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
-    it('sortMessageArray() by name/filename descendant', () => {
+    it('sortMessageArray_by_name_filename_descendant', () => {
         expect(testSort2[0].filename).toEqual('code2.adb');
         expect(testSort2[0].messages[0].name).toEqual('precondition2');
         expect(testSort2[0].messages[1].name).toEqual('precondition1');
@@ -210,7 +210,7 @@ describe('sortMessageArray()', () => {
     const testSort3: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
 
-    it('sortMessageArray() by _total_message_count/line ascendant', () => {
+    it('sortMessageArray_by _total_message_count_line_ascendant', () => {
         expect(testSort3[0]._total_message_count).toEqual(15);
         expect(testSort3[0].messages[0].line).toEqual(10);
         expect(testSort3[0].messages[1].line).toEqual(25);
@@ -224,7 +224,7 @@ describe('sortMessageArray()', () => {
     const testSort4: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
 
-    it('sortMessageArray() by _total_message_count/line descendant', () => {
+    it('sortMessageArray_by _total_message_count_line_descendant', () => {
         expect(testSort4[0]._total_message_count).toEqual(16);
         expect(testSort4[0].messages[0].line).toEqual(25);
         expect(testSort4[0].messages[1].line).toEqual(10);
@@ -237,7 +237,7 @@ describe('sortMessageArray()', () => {
     let completeFilter: ISort = oldFilter;
     const testSort5: ISourceNav[] = sortMessageArray(completeFilter, oldFilter,
                                        _.cloneDeep(message.sources));
-    it('sortMessageArray() only refresh', () => {
+    it('sortMessageArray_only_refresh', () => {
         expect(testSort5[0]._total_message_count).toEqual(16);
         expect(testSort5[0].messages[0].line).toEqual(25);
         expect(testSort5[0].messages[1].line).toEqual(10);
@@ -250,7 +250,7 @@ describe('sortMessageArray()', () => {
     completeFilter = {newSort: 'name', otherSort: 'filename', order: -1};
     const testSort6: ISourceNav[] = sortMessageArray(completeFilter, oldFilter,
                                        _.cloneDeep(message.sources));
-    it('sortMessageArray() whole newFilter', () => {
+    it('sortMessageArray_whole_newFilter', () => {
         expect(testSort6[0].filename).toEqual('code2.adb');
         expect(testSort6[0].messages[0].name).toEqual('precondition2');
         expect(testSort6[0].messages[1].name).toEqual('precondition1');
@@ -259,7 +259,7 @@ describe('sortMessageArray()', () => {
         expect(testSort6[1].messages[1].name).toEqual('precondition1');
     });
 
-    it('sortMessageArray() should have XFAIL', () => {
+    it('sortMessageArray_should_have_XFAIL', () => {
         expect(testSort6[0].filename).toEqual('code2.adb');
     });
 

@@ -1,7 +1,7 @@
 import { unescapeHTML } from './html-utils';
 
-describe('Unescape HTML', () => {
-    it('html-utils: unescapeHTML: convert into expected HTML', () => {
+describe('Unescape_HTML', () => {
+    it('html-utils_unescapeHTML_convert_into_expected_HTML', () => {
         expect(unescapeHTML('&gt;')).toEqual('>');
         expect(unescapeHTML('&lt;')).toEqual('<');
         expect(unescapeHTML('&lt;&amp;&gt;')).toEqual('<&>');
