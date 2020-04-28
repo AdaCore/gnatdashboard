@@ -25,6 +25,11 @@ const inputFullXML: any = '<?xml version="1.0"?>'
                       + 'line="2" column="22"/>'
                       + '<srcpos file="traversal-threaded_display.adb-frameset.html" '
                       + 'line="3" column="22"/>'
+                      + ' </srcpos_set>'
+                      + '<srcpos_set acc="update access">'
+
+                      + '<srcpos file="traversal-threaded_display.adb-frameset.html" '
+                      + 'line="42" column="42"/>'
 
                       + ' </srcpos_set>'
 
@@ -208,6 +213,13 @@ const expectedFullJSON: any = {
             entry_point: 'search_team.searcherTask_Type_Body',
             line: '3',
             access: 'read',
+            err_kind: 'unprotected access',
+            file: 'traversal-threaded_display.adb',
+            lock_name: 'test, test1, test 2'
+        }, {
+            entry_point: 'search_team.searcherTask_Type_Body',
+            line: '42',
+            access: 'update',
             err_kind: 'unprotected access',
             file: 'traversal-threaded_display.adb',
             lock_name: 'test, test1, test 2'
