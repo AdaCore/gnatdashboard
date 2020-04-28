@@ -269,6 +269,9 @@ export class SharedReport {
             .subscribe(
                 data => {
                     this.message = JSON.parse(data['_body']);
+                    if (this.codepeerReview){
+                        this.addUserReview();
+                    }
                     this.refreshFilter();
                 }, error => {
                     console.log('[Error] get message : ', error);
@@ -444,10 +447,15 @@ export class SharedReport {
             .subscribe(
                 data => {
                     this.codepeerReview = this.gnathub.convertToJson(data);
-                    this.addUserReview();
+                    if (this.message){
+                        this.addUserReview();
+                    }
+
                 }, error => {
                     console.log('[Error] get codepeerReview : ', error);
-                    this.addUserReview();
+                    if (this.message){
+                        this.addUserReview();
+                    }
                     this.codepeerReviewError = true;
                 }
             );
@@ -482,7 +490,6 @@ export class SharedReport {
      * the filter properly.
      */
     private refreshFilter(): void {
-
         if (this.code && this.filter && this.message && this.filter.review_status) {
             if (localStorage.length > 0) {
                 getStoredFilter(this.filter);
