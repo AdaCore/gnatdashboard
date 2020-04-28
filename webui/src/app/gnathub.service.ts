@@ -142,7 +142,7 @@ export class GNAThubService {
         if (access && access.srcpos && access.srcpos.$) {
             let tmpAccessMap: any = {
                 entry_point: entry,
-                access: accessType,
+                access: access.$.acc.replace(' access', ''),
                 line: access.srcpos.$.line,
                 file: access.srcpos.$.file,
                 err_kind: raceErrKind,
@@ -167,6 +167,24 @@ export class GNAThubService {
         return raceCondition;
     }
 
+    private get_srcpos_set(srcposSet: any, objName: string, entry: string,
+                           raceErrKind: string, lockName: string): any {
+        let accesObj: any = [];
+        if (srcposSet && srcposSet.$){
+            let accessType: string = srcposSet.$.acc.replace(' access', '');
+            accesObj = accesObj.concat(this.get_srcpos(srcposSet, objName, entry,
+                                                       accessType, raceErrKind, lockName));
+        } else if (srcposSet){
+            srcposSet.forEach(function(mySrcposSet: any): void{
+                let accessType: string = mySrcposSet.$.acc.replace(' access', '');
+                accesObj = accesObj.concat(this.get_srcpos(mySrcposSet, objName, entry,
+                                                       accessType, raceErrKind, lockName));
+
+            }.bind(this));
+        }
+        return accesObj;
+    }
+
     private getLockNames(lockSet: any): string {
         let lockName: string = '';
 
@@ -186,21 +204,17 @@ export class GNAThubService {
     private getAccessMap(accessMap: any, objName: string, raceErrKind: string): any {
         let entryPoint: string = accessMap.$.proc;
         let accesObj: any = [];
-
         if (accessMap && accessMap.lock_access_entry
-            && accessMap.lock_access_entry.srcpos_set
-            && accessMap.lock_access_entry.srcpos_set.$) {
+            && accessMap.lock_access_entry.srcpos_set) {
             let access: any = accessMap.lock_access_entry.srcpos_set;
             let lockName: string = this.getLockNames(accessMap.lock_access_entry.lock_set);
-            let accessType: string = access.$.acc.replace(' access', '');
-            accesObj = accesObj.concat(this.get_srcpos(access, objName, entryPoint,
-                                                       accessType, raceErrKind, lockName));
+            accesObj = accesObj.concat(this.get_srcpos_set(access, objName,
+                                                           entryPoint, raceErrKind, lockName));
         } else if (accessMap && accessMap.lock_access_entry){
             accessMap.lock_access_entry.forEach(function(access: any): void {
-                let accessType: string = access.srcpos_set.$.acc.replace(' access', '');
                 let lockName: string = this.getLockNames(access.lock_set);
-                accesObj = accesObj.concat(this.get_srcpos(access.srcpos_set, objName, entryPoint,
-                                                           accessType, raceErrKind, lockName));
+                accesObj = accesObj.concat(this.get_srcpos_set(access.srcpos_set, objName,
+                entryPoint, raceErrKind, lockName));
             }.bind(this));
         }
         return accesObj;
