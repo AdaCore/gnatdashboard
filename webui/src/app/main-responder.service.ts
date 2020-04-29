@@ -477,8 +477,11 @@ export class SharedReport {
                     this.raceCondition = this.gnathub.raceToJson(data['_body']);
                     this.showRace = Object.keys(this.raceCondition).length > 0;
                 }, error => {
-                    this.isReportFetchError = true;
-                    console.log('[Error] get getRaceCondition : ', error);
+                    /* No error triggered because race_conditions.xml doesn't always exist
+                     * So log a warning instead.
+                     * Take a look at T323-017
+                     */
+                    console.warn('[Error] get getRaceCondition : ', error);
                 }
             );
         }
