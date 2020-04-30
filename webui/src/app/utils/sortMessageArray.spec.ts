@@ -183,7 +183,7 @@ describe('sortMessageArray', () => {
     let newFilter: ISort = {newSort: 'name', otherSort: 'filename'};
     const testSort1: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
-    it('sortMessageArray_by name_filename_ascendant', () => {
+    it('sortMessageArray_by_name_filename_ascendant', () => {
         expect(testSort1[0].filename).toEqual('code1.adb');
         expect(testSort1[0].messages[0].name).toEqual('precondition1');
         expect(testSort1[0].messages[1].name).toEqual('precondition2');
@@ -210,7 +210,7 @@ describe('sortMessageArray', () => {
     const testSort3: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
 
-    it('sortMessageArray_by _total_message_count_line_ascendant', () => {
+    it('sortMessageArray_by_total_message_count_line_ascendant', () => {
         expect(testSort3[0]._total_message_count).toEqual(15);
         expect(testSort3[0].messages[0].line).toEqual(10);
         expect(testSort3[0].messages[1].line).toEqual(25);
@@ -224,7 +224,7 @@ describe('sortMessageArray', () => {
     const testSort4: ISourceNav[] = sortMessageArray(newFilter, oldFilter,
                                        _.cloneDeep(message.sources));
 
-    it('sortMessageArray_by _total_message_count_line_descendant', () => {
+    it('sortMessageArray_by_total_message_count_line_descendant', () => {
         expect(testSort4[0]._total_message_count).toEqual(16);
         expect(testSort4[0].messages[0].line).toEqual(25);
         expect(testSort4[0].messages[1].line).toEqual(10);
