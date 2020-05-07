@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016 - 2019, AdaCore
+ * Copyright (C) 2016 - 2020, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -22,7 +22,7 @@ import com.adacore.gnatdashboard.gnathub.api.Measures;
 import com.adacore.gnatdashboard.gnathub.api.SourceMapper;
 import com.adacore.gnatdashboard.gnathub.api.orm.Connector;
 import lombok.Getter;
-import org.sonar.api.batch.ScannerSide;
+import org.sonar.api.scanner.ScannerSide;
 import org.sonar.api.config.Configuration;
 import org.sonar.squidbridge.api.AnalysisException;
 

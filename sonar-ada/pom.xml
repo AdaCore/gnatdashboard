@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ GNATdashboard
-  ~ Copyright (C) 2016-2019, AdaCore
+  ~ Copyright (C) 2016-2020, AdaCore
   ~
   ~ This is free software;  you can redistribute it  and/or modify it  under
   ~ terms of the  GNU General Public License as published  by the Free Soft-
@@ -21,7 +21,7 @@
 
     <groupId>com.adacore.gnatdashboard</groupId>
     <artifactId>parent</artifactId>
-    <version>20.0w-SNAPSHOT</version>
+    <version>21.0w-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GNATdashboard</name>
@@ -68,7 +68,7 @@
         <version.guava>20.0</version.guava>
         <version.slf4j>1.6.2</version.slf4j>
         <version.sslr-squid-bridge>2.6.1</version.sslr-squid-bridge>
-        <version.sonar>6.7</version.sonar>
+        <version.sonar>7.9</version.sonar>
         <version.sonar-packaging-maven-plugin>1.17</version.sonar-packaging-maven-plugin>
         <version.sqlite-jdbc>3.15.1</version.sqlite-jdbc>
     </properties>

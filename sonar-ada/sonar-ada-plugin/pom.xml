@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ GNATdashboard
-  ~ Copyright (C) 2016-2019, AdaCore
+  ~ Copyright (C) 2016-2020, AdaCore
   ~
   ~ This is free software;  you can redistribute it  and/or modify it  under
   ~ terms of the  GNU General Public License as published  by the Free Soft-
@@ -22,7 +22,7 @@
     <parent>
         <groupId>com.adacore.gnatdashboard</groupId>
         <artifactId>parent</artifactId>
-        <version>20.0w-SNAPSHOT</version>
+        <version>21.0w-SNAPSHOT</version>
     </parent>
 
     <artifactId>sonar-ada-plugin</artifactId>
@@ -30,7 +30,7 @@
 
     <name>GNATdashboard :: Sonar Ada Plugin</name>
 
-    <description>Ada Plugin for SonarQube 6.7 LTS</description>
+    <description>Ada Plugin for SonarQube 7.9 LTS</description>
     <inceptionYear>2012</inceptionYear>
 
     <properties>

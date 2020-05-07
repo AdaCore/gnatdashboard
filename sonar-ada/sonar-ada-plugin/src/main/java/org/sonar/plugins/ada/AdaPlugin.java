@@ -81,10 +81,11 @@ public final class AdaPlugin implements Plugin {
         CountMeasuresComputer.class,
 
         PropertyDefinition.builder(FILE_SUFFIXES_KEY)
+            .multiValues(true)
             .defaultValue(Ada.DEFAULT_FILE_SUFFIXES)
             .name("File Suffixes")
             .description("Comma-separated list of suffixes of Ada files")
-            .onQualifiers(Qualifiers.MODULE, Qualifiers.PROJECT)
+            .onQualifiers(Qualifiers.PROJECT)
             .category(ADA_CATEGORY)
             .subCategory(GENERAL_CATEGORY)
             .build(),
@@ -92,7 +93,7 @@ public final class AdaPlugin implements Plugin {
         PropertyDefinition.builder(GNATHUB_DB_KEY)
             .name("Path to GNAThub database")
             .description("GNAThub DB full path")
-            .onQualifiers(Qualifiers.MODULE, Qualifiers.PROJECT)
+            .onQualifiers(Qualifiers.PROJECT)
             .category(ADA_CATEGORY)
             .subCategory(GNATHUB_CATEGORY)
             .build(),
@@ -100,7 +101,7 @@ public final class AdaPlugin implements Plugin {
         PropertyDefinition.builder(GNATHUB_SRC_MAPPING_KEY)
             .name("Path to GNAThub source mapping file")
             .description("GNAThub source mapping file full path")
-            .onQualifiers(Qualifiers.MODULE, Qualifiers.PROJECT)
+            .onQualifiers(Qualifiers.PROJECT)
             .category(ADA_CATEGORY)
             .subCategory(GNATHUB_CATEGORY)
             .build()
