@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2017, AdaCore
+# Copyright (C) 2013-2020, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -79,7 +79,7 @@ class SonarQube(object):
 
           :file:`<project_object_dir>/gnathub/sonar/sources-mapping.properties`
 
-        :return: the path to the configuration file
+        :return: the path to the source mapping file
         :rtype: str
         """
         return os.path.join(SonarQube.workdir(), SonarQube.SOURCE_MAPPING)
@@ -254,7 +254,8 @@ class SonarScannerProperties(object):
             ('sources', _escpath(sources)),
             ('ada.gnathub.db', db_path),
             ('ada.gnathub.src_mapping', _escpath(SonarQube.src_mapping())),
-            ('ada.file.suffixes', ','.join(suffixes))
+            ('ada.file.suffixes', ','.join(suffixes)),
+            ('scm.exclusions.disabled', 'true')
         ])
 
         # Set project properties
@@ -279,6 +280,7 @@ class SonarScannerProperties(object):
             ('ada.gnathub.db', db_path),
             ('ada.gnathub.src_mapping', _escpath(SonarQube.src_mapping())),
             ('ada.file.suffixes', ','.join(suffixes)),
+            ('scm.exclusions.disabled', 'true'),
             ('modules', ','.join([m.lower() for m in modules.keys()]))
         ])
 
