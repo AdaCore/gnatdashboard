@@ -45,7 +45,7 @@ plug-in must be deployed.
 supported by |SonarSource|:
 
   * for |SonarQube| |SonarQubeLTSVersion| LTS (Long Term Support)
-  * |SonarScanner| 4.0
+  * |SonarScanner| 3.0.3
 
 Upgrading from GNATdashboard 1.0
 --------------------------------
