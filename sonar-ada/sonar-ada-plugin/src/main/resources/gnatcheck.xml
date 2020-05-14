@@ -18,6 +18,22 @@
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
+      <key>access_to_local_objects</key>
+      <name>Access_To_Local_Objects</name>
+      <description>access attribute for local objects</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>address_attribute_for_non_volatile_objects</key>
+      <name>Address_Attribute_For_Non_Volatile_Objects</name>
+      <description>address attribute for non-volatile data objects</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
       <key>address_specifications_for_initialized_objects</key>
       <name>Address_Specifications_For_Initialized_Objects</name>
       <description>address specifications for initialized objects</description>
@@ -314,6 +330,14 @@
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
+      <key>generic_in_out_objects</key>
+      <name>Generic_IN_OUT_Objects</name>
+      <description>generic objects of mode IN OUT</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
       <key>generics_in_subprograms</key>
       <name>Generics_In_Subprograms</name>
       <description>definitions of generic units in  subprogram bodies</description>
@@ -538,6 +562,30 @@
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
+      <key>nonvolatile_overlays</key>
+      <name>Nonvolatile_Overlays</name>
+      <description>nonvolatile overlays</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>nonoverlay_address_specifications</key>
+      <name>Nonoverlay_Address_Specifications</name>
+      <description>nonoverlay address specifications</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>not_imported_overlays</key>
+      <name>Not_Imported_Overlays</name>
+      <description>not imported overlays</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
       <key>non_qualified_aggregates</key>
       <name>Non_Qualified_Aggregates</name>
       <description>non-qualified aggregates</description>
@@ -669,6 +717,14 @@
       <key>outer_loop_exits</key>
       <name>Outer_Loop_Exits</name>
       <description>exiting more than one loop at once</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>outside_references_from_subprograms</key>
+      <name>Outside_References_From_Subprograms</name>
+      <description>outside references from subprograms</description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -810,6 +866,14 @@
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
+      <key>renamings</key>
+      <name>Renamings</name>
+      <description>renaming declarations</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
       <key>representation_specifications</key>
       <name>Representation_Specifications</name>
       <description>representation specification (clause, aspect or pragma)</description>
@@ -829,6 +893,14 @@
       <key>single_value_enumeration_types</key>
       <name>Single_Value_Enumeration_Types</name>
       <description>enumeration type definitions with a single enumeration literal</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>size_attribute_for_types</key>
+      <name>Size_Attribute_For_Types</name>
+      <description>'Size attribute for types and subtypes</description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -976,6 +1048,14 @@
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+      <key>use_clauses</key>
+      <name>USE_Clauses</name>
+      <description>use clauses</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
       <key>use_package_clauses</key>

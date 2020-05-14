@@ -4,7 +4,7 @@
     <rule>
             <key>precondition</key>
             <name>precondition</name>
-            <description>a subprogram call that might violate the subprogram's precondition</description>
+            <description>a subprogram call that might violate the subprogram's precondition (CWE 628)</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
@@ -14,7 +14,7 @@
     <rule>
             <key>postcondition</key>
             <name>postcondition</name>
-            <description>the subprogram's body may violate its specified postcondition</description>
+            <description>the subprogram's body may violate its specified postcondition (CWE 682)</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
@@ -24,7 +24,7 @@
     <rule>
             <key>user precondition</key>
             <name>user precondition</name>
-            <description>a call might violate a user specified subprogram's precondition</description>
+            <description>a call might violate a user specified subprogram's precondition (CWE 628)</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>check</tag>
@@ -324,7 +324,7 @@
     <rule>
             <key>unprotected access</key>
             <name>unprotected access</name>
-            <description>a task type reads or writes a potentially shared object without holding a lock (CWE 362, 366, 820)</description>
+            <description>a task type reads or writes a potentially shared object without holding a lock (CWE 362, 366, 667, 820)</description>
             <type>BUG</type>
             <tag>codepeer</tag>
             <tag>race-condition</tag>
@@ -334,7 +334,7 @@
     <rule>
             <key>unprotected shared access</key>
             <name>unprotected shared access</name>
-            <description>a task reads or writes a potentially shared object without holding a lock (CWE 362, 366, 820)</description>
+            <description>a task reads or writes a potentially shared object without holding a lock (CWE 362, 366, 667, 820)</description>
             <type>BUG</type>
             <tag>codepeer</tag>
             <tag>race-condition</tag>
@@ -344,7 +344,7 @@
     <rule>
             <key>mismatched protected access</key>
             <name>mismatched protected access</name>
-            <description>shared access protected by improper lock (CWE 362, 366, 820)</description>
+            <description>shared access protected by improper lock (CWE 362, 366, 667, 821)</description>
             <type>BUG</type>
             <tag>codepeer</tag>
             <tag>race-condition</tag>
@@ -855,6 +855,26 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
+            <key>address_attribute_for_non_volatile_objects (gnatcheck)</key>
+            <name>Address_Attribute_For_Non_Volatile_Objects (GNATCheck)</name>
+            <description>address attribute for non-volatile data objects</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>address_of_local_objects (gnatcheck)</key>
+            <name>Address_Of_Local_Objects (GNATCheck)</name>
+            <description>address attribute for local objects</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
             <key>address_specifications_for_initialized_objects (gnatcheck)</key>
             <name>Address_Specifications_For_Initialized_Objects (GNATCheck)</name>
             <description>address specifications for initialized objects</description>
@@ -1225,6 +1245,16 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
+            <key>generic_in_out_objects (gnatcheck)</key>
+            <name>Generic_IN_OUT_Objects (GNATCheck)</name>
+            <description>generic objects of mode IN OUT</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
             <key>generics_in_subprograms (gnatcheck)</key>
             <name>Generics_In_Subprograms (GNATCheck)</name>
             <description>definitions of generic units in  subprogram bodies</description>
@@ -1503,6 +1533,36 @@
             <tag>warning</tag>
             <remediationFunction>CONSTANT_ISSUE</remediationFunction>
             <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>nonvolatile_overlays (gnatcheck)</key>
+            <name>Nonvolatile_Overlays (GNATCheck)</name>
+            <description>nonvolatile overlays</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>nonoverlay_address_specifications (gnatcheck)</key>
+            <name>Nonoverlay_Address_Specifications (GNATCheck)</name>
+            <description>nonoverlay address specifications</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>not_imported_volatile_objects (gnatcheck)</key>
+            <name>Not_Imported_Volatile_Objects (GNATCheck)</name>
+            <description>not imported volatile objects</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
             <key>non_qualified_aggregates (gnatcheck)</key>
@@ -1845,6 +1905,16 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
+            <key>renamings (gnatcheck)</key>
+            <name>Renamings (GNATCheck)</name>
+            <description>renaming declarations</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
             <key>representation_specifications (gnatcheck)</key>
             <name>Representation_Specifications (GNATCheck)</name>
             <description>representation specification (clause, aspect or pragma)</description>
@@ -1868,6 +1938,16 @@
             <key>single_value_enumeration_types (gnatcheck)</key>
             <name>Single_Value_Enumeration_Types (GNATCheck)</name>
             <description>enumeration type definitions with a single enumeration literal</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>size_attribute_for_types (gnatcheck)</key>
+            <name>Size_Attribute_For_Types (GNATCheck)</name>
+            <description>'Size attribute for types and subtypes</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
@@ -2115,9 +2195,9 @@
             <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>test always true (lal checker)</key>
-            <name>test always true (LAL checker)</name>
-            <description>test is always 'true'</description>
+            <key>test always false (lal checker)</key>
+            <name>test always false (LAL checker)</name>
+            <description>test is always 'false'</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
@@ -2135,29 +2215,29 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
+            <key>test always true (lal checker)</key>
+            <name>test always true (LAL checker)</name>
+            <description>test is always 'true'</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>contract check (lal checker)</key>
+            <name>contract check (LAL checker)</name>
+            <description>user contract (pragma Assert, pre/postcondition) could fail</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
             <key>access check (lal checker)</key>
             <name>access check (LAL checker)</name>
             <description>dereference of a possibly null reference</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
-            <key>test always false (lal checker)</key>
-            <name>test always false (LAL checker)</name>
-            <description>test is always 'false'</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
-            <key>code duplicated (lal checker)</key>
-            <name>code duplicated (LAL checker)</name>
-            <description>code is duplicated at several places.</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
@@ -2175,9 +2255,9 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>contract check (lal checker)</key>
-            <name>contract check (LAL checker)</name>
-            <description>user contract (pragma Assert, pre/postcondition) could fail</description>
+            <key>code duplicated (lal checker)</key>
+            <name>code duplicated (LAL checker)</name>
+            <description>code is duplicated at several places.</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>

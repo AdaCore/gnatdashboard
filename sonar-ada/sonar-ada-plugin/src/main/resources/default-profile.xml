@@ -349,6 +349,14 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
+        <key>address_attribute_for_non_volatile_objects (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>address_of_local_objects (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
         <key>address_specifications_for_initialized_objects (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
@@ -497,6 +505,10 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
+        <key>generic_in_out_objects (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
         <key>generics_in_subprograms (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
@@ -606,6 +618,18 @@
       </rule>
       <rule>
         <key>no_scalar_storage_order_specified (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>nonvolatile_overlays (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>nonoverlay_address_specifications (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>not_imported_volatile_objects (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -745,6 +769,10 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
+        <key>renamings (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
         <key>representation_specifications (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
@@ -754,6 +782,10 @@
       </rule>
       <rule>
         <key>single_value_enumeration_types (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>size_attribute_for_types (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -853,7 +885,7 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>test always true (lal checker)</key>
+        <key>test always false (lal checker)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -861,15 +893,15 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
+        <key>test always true (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>contract check (lal checker)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
         <key>access check (lal checker)</key>
-        <repositoryKey>codepeer</repositoryKey>
-      </rule>
-      <rule>
-        <key>test always false (lal checker)</key>
-        <repositoryKey>codepeer</repositoryKey>
-      </rule>
-      <rule>
-        <key>code duplicated (lal checker)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -877,7 +909,7 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>contract check (lal checker)</key>
+        <key>code duplicated (lal checker)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -886,6 +918,14 @@
       </rule>
       <rule>
         <key>abstract_type_declarations</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>access_to_local_objects</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>address_attribute_for_non_volatile_objects</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -1037,6 +1077,10 @@
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
+        <key>generic_in_out_objects</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
         <key>generics_in_subprograms</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
@@ -1149,6 +1193,18 @@
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
+        <key>nonvolatile_overlays</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>nonoverlay_address_specifications</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>not_imported_overlays</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
         <key>non_qualified_aggregates</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
@@ -1214,6 +1270,10 @@
       </rule>
       <rule>
         <key>outer_loop_exits</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>outside_references_from_subprograms</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -1285,6 +1345,10 @@
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
+        <key>renamings</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
         <key>representation_specifications</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
@@ -1294,6 +1358,10 @@
       </rule>
       <rule>
         <key>single_value_enumeration_types</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>size_attribute_for_types</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -1366,6 +1434,10 @@
       </rule>
       <rule>
         <key>unnamed_blocks_and_loops</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>use_clauses</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
