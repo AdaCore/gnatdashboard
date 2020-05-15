@@ -5,7 +5,7 @@ Sonar Ada Plugin
 
 This SonarQube plugin loads the analysis of Ada projects by GNATdashboard.
 
-ChangeLog 19.x
+ChangeLog 21.x
 --------------
 
 The Sonar Ada Plugin shipped with GNATdashboard now supports |SonarQube|
@@ -25,7 +25,7 @@ SonarQube Scanner
 to analyse a project.
 
 GNATdashboard dropped support for |SonarRunner|, and is now compatible with
-|SonarScanner| version 3.0.3, recommended as the default launcher for |SonarQube|
+|SonarScanner| version 4.0, recommended as the default launcher for |SonarQube|
 |SonarQubeLTSVersion| (LTS).
 
 Install |SonarScanner| make it available in your :envvar:`PATH` prior to
