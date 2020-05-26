@@ -327,8 +327,8 @@ class SonarScannerProperties(object):
 
         self.info('prepare source dirs for sonar-scanner')
         self.log.info(
-            'copy source files from the project closure to %s',
-            os.path.relpath(root_src_dir))
+             'copy source files from the project closure to %s',
+             root_src_dir)
 
         # Remove any previous analysis left-over
         shutil.rmtree(root_src_dir, ignore_errors=True)
@@ -440,12 +440,12 @@ class SonarScannerProperties(object):
         if not properties_fname:
             properties_fname = SonarQube.configuration()
 
-        self.info('generate %s' % os.path.relpath(properties_fname))
+        self.info('generate %s' % properties_fname)
         with open(properties_fname, 'w') as configuration:
             for pair in self.attributes.items():
                 configuration.write('%s = %s\n' % pair)
 
-        self.info('generate %s' % os.path.relpath(SonarQube.src_mapping()))
+        self.info('generate %s' % SonarQube.src_mapping())
         with open(SonarQube.src_mapping(), 'w') as mapping:
             for key, value in self.src_mapping.items():
                 mapping.write('%s = %s\n' % (_escape(key), value))
