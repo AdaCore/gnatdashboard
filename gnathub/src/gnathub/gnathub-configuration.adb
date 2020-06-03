@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2019, AdaCore                     --
+--                     Copyright (C) 2013-2020, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -256,7 +256,10 @@ package body GNAThub.Configuration is
    procedure Parse_Command_Line (Parser : Opt_Parser) is
 
       procedure Local_Parse_Command_Line (Switch, Param, Section : String);
-      --  Allow to manage every occurance of -X switch for scenario variable
+      --  Allow to manage every occurrence of --plugins switch
+
+      procedure Handle_Command_Line_Scenario_Variables (Index, Inc : Natural);
+      --  Allow to manage every occurrence of -X switch for scenario variables
 
       ------------------------------
       -- Local_Parse_Command_Line --
@@ -265,24 +268,8 @@ package body GNAThub.Configuration is
       procedure Local_Parse_Command_Line (Switch, Param, Section : String)
       is
          pragma Unreferenced (Section);
-         Equal : Natural;
       begin
-         if Switch = "-X" then
-            Equal := Ada.Strings.Fixed.Index (Param, "=");
-
-            if Equal /= 0 then
-               declare
-                  Key   : constant String := Param (Param'First .. Equal - 1);
-                  Value : constant String := Param (Equal + 1 .. Param'Last);
-               begin
-                  GNAThub.Project.Update_Env (Key, Value);
-               end;
-            else
-               Warn ("Unexpected argument for -X:");
-               Warn ("Expected ""key=value"", got " & Param);
-            end if;
-
-         elsif Switch = "--plugins" then
+         if Switch = "--plugins" then
             if All_Plugins = Null_Unbounded_String then
                All_Plugins := To_Unbounded_String (Param);
             else
@@ -291,12 +278,33 @@ package body GNAThub.Configuration is
          end if;
       end Local_Parse_Command_Line;
 
+      --------------------------------------------
+      -- Handle_Command_Line_Scenario_Variables --
+      --------------------------------------------
+
+      procedure Handle_Command_Line_Scenario_Variables (Index, Inc : Natural)
+      is
+         Param : constant String  := Argument (Index);
+         Pos   : constant Natural := Ada.Strings.Fixed.Index (Param, "=");
+      begin
+         if Pos /= 0 then
+            declare
+               Key   : constant String := Param (Param'First + Inc .. Pos - 1);
+               Value : constant String := Param (Pos + 1 .. Param'Last);
+            begin
+               GNAThub.Project.Update_Env (Key, Value);
+            end;
+         else
+            Warn ("Unexpected argument for -X:");
+            Warn ("Expected ""key=value"", got " & Param);
+         end if;
+      end Handle_Command_Line_Scenario_Variables;
+
       Count          : constant Natural := Argument_Count;
       Index          : Natural;
    begin
       Getopt (Config, Local_Parse_Command_Line'Unrestricted_Access, Parser);
 
-      --  Parse -P argument and set as project file path
       Index := 1;
       if Count > 0 then
 
@@ -304,6 +312,7 @@ package body GNAThub.Configuration is
             declare
                Str : constant String := Argument (Index);
             begin
+               --  Parse -P argument and set as project file path
                if Str'Length >= 2 and then Str (1 .. 2) = "-P" then
                   if Str'Length = 2 then
                      Index := Index + 1;
@@ -314,9 +323,21 @@ package body GNAThub.Configuration is
                   else
                      Project_Arg := new String'(Str (3 .. Str'Last));
                   end if;
-
-                  exit;
                end if;
+
+               --  Parse -X arguments (multiple occurrences should be handled)
+               if Str'Length >= 2 and then Str (1 .. 2) = "-X" then
+                  if Str'Length = 2 then
+                     Index := Index + 1;
+
+                     if Index <= Count and then Argument (Index) /= "" then
+                        Handle_Command_Line_Scenario_Variables (Index, 0);
+                     end if;
+                  else
+                     Handle_Command_Line_Scenario_Variables (Index, 2);
+                  end if;
+               end if;
+
             end;
             Index := Index + 1;
          end loop;

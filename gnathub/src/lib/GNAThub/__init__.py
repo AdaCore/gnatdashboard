@@ -8,7 +8,7 @@ plug-ins.
 """
 
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2017, AdaCore
+# Copyright (C) 2013-2020, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -765,6 +765,7 @@ except ImportError:
 # define pure-Python extensions.
 
 import os
+import platform
 
 from abc import ABCMeta, abstractmethod
 from subprocess import Popen, STDOUT
@@ -1040,6 +1041,7 @@ class Run(object):
         self.out = out
         self.append_out = append_out
         self.log = logging.getLogger(self.__class__.__name__)
+        self.shell = True if platform.system() == 'Windows' else False
 
         self.log.debug(
             'cd %s; %s', workdir if workdir is not None else os.getcwd(),
@@ -1052,10 +1054,10 @@ class Run(object):
         try:
             with open(self.output(), write_mode) as output:
                 self.inferior = Popen(
-                    self.argv, env=env, stdin=None, stdout=output,
-                    stderr=STDOUT if capture_stderr else None,
-                    cwd=workdir)
-
+                   self.argv, env=env, stdin=None, stdout=output,
+                   shell=self.shell,
+                   stderr=STDOUT if capture_stderr else None,
+                   cwd=workdir)
                 Console.info('output redirected to %s' % output.name)
                 self.pid = self.inferior.pid
                 self.wait()

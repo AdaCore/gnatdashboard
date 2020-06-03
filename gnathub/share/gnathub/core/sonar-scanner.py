@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2016-2017, AdaCore
+# Copyright (C) 2016-2020, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -51,12 +51,18 @@ class SonarScanner(Plugin, Reporter):
         """
         # Enable verbose and debugging output with -e and -X. This is handy for
         # debugging in case of issue in the SonarScanner step.
+
+        sonarqube_conf = SonarQube.configuration()
+        if platform.system() == 'Windows':
+            if (" " in sonarqube_conf):
+                sonarqube_conf = "/".join(sonarqube_conf.split("\\"))
+                sonarqube_conf = sonarqube_conf.replace(' ', "\ ")
+                sonarqube_conf = '\"' + SonarQube.configuration() + '\"'
+
         cmdline = [
             'sonar-scanner', '-e', '-X',
-            '-Dproject.settings={}'.format(SonarQube.configuration())
+            '-Dproject.settings={}'.format(sonarqube_conf)
         ]
-        if platform.system() == 'Windows':
-            return ['cmd', '/c', ' '.join(cmdline)]
         return cmdline
 
     def report(self):
