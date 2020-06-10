@@ -442,35 +442,36 @@ package body GNAThub.Configuration is
 
                J := J + 1;
 
-               --  Handle the case where --targs:<tool> is used without
-               --  parameter, eg.
-               --
-               --    $ gnathub […] --targs:codepeer
-
                if J > Argument_Count then
-                  raise Command_Line_Error with "missing parameter for " & Arg;
+                  --  Handle the case where --targs:<tool> is used without
+                  --  parameter, eg.
+                  --    $ gnathub […] --targs:codepeer
+
+                  --  ignore when missing tool switches and warn users
+                  Warn ("ignoring --targs:" & Tool
+                        & " since tool switches are missing!");
+
+               else
+                  --  Loop over the following switches and save them until
+                  --  either the end of the command line is reached, the
+                  --  special sentinel "--" is found or another
+                  --  --targs: parameter is next.
+
+                  loop
+                     Save_Tool_Argument (Tool, Argument (J));
+
+                     --  Exit if the next switch starts with --targs:
+                     exit when J < Argument_Count
+                       and then Starts_With_Tool_Args_Section
+                         (Argument (J + 1));
+
+                     J := J + 1;
+
+                     --  Exit at the end of the command line or if the next
+                     --  switch is the special sentinel "--".
+                     exit when J > Argument_Count or else Argument (J) = "--";
+                  end loop;
                end if;
-
-               --  Loop over the following switches and save them until either
-               --  the end of the command line is reached, the special sentinel
-               --  "--" is found or another --targs: parameter is next.
-
-               loop
-                  Save_Tool_Argument (Tool, Argument (J));
-
-                  --  Exit if the next switch starts with --targs:
-
-                  exit when J < Argument_Count
-                    and then Starts_With_Tool_Args_Section (Argument (J + 1));
-
-                  J := J + 1;
-
-                  --  Exit at the end of the command line or if the next switch
-                  --  is the special sentinel "--".
-
-                  exit when J > Argument_Count or else Argument (J) = "--";
-               end loop;
-
             else
                --  Defer the parsing of other switches to GNAThub's command
                --  line parser.
