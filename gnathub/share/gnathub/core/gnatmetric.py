@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2017, AdaCore
+# Copyright (C) 2013-2020, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -37,6 +37,9 @@ class GNATmetric(Plugin, Runner, Reporter):
 
     def __init__(self):
         super(GNATmetric, self).__init__()
+
+        if GNAThub.dry_run_without_project():
+            return
 
         self.tool = None
         self.output = os.path.join(GNAThub.Project.object_dir(), 'metrix.xml')

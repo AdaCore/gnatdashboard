@@ -144,6 +144,11 @@ class PluginRunner(object):
             if b().name in cls.POST_PHASE_PLUGINS:
                 return -1
             return 0
+        if GNAThub.dry_run_without_project():
+            #  The list of predefined plugins needs to be gathered, any
+            #  sorting is necessary at that point
+            return plugins
+
         return sorted(plugins, plugin_sort_fn)
 
     @classmethod
@@ -237,17 +242,23 @@ class PluginRunner(object):
         #       2. Project file
         #       3. All discoverable plugins
 
-        if GNAThub.plugins():
-            LOG.info('use user-defined list of plugins (--plugins switch)')
-            explicit = [p.strip() for p in GNAThub.plugins().split(',')]
-
-        elif GNAThub.Project.property_as_list('Plugins'):
-            LOG.info('use project-defined list of plugins (attr. Plugins)')
-            explicit = GNAThub.Project.property_as_list('Plugins')
+        # If no object directory was created and --dry-run means that gnathub
+        # was called in discovery mode of predefined plugins
+        if GNAThub.dry_run_without_project():
+            explicit = None
 
         else:
-            LOG.info('use all discoverable plugins')
-            explicit = None
+            if GNAThub.plugins():
+                LOG.info('use user-defined list of plugins (--plugins switch)')
+                explicit = [p.strip() for p in GNAThub.plugins().split(',')]
+
+            elif GNAThub.Project.property_as_list('Plugins'):
+                LOG.info('use project-defined list of plugins (attr. Plugins)')
+                explicit = GNAThub.Project.property_as_list('Plugins')
+
+            else:
+                LOG.info('use all discoverable plugins')
+                explicit = None
 
         # Generate the final list of plugin classes. Inspect Python scripts to
         # extract class definition and filter out those that will not be used.
@@ -290,6 +301,11 @@ class PluginRunner(object):
 
             # Filter out any plugin whose name is not in the "explicit" set
             plugins = [c for c in plugins if contains_plugin_name(c, explicit)]
+
+        # Return all autodiscovered plugins if is --dry_run mode without
+        # project file as command line parameter
+        if GNAThub.dry_run_without_project():
+            return cls.schedule(plugins)
 
         # Remove explicitly disabled plugins
         for name in GNAThub.Project.property_as_list('Plugins_Off'):
@@ -406,6 +422,15 @@ class PluginRunner(object):
         # Early exit if no plug-in are scheduled to be run
         if not self.plugins:
             self.info('nothing to do')
+            return
+
+        # Early exit when --dry_run mode without project file
+        # and dump the list of plugins
+        if GNAThub.dry_run_without_project():
+            for cls in self.plugins:
+                plugin = cls()
+                self.info('%s plug-in is available', plugin.name)
+                plugin.exec_status = GNAThub.EXEC_SUCCESS
             return
 
         # Execute each plug-in in order

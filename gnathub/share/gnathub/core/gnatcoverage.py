@@ -32,11 +32,15 @@ class GNATcoverage(Plugin, Reporter):
     Retrieves .xcov generated files from the project root object directory,
     parses them and feeds the database with the data collected from each files.
     """
-    GNATCOVERAGE_OUTPUT = os.path.join(GNAThub.Project.object_dir())
-    XML_EXT = '.xml'
 
     def __init__(self):
         super(GNATcoverage, self).__init__()
+
+        if GNAThub.dry_run_without_project():
+            return
+
+        self.GNATCOVERAGE_OUTPUT = os.path.join(GNAThub.Project.object_dir())
+        self.XML_EXT = '.xml'
 
         self.tool = None
         # Mapping: coverage level -> issue rule for this coverage.

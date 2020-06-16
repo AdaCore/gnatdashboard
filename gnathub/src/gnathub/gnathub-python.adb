@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2019, AdaCore                     --
+--                     Copyright (C) 2013-2020, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -92,8 +92,12 @@ package body GNAThub.Python is
    Codepeer_Output_Dir_Function : aliased constant String := "output_dir";
    Codepeer_DB_Dir_Function     : aliased constant String := "db_dir";
 
+   --  Added to handle --dry-run mode without project file
+   Dry_Run_Without_Project_Function : aliased constant String :=
+     "dry_run_without_project";
+
    No_Args_Root_Module_Functions :
-     constant array (1 .. 20) of access constant String :=
+     constant array (1 .. 21) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         HTML_Data_Function'Access,
@@ -114,7 +118,8 @@ package body GNAThub.Python is
         Server_Port_Function'Access,
         Object_Codepeer_Dir_Function'Access,
         Codepeer_Output_Dir_Function'Access,
-        Codepeer_DB_Dir_Function'Access);
+        Codepeer_DB_Dir_Function'Access,
+        Dry_Run_Without_Project_Function'Access);
 
    --------------------
    -- GNAThub Module --
@@ -721,6 +726,10 @@ package body GNAThub.Python is
       elsif Command = Dry_Run_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Dry_Run);
 
+      elsif Command = Dry_Run_Without_Project_Function then
+         Set_Return_Value (Data,
+                           GNAThub.Configuration.Dry_Run_Without_Project);
+
       elsif Command = Quiet_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Quiet);
 
@@ -754,8 +763,12 @@ package body GNAThub.Python is
          Set_Return_Value (Data, Extra_Plugins_Dir.Display_Full_Name);
          Set_Return_Value_Key (Data, "global");
 
-         Set_Return_Value (Data, Property_As_String ("Local_Repository"));
-         Set_Return_Value_Key (Data, "local");
+         if Configuration.Project /= "" then
+            --  This condition is added to be able to handle gnathub command
+            --  line --dry-run switch without project file associated
+            Set_Return_Value (Data, Property_As_String ("Local_Repository"));
+            Set_Return_Value_Key (Data, "local");
+         end if;
 
       elsif Command = Engine_Repository_Function then
          Set_Return_Value (Data, Server_Engine_Dir.Display_Full_Name);

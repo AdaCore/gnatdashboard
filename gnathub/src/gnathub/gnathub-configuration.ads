@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2018, AdaCore                     --
+--                     Copyright (C) 2013-2020, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -79,6 +79,11 @@ package GNAThub.Configuration is
    function Dry_Run return Boolean;
    --  Whether to run GNAThub in dry run mode (--dry-run). In dry run mode,
    --  GNAThub only list the plugins that it would execute.
+
+   function Dry_Run_Without_Project return Boolean;
+   --  Whether to run GNAThub in dry run mode (--dry-run) without project file.
+   --  In dry run mode without project file, GNAThub only list the available
+   --  prefefined plugins.
 
    function Tool_Args (Tool_Name : String) return Tool_Arg_Vectors.Vector;
    --  The list of additional arguments to pass to a tool

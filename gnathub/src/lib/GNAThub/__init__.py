@@ -227,6 +227,14 @@ def tool_args(tool_name):
     return NotImplemented   # Implemented in Ada
 
 
+def dry_run_without_project():
+    """Return true if --dry-run mode without project file.
+
+    :return: bool
+    """
+    return NotImplemented   # Implemented in Ada
+
+
 class Logger(object):
 
     """A logger object. Fully implemented in Ada."""

@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2013-2018, AdaCore
+# Copyright (C) 2013-2020, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -37,6 +37,9 @@ class GNATstack(Plugin, Runner, Reporter):
 
     def __init__(self):
         super(GNATstack, self).__init__()
+
+        if GNAThub.dry_run_without_project():
+            return
 
         self.tool = None
         # FIXME: For now we can't control where the xml file is created:

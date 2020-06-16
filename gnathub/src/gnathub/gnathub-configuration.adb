@@ -38,6 +38,8 @@ with GNATCOLL.VFS_Utils;                  use GNATCOLL.VFS_Utils;
 
 with GNAThub.Project;
 with GNAThub.Version;
+with GNAThub.Python;
+with GNAThub.Constants; use GNAThub.Constants;
 
 package body GNAThub.Configuration is
    Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
@@ -556,14 +558,25 @@ package body GNAThub.Configuration is
       end if;
 
       --  Check that job number is in the correct range
-
       if Jobs_Arg not in Natural'Range then
          raise Command_Line_Error
            with "invalid jobs value: " & Integer'Image (Jobs_Arg);
       end if;
 
-      --  Check that project file path has been specified on command line
+      if Dry_Run_Arg and then Project_Arg.all = "" then
+         --  When no project file is provided in gnathub command line with
+         --  dry-run switch list all auto-discovered plugins
+         declare
+            Had_Errors : Boolean := False;
+         begin
+            Trace (Me, "Execute plugin-runner: --dry-run without project");
+            GNAThub.Python.Execute_File
+              (Plugin_Runner.Display_Full_Name, Had_Errors);
+            raise GNAT.Command_Line.Exit_From_Command_Line;
+         end;
+      end if;
 
+      --  Check that project file path has been specified on command line
       if Project_Arg.all = "" then
          raise Command_Line_Error with "no project file specified";
       end if;
@@ -740,6 +753,15 @@ package body GNAThub.Configuration is
    begin
       return Dry_Run_Arg;
    end Dry_Run;
+
+   -----------------------------
+   -- Dry_Run_Without_Project --
+   -----------------------------
+
+   function Dry_Run_Without_Project return Boolean is
+   begin
+      return Dry_Run and (Project_Arg.all = "");
+   end Dry_Run_Without_Project;
 
    -------------
    -- Server ---
