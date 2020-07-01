@@ -464,7 +464,7 @@ class PluginRunner(object):
                     Console.ko(plugin)
 
         if exec_failure:
-            self.error('GNAThub error: one or more plugins failed to run!')
+            self.error('GNAThub error: one or more plugins failed to run')
 
 
 # Script entry point

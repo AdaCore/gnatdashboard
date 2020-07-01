@@ -3,9 +3,10 @@
 import json
 import os
 
-from gnatpython.env import BaseEnv, Env
-from gnatpython.ex import Run, PIPE, STDOUT
-from gnatpython.fileutils import cp, chmod, mkdir, sync_tree
+from e3.env import BaseEnv, Env
+from e3.os.process import Run, PIPE, STDOUT
+from e3.fs import cp, mkdir, sync_tree
+from e3.os.fs import chmod
 
 from support import const
 

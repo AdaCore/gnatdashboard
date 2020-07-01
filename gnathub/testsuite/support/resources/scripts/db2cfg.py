@@ -4,7 +4,7 @@ import sys
 
 import GNAThub
 
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 
 
 def collect_data(writer):
@@ -12,7 +12,7 @@ def collect_data(writer):
 
     Stores all resources and their associated metric in a ConfigParser object.
 
-    :param ConfigParser.SafeConfigParser writer: Container for the database
+    :param ConfigParser.ConfigParser writer: Container for the database
         metrics and values.
 
     """
@@ -36,7 +36,6 @@ def collect_data(writer):
 
         for emessage in [emessage for emessage in emessages if emessage.line]:
             line_messages[emessage.line].append(emessage)
-
             
         for line, messages in line_messages.items():
             columns = set()
@@ -50,7 +49,7 @@ def collect_data(writer):
 
 if __name__ == '__main__':
     # Create a case sensitive config writer
-    writer = SafeConfigParser()
+    writer = ConfigParser()
     writer.optionxform = str
 
     # Collect the data from the database and display them
