@@ -24,7 +24,7 @@ GPRBUILD = gprbuild -p -j0
 PYTHON = python
 DB2ADA = gnatcoll_db2ada
 PYTHON_PREFIX = $(shell $(PYTHON) \
-		 -c "from distutils.sysconfig import PREFIX; print PREFIX")
+		 -c "from distutils.sysconfig import PREFIX; print(PREFIX)")
 GNATHUB_LIB_MANIFEST = GNAThub.MANIFEST
 
 # General conventions for Makefiles
@@ -77,7 +77,7 @@ install: $(DESTDIR)$(datadir)/gnathub/python all installdirs \
 ifdef IS_WINDOWS
 	$(MAKE) PYTHON="$</python.exe" install-python-lib
 else
-	$(MAKE) PYTHON="$</bin/python" install-python-lib
+	$(MAKE) PYTHON="$</bin/python3" install-python-lib
 endif
 
 install-strip:
@@ -104,7 +104,7 @@ $(builddir)/bin/gnathub: $(rootdir)/gnathub.gpr $(GENERATED_SOURCES)
 		-XBUILD_MODE="$(BUILD_MODE)" -XGEN_SRC_DIR="$(gensrcdir)"
 ifdef IS_WINDOWS
 	$(MKDIR) $(builddir)/bin
-	$(INSTALL) $(PYTHON_PREFIX)/python27.dll $(builddir)/bin
+	$(INSTALL) $(PYTHON_PREFIX)/python37.dll $(builddir)/bin
 endif
 
 $(gensrcdir)/gnathub-version.ads: $(rootdir)/templates/gnathub-version.ads.in

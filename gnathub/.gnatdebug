@@ -24,3 +24,4 @@ SQL.PERF                = no
 --  Deactivate SQL-related traces in GNAThub
 POOLS                   = no
 GNATHUB.DATABASE        = no
+PYTHON                  = yes
