@@ -31,6 +31,7 @@ with GNAThub.Database;
 with GNAThub.Project;
 with GNAThub.Configuration;         use GNAThub.Configuration;
 with GNAThub.Python;
+with GNATCOLL.Scripts.Python;
 
    -------------
    -- GNAThub --
@@ -167,7 +168,12 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       end if;
 
       if Had_Errors then
-         raise Fatal_Error with Runner_Script & ": unexpected errors";
+         declare
+            PBT : constant String := GNATCOLL.Scripts.Python.Python_Backtrace;
+         begin
+            Trace (Me, PBT);
+            raise Fatal_Error with Runner_Script & ": unexpected errors";
+         end;
       end if;
 
    end Execute_Plugin_Runner;
