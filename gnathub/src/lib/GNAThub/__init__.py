@@ -778,11 +778,11 @@ import platform
 from abc import ABCMeta, abstractmethod
 from subprocess import Popen, STDOUT
 
-EXEC_SUCCESS, EXEC_FAILURE, NOT_EXECUTED = range(3)
+EXEC_SUCCESS, EXEC_FAILURE, NOT_EXECUTED = list(range(3))
 
 # Database-related constants
-RULE_KIND, METRIC_KIND = range(2)
-PROJECT_KIND, DIRECTORY_KIND, FILE_KIND = range(3)
+RULE_KIND, METRIC_KIND = list(range(2))
+PROJECT_KIND, DIRECTORY_KIND, FILE_KIND = list(range(3))
 
 # Predefined ranking constants
 RANKING_ANNOTATION = 0
@@ -851,7 +851,7 @@ def _console_ko(message, columns=79):
     Console._status(message, 'FAILED', columns)
 
 
-class Plugin(object):
+class Plugin(object, metaclass=ABCMeta):
 
     """GNAThub plugin interface.
 
@@ -867,8 +867,6 @@ class Plugin(object):
     driver will automatically find all classes implementing the
     :class:`GNAThub.Plugin` interface. No manual registration needed.
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self):
         """Initialize instance properties."""
@@ -966,10 +964,8 @@ class Plugin(object):
         self._exec_status = status
 
 
-class Runner(object):
+class Runner(object, metaclass=ABCMeta):
     """Plugin extension point for analyser tools."""
-
-    __metaclass__ = ABCMeta
 
     @abstractmethod
     def run(self):
@@ -985,10 +981,8 @@ class Runner(object):
         pass
 
 
-class Reporter(object):
+class Reporter(object, metaclass=ABCMeta):
     """Plugin extension point for reporter tools."""
-
-    __metaclass__ = ABCMeta
 
     @abstractmethod
     def report(self):
@@ -1062,10 +1056,11 @@ class Run(object):
         try:
             with open(self.output(), write_mode) as output:
                 self.inferior = Popen(
-                   self.argv, env=env, stdin=None, stdout=output,
-                   shell=self.shell,
-                   stderr=STDOUT if capture_stderr else None,
-                   cwd=workdir)
+                    self.argv, env=env, stdin=None, stdout=output,
+                    shell=self.shell,
+                    stderr=STDOUT if capture_stderr else None,
+                    cwd=workdir)
+
                 Console.info('output redirected to %s' % output.name)
                 self.pid = self.inferior.pid
                 self.wait()

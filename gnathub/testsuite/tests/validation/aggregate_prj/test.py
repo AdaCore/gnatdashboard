@@ -4,6 +4,7 @@ import os
 
 from unittest import TestCase
 from support.mock import GNAThub, Project
+from functools import reduce
 
 
 DIRS = [

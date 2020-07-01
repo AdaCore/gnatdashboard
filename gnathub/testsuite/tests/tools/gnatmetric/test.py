@@ -2,7 +2,7 @@
 
 import os
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 
 from unittest import TestCase
 from support.mock import GNAThub, Project, Script
@@ -59,6 +59,7 @@ EXPECTED_EMETRICS = {
     'extra exit points': 0
 }
 
+
 class TestGNATmetricSupport(TestCase):
     def setUp(self):
         self.longMessage = True
@@ -68,13 +69,13 @@ class TestGNATmetricSupport(TestCase):
         script_output_file = os.path.abspath('script.out')
         self.gnathub.run(script=Script.db2cfg(), output=script_output_file)
 
-        parser = SafeConfigParser()
+        parser = ConfigParser()
         parser.optionxform = str
 
         parser.read(script_output_file)
         self.assertListEqual(sorted(parser.sections()), ELEMENTS)
 
-        for metric, value in EXPECTED_METRICS.iteritems():
+        for metric, value in EXPECTED_METRICS.items():
             self.assertTrue(
                 parser.has_option(SECTION, metric),
                 'missing entry for "%s"' % metric)
@@ -82,7 +83,7 @@ class TestGNATmetricSupport(TestCase):
                 parser.getfloat(SECTION, metric), value,
                 'unexpected value for "%s"' % metric)
 
-        for emetric, value in EXPECTED_EMETRICS.iteritems():
+        for emetric, value in EXPECTED_EMETRICS.items():
             self.assertTrue(
                 parser.has_option(ESECTION, emetric),
                 'missing entry for "%s"' % emetric)

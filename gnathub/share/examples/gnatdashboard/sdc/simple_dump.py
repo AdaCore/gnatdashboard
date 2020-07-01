@@ -23,7 +23,7 @@ def _fetch():
     # Create a dictionary of rules
     rules = {rule.id: rule for rule in GNAThub.Rule.list()}
 
-    for rule in rules.values():
+    for rule in list(rules.values()):
         rule.tool_name = tools[rule.tool_id].name
 
     # Traverse all resources looking for files
@@ -49,7 +49,7 @@ def _display(rules, files, stream=sys.stdout):
 
         """
 
-        print >> stream, message
+        print(message, file=stream)
 
     for resource in files:
         write("[%s]" % os.path.basename(resource.name))

@@ -155,7 +155,7 @@ class CodePeer(Plugin, Runner, Reporter):
             version = re.match(".* ([0-9]+\.[0-9]+[w]?) .*",
                                output).groups()[0]
         except Exception as e:
-            print e
+            print(e)
         self.log.debug('Codepeer version put in %s', dest)
         self.info('Codepeer version put in %s', dest)
         with open(dest, 'w') as fd:
@@ -182,7 +182,7 @@ class CodePeer(Plugin, Runner, Reporter):
             self.error('no report found')
             return GNAThub.EXEC_FAILURE
 
-        with open(self.csv_report, 'rb') as report:
+        with open(self.csv_report, 'r') as report:
             # Compute the total number of lines for progress report (-1 because
             # the first line in irrelevant to the analysis).
             index, total = 0, len(report.readlines()) - 1
@@ -201,7 +201,7 @@ class CodePeer(Plugin, Runner, Reporter):
                 reader = csv.reader(report, quotechar='\"')
 
                 # Drop the first line (containing the columns name)
-                header = reader.next()
+                header = next(reader)
                 self.log.debug('drop header line: %s', header)
 
                 # Iterate over each relevant record

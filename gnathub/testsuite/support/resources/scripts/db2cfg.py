@@ -4,7 +4,7 @@ import sys
 
 import GNAThub
 
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 
 
 def collect_data(writer):
@@ -38,7 +38,7 @@ def collect_data(writer):
             line_messages[emessage.line].append(emessage)
 
             
-        for line, messages in line_messages.iteritems():
+        for line, messages in line_messages.items():
             columns = set()
             for message in messages:
                 section = '%s %d:%d' % (basename, line, message.col_begin)

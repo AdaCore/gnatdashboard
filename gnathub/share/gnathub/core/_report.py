@@ -76,13 +76,13 @@ def _count_extra_newlines(lines):
 class CoverageStatus(Enum):
     """Coverage status enumeration."""
 
-    NO_CODE, COVERED, NOT_COVERED, PARTIALLY_COVERED = range(4)
+    NO_CODE, COVERED, NOT_COVERED, PARTIALLY_COVERED = list(range(4))
 
 
 class MessageRanking(Enum):
     """Ranking values for messages collected and reported by GNAThub."""
 
-    Annotation, Unspecified, Info, Low, Medium, High = range(6)
+    Annotation, Unspecified, Info, Low, Medium, High = list(range(6))
 
 
 class _HtmlFormatter(HtmlFormatter):
@@ -399,7 +399,7 @@ class SourceBuilder(object):
         # TODO: double-check formula when adding support for GNATcoverage.
         return sum(
             1 if status == CoverageStatus.COVERED else 0
-            for _, status in self.coverage.itervalues()
+            for _, status in self.coverage.values()
         ) * 100 / len(self.coverage)
 
     def _process_messages(self):
@@ -432,11 +432,11 @@ class SourceBuilder(object):
             else:
                 self.annotations[message.line].append((message, rule, tool))
 
-        for no, messages in self.messages.iteritems():
+        for no, messages in self.messages.items():
             for message in messages:
                 self.all_messages.append(_encode_message(*message))
 
-        for no, annotations in self.annotations.iteritems():
+        for no, annotations in self.annotations.items():
             for annotation in annotations:
                 self.all_annotations.append(_encode_message(*annotation))
 
@@ -449,7 +449,7 @@ class SourceBuilder(object):
             'messages': self.all_messages or None,
             'coverage': self.file_coverage,
             'message_count': self.message_count,
-            '_total_message_count': sum(self.message_count.itervalues())
+            '_total_message_count': sum(self.message_count.values())
         }
         return this
 
@@ -472,7 +472,7 @@ class SourceBuilder(object):
             ] or None,
             'coverage': {
                 no: _encode_coverage(*self.coverage[no])
-                for no, coverage in self.coverage.iteritems()
+                for no, coverage in self.coverage.items()
             } or None,
             'messages': self.all_messages or None,
             'annotations': self.all_annotations or None,
@@ -490,8 +490,8 @@ class SourceBuilder(object):
         # NOTE: Pygments lexer seems to drop those leading and trailing new
         # lines in its output. Add them back after HTMLization to avoid line
         # desynchronization with the original files.
-        raw_lines = content.splitlines()
-        lead_nl_count, trail_nl_count = _count_extra_newlines(raw_lines)
+        lines = content.splitlines()
+        lead_nl_count, trail_nl_count = _count_extra_newlines(lines)
 
         # Select the appropriate lexer; fall back on "Null" lexer if no match.
         try:
@@ -501,19 +501,6 @@ class SourceBuilder(object):
             self.log.warn('fall back to using TextLexer (ie. no highlighting)')
             lex = pygments.lexers.special.TextLexer()
 
-        # Attempt to decode the source file from UTF-8.
-        try:
-            decoded = [line.decode('utf-8') for line in raw_lines]
-            if len(raw_lines) != len(decoded):
-                raise IndexError(' '.join([
-                    'mismatching number of source line in the decoded output;',
-                    'expected {}, got {}'
-                ]).format(len(raw_lines), len(decoded)))
-        except UnicodeDecodeError:
-            self.log.exception('failed to decode UTF-8: %s', self.path)
-            self.log.warn('source file content may not be available')
-            decoded = None
-
         # Attempt to highligth the source file; fall back to raw on failure.
         try:
             # HTML formatter outputting the decorated source code as a DOM.
@@ -521,11 +508,11 @@ class SourceBuilder(object):
                 [''] * lead_nl_count +
                 highlight(content, lex, _HtmlFormatter()).splitlines() +
                 [''] * trail_nl_count)
-            if len(raw_lines) != len(highlighted):
+            if len(lines) != len(highlighted):
                 raise IndexError(' '.join([
                     'mismatching number of source line in the HTML output;',
                     'expected {}, got {}'
-                ]).format(len(raw_lines), len(highlighted)))
+                ]).format(len(lines), len(highlighted)))
         except Exception:
             self.log.exception('failed to generate HTML: %s', self.path)
             self.log.warn('source file content may not be available')
@@ -533,7 +520,7 @@ class SourceBuilder(object):
 
         this['lines'] = [{
             'number': no,
-            'content': decoded[no - 1] if decoded else None,
+            'content': lines[no - 1],
             'html_content': highlighted[no - 1] if highlighted else None,
             'coverage': (
                 _encode_coverage(*self.coverage[no])
@@ -541,7 +528,7 @@ class SourceBuilder(object):
             'messages': [
                 _encode_message(*message) for message in self.messages[no]
             ] if no in self.messages else None,
-        } for no in range(1, len(raw_lines) + 1)]
+        } for no in range(1, len(lines) + 1)]
 
         # Return the best-effort representation of the source file.
         return this
@@ -580,9 +567,9 @@ class SourceDirBuilder(object):
             'coverage': file_coverage,
             'message_count': source.message_count,
             '_total_message_count': sum(
-                len(messages) for messages in source.messages.itervalues())
+                len(messages) for messages in source.messages.values())
         })
-        for _, _, tool in chain.from_iterable(source.messages.itervalues()):
+        for _, _, tool in chain.from_iterable(iter(source.messages.values())):
             self.message_count[tool.id] += 1
         self._coverage_avg.add(file_coverage)
 
@@ -598,7 +585,7 @@ class SourceDirBuilder(object):
             ],
             'coverage': self._coverage_avg.compute(),
             'message_count': self.message_count or None,
-            '_total_message_count': sum(self.message_count.itervalues())
+            '_total_message_count': sum(self.message_count.values())
         }
 
 
@@ -628,7 +615,7 @@ class ModuleBuilder(object):
             self.source_dirs[source.source_dir] = source_dir
         self.source_dirs[source.source_dir].add_source(source)
 
-        for tool_id, count in source.message_count.iteritems():
+        for tool_id, count in source.message_count.items():
             self.message_count[tool_id] += count
         self._coverage_avg.add(source.file_coverage)
 
@@ -637,16 +624,16 @@ class ModuleBuilder(object):
 
         :rtype: dict[str, *]
         """
-        paths = self.source_dirs.keys()
+        paths = list(self.source_dirs.keys())
         return {
             'name': self.name,
             'source_dirs': [
                 source_dir.to_json()
-                for path, source_dir in self.source_dirs.iteritems()
+                for path, source_dir in self.source_dirs.items()
             ],
             'coverage': self._coverage_avg.compute(),
             'message_count': self.message_count or None,
-            '_total_message_count': sum(self.message_count.itervalues()),
+            '_total_message_count': sum(self.message_count.values()),
             '_source_dirs_common_prefix': (
                 os.path.commonprefix(paths)
                 if len(paths) > 1 else os.path.dirname(paths[0]))
@@ -660,7 +647,7 @@ class IndexBuilder(object):
         self.source_files = GNAThub.Project.source_files()
         self.source_file_count = sum(
             len(sources)
-            for sources in self.source_files.itervalues())
+            for sources in self.source_files.values())
         self.log = logging.getLogger(__name__)
 
         self.tools, self.rules, self.props = [], [], []
@@ -683,14 +670,14 @@ class IndexBuilder(object):
         self.sources.append(source.sources_to_json(source.project))
 
         for message, rule, tool in chain.from_iterable(
-            source.messages.itervalues()
+            iter(source.messages.values())
         ):
             inc_msg_count(self.tools, _encode_tool, tool)
             inc_msg_count(self.rules, _encode_rule, rule, tool)
             inc_msg_count(self.ranking, _encode_ranking, message, tool)
             for prop in message.get_properties():
                 inc_msg_count(self.props, _encode_property, prop, tool)
-        for tool_id, count in source.message_count.iteritems():
+        for tool_id, count in source.message_count.items():
             self.message_count[tool_id] += count
 
         return source
@@ -705,7 +692,7 @@ class IndexBuilder(object):
         """
         tmp = {
             'project': GNAThub.Project.name(),
-            '_total_message_count': sum(self.message_count.itervalues()),
+            '_total_message_count': sum(self.message_count.values()),
             '_database': GNAThub.database(),
             'creation_time': int(time.time()),
             'properties': self.props or None,
@@ -714,7 +701,7 @@ class IndexBuilder(object):
             'ranking': self.ranking or None,
             'review_status': self.review_status or None,
             'modules': [module.to_json() for name,
-                        module in self.modules.iteritems()],
+                        module in self.modules.items()],
             'sources': self.sources
         }
         _write_json(path, tmp, indent=2)
@@ -729,7 +716,7 @@ class IndexBuilder(object):
         """
         tmp = {
             'modules': [module.to_json()
-                        for name, module in self.modules.iteritems()]
+                        for name, module in self.modules.items()]
         }
         _write_json(path, tmp, indent=2)
 
@@ -756,7 +743,7 @@ class IndexBuilder(object):
         """
         tmp = {
             'project': GNAThub.Project.name(),
-            '_total_message_count': sum(self.message_count.itervalues()),
+            '_total_message_count': sum(self.message_count.values()),
             '_database': GNAThub.database(),
             'creation_time': int(time.time()),
             'properties': self.props or None,
@@ -794,7 +781,7 @@ class IndexBuilder(object):
             }
             _write_json(path, tmp, indent=2)
         except Exception as e:
-            print e
+            print(e)
 
 
 class ReportBuilder(object):
@@ -809,7 +796,7 @@ class ReportBuilder(object):
 
         :yield: SourceBuilder
         """
-        for project, sources in self.index.source_files.iteritems():
+        for project, sources in self.index.source_files.items():
             for path in sources:
                 self.log.info('processing %s', path)
                 yield self.index.save_source(SourceBuilder(project, path))

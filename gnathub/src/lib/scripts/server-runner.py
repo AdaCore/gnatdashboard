@@ -60,7 +60,8 @@ else:
                 html_dir = os.path.join(GNAThub.root(), 'html-report')
                 os.environ["FLASK_RUN_PORT"] = str(port)
                 os.environ["WEBUI_HTML_FOLDER"] = html_dir
-                execfile(server_script_path)
+                exec(compile(open(server_script_path).read(),
+                             server_script_path, 'exec'))
 
             except Exception as why:
                 msg_excpt = 'failed to load script: ' + server_script_path

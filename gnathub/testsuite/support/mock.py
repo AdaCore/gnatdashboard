@@ -227,7 +227,7 @@ class GNAThub(object):
         if kwargs.get('scenario_vars', None):
             scenario = kwargs['scenario_vars']
             assert isinstance(scenario, dict), 'invalid "scenario_vars" arg'
-            argv.extend(['-X%s=%s' % (k, v) for k, v in scenario.iteritems()])
+            argv.extend(['-X%s=%s' % (k, v) for k, v in scenario.items()])
 
         if kwargs.get('plugins', None):
             assert isinstance(kwargs['plugins'], list), 'invalid "plugins" arg'
@@ -242,7 +242,7 @@ class GNAThub(object):
         if kwargs.get('runtime', None):
             argv.extend(['--RTS', kwargs['runtime']])
 
-        for tool_name, arguments in kwargs.get('tool_args', {}).iteritems():
+        for tool_name, arguments in kwargs.get('tool_args', {}).items():
             argv.append('--targs:%s' % tool_name)
             argv.extend(arguments)
             argv.append('--')

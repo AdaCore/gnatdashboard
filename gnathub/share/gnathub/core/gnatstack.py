@@ -356,7 +356,7 @@ class GNATstack(Plugin, Runner, Reporter):
                 resources_messages.append([project, [[message, 0, 1, 1]]])
 
             # Insert the messages and the metrics
-            for key, value in entities_messages_map.iteritems():
+            for key, value in entities_messages_map.items():
                 entities_messages.append([self.subprograms[key], value])
             self.tool.add_messages(resources_messages, entities_messages)
         except ParseError as why:

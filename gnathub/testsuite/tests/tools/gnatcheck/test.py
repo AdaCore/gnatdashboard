@@ -2,7 +2,7 @@
 
 import os
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 
 from unittest import TestCase
 from support.mock import GNAThub, Project, Script
@@ -57,7 +57,7 @@ class TestGNATcheckSupport(TestCase):
         script_output_file = os.path.abspath('script.out')
         self.gnathub.run(script=Script.db2cfg(), output=script_output_file)
 
-        parser = SafeConfigParser()
+        parser = ConfigParser()
         parser.optionxform = str
 
         parser.read(script_output_file)

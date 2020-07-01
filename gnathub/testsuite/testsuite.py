@@ -184,7 +184,7 @@ class Testsuite(object):
         """
 
         assert self.formatter is not None, 'Internal error'
-        print >> stream, pygments.format(tokens, self.formatter)
+        print(pygments.format(tokens, self.formatter), file=stream)
         stream.flush()
 
     def collect_result(self, name, process, job_info):
@@ -352,7 +352,7 @@ class Testsuite(object):
         return [
             (Token.Whitespace, '\n'),
 
-            (Token.Number, str(sum(n for n in self.summary.values()))),
+            (Token.Number, str(sum(n for n in list(self.summary.values())))),
             (Token.Whitespace, ' '),
             (Token.Text, 'testcases executed'),
             (Token.Whitespace, ' '),

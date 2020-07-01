@@ -164,7 +164,7 @@ class SonarScannerProperties(object):
             default sonar module)
         :type module: str or None
         """
-        for key, value in attributes.items():
+        for key, value in list(attributes.items()):
             self.log.debug('%s = %s', key, value)
             self._set(key, value, module)
 
@@ -179,7 +179,7 @@ class SonarScannerProperties(object):
             default sonar module)
         :type module: str or None
         """
-        for key, value in attributes.items():
+        for key, value in list(attributes.items()):
             # Unpack the tuple containing the default value and the custom
             # project attribute for this key.
             value, attribute = value
@@ -272,7 +272,8 @@ class SonarScannerProperties(object):
         :param str project_name: project name
         :param collections.Iterable[str] suffixes: list of Ada extensions
         """
-        modules = {k: v for k, v in GNAThub.Project.source_dirs().items() if v}
+        modules = {k: v for k, v in
+                   list(GNAThub.Project.source_dirs().items()) if v}
         _, modules = self._generate_source_dirs(modules)
 
         non_customizable_attributes = collections.OrderedDict([
@@ -281,7 +282,7 @@ class SonarScannerProperties(object):
             ('ada.gnathub.src_mapping', _escpath(SonarQube.src_mapping())),
             ('ada.file.suffixes', ','.join(suffixes)),
             ('scm.exclusions.disabled', 'true'),
-            ('modules', ','.join([m.lower() for m in modules.keys()]))
+            ('modules', ','.join([m.lower() for m in list(modules.keys())]))
         ])
 
         # Set project properties
@@ -292,7 +293,7 @@ class SonarScannerProperties(object):
         project_key = self._get('projectKey')
 
         # Set modules properties
-        for subproject_name, sources in modules.items():
+        for subproject_name, sources in list(modules.items()):
             module_attributes = collections.OrderedDict([
                 ('projectName', subproject_name),
                 ('projectKey', '%s::%s' % (project_key, subproject_name)),
@@ -321,7 +322,7 @@ class SonarScannerProperties(object):
 
         # Compute the total dirs count to copy to display progress
         count = 0
-        total = sum([len(dirs) for dirs in modules.itervalues()])
+        total = sum([len(dirs) for dirs in modules.values()])
 
         root_src_dir = SonarQube.src_cache()
 
@@ -442,10 +443,10 @@ class SonarScannerProperties(object):
 
         self.info('generate %s' % properties_fname)
         with open(properties_fname, 'w') as configuration:
-            for pair in self.attributes.items():
+            for pair in list(self.attributes.items()):
                 configuration.write('%s = %s\n' % pair)
 
         self.info('generate %s' % SonarQube.src_mapping())
         with open(SonarQube.src_mapping(), 'w') as mapping:
-            for key, value in self.src_mapping.items():
+            for key, value in list(self.src_mapping.items()):
                 mapping.write('%s = %s\n' % (_escape(key), value))

@@ -193,7 +193,7 @@ def getCodepeerVersion(data):
     try:
         tmp = re.match(".* ([0-9]+\.[0-9]+[w]?) .*", data).groups()[0]
     except Exception as e:
-        print e
+        print(e)
     return tmp
 
 
@@ -267,11 +267,11 @@ if __name__ == '__main__':
     flask_port = GNAThub.port() if GNAThub.port() else DEFAULT_PORT
 
     if flask_port > 1024:
-        print "Launching flask server on port {}".format(flask_port)
-        print "Logs redirected to {}".format(SERVER_LOG)
+        print("Launching flask server on port {}".format(flask_port))
+        print("Logs redirected to {}".format(SERVER_LOG))
         # TODO : Error occur when lauching with debug=True
         # app.run(port=flask_port, debug=True)
         app.run(host='0.0.0.0', port=flask_port, threaded=True)
     else:
         app.logger.error("Bad port used. Please relauch with port above 1024.")
-        print "Please use a port above 1024"
+        print("Please use a port above 1024")

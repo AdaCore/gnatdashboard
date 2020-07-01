@@ -3,7 +3,7 @@
 import os
 import unittest
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 
 from unittest import TestCase
 from support import const
@@ -40,13 +40,13 @@ class TestLALmetricSupport(TestCase):
         self.gnathub.run(script='check-run.py')
         self.gnathub.run(script=Script.db2cfg(), output=script_output_file)
 
-        parser = SafeConfigParser()
+        parser = ConfigParser()
         parser.optionxform = str
 
         parser.read(script_output_file)
         self.assertListEqual(sorted(parser.sections()), FILES)
 
-        for metric, value in EXPECTED_METRICS.iteritems():
+        for metric, value in EXPECTED_METRICS.items():
             self.assertTrue(
                 parser.has_option(SECTION, metric),
                 'missing entry for "%s"' % metric)

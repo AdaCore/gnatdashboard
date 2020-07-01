@@ -2,7 +2,7 @@
 
 import os
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 
 from unittest import TestCase
 from support.mock import GNAThub, Project, Script
@@ -24,7 +24,7 @@ class TestGcovMultiObjectDirExample(TestCase):
         script_output_file = os.path.abspath('script.out')
         self.gnathub.run(script=Script.db2cfg(), output=script_output_file)
 
-        self.parser = SafeConfigParser()
+        self.parser = ConfigParser()
         self.parser.optionxform = str
 
         self.parser.read(script_output_file)

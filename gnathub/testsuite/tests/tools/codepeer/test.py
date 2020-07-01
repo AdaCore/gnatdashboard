@@ -3,7 +3,7 @@
 import os
 import os.path
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 
 from unittest import TestCase
 from support.mock import GNAThub, Project, Script
@@ -73,7 +73,7 @@ class TestCodePeerSupport(TestCase):
             # read a row as {column1: value1, column2: value2,...}
             for row in reader:
                 # go over each column name and value
-                for (k,v) in row.items():
+                for (k,v) in list(row.items()):
                     # append the value into the appropriate list based on column name k
                     columns[k].append(v)
 
@@ -94,7 +94,7 @@ class TestCodePeerSupport(TestCase):
         script_output_file = os.path.abspath('script.out')
         gnathub.run(script=Script.db2cfg(), output=script_output_file)
 
-        parser = SafeConfigParser()
+        parser = ConfigParser()
         parser.optionxform = str
 
         parser.read(script_output_file)

@@ -3,7 +3,7 @@
 from collections import namedtuple
 import os
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 
 from unittest import TestCase
 from support.mock import GNAThub, Project, Script
@@ -143,7 +143,7 @@ class TestCoverageExhaustiveExample(TestCase):
         script_output_file = os.path.abspath('script.out')
         self.gnathub.run(script=Script.db2cfg(), output=script_output_file)
 
-        self.parser = SafeConfigParser()
+        self.parser = ConfigParser()
         self.parser.optionxform = str
 
         self.parser.read(script_output_file)
@@ -156,11 +156,11 @@ class TestCoverageExhaustiveExample(TestCase):
         coverage example.
         """
         result = []
-        for filename, record in struct.iteritems():
-            for line, record in record.iteritems():
+        for filename, record in struct.items():
+            for line, record in record.items():
                 # Shortcut: if there is only one message on a line, do not
                 # require a sequence of messages.
-                if isinstance(record, (basestring, self.Violation)):
+                if isinstance(record, (str, self.Violation)):
                     record = [record]
 
                 for content in record:

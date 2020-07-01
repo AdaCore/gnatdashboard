@@ -26,7 +26,7 @@ class TestEncoder(object):
 
         with open(os.path.join(const.basedir, 'category-encoding.yaml')) as fd:
             cls.encoding = yaml.load(fd.read())
-            cls.reverse_encoding = {v: k for k, v in cls.encoding.iteritems()}
+            cls.reverse_encoding = {v: k for k, v in cls.encoding.items()}
 
     @classmethod
     def encode(cls, path):

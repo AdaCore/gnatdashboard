@@ -124,32 +124,13 @@ class PluginRunner(object):
         :return: the ordered list of plugins
         :rtype: collection.Iterable[GNAThub.Plugin]
         """
-        def plugin_sort_fn(a, b):
-            """Sort the plugins.
-
-            All plugins are equals, apart from the Sonar Runner which should be
-            executed last.
-
-            Returns a negative, zero or positive number depending on whether
-            the first argument is considered smaller than, equal to, or larger
-            than the second argument.
-
-            :param GNAThub.Plugin a: first plugin
-            :param GNAThub.Plugin b: second plugin
-            :return: -1, 0 or 1 depending on the input
-            :rtype: int
-            """
-            if a().name in cls.POST_PHASE_PLUGINS:
-                return 1
-            if b().name in cls.POST_PHASE_PLUGINS:
-                return -1
-            return 0
         if GNAThub.dry_run_without_project():
             #  The list of predefined plugins needs to be gathered, any
             #  sorting is necessary at that point
             return plugins
-
-        return sorted(plugins, plugin_sort_fn)
+        else:
+            return sorted(plugins,
+                          key=lambda p: p.name in cls.POST_PHASE_PLUGINS)
 
     @classmethod
     def walk_repository(cls, repository):
@@ -186,13 +167,13 @@ class PluginRunner(object):
 
         try:
             LOG.debug('  + %s', script)
-            execfile(script, namespace)
+            exec(compile(open(script).read(), script, 'exec'), namespace)
 
         except Exception as why:
             LOG.exception('failed to load script: %s', script)
             cls.warn('%s: failed to load: %s', script, str(why))
 
-        for obj in namespace.values():
+        for obj in list(namespace.values()):
             if inspect.isclass(obj) and obj.__base__ is GNAThub.Plugin:
                 yield obj
 
@@ -219,7 +200,7 @@ class PluginRunner(object):
         # more plugins.
         scripts = set()
 
-        for name, path in GNAThub.repositories().items():
+        for name, path in list(GNAThub.repositories().items()):
             if not os.path.isdir(path):
                 LOG.info('skip repository [%s] (not found)', name)
                 continue
@@ -440,7 +421,6 @@ class PluginRunner(object):
                 try:
                     # Create a new instance
                     plugin, elapsed = cls(), None
-
                     # Execute the plug-in
                     elapsed = self.execute(plugin)
                 except KeyboardInterrupt:
