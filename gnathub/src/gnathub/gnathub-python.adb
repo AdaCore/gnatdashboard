@@ -428,7 +428,7 @@ package body GNAThub.Python is
 
    procedure Finalize is
    begin
-      null;
+      Unregister_Python_Scripting (Repository);
    end Finalize;
 
    ----------------------------------
