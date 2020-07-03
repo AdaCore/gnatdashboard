@@ -1,6 +1,7 @@
 """Check the integrity of the GNAThub Python module."""
 
 import GNAThub
+import platform
 
 import os
 import sys
@@ -69,6 +70,8 @@ assertTrue(os.path.isfile(process.output()))
 
 with open(process.output(), 'r') as logs:
     content = logs.read().strip()
+    if platform.system() == 'Windows':
+        TO_BE_ECHOED = '"' + TO_BE_ECHOED + '"'
     assertEqual(content, TO_BE_ECHOED)
 
 assertListUnorderedEqual(
