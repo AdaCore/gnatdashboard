@@ -1,5 +1,5 @@
 [gerrit]
 host = git.adacore.com
 project = gnatdashboard
-defaultbranch = 20.2
+defaultbranch = lts-20
 defaultremote = origin
