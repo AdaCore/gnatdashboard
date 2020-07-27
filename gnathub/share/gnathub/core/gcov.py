@@ -20,6 +20,7 @@ module and load it as part of the GNAThub default execution.
 """
 
 import os
+import re
 
 import GNAThub
 from GNAThub import Console, Plugin, Reporter
@@ -48,6 +49,8 @@ class Gcov(Plugin, Reporter):
         # List of resource messages suitable for tool level bulk insertion
         self.resources_messages = []
 
+        self.matcher = re.compile("^\s*(.*):\s*(\d+):.*")
+
     def __process_file(self, resource, filename, resources_messages):
         """Processe one file, adding in bulk all coverage info found.
 
@@ -60,28 +63,34 @@ class Gcov(Plugin, Reporter):
         with open(filename, 'r') as gcov_file:
             # Retrieve information for every source line.
             # Skip the first 2 lines.
+
             for line in gcov_file.readlines()[2:]:
+                matches = self.matcher.match(line)
+
+                if not matches:
+                    continue
+
+                (hits, line) = matches.groups()
 
                 # Skip lines that do not contain coverage info
-                if line.strip()[0] != '-':
-                    line_info = line.split(':', 2)
-                    hits = line_info[0].strip()
+                if hits == '-':
+                    continue
 
-                    # Line is not covered
-                    if hits == '#####' or hits == '=====':
-                        hits = '0'
+                # Line is not covered
+                if hits == '#####' or hits == '=====':
+                    hits = '0'
 
-                    line = int(line_info[1].strip())
+                line = int(line)
 
-                    # Find the message corresponding to this hits number
+                # Find the message corresponding to this hits number
 
-                    if hits in self.hits:
-                        msg = self.hits[hits]
-                    else:
-                        msg = GNAThub.Message(self.rule, hits)
-                        self.hits[hits] = msg
+                if hits in self.hits:
+                    msg = self.hits[hits]
+                else:
+                    msg = GNAThub.Message(self.rule, hits)
+                    self.hits[hits] = msg
 
-                    message_data.append([msg, line, 1, 1])
+                message_data.append([msg, line, 1, 1])
 
         # Preparing list for tool level insertion of resources messages
         resources_messages.append([resource, message_data])
