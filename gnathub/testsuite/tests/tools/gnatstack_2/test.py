@@ -16,7 +16,7 @@ MAIN = ["main.adb 1:1"]
 
 MATRIX = ["matrix_math.adb 3:4"]
 
-B_MAIN = ["b__main.adb 168:4"]
+B_MAIN = ["b__main.adb 165:4"]
 
 UNBOUNDED_FRAME = [
     "Unbounded Frame", '[unbounded frame] "*"'

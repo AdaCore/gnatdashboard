@@ -1,5 +1,9 @@
 PROJECT = gcov_multi_object_dir
 
+.EXPORT_ALL_VARIABLES:
+
+ENABLE_GCOV=1
+
 all: build
 
 build:
