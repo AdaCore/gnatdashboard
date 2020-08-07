@@ -149,7 +149,7 @@ class CodePeer(Plugin, Runner, Reporter):
         # Get codepeer version
         dest = os.path.join(self.output_dir, 'version.txt')
         cmd = 'codepeer -v'
-        output = subprocess.check_output(cmd, shell=True)
+        output = str(subprocess.check_output(cmd, shell=True))
         version = ""
         try:
             version = re.match(".* ([0-9]+\.[0-9]+[w]?) .*",
