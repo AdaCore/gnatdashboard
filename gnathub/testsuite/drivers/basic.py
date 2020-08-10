@@ -28,11 +28,15 @@ class BasicTestDriver(GNAThubTestDriver):
         Env().add_search_path('PYTHONPATH', base)
 
     def check_output(self, out, output):
+        def sanitize(output):
+            """Remove windows specific characters + exe extension"""
+            return output.replace("\r", "").replace(".exe", "")
+
         if os.path.isfile(out):
             # Found test.out => compare the output with the expected output
             with open(out, "r") as fd:
                 expected_output = fd.read()
-            if output == expected_output:
+            if sanitize(output) == expected_output:
                 self.result.set_status(TestStatus.PASS)
             else:
                 self.result.set_status(TestStatus.ERROR)

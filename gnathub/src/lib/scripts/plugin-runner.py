@@ -130,8 +130,7 @@ class PluginRunner(object):
             return plugins
         else:
             return sorted(plugins,
-                          key=lambda p: 1 if str(p.name).lower()
-                          in cls.POST_PHASE_PLUGINS else -1)
+                          key=lambda p:  p().name in cls.POST_PHASE_PLUGINS)
 
     @classmethod
     def walk_repository(cls, repository):
