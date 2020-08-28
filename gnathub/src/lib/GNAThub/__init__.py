@@ -356,6 +356,16 @@ class Project(object):
         return NotImplemented   # Implemented in Ada
 
     @staticmethod
+    def artifacts_dir():
+        """Return the full path to the root project artifacts directory
+        if defined as IDE attribute in IDE mode, the object directory if
+        is defined, project directory if any of the previous value is set.
+
+        :rtype: str
+        """
+        return NotImplemented   # Implemented in Ada
+
+    @staticmethod
     def object_dir():
         """Return the full path to the root project object directory.
 

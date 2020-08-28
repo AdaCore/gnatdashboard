@@ -42,7 +42,8 @@ class GNATmetric(Plugin, Runner, Reporter):
             return
 
         self.tool = None
-        self.output = os.path.join(GNAThub.Project.object_dir(), 'metrix.xml')
+        self.output = os.path.join(
+            GNAThub.Project.artifacts_dir(), 'metrix.xml')
         self.rules = {}
         self.messages = {}
         self.firstunit = False

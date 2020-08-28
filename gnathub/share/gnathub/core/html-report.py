@@ -132,15 +132,15 @@ class HTMLReport(Plugin, Reporter):
             dest = os.path.join(data_output_dir, 'custom_status.json')
             report.index.custom_review_to_json(dest)
             self.log.debug('custom review status saved as %s', dest)
-            self.verbose_info('HTML report custom review status generated in '
-                              + dest)
+            self.verbose_info(
+                'HTML report custom review status generated in ' + dest)
 
-            codepeer_obj_dir = os.path.join(GNAThub.Project.object_dir(),
-                                            'codepeer')
+            codepeer_obj_dir = os.path.join(
+                GNAThub.Project.artifacts_dir(), 'codepeer')
             if os.path.isdir(codepeer_obj_dir):
                 # Call to codepeer_bridge for offline mode
                 self.log.debug("Export info from codepeer_bridge")
-                dest = os.path.join(GNAThub.Project.object_dir(),
+                dest = os.path.join(GNAThub.Project.artifacts_dir(),
                                     'gnathub', 'html-report',
                                     'data', 'codepeer_review.xml')
                 name = 'codepeer_bridge'
@@ -153,10 +153,10 @@ class HTMLReport(Plugin, Reporter):
                 GNAThub.Run(name, cmd)
 
                 # Get codepeer_run file
-                copy_file = os.path.join(GNAThub.Project.object_dir(),
+                copy_file = os.path.join(GNAThub.Project.artifacts_dir(),
                                          'codepeer',
                                          'codepeer_run')
-                dest = os.path.join(GNAThub.Project.object_dir(),
+                dest = os.path.join(GNAThub.Project.artifacts_dir(),
                                     'gnathub', 'html-report',
                                     'data')
                 copy2(copy_file, dest)
@@ -164,13 +164,13 @@ class HTMLReport(Plugin, Reporter):
                 self.verbose_info('Codepeer_run file copied in ' + dest)
 
                 # Get race_condition file
-                copy_file = os.path.join(GNAThub.Project.object_dir(),
+                copy_file = os.path.join(GNAThub.Project.artifacts_dir(),
                                          'codepeer',
                                          GNAThub.Project.name().lower()
                                          + '.output',
                                          'race_conditions.xml')
                 if os.path.isfile(copy_file):
-                    dest = os.path.join(GNAThub.Project.object_dir(),
+                    dest = os.path.join(GNAThub.Project.artifacts_dir(),
                                         'gnathub', 'html-report',
                                         'data')
                     copy2(copy_file, dest)

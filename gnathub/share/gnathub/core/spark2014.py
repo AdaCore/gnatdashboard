@@ -64,9 +64,9 @@ class SPARK2014(Plugin, Runner, Reporter):
         self.tool = None
 
         self.output_dir = os.path.join(
-            GNAThub.Project.object_dir(), 'gnatprove')
+            GNAThub.Project.artifacts_dir(), 'gnatprove')
         self.output = os.path.join(
-            GNAThub.Project.object_dir(), 'gnatprove-gnathub.out')
+            GNAThub.Project.artifacts_dir(), 'gnatprove-gnathub.out')
 
         # Map of message ID (couple (filename, msg_id): dict[*])
         self.msg_ids = {}

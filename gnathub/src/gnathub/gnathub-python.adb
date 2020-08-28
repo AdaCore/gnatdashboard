@@ -55,6 +55,7 @@ package body GNAThub.Python is
    Project_Target_Method             : constant String := "target";
    Project_Runtime_Method            : constant String := "runtime";
    Project_Object_Dir_Method         : constant String := "object_dir";
+   Project_Artifacts_Dir_Method      : constant String := "artifacts_dir";
    Project_Object_Dirs_Method        : constant String := "object_dirs";
    Project_Source_Dirs_Method        : constant String := "source_dirs";
    Project_Source_File_Method        : constant String := "source_file";
@@ -277,6 +278,13 @@ package body GNAThub.Python is
 
       Repository.Register_Command
         (Command       => Project_Object_Dir_Method,
+         Params        => No_Params,
+         Handler       => Project_Class_Accessors_Handler'Access,
+         Class         => Project_Class,
+         Static_Method => True);
+
+      Repository.Register_Command
+        (Command       => Project_Artifacts_Dir_Method,
          Params        => No_Params,
          Handler       => Project_Class_Accessors_Handler'Access,
          Class         => Project_Class,
@@ -539,6 +547,9 @@ package body GNAThub.Python is
       elsif Command = Project_Object_Dir_Method then
          Set_Return_Value (Data, Object_Dir.Display_Full_Name);
 
+      elsif Command = Project_Artifacts_Dir_Method then
+         Set_Return_Value (Data, Artifacts_Dir.Display_Full_Name);
+
       elsif Command = Project_Source_File_Method then
          declare
             Name : constant String := Data.Nth_Arg (1);
@@ -700,25 +711,25 @@ package body GNAThub.Python is
          Set_Return_Value
            (Data,
             Create_From_Dir
-              (Object_Dir, Root_Dir.Full_Name).Display_Full_Name);
+              (Artifacts_Dir, Root_Dir.Full_Name).Display_Full_Name);
 
       elsif Command = Database_Function then
          Set_Return_Value
            (Data,
             Create_From_Dir
-              (Object_Dir, Database_File.Full_Name).Display_Full_Name);
+              (Artifacts_Dir, Database_File.Full_Name).Display_Full_Name);
 
       elsif Command = Logs_Function then
          Set_Return_Value
            (Data,
             Create_From_Dir
-              (Object_Dir, Logs_Dir.Full_Name).Display_Full_Name);
+              (Artifacts_Dir, Logs_Dir.Full_Name).Display_Full_Name);
 
       elsif Command = HTML_Data_Function then
          Set_Return_Value
            (Data,
             Create_From_Dir
-              (Object_Dir, HTML_Data_Dir.Full_Name).Display_Full_Name);
+              (Artifacts_Dir, HTML_Data_Dir.Full_Name).Display_Full_Name);
 
       elsif Command = Jobs_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Jobs);

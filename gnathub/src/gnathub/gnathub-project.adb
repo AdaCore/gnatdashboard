@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2019, AdaCore                     --
+--                     Copyright (C) 2013-2020, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -107,6 +107,31 @@ package body GNAThub.Project is
       return Project_Tree.Root_Project.Name;
    end Name;
 
+   -------------------
+   -- Artifacts_Dir --
+   -------------------
+
+   function Artifacts_Dir return Virtual_File is
+      Dir : Virtual_File := Project_Tree.Root_Project.Artifacts_Dir;
+   begin
+
+      if GNAThub.Configuration.Subdirs /= "" then
+         Dir := Dir.Sub_Dir
+           (Filesystem_String (GNAThub.Configuration.Subdirs));
+
+         if Dir = No_File then
+            --  The subdir doesn't exist => create it
+            Dir := Project_Tree.Root_Project.Artifacts_Dir;
+            Dir.Create_From_Dir
+              (Filesystem_String (GNAThub.Configuration.Subdirs)).Make_Dir;
+            Dir := Dir.Sub_Dir
+              (Filesystem_String (GNAThub.Configuration.Subdirs));
+         end if;
+      end if;
+
+      return Dir;
+   end Artifacts_Dir;
+
    ----------------
    -- Object_Dir --
    ----------------
@@ -114,6 +139,7 @@ package body GNAThub.Project is
    function Object_Dir return Virtual_File is
       Dir : Virtual_File := Project_Tree.Root_Project.Object_Dir;
    begin
+
       if GNAThub.Configuration.Subdirs /= "" then
          Dir := Dir.Sub_Dir
            (Filesystem_String (GNAThub.Configuration.Subdirs));
@@ -328,7 +354,6 @@ package body GNAThub.Project is
       Is_Project_Loaded := True;
 
       Trace (Me, "Project """ & Name & """ loaded");
-
    exception
       when Invalid_Project =>
          --  Errors are already printed on the standard error stream

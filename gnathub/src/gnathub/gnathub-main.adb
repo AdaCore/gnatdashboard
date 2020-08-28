@@ -80,7 +80,7 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    function Database_Full_Path return Virtual_File is
    begin
       return Create_From_Dir
-         (GNAThub.Project.Object_Dir, Database_File.Full_Name);
+         (GNAThub.Project.Artifacts_Dir, Database_File.Full_Name);
    end Database_Full_Path;
 
    ----------------------------------
@@ -89,35 +89,35 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
 
    procedure Create_Project_Directory_Env is
       Object_Directory : constant Virtual_File :=
-                           GNAThub.Project.Object_Dir;
-
-      Logs_Directory   : constant Virtual_File :=
-                           Create_From_Dir
-                             (Object_Directory, Logs_Dir.Full_Name);
-
+        GNAThub.Project.Artifacts_Dir;
    begin
       --  Check whether the project object directory exists
-
       if Object_Directory = No_File then
          raise Fatal_Error
            with "No object directory policy enforced by project";
       end if;
 
-      --  Create both root and log directories
-
-      if Is_Regular_File (Logs_Directory) then
-         if not Is_Directory (Logs_Directory) then
-            raise Fatal_Error
-              with Logs_Directory.Display_Full_Name & " must be a directory";
+      declare
+         Logs_Directory : constant Virtual_File :=
+           Create_From_Dir
+             (Object_Directory, Logs_Dir.Full_Name);
+      begin
+         --  Create both root and log directories
+         if Is_Regular_File (Logs_Directory) then
+            if not Is_Directory (Logs_Directory) then
+               raise Fatal_Error
+                 with Logs_Directory.Display_Full_Name
+                 & " must be a directory";
+            end if;
+         else
+            Trace
+              (Me,
+               "Create logs directory: " & Logs_Directory.Display_Full_Name);
+            if not GNAThub.Configuration.Dry_Run then
+               Make_Dir (Logs_Directory, Recursive => True);
+            end if;
          end if;
-      else
-         Trace (Me,
-           "Create logs directory: " & Logs_Directory.Display_Full_Name);
-
-         if not GNAThub.Configuration.Dry_Run then
-            Make_Dir (Logs_Directory, Recursive => True);
-         end if;
-      end if;
+      end;
 
    exception
       when E : Directory_Error =>
@@ -270,7 +270,6 @@ begin
       Trace (Me, "Launch only WEB server "
              & " (ignore all other command line switches if any)");
       Execute_Server_Script;
-
    else
       if GNAThub.Configuration.Incremental
         and then not Is_Regular_File (Database_Full_Path)

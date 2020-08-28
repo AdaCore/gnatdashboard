@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2018, AdaCore                     --
+--                     Copyright (C) 2013-2020, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -188,7 +188,7 @@ package body GNAThub.Constants is
 
    function Obj_Codepeer_Dir return Virtual_File is
    begin
-      return Create_From_Dir (GNAThub.Project.Object_Dir, "codepeer");
+      return Create_From_Dir (GNAThub.Project.Artifacts_Dir, "codepeer");
    end Obj_Codepeer_Dir;
 
    -------------------------

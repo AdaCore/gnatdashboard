@@ -83,7 +83,7 @@ class GNATcheck(Plugin, Runner, Reporter):
             return
 
         self.tool = None
-        self.output = os.path.join(GNAThub.Project.object_dir(),
+        self.output = os.path.join(GNAThub.Project.artifacts_dir(),
                                    '%s.out' % self.name)
 
         # Map of rules (couple (name, rule): dict[str,Rule])

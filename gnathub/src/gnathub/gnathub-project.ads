@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2018, AdaCore                     --
+--                     Copyright (C) 2013-2020, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -117,6 +117,12 @@ package GNAThub.Project is
    --  Runtime defined on the command line (via --runtime=) overwrites the
    --  runtime configured in the project, if any. This concerns only the
    --  runtime for Ada.
+
+   function Artifacts_Dir return Virtual_File
+     with Pre => Initialized and then Loaded;
+   --  Return the artifacts directory if IDE mode and this value is defined
+   --  or object directory defined for the project or project directory if
+   --  the previous conditions are not present.
 
    function Object_Dir return Virtual_File
      with Pre => Initialized and then Loaded;

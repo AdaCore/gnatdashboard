@@ -90,6 +90,10 @@ class Project(object):
     def simple_with_spaces(dst=os.getcwd()):
         return Project('simple with spaces', dst)
 
+    @staticmethod
+    def abstract_with_multi_obj_dir(dst=os.getcwd()):
+        return Project('abstract_multi_obj', dst)
+
 
 class MockedExecutable(object):
 
@@ -278,6 +282,11 @@ class GNAThub(object):
             return
         backlog = os.path.join(
             self.project.install_dir, 'obj', 'gnathub', 'gnathub.backlog')
+        if not os.path.exists(backlog):
+            # when the object directory is the same as the project dir
+            backlog = os.path.join(
+                self.project.install_dir, 'gnathub', 'gnathub.backlog')
+
         with open(backlog, 'r') as fd:
             plugins = json.loads(fd.read())
         failed = [name for name, results in plugins if not results['success']]

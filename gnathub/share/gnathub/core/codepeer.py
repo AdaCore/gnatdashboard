@@ -52,7 +52,7 @@ class CodePeer(Plugin, Runner, Reporter):
         :rtype: str
         """
 
-        return os.path.join(GNAThub.Project.object_dir(), self.name)
+        return os.path.join(GNAThub.Project.artifacts_dir(), self.name)
 
     def __init__(self):
         super(CodePeer, self).__init__()
@@ -63,7 +63,7 @@ class CodePeer(Plugin, Runner, Reporter):
         self.tool = None
 
         self.csv_report = os.path.join(
-             GNAThub.Project.object_dir(), 'codepeer',
+             GNAThub.Project.artifacts_dir(), 'codepeer',
              '{}.csv'.format(GNAThub.Project.name().lower()))
 
         # Map of rules (couple (name, rule): dict[str,Rule])
@@ -112,7 +112,7 @@ class CodePeer(Plugin, Runner, Reporter):
         cmd_start.extend([ToolArgsPlaceholder('codepeer')])
 
         dest = os.path.join(
-             GNAThub.Project.object_dir(), 'codepeer',
+             GNAThub.Project.artifacts_dir(), 'codepeer',
              'codepeer_run')
 
         cmd_end = [

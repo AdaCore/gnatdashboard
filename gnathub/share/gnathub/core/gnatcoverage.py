@@ -39,7 +39,8 @@ class GNATcoverage(Plugin, Reporter):
         if GNAThub.dry_run_without_project():
             return
 
-        self.GNATCOVERAGE_OUTPUT = os.path.join(GNAThub.Project.object_dir())
+        self.GNATCOVERAGE_OUTPUT = os.path.join(
+            GNAThub.Project.artifacts_dir())
         self.XML_EXT = '.xml'
 
         self.tool = None

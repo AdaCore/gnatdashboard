@@ -130,8 +130,9 @@ class Gcov(Plugin, Reporter):
             # If any object directory is defined in .gpr, fetch all files in
             # default project object directory and retrieve only .gcov files,
             # absolute path
-            files = [os.path.join(GNAThub.Project.object_dir(), filename)
-                     for filename in os.listdir(GNAThub.Project.object_dir())
+            prj_object_dir = GNAThub.Project.artifacts_dir()
+            files = [os.path.join(prj_object_dir, filename)
+                     for filename in os.listdir(prj_object_dir)
                      if filename.endswith(self.GCOV_EXT)]
 
         # If no .gcov file found, plugin returns on failure
