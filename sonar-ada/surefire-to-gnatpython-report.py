@@ -160,7 +160,7 @@ def parse_testcase_node(testcase_node):
 
     testcase = SureFireTestcase(**{
         name: testcase_attr_value(name, value)
-        for name, value in testcase_node.attributes.items()
+        for name, value in list(testcase_node.attributes.items())
     })
     LOG.info('Parsing testcase %s', testcase.name)
     error_node = get_uniq_child_node_by_name(testcase_node, 'error')
@@ -197,7 +197,7 @@ def parse_surefire_xml_report(report_path):
 
     testsuite = SureFireTestsuite(**{
         name: testsuite_attr_value(name, value)
-        for name, value in testsuite_node.attributes.items() if ':' not in name
+        for name, value in list(testsuite_node.attributes.items()) if ':' not in name
     })
     LOG.info(json.dumps(testsuite._asdict(), indent=2))
 

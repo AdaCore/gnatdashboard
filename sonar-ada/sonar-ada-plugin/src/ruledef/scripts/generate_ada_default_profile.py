@@ -33,26 +33,26 @@ Tools = ['gnatcheck', 'codepeer', 'gnatcoverage', 'spark2014']
 
 def __print_header(language, name):
     # Print the header
-    print """<?xml version='1.0' encoding='UTF-8'?>
+    print("""<?xml version='1.0' encoding='UTF-8'?>
 
 <profile>
    <name>{}</name>
    <language>{}</language>
-   <rules>""".format(name, language.lower())
+   <rules>""".format(name, language.lower()))
 
 
 def __print_footer():
     # Print the footer
-    print """   </rules>
-</profile>"""
+    print("""   </rules>
+</profile>""")
 
 
 def __print_rule(def_profile_rule):
-    print """      <rule>
+    print("""      <rule>
         <key>{}</key>
         <repositoryKey>{}</repositoryKey>
       </rule>""".format(def_profile_rule['key'],
-                        def_profile_rule['repositoryKey'])
+                        def_profile_rule['repositoryKey']))
 
 
 def __load_rules(rules_definition_files):
@@ -78,7 +78,7 @@ def __load_rules(rules_definition_files):
                     if child.tag == 'key':
                         default_rule['key'] = child.text
                     else:
-                        if (child.tag == 'tag' and child.text in Tools):
+                        if child.tag == 'tag' and child.text in Tools:
                             default_rule['repositoryKey'] = child.text
                 __print_rule(default_rule)
 
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     logging.basicConfig(
         level=logging.INFO,
         format='[%(asctime)s] %(levelname)s - %(message)s',
-        handlers=[logging.StreamHandler()]
+        stream=[logging.StreamHandler()]
     )
 
     try:

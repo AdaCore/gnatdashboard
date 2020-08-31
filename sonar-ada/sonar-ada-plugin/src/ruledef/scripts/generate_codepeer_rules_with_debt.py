@@ -4,13 +4,12 @@ This script takes as input the output of codepeer --list-categories
 """
 
 import sys
-
 import config
 
 # Print the header
-print """<?xml version='1.0' encoding='UTF-8'?>
+print("""<?xml version='1.0' encoding='UTF-8'?>
 <rules>
-"""
+""")
 
 # The output of codepeer --list-categories-with-debts looks like this:
 
@@ -58,8 +57,6 @@ current_rule_debt = ""
 constant_debt = "CONSTANT_ISSUE"
 constant_debt_val = "0min"
 
-lal_checkers = False
-
 # SonarQube coding rules remediation effort categories
 CATEGORY_TO_REMEDIATION_EFFORT = {
     'trivial': config.TRIVIAL_REMEDIATION_EFFORT,
@@ -86,7 +83,7 @@ def print_current_rule():
     """Print the current rule"""
     if current_rule_text:
         if current_rule_type:
-            print """    <rule>
+            print("""    <rule>
             <key>{}</key>
             <name>{}</name>
             <description>{}</description>
@@ -102,9 +99,9 @@ def print_current_rule():
                             current_tool_name,
                             current_rule_category,
                             constant_debt,
-                            constant_debt_val)
+                            constant_debt_val))
         else:
-            print """    <rule>
+            print("""    <rule>
             <key>{}</key>
             <name>{}</name>
             <description>{}</description>
@@ -118,7 +115,7 @@ def print_current_rule():
                             current_tool_name,
                             current_rule_category,
                             constant_debt,
-                            constant_debt_val)
+                            constant_debt_val))
 
 
 for j in sys.stdin.readlines():
@@ -159,8 +156,7 @@ for j in sys.stdin.readlines():
         current_rule_type = "CODE_SMELL"
         continue
 
-    elif j.startswith("[ LAL-checkers"):
-        lal_checkers = True
+    elif j.startswith("[ Infer "):
         current_tool_name = "codepeer"
         current_rule_category = "warning"
         current_rule_type = "CODE_SMELL"
@@ -171,12 +167,6 @@ for j in sys.stdin.readlines():
             # This is the continuation of the previous rule
             # (To be never here since rules are listed as one line by rule)
             current_rule_text += " " + j.strip()
-        elif lal_checkers:
-            # LAL checkers: keep only significant information
-            current_rule_label, current_rule_text, dummy, current_rule_debt =\
-                j.strip().split(" - ", 3)
-            constant_debt_val = get_effort(current_rule_debt)
-            print_current_rule()
         else:
             # This is the definition of a rule
             current_rule_label, current_rule_text, current_rule_debt =\
@@ -184,6 +174,5 @@ for j in sys.stdin.readlines():
             constant_debt_val = get_effort(current_rule_debt)
             print_current_rule()
 
-
 # Print the footer
-print "</rules>"
+print("</rules>")

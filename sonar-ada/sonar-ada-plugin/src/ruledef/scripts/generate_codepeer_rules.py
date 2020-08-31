@@ -6,9 +6,9 @@ This script takes as input the output of codepeer --list-categories
 import sys
 
 # Print the header
-print """<?xml version='1.0' encoding='UTF-8'?>
+print("""<?xml version='1.0' encoding='UTF-8'?>
 <rules>
-"""
+""")
 
 # The output of codepeer --list-categories looks like this:
 
@@ -40,14 +40,12 @@ current_rule_label = ""
 current_rule_type = ""
 current_rule_category = ""
 
-lal_checkers = False
-
 
 def print_current_rule():
     """Print the current rule"""
     if current_rule_text:
         if current_rule_type:
-            print """    <rule>
+            print("""    <rule>
             <key>{}</key>
             <name>{}</name>
             <description>{}</description>
@@ -59,9 +57,9 @@ def print_current_rule():
                             current_rule_text,
                             current_rule_type,
                             current_tool_name,
-                            current_rule_category)
+                            current_rule_category))
         else:
-            print """    <rule>
+            print("""    <rule>
             <key>{}</key>
             <name>{}</name>
             <description>{}</description>
@@ -71,7 +69,7 @@ def print_current_rule():
                             current_rule_label,
                             current_rule_text,
                             current_tool_name,
-                            current_rule_category)
+                            current_rule_category))
 
 
 for j in sys.stdin.readlines():
@@ -112,8 +110,7 @@ for j in sys.stdin.readlines():
         current_rule_type = "CODE_SMELL"
         continue
 
-    elif j.startswith("[ LAL-checkers"):
-        lal_checkers = True
+    elif j.startswith("[ Infer "):
         current_tool_name = "codepeer"
         current_rule_category = "warning"
         current_rule_type = "CODE_SMELL"
@@ -124,15 +121,10 @@ for j in sys.stdin.readlines():
             # This is the continuation of the previous rule
             # (normally never here since rules are listed as one line by rule)
             current_rule_text += " " + j.strip()
-        elif lal_checkers:
-            # LAL checkers: keep only significant information
-            current_rule_label, current_rule_text, dummy =\
-                j.strip().split(" - ", 2)
-            print_current_rule()
         else:
             # This is the definition of a rule
             current_rule_label, current_rule_text = j.strip().split(" - ", 1)
             print_current_rule()
 
 # Print the footer
-print "</rules>"
+print("</rules>")

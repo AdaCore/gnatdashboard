@@ -4,13 +4,12 @@ This script takes as input the output of gnatcheck -dR -h
 """
 
 import sys
-
 import config
 
 # Print the header
-print """<?xml version='1.0' encoding='UTF-8'?>
+print("""<?xml version='1.0' encoding='UTF-8'?>
 <rules>
-"""
+""")
 
 # The output of gnatcheck -dR -h looks like this:
 # gnatcheck currently implements the following rules:
@@ -67,7 +66,7 @@ def get_effort(category):
 def print_current_rule():
     """Print the current rule"""
     if current_rule_text:
-        print """    <rule>
+        print("""    <rule>
       <key>{}</key>
       <name>{}</name>
       <description>{}</description>
@@ -78,7 +77,7 @@ def print_current_rule():
                       current_rule_label,
                       current_rule_text,
                       constant_debt,
-                      constant_debt_val)
+                      constant_debt_val))
 
 
 for j in sys.stdin.readlines():
@@ -123,4 +122,4 @@ for j in sys.stdin.readlines():
 
 
 # Print the footer
-print "</rules>"
+print("</rules>")

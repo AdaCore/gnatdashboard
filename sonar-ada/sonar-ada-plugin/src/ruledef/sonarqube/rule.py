@@ -17,6 +17,7 @@
 import logging
 import os
 import sys
+from filecmp import cmp
 
 import lxml.builder
 import lxml.etree
@@ -51,7 +52,7 @@ class Rule(object):
 
         if tags is None:
             self.tags = tuple()
-        elif isinstance(tags, basestring):
+        elif isinstance(tags, str):
             self.tags = (tags,)
         else:
             assert isinstance(tags, list) or isinstance(tags, tuple)
@@ -150,7 +151,7 @@ class RulesDefinition(set):
 
         Return the object to allow methods chaining.
 
-        :param Rule rules: the rule to add to the repository
+        :param Rule rule: the rule to add to the repository
         :rtype: RulesDefinition
         """
         if rule in self:

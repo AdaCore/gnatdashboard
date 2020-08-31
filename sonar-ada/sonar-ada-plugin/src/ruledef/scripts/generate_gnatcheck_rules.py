@@ -6,9 +6,9 @@ This script takes as input the output of gnatcheck -h
 import sys
 
 # Print the header
-print """<?xml version='1.0' encoding='UTF-8'?>
+print("""<?xml version='1.0' encoding='UTF-8'?>
 <rules>
-"""
+""")
 
 # The output of gnatcheck -h looks like this:
 # gnatcheck currently implements the following rules:
@@ -33,14 +33,14 @@ extended_checks = False
 def print_current_rule():
     """Print the current rule"""
     if current_rule_text:
-        print """    <rule>
+        print("""    <rule>
       <key>{}</key>
       <name>{}</name>
       <description>{}</description>
       <tag>gnatcheck</tag>
     </rule>""".format(current_rule_label.lower(),
                       current_rule_label,
-                      current_rule_text)
+                      current_rule_text))
 
 
 for j in sys.stdin.readlines():
@@ -71,4 +71,4 @@ for j in sys.stdin.readlines():
 
 
 # Print the footer
-print "</rules>"
+print("</rules>")

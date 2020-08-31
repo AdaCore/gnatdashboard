@@ -191,7 +191,7 @@ class _WalkTableVisitor(docutils.nodes.SparseNodeVisitor):
 
         if not self.title_row_visited:
             # The first row of a table contains the titles; skip it
-            assert message == u'Message' and description == u'Description'
+            assert message == 'Message' and description == 'Description'
             self.title_row_visited = True
         else:
             # Append the (message, description) pair to the provided rules set
