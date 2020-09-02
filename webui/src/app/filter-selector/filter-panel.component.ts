@@ -44,8 +44,10 @@ export class FilterPanelComponent {
     private refreshSorting(): void {
         let projectSort: ISort = this.reportService.projectSort;
         let messageSort: ISort = this.reportService.messageSort;
-        sortMessageArray(this.messageSort, this.messageSort, this.reportService.message.sources);
-        sortCodeArray(this.projectSort, this.projectSort, this.reportService.code.modules);
+        sortMessageArray(this.messageSort, this.messageSort,
+                         Object['values'](this.reportService.message.sources));
+        sortCodeArray(
+            this.projectSort, this.projectSort, this.reportService.code.modules);
     }
 
     /*

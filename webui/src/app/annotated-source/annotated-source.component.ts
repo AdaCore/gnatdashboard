@@ -8,7 +8,8 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { DOCUMENT } from '@angular/common';
@@ -43,6 +44,7 @@ type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
     selector: 'annotated-source',
     templateUrl: './annotated-source.component.html',
     styleUrls: [ 'annotated-source.component.scss' ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DialogsService]
 })
 export class AnnotatedSourceComponent
@@ -64,6 +66,8 @@ export class AnnotatedSourceComponent
     public raceEntry: any = [];
     public raceSort: any = {};
     public raceSelected: string = '';
+    public isLoadingFile: boolean = false;
+    public sourceMessageList: ISourceNav[] = [];
 
     @ViewChild('scrollView', {static: true}) private scrollView: ElementRef;
 
@@ -87,24 +91,28 @@ export class AnnotatedSourceComponent
 
             this.selectedLine = line;
             this.selectedId = id;
-
-            this.reportService.page = filename;
             if (filename && filename !== this.sourceView.filename){
                 this.reloadFile(filename, line, id);
             } else {
                 this.processSource();
             }
+            setTimeout(() => {
+                this.reportService.setPage(filename);
+            });
         });
     }
 
     private reloadFile(filename: string, line: number, id: number): void {
         const url: string = this.reportService.url + 'source/' +  filename + '.json';
+        this.isLoadingFile = true;
         this.http.get(url).subscribe(
             data => {
+                this.isLoadingFile = false;
                 this.source = JSON.parse(data['_body']);
                 this.sourceView.filename = filename;
                 this.processSource();
             }, error => {
+                this.isLoadingFile = false;
                 console.error('[Error] reloadFile :', error);
             }
         );
@@ -115,6 +123,7 @@ export class AnnotatedSourceComponent
         this.source.messages = this.source.messages || [];
         this.createInlineAnnotations();
         this.afterInitProcess(this.selectedLine, this.selectedId);
+        this.checkChanges();
     }
 
     private afterInitProcess(line: number, id: number): void {
@@ -131,19 +140,20 @@ export class AnnotatedSourceComponent
         this.inlineAnnotations = {};
         this.source.annotations = this.source.annotations || [];
         if (this.source) {
-            if (this.reportService.checkArray(this.source.annotations,
-                                              'annotated-source.component',
-                                              'inlineAnnotations', 'source.annotations')) {
+            if (this.reportService.checkArray(
+                this.source.annotations,
+                'annotated-source.component',
+                'inlineAnnotations', 'source.annotations')) {
                 this.reportService.isAnnotations = true;
                 this.source.annotations.forEach(function(
-                                                annotation: IAnnotatedSourceMessage): void {
-                    const toolId: number = annotation.rule.tool_id;
-                    const line: number = annotation.line;
-                    if (!this.inlineAnnotations.hasOwnProperty(line)) {
-                        this.inlineAnnotations[line] = new Set();
-                    }
-                    this.inlineAnnotations[line].add(annotation);
-                }.bind(this));
+                    annotation: IAnnotatedSourceMessage): void {
+                        const toolId: number = annotation.rule.tool_id;
+                        const line: number = annotation.line;
+                        if (!this.inlineAnnotations.hasOwnProperty(line)) {
+                            this.inlineAnnotations[line] = new Set();
+                        }
+                        this.inlineAnnotations[line].add(annotation);
+                    }.bind(this));
             } else {
                 this.reportService.isAnnotations = false;
             }
@@ -178,25 +188,31 @@ export class AnnotatedSourceComponent
         }
     }
 
+    public toList(sources: any): ISourceNav[] {
+        if (this.sourceMessageList.length === 0) {
+            this.sourceMessageList = Object['values'](sources);
+        }
+        return this.sourceMessageList;
+    }
+
+    public checkChanges(): void {
+        this.cdRef.markForCheck();
+    }
     private initSelectMsg(id: number): void {
         if (this.reportService.message){
-            if (id !== -1
-                && this.reportService.checkArray(this.reportService.message.sources,
-                                                 'annotated-source.component',
-                                                 'initSelectMsg',
-                                                 'reportService.message.sources')) {
-                this.reportService.message.sources.forEach(function(
-                                                           source: ISourceNav): void {
-                    if (source.filename === this.source.filename) {
-                        let index: number = this.getIndex(id, source.messages);
-                        this.selectMessage(source.messages[index]);
-                    }
-                }.bind(this));
+            if (id !== -1) {
+                let tmp: any = this.reportService.message;
+                if (tmp.sources[this.source.filename]) {
+                    let source: ISourceNav = tmp.sources[this.source.filename];
+                    let index: number = this.getIndex(id, source.messages);
+                    this.selectMessage(source.messages[index], null);
+                }
             }
         } else  {
             console.log('[Error] annotated-source.component:initSelectMsg :'
                         + " reportService.message doesn't exist.");
         }
+        this.checkChanges();
     }
 
     /**
@@ -208,17 +224,11 @@ export class AnnotatedSourceComponent
         if (line) {
             this.selectedLine = line;
             let id: string = 'L' + line;
-
-            const config: ScrollToConfigOptions = {
-                target: id,
-                offset: -270,
-                duration: 200
-            };
-
-            let ret: any = this.scrollToService.scrollTo(config);
-            if (ret.source === undefined){
-                console.error('[Error] annotated-source.component:goToLine:'
-                              + ' scrollToService failed.', ret);
+            try {
+                let elem: HTMLElement = this.document.getElementById(id);
+                elem.scrollIntoView({block: 'center', inline: 'nearest'});
+            } catch (err) {
+                console.warn(err);
             }
         }
     };
@@ -255,11 +265,14 @@ export class AnnotatedSourceComponent
 
     private getIndex(id: number, array: any[]): number {
         let index: number = -1;
-        array.forEach(function(cell: any, idx: number): void {
-            if (cell.id === id){
+        let id2: string = id + '';
+        for (let idx: number = 0; idx < array.length - 1; idx++) {
+            let cellId: string = array[idx].id + '';
+            if (cellId === id2){
                 index = idx;
+                break;
             }
-        });
+        }
         return index;
     }
 
@@ -273,29 +286,6 @@ export class AnnotatedSourceComponent
     }
 
     public selectMessage( message: any, event: KeyboardEvent): void {
-        /* Keep these lines for future activation of the feature */
-        /*if (event && event.ctrlKey && event.shiftKey && this.lastSelectedMsg != -1){
-            if (this.reportService.checkArray(this.reportService.message.sources,
-                                              'annotated-source.component',
-                                              'selectMessage', 'reportService.message.sources')) {
-                this.reportService.message.sources.forEach(function(source){
-                    if (source.filename == this.source.filename) {
-
-                        let tmp_id_idx = this.getIndex(message.id, source.messages);
-                        let tmp_last_idx = this.getIndex(this.lastSelectedMsg, source.messages);
-
-                        let start = (tmp_id_idx > tmp_last_idx ? tmp_last_idx + 1 : tmp_id_idx);
-                        let end = (tmp_id_idx > tmp_last_idx ? tmp_id_idx : tmp_last_idx - 1);
-
-                        while (start <= end){
-                            this.toggleSelectedMsg(source.messages[start].id);
-                            this.checkMessage(source.messages[start])
-                            start ++;
-                        }
-                    }
-                }.bind(this));
-            }
-        } else*/
         if (message){
             this.lastSelectedMsg = message.id;
         }
@@ -329,36 +319,36 @@ export class AnnotatedSourceComponent
 
     private refreshFilter(): void {
         let userReviewFilter: [IReviewFilter];
+        if (this.reportService.message.sources) {
+            Object['entries'](this.reportService.message.sources).forEach(
+                function(val: any): void {
+                    let source: ISourceNav = val[1];
+                    if (source.messages){
+                        source.messages.forEach(function(message: IMessage): void {
+                            if (message.user_review){
+                                userReviewFilter = this.reportService.putInFilter(
+                                    message.user_review,
+                                    userReviewFilter);
+                            }
+                        }.bind(this));
+                    }
 
-        if (this.reportService.checkArray(this.reportService.message.sources,
-                                          'annotated-source.component',
-                                          'refreshFilter', 'reportService.message.sources')) {
-            this.reportService.message.sources.forEach(function(
-                                                       source: ISourceNav): void {
-                if (source.messages){
-                    source.messages.forEach(function(message: IMessage): void {
-                        if (message.user_review){
-                            userReviewFilter = this.reportService.putInFilter(message.user_review,
-                                                                              userReviewFilter);
-                        }
-                    }.bind(this));
-                }
-
-            }.bind(this));
+                }.bind(this));
         }
 
         let count: number = this.reportService
-                                .countUncategorized(userReviewFilter,
-                                                    this.reportService.filter
-                                                                      ._total_message_count);
+            .countUncategorized(userReviewFilter,
+                                this.reportService.filter
+                                ._total_message_count);
         if (count > 0){
             let tmpReview: any = {
                 status: 'UNCATEGORIZED',
                 display_name: 'Uncategorized'
             };
             this.reportService.putInFilter(tmpReview, userReviewFilter);
-            this.reportService.countUncategorized(userReviewFilter,
-                                                  this.reportService.filter._total_message_count);
+            this.reportService.countUncategorized(
+                userReviewFilter,
+                this.reportService.filter._total_message_count);
         }
 
         this.reportService.filter.review_status = userReviewFilter;
@@ -366,22 +356,23 @@ export class AnnotatedSourceComponent
     }
 
     public addDynamicReview(newReview: any[]): void {
-        if (this.reportService.checkArray(this.reportService.message.sources,
-                                          'annotated-source.component',
-                                          'addDynamicReview', 'reportService.message.sources')) {
-            this.reportService.message.sources.forEach(function(source: ISourceNav): void{
-                if (source.messages){
-                    source.messages.forEach(function(message: IMessage): void {
-                        if (newReview[message.tool_msg_id]){
-                            if (!message.review_history) {
-                                message.review_history = [];
-                            }
-                            message.review_history.unshift(newReview[message.tool_msg_id]);
-                            message.user_review = newReview[message.tool_msg_id];
+        if (this.reportService.message.sources) {
+            Object['entries'](this.reportService.message.sources).forEach(
+                function(val: any): void{
+                    let source: ISourceNav = val[1];
+                    if (source.messages){
+                        source.messages.forEach(function(message: IMessage): void {
+                            if (newReview[message.tool_msg_id]){
+                                if (!message.review_history) {
+                                    message.review_history = [];
+                                }
+                                message.review_history.unshift(
+                                    newReview[message.tool_msg_id]);
+                                message.user_review = newReview[message.tool_msg_id];
                         }
-                    });
-                }
-            });
+                        });
+                    }
+                });
             this.refreshFilter();
         }
     }
@@ -478,7 +469,6 @@ export class AnnotatedSourceComponent
             this.reportService.verifyServerStatus();
         });
     }
-
     public trackMsg(index: number, message: any): void {
         return message ? message.id : undefined;
     }
@@ -489,10 +479,10 @@ export class AnnotatedSourceComponent
 
     public sortModules(firstSort: string, secondSort: string): void {
         let newFilter: ISort = {newSort: firstSort, otherSort: secondSort};
-        this.reportService.message.sources = sortMessageArray(
+        this.sourceMessageList = sortMessageArray(
             newFilter,
             this.reportService.messageSort,
-            this.reportService.message.sources);
+            this.toList(this.reportService.message.sources));
         storeMessageSort(newFilter);
     }
 

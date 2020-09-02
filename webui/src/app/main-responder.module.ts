@@ -17,7 +17,7 @@ import { ROUTES } from './main-responder.routes';
 import { MainResponderComponent } from './main-responder.component';
 import { APP_RESOLVER_PROVIDERS } from './main-responder.resolver';
 import { AppState, InteralStateType, SharedReport } from './main-responder.service';
-
+import { ValuesPipe, KeysPipe} from './pipes';
 import { PreferencesComponent } from './preferences';
 import {
     AnnotatedSourceComponent,
@@ -93,7 +93,9 @@ type StoreType = {
         SpinnerComponent,
         ReviewDialogComponent,
         ReviewHistoryDialogComponent,
-        ErrorDialogComponent
+        ErrorDialogComponent,
+        KeysPipe,
+        ValuesPipe
     ],
     imports: [
         BrowserModule,

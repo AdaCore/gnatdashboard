@@ -26,7 +26,7 @@ export function sortCodeArray(newFilter: ISort, oldFilter: ISort,
             return 0;
         });
     } else {
-        console.log('bad filter', newFilter, projectArray);
+        console.log('bad filter', newFilter);
     }
 
     // Map of folders to array of folders
@@ -42,7 +42,7 @@ export function sortCodeArray(newFilter: ISort, oldFilter: ISort,
                 return 0;
             });
         } else {
-            console.log('bad filter', newFilter, folderArray);
+            console.log('bad filter', newFilter);
         }
 
         // Map of files to array of files
@@ -62,7 +62,7 @@ export function sortCodeArray(newFilter: ISort, oldFilter: ISort,
                     return 0;
                 });
             } else {
-                console.log('bad filter', newFilter, fileArray);
+                console.log('bad filter', newFilter);
             }
             folder.sources = fileArray;
         });
@@ -97,85 +97,99 @@ function sortRanking(a: number, b: number): number{
  *  Sort the array containing all the information
  *  for message navigation according to the given filter
  */
-export function sortMessageArray(newFilter: ISort, oldFilter: ISort,
-                                 sourceArray: ISourceNav[]): ISourceNav[] {
+export function sortMessageArray(
+    newFilter: ISort, oldFilter: ISort,
+    sourceArray: ISourceNav[]): ISourceNav[] {
+        if ((oldFilter.newSort === newFilter.newSort
+             || oldFilter.otherSort === newFilter.otherSort) && !newFilter.order) {
+            newFilter.order = oldFilter.order * -1;
+        } else if (newFilter.order) {
+            newFilter.order = newFilter.order;
+        } else {
+            newFilter.order = 1;
+        }
+        let property: string = checkProperty(sourceArray, newFilter);
 
-    if ((oldFilter.newSort === newFilter.newSort
-         || oldFilter.otherSort === newFilter.otherSort) && !newFilter.order) {
-        newFilter.order = oldFilter.order * -1;
-    } else if (newFilter.order) {
-        newFilter.order = newFilter.order;
-    } else {
-        newFilter.order = 1;
-    }
-
-    let property: string = checkProperty(sourceArray, newFilter);
-    if (property === 'countRanking'){
-        sourceArray.sort((a: ISourceNav, b: ISourceNav) => {
-            let tmp: number = sortRanking(a.countRanking.High, b.countRanking.High);
-            if (tmp === 0){
-                tmp = sortRanking(a.countRanking.Medium, b.countRanking.Medium);
+        if (property === 'countRanking'){
+            sourceArray.sort((a: ISourceNav, b: ISourceNav) => {
+                let tmp: number = sortRanking(a.countRanking.High, b.countRanking.High);
                 if (tmp === 0){
-                    tmp = sortRanking(a.countRanking.Low, b.countRanking.Low);
+                    tmp = sortRanking(a.countRanking.Medium, b.countRanking.Medium);
                     if (tmp === 0){
-                        tmp = sortRanking(a.countRanking.Info, b.countRanking.Info);
+                        tmp = sortRanking(a.countRanking.Low, b.countRanking.Low);
                         if (tmp === 0){
-                            tmp = sortRanking(a.countRanking.Unspecified,
-                                              b.countRanking.Unspecified);
+                            tmp = sortRanking(a.countRanking.Info, b.countRanking.Info);
+                            if (tmp === 0){
+                                tmp = sortRanking(a.countRanking.Unspecified,
+                                                  b.countRanking.Unspecified);
+                            }
                         }
                     }
                 }
-            }
-            return tmp * newFilter.order;
-        });
-    } else if (property != null) {
-        sourceArray.sort((a: ISourceNav, b: ISourceNav) => {
-            if (a[property] < b[property]) {
-                return -1 * newFilter.order;
-            }
-            if (a[property] > b[property]) {
-                return 1 * newFilter.order;
-            }
-            return 0;
-        });
-    } else if (newFilter.otherSort !== '') {
-        console.log('bad filter', newFilter, sourceArray);
-    }
-
-    sourceArray.forEach(function(source: ISourceNav): void {
-        if (source.messages && newFilter.newSort !== 'status_priority'){
-            let messageArray: IMessage[] =  source.messages;
-            property = checkProperty(messageArray, newFilter);
-            if (property === 'ranking') {
-                messageArray.sort((a: IMessage, b: IMessage) => {
-                    if (a['ranking']['id'] < b['ranking']['id']) { return -1 * newFilter.order; }
-                    if (a['ranking']['id'] > b['ranking']['id']) { return 1 * newFilter.order; }
-                    return 0;
-                });
-            } else if (property != null) {
-                messageArray.sort((a: IMessage, b: IMessage) => {
-                    if (a[property] < b[property]) { return -1 * newFilter.order; }
-                    if (a[property] > b[property]) { return 1 * newFilter.order; }
-                    return 0;
-                });
-            }
-            source.messages = messageArray;
-        } else if (source.messages
-                   && newFilter.newSort === 'status_priority') {
-            let messageArray: IMessage[] =  source.messages;
-            messageArray.sort((a: any, b: any) => {
-                let typeA: number = a['status_priority'] ? a['status_priority'] : 0;
-                let typeB: number = b['status_priority'] ? b['status_priority'] : 0;
-                if (typeA < typeB) { return -1 * newFilter.order; }
-                if (typeA > typeB) { return 1 * newFilter.order; }
+                return tmp * newFilter.order;
+            });
+        } else if (property != null) {
+            sourceArray.sort((a: ISourceNav, b: ISourceNav) => {
+                if (a[property] < b[property]) {
+                    return -1 * newFilter.order;
+                }
+                if (a[property] > b[property]) {
+                    return 1 * newFilter.order;
+                }
                 return 0;
             });
-            source.messages = messageArray;
+        } else if (newFilter.otherSort !== '') {
+            console.log('bad filter', newFilter);
         }
-    });
 
-    oldFilter.order = newFilter.order;
-    oldFilter.newSort = newFilter.newSort;
-    oldFilter.otherSort = newFilter.otherSort;
-    return sourceArray;
-}
+        sourceArray.forEach(function(source: ISourceNav): void {
+            if (source.messages && newFilter.newSort !== 'status_priority'){
+                let messageArray: IMessage[] =  source.messages;
+                property = checkProperty(messageArray, newFilter);
+                if (property === 'ranking') {
+                    messageArray.sort((a: IMessage, b: IMessage) => {
+                        if (a['ranking']['id'] < b['ranking']['id']) {
+                            return -1 * newFilter.order;
+                        }
+                        if (a['ranking']['id'] > b['ranking']['id']) {
+                            return 1 * newFilter.order;
+                        }
+                        return 0;
+                    });
+                } else if (property != null) {
+                    messageArray.sort((a: IMessage, b: IMessage) => {
+                        if (a[property] < b[property]) {
+                            return -1 * newFilter.order;
+                        }
+                        if (a[property] > b[property]) {
+                            return 1 * newFilter.order;
+                        }
+                        return 0;
+                    });
+                }
+                source.messages = messageArray;
+            } else if (source.messages
+                       && newFilter.newSort === 'status_priority') {
+                let messageArray: IMessage[] =  source.messages;
+                messageArray.sort((a: any, b: any) => {
+                    let typeA: number = a['status_priority'] ?
+                        a['status_priority'] : 0;
+                    let typeB: number = b['status_priority'] ?
+                        b['status_priority'] : 0;
+                    if (typeA < typeB) {
+                        return -1 * newFilter.order;
+                    }
+                    if (typeA > typeB) {
+                        return 1 * newFilter.order;
+                    }
+                    return 0;
+                });
+                source.messages = messageArray;
+            }
+        });
+
+        oldFilter.order = newFilter.order;
+        oldFilter.newSort = newFilter.newSort;
+        oldFilter.otherSort = newFilter.otherSort;
+        return sourceArray;
+    };

@@ -62,11 +62,6 @@ body { overflow: hidden; }
             .codepeer-run-info-button {
                 margin: 3px;
                 text-align: center;
-                background-color: var(--elem-color);
-                border: 1px #C4c4c5 solid;
-                width: 150px;
-                padding: 7px;
-                border-radius: 5px;
                 line-height: initial;
                 position: absolute;
                 right: 34px;
@@ -368,26 +363,14 @@ filter-selector.tool-selector .filter-selector {
 .navig-button {
 
     button {
-        margin: 0px;
-        text-align: center;
-        background-color: var(--elem-color);
-        border: 1px #C4c4c5 solid;
-        line-height: 100%;
-        width: 200px;
-        padding: 7px;
-        border-radius: 5px;
+        margin: 0 10px 0 0;
 
-
-        button#ErrorButton {
-            margin-left: -5px;
+       button#ErrorButton {
+          margin-left: -5px;
         }
-        button#ProjectButton {
-            margin-right: 2.5px;
-        }
-    }
-    .active {
-        background-color: var(--elem-hover);
-        border: 1px var(--elem-border) solid;
+       button#ProjectButton {
+          margin-right: 2.5px;
+       }
     }
 }
 

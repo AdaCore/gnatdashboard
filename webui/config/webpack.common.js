@@ -63,7 +63,7 @@ module.exports = function (options) {
 
     },
 
-    optimization: {
+      optimization: {
       splitChunks: {
         cacheGroups: {
           commons: {

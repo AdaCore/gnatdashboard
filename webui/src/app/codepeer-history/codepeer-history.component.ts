@@ -1,5 +1,6 @@
-import { Component, DoCheck } from '@angular/core';
+import { Component, DoCheck, AfterViewInit, Inject } from '@angular/core';
 import { SharedReport } from '../main-responder.service';
+import { DOCUMENT } from '@angular/common';
 import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scroll-to';
 
 @Component({
@@ -7,7 +8,7 @@ import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scrol
     templateUrl: './codepeer-history.component.html',
     styleUrls: [ 'codepeer-history.component.scss' ]
 })
-export class CodepeerHistoryComponent implements DoCheck {
+export class CodepeerHistoryComponent implements DoCheck, AfterViewInit {
 
     private selectedRun: number;
 
@@ -40,10 +41,15 @@ export class CodepeerHistoryComponent implements DoCheck {
     private minDateFilter: Date;
 
     constructor(public reportService: SharedReport,
-                private scrollToService: ScrollToService) {
-        this.reportService.page = 'codepeer-history';
+                private scrollToService: ScrollToService,
+                @Inject(DOCUMENT) private document: Document) {
     }
 
+    public ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.reportService.setPage('codepeer-history');
+        });
+    }
     public ngDoCheck(): void {
         if (this.maxRunFilter === 0 && this.reportService.codepeerCurrentRun > 0){
             this.initFilterValues();
@@ -94,16 +100,11 @@ export class CodepeerHistoryComponent implements DoCheck {
     private goToLine(line: number): void {
         if (line) {
             let id: string = 'Run' + line;
-            const config: ScrollToConfigOptions = {
-                target: id,
-                offset: -270,
-                duration: 200
-            };
-
-            let ret: any = this.scrollToService.scrollTo(config);
-            if (ret.source === undefined){
-                console.error('[Error] annotated-source.component:goToLine:'
-                              + ' scrollToService failed.', ret);
+            try {
+                let elem: HTMLElement = this.document.getElementById(id);
+                elem.scrollIntoView({block: 'center', inline: 'nearest'});
+            } catch (err) {
+                console.warn(err);
             }
         }
     };

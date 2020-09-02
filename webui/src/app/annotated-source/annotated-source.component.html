@@ -19,6 +19,11 @@
             </span>
         </nav>
         <main #scrollView class="scrollable-content d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12" [ngClass]="showMessageList ? 'expanded' : 'reduce'">
+            <spinner
+                *ngIf="isLoadingFile"
+                caption="Loading file..."
+                class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+            </spinner>
             <div class="missing-file-content" *ngIf="!source.lines">
                 <h4>Missing file content</h4>
                 <p>
@@ -195,10 +200,11 @@
                 <table *ngIf="tabOpen == 'message'" class="file-line-container d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
                     <span *ngIf="reportService.message" class="all-sources-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
 
-                        <span *ngFor="let mySource of reportService.message.sources;trackBy: trackSrc"
+                        <span *ngFor="let mySource of toList(reportService.message.sources);trackBy: trackSrc"
                               class=" d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                               [ngClass]="mySource.filename === source.filename ? '' : 'hideIt'">
-                            <span id="{{mySource.filename}}" class="all-messages-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open" *ngIf="mySource && (mySource._total_message_count > 0 || !mySource._total_message_count)" >
+                            <span id="{{mySource.filename}}" class="all-messages-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open"
+                                  *ngIf="mySource && (mySource._total_message_count > 0 || mySource._total_message_count === undefined)" >
                                 <span *ngFor="let message of mySource.messages;trackBy: trackMsg"
                                       class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) || (!reportService.showReviews && !message.user_review) ? 'hideIt' : ''">
@@ -238,7 +244,7 @@
                     <span class="all-sources-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                           *ngIf="reportService.message && reportService.message._ui_total_message_count > 0 || !reportService.message._ui_total_message_count">
 
-                        <span *ngFor="let mySource of reportService.message.sources;trackBy: trackSrc"
+                        <span *ngFor="let mySource of toList(reportService.message.sources);trackBy: trackSrc"
                               class=" d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                               [ngClass]="(!this.reportService.showFiles && (mySource._ui_total_message_count == 0 || ( mySource._ui_total_message_count == null && mySource._total_message_count == 0))) ? 'hideIt' : ''">
                             <span id="{{mySource.filename}}" class="source-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad open">

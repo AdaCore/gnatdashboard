@@ -1,6 +1,6 @@
 <!-- Spinner animation -->
 <spinner
-         *ngIf="!reportService.message && !reportService.isReportFetchError"
+    *ngIf="!reportService.message && !reportService.isReportFetchError"
          caption="Loading report...">
 </spinner>
 <!-- Report display -->
@@ -57,7 +57,7 @@
         <span class="all-sources-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
             <span class="all-sources-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                   *ngIf="reportService && reportService.message">
-                <span *ngFor="let source of reportService.message.sources;trackBy: trackSrc"
+                <span *ngFor="let source of toList(reportService.message.sources);trackBy: trackSrc"
                       class=" d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                       [ngClass]="(!this.reportService.showFiles && (source._ui_total_message_count == 0 || ( source._ui_total_message_count == null && source._total_message_count == 0))) ? 'hideIt' : ''">
                     <span id="{{source.filename}}" class="source-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad" [ngClass]="source.expand ? 'open' : 'reduce'">

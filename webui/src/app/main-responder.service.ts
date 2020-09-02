@@ -21,6 +21,7 @@ export type InteralStateType = {
 
 @Injectable()
 export class AppState {
+
     public _state: InteralStateType = {};
 
     // already return a clone of the current state
@@ -106,6 +107,8 @@ export class SharedReport {
     private serverHost: string = window.location.origin;
     public url: string = this.serverHost + '/';
 
+    public sourceMessageList: ISourceNav[] = [];
+
     constructor(@Inject(DOCUMENT) private document: Document,
                 private gnathub: GNAThubService,
                 private http: Http) {
@@ -116,6 +119,16 @@ export class SharedReport {
          */
         console.log('Designated API Url :', this.url);
         this.initApp();
+    }
+
+    public setPage(page: string): void {
+        this.page = page;
+    }
+    public toList(sources: any): ISourceNav[] {
+        if (this.sourceMessageList.length === 0) {
+            this.sourceMessageList = Object['values'](sources);
+        }
+        return this.sourceMessageList;
     }
 
     private initApp(): void {
@@ -498,9 +511,10 @@ export class SharedReport {
                 getStoredFilter(this.filter);
             }
             updateFilter(this);
-            this.message.sources = sortMessageArray(
+            this.sourceMessageList = sortMessageArray(
                 this.messageSort,
-                this.messageSort, this.message.sources);
+                this.messageSort,
+                this.toList(this.message.sources));
             console.log('this.code', this.code);
             console.log('this.filter', this.filter);
             console.log('this.message', this.message);
@@ -646,9 +660,10 @@ export class SharedReport {
     }
 
     private addUserReview(): void {
-        if (this.checkArray(this.message.sources, 'main-responder.service',
-                'addUserReview', 'message.sources')) {
-            this.message.sources.forEach(function (source: ISourceNav): void {
+        let sources: any[] = this.toList(this.message.sources);
+        if (this.checkArray(sources, 'main-responder.service',
+                            'addUserReview', 'message.sources')) {
+            sources.forEach(function (source: ISourceNav): void {
                 source.expand = false;
                 if (source.messages) {
                     source.messages.forEach(function (message: IMessage): void {

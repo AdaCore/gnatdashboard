@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, Inject, AfterViewInit } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { ISort, IModule, ISourceNav, ISourceDir, ISource } from 'gnat';
     templateUrl: './code-explorer.component.html',
     styleUrls: [ 'code-explorer.component.scss' ]
 })
-export class CodeExplorerComponent implements OnInit, OnDestroy {
+export class CodeExplorerComponent implements OnInit, OnDestroy, AfterViewInit {
     public project: string;
     public directory: string;
     private sub: Subscription;
@@ -20,16 +20,20 @@ export class CodeExplorerComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute,
                 public reportService: SharedReport,
                 @Inject(DOCUMENT) private document: Document) {}
+
     /** @override */
     public ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
             this.directory = params['directory'];
             this.project = params['project'];
         });
-        this.reportService.page = 'code-explorer';
         localStorage.setItem('defaultMain', '/code-explorer');
     }
-
+    public ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.reportService.setPage('code-explorer');
+        });
+    }
     /** @override */
     public ngOnDestroy(): void {
         this.sub.unsubscribe();

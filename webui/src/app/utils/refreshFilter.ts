@@ -102,10 +102,13 @@ export function updateFilter(reportService: any): void {
         });
     }
 
-    if (reportService && reportService.message && reportService.message.sources){
-        reportService.message.sources.forEach(function(source: ISourceNav): void {
-            source._ui_total_message_count = 0;
-        });
+    if (reportService &&
+        reportService.message &&
+        reportService.message.sources){
+        Object['values'](reportService.message.sources).forEach(
+            function(source: ISourceNav): void {
+                source._ui_total_message_count = 0;
+            });
     }
 
     reportService.code.modules.forEach(function(myModule: IModule): void {
@@ -117,76 +120,89 @@ export function updateFilter(reportService: any): void {
             folder.sources.forEach(function(codeSource: ISource): void {
                 codeSource._ui_total_message_count = 0;
 
-                reportService.message.sources.forEach(function(source: ISourceNav): void {
+                Object['values'](reportService.message.sources).forEach(
+                    function(source: ISourceNav): void {
 
-                    if (!source.countRanking) {
-                        source.countRanking = initCountRanking();
-                    }
-                    if (!source._ui_total_message_count){
-                        source._ui_total_message_count = 0;
-                    }
+                        if (!source.countRanking) {
+                            source.countRanking = initCountRanking();
+                        }
+                        if (!source._ui_total_message_count){
+                            source._ui_total_message_count = 0;
+                        }
 
-                    if (source.filename.toUpperCase() === codeSource.filename.toUpperCase() &&
-                        source.messages != null){
-                        source.countRanking = initCountRanking();
-                        source._ui_total_message_count = 0;
+                        if (source.filename.toUpperCase() ===
+                            codeSource.filename.toUpperCase() &&
+                            source.messages != null){
+                            source.countRanking = initCountRanking();
+                            source._ui_total_message_count = 0;
 
-                        source.messages.forEach(function(message: IMessage): void {
-                            const toolId: number = message.rule.tool_id;
-                            const ruleId: number = message.rule.id;
-                            const rankId: number = message.ranking.id;
-                            const reviewName: string = (message.user_review ?
-                                                        message.user_review.status :
-                                                        'UNCATEGORIZED');
+                            source.messages.forEach(function(
+                                message: IMessage): void {
+                                    const toolId: number = message.rule.tool_id;
+                                    const ruleId: number = message.rule.id;
+                                    const rankId: number = message.ranking.id;
+                                    const reviewName: string = (
+                                        message.user_review ?
+                                            message.user_review.status :
+                                            'UNCATEGORIZED');
 
-                            const isToolSelected: boolean = isSelected(toolId, tools);
-                            const isRuleSelected: boolean = isSelected(ruleId, rules);
-                            const isRankSelected: boolean = isSelected(rankId, ranking);
-                            const IsReviewSelected: boolean = reviewSelected(reviewName, review);
+                                    const isToolSelected: boolean = isSelected(
+                                        toolId, tools);
+                                    const isRuleSelected: boolean = isSelected(
+                                        ruleId, rules);
+                                    const isRankSelected: boolean = isSelected(
+                                        rankId, ranking);
+                                    const IsReviewSelected: boolean = reviewSelected(
+                                        reviewName, review);
 
-                            let hasSelectedProperties: boolean = false;
+                                    let hasSelectedProperties: boolean = false;
 
-                            if (message.properties != null){
-                                if (message.properties.length < 1){
-                                    hasSelectedProperties = true;
-                                }
-                                message.properties.forEach(function(property: IProperty): void {
-                                    let isPropertySelected: boolean =
-                                        isSelected(property.id, properties);
-                                    if (isPropertySelected){
-                                        hasSelectedProperties = true;
+                                    if (message.properties != null){
+                                        if (message.properties.length < 1){
+                                            hasSelectedProperties = true;
+                                        }
+                                        message.properties.forEach(
+                                            function(property: IProperty): void {
+                                                let isPropertySelected: boolean =
+                                                    isSelected(property.id, properties);
+                                                if (isPropertySelected){
+                                                    hasSelectedProperties = true;
+                                                }
+                                            }.bind(this));
+                                    }
+
+                                    if (isToolSelected &&
+                                        isRuleSelected &&
+                                        isRankSelected &&
+                                        IsReviewSelected &&
+                                        hasSelectedProperties) {
+                                        incMessageCount(toolId, tools);
+                                        incMessageCount(ruleId, rules);
+                                        incMessageCount(rankId, ranking);
+                                        incRevMessageCount(reviewName, review);
+                                        message.properties.forEach(
+                                            function(property: IProperty): void {
+                                                let isPropertySelected: boolean =
+                                                    isSelected(property.id, properties);
+                                                if (isPropertySelected){
+                                                    incMessageCount(property.id, properties);
+                                                }
+                                            }.bind(this));
+
+                                        source.countRanking[message.ranking.name] += 1;
+
+                                        message.hide = true;
+                                        source._ui_total_message_count ++;
+                                        codeSource._ui_total_message_count ++;
+                                        folder._ui_total_message_count++;
+                                        myModule._ui_total_message_count++;
+                                        reportService.totalMessageCount ++;
+                                    } else {
+                                        message.hide = false;
                                     }
                                 }.bind(this));
-                            }
-
-                            if (isToolSelected && isRuleSelected && isRankSelected
-                                && IsReviewSelected && hasSelectedProperties) {
-                                incMessageCount(toolId, tools);
-                                incMessageCount(ruleId, rules);
-                                incMessageCount(rankId, ranking);
-                                incRevMessageCount(reviewName, review);
-                                message.properties.forEach(function(property: IProperty): void {
-                                    let isPropertySelected: boolean =
-                                        isSelected(property.id, properties);
-                                    if (isPropertySelected){
-                                        incMessageCount(property.id, properties);
-                                    }
-                                }.bind(this));
-
-                                source.countRanking[message.ranking.name] += 1;
-
-                                message.hide = true;
-                                source._ui_total_message_count ++;
-                                codeSource._ui_total_message_count ++;
-                                folder._ui_total_message_count++;
-                                myModule._ui_total_message_count++;
-                                reportService.totalMessageCount ++;
-                            } else {
-                                message.hide = false;
-                            }
-                        }.bind(this));
-                    }
-                }.bind(this));
+                        }
+                    }.bind(this));
             }.bind(this));
         }.bind(this));
     }.bind(this));

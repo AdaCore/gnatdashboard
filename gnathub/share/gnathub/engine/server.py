@@ -22,6 +22,7 @@ import GNAThub
 import os
 import subprocess
 import re
+import json
 
 # To hide server banner, and so production warning.
 import sys
@@ -105,6 +106,18 @@ def get_json(filename):
     if os.path.isfile(filepath):
         with open(filepath, 'r') as myFile:
             data = myFile.read()
+            if filename == 'message.json':
+                # Convert messages list to a dict
+                # for performance  sake
+                data = json.loads(data)
+                resp = {}
+                if 'sources' in data:
+                    for s in data.get('sources'):
+                        if s['filename'] not in resp:
+                            resp[s['filename']] = []
+                        resp[s['filename']].append(s)
+                    data['sourcekeys'] = resp
+                data = json.dumps(data)
             return data
     else:
         resp = make_response(404)
