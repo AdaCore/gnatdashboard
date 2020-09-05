@@ -195,7 +195,7 @@
     "html-loader": "^0.5.5",
     "htmlparser2": "3.3.0",
     "http-errors": "1.6.2",
-    "http-proxy": "1.16.2",
+    "http-proxy": "1.18.1",
     "https-browserify": "1.0.0",
     "iconv-lite": "0.4.19",
     "icss-replace-symbols": "1.1.0",
