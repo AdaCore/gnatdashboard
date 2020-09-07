@@ -482,10 +482,10 @@ class SourceBuilder(object):
         try:
             with open(self.path, 'r') as infile:
                 content = infile.read()
-        except IOError:
+        except (IOError, UnicodeDecodeError):
             self.log.exception('failed to read source file: %s', self.path)
             self.log.warn('report will be incomplete')
-            return this
+            return None
 
         # NOTE: Pygments lexer seems to drop those leading and trailing new
         # lines in its output. Add them back after HTMLization to avoid line
