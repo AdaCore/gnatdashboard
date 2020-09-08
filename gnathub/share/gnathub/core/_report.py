@@ -37,7 +37,7 @@ from pygments import highlight
 from pygments.formatters import HtmlFormatter
 
 
-def _write_json(output, obj, **kwargs):
+def _write_json(output, obj, indent=2):
     """Dump a JSON-encoded representation of `obj` into `output`.
 
     :param str output: path to the output file
@@ -50,8 +50,17 @@ def _write_json(output, obj, **kwargs):
     :see: :func:`json.dumps`
     """
 
-    with open(output, 'w') as outfile:
-        outfile.write(json.dumps(obj, **kwargs))
+    def encode_string(s):
+        if isinstance(obj, str):
+            return s.encode("utf-8")
+    try:
+        with open(output, 'w') as outfile:
+            outfile.write(json.dumps(obj, indent=indent))
+    except TypeError:
+        with open(output, 'w') as outfile:
+            outfile.write(json.dumps(obj, indent=indent,
+                                     ensure_ascii=False,
+                                     default=encode_string))
 
 
 def _count_extra_newlines(lines):
@@ -480,9 +489,13 @@ class SourceBuilder(object):
         }
 
         try:
-            with open(self.path, 'r') as infile:
-                content = infile.read()
-        except (IOError, UnicodeDecodeError):
+            try:
+                with open(self.path, 'r') as infile:
+                    content = infile.read()
+            except UnicodeDecodeError:
+                with open(self.path, 'rb') as infile:
+                    content = infile.read().decode('iso-8859-1').encode('utf8')
+        except IOError:
             self.log.exception('failed to read source file: %s', self.path)
             self.log.warn('report will be incomplete')
             return None
