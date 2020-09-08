@@ -97,7 +97,7 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>useless self assignment</key>
+        <key>useless reassignment</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -349,11 +349,11 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>address_attribute_for_non_volatile_objects (gnatcheck)</key>
+        <key>access_to_local_objects (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>address_of_local_objects (gnatcheck)</key>
+        <key>address_attribute_for_non_volatile_objects (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -398,6 +398,10 @@
       </rule>
       <rule>
         <key>conditional_expressions (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>constant_overlays (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -621,7 +625,7 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>nonvolatile_overlays (gnatcheck)</key>
+        <key>non_constant_overlays (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -629,7 +633,7 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>not_imported_volatile_objects (gnatcheck)</key>
+        <key>not_imported_overlays (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -698,6 +702,10 @@
       </rule>
       <rule>
         <key>outer_loop_exits (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>outside_references_from_subprograms (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -861,6 +869,10 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
+        <key>use_clauses (gnatcheck)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
         <key>use_package_clauses (gnatcheck)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
@@ -885,31 +897,51 @@
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>test always false (lal checker)</key>
+        <key>assertion (infer)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>same operands (lal checker)</key>
+        <key>access check (infer)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>test always true (lal checker)</key>
+        <key>test always false (infer)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>contract check (lal checker)</key>
+        <key>test always true (infer)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>access check (lal checker)</key>
+        <key>discriminant check (infer)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>discriminant check (lal checker)</key>
+        <key>duplicate branches (infer)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
-        <key>code duplicated (lal checker)</key>
+        <key>array index check (infer)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>length check (infer)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>precondition (infer)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>range check (infer)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>same operands (infer)</key>
+        <repositoryKey>codepeer</repositoryKey>
+      </rule>
+      <rule>
+        <key>same test (infer)</key>
         <repositoryKey>codepeer</repositoryKey>
       </rule>
       <rule>
@@ -970,6 +1002,10 @@
       </rule>
       <rule>
         <key>conditional_expressions</key>
+        <repositoryKey>gnatcheck</repositoryKey>
+      </rule>
+      <rule>
+        <key>constant_overlays</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
@@ -1193,7 +1229,7 @@
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>
-        <key>nonvolatile_overlays</key>
+        <key>non_constant_overlays</key>
         <repositoryKey>gnatcheck</repositoryKey>
       </rule>
       <rule>

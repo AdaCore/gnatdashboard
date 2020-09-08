@@ -232,8 +232,8 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>useless self assignment</key>
-            <name>useless self assignment</name>
+            <key>useless reassignment</key>
+            <name>useless reassignment</name>
             <description>assignment does not modify the value stored (CWE 563)</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
@@ -855,9 +855,9 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>address_attribute_for_non_volatile_objects (gnatcheck)</key>
-            <name>Address_Attribute_For_Non_Volatile_Objects (GNATCheck)</name>
-            <description>address attribute for non-volatile data objects</description>
+            <key>access_to_local_objects (gnatcheck)</key>
+            <name>Access_To_Local_Objects (GNATCheck)</name>
+            <description>access attribute for local objects</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
@@ -865,9 +865,9 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>address_of_local_objects (gnatcheck)</key>
-            <name>Address_Of_Local_Objects (GNATCheck)</name>
-            <description>address attribute for local objects</description>
+            <key>address_attribute_for_non_volatile_objects (gnatcheck)</key>
+            <name>Address_Attribute_For_Non_Volatile_Objects (GNATCheck)</name>
+            <description>address attribute for non-volatile data objects</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
@@ -978,6 +978,16 @@
             <key>conditional_expressions (gnatcheck)</key>
             <name>Conditional_Expressions (GNATCheck)</name>
             <description>Ada 2012 conditional expressions</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>constant_overlays (gnatcheck)</key>
+            <name>Constant_Overlays (GNATCheck)</name>
+            <description>inproper overlay of a constant object</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
@@ -1535,9 +1545,9 @@
             <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>nonvolatile_overlays (gnatcheck)</key>
-            <name>Nonvolatile_Overlays (GNATCheck)</name>
-            <description>nonvolatile overlays</description>
+            <key>non_constant_overlays (gnatcheck)</key>
+            <name>Non_Constant_Overlays (GNATCheck)</name>
+            <description>inproper overlay of a variable object</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
@@ -1555,9 +1565,9 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>not_imported_volatile_objects (gnatcheck)</key>
-            <name>Not_Imported_Volatile_Objects (GNATCheck)</name>
-            <description>not imported volatile objects</description>
+            <key>not_imported_overlays (gnatcheck)</key>
+            <name>Not_Imported_Overlays (GNATCheck)</name>
+            <description>not imported overlays</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
@@ -1728,6 +1738,16 @@
             <key>outer_loop_exits (gnatcheck)</key>
             <name>Outer_Loop_Exits (GNATCheck)</name>
             <description>exiting more than one loop at once</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>outside_references_from_subprograms (gnatcheck)</key>
+            <name>Outside_References_From_Subprograms (GNATCheck)</name>
+            <description>outside references from subprograms</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
@@ -2135,6 +2155,16 @@
             <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
           </rule>
     <rule>
+            <key>use_clauses (gnatcheck)</key>
+            <name>USE_Clauses (GNATCheck)</name>
+            <description>use clauses</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
             <key>use_package_clauses (gnatcheck)</key>
             <name>USE_PACKAGE_Clauses (GNATCheck)</name>
             <description>use clause for packages</description>
@@ -2195,9 +2225,9 @@
             <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>test always false (lal checker)</key>
-            <name>test always false (LAL checker)</name>
-            <description>test is always 'false'</description>
+            <key>assertion (infer)</key>
+            <name>assertion (Infer)</name>
+            <description>user assertion (pragma Assert or precondition) could fail</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>
@@ -2205,8 +2235,98 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>same operands (lal checker)</key>
-            <name>same operands (LAL checker)</name>
+            <key>access check (infer)</key>
+            <name>access check (Infer)</name>
+            <description>dereference of a possibly null reference (CWE 476)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>test always false (infer)</key>
+            <name>test always false (Infer)</name>
+            <description>test is always 'false' (CWE 572)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>test always true (infer)</key>
+            <name>test always true (Infer)</name>
+            <description>test is always 'true' (CWE 571)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>discriminant check (infer)</key>
+            <name>discriminant check (Infer)</name>
+            <description>a field for the wrong variant/discriminant is accessed (CWE 136, 137)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>duplicate branches (infer)</key>
+            <name>duplicate branches (Infer)</name>
+            <description>two syntactically equivalent branch bodies in a common 'case' or 'if' construct</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>array index check (infer)</key>
+            <name>array index check (Infer)</name>
+            <description>index value could be outside the array bounds (CWE 120, 124, 125-127, 129-131)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>length check (infer)</key>
+            <name>length check (Infer)</name>
+            <description>the arguments of an array assignment have differing lengths</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>precondition (infer)</key>
+            <name>precondition (Infer)</name>
+            <description>a subprogram call that might violate the subprogram's precondition (CWE 628)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>range check (infer)</key>
+            <name>range check (Infer)</name>
+            <description>calculation may generate a value outside the bounds of the type (CWE 682)</description>
+            <type>CODE_SMELL</type>
+            <tag>codepeer</tag>
+            <tag>warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+          </rule>
+    <rule>
+            <key>same operands (infer)</key>
+            <name>same operands (Infer)</name>
             <description>a binary operation uses the same two operands</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
@@ -2215,49 +2335,9 @@
             <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
           </rule>
     <rule>
-            <key>test always true (lal checker)</key>
-            <name>test always true (LAL checker)</name>
-            <description>test is always 'true'</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
-            <key>contract check (lal checker)</key>
-            <name>contract check (LAL checker)</name>
-            <description>user contract (pragma Assert, pre/postcondition) could fail</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
-            <key>access check (lal checker)</key>
-            <name>access check (LAL checker)</name>
-            <description>dereference of a possibly null reference</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
-            <key>discriminant check (lal checker)</key>
-            <name>discriminant check (LAL checker)</name>
-            <description>a field for the wrong variant/discriminant is accessed</description>
-            <type>CODE_SMELL</type>
-            <tag>codepeer</tag>
-            <tag>warning</tag>
-            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
-            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
-          </rule>
-    <rule>
-            <key>code duplicated (lal checker)</key>
-            <name>code duplicated (LAL checker)</name>
-            <description>code is duplicated at several places.</description>
+            <key>same test (infer)</key>
+            <name>same test (Infer)</name>
+            <description>if statement / expression contains several syntactically equivalent conditions</description>
             <type>CODE_SMELL</type>
             <tag>codepeer</tag>
             <tag>warning</tag>

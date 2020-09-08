@@ -122,6 +122,14 @@
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
+      <key>constant_overlays</key>
+      <name>Constant_Overlays</name>
+      <description>inproper overlay of a constant object</description>
+      <tag>gnatcheck</tag>
+      <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+      <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
       <key>constructors</key>
       <name>Constructors</name>
       <description>constructors</description>
@@ -562,9 +570,9 @@
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
-      <key>nonvolatile_overlays</key>
-      <name>Nonvolatile_Overlays</name>
-      <description>nonvolatile overlays</description>
+      <key>non_constant_overlays</key>
+      <name>Non_Constant_Overlays</name>
+      <description>inproper overlay of a variable object</description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
