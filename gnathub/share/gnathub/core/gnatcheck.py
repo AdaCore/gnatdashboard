@@ -22,6 +22,7 @@ module and load it as part of the GNAThub default execution.
 import collections
 import os
 import re
+import shutil
 
 from _gnat import SLOC_PATTERN
 
@@ -95,6 +96,9 @@ class GNATcheck(Plugin, Runner, Reporter):
         # Map of bulk data (couple (source, message_data): dict[str,list])
         self.bulk_data = collections.defaultdict(list)
 
+    def __cmd_exists(self, cmd):
+        return shutil.which(cmd) is not None
+
     def __cmd_line(self):
         """Create GNATcheck command line arguments list.
 
@@ -119,7 +123,12 @@ class GNATcheck(Plugin, Runner, Reporter):
         cmd_line = cmd_line + GNAThub.Project.scenario_switches()
 
         if GNAThub.Project.target():
-            cmd_line[0] = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
+            cmd = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
+            if self.__cmd_exists(cmd):
+                cmd_line[0] = cmd
+            else:
+                cmd_line.extend(['--target', GNAThub.Project.target()])
+
         if GNAThub.Project.runtime():
             cmd_line.extend(('--RTS', GNAThub.Project.runtime()))
         if GNAThub.subdirs():
