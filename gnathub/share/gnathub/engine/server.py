@@ -214,7 +214,7 @@ def getCodepeerVersion(data):
 def _get_codepeer():
     cmd = 'codepeer' + ' -v'
     output = subprocess.check_output(cmd, shell=True)
-    actual_version = getCodepeerVersion(output)
+    actual_version = getCodepeerVersion(str(output))
     old_version = ""
 
     version_path = os.path.join(CODEPEER_OBJ_DIR, 'version.txt')
