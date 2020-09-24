@@ -21,6 +21,7 @@ import collections
 import logging
 import os
 import shutil
+import platform
 
 import GNAThub
 from GNAThub import Console
@@ -375,11 +376,57 @@ class SonarScannerProperties(object):
             # Copy each source dir content
             self.info('prepare files from module: %s' % module_name)
             for src_dir in modules[module_name]:
-                src_dir_relpath = os.path.relpath(src_dir, dirs_commonprefix)
-                src_dir_path = os.path.join(module_root_src_dir,
+                # Local variables to be used for common prefix and root source
+                # directory manipulation in Windows case
+                crt_commonprefix = dirs_commonprefix
+                crt_modules_source_dir = module_root_src_dir
+
+                if platform.system() == 'Windows':
+                    if not crt_commonprefix:
+                        # NOTE: We should be in this case only on Windows when
+                        # the referenced sources files of the project are
+                        # located under different drives
+                        # In this case sources cache will be handled as follow:
+                        #   Create a specific folder under the [module]-src
+                        #   folder starting with the drive name and keeping the
+                        #   original path of the sources on the other drive
+                        # This is needed to avoid relative paths issues on
+                        # Windows between folders located on different drives.
+                        src_head_tail = os.path.splitdrive(src_dir)
+                        src_drive = src_head_tail[0].replace(':', '')
+
+                        root_head_tail = os.path.splitdrive(
+                            module_root_src_dir)
+                        modules_drive = root_head_tail[0].replace(':', '')
+
+                        same_drive = src_drive == modules_drive
+                        if same_drive:
+                            crt_modules_source_dir = module_root_src_dir
+                        else:
+                            crt_modules_source_dir = os.path.join(
+                                module_root_src_dir, src_drive)
+
+                            # Create the drive specific local source directory
+                            if not os.path.exists(crt_modules_source_dir):
+                                os.makedirs(crt_modules_source_dir)
+
+                        crt_commonprefix = src_head_tail[0]
+                        src_abspath = os.path.abspath(src_dir)
+                        if same_drive:
+                            src_dir_relpath = os.path.relpath(
+                                src_abspath, crt_commonprefix)
+                        else:
+                            src_dir_relpath = os.path.relpath(
+                                src_abspath, src_head_tail[0])
+                    else:
+                        src_dir_relpath = os.path.relpath(src_dir,
+                                                          crt_commonprefix)
+                else:
+                    src_dir_relpath = os.path.relpath(src_dir,
+                                                      crt_commonprefix)
+                src_dir_path = os.path.join(crt_modules_source_dir,
                                             src_dir_relpath)
                 self.log.info(' + %s' % src_dir_path)
-
                 if not os.path.exists(src_dir_path):
                     os.makedirs(src_dir_path)
 
