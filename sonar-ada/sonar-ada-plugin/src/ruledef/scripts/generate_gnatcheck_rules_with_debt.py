@@ -66,6 +66,16 @@ def get_effort(category):
 def print_current_rule():
     """Print the current rule"""
     if current_rule_text:
+        http_link =\
+            '\"https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/'\
+            + 'gnatcheck_rm/predefined_rules.html#'\
+            + current_rule_label.lower().replace('_', '-') + '\"'
+        hyperlink_format = """<a href={}>{}</a>""".\
+            format(http_link, current_rule_text)
+        body_format = """<body>Click on {} for rule description.</body>""".\
+            format(hyperlink_format)
+        current_rule_description = """<![CDATA[{}]]>""".format(body_format)
+
         print("""    <rule>
       <key>{}</key>
       <name>{}</name>
@@ -75,7 +85,7 @@ def print_current_rule():
       <remediationFunctionBaseEffort>{}</remediationFunctionBaseEffort>
     </rule>""".format(current_rule_label.lower(),
                       current_rule_label,
-                      current_rule_text,
+                      current_rule_description,
                       constant_debt,
                       constant_debt_val))
 

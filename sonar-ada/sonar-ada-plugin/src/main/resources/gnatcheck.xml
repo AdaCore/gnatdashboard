@@ -4,7 +4,7 @@
     <rule>
       <key>abort_statements</key>
       <name>Abort_Statements</name>
-      <description>abort statements</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#abort-statements">abort statements</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -12,7 +12,7 @@
     <rule>
       <key>abstract_type_declarations</key>
       <name>Abstract_Type_Declarations</name>
-      <description>abstract types</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#abstract-type-declarations">abstract types</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -20,7 +20,7 @@
     <rule>
       <key>access_to_local_objects</key>
       <name>Access_To_Local_Objects</name>
-      <description>access attribute for local objects</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#access-to-local-objects">access attribute for local objects</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -28,7 +28,7 @@
     <rule>
       <key>address_attribute_for_non_volatile_objects</key>
       <name>Address_Attribute_For_Non_Volatile_Objects</name>
-      <description>address attribute for non-volatile data objects</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#address-attribute-for-non-volatile-objects">address attribute for non-volatile data objects</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -36,7 +36,7 @@
     <rule>
       <key>address_specifications_for_initialized_objects</key>
       <name>Address_Specifications_For_Initialized_Objects</name>
-      <description>address specifications for initialized objects</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#address-specifications-for-initialized-objects">address specifications for initialized objects</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -44,7 +44,7 @@
     <rule>
       <key>address_specifications_for_local_objects</key>
       <name>Address_Specifications_For_Local_Objects</name>
-      <description>address specifications for local objects</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#address-specifications-for-local-objects">address specifications for local objects</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -52,7 +52,7 @@
     <rule>
       <key>annotated_comments</key>
       <name>Annotated_Comments</name>
-      <description>use of comment annotations</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#annotated-comments">use of comment annotations</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -60,7 +60,7 @@
     <rule>
       <key>anonymous_arrays</key>
       <name>Anonymous_Arrays</name>
-      <description>anonymous array types</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#anonymous-arrays">anonymous array types</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -68,7 +68,7 @@
     <rule>
       <key>anonymous_subtypes</key>
       <name>Anonymous_Subtypes</name>
-      <description>anonymous subtypes</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#anonymous-subtypes">anonymous subtypes</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -76,7 +76,7 @@
     <rule>
       <key>binary_case_statements</key>
       <name>Binary_Case_Statements</name>
-      <description>CASE statements that can be replaced with IF statements</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#binary-case-statements">CASE statements that can be replaced with IF statements</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -84,7 +84,7 @@
     <rule>
       <key>bit_records_without_layout_definition</key>
       <name>Bit_Records_Without_Layout_Definition</name>
-      <description>record with modular component without representation clause</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#bit-records-without-layout-definition">record with modular component without representation clause</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -92,7 +92,7 @@
     <rule>
       <key>blocks</key>
       <name>Blocks</name>
-      <description>block statements</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#blocks">block statements</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -100,7 +100,7 @@
     <rule>
       <key>boolean_relational_operators</key>
       <name>Boolean_Relational_Operators</name>
-      <description>comparisons of Boolean values</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#boolean-relational-operators">comparisons of Boolean values</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -108,7 +108,7 @@
     <rule>
       <key>complex_inlined_subprograms</key>
       <name>Complex_Inlined_Subprograms</name>
-      <description>complex inlined subprograms</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#complex-inlined-subprograms">complex inlined subprograms</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -116,7 +116,7 @@
     <rule>
       <key>conditional_expressions</key>
       <name>Conditional_Expressions</name>
-      <description>Ada 2012 conditional expressions</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#conditional-expressions">Ada 2012 conditional expressions</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -124,7 +124,7 @@
     <rule>
       <key>constant_overlays</key>
       <name>Constant_Overlays</name>
-      <description>inproper overlay of a constant object</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#constant-overlays">inproper overlay of a constant object</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -132,7 +132,7 @@
     <rule>
       <key>constructors</key>
       <name>Constructors</name>
-      <description>constructors</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#constructors">constructors</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -140,7 +140,7 @@
     <rule>
       <key>controlled_type_declarations</key>
       <name>Controlled_Type_Declarations</name>
-      <description>controlled types</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#controlled-type-declarations">controlled types</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -148,7 +148,7 @@
     <rule>
       <key>declarations_in_blocks</key>
       <name>Declarations_In_Blocks</name>
-      <description>block statements with local declarations</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#declarations-in-blocks">block statements with local declarations</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -156,7 +156,7 @@
     <rule>
       <key>deep_inheritance_hierarchies</key>
       <name>Deep_Inheritance_Hierarchies</name>
-      <description>derivation tree is too deep</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#deep-inheritance-hierarchies">derivation tree is too deep</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -164,7 +164,7 @@
     <rule>
       <key>deeply_nested_generics</key>
       <name>Deeply_Nested_Generics</name>
-      <description>deeply nested generic declarations</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#deeply-nested-generics">deeply nested generic declarations</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -172,7 +172,7 @@
     <rule>
       <key>deep_library_hierarchy</key>
       <name>Deep_Library_Hierarchy</name>
-      <description>deep library hierarchy</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#deep-library-hierarchy">deep library hierarchy</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -180,7 +180,7 @@
     <rule>
       <key>deeply_nested_inlining</key>
       <name>Deeply_Nested_Inlining</name>
-      <description>deeply nested inlining (global check)</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#deeply-nested-inlining">deeply nested inlining (global check)</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -188,7 +188,7 @@
     <rule>
       <key>default_parameters</key>
       <name>Default_Parameters</name>
-      <description>declarations of default subprogram parameters</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#default-parameters">declarations of default subprogram parameters</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -196,7 +196,7 @@
     <rule>
       <key>default_values_for_record_components</key>
       <name>Default_Values_For_Record_Components</name>
-      <description>default values for record components</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#default-values-for-record-components">default values for record components</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -204,7 +204,7 @@
     <rule>
       <key>deriving_from_predefined_type</key>
       <name>Deriving_From_Predefined_Type</name>
-      <description>types derived from predefined types</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#deriving-from-predefined-type">types derived from predefined types</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -212,7 +212,7 @@
     <rule>
       <key>direct_calls_to_primitives</key>
       <name>Direct_Calls_To_Primitives</name>
-      <description>non-dispatching calls to primitives</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#direct-calls-to-primitives">non-dispatching calls to primitives</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -220,7 +220,7 @@
     <rule>
       <key>discriminated_records</key>
       <name>Discriminated_Records</name>
-      <description>discriminated records</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#discriminated-records">discriminated records</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -228,7 +228,7 @@
     <rule>
       <key>downward_view_conversions</key>
       <name>Downward_View_Conversions</name>
-      <description>downward view conversions</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#downward-view-conversions">downward view conversions</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -236,7 +236,7 @@
     <rule>
       <key>enumeration_ranges_in_case_statements</key>
       <name>Enumeration_Ranges_In_CASE_Statements</name>
-      <description>enumeration ranges as choices in case statements</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#enumeration-ranges-in-case-statements">enumeration ranges as choices in case statements</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -244,7 +244,7 @@
     <rule>
       <key>enumeration_representation_clauses</key>
       <name>Enumeration_Representation_Clauses</name>
-      <description>enumeration representation clauses</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#enumeration-representation-clauses">enumeration representation clauses</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -252,7 +252,7 @@
     <rule>
       <key>exceptions_as_control_flow</key>
       <name>Exceptions_As_Control_Flow</name>
-      <description>exceptions for control flow</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#exceptions-as-control-flow">exceptions for control flow</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -260,7 +260,7 @@
     <rule>
       <key>exits_from_conditional_loops</key>
       <name>Exits_From_Conditional_Loops</name>
-      <description>exit from conditional loops</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#exits-from-conditional-loops">exit from conditional loops</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -268,7 +268,7 @@
     <rule>
       <key>exit_statements_with_no_loop_name</key>
       <name>EXIT_Statements_With_No_Loop_Name</name>
-      <description>exit statements with no loop name</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#exit-statements-with-no-loop-name">exit statements with no loop name</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -276,7 +276,7 @@
     <rule>
       <key>expanded_loop_exit_names</key>
       <name>Expanded_Loop_Exit_Names</name>
-      <description>expanded loop names in exit statements</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#expanded-loop-exit-names">expanded loop names in exit statements</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -284,7 +284,7 @@
     <rule>
       <key>explicit_full_discrete_ranges</key>
       <name>Explicit_Full_Discrete_Ranges</name>
-      <description>explicit discrete ranges</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#explicit-full-discrete-ranges">explicit discrete ranges</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -292,7 +292,7 @@
     <rule>
       <key>expression_functions</key>
       <name>Expression_Functions</name>
-      <description>expression function in package specifications</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#expression-functions">expression function in package specifications</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -300,7 +300,7 @@
     <rule>
       <key>fixed_equality_checks</key>
       <name>Fixed_Equality_Checks</name>
-      <description>equality for fixed values</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#fixed-equality-checks">equality for fixed values</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -308,7 +308,7 @@
     <rule>
       <key>float_equality_checks</key>
       <name>Float_Equality_Checks</name>
-      <description>equality for float values</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#float-equality-checks">equality for float values</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -316,7 +316,7 @@
     <rule>
       <key>forbidden_attributes</key>
       <name>Forbidden_Attributes</name>
-      <description>usage of specified attributes</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#forbidden-attributes">usage of specified attributes</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -324,7 +324,7 @@
     <rule>
       <key>forbidden_pragmas</key>
       <name>Forbidden_Pragmas</name>
-      <description>usage of specified pragmas</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#forbidden-pragmas">usage of specified pragmas</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -332,7 +332,7 @@
     <rule>
       <key>function_style_procedures</key>
       <name>Function_Style_Procedures</name>
-      <description>procedures looking like functions</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#function-style-procedures">procedures looking like functions</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -340,7 +340,7 @@
     <rule>
       <key>generic_in_out_objects</key>
       <name>Generic_IN_OUT_Objects</name>
-      <description>generic objects of mode IN OUT</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#generic-in-out-objects">generic objects of mode IN OUT</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -348,7 +348,7 @@
     <rule>
       <key>generics_in_subprograms</key>
       <name>Generics_In_Subprograms</name>
-      <description>definitions of generic units in  subprogram bodies</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#generics-in-subprograms">definitions of generic units in  subprogram bodies</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -356,7 +356,7 @@
     <rule>
       <key>global_variables</key>
       <name>Global_Variables</name>
-      <description>declarations of global variables</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#global-variables">declarations of global variables</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -364,7 +364,7 @@
     <rule>
       <key>goto_statements</key>
       <name>GOTO_Statements</name>
-      <description>goto statements</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#goto-statements">goto statements</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -372,7 +372,7 @@
     <rule>
       <key>identifier_casing</key>
       <name>Identifier_Casing</name>
-      <description>casing of defining names</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#identifier-casing">casing of defining names</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -380,7 +380,7 @@
     <rule>
       <key>identifier_suffixes</key>
       <name>Identifier_Suffixes</name>
-      <description>suffixes in defining names</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#identifier-suffixes">suffixes in defining names</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -388,7 +388,7 @@
     <rule>
       <key>identifier_prefixes</key>
       <name>Identifier_Prefixes</name>
-      <description>prefixes in defining names</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#identifier-prefixes">prefixes in defining names</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -396,7 +396,7 @@
     <rule>
       <key>implicit_in_mode_parameters</key>
       <name>Implicit_IN_Mode_Parameters</name>
-      <description>implicit IN mode in parameter specifications</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#implicit-in-mode-parameters">implicit IN mode in parameter specifications</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
@@ -404,7 +404,7 @@
     <rule>
       <key>implicit_small_for_fixed_point_types</key>
       <name>Implicit_SMALL_For_Fixed_Point_Types</name>
-      <description>fixed point type declarations with no 'Small clause</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#implicit-small-for-fixed-point-types">fixed point type declarations with no 'Small clause</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -412,7 +412,7 @@
     <rule>
       <key>improper_returns</key>
       <name>Improper_Returns</name>
-      <description>improper use of return statements</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#improper-returns">improper use of return statements</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -420,7 +420,7 @@
     <rule>
       <key>improperly_located_instantiations</key>
       <name>Improperly_Located_Instantiations</name>
-      <description>instantiations that can cause problems</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#improperly-located-instantiations">instantiations that can cause problems</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -428,7 +428,7 @@
     <rule>
       <key>incomplete_representation_specifications</key>
       <name>Incomplete_Representation_Specifications</name>
-      <description>record types with layout specification but without size and pack specification</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#incomplete-representation-specifications">record types with layout specification but without size and pack specification</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -436,7 +436,7 @@
     <rule>
       <key>library_level_subprograms</key>
       <name>Library_Level_Subprograms</name>
-      <description>library level subprograms</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#library-level-subprograms">library level subprograms</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -444,7 +444,7 @@
     <rule>
       <key>local_packages</key>
       <name>Local_Packages</name>
-      <description>local packages</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#local-packages">local packages</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -452,7 +452,7 @@
     <rule>
       <key>local_use_clauses</key>
       <name>Local_USE_Clauses</name>
-      <description>local use clauses</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#local-use-clauses">local use clauses</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -460,7 +460,7 @@
     <rule>
       <key>max_identifier_length</key>
       <name>Max_Identifier_Length</name>
-      <description>maximal identifier length</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#max-identifier-length">maximal identifier length</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -468,7 +468,7 @@
     <rule>
       <key>metrics_cyclomatic_complexity</key>
       <name>Metrics_Cyclomatic_Complexity</name>
-      <description>(metrics) high cyclomatic complexity</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#metrics-cyclomatic-complexity">(metrics) high cyclomatic complexity</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
@@ -476,7 +476,7 @@
     <rule>
       <key>metrics_essential_complexity</key>
       <name>Metrics_Essential_Complexity</name>
-      <description>(metrics) high essential complexity</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#metrics-essential-complexity">(metrics) high essential complexity</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
@@ -484,7 +484,7 @@
     <rule>
       <key>metrics_lsloc</key>
       <name>Metrics_LSLOC</name>
-      <description>(metrics) high LSLOC value</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#metrics-lsloc">(metrics) high LSLOC value</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
@@ -492,7 +492,7 @@
     <rule>
       <key>maximum_parameters</key>
       <name>Maximum_Parameters</name>
-      <description>maximum number of subprogram parameters</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#maximum-parameters">maximum number of subprogram parameters</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -500,7 +500,7 @@
     <rule>
       <key>membership_tests</key>
       <name>Membership_Tests</name>
-      <description>membership test</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#membership-tests">membership test</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -508,7 +508,7 @@
     <rule>
       <key>misnamed_controlling_parameters</key>
       <name>Misnamed_Controlling_Parameters</name>
-      <description>Badly formatted profile of a primitive operation</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#misnamed-controlling-parameters">Badly formatted profile of a primitive operation</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -516,7 +516,7 @@
     <rule>
       <key>misplaced_representation_items</key>
       <name>Misplaced_Representation_Items</name>
-      <description>representation items out of order</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#misplaced-representation-items">representation items out of order</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -524,7 +524,7 @@
     <rule>
       <key>multiple_entries_in_protected_definitions</key>
       <name>Multiple_Entries_In_Protected_Definitions</name>
-      <description>protected definitions with more than one entry</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#multiple-entries-in-protected-definitions">protected definitions with more than one entry</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -532,7 +532,7 @@
     <rule>
       <key>name_clashes</key>
       <name>Name_Clashes</name>
-      <description>restrictions on name space</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#name-clashes">restrictions on name space</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -540,7 +540,7 @@
     <rule>
       <key>nested_subprograms</key>
       <name>Nested_Subprograms</name>
-      <description>nested subprograms</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#nested-subprograms">nested subprograms</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -548,7 +548,7 @@
     <rule>
       <key>no_inherited_classwide_pre</key>
       <name>No_Inherited_Classwide_Pre</name>
-      <description>overridden operation has no Pre'Class</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#no-inherited-classwide-pre">overridden operation has no Pre'Class</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -556,7 +556,7 @@
     <rule>
       <key>no_explicit_real_range</key>
       <name>No_Explicit_Real_Range</name>
-      <description>real types with no range definition</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#no-explicit-real-range">real types with no range definition</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -564,7 +564,7 @@
     <rule>
       <key>no_scalar_storage_order_specified</key>
       <name>No_Scalar_Storage_Order_Specified</name>
-      <description>a record/record extension type has record representation clause but no Scalar_Storage_Order attribute clause</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#no-scalar-storage-order-specified">a record/record extension type has record representation clause but no Scalar_Storage_Order attribute clause</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -572,7 +572,7 @@
     <rule>
       <key>non_constant_overlays</key>
       <name>Non_Constant_Overlays</name>
-      <description>inproper overlay of a variable object</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#non-constant-overlays">inproper overlay of a variable object</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -580,7 +580,7 @@
     <rule>
       <key>nonoverlay_address_specifications</key>
       <name>Nonoverlay_Address_Specifications</name>
-      <description>nonoverlay address specifications</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#nonoverlay-address-specifications">nonoverlay address specifications</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -588,7 +588,7 @@
     <rule>
       <key>not_imported_overlays</key>
       <name>Not_Imported_Overlays</name>
-      <description>not imported overlays</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#not-imported-overlays">not imported overlays</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -596,7 +596,7 @@
     <rule>
       <key>non_qualified_aggregates</key>
       <name>Non_Qualified_Aggregates</name>
-      <description>non-qualified aggregates</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#non-qualified-aggregates">non-qualified aggregates</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -604,7 +604,7 @@
     <rule>
       <key>non_short_circuit_operators</key>
       <name>Non_Short_Circuit_Operators</name>
-      <description>use of predefined AND and OR for boolean types</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#non-short-circuit-operators">use of predefined AND and OR for boolean types</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -612,7 +612,7 @@
     <rule>
       <key>non_spark_attributes</key>
       <name>Non_SPARK_Attributes</name>
-      <description>attributes that are not from the SPARK subset</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#non-spark-attributes">attributes that are not from the SPARK subset</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -620,7 +620,7 @@
     <rule>
       <key>non_tagged_derived_types</key>
       <name>Non_Tagged_Derived_Types</name>
-      <description>derived types that are not type extensions</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#non-tagged-derived-types">derived types that are not type extensions</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -628,7 +628,7 @@
     <rule>
       <key>non_visible_exceptions</key>
       <name>Non_Visible_Exceptions</name>
-      <description>potential propagations of non-visible exceptions</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#non-visible-exceptions">potential propagations of non-visible exceptions</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -636,7 +636,7 @@
     <rule>
       <key>null_paths</key>
       <name>Null_Paths</name>
-      <description>null paths in control statements</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#null-paths">null paths in control statements</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -644,7 +644,7 @@
     <rule>
       <key>number_declarations</key>
       <name>Number_Declarations</name>
-      <description>number declarations</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#number-declarations">number declarations</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -652,7 +652,7 @@
     <rule>
       <key>numeric_indexing</key>
       <name>Numeric_Indexing</name>
-      <description>use integer literals as indexes</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#numeric-indexing">use integer literals as indexes</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -660,7 +660,7 @@
     <rule>
       <key>numeric_literals</key>
       <name>Numeric_Literals</name>
-      <description>numeric literals</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#numeric-literals">numeric literals</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -668,7 +668,7 @@
     <rule>
       <key>object_declarations_out_of_order</key>
       <name>Object_Declarations_Out_Of_Order</name>
-      <description>object declarations should precede program unit declarations</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#object-declarations-out-of-order">object declarations should precede program unit declarations</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -676,7 +676,7 @@
     <rule>
       <key>objects_of_anonymous_types</key>
       <name>Objects_Of_Anonymous_Types</name>
-      <description>data objects of anonymous types</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#objects-of-anonymous-types">data objects of anonymous types</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -684,7 +684,7 @@
     <rule>
       <key>one_construct_per_line</key>
       <name>One_Construct_Per_Line</name>
-      <description>each statement or declaration should use separate code line</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#one-construct-per-line">each statement or declaration should use separate code line</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -692,7 +692,7 @@
     <rule>
       <key>others_in_aggregates</key>
       <name>OTHERS_In_Aggregates</name>
-      <description>OTHERS choices in aggregates</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#others-in-aggregates">OTHERS choices in aggregates</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -700,7 +700,7 @@
     <rule>
       <key>others_in_case_statements</key>
       <name>OTHERS_In_CASE_Statements</name>
-      <description>OTHERS choices in case statements</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#others-in-case-statements">OTHERS choices in case statements</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -708,7 +708,7 @@
     <rule>
       <key>others_in_exception_handlers</key>
       <name>OTHERS_In_Exception_Handlers</name>
-      <description>OTHERS choices in exception handlers</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#others-in-exception-handlers">OTHERS choices in exception handlers</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -716,7 +716,7 @@
     <rule>
       <key>outbound_protected_assignments</key>
       <name>Outbound_Protected_Assignments</name>
-      <description>assignments from protected bodiesto outside objects</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#outbound-protected-assignments">assignments from protected bodiesto outside objects</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -724,7 +724,7 @@
     <rule>
       <key>outer_loop_exits</key>
       <name>Outer_Loop_Exits</name>
-      <description>exiting more than one loop at once</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#outer-loop-exits">exiting more than one loop at once</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -732,7 +732,7 @@
     <rule>
       <key>outside_references_from_subprograms</key>
       <name>Outside_References_From_Subprograms</name>
-      <description>outside references from subprograms</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#outside-references-from-subprograms">outside references from subprograms</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -740,7 +740,7 @@
     <rule>
       <key>overloaded_operators</key>
       <name>Overloaded_Operators</name>
-      <description>operator overloading</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#overloaded-operators">operator overloading</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -748,7 +748,7 @@
     <rule>
       <key>overly_nested_control_structures</key>
       <name>Overly_Nested_Control_Structures</name>
-      <description>deep nesting level of control structures</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#overly-nested-control-structures">deep nesting level of control structures</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -756,7 +756,7 @@
     <rule>
       <key>parameters_out_of_order</key>
       <name>Parameters_Out_Of_Order</name>
-      <description>formal parameters ordering</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#parameters-out-of-order">formal parameters ordering</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -764,7 +764,7 @@
     <rule>
       <key>positional_actuals_for_defaulted_generic_parameters</key>
       <name>Positional_Actuals_For_Defaulted_Generic_Parameters</name>
-      <description>positional generic actuals for defaulted generic parameters</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#positional-actuals-for-defaulted-generic-parameters">positional generic actuals for defaulted generic parameters</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -772,7 +772,7 @@
     <rule>
       <key>positional_actuals_for_defaulted_parameters</key>
       <name>Positional_Actuals_For_Defaulted_Parameters</name>
-      <description>positional actuals for defaulted parameters</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#positional-actuals-for-defaulted-parameters">positional actuals for defaulted parameters</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -780,7 +780,7 @@
     <rule>
       <key>pos_on_enumeration_types</key>
       <name>POS_On_Enumeration_Types</name>
-      <description>attribute 'POS applied to enumeration types</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#pos-on-enumeration-types">attribute 'POS applied to enumeration types</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -788,7 +788,7 @@
     <rule>
       <key>positional_components</key>
       <name>Positional_Components</name>
-      <description>positional components associations in aggregates</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#positional-components">positional components associations in aggregates</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -796,7 +796,7 @@
     <rule>
       <key>positional_generic_parameters</key>
       <name>Positional_Generic_Parameters</name>
-      <description>positional generic associations</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#positional-generic-parameters">positional generic associations</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -804,7 +804,7 @@
     <rule>
       <key>positional_parameters</key>
       <name>Positional_Parameters</name>
-      <description>positional associations in subprogram and entry calls</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#positional-parameters">positional associations in subprogram and entry calls</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -812,7 +812,7 @@
     <rule>
       <key>predefined_numeric_types</key>
       <name>Predefined_Numeric_Types</name>
-      <description>explicit references to predefined numeric subtypes</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#predefined-numeric-types">explicit references to predefined numeric subtypes</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -820,7 +820,7 @@
     <rule>
       <key>predicate_testing</key>
       <name>Predicate_Testing</name>
-      <description>expressions need subtype predicate evaluation</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#predicate-testing">expressions need subtype predicate evaluation</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -828,7 +828,7 @@
     <rule>
       <key>printable_ascii</key>
       <name>Printable_ASCII</name>
-      <description>non-printable characters</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#printable-ascii">non-printable characters</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -836,7 +836,7 @@
     <rule>
       <key>quantified_expressions</key>
       <name>Quantified_Expressions</name>
-      <description>Ada 2012 quantified expressions</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#quantified-expressions">Ada 2012 quantified expressions</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -844,7 +844,7 @@
     <rule>
       <key>raising_external_exceptions</key>
       <name>Raising_External_Exceptions</name>
-      <description>visibility of exceptions raised by routines declared in library package</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#raising-external-exceptions">visibility of exceptions raised by routines declared in library package</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -852,7 +852,7 @@
     <rule>
       <key>raising_predefined_exceptions</key>
       <name>Raising_Predefined_Exceptions</name>
-      <description>explicit raise of predefined exceptions</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#raising-predefined-exceptions">explicit raise of predefined exceptions</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -860,7 +860,7 @@
     <rule>
       <key>recursive_subprograms</key>
       <name>Recursive_Subprograms</name>
-      <description>recursion (call graph cycles)</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#recursive-subprograms">recursion (call graph cycles)</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -868,7 +868,7 @@
     <rule>
       <key>relative_delay_statements</key>
       <name>Relative_Delay_Statements</name>
-      <description>relative delay statements</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#relative-delay-statements">relative delay statements</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -876,7 +876,7 @@
     <rule>
       <key>renamings</key>
       <name>Renamings</name>
-      <description>renaming declarations</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#renamings">renaming declarations</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -884,7 +884,7 @@
     <rule>
       <key>representation_specifications</key>
       <name>Representation_Specifications</name>
-      <description>representation specification (clause, aspect or pragma)</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#representation-specifications">representation specification (clause, aspect or pragma)</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -892,7 +892,7 @@
     <rule>
       <key>separate_numeric_error_handlers</key>
       <name>Separate_Numeric_Error_Handlers</name>
-      <description>Numeric_Error and Constraint error are not handled together</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#separate-numeric-error-handlers">Numeric_Error and Constraint error are not handled together</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -900,7 +900,7 @@
     <rule>
       <key>single_value_enumeration_types</key>
       <name>Single_Value_Enumeration_Types</name>
-      <description>enumeration type definitions with a single enumeration literal</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#single-value-enumeration-types">enumeration type definitions with a single enumeration literal</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -908,7 +908,7 @@
     <rule>
       <key>size_attribute_for_types</key>
       <name>Size_Attribute_For_Types</name>
-      <description>'Size attribute for types and subtypes</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#size-attribute-for-types">'Size attribute for types and subtypes</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -916,7 +916,7 @@
     <rule>
       <key>slices</key>
       <name>Slices</name>
-      <description>slices</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#slices">slices</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -924,7 +924,7 @@
     <rule>
       <key>specific_parent_type_invariant</key>
       <name>Specific_Parent_Type_Invariant</name>
-      <description>derivation from a type with specific Type_Invariant aspect</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#specific-parent-type-invariant">derivation from a type with specific Type_Invariant aspect</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -932,7 +932,7 @@
     <rule>
       <key>specific_pre_post</key>
       <name>Specific_Pre_Post</name>
-      <description>definition of non class-wide Pre and Post aspects for tagged type primitives</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#specific-pre-post">definition of non class-wide Pre and Post aspects for tagged type primitives</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -940,7 +940,7 @@
     <rule>
       <key>specific_type_invariants</key>
       <name>Specific_Type_Invariants</name>
-      <description>non class-wide Type_Invariant aspect</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#specific-type-invariants">non class-wide Type_Invariant aspect</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -948,7 +948,7 @@
     <rule>
       <key>subprogram_access</key>
       <name>Subprogram_Access</name>
-      <description>access to subprogram definition</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#subprogram-access">access to subprogram definition</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -956,7 +956,7 @@
     <rule>
       <key>too_many_dependencies</key>
       <name>Too_Many_Dependencies</name>
-      <description>compilation unit has too many dependencies</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#too-many-dependencies">compilation unit has too many dependencies</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
@@ -964,7 +964,7 @@
     <rule>
       <key>too_many_parents</key>
       <name>Too_Many_Parents</name>
-      <description>type/object has too many parents</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#too-many-parents">type/object has too many parents</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
@@ -972,7 +972,7 @@
     <rule>
       <key>too_many_primitives</key>
       <name>Too_Many_Primitives</name>
-      <description>tagged type has too many primitives</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#too-many-primitives">tagged type has too many primitives</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>60min</remediationFunctionBaseEffort>
@@ -980,7 +980,7 @@
     <rule>
       <key>unassigned_out_parameters</key>
       <name>Unassigned_OUT_Parameters</name>
-      <description>OUT parameters do not get values in procedure bodies</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#unassigned-out-parameters">OUT parameters do not get values in procedure bodies</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -988,7 +988,7 @@
     <rule>
       <key>unchecked_address_conversions</key>
       <name>Unchecked_Address_Conversions</name>
-      <description>unchecked conversions from System.Address into access type</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#unchecked-address-conversions">unchecked conversions from System.Address into access type</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -996,7 +996,7 @@
     <rule>
       <key>unchecked_conversions_as_actuals</key>
       <name>Unchecked_Conversions_As_Actuals</name>
-      <description>passing instance of Unchecked_Conversion as actual</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#unchecked-conversions-as-actuals">passing instance of Unchecked_Conversion as actual</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -1004,7 +1004,7 @@
     <rule>
       <key>uncommented_begin_in_package_bodies</key>
       <name>Uncommented_BEGIN_In_Package_Bodies</name>
-      <description>BEGIN keywords in package bodies non-marked with comment with package name</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#uncommented-begin-in-package-bodies">BEGIN keywords in package bodies non-marked with comment with package name</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -1012,7 +1012,7 @@
     <rule>
       <key>unconstrained_array_returns</key>
       <name>Unconstrained_Array_Returns</name>
-      <description>functions returning unconstrained arrays</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#unconstrained-array-returns">functions returning unconstrained arrays</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -1020,7 +1020,7 @@
     <rule>
       <key>unconditional_exits</key>
       <name>Unconditional_Exits</name>
-      <description>Exit statement with no condition</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#unconditional-exits">Exit statement with no condition</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -1028,7 +1028,7 @@
     <rule>
       <key>unconstrained_arrays</key>
       <name>Unconstrained_Arrays</name>
-      <description>unconstrained array definitions</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#unconstrained-arrays">unconstrained array definitions</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -1036,7 +1036,7 @@
     <rule>
       <key>uninitialized_global_variables</key>
       <name>Uninitialized_Global_Variables</name>
-      <description>uninitialized variables in packages</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#uninitialized-global-variables">uninitialized variables in packages</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -1044,7 +1044,7 @@
     <rule>
       <key>universal_ranges</key>
       <name>Universal_Ranges</name>
-      <description>ranges with universal integer bounds</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#universal-ranges">ranges with universal integer bounds</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -1052,7 +1052,7 @@
     <rule>
       <key>unnamed_blocks_and_loops</key>
       <name>Unnamed_Blocks_And_Loops</name>
-      <description>compound statements naming</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#unnamed-blocks-and-loops">compound statements naming</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -1060,7 +1060,7 @@
     <rule>
       <key>use_clauses</key>
       <name>USE_Clauses</name>
-      <description>use clauses</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#use-clauses">use clauses</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -1068,7 +1068,7 @@
     <rule>
       <key>use_package_clauses</key>
       <name>USE_PACKAGE_Clauses</name>
-      <description>use clause for packages</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#use-package-clauses">use clause for packages</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -1076,7 +1076,7 @@
     <rule>
       <key>visible_components</key>
       <name>Visible_Components</name>
-      <description>Types with publicly accessible components</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#visible-components">Types with publicly accessible components</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -1084,7 +1084,7 @@
     <rule>
       <key>volatile_objects_without_address_clauses</key>
       <name>Volatile_Objects_Without_Address_Clauses</name>
-      <description>volatile objects with no address clause</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#volatile-objects-without-address-clauses">volatile objects with no address clause</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
@@ -1092,7 +1092,7 @@
     <rule>
       <key>warnings</key>
       <name>Warnings</name>
-      <description>compiler warnings</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#warnings">compiler warnings</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
@@ -1100,7 +1100,7 @@
     <rule>
       <key>style_checks</key>
       <name>Style_Checks</name>
-      <description>compiler style checks</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#style-checks">compiler style checks</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>5min</remediationFunctionBaseEffort>
@@ -1108,7 +1108,7 @@
     <rule>
       <key>restrictions</key>
       <name>Restrictions</name>
-      <description>checks made by pragma Restriction_Warnings</description>
+      <description><![CDATA[<body>Click on <a href="https://docs.adacore.com/live/wave/asis/html/gnatcheck_rm/gnatcheck_rm/predefined_rules.html#restrictions">checks made by pragma Restriction_Warnings</a> for rule description.</body>]]></description>
       <tag>gnatcheck</tag>
       <remediationFunction>CONSTANT_ISSUE</remediationFunction>
       <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
