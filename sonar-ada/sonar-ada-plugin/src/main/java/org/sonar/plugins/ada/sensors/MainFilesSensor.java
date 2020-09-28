@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016-2019, AdaCore
+ * Copyright (C) 2016-2020, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -53,6 +53,18 @@ abstract class MainFilesSensor implements Sensor {
 
   @Override
   public void execute(final SensorContext context) {
+    if (!GNAThub.isGNAThubDBDefined(context.config())) {
+      log.error("   Sonar Ada plugin: no results to import.");
+      log.error("   Ada-like (*.ads and *.adb) source files detected but");
+      log.error("   sonar.ada.gnathub.db is not defined in the sonar-project.properties file");
+      log.error("   Use GNAThub to analyse and upload results for Ada projects.");
+      log.error("   Sonar Ada plugin: import is stopped.");
+      log.error("   ------------------------------------ ");
+
+      // No GNAThub database is defined in sonar-project.properties file. Exiting!
+      return;
+    }
+
     final GNAThub gnathub = new GNAThub(context.config());
     final FileSystem fs = context.fileSystem();
     final FilePredicate mainFilePredicate = fs.predicates().and(

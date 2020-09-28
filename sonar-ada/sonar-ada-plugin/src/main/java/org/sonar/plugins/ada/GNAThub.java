@@ -38,11 +38,16 @@ public class GNAThub {
   @Getter private final Measures measures;
   @Getter private final Issues issues;
 
+  public static boolean isGNAThubDBDefined(final Configuration config) {
+    final String dbUri = config.get(AdaPlugin.GNATHUB_DB_KEY).orElse(null);
+    return dbUri != null;
+  }
+
   public GNAThub(final Configuration config) {
     final String dbUri = config.get(AdaPlugin.GNATHUB_DB_KEY).orElse(null);
     final String srcMappingUri = config.get(AdaPlugin.GNATHUB_SRC_MAPPING_KEY).orElse(null);
 
-    if (dbUri == null) {
+    if (!isGNAThubDBDefined(config)) {
       throw new AnalysisException(String.format(
           "%s is not defined in the project properties file", AdaPlugin.GNATHUB_DB_KEY));
     }
