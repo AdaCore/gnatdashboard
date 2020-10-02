@@ -29,7 +29,7 @@ class Project(object):
         """Run :command:`make target` and return the process.
 
         :param str target: The Makefile target to call.
-        :returns: gnatpython.ex.Run
+        :returns: e3.ex.Run
         """
 
         return Run(

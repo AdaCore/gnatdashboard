@@ -24,7 +24,7 @@ gnathub/share/examples/gnatdashboard/sdc/struct/values-operations.ads no-precomm
 gnathub/share/examples/gnatdashboard/sdc/struct/instructions.ads no-precommit-check
 # sonar-ada-plugin Java Files
 sonar-ada/**/*.java no-precommit-check
-sonar-ada/surefire-to-gnatpython-report.py no-precommit-check
+sonar-ada/surefire-to-e3-report.py no-precommit-check
 # Old known-problems and features files
 features-10 no-precommit-check
 features-11 no-precommit-check

@@ -3,7 +3,7 @@
 import os
 import yaml
 
-from gnatpython.fileutils import unixpath
+from e3.os.fs import unixpath
 from support import const
 
 

@@ -18,7 +18,7 @@ test:
 	# The maven command can fail because of the tests, but we want the report to
 	# be generated afterward.
 	-MAVEN_OPTS="$(MVN_OPTS)" $(MVN) $(MVN_TEST_OPTS) $(MAVEN_ANOD_OPTS) package
-	python surefire-to-gnatpython-report.py \
+	python surefire-to-e3-report.py \
 		-i $(BUILD_DIR)/surefire-reports \
 		-o $(RESULTS_DIR)
 
