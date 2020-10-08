@@ -152,11 +152,11 @@ class CodePeer(Plugin, Runner, Reporter):
         output = str(subprocess.check_output(cmd, shell=True))
         version = ""
         try:
-            version = re.match(".* ([0-9]+\.[0-9]+[w]?) .*",
+            version = re.match(".* ([0-9]+\\.[0-9]+([w]?|rc)) .*",
                                output).groups()[0]
-        except Exception as e:
-            print(e)
-        self.log.debug('Codepeer version put in %s', dest)
+        except Exception:
+            self.log.debug('Unrecognized version number %s', output)
+            version = output  # fallback
         self.info('Codepeer version put in %s', dest)
         with open(dest, 'w') as fd:
             fd.write(version)
