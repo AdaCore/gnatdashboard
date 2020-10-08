@@ -204,7 +204,7 @@ def _get_online():
 def getCodepeerVersion(data):
     tmp = ""
     try:
-        tmp = re.match(".* ([0-9]+\.[0-9]+[w]?) .*", data).groups()[0]
+        tmp = re.match(".* ([0-9]+\\.[0-9]+(w|rc)?) .*", data).groups()[0]
     except Exception as e:
         print(e)
     return tmp
