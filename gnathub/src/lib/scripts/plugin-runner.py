@@ -111,6 +111,15 @@ class PluginRunner(object):
         """
         Console.error(message % args, prefix=MODULE)
 
+    @staticmethod
+    def set_failure(message, *args):
+        """Set global run of plugins failure.
+
+        :param str message: the message to log
+        :param list[*] args: arguments of the `message` format string
+         """
+        Console.set_failure(message % args, prefix=MODULE)
+
     @classmethod
     def schedule(cls, plugins):
         """Schedule the plugins execution order.
@@ -464,7 +473,8 @@ class PluginRunner(object):
                     Console.ko(plugin)
 
         if exec_failure:
-            self.error('GNAThub error: one or more plugins failed to run')
+            self.error('GNAThub error: one or more plugins failed to run!')
+            self.set_failure("Global run failed!")
 
 
 # Script entry point

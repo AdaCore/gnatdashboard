@@ -74,4 +74,9 @@ package GNAThub is
    --  If New_Line is True, then terminate the line with a ASCII.LF
    --  character. Defaults to False.
 
+   procedure Set_Global_Run_Failure
+     (Message : String; Prefix : String := Console_Prefix);
+   --  Set a global run failure after plugin-runner execution and print an
+   --  error message
+
 end GNAThub;

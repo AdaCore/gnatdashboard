@@ -39,16 +39,18 @@ package body GNAThub.Python is
 
    Logger_Log_Method : constant String := "log";
 
-   Console_Info_Method     : aliased constant String := "info";
-   Console_Warn_Method     : aliased constant String := "warn";
-   Console_Error_Method    : aliased constant String := "error";
-   Console_Progress_Method : aliased constant String := "progress";
+   Console_Info_Method        : aliased constant String := "info";
+   Console_Warn_Method        : aliased constant String := "warn";
+   Console_Error_Method       : aliased constant String := "error";
+   Console_Progress_Method    : aliased constant String := "progress";
+   Console_Global_Run_Failure : aliased constant String := "set_failure";
 
    Console_Class_Instance_Methods :
-     constant array (1 .. 3) of access constant String :=
+     constant array (1 .. 4) of access constant String :=
        (Console_Info_Method'Access,
         Console_Warn_Method'Access,
-        Console_Error_Method'Access);
+        Console_Error_Method'Access,
+        Console_Global_Run_Failure'Access);
 
    Project_Name_Method               : constant String := "name";
    Project_Path_Method               : constant String := "path";
@@ -458,6 +460,9 @@ package body GNAThub.Python is
 
       elsif Command = Console_Error_Method then
          Error (Message, Prefix => Prefix);
+
+      elsif Command = Console_Global_Run_Failure then
+         Set_Global_Run_Failure (Message, Prefix => Prefix);
 
       else
          raise Python_Error with "Unknown method GNAThub.Console." & Command;
