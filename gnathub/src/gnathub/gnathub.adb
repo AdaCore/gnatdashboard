@@ -98,9 +98,6 @@ package body GNAThub is
    procedure Error (Message : String; Prefix : String := Console_Prefix) is
       Output : constant String := Format_Message ("error: " & Message, Prefix);
    begin
-      Global_Error :=
-        Message = "GNAThub error: one or more plugins failed to run!";
-
       Put_Line (Standard_Error, Output);
       Trace (Me, Output);
    end Error;
@@ -189,5 +186,24 @@ package body GNAThub is
 
       Trace (Me, Message);
    end Progress;
+
+   ----------------------------
+   -- Set_Global_Run_Failure --
+   ----------------------------
+
+   procedure Set_Global_Run_Failure
+     (Message : String; Prefix : String := Console_Prefix)
+   is
+      Output : constant String := Format_Message ("error: " & Message, Prefix);
+   begin
+      Trace (Me, "GNAThub one or more plugins have failed!");
+
+      --  Set the global run error flag
+      Global_Error := True;
+
+      Put_Line (Standard_Error, Output);
+      Trace (Me, Output);
+
+   end Set_Global_Run_Failure;
 
 end GNAThub;

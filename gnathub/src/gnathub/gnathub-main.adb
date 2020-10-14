@@ -160,13 +160,14 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
       --  specified on the command line.
       GNAThub.Python.Execute_File (Runner_Script, Had_Errors);
 
-      --  This is a main error got when one or more plugins are failing during
+      --  This is a main error when one or more plugins are failing during
       --  GNAThub run ==> raising Global_Run_Error to have non-zero
       --  error code returned at the end of the plugin-runner execution
       if not Had_Errors and then Global_Error then
          raise Global_Run_Error;
       end if;
 
+      --  This is the case when unexpected errors occured during runner script
       if Had_Errors then
          declare
             PBT : constant String := GNATCOLL.Scripts.Python.Python_Backtrace;

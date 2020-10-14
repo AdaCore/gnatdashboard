@@ -309,6 +309,17 @@ class Console(object):
         """
         pass    # Implemented in Ada
 
+    @staticmethod
+    def set_failure(message, prefix=None):
+        """Used to set a global run failure.
+
+        This is done when one or more plugins have failed during GNAThub run.
+
+        :param str message: the message to display
+        :param str prefix: optional prefix to the message
+        """
+        pass    # Implemented in Ada
+
 
 class Project(object):
 
