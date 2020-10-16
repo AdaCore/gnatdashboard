@@ -87,6 +87,8 @@ dictConfig({
 
 app = Flask(__name__, static_url_path='', static_folder=STATIC_FOLDER)
 
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
 
 @app.route('/')
 def root():
