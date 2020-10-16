@@ -77,6 +77,8 @@ package body GNAThub.Python is
    Plugins_Function           : aliased constant String := "plugins";
    Subdirs_Function           : aliased constant String := "subdirs";
    Incremental_Function       : aliased constant String := "incremental";
+   Hide_Exempted_Function     : aliased constant String :=
+     "gnatcheck_hide_exempted";
 
    --  Keeping this for later implemntation of -U main switch
    --     U_Main_Function            : aliased constant String := "u_main";
@@ -100,7 +102,7 @@ package body GNAThub.Python is
      "dry_run_without_project";
 
    No_Args_Root_Module_Functions :
-     constant array (1 .. 21) of access constant String :=
+     constant array (1 .. 22) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         HTML_Data_Function'Access,
@@ -111,6 +113,7 @@ package body GNAThub.Python is
         Plugins_Function'Access,
         Subdirs_Function'Access,
         Incremental_Function'Access,
+        Hide_Exempted_Function'Access,
         -- U_Main_Function'Access,
         U_Process_All_Function'Access,
         Database_Function'Access,
@@ -760,6 +763,9 @@ package body GNAThub.Python is
 
       elsif Command = Incremental_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Incremental);
+
+      elsif Command = Hide_Exempted_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Hide_Exempted);
 
       --  Keeping this for later implementation of -U main switch
       --        elsif Command = U_Main_Function then

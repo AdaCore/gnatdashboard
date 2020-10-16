@@ -235,6 +235,16 @@ def dry_run_without_project():
     return NotImplemented   # Implemented in Ada
 
 
+def gnatcheck_hide_exempted():
+    """Whether the gnatcheck-hide-exempted switch was passed to the GNAThub
+    driver or not.
+
+    :return: whether the gnatcheck-hide-exempted switch is passed or not
+    :rtype: bool
+    """
+    return NotImplemented   # Implemented in Ada
+
+
 class Logger(object):
 
     """A logger object. Fully implemented in Ada."""

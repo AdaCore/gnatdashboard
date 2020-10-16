@@ -58,6 +58,7 @@ package body GNAThub.Configuration is
    Quiet_Arg            : aliased Boolean;
    Verbose_Arg          : aliased Boolean;
    Incremental_Arg      : aliased Boolean;
+   Hide_Exempted_Arg    : aliased Boolean;
    Runners_Only_Arg     : aliased Boolean;
    Reporters_Only_Arg   : aliased Boolean;
    Display_Progress_Arg : aliased Boolean;
@@ -237,6 +238,11 @@ package body GNAThub.Configuration is
          Long_Switch => "--incremental",
          Help        => "Do not remove database if exists");
 
+      Define_Switch
+        (Config      => Config,
+         Output      => Hide_Exempted_Arg'Access,
+         Long_Switch => "--gnatcheck-hide-exempted",
+         Help        => "Hide GNATcheck exempted violations");
       --  Usage
 
       Set_Usage
@@ -735,6 +741,15 @@ package body GNAThub.Configuration is
    begin
       return Interpreter_Mode or else Incremental_Arg;
    end Incremental;
+
+   --------------------
+   --  Hide_Exempted --
+   --------------------
+
+   function Hide_Exempted return Boolean is
+   begin
+      return Hide_Exempted_Arg;
+   end Hide_Exempted;
 
    ----------------------
    -- Display_Progress --

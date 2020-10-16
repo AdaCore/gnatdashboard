@@ -251,6 +251,18 @@ what plugins it would have executed rather than making and executing them. Check
 mode is a simulation that can be useful for testing the validity of a command
 line and project configuration without running the actual tools.
 
+:command:`--gnatcheck-hide-exempted`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Takes no argument. This is a GNATcheck specific switch, to be used when GNATcheck
+plugin is executed, otherwise will have no effect.
+This switch allows you to specify whether GNATcheck exempted wiolations should be
+taken into account and added into |GNAThub| database.
+Instead of the default behavior (where all exempted violations are imported), when
+you specify :command:`--gnatcheck-hide-exempted`, |GNAThub| will ignore all
+GNATcheck violation reported in the "Exempted Coding Standard Violations" section of
+GNATcheck output file.
+
 :command:`--target`
 ^^^^^^^^^^^^^^^^^^^^
 

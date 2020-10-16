@@ -73,6 +73,9 @@ package GNAThub.Configuration is
    function Incremental return Boolean;
    --  Whether the run should be incremental (not removing the DB) or not
 
+   function Hide_Exempted return Boolean;
+   --  Whether the run should hide or not GNATcheck exempted violations
+
    function Display_Progress return Boolean;
    --  Whether to display a progress bar for IDEs
 

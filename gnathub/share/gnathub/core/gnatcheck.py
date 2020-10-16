@@ -179,7 +179,14 @@ class GNATcheck(Plugin, Runner, Reporter):
             with open(self.output, 'r') as output:
                 lines = output.readlines()
                 total = len(lines)
+
+                # Local variables used for exemptions handling
                 exempted_violation = False
+                hide_exempted = GNAThub.gnatcheck_hide_exempted()
+
+                # Add the tag "exempted" for GNATcheck exempted violations
+                exempt_tag = GNAThub.Property('gnatcheck:exempted', 'Exempted')
+                prev_line = ""
 
                 for index, line in enumerate(lines, start=1):
                     self.log.debug('parse line: %s', line)
@@ -191,17 +198,54 @@ class GNATcheck(Plugin, Runner, Reporter):
                         exempted_violation = stitle in ('Exempted', 'EXEMPTED')
 
                     # filter messages if occurs in exempted violation section
-                    if not exempted_violation:
-                        match = self._MESSAGE.match(line)
-                        if match:
-                            self.log.debug('matched: %s', str(match.groups()))
-                            self.__parse_line(match)
+                    import_violation = not exempted_violation or (
+                       exempted_violation and not hide_exempted)
+                    handle_exempted = exempted_violation and not hide_exempted
+
+                    if import_violation:
+                        if handle_exempted:
+                            match1 = self._MESSAGE.match(line)
+                            if match1:
+                                self.log.debug('matched: %s',
+                                               str(match1.groups()))
+                                # Store this line in order to gather next line
+                                # justification if any
+                                if prev_line == "":
+                                    prev_line = line
+                                else:
+                                    # Second line is a new violation report
+                                    match_prev = self._MESSAGE.match(prev_line)
+                                    if match_prev:
+                                        self.__parse_line_exempted(
+                                           match_prev, [exempt_tag])
+                                        prev_line = line
+
+                                # self.__parse_line_exempted(match1,
+                                #                           [exempt_tag])
+                            else:
+                                if prev_line != "":
+                                    if len(line.strip()) != 0:
+                                        # Handle justification for prev_line
+                                        pmatch = self._MESSAGE.match(prev_line)
+                                        if pmatch:
+                                            self.__parse_line_exempted(
+                                              pmatch, [exempt_tag],
+                                              line.strip())
+                                            # Reset previous line value
+                                            prev_line = ""
+
                         else:
-                            match2 = self._MESSAGE_INST.match(line)
-                            if match2:
-                                self.log.debug('matched 2: %s',
-                                               str(match2.groups()))
-                                self.__parse_line_inst(match2)
+                            match = self._MESSAGE.match(line)
+                            if match:
+                                self.log.debug('matched: %s',
+                                               str(match.groups()))
+                                self.__parse_line(match)
+                            else:
+                                match2 = self._MESSAGE_INST.match(line)
+                                if match2:
+                                    self.log.debug('matched 2: %s',
+                                                   str(match2.groups()))
+                                    self.__parse_line_inst(match2)
 
                     Console.progress(index, total, new_line=(index == total))
 
@@ -245,6 +289,44 @@ class GNATcheck(Plugin, Runner, Reporter):
 
         self.__add_message(src, line, column, rule_id, message)
 
+    def __parse_line_exempted(self, regex, tag, justify=""):
+        """Parse a GNATcheck exempted violation message line.
+
+        Adds the message to the current database session.
+
+        Retrieves following information:
+
+            * source basename
+            * line in source
+            * rule identification
+            * message description
+
+        :param re.RegexObject regex: the result of the _MESSAGE regex
+        :param tag: the message properties
+        :type tag: collections.Iterable[GNAThub.Property] or None
+        :param justify: the exemption associated justification string or None
+        """
+
+        # The following Regex results are explained using this example.
+        # 'input.adb:3:19: use clause for package [USE_PACKAGE_Clauses]'
+
+        # Extract each component from the message:
+        #       ('input.adb', '3', '19', 'use clause for package',
+        #        'USE_PACKAGE_Clauses')
+        base = regex.group('file')
+        src = GNAThub.Project.source_file(base)
+        line = regex.group('line')
+        column = regex.group('column')
+        message = regex.group('message')
+        rule_id = regex.group('rule_id').lower()
+
+        # Add justification as part of the associated message
+        new_message = message
+        if justify != "":
+            new_message = message + ' ' + justify
+
+        self.__add_message(src, line, column, rule_id, new_message, tag)
+
     def __parse_line_inst(self, regex):
         """Parse a GNATcheck instance message line.
 
@@ -281,7 +363,7 @@ class GNATcheck(Plugin, Runner, Reporter):
         new_msg = instance + message
         self.__add_message(src, line, column, rule_id, new_msg)
 
-    def __add_message(self, src, line, column, rule_id, msg):
+    def __add_message(self, src, line, column, rule_id, msg, tag=None):
         """Add GNATcheck message to current session database.
 
         :param str src: Message source file.
@@ -305,7 +387,11 @@ class GNATcheck(Plugin, Runner, Reporter):
         if (rule, msg, ranking) in self.messages:
             message = self.messages[(rule, msg, ranking)]
         else:
-            message = GNAThub.Message(rule, msg, ranking)
+            if tag:
+                message = GNAThub.Message(rule, msg, ranking, 0, tag)
+            else:
+                message = GNAThub.Message(rule, msg, ranking)
+
             self.messages[(rule, msg, ranking)] = message
 
         # Add the message to the given resource
