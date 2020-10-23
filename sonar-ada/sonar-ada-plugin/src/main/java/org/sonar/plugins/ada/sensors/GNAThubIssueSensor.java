@@ -16,6 +16,8 @@
 
 package org.sonar.plugins.ada.sensors;
 
+import com.adacore.gnatdashboard.gnathub.api.orm.ExemptedViolations;
+import com.adacore.gnatdashboard.gnathub.api.orm.FileExemptedViolations;
 import com.adacore.gnatdashboard.gnathub.api.orm.FileIssues;
 import com.adacore.gnatdashboard.gnathub.api.orm.Issue;
 import com.google.common.collect.HashBasedTable;
@@ -45,9 +47,13 @@ import java.util.Optional;
 @Slf4j
 public class GNAThubIssueSensor extends MainFilesSensor {
   private static final String CODEPEER = "codepeer";
+  private static final String GNATCHECK = "gnatcheck";
   private static final String SPARK2014 = "spark2014";
+
   private static final String SUPPRESSED = "suppressed";
   private final List<Issue> suppressedIssues = new ArrayList<>();
+  private final List<Issue> exemptedIssues = new ArrayList<>();
+
   private final Table<String, String, Integer> missingRules = HashBasedTable.create();
 
   @Override
@@ -77,6 +83,15 @@ public class GNAThubIssueSensor extends MainFilesSensor {
 
   @Override
   public void tearDown() {
+    if (exemptedIssues.size() != 0) {
+      // Log the number of GNATcheck exempted violations (GNATcheck "exempted" property).
+      log.warn(" {} GNATcheck exempted violations have been found " +
+               " (see GNATcheck's report \"Exempted Coding Standard Violations\" section).",
+               exemptedIssues.size());
+      log.warn(" Resolutions needs to be set manually for GNATcheck exemptions!");
+      exemptedIssues.clear();
+    }
+
     if (suppressedIssues.size() != 0) {
       // Log the number of silenced issues (CodePeer "suppressed").
       log.info("Silenced {} issues (see CodePeer's \"suppressed\")", suppressedIssues.size());
@@ -94,12 +109,14 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   public void forInputFile(final SensorContext context, final GNAThub gnathub, final InputFile file)
   {
     final FileIssues issues = gnathub.getIssues().forFile(file.uri().getPath());
+    final FileExemptedViolations exempted = gnathub.getExemptedViolations().forFile(file.uri().getPath());
 
     // Defensive programming
     if (issues == null) {
       log.warn("Skipping: {}", file.uri().getPath());
       return;
     }
+
     for (final Issue issue : issues.getIssues()) {
       if (CODEPEER.equalsIgnoreCase(issue.getTool()) &&
           SUPPRESSED.equalsIgnoreCase(issue.getCategory())) {
@@ -124,6 +141,18 @@ public class GNAThubIssueSensor extends MainFilesSensor {
           .on(file)
           .at(file.selectLine(issue.getLine()));
       newIssue.at(location).save();
+    }
+
+    // Store and log GNATcheck exempted violations if any
+    if (exempted != null) {
+      // Dump GNATcheck exempted violations list
+      if (exempted.getExemptedViolations().size() != 0) {
+        log.warn(" GNATcheck exempted violation found for {}:", file.uri().getPath());
+        for (final Issue violation : exempted.getExemptedViolations()) {
+          exemptedIssues.add(violation);
+          log.warn("   At line " + violation.getLine() + ": " + violation.getMessage());
+        }
+      }
     }
   }
 }

@@ -18,6 +18,7 @@ package org.sonar.plugins.ada;
 
 import com.adacore.gnatdashboard.gnathub.api.Coverage;
 import com.adacore.gnatdashboard.gnathub.api.Issues;
+import com.adacore.gnatdashboard.gnathub.api.ExemptedViolations;
 import com.adacore.gnatdashboard.gnathub.api.Measures;
 import com.adacore.gnatdashboard.gnathub.api.SourceMapper;
 import com.adacore.gnatdashboard.gnathub.api.orm.Connector;
@@ -37,6 +38,7 @@ public class GNAThub {
   @Getter private final Coverage coverage;
   @Getter private final Measures measures;
   @Getter private final Issues issues;
+  @Getter private final ExemptedViolations exemptedViolations;
 
   public static boolean isGNAThubDBDefined(final Configuration config) {
     final String dbUri = config.get(AdaPlugin.GNATHUB_DB_KEY).orElse(null);
@@ -72,5 +74,6 @@ public class GNAThub {
     this.coverage = new Coverage(connector, srcMapper);
     this.measures = new Measures(connector, srcMapper);
     this.issues = new Issues(connector, srcMapper);
+    this.exemptedViolations = new ExemptedViolations(connector, srcMapper);
   }
 }

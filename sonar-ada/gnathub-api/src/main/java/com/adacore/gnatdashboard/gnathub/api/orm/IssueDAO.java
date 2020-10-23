@@ -29,6 +29,7 @@ public class IssueDAO {
 
   private static final String CODEPEER_TOOL = "codepeer";
   private static final String CODEPEER_ANNOTATION_CATEGORY = "annotation";
+  private static final String GNATCHECK_TOOL = "gnatcheck";
 
    // Returns the category string related to the current ranking value
    //
@@ -75,5 +76,45 @@ public class IssueDAO {
             resultSet.getInt("line_no"), resultSet.getString("key"),
             resultSet.getString("tool_name"), resultSet.getString("message"),
             getCategory(resultSet.getInt("category")))));
+  }
+
+    // Specific query to get GNATcheck exempted violations for file
+
+    private static final String ExemptedSQL = String.join(" ",
+            "SELECT",
+            "  rm.line as line_no, rule.identifier as key, msg.data as message, msg.ranking as category,",
+            "  tool.name as tool_name, prop.name as property",
+            "FROM",
+            "  resources_messages rm, rules rule, tools tool, messages msg, resources file, properties prop",
+            "JOIN",
+            "  messages_properties mp ON msg.id = mp.message_id",
+            "WHERE",
+            "  msg.rule_id = rule.id",
+            "  AND rm.message_id = msg.id",
+            "  AND rule.tool_id = tool.id",
+            "  AND rm.resource_id = file.id",
+            "  AND rule.kind = ?",
+            "  AND file.name = ?",
+            "  AND tool.name = ?",
+            "  AND prop.id = mp.property_id");
+
+  /**
+   * Fetch GNATcheck exempted violations if any
+   *
+   * @param path The path to the file.
+   * @return The GNATcheck exempted violations for that file.
+   */
+  @SneakyThrows
+  public final FileExemptedViolations getExemptedViolationsForFile(final String path) {
+      @Cleanup final PreparedStatement statement = connector.createStatement(ExemptedSQL);
+      statement.setInt(1, RuleKind.ISSUE.img);
+      statement.setString(2, path);
+      statement.setString(3, GNATCHECK_TOOL);
+
+      return new FileExemptedViolations(path, connector.query(statement,
+              resultSet -> new Issue(
+                      resultSet.getInt("line_no"), resultSet.getString("key"),
+                      resultSet.getString("tool_name"), resultSet.getString("message"),
+                      getCategory(resultSet.getInt("category")))));
   }
 }
