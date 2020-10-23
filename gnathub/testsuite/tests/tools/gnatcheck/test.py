@@ -12,7 +12,8 @@ F_ADB = 'f.adb 10:7'
 
 P_ADB = 'p.adb 3:4'
 
-P_ADS = 'p.ads 6:4'
+P_ADS_1 = 'p.ads 6:4'
+P_ADS_2 = 'p.ads 9:4'
 
 PG_ADB_1 = 'p_g.adb 40:10'
 PG_ADB_2 = 'p_g.adb 49:10'
@@ -40,7 +41,7 @@ SECTIONS = sorted([
     'p_g_g.ads',
     F_ADB,
     P_ADB,
-    P_ADS,
+    P_ADS_1, P_ADS_2,
     PG_ADB_1, PG_ADB_2, PG_ADB_3, PG_ADB_4, PG_ADB_5,
     PG_ADS_1, PG_ADS_2, PG_ADS_3, PG_ADS_4,
     PGG_ADS_1, PGG_ADS_2,
@@ -74,7 +75,7 @@ class TestGNATcheckSupport(TestCase):
             parser.has_option(P_ADB, 'unconstrained_array_returns'),
             'missing "unconstrained_array_returns" entry')
         self.assertTrue(
-            parser.has_option(P_ADS, 'unconstrained_array_returns'),
+            parser.has_option(P_ADS_1, 'unconstrained_array_returns'),
             'missing "unconstrained_array_returns" entry')
 
         self.assertTrue(
