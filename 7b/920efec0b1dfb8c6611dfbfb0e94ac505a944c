@@ -1,0 +1,7 @@
+Code-Review+2: Boris Yakobowski <yakobowski@adacore.com>
+Code-Review-1: CI Builder <ci-builder@adacore.com>
+Submitted-by: Nicolas Setton <setton@adacore.com>
+Submitted-at: Thu, 05 Nov 2020 13:37:54 +0100
+Reviewed-on: https://git.adacore.com/82148
+Project: gnatdashboard
+Branch: refs/heads/master
