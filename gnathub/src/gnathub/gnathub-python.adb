@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2020, AdaCore                     --
+--                     Copyright (C) 2013-2021, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -20,7 +20,6 @@ with GNAT.OS_Lib;                   use GNAT.OS_Lib;
 with GNAT.Source_Info;
 
 with GNATCOLL.Projects;             use GNATCOLL.Projects;
-with GNATCOLL.SQL;                  use GNATCOLL.SQL;
 with GNATCOLL.Scripts;              use GNATCOLL.Scripts;
 with GNATCOLL.Scripts.Python;       use GNATCOLL.Scripts.Python;
 with GNATCOLL.Traces;               use GNATCOLL.Traces;
