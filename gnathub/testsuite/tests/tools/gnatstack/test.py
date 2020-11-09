@@ -8,8 +8,8 @@ from unittest import TestCase
 from support.mock import GNAThub, Project, Script
 
 
-TEXT_IO = ["a-textio.ads", "a-textio.ads 508:14"]
-S_IMGINT = ["s-imgint.ads", "s-imgint.ads 39:14"]
+TEXT_IO = ["a-textio.ads", "a-textio.ads 509:14"]
+S_IMGINT = ["s-imagei.ads", "s-imagei.ads 43:14"]
 S_SECSTA = ["s-secsta.ads", "s-secsta.ads 328:9"]
 F_ADB = ["f.adb", "f.adb 9:4", "f.adb 21:1"]
 F_ADS = ["f.ads"]
@@ -58,7 +58,6 @@ class TestGNATstackSupport(TestCase):
         self.assertEqual(parser.get(TEXT_IO[1], EXTERNAL_CALL[0]),
                          EXTERNAL_CALL[1],
                          'Wrong message')
-
         self.assertTrue(parser.has_option(B_SIMPLE_ADB[1], ENTRY_POINT[0]),
                         "Entry point not found")
         self.assertTrue(parser.get(B_SIMPLE_ADB[1],
