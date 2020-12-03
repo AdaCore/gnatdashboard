@@ -16,7 +16,7 @@ F_ADS = ["f.ads"]
 SIMPLE_ADB = ["simple.adb", "simple.adb 19:4", "simple.adb 28:4",
               "simple.adb 10:4", "simple.adb 51:5"]
 SIMPLE_4_1 = ["simple.adb 4:1"]
-B_SIMPLE_ADB = ["b__simple.adb", "b__simple.adb 210:4"]
+B_SIMPLE_ADB = ["b__simple.adb", "b__simple.adb 211:4"]
 SECTIONS = TEXT_IO + S_IMGINT + S_SECSTA + F_ADB + F_ADS + SIMPLE_ADB + SIMPLE_4_1 + B_SIMPLE_ADB
 
 EXTERNAL_CALL = [
