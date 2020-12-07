@@ -42,16 +42,16 @@ project GNAThub is
    package Compiler is
       for Driver ("Python") use "";
       for Driver ("SQL") use "";
-      for Switches ("Ada") use ("-gnat2012", "-g", "-gnatwa", "-gnatyy");
+      for Switches ("Ada") use ("-gnat2012", "-g", "-gnatyy");
 
       case Build_Mode is
          when "Production" =>
             for Switches ("Ada") use
-              Compiler'Switches ("Ada") & ("-gnatwe", "-gnatn", "-O2");
+              Compiler'Switches ("Ada") & ("-gnatwa", "-gnatn", "-O2");
 
          when "Debug" =>
             for Switches ("Ada") use
-              Compiler'Switches ("Ada") & ("-gnata", "-O0");
+              Compiler'Switches ("Ada") & ("-gnata", "-gnatwae", "-O0");
 
          when "Coverage" =>
             for Switches ("Ada") use

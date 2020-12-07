@@ -94,7 +94,11 @@ class Project(object):
     def abstract_with_multi_obj_dir(dst=os.getcwd()):
         return Project('abstract_multi_obj', dst)
 
+    @staticmethod
+    def simple_with_hide_exempted(dst=os.getcwd()):
+        return Project('simple_with_hide_exempted', dst)
 
+    
 class MockedExecutable(object):
 
     """Mocked executable."""
@@ -219,6 +223,9 @@ class GNAThub(object):
 
         if kwargs.get('incremental', False):
             argv.append('--incremental')
+
+        if kwargs.get('gnatcheck_hide_exempted', False):
+            argv.append('--gnatcheck-hide-exempted')
 
         if kwargs.get('dry_run', False):
             argv.append('--dry-run')
