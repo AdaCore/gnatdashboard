@@ -98,9 +98,8 @@ class GNATmetric(Plugin, Runner, Reporter):
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
 
-        return GNAThub.EXEC_SUCCESS if GNAThub.Run(
-            self.name, self.__cmd_line()
-        ).status in GNATmetric.VALID_EXIT_CODES else GNAThub.EXEC_FAILURE
+        status = GNAThub.Run(self.name, self.__cmd_line()).status
+        return GNAThub.EXEC_SUCCESS if status == 0 else GNAThub.EXEC_FAILURE
 
     def parse_metrics(self, node, entity=False):
         """Parse the xml *node* returns a list of metrics"""
@@ -196,6 +195,10 @@ class GNATmetric(Plugin, Runner, Reporter):
         if not GNAThub.incremental():
             self.info('clear existing results if any')
             GNAThub.Tool.clear_references(self.name)
+
+        if not os.path.isfile(self.output):
+            self.error('no XML report found')
+            return GNAThub.EXEC_FAILURE
 
         self.info('analyse report')
 
