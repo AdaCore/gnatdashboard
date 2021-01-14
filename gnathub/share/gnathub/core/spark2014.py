@@ -1,5 +1,5 @@
 # GNAThub (GNATdashboard)
-# Copyright (C) 2017-2020, AdaCore
+# Copyright (C) 2017-2021, AdaCore
 #
 # This is free software;  you can redistribute it  and/or modify it  under
 # terms of the  GNU General Public License as published  by the Free Soft-
@@ -51,7 +51,7 @@ class SPARK2014(Plugin, Runner, Reporter):
     _MSG_PATTERN = \
         r'(?P<category>.+):\s(?P<message>.+)\[#(?P<msg_id>[0-9]+)\]$'
 
-    # Regular expression to match GNATcheck output and extract all relevant
+    # Regular expression to match SPARK output and extract all relevant
     # information stored in it.
     _MESSAGE = re.compile(r'%s:\s%s' % (SLOC_PATTERN, _MSG_PATTERN))
 
@@ -168,7 +168,7 @@ class SPARK2014(Plugin, Runner, Reporter):
 
             self.log.debug('parse file: %s', entry)
             try:
-                with open(os.path.join(self.output_dir, entry), 'rb') as spark:
+                with open(os.path.join(self.output_dir, entry), 'r') as spark:
                     results = json.load(spark)
                     for record in chain(results['flow'], results['proof']):
                         if 'msg_id' not in record or 'file' not in record:
@@ -181,11 +181,11 @@ class SPARK2014(Plugin, Runner, Reporter):
 
             except IOError as why:
                 self.log.exception('failed to parse GNATprove .spark file')
-                self.error('%s (%s:%d)' % (
-                    why, os.path.basename(self.output)))
+                self.error('%s (%s:%s)' % (
+                    why, os.path.basename(self.output), entry))
 
         try:
-            with open(self.output, 'rb') as fdin:
+            with open(self.output, 'r') as fdin:
                 # Compute the total number of lines for progress report
                 lines = fdin.readlines()
                 index, total = 0, len(lines)
