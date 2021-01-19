@@ -1513,6 +1513,146 @@
         <repositoryKey>gnatcoverage</repositoryKey>
       </rule>
       <rule>
+        <key>aliasing</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>call_in_type_invariant</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>call_to_current_task</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>concurrent_access</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>dead_code</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>default_initialization_mismatch</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>depends_missing</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>depends_missing_clause</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>depends_null</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>depends_wrong</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>export_depends_on_proof_in</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>ghost_wrong</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>global_missing</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>global_wrong</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>hidden_unexposed_state</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>illegal_update</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>impossible_to_initialize_state</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>ineffective</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>initializes_wrong</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>inout_only_read</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>missing_return</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_volatile_function_with_volatile_effects</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>not_constant_after_elaboration</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>pragma_elaborate_all_needed</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>pragma_elaborate_body_needed</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>potentially_blocking_in_protected</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>reference_to_non_cae_variable</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>refined_state_wrong</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>side_effects</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>stable</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>subprogram_termination</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>uninitialized</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>unused</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>unused_initial_value</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>volatile_function_without_volatile_effects</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
         <key>vc_division_check</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
@@ -1541,6 +1681,22 @@
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
+        <key>vc_null_pointer_dereference</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_null_exclusion</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_memory_leak</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_memory_leak_at_end_of_scope</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
         <key>vc_length_check</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
@@ -1557,7 +1713,19 @@
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
+        <key>vc_initialization_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
         <key>vc_interrupt_reserved</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_invariant_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_invariant_check_on_default_value</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
@@ -1605,6 +1773,10 @@
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
+        <key>vc_loop_invariant</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
         <key>vc_loop_invariant_init</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
@@ -1617,11 +1789,35 @@
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
+        <key>vc_subprogram_variant</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
         <key>vc_assert</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
         <key>vc_raise</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_inline_check</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_uc_source</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_uc_target</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_uc_same_size</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_uc_alignment</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
@@ -1642,6 +1838,34 @@
       </rule>
       <rule>
         <key>vc_stronger_classwide_post</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_weaker_pre_access</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_stronger_post_access</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_inconsistent_pre</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_inconsistent_post</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_inconsistent_assume</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_unreachable_branch</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>vc_dead_code</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
    </rules>
