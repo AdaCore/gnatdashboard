@@ -98,6 +98,14 @@ class Project(object):
     def simple_with_hide_exempted(dst=os.getcwd()):
         return Project('simple_with_hide_exempted', dst)
 
+    @staticmethod
+    def flow_analysis(dst=os.getcwd()):
+        return Project('flow_analysis', dst)
+
+    @staticmethod
+    def fa_multi_obj(dst=os.getcwd()):
+        return Project('fa_multi_obj', dst)
+
     
 class MockedExecutable(object):
 
