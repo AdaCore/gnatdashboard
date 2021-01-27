@@ -1,0 +1,5 @@
+project FA is
+
+   for Object_Dir use "obj1";
+
+end FA;

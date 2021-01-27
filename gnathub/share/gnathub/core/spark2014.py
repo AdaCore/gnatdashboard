@@ -155,34 +155,28 @@ class SPARK2014(Plugin, Runner, Reporter):
         self.info('analyse report')
         self.tool = GNAThub.Tool(self.name)
 
-        self.log.debug('parse report: %s', self.output_dir)
+        # Handle multiple object directories for a given project
+        if GNAThub.Project.object_dirs():
+            # If there are multiple object directories defined in the project
+            # tree will pass here and will look for all .spark files that was
+            # generated under the object dirs gnatprove's folder
 
-        if not os.path.isdir(self.output_dir):
-            self.error('no report found')
-            return GNAThub.EXEC_FAILURE
+            for obj_dir in GNAThub.Project.object_dirs():
+                # Fetch all files in project object directories and retrieve
+                # only .spark files from gnatprove folders
 
-        for entry in os.listdir(self.output_dir):
-            filename, ext = os.path.splitext(entry)
-            if not ext == '.spark':
-                continue
+                gnatprove_dir = os.path.join(obj_dir, 'gnatprove')
+                if os.path.isdir(gnatprove_dir):
+                    self.log.debug('parse report: %s', gnatprove_dir)
+                    self.__parse_spark_files(gnatprove_dir)
 
-            self.log.debug('parse file: %s', entry)
-            try:
-                with open(os.path.join(self.output_dir, entry), 'r') as spark:
-                    results = json.load(spark)
-                    for record in chain(results['flow'], results['proof']):
-                        if 'msg_id' not in record or 'file' not in record:
-                            continue
-                        self.log.debug('found record %s', json.dumps(record))
+        else:
+            self.log.debug('parse report: %s', self.output_dir)
+            if not os.path.isdir(self.output_dir):
+                self.error('no report found')
+                return GNAThub.EXEC_FAILURE
 
-                        msg_id = record['msg_id']
-                        filename = record['file']
-                        self.msg_ids[(filename, msg_id)] = record
-
-            except IOError as why:
-                self.log.exception('failed to parse GNATprove .spark file')
-                self.error('%s (%s:%s)' % (
-                    why, os.path.basename(self.output), entry))
+            self.__parse_spark_files(self.output_dir)
 
         try:
             with open(self.output, 'r') as fdin:
@@ -209,6 +203,39 @@ class SPARK2014(Plugin, Runner, Reporter):
         else:
             self.__do_bulk_insert()
             return GNAThub.EXEC_SUCCESS
+
+    def __parse_spark_files(self, files_dir):
+        """ Retrieve only .spark files from files_dir folder and parse them.
+
+        Fill the msg_ids with the related information of "flow" and "proof"
+        record generated for each parsed file, when these records are not empty
+
+        :param files_dir: files folder PATH to be handled
+
+        """
+        for entry in os.listdir(files_dir):
+            filename, ext = os.path.splitext(entry)
+            if not ext == '.spark':
+                continue
+
+            self.log.debug('parse file: %s', entry)
+            try:
+                with open(os.path.join(files_dir, entry), 'r') as spark:
+                    results = json.load(spark)
+                    for record in chain(results['flow'], results['proof']):
+                        if 'msg_id' not in record or 'file' not in record:
+                            continue
+
+                        self.log.debug('found record %s', json.dumps(record))
+
+                        msg_id = record['msg_id']
+                        filename = record['file']
+                        self.msg_ids[(filename, msg_id)] = record
+
+            except IOError as why:
+                self.log.exception('failed to parse GNATprove .spark file')
+                self.error('%s (%s:%s)' % (
+                    why, os.path.basename(self.output), entry))
 
     def __parse_line(self, regex):
         """Parse a GNATprove message line.

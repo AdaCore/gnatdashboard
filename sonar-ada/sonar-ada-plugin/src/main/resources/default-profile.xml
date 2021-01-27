@@ -1513,6 +1513,18 @@
         <repositoryKey>gnatcoverage</repositoryKey>
       </rule>
       <rule>
+        <key>critical_global_missing</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>non_volatile_function_with_volatile_effects</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>side_effects</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
         <key>aliasing</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
@@ -1526,10 +1538,6 @@
       </rule>
       <rule>
         <key>concurrent_access</key>
-        <repositoryKey>spark2014</repositoryKey>
-      </rule>
-      <rule>
-        <key>dead_code</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
@@ -1577,19 +1585,7 @@
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
-        <key>impossible_to_initialize_state</key>
-        <repositoryKey>spark2014</repositoryKey>
-      </rule>
-      <rule>
-        <key>ineffective</key>
-        <repositoryKey>spark2014</repositoryKey>
-      </rule>
-      <rule>
         <key>initializes_wrong</key>
-        <repositoryKey>spark2014</repositoryKey>
-      </rule>
-      <rule>
-        <key>inout_only_read</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
@@ -1597,19 +1593,7 @@
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
-        <key>non_volatile_function_with_volatile_effects</key>
-        <repositoryKey>spark2014</repositoryKey>
-      </rule>
-      <rule>
         <key>not_constant_after_elaboration</key>
-        <repositoryKey>spark2014</repositoryKey>
-      </rule>
-      <rule>
-        <key>pragma_elaborate_all_needed</key>
-        <repositoryKey>spark2014</repositoryKey>
-      </rule>
-      <rule>
-        <key>pragma_elaborate_body_needed</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
@@ -1625,14 +1609,6 @@
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
-        <key>side_effects</key>
-        <repositoryKey>spark2014</repositoryKey>
-      </rule>
-      <rule>
-        <key>stable</key>
-        <repositoryKey>spark2014</repositoryKey>
-      </rule>
-      <rule>
         <key>subprogram_termination</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
@@ -1641,7 +1617,31 @@
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>
-        <key>unused</key>
+        <key>unused_global</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>dead_code</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>impossible_to_initialize_state</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>ineffective</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>inout_only_read</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>stable</key>
+        <repositoryKey>spark2014</repositoryKey>
+      </rule>
+      <rule>
+        <key>unused_variable</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
       <rule>

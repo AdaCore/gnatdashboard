@@ -1,0 +1,7 @@
+with "p1/fa.gpr";
+
+project fa_multi_obj is
+
+  for Object_Dir use "obj";
+
+end fa_multi_obj;

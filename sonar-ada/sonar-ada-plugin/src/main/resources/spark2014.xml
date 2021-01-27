@@ -2,12 +2,44 @@
 <rules>
 
     <rule>
+            <key>critical_global_missing</key>
+            <name>critically incomplete Global or Initializes contract</name>
+            <description>A Global or Initializes contract fails to mention some objects.</description>
+            <type>BUG</type>
+            <tag>spark2014</tag>
+            <tag>flow-analysis-error</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+            <key>non_volatile_function_with_volatile_effects</key>
+            <name>volatile function wrongly declared as non-volatile</name>
+            <description>A volatile function wrongly declared as non-volatile.</description>
+            <type>BUG</type>
+            <tag>spark2014</tag>
+            <tag>flow-analysis-error</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+            <key>side_effects</key>
+            <name>function with side effects</name>
+            <description>A function with side effects.</description>
+            <type>BUG</type>
+            <tag>spark2014</tag>
+            <tag>flow-analysis-error</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
             <key>aliasing</key>
             <name>aliasing between subprogram parameters</name>
             <description>Aliasing between formal parameters or global objects.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>call_in_type_invariant</key>
@@ -16,6 +48,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>call_to_current_task</key>
@@ -24,6 +58,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>concurrent_access</key>
@@ -32,14 +68,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
-    </rule>
-    <rule>
-            <key>dead_code</key>
-            <name>dead code</name>
-            <description>A statement is never executed.</description>
-            <type>BUG</type>
-            <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>default_initialization_mismatch</key>
@@ -48,6 +78,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>depends_missing</key>
@@ -56,6 +88,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>depends_missing_clause</key>
@@ -64,6 +98,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>depends_null</key>
@@ -72,6 +108,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>depends_wrong</key>
@@ -80,6 +118,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>export_depends_on_proof_in</key>
@@ -88,6 +128,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>ghost_wrong</key>
@@ -96,6 +138,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>global_missing</key>
@@ -104,6 +148,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>global_wrong</key>
@@ -112,6 +158,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>hidden_unexposed_state</key>
@@ -120,6 +168,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>illegal_update</key>
@@ -128,22 +178,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
-    </rule>
-    <rule>
-            <key>impossible_to_initialize_state</key>
-            <name>a state abstraction that is impossible to initialize</name>
-            <description>A state abstraction that is impossible to initialize.</description>
-            <type>BUG</type>
-            <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
-    </rule>
-    <rule>
-            <key>ineffective</key>
-            <name>a statement with no effect on subprogram's outputs</name>
-            <description>A statement with no effect on subprogram's outputs.</description>
-            <type>BUG</type>
-            <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>initializes_wrong</key>
@@ -152,14 +188,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
-    </rule>
-    <rule>
-            <key>inout_only_read</key>
-            <name>an IN OUT parameter or an In_Out global that is not written</name>
-            <description>An IN OUT parameter or an In_Out global that is not written.</description>
-            <type>BUG</type>
-            <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>missing_return</key>
@@ -168,14 +198,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
-    </rule>
-    <rule>
-            <key>non_volatile_function_with_volatile_effects</key>
-            <name>volatile function wrongly declared as non-volatile</name>
-            <description>A volatile function wrongly declared as non-volatile.</description>
-            <type>BUG</type>
-            <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>not_constant_after_elaboration</key>
@@ -184,22 +208,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
-    </rule>
-    <rule>
-            <key>pragma_elaborate_all_needed</key>
-            <name>use of an abstract state of a package that was not yet elaborated</name>
-            <description>Use of an abstract state of a package that was not yet elaborated.</description>
-            <type>BUG</type>
-            <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
-    </rule>
-    <rule>
-            <key>pragma_elaborate_body_needed</key>
-            <name>a missing pragma Elaborate_Body</name>
-            <description>A missing pragma Elaborate_Body.</description>
-            <type>BUG</type>
-            <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>potentially_blocking_in_protected</key>
@@ -208,6 +218,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>reference_to_non_cae_variable</key>
@@ -216,6 +228,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>refined_state_wrong</key>
@@ -224,22 +238,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
-    </rule>
-    <rule>
-            <key>side_effects</key>
-            <name>function with side effects</name>
-            <description>A function with side effects.</description>
-            <type>BUG</type>
-            <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
-    </rule>
-    <rule>
-            <key>stable</key>
-            <name>loop with stable statement</name>
-            <description>A loop with stable statement.</description>
-            <type>BUG</type>
-            <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>subprogram_termination</key>
@@ -248,6 +248,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>uninitialized</key>
@@ -256,30 +258,98 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
-            <key>unused</key>
-            <name>object is not used</name>
-            <description>A global or locally declared object is never used.</description>
+            <key>unused_global</key>
+            <name>global object is not used</name>
+            <description>A global object is never used.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>flow-analysis-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+            <key>dead_code</key>
+            <name>dead code</name>
+            <description>A statement is never executed.</description>
+            <type>CODE_SMELL</type>
+            <tag>spark2014</tag>
+            <tag>flow-analysis-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+            <key>impossible_to_initialize_state</key>
+            <name>a state abstraction that is impossible to initialize</name>
+            <description>A state abstraction that is impossible to initialize.</description>
+            <type>CODE_SMELL</type>
+            <tag>spark2014</tag>
+            <tag>flow-analysis-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+            <key>ineffective</key>
+            <name>a statement with no effect on subprogram's outputs</name>
+            <description>A statement with no effect on subprogram's outputs.</description>
+            <type>CODE_SMELL</type>
+            <tag>spark2014</tag>
+            <tag>flow-analysis-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+            <key>inout_only_read</key>
+            <name>an IN OUT parameter or an In_Out global that is not written</name>
+            <description>An IN OUT parameter or an In_Out global that is not written.</description>
+            <type>CODE_SMELL</type>
+            <tag>spark2014</tag>
+            <tag>flow-analysis-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+            <key>stable</key>
+            <name>loop with stable statement</name>
+            <description>A loop with stable statement.</description>
+            <type>CODE_SMELL</type>
+            <tag>spark2014</tag>
+            <tag>flow-analysis-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
+    </rule>
+    <rule>
+            <key>unused_variable</key>
+            <name>object is not used</name>
+            <description>A parameter or locally declared object is never used.</description>
+            <type>CODE_SMELL</type>
+            <tag>spark2014</tag>
+            <tag>flow-analysis-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>unused_initial_value</key>
             <name>initial value of an object is not used</name>
             <description>The initial value of an object is not used.</description>
-            <type>BUG</type>
+            <type>CODE_SMELL</type>
             <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
+            <tag>flow-analysis-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>volatile_function_without_volatile_effects</key>
             <name>non-volatile function wrongly declared as volatile</name>
             <description>A non-volatile function wrongly declared as volatile.</description>
-            <type>BUG</type>
+            <type>CODE_SMELL</type>
             <tag>spark2014</tag>
-            <tag>flow-analysis-check</tag>
+            <tag>flow-analysis-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_division_check</key>
@@ -288,6 +358,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_index_check</key>
@@ -296,6 +368,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_overflow_check</key>
@@ -304,6 +378,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_fp_overflow_check</key>
@@ -312,6 +388,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_range_check</key>
@@ -320,6 +398,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_predicate_check</key>
@@ -328,6 +408,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_predicate_check_on_default_value</key>
@@ -336,6 +418,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_null_pointer_dereference</key>
@@ -344,6 +428,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_null_exclusion</key>
@@ -352,6 +438,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_memory_leak</key>
@@ -360,6 +448,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_memory_leak_at_end_of_scope</key>
@@ -368,6 +458,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_length_check</key>
@@ -376,6 +468,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_discriminant_check</key>
@@ -384,6 +478,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_tag_check</key>
@@ -392,6 +488,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_ceiling_interrupt</key>
@@ -400,6 +498,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_initialization_check</key>
@@ -408,6 +508,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_interrupt_reserved</key>
@@ -416,6 +518,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_invariant_check</key>
@@ -424,6 +528,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_invariant_check_on_default_value</key>
@@ -432,6 +538,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_ceiling_priority_protocol</key>
@@ -440,6 +548,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_task_termination</key>
@@ -448,6 +558,8 @@
             <type>BUG</type>
             <tag>spark2014</tag>
             <tag>run-time-check</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_initial_condition</key>
@@ -455,7 +567,9 @@
             <description>Check that the initial condition of a package is true after elaboration.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_default_initial_condition</key>
@@ -463,7 +577,9 @@
             <description>Check that the default initial condition of a type is true after default initialization of an object of the type.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_precondition</key>
@@ -471,7 +587,9 @@
             <description>Check that the precondition aspect of the given call evaluates to True.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_precondition_main</key>
@@ -479,7 +597,9 @@
             <description>Check that the precondition aspect of the given main procedure evaluates to True after elaboration.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_postcondition</key>
@@ -487,7 +607,9 @@
             <description>Check that the postcondition aspect of the subprogram evaluates to True.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_refined_post</key>
@@ -495,7 +617,9 @@
             <description>Check that the refined postcondition aspect of the subprogram evaluates to True.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_contract_case</key>
@@ -503,7 +627,9 @@
             <description>Check that all cases of the contract case evaluate to true at the end of the subprogram.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_disjoint_contract_cases</key>
@@ -511,7 +637,9 @@
             <description>Check that the cases of the contract cases aspect are all mutually disjoint.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_complete_contract_cases</key>
@@ -519,7 +647,9 @@
             <description>Check that the cases of the contract cases aspect cover the state space that is allowed by the precondition aspect.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_loop_invariant</key>
@@ -527,7 +657,9 @@
             <description>Check that the loop invariant evaluates to True on all iterations of the loop.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_loop_invariant_init</key>
@@ -535,7 +667,9 @@
             <description>Check that the loop invariant evaluates to True on the first iteration of the loop.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_loop_invariant_preserv</key>
@@ -543,7 +677,9 @@
             <description>Check that the loop invariant evaluates to True at each further iteration of the loop.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_loop_variant</key>
@@ -551,7 +687,9 @@
             <description>Check that the given loop variant decreases/increases as specified during each iteration of the loop. This implies termination of the loop.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_subprogram_variant</key>
@@ -559,7 +697,9 @@
             <description>Check that the given subprogram variant decreases/increases as specified during each recursive call. This implies there will be no infinite recursion.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_assert</key>
@@ -567,7 +707,9 @@
             <description>Check that the given assertion evaluates to True.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_raise</key>
@@ -575,7 +717,9 @@
             <description>Check that the raise statement or expression can never be reached.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_inline_check</key>
@@ -583,7 +727,9 @@
             <description>Check that an Annotate pragma with the Inline_For_Proof identifier is correct.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_uc_source</key>
@@ -591,7 +737,9 @@
             <description>Check that a source type in an unchecked conversion can safely be used for such conversions. This means that the memory occupied by objects of this type is fully used by the object.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_uc_target</key>
@@ -599,7 +747,9 @@
             <description>Check that a target type in an unchecked conversion can safely be used for such conversions. This means that the memory occupied by objects of this type is fully used by the object, and no invalid bitpatterns occur.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_uc_same_size</key>
@@ -607,7 +757,9 @@
             <description>Check that the two types in an unchecked conversion instance are of the same size.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_uc_alignment</key>
@@ -615,7 +767,9 @@
             <description>Check that the first object's alignment is an integral multiple of the second object's alignment.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>assertion</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_weaker_pre</key>
@@ -623,7 +777,9 @@
             <description>Check that the precondition aspect of the subprogram is weaker than its class-wide precondition.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>liskov-substitution-principle</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_trivial_weaker_pre</key>
@@ -631,7 +787,9 @@
             <description>Check that the precondition aspect of the subprogram is True if its class-wide precondition is True.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>liskov-substitution-principle</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_stronger_post</key>
@@ -639,7 +797,9 @@
             <description>Check that the postcondition aspect of the subprogram is stronger than its class-wide postcondition.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>liskov-substitution-principle</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_weaker_classwide_pre</key>
@@ -647,7 +807,9 @@
             <description>Check that the class-wide precondition aspect of the subprogram is weaker than its overridden class-wide precondition.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>liskov-substitution-principle</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_stronger_classwide_post</key>
@@ -655,7 +817,9 @@
             <description>Check that the class-wide postcondition aspect of the subprogram is stronger than its overridden class-wide postcondition.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>liskov-substitution-principle</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_weaker_pre_access</key>
@@ -663,7 +827,9 @@
             <description>Check that the precondition aspect of the access-to-subprogram type used as the target of a conversion implies the precondition of the source.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>liskov-substitution-principle</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_stronger_post_access</key>
@@ -671,7 +837,9 @@
             <description>Check that the postcondition aspect of the access-to-subprogram type used as the target of a conversion is implied by the postcondition of the source.</description>
             <type>BUG</type>
             <tag>spark2014</tag>
-            <tag>run-time-check</tag>
+            <tag>liskov-substitution-principle</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>20min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_inconsistent_pre</key>
@@ -679,7 +847,9 @@
             <description>Warn if precondition is found to be always False</description>
             <type>CODE_SMELL</type>
             <tag>spark2014</tag>
-            <tag>warning</tag>
+            <tag>proof-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_inconsistent_post</key>
@@ -687,7 +857,9 @@
             <description>Warn if postcondition is found to be always False</description>
             <type>CODE_SMELL</type>
             <tag>spark2014</tag>
-            <tag>warning</tag>
+            <tag>proof-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_inconsistent_assume</key>
@@ -695,7 +867,9 @@
             <description>Warn if pragma Assume is found to be always False</description>
             <type>CODE_SMELL</type>
             <tag>spark2014</tag>
-            <tag>warning</tag>
+            <tag>proof-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_unreachable_branch</key>
@@ -703,7 +877,9 @@
             <description>Warn if branch is found to be unreachable</description>
             <type>CODE_SMELL</type>
             <tag>spark2014</tag>
-            <tag>warning</tag>
+            <tag>proof-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
     <rule>
             <key>vc_dead_code</key>
@@ -711,6 +887,8 @@
             <description>Warn if code is found to be unreachable</description>
             <type>CODE_SMELL</type>
             <tag>spark2014</tag>
-            <tag>warning</tag>
+            <tag>proof-warning</tag>
+            <remediationFunction>CONSTANT_ISSUE</remediationFunction>
+            <remediationFunctionBaseEffort>10min</remediationFunctionBaseEffort>
     </rule>
 </rules>

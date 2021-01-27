@@ -47,7 +47,7 @@ gnatcheck_rules_definition_with_technical_debt:
 
 #  This script is usable for gnatprove without technical debt infos listed
 spark_rules_definition:
-	gnatprove --list-categories 2>&1 | python $(TOP)/scripts/generate_spark_rules.py > \
+	gnatprove --list-categories 2>&1 | python $(TOP)/scripts/generate_spark_rules_with_debt.py > \
          $(SONAR_ADA_PLUGIN_RESOURCES)/spark2014.xml
 
 $(BUILD_DIR)/$(CODEPEER_DOC):
