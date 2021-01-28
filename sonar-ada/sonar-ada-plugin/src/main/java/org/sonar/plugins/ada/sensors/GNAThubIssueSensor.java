@@ -49,6 +49,7 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   private static final String CODEPEER = "codepeer";
   private static final String GNATCHECK = "gnatcheck";
   private static final String SPARK2014 = "spark2014";
+  private static final String GNATCOVERAGE = "gnatcoverage";
 
   private static final String SUPPRESSED = "suppressed";
   private final List<Issue> suppressedIssues = new ArrayList<>();
@@ -122,6 +123,9 @@ public class GNAThubIssueSensor extends MainFilesSensor {
           SUPPRESSED.equalsIgnoreCase(issue.getCategory())) {
         suppressedIssues.add(issue);
         continue; // Silence CodePeer's SUPPRESSED rules.
+      }
+      if (GNATCOVERAGE.equalsIgnoreCase(issue.getTool())) {
+        continue; // Silence GNATcoverage messages.
       }
       // Locate the rule in the given rule repository.
       final ActiveRule rule =

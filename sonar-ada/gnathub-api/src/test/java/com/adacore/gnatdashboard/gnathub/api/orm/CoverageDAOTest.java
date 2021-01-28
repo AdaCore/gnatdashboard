@@ -20,10 +20,20 @@ import lombok.Cleanup;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Optional;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 public class CoverageDAOTest {
+  private LineHits getLine (int lineno, FileCoverage coverage) {
+    for (LineHits hits : coverage.hits){
+      if (hits.line == lineno) {
+        return hits;
+      }
+    }
+    return null;
+  }
+
   @Test
   public void getCoverageForFile() throws Exception {
     final File db = GNAThubDBMock.getGNAThubTestDB();
@@ -42,5 +52,10 @@ public class CoverageDAOTest {
     assertThat(coverage.hits.get(0).count).isEqualTo(1);
     assertThat(coverage.hits.get(12).line).isEqualTo(48);
     assertThat(coverage.hits.get(12).count).isEqualTo(1);
+
+    Optional.ofNullable(getLine(11, coverage))
+            .ifPresent(hit -> assertThat(hit.count).isEqualTo(1));
+    Optional.ofNullable(getLine(48, coverage))
+            .ifPresent(hit -> assertThat(hit.count).isEqualTo(1));
   }
 }

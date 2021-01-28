@@ -19,10 +19,15 @@ package com.adacore.gnatdashboard.gnathub.api.orm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.List;
 
 @AllArgsConstructor
 public class FileCoverage {
   public final String path;
   public final List<LineHits> hits;
+
+  public String toString() {
+    return Arrays.toString(hits.toArray());
+  }
 }
