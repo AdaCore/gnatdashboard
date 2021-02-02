@@ -22,6 +22,11 @@ class GNAThubTestsuite(Testsuite):
             action='store_true',
             default=False,
             help='show diffs on stdout')
+        parser.add_argument(
+            '--with-sonarqube',
+            action='store_true',
+            default=False,
+            help='SonarQube instance is available')
 
     @staticmethod
     def find(root, pattern):
