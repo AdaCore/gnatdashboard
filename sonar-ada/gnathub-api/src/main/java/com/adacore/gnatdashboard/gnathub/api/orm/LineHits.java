@@ -20,8 +20,36 @@ import lombok.AllArgsConstructor;
 import lombok.ToString;
 
 @ToString
-@AllArgsConstructor
 public class LineHits {
   public final int line;
+
+  // gcov provides the number of test that hit a particular line,
+  // but not GNATcoverage.
   public final int count;
+
+  // We will use Sonar condition coverage to express decision coverage
+  public final int conditions;
+  public final int conditionsCovered;
+
+  // To know if data was computed by gcov or GNATcoverage
+  public String toolname;
+
+  // Constructor for gcov data
+  public LineHits (int line, int count, String toolname){
+    this.line = line;
+    this.count = count;
+    this.conditions = 0;
+    this.conditionsCovered = 0;
+    this.toolname = toolname;
+  }
+
+  // Constructor for GNATcoverage data
+  public LineHits (int line, int count, int conditions, int conditionsCovered, String toolname) {
+    this.line = line;
+    this.count = count;
+    this.conditions = conditions;
+    this.conditionsCovered = conditionsCovered;
+    this.toolname = toolname;
+  }
+
 }
