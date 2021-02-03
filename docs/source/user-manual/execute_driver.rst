@@ -42,7 +42,7 @@ platforms.
       $ gnathub -P project --plugins sonar-config,sonar-scanner --incremental
 
   Make sure to use the same project across all invocations of gnathub with the
-  :commmand:` --incremental` switch.
+  :commmand:`--incremental` switch.
 
   It is important to note that |GNAThub| assumes the following properties on the
   |SQLite| database:
