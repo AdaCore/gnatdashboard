@@ -116,6 +116,9 @@ class SPARK2014(Plugin, Runner, Reporter):
 
         cmd_line.extend(['--report=all', '-j', str(GNAThub.jobs()),
                          '--output-msg-only', '--ide-progress-bar'])
+        if GNAThub.tool_args("spark2014"):
+            cmd_line = cmd_line + GNAThub.tool_args("spark2014")
+
         return cmd_line + GNAThub.Project.scenario_switches()
 
     def run(self):
@@ -127,7 +130,6 @@ class SPARK2014(Plugin, Runner, Reporter):
             * ``GNAThub.EXEC_SUCCESS``: on successful execution
             * ``GNAThub.EXEC_FAILURE``: on any error
         """
-
         return GNAThub.EXEC_SUCCESS if GNAThub.Run(
             self.name, self.__cmd_line()
         ).status == 0 else GNAThub.EXEC_FAILURE
@@ -147,7 +149,7 @@ class SPARK2014(Plugin, Runner, Reporter):
 
         self.info('extract results with msg_reader')
         proc = GNAThub.Run(
-            self.output_dir, self.__msg_reader_cmd_line(), out=self.output)
+           self.output_dir, self.__msg_reader_cmd_line(), out=self.output)
 
         if proc.status != 0:
             return GNAThub.EXEC_FAILURE
@@ -222,15 +224,22 @@ class SPARK2014(Plugin, Runner, Reporter):
             try:
                 with open(os.path.join(files_dir, entry), 'r') as spark:
                     results = json.load(spark)
-                    for record in chain(results['flow'], results['proof']):
-                        if 'msg_id' not in record or 'file' not in record:
-                            continue
 
-                        self.log.debug('found record %s', json.dumps(record))
+                    def analyse_results(mode):
+                        for record in chain(results[mode]):
+                            if 'msg_id' not in record or 'file' not in record:
+                                continue
+                            self.log.debug('found record %s',
+                                           json.dumps(record))
+                            msg_id = record['msg_id']
+                            filename = record['file']
+                            self.msg_ids[(filename, msg_id)] = record
 
-                        msg_id = record['msg_id']
-                        filename = record['file']
-                        self.msg_ids[(filename, msg_id)] = record
+                    if results.get('flow'):
+                        analyse_results('flow')
+
+                    if results.get('proof'):
+                        analyse_results('proof')
 
             except IOError as why:
                 self.log.exception('failed to parse GNATprove .spark file')
