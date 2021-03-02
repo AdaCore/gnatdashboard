@@ -79,6 +79,10 @@ class Project(object):
         return Project('simple_gnatcheck', dst)
 
     @staticmethod
+    def simple_sonar(dst=os.getcwd()):
+        return Project('simple_sonar', dst)
+
+    @staticmethod
     def simple_gnatstack(dst=os.getcwd()):
         return Project('simple_gnatstack', dst)
 

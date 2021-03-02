@@ -23,7 +23,7 @@ class GNAThubTestsuite(Testsuite):
             default=False,
             help='show diffs on stdout')
         parser.add_argument(
-            '--with-sonarqube',
+            '--with_sonarqube',
             action='store_true',
             default=False,
             help='SonarQube instance is available')

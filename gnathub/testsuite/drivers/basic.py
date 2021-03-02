@@ -69,8 +69,9 @@ class BasicTestDriver(GNAThubTestDriver):
         process = Run(
             cmd_line,
             cwd=wd,
-            timeout=120,
-            ignore_environ=False)
+            timeout=500 if self.env.options.with_sonarqube else 120,
+            ignore_environ=False,
+            env={"WITH_SONAR": "here" if self.env.options.with_sonarqube else ""})
         output = process.out
 
         if output:

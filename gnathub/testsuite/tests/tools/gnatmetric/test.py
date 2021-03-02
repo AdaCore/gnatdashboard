@@ -63,7 +63,8 @@ EXPECTED_EMETRICS = {
 class TestGNATmetricSupport(TestCase):
     def setUp(self):
         self.longMessage = True
-        self.gnathub = GNAThub(Project.simple(), plugins=['gnatmetric'])
+        plugins = ['gnatmetric']
+        self.gnathub = GNAThub(Project.simple(), plugins=plugins)
 
     def testDatabaseContent(self):
         script_output_file = os.path.abspath('script.out')
