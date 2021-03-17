@@ -58,10 +58,10 @@ class GNATcoverage(Plugin, Reporter):
         file_path = os.path.join(self.GNATCOVERAGE_OUTPUT,
                                  filename) + self.XML_EXT
 
-        def add_message(rule, message, ranking, line_no, column_no):
+        def add_message(rule, message, ranking, line_no, col_begin, col_end):
             bulk_messages.append([
                 GNAThub.Message(rule, message, ranking=ranking),
-                line_no, column_no, column_no,
+                line_no, col_begin, col_end,
             ])
 
         file_xml = minidom.parse(file_path)
@@ -78,11 +78,19 @@ class GNATcoverage(Plugin, Reporter):
                  }[cov_char]
             line_info = line.getElementsByTagName('line')
             line_no = int(line_info[0].attributes['num'].value)
+
+            col_begin = 1
+            col_end = 1
             if line_info.length > 1:
-                column_no = int(line_info[1].
-                                attributes['column_begin'].value)
+                if line_info[1].hasAttribute('column_begin'):
+                    col_begin = int(
+                        line_info[1].attributes['column_begin'].value)
+
+                if line_info[1].hasAttribute('column_end'):
+                    col_end = int(line_info[1].attributes['column_end'].value)
+
             add_message(cov_rule, cov_status,
-                        GNAThub.RANKING_LOW, line_no, 0)
+                        GNAThub.RANKING_LOW, line_no, 0, 0)
 
             message_info = line.getElementsByTagName('message')
             if message_info.length > 0:
@@ -101,7 +109,7 @@ class GNATcoverage(Plugin, Reporter):
                 message_label = message_info[0].attributes['message'].value
                 message_label = cov_level + " " + message_label
                 add_message(cov_rule, message_label,
-                            ranking, line_no, column_no)
+                            ranking, line_no, col_begin, col_end)
 
         # Preparing list for tool level insertion of resources messages
         resources_messages.append([resource, bulk_messages])
