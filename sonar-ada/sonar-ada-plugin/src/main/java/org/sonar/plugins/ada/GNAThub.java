@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016 - 2020, AdaCore
+ * Copyright (C) 2016 - 2021, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -16,12 +16,9 @@
 
 package org.sonar.plugins.ada;
 
-import com.adacore.gnatdashboard.gnathub.api.Coverage;
-import com.adacore.gnatdashboard.gnathub.api.Issues;
-import com.adacore.gnatdashboard.gnathub.api.ExemptedViolations;
-import com.adacore.gnatdashboard.gnathub.api.Measures;
-import com.adacore.gnatdashboard.gnathub.api.SourceMapper;
+import com.adacore.gnatdashboard.gnathub.api.*;
 import com.adacore.gnatdashboard.gnathub.api.orm.Connector;
+import com.adacore.gnatdashboard.gnathub.api.orm.GNATstackEntitiesIssues;
 import lombok.Getter;
 import org.sonar.api.scanner.ScannerSide;
 import org.sonar.api.config.Configuration;
@@ -39,6 +36,7 @@ public class GNAThub {
   @Getter private final Measures measures;
   @Getter private final Issues issues;
   @Getter private final ExemptedViolations exemptedViolations;
+  @Getter private final GNATstackFileIssues entityIssues;
 
   public static boolean isGNAThubDBDefined(final Configuration config) {
     final String dbUri = config.get(AdaPlugin.GNATHUB_DB_KEY).orElse(null);
@@ -75,5 +73,6 @@ public class GNAThub {
     this.measures = new Measures(connector, srcMapper);
     this.issues = new Issues(connector, srcMapper);
     this.exemptedViolations = new ExemptedViolations(connector, srcMapper);
+    this.entityIssues = new GNATstackFileIssues(connector, srcMapper);
   }
 }

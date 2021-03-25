@@ -14,7 +14,8 @@ CODEPEER_SVN_USERS_GUIDE   := $(CODEPEER_SVN_REPOSITORY)/$(CODEPEER_USERS_GUIDE)
 RULES_DEFINITIONS := $(SONAR_ADA_PLUGIN_RESOURCES)/codepeer.xml \
 	$(SONAR_ADA_PLUGIN_RESOURCES)/gnatcheck.xml \
 	$(SONAR_ADA_PLUGIN_RESOURCES)/gnatcoverage.xml \
-	$(SONAR_ADA_PLUGIN_RESOURCES)/spark2014.xml
+	$(SONAR_ADA_PLUGIN_RESOURCES)/spark2014.xml \
+	$(SONAR_ADA_PLUGIN_RESOURCES)/gnatstack.xml
 
 all: ada_rules_profile
 
@@ -45,10 +46,16 @@ gnatcheck_rules_definition_with_technical_debt:
 	gnatcheck -h 2>&1 | python $(TOP)/scripts/generate_gnatcheck_rules_with_debt.py > \
          $(SONAR_ADA_PLUGIN_RESOURCES)/gnatcheck.xml
 
-#  This script is usable for gnatprove without technical debt infos listed
+#  This script is usable for gnatprove with technical debt infos listed
 spark_rules_definition:
 	gnatprove --list-categories 2>&1 | python $(TOP)/scripts/generate_spark_rules_with_debt.py > \
          $(SONAR_ADA_PLUGIN_RESOURCES)/spark2014.xml
+
+#  This script is usable for gnatstack rule file generation
+gnatstack_rules_definition:
+	gnatstack --list-categories 2>&1 | python $(TOP)/scripts/generate_gnatstack_rules.py > \
+         $(SONAR_ADA_PLUGIN_RESOURCES)/gnatstack.xml
+
 
 $(BUILD_DIR)/$(CODEPEER_DOC):
 	mkdir -p $(BUILD_DIR)
