@@ -28,6 +28,7 @@ test result schema.
 :see: http://windyroad.com.au/dl/Open%20Source/JUnit.xsd
 """
 
+import re
 import json
 import logging
 import os
@@ -220,11 +221,22 @@ def parse_surefire_xml_report(report_path):
 
 def generate_e3_report(output_dir, testsuites):
     def test_name(testsuite, testcase):
-        return '{}.{}'.format(testsuite.name, testcase.name).replace('/', '.')
+        return re.sub(
+            r'-+$',
+            '',
+            re.sub(
+                r'[^\w.]',
+                '-',
+                '{}.{}'.format(testsuite.name, testcase.name)))
 
     def resource(testsuite, testcase, ext):
         return os.path.join(
             output_dir, '{}.{}'.format(test_name(testsuite, testcase), ext))
+
+    def one_line_error_message(error):
+        return (
+            '{}: {}'.format(error.type, error.message.splitlines()[0]) if error.message
+            else error.type)
 
     def error_message(error):
         return (
@@ -240,9 +252,9 @@ def generate_e3_report(output_dir, testsuites):
             if skipped:
                 result = 'DEAD:test was skipped'
             elif failure:
-                result = 'FAILED:{}'.format(error_message(failure))
+                result = 'FAILED:{}'.format(one_line_error_message(failure))
             elif error:
-                result = 'CRASH:{}'.format(error_message(error))
+                result = 'CRASH:{}'.format(one_line_error_message(error))
             else:
                 result = 'OK:'
             result = nl(result)
@@ -259,7 +271,7 @@ def generate_e3_report(output_dir, testsuites):
             if failure or error:
                 for ext in 'out', 'diff':
                     with open(resource(testsuite, testcase, ext), 'w') as out:
-                        out.write(nl((failure or error).data))
+                        out.write(nl(error_message(failure or error)))
 
     # Generate the 'results' file
     with open(os.path.join(output_dir, 'results'), 'w') as out:
