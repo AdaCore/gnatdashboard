@@ -1868,5 +1868,45 @@
         <key>vc_dead_code</key>
         <repositoryKey>spark2014</repositoryKey>
       </rule>
+      <rule>
+        <key>Unknown Global Stack Usage</key>
+        <repositoryKey>gnatstack</repositoryKey>
+      </rule>
+      <rule>
+        <key>Static Global Stack Usage</key>
+        <repositoryKey>gnatstack</repositoryKey>
+      </rule>
+      <rule>
+        <key>Unknown Local Stack Usage</key>
+        <repositoryKey>gnatstack</repositoryKey>
+      </rule>
+      <rule>
+        <key>Static Local Stack Usage</key>
+        <repositoryKey>gnatstack</repositoryKey>
+      </rule>
+      <rule>
+        <key>Indirect Call</key>
+        <repositoryKey>gnatstack</repositoryKey>
+      </rule>
+      <rule>
+        <key>External Call</key>
+        <repositoryKey>gnatstack</repositoryKey>
+      </rule>
+      <rule>
+        <key>Potential Cycle</key>
+        <repositoryKey>gnatstack</repositoryKey>
+      </rule>
+      <rule>
+        <key>Unbounded Frame</key>
+        <repositoryKey>gnatstack</repositoryKey>
+      </rule>
+      <rule>
+        <key>Entry point</key>
+        <repositoryKey>gnatstack</repositoryKey>
+      </rule>
+      <rule>
+        <key>Accuracy</key>
+        <repositoryKey>gnatstack</repositoryKey>
+      </rule>
    </rules>
 </profile>

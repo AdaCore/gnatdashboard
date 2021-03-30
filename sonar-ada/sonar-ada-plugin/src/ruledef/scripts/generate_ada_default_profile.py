@@ -28,7 +28,8 @@ from argparse import ArgumentParser, FileType
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
 
-Tools = ['gnatcheck', 'codepeer', 'gnatcoverage', 'spark2014']
+
+Tools = ['gnatcheck', 'codepeer', 'gnatcoverage', 'spark2014', 'gnatstack']
 
 
 def __print_header(language, name):

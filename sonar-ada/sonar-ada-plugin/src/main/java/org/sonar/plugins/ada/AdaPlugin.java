@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2017-2019, AdaCore
+ * Copyright (C) 2017-2021, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -24,10 +24,7 @@ import org.sonar.plugins.ada.lang.Ada;
 import org.sonar.plugins.ada.lang.AdaHighlightingSensor;
 import org.sonar.plugins.ada.metrics.CountMetrics;
 import org.sonar.plugins.ada.metrics.GNAThubMetrics;
-import org.sonar.plugins.ada.rules.CodePeerRulesDefinitionXmlLoader;
-import org.sonar.plugins.ada.rules.GNATcheckRulesDefinitionXmlLoader;
-import org.sonar.plugins.ada.rules.GNATcoverageRulesDefinitionXmlLoader;
-import org.sonar.plugins.ada.rules.SPARK2014RulesDefinitionXmlLoader;
+import org.sonar.plugins.ada.rules.*;
 import org.sonar.plugins.ada.sensors.GNAThubCoverageSensor;
 import org.sonar.plugins.ada.sensors.GNAThubIssueSensor;
 import org.sonar.plugins.ada.sensors.GNAThubMetricsSensor;
@@ -71,6 +68,7 @@ public final class AdaPlugin implements Plugin {
         SPARK2014RulesDefinitionXmlLoader.class,
         GNATcheckRulesDefinitionXmlLoader.class,
         GNATcoverageRulesDefinitionXmlLoader.class,
+        GNATstackRulesDefinitionXmlLoader.class,
 
         // Collect metrics and issues.
         GNAThubIssueSensor.class,

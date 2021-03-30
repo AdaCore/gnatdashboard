@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rules>
+
+    <rule>
+      <key>Unknown Global Stack Usage</key>
+      <name>Unknown Global Stack Usage</name>
+      <description>unknown part of the total stack usage</description>
+      <tag>gnatstack</tag>
+    </rule>
+    <rule>
+      <key>Static Global Stack Usage</key>
+      <name>Static Global Stack Usage</name>
+      <description>total stack usage</description>
+      <tag>gnatstack</tag>
+    </rule>
+    <rule>
+      <key>Unknown Local Stack Usage</key>
+      <name>Unknown Local Stack Usage</name>
+      <description>unknown part of the local stack usage</description>
+      <tag>gnatstack</tag>
+    </rule>
+    <rule>
+      <key>Static Local Stack Usage</key>
+      <name>Static Local Stack Usage</name>
+      <description>local stack usage</description>
+      <tag>gnatstack</tag>
+    </rule>
+    <rule>
+      <key>Indirect Call</key>
+      <name>Indirect Call</name>
+      <description>function pointers</description>
+      <tag>gnatstack</tag>
+    </rule>
+    <rule>
+      <key>External Call</key>
+      <name>External Call</name>
+      <description>subprograms for which no stack information is available.</description>
+      <tag>gnatstack</tag>
+    </rule>
+    <rule>
+      <key>Potential Cycle</key>
+      <name>Potential Cycle</name>
+      <description>potential recursive function call</description>
+      <tag>gnatstack</tag>
+    </rule>
+    <rule>
+      <key>Unbounded Frame</key>
+      <name>Unbounded Frame</name>
+      <description>frames of functions that  use dynamically sized local objects</description>
+      <tag>gnatstack</tag>
+    </rule>
+    <rule>
+      <key>Entry point</key>
+      <name>Entry point</name>
+      <description>program entry point from which to start the analysis</description>
+      <tag>gnatstack</tag>
+    </rule>
+    <rule>
+      <key>Accuracy</key>
+      <name>Accuracy</name>
+      <description>stack computation accuracy</description>
+      <tag>gnatstack</tag>
+    </rule>
+</rules>

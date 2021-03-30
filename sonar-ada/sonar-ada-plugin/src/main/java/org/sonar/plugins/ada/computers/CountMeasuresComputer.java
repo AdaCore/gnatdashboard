@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2016, AdaCore
+ * Copyright (C) 2016-2021, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -23,6 +23,7 @@ import org.sonar.api.ce.measure.MeasureComputer;
 import org.sonar.plugins.ada.metrics.CountMetrics;
 import org.sonar.plugins.ada.rules.CodePeerRulesDefinitionXmlLoader;
 import org.sonar.plugins.ada.rules.GNATcheckRulesDefinitionXmlLoader;
+import org.sonar.plugins.ada.rules.GNATstackRulesDefinitionXmlLoader;
 
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -57,7 +58,7 @@ public class CountMeasuresComputer implements MeasureComputer {
           context.getChildrenMeasures(CountMetrics.CODEPEER.key()).spliterator(), false
       ).mapToInt(Measure::getIntValue).sum());
       context.addMeasure(CountMetrics.GNATCHECK.key(), StreamSupport.stream(
-          context.getChildrenMeasures(CountMetrics.GNATCHECK.key()).spliterator(), false
+              context.getChildrenMeasures(CountMetrics.GNATCHECK.key()).spliterator(), false
       ).mapToInt(Measure::getIntValue).sum());
     }
   }

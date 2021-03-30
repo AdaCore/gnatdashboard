@@ -1,6 +1,6 @@
 /*
  * GNATdashboard
- * Copyright (C) 2017-2019, AdaCore
+ * Copyright (C) 2017-2021, AdaCore
  *
  * This is free software;  you can redistribute it  and/or modify it  under
  * terms of the  GNU General Public License as published  by the Free Soft-
@@ -16,10 +16,7 @@
 
 package org.sonar.plugins.ada.sensors;
 
-import com.adacore.gnatdashboard.gnathub.api.orm.ExemptedViolations;
-import com.adacore.gnatdashboard.gnathub.api.orm.FileExemptedViolations;
-import com.adacore.gnatdashboard.gnathub.api.orm.FileIssues;
-import com.adacore.gnatdashboard.gnathub.api.orm.Issue;
+import com.adacore.gnatdashboard.gnathub.api.orm.*;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +47,7 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   private static final String GNATCHECK = "gnatcheck";
   private static final String SPARK2014 = "spark2014";
   private static final String GNATCOVERAGE = "gnatcoverage";
+  private static final String GNATSTACK = "gnatstack";
 
   private static final String SUPPRESSED = "suppressed";
   private final List<Issue> suppressedIssues = new ArrayList<>();
@@ -78,6 +76,9 @@ public class GNAThubIssueSensor extends MainFilesSensor {
         log.warn("Unsupported SPARK2014 severity \"{}\" - defaults to MAJOR", issue.getCategory());
         return Severity.MAJOR;
       }
+    }
+    if (GNATSTACK.equalsIgnoreCase(issue.getTool())) {
+      return Severity.INFO;
     }
     return null; // A null value means to use severity configured in the quality profile.
   }
@@ -111,6 +112,7 @@ public class GNAThubIssueSensor extends MainFilesSensor {
   {
     final FileIssues issues = gnathub.getIssues().forFile(file.uri().getPath());
     final FileExemptedViolations exempted = gnathub.getExemptedViolations().forFile(file.uri().getPath());
+    final GNATstackEntitiesIssues entityIssues = gnathub.getEntityIssues().forFile(file.uri().getPath());
 
     // Defensive programming
     if (issues == null) {
@@ -155,6 +157,32 @@ public class GNAThubIssueSensor extends MainFilesSensor {
         for (final Issue violation : exempted.getExemptedViolations()) {
           exemptedIssues.add(violation);
           log.warn("   At line " + violation.getLine() + ": " + violation.getMessage());
+        }
+      }
+    }
+
+    // Handle GNATstack entity related issues and save them to the dashboard
+    if (entityIssues != null) {
+      if (entityIssues.getEntityIssues().size() != 0) {
+        for (final Issue entIssue : entityIssues.getEntityIssues()) {
+          // Locate the rule in the given rule repository.
+          final ActiveRule rule =
+                  context.activeRules().find(RuleKey.of(entIssue.getTool(), entIssue.getKey()));
+          if (rule == null) {
+            missingRules.put(entIssue.getTool(), entIssue.getKey(),
+                    Optional.ofNullable(
+                            missingRules.get(entIssue.getTool(), entIssue.getKey())).orElse(0) + 1);
+            continue;
+          }
+          // Create the issue and save it.
+          final NewIssue newIssue = context.newIssue()
+                  .forRule(rule.ruleKey())
+                  .overrideSeverity(getSonarSeverity(entIssue));
+          final NewIssueLocation location = newIssue.newLocation()
+                  .message(entIssue.getMessage())
+                  .on(file)
+                  .at(file.selectLine(entIssue.getLine()));
+          newIssue.at(location).save();
         }
       }
     }
