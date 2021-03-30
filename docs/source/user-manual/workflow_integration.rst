@@ -37,6 +37,16 @@ analyzed (project name, project key, location of the :file:`gnathub.db` file,
 |GNAThub| and is expected to be used *as-is* by the |SonarAdaPlugin| part of the
 |GNATdashboard| product.
 
+|GNAThub| :program:`sonar-config` plug-in regenerates the :file:`sonar-project.properties`
+configuration file each time it is executed. This file is a project configuration
+file and does not contain authentication credentials in it. In order to authenticate,
+these parameters could be passed explicitly when the :program:`sonar-scanner` plug-in is
+executed through :command:`--targs:` switch tool specific parameters, *eg.*::
+
+    $ gnathub -P project --plugins sonar-scanner --incremental
+           --targs:sonar-scanner -Dsonar.projectKey=<project_key>
+	   -Dsonar.login=<sonar_login> -Dsonar.password=<sonar-password>
+
 |SonarScanner| reads its settings from two different files:
 
 * the system-wide :file:`$SONAR_RUNNER_HOME/conf/sonar-scanner.properties`
@@ -63,10 +73,12 @@ been generated prior to launching the |SonarScanner|.
 |GNATdashboard| without |SonarQube|
 -----------------------------------
 
-|SonarQube| is only used to display results from various analysis. It is
-therefore not mandatory to display the analysis: for instance, you can choose
-not to use the |SonarQube| integration but use custom scripting to extract
-the analysis results stored in the |GNAThub| database.
+|SonarQube| is only used to display results from various analyses.
+The technical debt information is also available in the |SonarQube| dashboard
+for the issues reported by the supported tools. It is therefore not mandatory
+to display the analysis: for instance, you can choose not to use the |SonarQube|
+integration but use custom scripting to extract the analysis results stored in
+the |GNAThub| database.
 
 To disable the :program:`sonar-config` and :program:`sonar-scanner` plug-ins,
 use the :command:`Plugins_Off` project attribute
