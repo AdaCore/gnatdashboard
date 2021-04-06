@@ -95,9 +95,9 @@ class TestSonarScannerSupport(TestCase):
 
                 self.assertTrue(GNATDASHBOARD_WAY,
                                 'missing GNATdashboard way from Quality Profile')
-                self.assertEqual(ACTIVE_RULES_COUNT, 466,
+                self.assertEqual(ACTIVE_RULES_COUNT, 476,
                                  'unexpected value for Ada active rules.' +
-                                 ' Found "%s" instead of 466' % str(ACTIVE_RULES_COUNT))
+                                 ' Found "%s" instead of 476' % str(ACTIVE_RULES_COUNT))
                 session.close()
 
             def check_Ada_project_uploaded():
