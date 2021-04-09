@@ -116,7 +116,7 @@ class CodePeer(Plugin, Runner, Reporter):
              'codepeer_run')
 
         cmd_end = [
-                   '-output-msg-only', '-csv', '-out', report,
+                   '-output-msg-only', '-csv', '-csv-out', report,
                    ToolArgsPlaceholder('codepeer_msg_reader'),
                    '-db-info', dest
                   ]
