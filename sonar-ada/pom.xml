@@ -61,7 +61,7 @@
     <properties>
         <jdk.min.version>1.8</jdk.min.version>
         <version.commons-lang>2.6</version.commons-lang>
-        <version.commons-io>2.5</version.commons-io>
+        <version.commons-io>2.7</version.commons-io>
         <version.fest-assert>1.4</version.fest-assert>
         <version.junit>4.12</version.junit>
         <version.lombok>1.16.10</version.lombok>
