@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2020, AdaCore                     --
+--                     Copyright (C) 2013-2021, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -279,7 +279,10 @@ begin
       end if;
 
       Trace (Me, "Initialize local database");
-      Init_Local_Database (Overwrite => not GNAThub.Configuration.Incremental);
+      Init_Local_Database
+        (Overwrite =>
+           not (GNAThub.Configuration.Incremental
+                and then Is_Regular_File (Database_Full_Path)));
 
       if GNAThub.Configuration.Interpreter_Mode then
          Trace (Me, "Execute user script: " & Script);
