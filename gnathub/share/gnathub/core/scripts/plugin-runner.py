@@ -25,12 +25,17 @@ import os
 import sys
 import time
 
+__file__ = inspect.getfile(inspect.currentframe())
+
+# Add the core dir as a Python site, to find GNAThub and plugins
+import site
+site.addsitedir(os.path.dirname(os.path.dirname(__file__)))
+
 import GNAThub
 from GNAThub import Console
 
 
 # Create this script logger
-__file__ = inspect.getfile(inspect.currentframe())
 MODULE, _ = os.path.splitext(os.path.basename(__file__))
 LOG = logging.getLogger(MODULE)
 

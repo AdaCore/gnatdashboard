@@ -25,7 +25,6 @@ PYTHON = python
 DB2ADA = gnatcoll_db2ada
 PYTHON_PREFIX = $(shell $(PYTHON) \
 		 -c "from distutils.sysconfig import PREFIX; print(PREFIX)")
-GNATHUB_LIB_MANIFEST = GNAThub.MANIFEST
 
 # General conventions for Makefiles
 SHELL = /bin/sh
@@ -58,13 +57,12 @@ gensrcdir = $(builddir)/gen-src
 GENERATED_FILENAMES := gnathub-version.ads database.ads
 GENERATED_SOURCES := $(foreach src,$(GENERATED_FILENAMES),$(gensrcdir)/$(src))
 
-.PHONY: $(gensrcdir)/gnathub-version.ads $(builddir)/$(GNATHUB_LIB_MANIFEST)
+.PHONY: $(gensrcdir)/gnathub-version.ads
 
 # Standard targets for users
 all: $(builddir)/bin/gnathub
 
-install: $(DESTDIR)$(datadir)/gnathub/python all installdirs \
-		$(builddir)/$(GNATHUB_LIB_MANIFEST)
+install: $(DESTDIR)$(datadir)/gnathub/python all installdirs
 	$(INSTALL_PROGRAM) $(builddir)/bin/gnathub $(DESTDIR)$(bindir)
 	(cd "$(rootdir)/share" && tar cf - gnathub) | \
 		(cd "$(DESTDIR)$(datadir)" && tar xf -)
@@ -72,13 +70,6 @@ install: $(DESTDIR)$(datadir)/gnathub/python all installdirs \
 	find $(DESTDIR)$(datadir)/gnathub/extras -name '*.pyc' -delete
 	(cd "$(rootdir)/share/examples" && tar cf - gnatdashboard) | \
 		(cd "$(DESTDIR)$(datadir)/examples" && tar xf -)
-	$(INSTALL_DATA) $(builddir)/$(GNATHUB_LIB_MANIFEST) \
-		$(DESTDIR)$(datadir)/gnathub
-ifdef IS_WINDOWS
-	$(MAKE) PYTHON="$</python.exe" install-python-lib
-else
-	$(MAKE) PYTHON="$</bin/python3" install-python-lib
-endif
 
 install-strip:
 	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
@@ -122,13 +113,6 @@ gen-db-bindings: $(rootdir)/share/gnathub/sql/db.model
 	$(MKDIR) $(gensrcdir)
 	(cd $(gensrcdir) && \
 		$(DB2ADA) -api=Database -orm=Database.ORM -dbmodel=$<)
-
-install-python-lib: $(builddir)/$(GNATHUB_LIB_MANIFEST)
-
-$(builddir)/$(GNATHUB_LIB_MANIFEST): $(srcdir)/lib/setup.py
-	"$(PYTHON)" $< build -b "$(builddir)" install --record $@
-
-install-python-distrib: $(DESTDIR)$(datadir)/gnathub/python
 
 $(DESTDIR)$(datadir)/gnathub/python:
 	if test ! -d "$@"; then \

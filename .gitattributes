@@ -50,6 +50,6 @@ webui/karma.conf.js no-precommit-check
 webui/dll/polyfills.dll.js no-precommit-check
 webui/dll/vendor.dll.js no-precommit-check
 # This imports the Ada Python API using "from x import *"
-gnathub/src/lib/GNAThub/__init__.py no-precommit-check
+gnathub/share/gnathub/core/GNAThub/__init__.py no-precommit-check
 
 sonar-ada/sonar-ada-plugin/src/test/resources/test_sources/* no-precommit-check

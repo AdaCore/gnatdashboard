@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2020, AdaCore                     --
+--                     Copyright (C) 2013-2021, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -86,6 +86,15 @@ package body GNAThub.Constants is
       return Create_From_Dir (Share_Dir, "core");
    end Core_Plugins_Dir;
 
+   -----------------
+   -- Scripts_Dir --
+   -----------------
+
+   function Scripts_Dir return Virtual_File is
+   begin
+      return Create_From_Dir (Share_Dir, "core/scripts");
+   end Scripts_Dir;
+
    -----------------------
    -- Extra_Plugins_Dir --
    -----------------------
@@ -109,30 +118,14 @@ package body GNAThub.Constants is
    -------------------
 
    function Plugin_Runner return Virtual_File is
-      Runner : Virtual_File := Create_From_Dir
-                                 (Python_Home, "bin/plugin-runner.py");
-   begin
-      if not Runner.Is_Regular_File then
-         Runner := Create_From_Dir (Python_Home, "Scripts/plugin-runner.py");
-      end if;
-
-      return Runner;
-   end Plugin_Runner;
+      (Create_From_Dir (Scripts_Dir, "plugin-runner.py"));
 
    -------------------
    -- Server_Runner --
    -------------------
 
    function Server_Runner return Virtual_File is
-      Runner : Virtual_File := Create_From_Dir
-                                 (Python_Home, "bin/server-runner.py");
-   begin
-      if not Runner.Is_Regular_File then
-         Runner := Create_From_Dir (Python_Home, "Scripts/server-runner.py");
-      end if;
-
-      return Runner;
-   end Server_Runner;
+      (Create_From_Dir (Scripts_Dir, "server-runner.py"));
 
    -------------------------
    -- Database_Model_File --

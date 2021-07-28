@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2018, AdaCore                     --
+--                     Copyright (C) 2013-2021, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -24,6 +24,9 @@ package GNAThub.Constants is
 
    function Server_Engine_Dir return Virtual_File;
    --  Web server engine packaged with GNAThub
+
+   function Scripts_Dir return Virtual_File;
+   --  The directory containing the main Python entry scripts
 
    function Core_Plugins_Dir return Virtual_File;
    --  Core plugins packaged with GNAThub
