@@ -2,6 +2,7 @@ import collections
 import os
 import sys
 
+sys.path.append(os.environ["GNATHUB_COREDIR"])
 import GNAThub
 
 from configparser import ConfigParser

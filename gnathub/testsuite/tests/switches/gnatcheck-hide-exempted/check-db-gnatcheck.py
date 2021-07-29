@@ -1,9 +1,9 @@
 """Check the integrity of the GNAThub results after GNATcheck plugin run."""
 
-import GNAThub
-
 import os
 import sys
+sys.path.append(os.environ["GNATHUB_COREDIR"])
+import GNAThub
 
 from support.asserts import (
     assertEmpty, assertEqual, assertFalse, assertListUnorderedEqual, assertTrue

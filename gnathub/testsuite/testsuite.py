@@ -12,7 +12,6 @@ ORIGIN = os.getcwd()
 # Base directory for the testsuite
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
 
-
 class GNAThubTestsuite(Testsuite):
     DRIVERS = {'default': BasicTestDriver}
 

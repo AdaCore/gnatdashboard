@@ -1,5 +1,8 @@
 """Check that LALmetric executed correctly."""
 
+import sys
+import os
+sys.path.append(os.environ["GNATHUB_COREDIR"])
 import GNAThub
 
 from support.asserts import assertIn, assertNotEmpty

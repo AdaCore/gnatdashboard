@@ -7,7 +7,13 @@ import os
 import sys
 import glob
 import logging
+from shutil import which
 
+# Dir containing the core python module, so the testsuite can reference
+# the GNAThub module
+gnathub = which('gnathub')
+GNATHUB_COREDIR = os.path.join(os.path.dirname(os.path.dirname(gnathub)),
+                               "share", "gnathub", "core")
 
 class BasicTestDriver(GNAThubTestDriver):
     """ Each test should have:
@@ -26,6 +32,7 @@ class BasicTestDriver(GNAThubTestDriver):
                   self.test_env['working_dir'])
         base = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         Env().add_search_path('PYTHONPATH', base)
+        os.environ["GNATHUB_COREDIR"] = GNATHUB_COREDIR
 
     def check_output(self, out, output):
         def sanitize(output):

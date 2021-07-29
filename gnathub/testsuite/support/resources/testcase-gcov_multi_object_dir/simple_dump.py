@@ -2,9 +2,11 @@
 display its content.
 """
 
+import os
 import os.path
 import sys
 
+sys.path.append(os.environ["GNATHUB_COREDIR"])
 import GNAThub
 
 

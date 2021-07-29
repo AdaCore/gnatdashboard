@@ -1,9 +1,11 @@
 """Check the integrity of the GNAThub Python module."""
 
+import os
+import sys
+sys.path.append(os.environ["GNATHUB_COREDIR"])
 import GNAThub
 
 import os.path
-import sys
 
 from support.asserts import assertEqual, assertIn, assertTrue
 from support.helpers import uniq
