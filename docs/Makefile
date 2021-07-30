@@ -13,8 +13,8 @@ BUILDDIR      = $(builddir)/docs
 APIDOC        = source/api-doc
 PLUGINSDOC    = source/plugins-doc
 
-PY_API_SOURCES = $(shell find $(GNATHUBDIR)/src/lib/GNAThub -name '*.py')
-PY_PLUGINS_SOURCES = $(shell find $(GNATHUBDIR)/share/gnathub/core -name '*.py')
+PY_API_SOURCES = $(shell find $(GNATHUBDIR)/share/gnathub/core/GNAThub -name '*.py')
+PY_PLUGINS_SOURCES = $(shell find $(GNATHUBDIR)/share/gnathub/core -name '*.py' | grep -v GNAThub)
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -52,7 +52,7 @@ clean:
 	-rm -rf $(BUILDDIR)/*
 
 api-doc: $(PY_API_SOURCES)
-	$(SPHINXAPIDOC) -o $(APIDOC) $(GNATHUBDIR)/src/lib/GNAThub
+	$(SPHINXAPIDOC) -o $(APIDOC) $(GNATHUBDIR)/share/gnathub/core/GNAThub
 
 plugins-doc: $(PY_PLUGINS_SOURCES)
 	$(SPHINXAPIDOC) -o $(PLUGINSDOC) $(GNATHUBDIR)/share/gnathub/core
