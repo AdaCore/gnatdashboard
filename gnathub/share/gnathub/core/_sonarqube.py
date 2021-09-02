@@ -19,6 +19,7 @@ Factorize shared components between SonarConfig and SonarScanner.
 
 import collections
 import logging
+import errno
 import os
 import shutil
 import platform
@@ -56,6 +57,19 @@ class SonarQube(object):
         :return: the path to the working directory
         :rtype: str
         """
+        if GNAThub.sonar_work_dir():
+            """Create the SonarQube working directory as specified by the
+            switch if it does not exist and return it."""
+            if not os.path.exists(GNAThub.sonar_work_dir()):
+                try:
+                    os.makedirs(GNAThub.sonar_work_dir())
+                except OSError as e:
+                    if e.errno != errno.EEXIST:
+                        raise
+                    pass
+
+            return os.path.normpath(os.path.abspath(GNAThub.sonar_work_dir()))
+
         return os.path.join(GNAThub.root(), SonarQube.EXEC_DIRECTORY)
 
     @staticmethod
@@ -102,7 +116,12 @@ class SonarQube(object):
     def make_workdir():
         """Create the SonarQube execution directory if it does not exist."""
         if not os.path.exists(SonarQube.workdir()):
-            os.makedirs(SonarQube.workdir())
+            try:
+                os.makedirs(SonarQube.workdir())
+            except OSError as e:
+                if e.errno != errno.EEXIST:
+                    raise
+                pass
 
 
 class SonarScannerProperties(object):
@@ -353,7 +372,12 @@ class SonarScannerProperties(object):
 
             # Create the local source directory
             if not os.path.exists(module_root_src_dir):
-                os.makedirs(module_root_src_dir)
+                try:
+                    os.makedirs(module_root_src_dir)
+                except OSError as e:
+                    if e.errno != errno.EEXIST:
+                        raise
+                    pass
 
             # Compute the base directory for source dirs.
             # NOTE: The GNAT Project language allows the user to specify a list
@@ -408,7 +432,12 @@ class SonarScannerProperties(object):
 
                             # Create the drive specific local source directory
                             if not os.path.exists(crt_modules_source_dir):
-                                os.makedirs(crt_modules_source_dir)
+                                try:
+                                    os.makedirs(crt_modules_source_dir)
+                                except OSError as e:
+                                    if e.errno != errno.EEXIST:
+                                        raise
+                                    pass
 
                         crt_commonprefix = src_head_tail[0]
                         src_abspath = os.path.abspath(src_dir)
@@ -428,7 +457,12 @@ class SonarScannerProperties(object):
                                             src_dir_relpath)
                 self.log.info(' + %s' % src_dir_path)
                 if not os.path.exists(src_dir_path):
-                    os.makedirs(src_dir_path)
+                    try:
+                        os.makedirs(src_dir_path)
+                    except OSError as e:
+                        if e.errno != errno.EEXIST:
+                            raise
+                        pass
 
                 # Copy over all files
                 for entry in os.listdir(src_dir):

@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2020, AdaCore                     --
+--                     Copyright (C) 2013-2021, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -49,6 +49,10 @@ package GNAThub.Configuration is
    function Subdirs return String;
    --  Return where the database is located relatively from the object
    --  directory. Return empty string otherwise.
+
+   function Sonar_Work_Dir return String;
+   --  Return where the sonar scanner work folder is located for SonarQube.
+   --  Return empty string otherwise.
 
    function Target return String;
    --  Return the Target attribute if given on the command line. Return the
