@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2020, AdaCore                     --
+--                     Copyright (C) 2013-2021, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -75,6 +75,7 @@ package body GNAThub.Python is
    Verbose_Function           : aliased constant String := "verbose";
    Plugins_Function           : aliased constant String := "plugins";
    Subdirs_Function           : aliased constant String := "subdirs";
+   Sonar_Work_Dir_Function    : aliased constant String := "sonar_work_dir";
    Incremental_Function       : aliased constant String := "incremental";
    Hide_Exempted_Function     : aliased constant String :=
      "gnatcheck_hide_exempted";
@@ -101,7 +102,7 @@ package body GNAThub.Python is
      "dry_run_without_project";
 
    No_Args_Root_Module_Functions :
-     constant array (1 .. 22) of access constant String :=
+     constant array (1 .. 23) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         HTML_Data_Function'Access,
@@ -111,6 +112,7 @@ package body GNAThub.Python is
         Verbose_Function'Access,
         Plugins_Function'Access,
         Subdirs_Function'Access,
+        Sonar_Work_Dir_Function'Access,
         Incremental_Function'Access,
         Hide_Exempted_Function'Access,
         -- U_Main_Function'Access,
@@ -759,6 +761,9 @@ package body GNAThub.Python is
 
       elsif Command = Subdirs_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Subdirs);
+
+      elsif Command = Sonar_Work_Dir_Function then
+         Set_Return_Value (Data, GNAThub.Configuration.Sonar_Work_Dir);
 
       elsif Command = Incremental_Function then
          Set_Return_Value (Data, GNAThub.Configuration.Incremental);

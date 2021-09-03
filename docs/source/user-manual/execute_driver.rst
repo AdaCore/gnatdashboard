@@ -275,6 +275,13 @@ Expects a directory as argument. The database will be located in this
 directory relatively from the project object directory. Creates the
 subdirectory if necessary.
 
+:command:`--sonar-work-dir`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Expects a folder path as argument. This is the directory where the data needed by
+the :file:`sonar-scanner` will be collected and used by the |SonarAdaPlugin| to upload
+analysis results to |SonarQube| dashboard. Creates the directory if necessary.
+
 :command:`--RTS`
 ^^^^^^^^^^^^^^^^^^^^
 

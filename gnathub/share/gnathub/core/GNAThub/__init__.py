@@ -103,6 +103,18 @@ def subdirs():
     """
     return NotImplemented   # Implemented in Ada
 
+def sonar_work_dir():
+    """Return the sonar scanner work dir used by SonarQube provided by the
+    switch.
+
+    This is the equivalent to using :command:`--sonar-cache-dir` on the
+    command-line.
+
+    :return: the path of the new sonar sources cache
+    :rtype: str
+    """
+    return NotImplemented   # Implemented in Ada
+
 
 def incremental():
     """Whether the incremental switch was passed to the GNAThub driver or not.

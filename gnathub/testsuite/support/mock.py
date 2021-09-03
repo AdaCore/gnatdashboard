@@ -260,6 +260,9 @@ class GNAThub(object):
         if kwargs.get('subdirs', None):
             argv.extend(['--subdirs', kwargs['subdirs']])
 
+        if kwargs.get('sonar_work_dir', None):
+            argv.extend(['--sonar-work-dir', kwargs['sonar_work_dir']])
+
         if kwargs.get('target', None):
             argv.extend(['--target', kwargs['target']])
 
