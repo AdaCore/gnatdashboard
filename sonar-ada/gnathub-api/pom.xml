@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ GNATdashboard
-  ~ Copyright (C) 2016-2020, AdaCore
+  ~ Copyright (C) 2016-2021, AdaCore
   ~
   ~ This is free software;  you can redistribute it  and/or modify it  under
   ~ terms of the  GNU General Public License as published  by the Free Soft-
@@ -22,7 +22,7 @@
     <parent>
         <groupId>com.adacore.gnatdashboard</groupId>
         <artifactId>parent</artifactId>
-        <version>21.0w-SNAPSHOT</version>
+        <version>22.0w-SNAPSHOT</version>
     </parent>
 
     <artifactId>gnathub-api</artifactId>
@@ -35,6 +35,7 @@
         <dependency>
             <groupId>org.sonarsource.sonarqube</groupId>
             <artifactId>sonar-plugin-api</artifactId>
+            <version>8.9.0.43852</version>
             <scope>provided</scope>
         </dependency>
         <!-- Library Dependencies -->
