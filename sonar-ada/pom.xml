@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ GNATdashboard
-  ~ Copyright (C) 2016-2020, AdaCore
+  ~ Copyright (C) 2016-2021, AdaCore
   ~
   ~ This is free software;  you can redistribute it  and/or modify it  under
   ~ terms of the  GNU General Public License as published  by the Free Soft-
@@ -21,7 +21,7 @@
 
     <groupId>com.adacore.gnatdashboard</groupId>
     <artifactId>parent</artifactId>
-    <version>21.0w-SNAPSHOT</version>
+    <version>22.0w-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GNATdashboard</name>
@@ -59,17 +59,17 @@
     </modules>
 
     <properties>
-        <jdk.min.version>1.8</jdk.min.version>
+        <jdk.min.version>11</jdk.min.version>
         <version.commons-lang>2.6</version.commons-lang>
         <version.commons-io>2.5</version.commons-io>
         <version.fest-assert>1.4</version.fest-assert>
         <version.junit>4.12</version.junit>
-        <version.lombok>1.16.10</version.lombok>
+        <version.lombok>1.18.4</version.lombok>
         <version.guava>20.0</version.guava>
         <version.slf4j>1.6.2</version.slf4j>
         <version.sslr-squid-bridge>2.6.1</version.sslr-squid-bridge>
-        <version.sonar>7.9</version.sonar>
-        <version.sonar-packaging-maven-plugin>1.17</version.sonar-packaging-maven-plugin>
+        <version.sonar>8.9.0.43852</version.sonar>
+        <version.sonar-packaging-maven-plugin>1.18.0.372</version.sonar-packaging-maven-plugin>
         <version.sqlite-jdbc>3.15.1</version.sqlite-jdbc>
     </properties>
 
@@ -81,6 +81,12 @@
                 <artifactId>sonar-plugin-api</artifactId>
                 <version>${version.sonar}</version>
             </dependency>
+            <dependency>
+                <groupId>org.sonarsource.sonarqube</groupId>
+                <artifactId>sonar-plugin-api-impl</artifactId>
+                <version>${version.sonar}</version>
+            </dependency>
+
             <!-- Sonar Ada Plugin Dependencies -->
             <dependency>
                 <groupId>org.xerial</groupId>
