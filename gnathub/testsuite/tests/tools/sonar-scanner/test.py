@@ -19,8 +19,11 @@ class TestSonarScannerSupport(TestCase):
 
         if os.environ["WITH_SONAR"]:
             plugins = ['gnatcheck', 'sonar-config', 'sonar-scanner']
-
-        self.gnathub = GNAThub(Project.simple_sonar(), plugins=plugins)
+            str_args = {'sonar-scanner': ['-Dsonar.login=admin', '-Dsonar.password=admin']}
+            self.gnathub = GNAThub(
+                Project.simple_sonar(), plugins=plugins, tool_args=str_args)
+        else:
+            self.gnathub = GNAThub(Project.simple_sonar(), plugins=plugins)
 
     def testDatabaseContent(self):
         script_output_file = os.path.abspath('script.out')
@@ -32,7 +35,7 @@ class TestSonarScannerSupport(TestCase):
         parser.read(script_output_file)
         self.assertEqual(len(parser.sections()), 26)
 
-        if os.environ["WITH_SONAR"]:
+        if os.environ["WITH_SONAR"]:            
             user = 'admin'
             pwd = 'admin'
 
