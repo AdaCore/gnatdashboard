@@ -47,6 +47,25 @@ executed through :command:`--targs:` switch tool specific parameters, *eg.*::
            --targs:sonar-scanner -Dsonar.projectKey=<project_key>
 	   -Dsonar.login=<sonar_login> -Dsonar.password=<sonar-password>
 
+.. note::
+
+   For |SonarQube| |SonarQubeLTSVersion| LTS version, in order to be able to upload
+   analysis results into the dashboard the authentication information is mandatory
+   and should be provided when the :program:`sonar-scanner` plug-in is executed as
+   :command:`--targs:` switch parameters.
+   Instead of passing through explicit login/password information, we recommend the
+   usage of tokens to authenticate. Once generated, the token could be passed as
+   :command:`--targs:` parameter, *eg.*::
+
+    $ gnathub -P project --plugins sonar-scanner --incremental
+           --targs:sonar-scanner -Dsonar.projectKey=<project_key>
+	   -Dsonar.login=<myAuthenticationToken>
+
+   To know more about how to generate and use the tokens please refer to the
+   official |SonarQube| documentation related to `Generating and Using Tokens`
+   at https://docs.sonarqube.org/latest/user-guide/user-token/.
+
+
 |SonarScanner| reads its settings from two different files:
 
 * the system-wide :file:`$SONAR_RUNNER_HOME/conf/sonar-scanner.properties`
@@ -99,6 +118,7 @@ Use :ref:`gnathub-switch-incremental` to enable incremental mode::
 
   $ gnathub --incremental --plugins sonar-config -P project.gpr
   $ gnathub --incremental --plugins sonar-scanner -P project.gpr
+           --targs:sonar-scanner -Dsonar.login=<myAuthenticationToken>
 
 If you do not wish to use the |SonarQube| integration, you can
 simply omit the last two |GNAThub| executions and use the
