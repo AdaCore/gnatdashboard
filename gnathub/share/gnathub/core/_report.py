@@ -490,9 +490,12 @@ class SourceBuilder(object):
 
         try:
             try:
-                with open(self.path, 'r') as infile:
+                # Files are opened using cp-1251 encoding under Windows
+                # by default.
+                with open(self.path, 'r', encoding="utf-8") as infile:
                     content = infile.read()
             except UnicodeDecodeError:
+                # Try to be resilient when faced with Latin1-encoded files.
                 with open(self.path, 'rb') as infile:
                     content = infile.read().decode('iso-8859-1').encode('utf8')
         except IOError:
