@@ -95,7 +95,7 @@ $(builddir)/bin/gnathub: $(rootdir)/gnathub.gpr $(GENERATED_SOURCES)
 		-XBUILD_MODE="$(BUILD_MODE)" -XGEN_SRC_DIR="$(gensrcdir)"
 ifdef IS_WINDOWS
 	$(MKDIR) $(builddir)/bin
-	$(INSTALL) $(PYTHON_PREFIX)/python37.dll $(builddir)/bin
+	$(INSTALL) $(PYTHON_PREFIX)/python39.dll $(builddir)/bin
 endif
 
 $(gensrcdir)/gnathub-version.ads: $(rootdir)/templates/gnathub-version.ads.in
