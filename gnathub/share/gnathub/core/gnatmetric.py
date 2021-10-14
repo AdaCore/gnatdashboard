@@ -45,6 +45,7 @@ class GNATmetric(Plugin, Runner, Reporter):
         self.output = os.path.join(
             GNAThub.Project.artifacts_dir(), 'metrix.xml')
         self.rules = {}
+        self.display_names = {}
         self.messages = {}
         self.firstunit = False
 
@@ -112,7 +113,8 @@ class GNATmetric(Plugin, Runner, Reporter):
                 rule = self.rules[name]
             else:
                 rule = GNAThub.Rule(
-                    name, name, GNAThub.METRIC_KIND, self.tool)
+                    self.display_names[name], name,
+                    GNAThub.METRIC_KIND, self.tool)
                 self.rules[name] = rule
 
             if (rule, metric.text, GNATmetric.RANKING) in self.messages:
@@ -159,7 +161,10 @@ class GNATmetric(Plugin, Runner, Reporter):
         return entities_messages
 
     def parse_config(self, tree):
-        """Parse the config block to create the GNAThub rules, if any"""
+        """
+        Parse the config block to retrieve the names to be displayed for
+        each rule.
+        """
 
         config_node = tree.find('./config')
 
@@ -175,12 +180,8 @@ class GNATmetric(Plugin, Runner, Reporter):
             if not display_name:
                 display_name = name
 
-            if name in self.rules:
-                rule = self.rules[name]
-            else:
-                rule = GNAThub.Rule(
-                    display_name, name, GNAThub.METRIC_KIND, self.tool)
-                self.rules[name] = rule
+            if name not in self.display_names:
+                self.display_names[name] = display_name
 
     def report(self):
         """Parse GNATmetric XML report and save data to the database.
