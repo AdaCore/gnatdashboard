@@ -37,6 +37,12 @@ import xml.dom.minidom as xml
 
 from collections import namedtuple
 
+import locale
+
+# We need the locale module to parse float values that use a comma as a
+# thousand separator
+locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+
 # Module logger
 LOG = logging.getLogger(__name__)
 
@@ -152,7 +158,10 @@ def parse_testcase_node(testcase_node):
     """
     def testcase_attr_value(name, value):
         if name == 'time':
-            return float(value)
+            # float(str) cannot parse float values that use commas as thousand
+            # separators. Surefire reports have those. Instead we need to use
+            # the locale module.
+            return locale.atof(value)
         else:
             return value
 
@@ -189,7 +198,10 @@ def parse_surefire_xml_report(report_path):
         if name == 'name':
             return value
         elif name == 'time':
-            return float(value)
+            # float(str) cannot parse float values that use commas as thousand
+            # separators. Surefire reports have those. Instead we need to use
+            # the locale module.
+            return locale.atof(value)
         else:
             return int(value)
 
