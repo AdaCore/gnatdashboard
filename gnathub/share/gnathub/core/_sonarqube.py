@@ -21,6 +21,7 @@ import collections
 import logging
 import errno
 import os
+from pathlib import Path
 import shutil
 import platform
 
@@ -483,7 +484,7 @@ class SonarScannerProperties(object):
 
                     shutil.copy(entry_path, new_path)
                     self.src_mapping[_escpath(entry_path)] = \
-                        _escpath(os.path.normpath(new_path))
+                        _escpath(str(Path(new_path).resolve()))
 
                 count = count + 1
                 Console.progress(count, total, count == total)
