@@ -8,7 +8,7 @@ from unittest import TestCase
 from support.mock import GNAThub, Project, Script
 
 
-TEXT_IO = ["a-textio.ads", "a-textio.ads 506:14"]
+TEXT_IO = ["a-textio.ads", "a-textio.ads 507:14"]
 S_IMGINT = ["s-imagei.ads", "s-imagei.ads 43:14"]
 S_SECSTA = ["s-secsta.ads", "s-secsta.ads 328:9"]
 F_ADB = ["f.adb", "f.adb 9:4", "f.adb 21:1"]
@@ -50,7 +50,7 @@ class TestGNATstackSupport(TestCase):
         parser.read(script_output_file)
 
         sections = parser.sections()
-
+            
         for s in SECTIONS:
             self.assertTrue(s in sections, "Missing section: " + s)
 
