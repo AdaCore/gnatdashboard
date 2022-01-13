@@ -33,7 +33,7 @@ class TestSonarScannerSupport(TestCase):
         parser.optionxform = str
 
         parser.read(script_output_file)
-        self.assertEqual(len(parser.sections()), 26)
+        self.assertEqual(len(parser.sections()), 27)
 
         if os.environ["WITH_SONAR"]:            
             user = 'admin'

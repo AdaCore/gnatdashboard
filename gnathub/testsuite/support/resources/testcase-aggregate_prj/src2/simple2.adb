@@ -1,5 +1,4 @@
 with Ada.Text_IO;
-with F;
 
 procedure Simple2 is
 
@@ -46,6 +45,5 @@ begin
    Ada.Text_IO.Put_Line (Integer'Image (Inc (Number)));
    Ada.Text_IO.Put_Line (Integer'Image (Dec (Number)));
 
-   F.Foo;
    Bar;
 end Simple2;

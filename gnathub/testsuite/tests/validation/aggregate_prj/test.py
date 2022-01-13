@@ -17,8 +17,6 @@ FILES = [
     ('obj', 'gnatcheck.out'),
     ('obj', 'gnatcheck_1.out'),
     ('obj', 'gnatcheck_2.out'),
-    ('obj', 'gnatcheck-source-list_1.out'),
-    ('obj', 'gnatcheck-source-list_2.out'),
     ('obj', 'gnathub', 'gnathub.db'),
     ('obj', 'gnathub', 'logs', 'gnatcheck.log'),
     ('obj', 'gnathub', 'sonar', 'sonar-project.properties')
