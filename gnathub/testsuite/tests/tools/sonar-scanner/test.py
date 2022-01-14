@@ -149,7 +149,7 @@ class TestSonarScannerSupport(TestCase):
                             "qualifier":"TRK",
                             "measures":[{"metric":"reliability_rating", "value":"1.0","bestValue":true},
                                         {"metric":"bugs","value":"0","bestValue":true},
-                                        {"metric":"code_smells","value":"17","bestValue":false}]}}
+                                        {"metric":"code_smells","value":"34","bestValue":false}]}}
                 '''
                 PROJECT_KEY = 'Simple_Sonar'
                 METRICS_LIST = ['reliability_rating', 'code_smells', 'bugs']
@@ -194,7 +194,7 @@ class TestSonarScannerSupport(TestCase):
                         code_smells = int(record['value'])
 
                 self.assertEqual(bugs, 0, 'Not expected metric %s' % str(bugs))
-                self.assertEqual(code_smells, 17, 'Not expected metric %s' % str(code_smells))
+                self.assertEqual(code_smells, 34, 'Not expected metric %s' % str(code_smells))
                 session.close()
 
             # Check if the Sonar Ada plugin is used
