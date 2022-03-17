@@ -4,7 +4,6 @@ Check gnatstack entry point when it's containing a frame without location.
 the project and gnatstack can't link it to a file thus it doesn't have a
 location)
 """
-
 import os
 
 from configparser import ConfigParser
@@ -16,15 +15,18 @@ MAIN = ["main.adb 1:1"]
 
 MATRIX = ["matrix_math.adb 3:4"]
 
-B_MAIN = ["b__main.adb 165:4"]
+B_MAIN = ["b__main.adb 174:4"]
 
 UNBOUNDED_FRAME = [
     "Unbounded Frame", '[unbounded frame] "*"'
 ]
 
 ENTRY_POINT = [
-    "Entry point", ('Main\nMain\n"*"\n<_gnat_rcheck_CE_Range_Check>')
+    "Entry point", ('Main\nMain\n"*"\nSS_Allocate')
 ]
+#ENTRY_POINT = [
+#    "Entry point", ('Main\nMain\n"*"\n<_gnat_rcheck_CE_Range_Check>')
+#]
 
 METRICS_MATRIX = [
     "Unknown Global Stack Usage",
@@ -41,11 +43,12 @@ class TestGNATstackSupport(TestCase):
 
         script_output_file = os.path.abspath('script.out')
         self.gnathub.run(script=Script.db2cfg(), output=script_output_file)
-
+        
         self.parser = ConfigParser()
         self.parser.optionxform = str
 
         self.parser.read(script_output_file)
+
 
     def testDatabaseContent(self):
         self.assertTrue(self.parser.has_option(MATRIX[0], UNBOUNDED_FRAME[0]),
