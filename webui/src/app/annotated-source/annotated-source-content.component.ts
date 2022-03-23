@@ -28,10 +28,9 @@ type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
 })
 export class AnnotatedSourceContentComponent implements OnDestroy, OnInit, OnChanges {
     @Input() public lines: IAnnotatedSourceLine[];
-    @Input() public tools: { [toolId: number]: ITool };
     @Input() public coverage: { [line: number]: ICoverage };
-    @Input() public inlineAnnotations: { [line: number]: MessagesByToolId };
-    @Input() public displayMessages: any[];
+    @Input() public inlineAnnotations: { [line: number]: IAnnotatedSourceMessage[] };
+    @Input() public displayMessages: boolean;
 
     public selectedLine: number;
     private paramSubscription: Subscription;
@@ -50,16 +49,14 @@ export class AnnotatedSourceContentComponent implements OnDestroy, OnInit, OnCha
 
     public ngOnChanges(changes: SimpleChanges): void {
 
-        if (changes.lines && !changes.lines.firstChange){
-            this.lines = changes.lines.currentValue;
-        }else if (changes.tools && !changes.tools.firstChange){
-            this.tools = changes.tools.currentValue;
-        }else if (changes.inlineAnnotations && !changes.inlineAnnotations.firstChange){
-            this.inlineAnnotations = changes.inlineAnnotations.currentValue;
-        }else if (changes.displayMessages && !changes.displayMessages.firstChange){
-            this.displayMessages = changes.displayMessages.currentValue;
-        }else if (changes.coverage && !changes.coverage.firstChange){
-            this.coverage = changes.coverage.currentValue;
+        if (changes["lines"] && !changes["lines"].firstChange){
+            this.lines = changes["lines"].currentValue;
+        }else if (changes["inlineAnnotations"] && !changes["inlineAnnotations"].firstChange){
+            this.inlineAnnotations = changes["inlineAnnotations"].currentValue;
+        }else if (changes["displayMessages"] && !changes["displayMessages"].firstChange){
+            this.displayMessages = changes["displayMessages"].currentValue;
+        }else if (changes["coverage"] && !changes["coverage"].firstChange){
+            this.coverage = changes["coverage"].currentValue;
         }
 
     }

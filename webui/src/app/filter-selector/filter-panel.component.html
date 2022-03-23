@@ -37,37 +37,35 @@
     </span>
 
     <!-- Show all the filters according to the report.json -->
-    <ng-template [ngIf]="(this.reportService.filter.tools || this.reportService.filter.rules || this.reportService.filter.properties) | dshNotEmpty" class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
-        <div class="option-selectors d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
+    <div class="option-selectors d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad">
             <filter-selector class="tool-selector" title="Tools"
-                             *ngIf="this.reportService.filter.tools | dshNotEmpty"
-                             [options]="this.reportService.filter.tools | dshMapValues"
+                             *ngIf="this.reportService.filter.tools.length"
+                             [options]="this.reportService.filter.tools"
                              (toggle)="onToolFilterToggle($event)">
             </filter-selector>
             <filter-selector
                              class="property-selector" title="Ranking"
-                             *ngIf="this.reportService.filter.ranking | dshNotEmpty"
-                             [options]="this.reportService.filter.ranking | dshMapValues"
+                             *ngIf="this.reportService.filter.ranking.length"
+                             [options]="this.reportService.filter.ranking"
                              (toggle)="onRankingFilterToggle($event)">
             </filter-selector>
             <filter-selector
                              class="rule-selector" title="Categories"
-                             *ngIf="this.reportService.filter.rules | dshNotEmpty"
-                             [options]="this.reportService.filter.rules | dshMapValues"
+                             *ngIf="this.reportService.filter.rules.length"
+                             [options]="this.reportService.filter.rules"
                              (toggle)="onRuleFilterToggle($event)">
             </filter-selector>
             <filter-selector
                              class="property-selector" title="History"
-                             *ngIf="this.reportService.filter.properties | dshNotEmpty"
-                             [options]="this.reportService.filter.properties | dshMapValues"
+                             *ngIf="this.reportService.filter.properties"
+                             [options]="this.reportService.filter.properties"
                              (toggle)="onPropertyFilterToggle($event)">
             </filter-selector>
             <filter-selector
                              class="property-selector" title="Review Status"
-                             *ngIf="this.reportService.filter.review_status | dshNotEmpty"
-                             [options]="this.reportService.filter.review_status | dshMapValues"
+                             *ngIf="this.reportService.filter.review_status"
+                             [options]="this.reportService.filter.review_status"
                              (toggle)="onReviewFilterToggle($event)">
             </filter-selector>
         </div>
-    </ng-template>
 </nav>

@@ -3,4 +3,4 @@
        [attr.data-line-number]="line.number">&nbsp;</a>
     <span>{{char}}</span>
 </td>
-<td class="line-content" [innerHTML]="safeHtml"></td>
+<td class="line-content" [highlight]="this.line.content"></td>

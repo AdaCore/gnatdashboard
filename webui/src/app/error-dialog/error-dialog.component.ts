@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BrowserAnimationsModule } from  '@angular/platform-browser/animations';
-import { MatDialogRef} from '@angular/material';
+import { MatDialogRef} from '@angular/material/dialog';
 import { SharedReport } from '../main-responder.service';
 
 @Component({

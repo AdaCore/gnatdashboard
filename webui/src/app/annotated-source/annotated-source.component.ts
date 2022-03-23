@@ -11,7 +11,6 @@ import {
     ChangeDetectorRef,
     ChangeDetectionStrategy
 } from '@angular/core';
-import { Http, Response } from '@angular/http';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -26,7 +25,6 @@ import { AnnotatedSourceViewComponent } from './annotated-source-view.component'
 import { updateFilter } from '../utils/refreshFilter';
 import { sortMessageArray } from '../utils/sortArray';
 import { storeMessageSort } from '../utils/dataStorage';
-import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scroll-to';
 
 import {
     IAnnotatedSourceFile,
@@ -37,6 +35,7 @@ import {
     IReviewUser,
     ISort
 } from 'gnat';
+import {LoadJsonService} from "../load-json.service";
 
 type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
 
@@ -44,7 +43,6 @@ type MessagesByToolId = { [toolId: number]: IAnnotatedSourceMessage[] };
     selector: 'annotated-source',
     templateUrl: './annotated-source.component.html',
     styleUrls: [ 'annotated-source.component.scss' ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DialogsService]
 })
 export class AnnotatedSourceComponent
@@ -70,9 +68,9 @@ export class AnnotatedSourceComponent
     public sourceMessageList: ISourceNav[] = [];
 
     @ViewChild('scrollView', {static: true}) private scrollView: ElementRef;
+    thisFile: boolean
 
     constructor( @Inject(DOCUMENT) private document: Document,
-                 private scrollToService: ScrollToService,
                  private route: ActivatedRoute,
                  private router: Router,
                  public reportService: SharedReport,
@@ -80,7 +78,7 @@ export class AnnotatedSourceComponent
                  private sourceView: AnnotatedSourceViewComponent,
                  private gnathub: GNAThubService,
                  private cdRef: ChangeDetectorRef,
-                 private http: Http) {}
+                 private loadJSONService: LoadJsonService) {}
 
     /** @override */
     public ngOnInit(): void {
@@ -103,19 +101,19 @@ export class AnnotatedSourceComponent
     }
 
     private reloadFile(filename: string, line: number, id: number): void {
-        const url: string = this.reportService.url + 'source/' +  filename + '.json';
+        const url: string = 'source/' +  filename + '.js';
         this.isLoadingFile = true;
-        this.http.get(url).subscribe(
-            data => {
-                this.isLoadingFile = false;
-                this.source = JSON.parse(data['_body']);
-                this.sourceView.filename = filename;
-                this.processSource();
-            }, error => {
-                this.isLoadingFile = false;
-                console.error('[Error] reloadFile :', error);
-            }
-        );
+        this.loadJSONService.getJSON(url).subscribe(
+          (data : IAnnotatedSourceFile) => {
+            this.isLoadingFile = false;
+            this.source = data;
+            this.sourceView.filename = filename;
+            this.processSource();
+        }, error => {
+            this.isLoadingFile = false;
+            console.error('[Error] reloadFile :', error);
+        }
+      );
     }
 
     private processSource(): void {
@@ -285,7 +283,7 @@ export class AnnotatedSourceComponent
         }
     }
 
-    public selectMessage( message: any, event: KeyboardEvent): void {
+    public selectMessage( message: any, event: MouseEvent): void {
         if (message){
             this.lastSelectedMsg = message.id;
         }
@@ -355,27 +353,6 @@ export class AnnotatedSourceComponent
         updateFilter(this.reportService);
     }
 
-    public addDynamicReview(newReview: any[]): void {
-        if (this.reportService.message.sources) {
-            Object['entries'](this.reportService.message.sources).forEach(
-                function(val: any): void{
-                    let source: ISourceNav = val[1];
-                    if (source.messages){
-                        source.messages.forEach(function(message: IMessage): void {
-                            if (newReview[message.tool_msg_id]){
-                                if (!message.review_history) {
-                                    message.review_history = [];
-                                }
-                                message.review_history.unshift(
-                                    newReview[message.tool_msg_id]);
-                                message.user_review = newReview[message.tool_msg_id];
-                        }
-                        });
-                    }
-                });
-            this.refreshFilter();
-        }
-    }
 
     private formatName(name: string): string {
         let myArray: string[] = name.split('_');
@@ -391,84 +368,6 @@ export class AnnotatedSourceComponent
         return int < 10 ? '0' + int.toString() : int.toString();
     }
 
-    public writeReview(): void {
-        if (!this.checkedMsg || this.checkedMsg.length === 0) {return; }
-        this.dialog.review().subscribe((data: any) => {
-
-            if (!data) {return; }
-
-            /*Timestamp format must be YYYY-MM-jj HH:mm:ss*/
-            let now: Date = new Date();
-
-            let year: string = now.getFullYear().toString();
-            let month: string = this.formatDate(now.getMonth() + 1);
-            let day: string = this.formatDate(now.getDate());
-            let hour: string = this.formatDate(now.getHours());
-            let minutes: string = this.formatDate(now.getMinutes());
-            let seconds: string = this.formatDate(now.getSeconds());
-
-            let date: string = year + '-' + month + '-' + day + ' '
-                               + hour + ':' + minutes + ':' + seconds;
-
-            /*Now create xml*/
-            let xml: string = "<?xml version='1.0' encoding='utf-8'?>\n<audit_trail format='6'>\n";
-            let newReview: any[] = [];
-
-            if (this.reportService.checkArray(this.checkedMsg,
-                                              'annotated-source.component',
-                                              'writeReview', 'checkedMsg')) {
-                this.checkedMsg.forEach(function(id: number): void {
-
-                    /* Create the xml to send to codepeer_bridge */
-                    xml += "<message identifier='" + id + "'>\n";
-                    xml += "<audit timestamp='" + date + "' ";
-
-                    /* Create the object to add to the client side to show it */
-                    newReview[id] = {};
-                    newReview[id].date = date;
-
-                    if (data.status) {
-                        xml += "status='" + data.status + "' ";
-                        xml += "status_category='" + data.category + "' ";
-                        newReview[id].status = data.status;
-                        newReview[id].display_name = this.formatName(data.status);
-                        newReview[id].status_kind = data.category;
-                    }
-                    if (data.username) {
-                        xml += "approved='" + data.username + "' ";
-                        newReview[id].author = data.username;
-                    }
-                    xml += "from_source='FALSE'>";
-                    if (data.review) {
-                        xml += data.review;
-                        newReview[id].message = data.review;
-                    }
-                    xml += '</audit>\n</message>\n';
-
-                }.bind(this));
-            }
-            xml += '</audit_trail>';
-
-            this.sendUserReview(xml, newReview);
-            this.selectedLine = -1;
-            this.checkedMsg = [];
-            this.selectedMsg = [];
-            this.reportService.selectedMessage = [];
-        });
-    }
-
-    public sendUserReview(xml: string, newReview: IReviewUser[]): void {
-        let url: string = this.reportService.url + 'post-review/';
-        this.http.post(url, xml)
-            .subscribe(data => {
-            this.addDynamicReview(newReview);
-            this.reportService.refreshUserReview();
-        }, error => {
-            console.error('[Error] sendUserReview :', error);
-            this.reportService.errorToShow.push('Error when trying to add a review.');
-            this.reportService.verifyServerStatus();
-        });
-    }
     public trackMsg(index: number, message: any): void {
         return message ? message.id : undefined;
     }

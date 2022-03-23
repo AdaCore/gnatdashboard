@@ -20,7 +20,6 @@ import { IAnnotatedSourceLine, ICoverage } from 'gnat';
 export class AnnotatedSourceLineComponent implements OnInit, OnChanges {
     @Input() public line: IAnnotatedSourceLine;
     @Input() public coverage: ICoverage;
-    public safeHtml: SafeHtml;
     public char: String = '';
 
     @HostBinding('class.no_code') private isNoCode: boolean = false;
@@ -32,8 +31,6 @@ export class AnnotatedSourceLineComponent implements OnInit, OnChanges {
 
     /** @override */
     public ngOnInit(): void {
-        this.safeHtml =
-            this.sanitizer.bypassSecurityTrustHtml(this.line.html_content);
         if (this.coverage) {
             const status: string = this.coverage.status.toLowerCase();
             this.isNoCode = status === 'no_code';
@@ -45,10 +42,10 @@ export class AnnotatedSourceLineComponent implements OnInit, OnChanges {
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.line && !changes.line.firstChange){
-            this.line = changes.line.currentValue;
-        }else if (changes.coverage && !changes.coverage.firstChange){
-            this.coverage = changes.coverage.currentValue;
+        if (changes["line"] && !changes["line"].firstChange){
+            this.line = changes["line"].currentValue;
+        }else if (changes["coverage"] && !changes["coverage"].firstChange){
+            this.coverage = changes["coverage"].currentValue;
         }
         this.ngOnInit();
     }

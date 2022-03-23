@@ -193,14 +193,13 @@ declare module 'gnat' {
         rule: IRule;
         line: number;
         properties: [IProperty];
-        text: string;
+        name: string;
         _ui_hidden?: boolean;
     }
 
     export interface IAnnotatedSourceLine {
         number: number;
         content: string;
-        html_content: string;
     }
 
     export interface IAnnotatedSourceFile {
@@ -209,7 +208,7 @@ declare module 'gnat' {
         source_dir: string;
         full_path: string;
         lines: [IAnnotatedSourceLine];
-        metrics?: Array<{ [metricId: number]: IMetric }>;
+        metrics?: Array<IMetric>;
         coverage?: { [line: number]: ICoverage };
         messages?: IAnnotatedSourceMessage[];
         annotations?: IAnnotatedSourceMessage[];

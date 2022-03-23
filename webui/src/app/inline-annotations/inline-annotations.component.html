@@ -2,7 +2,7 @@
     <div class="annotations-tool d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad click"
          (click)="openClose(line)" >
         <span>
-            Annotations ( {{annotations.size}} )
+            Annotations ( {{annotations.length}} )
         </span>
         <span class="annotation-icon">
             <mat-icon>keyboard_arrow_down</mat-icon>
@@ -14,7 +14,7 @@
                 <mat-icon class="tags" md-tooltip="Rule identifier">label</mat-icon>
                 {{ annotation.rule.name }}
             </span>
-            <span class="annotation-text">{{ annotation.name }}</span>
+            <span class="annotation-text">{{ annotation.name}}</span>
 
              <span class="annotation-properties" *ngIf="annotation.properties | dshNotEmpty">
                 <mat-icon class="tags" md-tooltip="Annotation properties">local_offer</mat-icon>

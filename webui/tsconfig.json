@@ -1,51 +1,44 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "compilerOptions": {
-    "target": "es2017",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "noEmit": true,
-    "noEmitHelpers": true,
-    "strictNullChecks": false,
-    "lib": [
-      "dom",
-      "es6"
-    ],
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "types": [
-      "hammerjs",
-      "jasmine",
-      "node",
-      "uglify-js",
-      "webpack",
-      "events",
-      "glob",
-      "minimatch",
-      "q",
-      "tapable",
-      "xml2js"
-    ]
-  },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
-  "files": [
-    "./node_modules/@types/tapable/index.d.ts"
-    "./src/gnat.d.ts"
-  ],
-  "awesomeTypescriptLoaderOptions": {
-    "forkChecker": true,
-    "useWebpackText": true
-  },
   "compileOnSave": false,
-  "buildOnSave": false,
-  "atom": {
-    "rewriteTsconfig": false
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    // TODO: enable strict. Avoid the hassle of fixing everything for now.
+    "strict": false,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    // TODO: enable noImplicitAny. Same remark as above.
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2020",
+    "module": "es2020",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "paths": {
+      "timers": [
+        "node_modules/timers-browserify"
+      ],
+      "stream": [
+        "node_modules/stream-browserify"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": false
   }
 }

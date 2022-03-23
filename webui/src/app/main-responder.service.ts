@@ -14,6 +14,8 @@ import {
     getStoredMessageSort, getStoredProjectSort
 } from './utils/dataStorage';
 import { DOCUMENT } from '@angular/common';
+import {HttpClient} from "@angular/common/http";
+import {LoadJsonService} from "./load-json.service";
 
 export type InteralStateType = {
     [key: string]: any
@@ -71,7 +73,7 @@ export class SharedReport {
     private codepeerReview: any;
     public codepeerHistory: any;
     public raceCondition: any;
-    public showRace: boolean = false;
+    public showRace: boolean;
     public isAnnotations: boolean = false;
     public showAnnotations: boolean = true;
 
@@ -79,7 +81,7 @@ export class SharedReport {
     public projectSort: ISort = getStoredProjectSort();
     public messageSort: ISort = getStoredMessageSort();
 
-    /* Corresponds to the gloal info needed in the web navigation */
+    /* Corresponds to the global info needed in the web navigation */
     public page: string;
     public projectName: string;
     public history: any = {
@@ -103,21 +105,11 @@ export class SharedReport {
     private activeFilter: boolean = false;
     private userReviewFilter: [IReviewFilter];
 
-    /* Correspond to the information needed to contact the API */
-    private serverHost: string = window.location.origin;
-    public url: string = this.serverHost + '/';
-
     public sourceMessageList: ISourceNav[] = [];
 
     constructor(@Inject(DOCUMENT) private document: Document,
                 private gnathub: GNAThubService,
-                private http: Http) {
-
-        /*
-         * This part is for the connection with the server
-         * If server not running or responding, use the old get
-         */
-        console.log('Designated API Url :', this.url);
+                private loadJSONService: LoadJsonService) {
         this.initApp();
     }
 
@@ -134,8 +126,12 @@ export class SharedReport {
     private initApp(): void {
         this.initLocalStorage();
         this.getCustomReview();
-        this.isServerOnline();
-        this.isCodepeerPassed();
+        this.getCode();
+        this.getFilter();
+        this.getMessage();
+        this.getUserReview();
+        this.getRaceCondition();
+        this.getCodepeerRunInfo();
     }
 
     private initLocalStorage(): void {
@@ -155,69 +151,11 @@ export class SharedReport {
         }
     }
 
-    private isServerOnline(): void {
-        this.http.get(this.url + 'online-server')
+    private getFilter(): void {
+      this.loadJSONService.getJSON('json/filter.js')
             .subscribe(
-                data => {
-                    if (data.status === 200) {
-                        console.log('[Success] The server is online.');
-                        this.isOnline = true;
-                        this.getFilterOnline();
-                        this.getCodeOnline();
-                        this.getMessageOnline();
-                    } else {
-                        this.serverOffline();
-                    }
-                }, error => {
-                    console.log('[Warning] main-responder.service:isServerOnline: ', error);
-                    this.serverOffline();
-                }
-            );
-    }
-
-    private serverOffline(): void {
-        console.log('[Warning] The server is offline');
-        this.isOnline = false;
-        this.getFilterOffline();
-        this.getCodeOffline();
-        this.getMessageOffline();
-    }
-
-    private CodepeerVersionError(): void {
-        this.errorToShow.push('You are running an old html interface with new codepeer results.');
-        this.errorToShow.push('This could trigger some error in the web interface.');
-        this.errorToShow.push('To ensure the best experience,');
-        this.errorToShow.push(' please re-run codepeer with the -html or -html-only flag');
-        this.triggerError();
-    }
-
-    private isCodepeerPassed(): void {
-        this.http.get(this.url + 'codepeer-passed')
-            .subscribe(
-                data => {
-                    if (data.status !== 204) {
-                        this.isCodepeer = true;
-                        // If version of WebUI doesn't match version of Codepeer
-                        if (data.status === 202) {
-                            this.CodepeerVersionError();
-                            this.isCodepeer = false;
-                        }
-                        this.getUserReview();
-                        this.getRaceCondition();
-                        this.getCodepeerRunInfo();
-                    }
-                }, error => {
-                    console.log('[Error] is codepeer passed : ', error);
-                    this.isCodepeer = false;
-                }
-            );
-    }
-
-    private getFilterOnline(): void {
-        this.http.get(this.url + 'json/filter.json')
-            .subscribe(
-                data => {
-                    this.filter = JSON.parse(data['_body']);
+              (data : IFilterIndex) => {
+                    this.filter = data;
                     this.initFilter();
                     this.projectName = this.filter.project;
                     this.getCodepeerCode();
@@ -227,84 +165,38 @@ export class SharedReport {
                     this.refreshFilter();
                 }, error => {
                     console.log('[Error] get filter : ', error);
-                    this.getFilterOffline();
                 }
             );
     }
-    private getFilterOffline(): void {
-        this.gnathub.getFilter().subscribe(
-            filter => {
-                this.filter = filter;
-                this.initFilter();
-                this.projectName = filter.project;
-                this.getCodepeerCode();
-                if (this.filter.tools == null) {
-                    this.isFilter = false;
-                }
-                this.refreshFilter();
-            }, error => {
-                this.isReportFetchError = true;
-            }
-        );
-    }
 
-    private getCodeOnline(): void {
-        this.http.get(this.url + 'json/code.json')
-            .subscribe(
-                data => {
-                    this.code = JSON.parse(data['_body']);
+    private getCode(): void {
+      this.loadJSONService.getJSON('json/code.js')
+        .subscribe(
+              (data : ICodeIndex) => {
+                    this.code = data;
                     this.code.modules = sortCodeArray(
                         this.projectSort,
                         this.projectSort, this.code.modules);
                     this.refreshFilter();
                 }, error => {
                     console.log('[Error] get code : ', error);
-                    this.getCodeOffline();
                 }
             );
     }
-    private getCodeOffline(): void {
-        this.gnathub.getCode().subscribe(
-            object => {
-                this.code = object;
-                this.code.modules = sortCodeArray(
-                    this.projectSort,
-                    this.projectSort, object.modules);
-                this.refreshFilter();
-            }, error => {
-                this.isReportFetchError = true;
-            }
-        );
-    }
 
-    private getMessageOnline(): void {
-        this.http.get(this.url + 'json/message.json')
+    private getMessage(): void {
+      this.loadJSONService.getJSON('json/message.js')
             .subscribe(
-                data => {
-                    this.message = JSON.parse(data['_body']);
+              (data : IMessageIndex) => {
+                    this.message = data;
                     if (this.codepeerReview){
                         this.addUserReview();
                     }
                     this.refreshFilter();
                 }, error => {
                     console.log('[Error] get message : ', error);
-                    this.getMessageOffline();
                 }
             );
-    }
-
-    private getMessageOffline(): void {
-        this.gnathub.getMessage().subscribe(
-            messages => {
-                this.message = messages;
-                if (this.isCodepeer) {
-                    this.getUserReview();
-                }
-                this.refreshFilter();
-            }, error => {
-                this.isReportFetchError = true;
-            }
-        );
     }
 
     private sortReviewStatus(array: string[], myKind: string, priority: number): any {
@@ -347,9 +239,9 @@ export class SharedReport {
     }
 
     private getCustomReview(): void {
-        this.http.get(this.url + 'json/custom_status.json').subscribe(
+        this.loadJSONService.getJSON('json/custom_status.js').subscribe(
                 data => {
-                    this.handleReviewStatus(JSON.parse(data['_body']));
+                    this.handleReviewStatus(data);
                 }, error => {
                     console.log('[Error] get custom review status : ', error);
                     this.isReportFetchError = true;
@@ -402,8 +294,9 @@ export class SharedReport {
     }
 
     private getCodepeerRunInfo(): void {
-        this.gnathub.getCodepeerRun().subscribe(
-            runInfo => {
+
+      this.loadJSONService.getJSON('json/codepeer_run.js').subscribe(
+        (runInfo: any)  => {
                 this.codepeerHistory = this.buildCodepeerHistory(runInfo.history);
                 this.codepeerCurrentRun = runInfo.current_run_number;
 
@@ -437,9 +330,11 @@ export class SharedReport {
                     value: runInfo.current_run_number
                 });
                 let tempValue: string = '';
-                runInfo.excluded_files.forEach(function (file: string): void {
+                if (runInfo.excluded_files) {
+                  runInfo.excluded_files.forEach(function (file: string): void {
                     tempValue += file + '';
-                });
+                  });
+                }
                 tmp.push({
                     name: 'excluded files',
                     value: tempValue
@@ -454,9 +349,7 @@ export class SharedReport {
     }
 
     private getUserReview(): void {
-        if (this.isCodepeer) {
-        let url: string = this.url + 'get-review/';
-        this.http.get(url + 'codepeer_review.xml')
+        this.loadJSONService.getJSON('json/codepeer_review.js')
             .subscribe(
                 data => {
                     this.codepeerReview = this.gnathub.convertToJson(data);
@@ -472,32 +365,22 @@ export class SharedReport {
                     this.codepeerReviewError = true;
                 }
             );
-        }
-    }
-
-    public refreshUserReview(): void {
-        this.filter.review_status = undefined;
-        this.userReviewFilter = undefined;
-        this.getUserReview();
     }
 
     private getRaceCondition(): void {
-        if (this.isCodepeer) {
-        let url: string = this.url + 'get-race-condition';
-        this.http.get(url)
+        this.loadJSONService.getJSON('json/race_conditions.js')
             .subscribe(
                 data => {
-                    this.raceCondition = this.gnathub.raceToJson(data['_body']);
+                    this.raceCondition = this.gnathub.raceToJson(data);
                     this.showRace = Object.keys(this.raceCondition).length > 0;
                 }, error => {
-                    /* No error triggered because race_conditions.xml doesn't always exist
+                    /* No error triggered because race_conditions.js doesn't always exist
                      * So log a warning instead.
                      * Take a look at T323-017
                      */
                     console.warn('[Error] get getRaceCondition : ', error);
                 }
             );
-        }
     }
 
     /* This function is called each time a set of data is loaded.
@@ -703,26 +586,6 @@ export class SharedReport {
     private triggerError(): void {
         let elem: HTMLElement = this.document.getElementById('ErrorButton');
         elem.click();
-    }
-
-    public verifyServerStatus(): void {
-        this.http.get(this.url + 'online-server')
-            .subscribe(
-                data => {
-                    if (data.status === 200) {
-                        this.errorToShow.push('Please contact support.');
-                    } else {
-                        this.errorToShow.push("The server doesn't seem to be running.");
-                        this.isOnline = false;
-                    }
-                    this.triggerError();
-                }, error => {
-                    console.warn('[Warning] main-responder.service:isServerOnline: ', error);
-                    this.errorToShow.push("The server doesn't seem to be running.");
-                    this.isOnline = false;
-                    this.triggerError();
-                }
-            );
     }
 
     public checkArray(array: any[], file: string,

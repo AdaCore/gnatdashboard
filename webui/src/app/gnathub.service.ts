@@ -1,57 +1,19 @@
 import {throwError as observableThrowError, Observable } from 'rxjs';
 import {map, catchError} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Response } from '@angular/http';
 import xml2js from 'xml2js';
 
 import { IAnnotatedSourceFile, IFilterIndex, ICodeIndex,
         IMessageIndex, IReviewUser } from 'gnat';
 import { createDisplayName } from './utils/createDisplayName';
+import {HttpClient} from "@angular/common/http";
 
 @Injectable()
 export class GNAThubService {
     public name: string = 'test';
 
-    constructor(private http: Http) {}
-
-    public getFilter(): Observable<IFilterIndex> {
-        return this.http.get('data/filter.json').pipe(
-            map(this.handleResults),
-            catchError(this.handleError), );
-    }
-    public getCode(): Observable<ICodeIndex> {
-        return this.http.get('data/code.json').pipe(
-            map(this.handleResults),
-            catchError(this.handleError), );
-    }
-    public getMessage(): Observable<IMessageIndex> {
-        return this.http.get('data/message.json').pipe(
-            map(this.handleResults),
-            catchError(this.handleError), );
-    }
-    public getReview(): Observable<any> {
-        return this.http.get('data/codepeer_review.xml').pipe(
-            map(this.convertToJson),
-            catchError(this.handleError), );
-    }
-
-    public getCodepeerRun(): Observable<any> {
-        return this.http.get('data/codepeer_run').pipe(
-            map(this.handleResults),
-            catchError(this.handleError));
-    }
-
-    private handleResults(res: Response): any {
-        return res.json() || {};
-    }
-
-    private handleError(error: any): any {
-        let errMsg: string = (error.message) ?
-            error.message : error.status ?
-            `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg);
-        return observableThrowError(errMsg);
-    }
+    constructor() {}
 
     private createReview(review: any): any {
         let myReview: IReviewUser[] = [];
@@ -112,7 +74,7 @@ export class GNAThubService {
 
     public convertToJson(res: any): IReviewUser[] {
         let userReview: IReviewUser[] = [];
-        xml2js.parseString(res._body, { explicitArray: false }, (error, result) => {
+        xml2js.parseString(res, { explicitArray: false }, (error, result) => {
             if (error) {
                 console.log('[Error] convertToJson : Problem to parse :', error);
             } else {
@@ -126,10 +88,6 @@ export class GNAThubService {
                            && result.audit_trail.message.audit) {
                     let tmp: any = this.createReview(result.audit_trail.message);
                     userReview[result.audit_trail.message.$.identifier] = tmp;
-                } else {
-                    console.log('[Error] gnathub.service:convertToJson : '
-                                + 'result.audit_trail.message should not be empty.');
-                    console.log('Please see result : ', result);
                 }
             }
         });
