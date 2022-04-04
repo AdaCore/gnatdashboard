@@ -24,6 +24,7 @@ import os
 import GNAThub
 from GNAThub import Console, Plugin, Reporter, Runner
 
+import shutil
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
 
@@ -48,6 +49,9 @@ class GNATmetric(Plugin, Runner, Reporter):
         self.display_names = {}
         self.messages = {}
         self.firstunit = False
+
+    def __cmd_exists(self, cmd):
+        return shutil.which(cmd) is not None
 
     @property
     def name(self):
@@ -82,7 +86,11 @@ class GNATmetric(Plugin, Runner, Reporter):
         cmd_line = cmd_line + GNAThub.Project.scenario_switches()
 
         if GNAThub.Project.target():
-            cmd_line[0] = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
+            cmd = '{}-{}'.format(GNAThub.Project.target(), cmd_line[0])
+            if self.__cmd_exists(cmd):
+                cmd_line[0] = cmd
+            else:
+                cmd_line.extend(['--target', GNAThub.Project.target()])
         if GNAThub.Project.runtime():
             cmd_line.extend(('--RTS', GNAThub.Project.runtime()))
         if GNAThub.subdirs():
