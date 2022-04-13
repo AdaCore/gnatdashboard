@@ -1,4 +1,3 @@
-with "gpr2";
 with "gnatcoll";
 with "gnatcoll_python";
 with "gnatcoll_sqlite";

@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2022, AdaCore                     --
+--                     Copyright (C) 2013-2021, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -30,17 +30,16 @@ with GNAT.OS_Lib;
 with GNAT.Source_Info;
 with GNAT.Strings;
 
+with GNATCOLL.Projects;                   use GNATCOLL.Projects;
 with GNATCOLL.Traces;                     use GNATCOLL.Traces;
+with GNATCOLL.Utils;                      use GNATCOLL.Utils;
 with GNATCOLL.VFS;                        use GNATCOLL.VFS;
+with GNATCOLL.VFS_Utils;                  use GNATCOLL.VFS_Utils;
 
 with GNAThub.Project;
 with GNAThub.Version;
 with GNAThub.Python;
 with GNAThub.Constants; use GNAThub.Constants;
-
-with GPR2;
-with GPR2.Path_Name;
-with GPR2.Project;
 
 package body GNAThub.Configuration is
    Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
@@ -600,14 +599,16 @@ package body GNAThub.Configuration is
       --  Check existence of the given paths on disk
 
       declare
-         Project_File : constant GPR2.Path_Name.Object :=
-                          GPR2.Path_Name.Create_File
-                            (GPR2.Project.Ensure_Extension
-                               (GPR2.Filename_Optional (Project_Arg.all)));
+         Project : constant String := Project_Arg.all;
+         Ext     : constant String := +Project_File_Extension;
       begin
-         if not Project_File.Exists then
-            raise Fatal_Error
-              with Project_Arg.all & ": no such file or directory";
+         if not Ends_With (Project, Ext) then
+            Free (Project_Arg);
+            Project_Arg := new String'(Project & Ext);
+         end if;
+
+         if not Is_Regular_File (Filesystem_String (Project_Arg.all)) then
+            raise Fatal_Error with Project & ": no such file or directory";
          end if;
       end;
 

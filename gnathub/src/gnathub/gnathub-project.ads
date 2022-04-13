@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2022, AdaCore                     --
+--                     Copyright (C) 2013-2020, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -21,22 +21,20 @@ with Ada.Strings.Unbounded;         use Ada.Strings.Unbounded;
 with GNAT.OS_Lib;                   use GNAT.OS_Lib;
 
 with GNATCOLL.VFS;                  use GNATCOLL.VFS;
-
-with GPR2; use GPR2;
-
-with GPR2.Project.View.Vector;
+with GNATCOLL.Projects;             use GNATCOLL.Projects;
 
 package GNAThub.Project is
 
-   GNATdashboard : constant String;
-   GNATdashboard_Package : constant GPR2.Package_Id;
-   --  GNATdashboard_Package MUST be in lower case to avoid Prj
-   --  error "cannot register a package with a non unique name"
-
-   Local_Repository : constant GPR2.Optional_Attribute_Id;
+   GNATdashboard_Package : constant String;
+   --  GNATdashboard_Package MUST be in lower case to avoid Prj error "cannot
+   --  register a package with a non unique name"
 
    Project_Error : exception;
    --  Custom error for this module
+
+   package Project_Vectors is
+     new Ada.Containers.Vectors (Positive, Project_Type);
+   --  A list of Projects
 
    function Loaded return Boolean;
    --  Whether a call to Load has already been made
@@ -78,9 +76,12 @@ package GNAThub.Project is
      with Pre => Initialized and then Loaded;
    --  Store the project details in database
 
-   function All_Projects return GPR2.Project.View.Vector.Object
+   function All_Projects return Project_Vectors.Vector
       with Pre => Initialized;
    --  Return a flat list of all Projects.
+
+   function Tree return GNATCOLL.Projects.Project_Tree;
+   --  Return the loaded project tree
 
    function Name return String
      with Pre => Initialized and then Loaded;
@@ -128,16 +129,16 @@ package GNAThub.Project is
    --  Return the object directory file
 
    function Property_As_String
-     (Property     : GPR2.Attribute_Id;
-      Package_Name : GPR2.Optional_Package_Id := GNATdashboard_Package;
+     (Property     : String;
+      Package_Name : String := GNATdashboard_Package;
       Index        : String := "") return String
      with Pre => Initialized and then Loaded;
    --  Return the given property as a string. Return the empty string if the
    --  property does not exist
 
    function Property_As_List
-     (Property     : GPR2.Attribute_Id;
-      Package_Name : GPR2.Optional_Package_Id := GNATdashboard_Package;
+     (Property     : String;
+      Package_Name : String := GNATdashboard_Package;
       Index        : String := "") return String_List_Access
      with Pre => Initialized and then Loaded;
    --  Return the given property as a list. Return an empty list if the
@@ -148,12 +149,7 @@ package GNAThub.Project is
 
 private
 
-   Local_Repository : constant GPR2.Optional_Attribute_Id :=
-                        +"Local_Repository";
-
-   GNATdashboard : constant String := "dashboard";
-   GNATdashboard_Package : constant GPR2.Package_Id :=
-                             +GPR2.Name_Type (GNATdashboard);
+   GNATdashboard_Package : constant String := "dashboard";
    --  GNATdashboard_Package value
 
 end GNAThub.Project;
