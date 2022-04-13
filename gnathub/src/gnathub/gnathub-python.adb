@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2022, AdaCore                     --
+--                     Copyright (C) 2013-2021, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -19,6 +19,7 @@ with Ada.Strings.Unbounded;         use Ada.Strings.Unbounded;
 with GNAT.OS_Lib;                   use GNAT.OS_Lib;
 with GNAT.Source_Info;
 
+with GNATCOLL.Projects;             use GNATCOLL.Projects;
 with GNATCOLL.Scripts;              use GNATCOLL.Scripts;
 with GNATCOLL.Scripts.Python;       use GNATCOLL.Scripts.Python;
 with GNATCOLL.Traces;               use GNATCOLL.Traces;
@@ -28,15 +29,6 @@ with GNAThub.Constants;
 with GNAThub.Configuration;         use GNAThub.Configuration;
 with GNAThub.Project;
 with GNAThub.Python.Database;       use GNAThub.Python.Database;
-
-with GPR2;
-with GPR2.Path_Name;
-with GPR2.Project;
-with GPR2.Project.Registry.Attribute;
-with GPR2.Project.Registry.Pack;
-with GPR2.Project.Source;
-with GPR2.Project.Source.Set;
-with GPR2.Project.View;
 
 package body GNAThub.Python is
    Me : constant Trace_Handle := Create (GNAT.Source_Info.Enclosing_Entity);
@@ -548,7 +540,6 @@ package body GNAThub.Python is
       Command : String)
    is
       use GNAThub.Project;
-      use GPR2.Project.Source.Set;
    begin
       if Command = Project_Name_Method then
          Set_Return_Value (Data, Name);
@@ -576,44 +567,34 @@ package body GNAThub.Python is
          end;
 
       elsif Command = Project_Source_Files_Method then
-         for View of  GNAThub.Project.All_Projects loop
+         for Project of GNAThub.Project.All_Projects loop
             Set_Return_Value_As_List (Data);
-            for Source of View.Sources
+
+            for File of File_Array_Access'
+              (Project.Source_Files (Recursive => False)).all
             loop
-               Set_Return_Value (Data, String (Source.Path_Name.Value));
+               Set_Return_Value (Data, File.Display_Full_Name);
             end loop;
 
-            Set_Return_Value_Key
-              (Data,
-               String (View.Name));
+            Set_Return_Value_Key (Data, Project.Name);
          end loop;
 
       elsif Command = Project_Source_Dirs_Method then
-         for View of  GNAThub.Project.All_Projects loop
+         for Project of GNAThub.Project.All_Projects loop
             Set_Return_Value_As_List (Data);
 
-            if View.Is_Defined and then View.Qualifier not in
-              GPR2.K_Aggregate | GPR2.K_Abstract
-            then
-               for Source of View.Source_Directories.Values loop
-                  Set_Return_Value
-                    (Data,
-                     String (GPR2.Path_Name.Create_Directory
-                       (GPR2.Filename_Type (Source.Text)).Value));
-               end loop;
-            end if;
+            for Dir of Project.Source_Dirs (Recursive => False) loop
+               Set_Return_Value (Data, Dir.Display_Full_Name);
+            end loop;
 
-            Set_Return_Value_Key (Data, String (View.Name));
+            Set_Return_Value_Key (Data, Project.Name);
          end loop;
 
       elsif Command = Project_Object_Dirs_Method then
          Set_Return_Value_As_List (Data);
-
-         for View of GNAThub.Project.All_Projects loop
-            if View.Has_Attribute
-              (GPR2.Project.Registry.Attribute.Object_Dir)
-            then
-               Set_Return_Value (Data, String (View.Object_Directory.Value));
+         for Project of GNAThub.Project.All_Projects loop
+            if Project.Has_Attribute (GNATCOLL.Projects.Obj_Dir_Attribute) then
+               Set_Return_Value (Data, Project.Object_Dir.Display_Full_Name);
             end if;
          end loop;
 
@@ -646,16 +627,14 @@ package body GNAThub.Python is
       Language : constant String := Data.Nth_Arg (1);
 
       Spec_Ext : constant String :=
-        Property_As_String
-          (Property     => GPR2.Project.Registry.Attribute.Spec_Suffix,
-           Package_Name => GPR2.Project.Registry.Pack.Naming,
-           Index        => Language);
+        Property_As_String (Property     => "Spec_Suffix",
+                            Package_Name => Naming_Package,
+                            Index        => Language);
 
       Body_Ext : constant String :=
-        Property_As_String
-          (Property     => GPR2.Project.Registry.Attribute.Body_Suffix,
-           Package_Name => GPR2.Project.Registry.Pack.Naming,
-           Index        => Language);
+        Property_As_String (Property     => "Body_Suffix",
+                            Package_Name => Naming_Package,
+                            Index        => Language);
 
    begin
       pragma Assert (Command = Project_Source_Suffixes_Method);
@@ -674,74 +653,53 @@ package body GNAThub.Python is
       Command : String)
    is
       use GNAThub.Project;
-      use GPR2;
 
       Property     : constant String    := Data.Nth_Arg (1);
       Package_Name : constant String    :=
-                       Data.Nth_Arg (2, GNATdashboard);
+                       Data.Nth_Arg (2, GNATdashboard_Package);
+      Value        : constant String    :=
+                       Property_As_String (Property, Package_Name);
+      List         : String_List_Access :=
+                       Property_As_List (Property, Package_Name);
 
    begin
       if Command = Project_Property_As_String_Method then
-         declare
-            Value : constant String :=
-                      Property_As_String
-                        (+Optional_Name_Type (Property),
-                         +Optional_Name_Type (Package_Name));
-         begin
-            if Value = "" then
-               declare
-                  Result : Unbounded_String;
-                  List   : String_List_Access :=
-                             Property_As_List
-                               (+Optional_Name_Type (Property),
-                                +Optional_Name_Type (Package_Name));
-               begin
-                  if List /= null then
-                     for L in List'Range loop
-                        Append (Result, List (L).all);
+         if Value = "" then
+            declare
+               Result : Unbounded_String;
+            begin
+               if List /= null then
+                  for L in List'Range loop
+                     Append (Result, List (L).all);
 
-                        if L /= List'Last then
-                           Append (Result, " ");
-                        end if;
-                     end loop;
+                     if L /= List'Last then
+                        Append (Result, " ");
+                     end if;
+                  end loop;
 
-                     Free (List);
-                  end if;
+                  Free (List);
+               end if;
 
-                  Set_Return_Value (Data, To_String (Result));
-               end;
-            else
-               Set_Return_Value (Data, Value);
-            end if;
-         end;
+               Set_Return_Value (Data, To_String (Result));
+            end;
+         else
+            Set_Return_Value (Data, Value);
+         end if;
+
       elsif Command = Project_Property_As_List_Method then
          Set_Return_Value_As_List (Data);
 
-         declare
-            List : String_List_Access :=
-                     Property_As_List
-                       (+Optional_Name_Type (Property),
-                        +Optional_Name_Type (Package_Name));
-         begin
-            if List = null then
-               declare
-                  Value : constant String :=
-                            Property_As_String
-                              (+Optional_Name_Type (Property),
-                               +Optional_Name_Type (Package_Name));
-               begin
-                  if Value /= "" then
-                     Set_Return_Value (Data, Value);
-                  end if;
-               end;
-            else
-               for L in List'Range loop
-                  Set_Return_Value (Data, List (L).all);
-               end loop;
+         if List = null and then Value /= "" then
+            Set_Return_Value (Data, Value);
 
-               Free (List);
-            end if;
-         end;
+         elsif List /= null then
+            for L in List'Range loop
+               Set_Return_Value (Data, List (L).all);
+            end loop;
+         end if;
+
+         Free (List);
+
       else
          raise Python_Error with "Unknown method GNAThub.Project." & Command;
       end if;
@@ -834,7 +792,7 @@ package body GNAThub.Python is
          if Configuration.Project /= "" then
             --  This condition is added to be able to handle gnathub command
             --  line --dry-run switch without project file associated
-            Set_Return_Value (Data, Property_As_String (Local_Repository));
+            Set_Return_Value (Data, Property_As_String ("Local_Repository"));
             Set_Return_Value_Key (Data, "local");
          end if;
 
