@@ -287,6 +287,7 @@ package body GNAThub.Configuration is
       is
          pragma Unreferenced (Section);
       begin
+
          if Switch = "--plugins" then
             if All_Plugins = Null_Unbounded_String then
                All_Plugins := To_Unbounded_String (Param);
@@ -325,11 +326,11 @@ package body GNAThub.Configuration is
 
       Index := 1;
       if Count > 0 then
-
          while Index <= Count loop
             declare
                Str : constant String := Argument (Index);
             begin
+
                --  Parse -P argument and set as project file path
                if Str'Length >= 2 and then Str (1 .. 2) = "-P" then
                   if Str'Length = 2 then
@@ -425,11 +426,33 @@ package body GNAThub.Configuration is
       ------------------------------------
 
       procedure Append_To_GNAThub_Command_Line (Option : String) is
+
+         -----------------------------------
+         --  Update_GNAThub_Command_Line  --
+         -----------------------------------
+
+         procedure Update_GNAThub_Command_Line (Opt : String) is
+         begin
+            if GNAThub_Command_Line = Null_Unbounded_String then
+               GNAThub_Command_Line := To_Unbounded_String (Opt);
+            else
+               Append (GNAThub_Command_Line, " " & Opt);
+            end if;
+         end Update_GNAThub_Command_Line;
+
+         Idx : constant Natural := Option'First;
+
       begin
-         if GNAThub_Command_Line = Null_Unbounded_String then
-            GNAThub_Command_Line := To_Unbounded_String (Option);
+
+         --  In order to avoid execution errors when the scenario variables
+         --  contains the sequence of " - " or " -" adding '"' delimiters
+         --  surrounding these variables into the reconstructed command line
+         --  parsed by the GNAThub's command line parser.
+
+         if Option'Length >= 2 and then Option (Idx .. Idx + 1) = "-X" then
+            Update_GNAThub_Command_Line ('"' & Option & '"');
          else
-            Append (GNAThub_Command_Line, " " & Option);
+            Update_GNAThub_Command_Line (Option);
          end if;
       end Append_To_GNAThub_Command_Line;
 
