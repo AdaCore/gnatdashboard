@@ -427,6 +427,8 @@ package body GNAThub.Configuration is
 
       procedure Append_To_GNAThub_Command_Line (Option : String) is
 
+         procedure Update_GNAThub_Command_Line (Opt : String);
+
          -----------------------------------
          --  Update_GNAThub_Command_Line  --
          -----------------------------------
