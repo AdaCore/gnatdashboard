@@ -119,9 +119,8 @@ package body GNAThub.Project is
    -------------------
 
    function Artifacts_Dir return Virtual_File is
-      Project : GPR2.Project.View.Object renames Project_Tree.Root_Project;
    begin
-      return GPR2.Path_Name.Virtual_File (Project.Object_Directory);
+      return Object_Dir;
    end Artifacts_Dir;
 
    ----------------
@@ -129,9 +128,14 @@ package body GNAThub.Project is
    ----------------
 
    function Object_Dir return Virtual_File is
+      Project : GPR2.Project.View.Object renames Project_Tree.Root_Project;
    begin
-      return GPR2.Path_Name.Virtual_File
-               (Project_Tree.Root_Project.Object_Directory);
+      if Project.Kind not in K_Configuration | K_Abstract then
+         return GPR2.Path_Name.Virtual_File
+                 (Project_Tree.Root_Project.Object_Directory);
+      else
+         return GNATCOLL.VFS.Create (".");
+      end if;
    end Object_Dir;
 
    ----------

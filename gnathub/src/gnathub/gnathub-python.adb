@@ -592,14 +592,11 @@ package body GNAThub.Python is
          for View of  GNAThub.Project.All_Projects loop
             Set_Return_Value_As_List (Data);
 
-            if View.Is_Defined and then View.Qualifier not in
-              GPR2.K_Aggregate | GPR2.K_Abstract
+            if View.Is_Defined and then View.Qualifier in
+              GPR2.K_Standard | GPR2.K_Library
             then
-               for Source of View.Source_Directories.Values loop
-                  Set_Return_Value
-                    (Data,
-                     String (GPR2.Path_Name.Create_Directory
-                       (GPR2.Filename_Type (Source.Text)).Value));
+               for Dir of View.Source_Directories loop
+                  Set_Return_Value (Data, String (Dir.Value));
                end loop;
             end if;
 
