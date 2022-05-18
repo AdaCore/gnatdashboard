@@ -595,8 +595,11 @@ package body GNAThub.Python is
             if View.Is_Defined and then View.Qualifier not in
               GPR2.K_Aggregate | GPR2.K_Abstract
             then
-               for Dir of View.Source_Directories loop
-                  Set_Return_Value (Data, String (Dir.Value));
+               for Source of View.Source_Directories.Values loop
+                  Set_Return_Value
+                    (Data,
+                     String (GPR2.Path_Name.Create_Directory
+                       (GPR2.Filename_Type (Source.Text)).Value));
                end loop;
             end if;
 
