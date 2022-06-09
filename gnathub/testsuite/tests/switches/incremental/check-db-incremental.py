@@ -63,8 +63,8 @@ assertEqual(len(tools), 2)
 
 # Rules dictionary from DB
 rules = {rule.id: rule for rule in GNAThub.Rule.list()}
-assertEqual(len(rules), 33)
+assertEqual(len(rules), 37)
 
 # Messages from DB
 messages = {msg.id: msg for msg in GNAThub.Message.list()}
-assertEqual(len(messages), 102)
+assertEqual(len(messages), 106)

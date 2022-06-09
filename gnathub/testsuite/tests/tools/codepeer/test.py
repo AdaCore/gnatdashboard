@@ -13,26 +13,43 @@ from collections import defaultdict
 
 RESULTS = sorted([
     'f.adb',
+    'f.adb 10:7',
     'f.adb 18:32',
     'f.ads',
     'simple.adb',
     'simple.adb 30:24',
-    'simple.adb 37:8'
+    'simple.adb 33:17', 
+    'simple.adb 37:8',
+    'simple.adb 43:4'
 ])
 
 # For .csv content check
-EXPECTED_LINES_FROM_CSV = ['18', '30', '37']
-EXPECTED_COLUMNS_FROM_CSV = ['32', '24', '8']
+EXPECTED_LINES_FROM_CSV = ['10', '18', '30', '33', '37', '43', '43']
+EXPECTED_COLUMNS_FROM_CSV = ['7', '32', '24', '17', '8', '4', '4']
+#EXPECTED_CATEGORIES_FROM_CSV = [
+#    'validity check',
+#    'test always true',
+#    'dead code']
+
 EXPECTED_CATEGORIES_FROM_CSV = [
+    'identifier_casing (gnatcheck)',
     'validity check',
     'test always true',
-    'dead code']
-EXPECTED_RANKINGS_FROM_CSV = ['high', 'medium', 'medium']
-EXPECTED_KINDS_FROM_CSV = ['check', 'warning', 'warning']
+    'improper_returns (gnatcheck)',
+    'dead code',
+    'identifier_suffixes (gnatcheck)',
+    'identifier_prefixes (gnatcheck)']
+
+EXPECTED_RANKINGS_FROM_CSV = ['medium', 'high', 'medium', 'medium', 'medium', 'medium', 'medium']
+EXPECTED_KINDS_FROM_CSV = ['warning', 'check', 'warning', 'warning', 'warning', 'warning', 'warning']
 EXPECTED_MESSAGES_FROM_CSV = [
+    'identifier_casing (gnatcheck): uninitialized does not have casing specified (mixed)',
     'validity check: uninitialized is uninitialized here',
     'test always true because J <= (42) - 38',
-    'dead code because (1) = (42) - 41']
+    'improper_returns (gnatcheck): extra return statement',
+    'dead code because (1) = (42) - 41',
+    'identifier_suffixes (gnatcheck): Number does not end with constant suffix _Cst',
+    'identifier_prefixes (gnatcheck): Number does not start with constant prefix C_']
 
 class TestCodePeerSupport(TestCase):
     def setUp(self):
@@ -89,7 +106,7 @@ class TestCodePeerSupport(TestCase):
         self.assertListEqual(columns['Kind'], EXPECTED_KINDS_FROM_CSV)
         # Check column 'Message'
         self.assertListEqual(columns['Message'], EXPECTED_MESSAGES_FROM_CSV)
-
+        
         # Checks the analysis report results are as expected
         script_output_file = os.path.abspath('script.out')
         gnathub.run(script=Script.db2cfg(), output=script_output_file)
