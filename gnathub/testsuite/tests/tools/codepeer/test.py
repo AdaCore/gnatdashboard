@@ -32,24 +32,24 @@ EXPECTED_COLUMNS_FROM_CSV = ['7', '32', '24', '17', '8', '4', '4']
 #    'dead code']
 
 EXPECTED_CATEGORIES_FROM_CSV = [
-    'identifier casing (GNATCheck)',
+    'identifier casing (GNATcheck)',
     'validity check',
     'test always true',
-    'improper returns (GNATCheck)',
+    'improper returns (GNATcheck)',
     'dead code',
-    'identifier suffixes (GNATCheck)',
-    'identifier prefixes (GNATCheck)']
+    'identifier suffixes (GNATcheck)',
+    'identifier prefixes (GNATcheck)']
 
 EXPECTED_RANKINGS_FROM_CSV = ['medium', 'high', 'medium', 'medium', 'medium', 'medium', 'medium']
 EXPECTED_KINDS_FROM_CSV = ['warning', 'check', 'warning', 'warning', 'warning', 'warning', 'warning']
 EXPECTED_MESSAGES_FROM_CSV = [
-    'identifier casing (GNATCheck): uninitialized does not have casing specified (mixed)',
+    'identifier casing (GNATcheck): uninitialized does not have casing specified (mixed)',
     'validity check: uninitialized is uninitialized here',
     'test always true because J <= (42) - 38',
-    'improper returns (GNATCheck): extra return statement',
+    'improper returns (GNATcheck): extra return statement',
     'dead code because (1) = (42) - 41',
-    'identifier suffixes (GNATCheck): Number does not end with constant suffix _Cst',
-    'identifier prefixes (GNATCheck): Number does not start with constant prefix C_']
+    'identifier suffixes (GNATcheck): Number does not end with constant suffix _Cst',
+    'identifier prefixes (GNATcheck): Number does not start with constant prefix C_']
 
 class TestCodePeerSupport(TestCase):
     def setUp(self):
