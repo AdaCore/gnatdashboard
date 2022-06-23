@@ -380,8 +380,8 @@ class GNATcheck(Plugin, Runner, Reporter):
             rule = GNAThub.Rule(rule_id, rule_id, GNAThub.RULE_KIND, self.tool)
             self.rules[rule_id] = rule
 
-        # Set predefined unspecified ranking for all GNATcheck messages
-        ranking = GNAThub.RANKING_UNSPECIFIED
+        # Set predefined info ranking for all GNATcheck messages
+        ranking = GNAThub.RANKING_INFO
 
         # Cache the messages
         if (rule, msg, ranking) in self.messages:
