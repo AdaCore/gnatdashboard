@@ -37,6 +37,19 @@ from pygments import highlight
 from pygments.formatters import HtmlFormatter
 
 
+def write_js_header(dest, f):
+    """ Write a JS header that stores all the subsequent output (assumed
+    to be json) into a JS variable. The name of this variable is deduced from
+    `output`.
+
+    :param dest: the name of the file in which we are writing
+    :param f: the file in which we are writing
+    :type f: file
+    """
+    f.write("var REPORT = REPORT || {};\n")
+    f.write(f"REPORT ['{os.path.basename(dest)}'] = \n")
+
+
 def _write_json(output, obj, indent=2):
     """Dump a JSON-encoded representation of `obj` into `output`.
 
@@ -55,9 +68,11 @@ def _write_json(output, obj, indent=2):
             return s.encode("utf-8")
     try:
         with open(output, 'w') as outfile:
+            write_js_header(output, outfile)
             outfile.write(json.dumps(obj, indent=indent))
     except TypeError:
         with open(output, 'w') as outfile:
+            write_js_header(output, outfile)
             outfile.write(json.dumps(obj, indent=indent,
                                      ensure_ascii=False,
                                      default=encode_string))
