@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2021, AdaCore                     --
+--                     Copyright (C) 2013-2022, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -22,9 +22,6 @@ package GNAThub.Constants is
    function Python_Home return Virtual_File;
    --  The GNAThub Python installation HOME
 
-   function Server_Engine_Dir return Virtual_File;
-   --  Web server engine packaged with GNAThub
-
    function Scripts_Dir return Virtual_File;
    --  The directory containing the main Python entry scripts
 
@@ -41,10 +38,6 @@ package GNAThub.Constants is
 
    function Database_Model_File return Virtual_File;
    --  GNAThub database model file for database initialization
-
-   function Server_Runner return Virtual_File;
-   --  The path to the script in charge of chaining the execution of server
-   --  (engine + server.py).
 
    function Plugin_Runner return Virtual_File;
    --  The path to the script in charge of chaining the execution of all

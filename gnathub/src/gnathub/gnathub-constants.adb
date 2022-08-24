@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2021, AdaCore                     --
+--                     Copyright (C) 2013-2022, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -68,15 +68,6 @@ package body GNAThub.Constants is
       return Create_From_Dir (Share_Dir, "sql");
    end Sql_Dir;
 
-   -----------------------
-   -- Server_Engine_Dir --
-   -----------------------
-
-   function Server_Engine_Dir return Virtual_File is
-   begin
-      return Create_From_Dir (Share_Dir, "engine");
-   end Server_Engine_Dir;
-
    ----------------------
    -- Core_Plugins_Dir --
    ----------------------
@@ -119,13 +110,6 @@ package body GNAThub.Constants is
 
    function Plugin_Runner return Virtual_File is
       (Create_From_Dir (Scripts_Dir, "plugin-runner.py"));
-
-   -------------------
-   -- Server_Runner --
-   -------------------
-
-   function Server_Runner return Virtual_File is
-      (Create_From_Dir (Scripts_Dir, "server-runner.py"));
 
    -------------------------
    -- Database_Model_File --

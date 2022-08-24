@@ -9,8 +9,7 @@ reporters/exporters.
 HTML Report
 -----------
 
-This reporter generates a standalone web application that any web server can run
-(e.g.  Python's SimpleHTTPServer implementation).
+This reporter generates a standalone static web report.
 
 JSON Report
 -----------

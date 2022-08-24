@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                               G N A T h u b                              --
 --                                                                          --
---                     Copyright (C) 2013-2021, AdaCore                     --
+--                     Copyright (C) 2013-2022, AdaCore                     --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -100,12 +100,6 @@ package GNAThub.Configuration is
 
    function Reporters_Only return Boolean;
    --  Whether to run only plugins implementing the GNAThub.Reporter interface
-
-   function Server return Boolean;
-   --  Whether to run WEB server script
-
-   function Port return Integer;
-   --  Return the port to launch the server
 
    procedure Finalize;
    --  Free allocated memory

@@ -8,7 +8,7 @@ It works with CodePeer, GNATmetric and GNATcheck.
 Quick Launch
 ------------
 
-To launch the web interface, you first need to create the web data files statically and then launch a web server.
+To launch the web interface, you first need to create the web data files statically.
 
 Creating the data files
 '''''''''''''''''''''''
@@ -21,27 +21,6 @@ Creating the data files
     :code:`codepeer -P<project> -html`
 
     :code:`codepeer -P<project> -html-only`
-
-Serving the interface
-'''''''''''''''''''''
-
-To serve the interface, you need to launch a client webserver to render the HTML pages and an API webserver that serves the data shown by the interface.
-Those two servers need to use two ports.
-
-If not specified, the ports used by default will be 8080 and 8081.
-If a <port_number> is specified, then the servers will use respectively <port_number> and <port_number+1>.
-
-* Gnathub: You need to use the ``-server`` switch, and optionally ``-port`` to specify a port:
-    :code:`gnathub -P<project> -server`
-
-    :code:`gnathub -P<project> -server -port <port_number>`
-
-* CodePeer: You need to add the ``--web-server`` switch, and optionally ``--port=`` to specify a port:
-    :code:`codepeer -P<project> --web-server`
-
-    :code:`codepeer -P<project> --web-server --port=<port_number>`
-
-Please refer to the CodePeer documentation for more details and options.
 
 Web Interface Overview
 ----------------------
@@ -63,14 +42,6 @@ It is composed of two navigations buttons (on the left side):
 
 * the Message Navigation button, that will lead to :ref:`Message navigation` content.
 * the Project Navigation button, that will lead to :ref:`Project navigation` content.
-
-On the right side, you can see a marker that tells you if the server is offline or online.
-The difference between offline and online mode is the state of the API server.
-If the API server is not running (e.g. API server is down or a different HTML server is used.) then the WebUI interface will be offline.
-The offline mode doesn't allow you to do message review (Note: Posting review is a feature specific to CodePeer).
-
-If you are running CodePeer, an extra button `CodePeer history` is displayed.
-This button will open a page displaying additional CodePeer run information and statisitcs
 
 .. _Filter:
 
@@ -152,24 +123,18 @@ You can see all the messages in the ``All messages`` tab.
 
 If GNATmetric is activated, you can see them in the ``File Metric`` tab.
 If there are Race condition, you can see them in the ``Race condition`` tab.
-.. _Add review:
 
-|  In the ``File message`` tab you can:
+.. _View reviews:
 
-* Select a message by clicking on it (will scroll the source view to the selected line)
-* Select multiple messages by using :key:``Ctrl+click`` on each message you want to select.
-
-If you select one or more  CodePeer messages, you can review them on the interface by clicking on the ``Add review`` button.
-This will open the following pop-up. Note that changing the status is mandatory:
-
-.. figure:: images/add_review.png
-   :align: center
-
-If there are already some manual reviews made, then you can see the history icon appear.
+In the ``File message`` tab you can select a message by clicking on it. This will scroll the source view to the selected line.
+If there are already some manual reviews made, then you can see the history icon appear, in the rightmost column.
 By clicking on it, you will see the ``User review history`` pop-up open:
 
 .. figure:: images/history_review.png
    :align: center
+
+Note that WebUI used to allow adding reviews, but this functionality was removed in CodePeer 23.
+
 
 Features shortcut
 -----------------
@@ -178,8 +143,3 @@ Filter messages
 '''''''''''''''
 
 See the :ref:`Filter` section.
-
-User Review
-'''''''''''
-
-See the `Add review`_ section.

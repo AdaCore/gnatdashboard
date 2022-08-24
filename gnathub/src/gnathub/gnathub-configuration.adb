@@ -71,10 +71,6 @@ package body GNAThub.Configuration is
    --  Keeping this for later -U main_file switchimplementation
    --  U_Main_Arg           : aliased GNAT.Strings.String_Access;
 
-   --  WEB server handling
-   Server_Arg         : aliased Boolean;
-   Port_Arg           : aliased Integer;
-
    All_Plugins : Unbounded_String := Null_Unbounded_String;
    --  Store all plugins provided with --plugins
 
@@ -219,20 +215,6 @@ package body GNAThub.Configuration is
          Output      => Reporters_Only_Arg'Access,
          Long_Switch => "--reporters-only",
          Help        => "Execute only plugins implementing GNAThub.Reporter");
-
-      Define_Switch
-        (Config      => Config,
-         Output      => Server_Arg'Access,
-         Switch      => "-s",
-         Long_Switch => "--server",
-         Help        => "Specify that the WEB server must be launched");
-
-      Define_Switch
-        (Config       => Config,
-         Output       => Port_Arg'Access,
-         Switch       => "-p:",
-         Long_Switch  => "--port=",
-         Help         => "Specify a port to launch server (default: 8000)");
 
       Define_Switch
         (Config      => Config,
@@ -819,24 +801,6 @@ package body GNAThub.Configuration is
    begin
       return Dry_Run and (Project_Arg.all = "");
    end Dry_Run_Without_Project;
-
-   -------------
-   -- Server ---
-   -------------
-
-   function Server return Boolean is
-   begin
-      return Server_Arg;
-   end Server;
-
-   -------------
-   -- Port -----
-   -------------
-
-   function Port return Integer is
-   begin
-      return Port_Arg;
-   end Port;
 
    --------------
    -- Finalize --

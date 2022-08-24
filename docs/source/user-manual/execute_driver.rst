@@ -328,20 +328,6 @@ plugins that need to process the output of the tool to save its results within
 encapsulate all the logic to run a tool and collect its results in the same
 class.
 
-:command:`--server`
-^^^^^^^^^^^^^^^^^^^^
-
-Takes no argument. Launch a WEB server. If `--port` switch is present, then the
-server is launched on the specified port. Otherwise, the server will be launched
-using a default port which is 8000. Any plugin will be executed.
-
-:command:`--port`
-^^^^^^^^^^^^^^^^^^^^
-
-Takes a port number as argument where the web server will be launched. To be
-used with `--server` switch in order to specify a custom port for the WEB
-server.
-
 :command:`-d`
 ^^^^^^^^^^^^^
 
