@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="">
 <head>
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <title><Codepeer report></title>
+  <script>
+    document.write("<base href='" + window.location.href + "'/>");
+  </script>
+
+  <script>var REPORT = {}</script>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -9,13 +14,7 @@
     <meta name="description" content="<%= htmlWebpackPlugin.options.title %>">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/variable-theme.css">
-
-    <% if (webpackConfig.htmlElements.headTags) { %>
-    <!-- Configured Head Tags  -->
-    <%= webpackConfig.htmlElements.headTags %>
-    <% } %>
 
     <!-- Base URL -->
     <!-- <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>"> -->
@@ -25,9 +24,5 @@
         <div style="text-align: center;">Still working…</div>
     </main-responder>
 
-    <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
-    <!-- Webpack Dev Server reload -->
-    <script src="/webpack-dev-server.js"></script>
-    <% } %>
 </body>
 </html>

@@ -10,7 +10,7 @@ type InlineAnnotations = IAnnotatedSourceMessage[];
     styleUrls: [ 'inline-annotations.component.scss' ]
 })
 export class InlineAnnotationsComponent implements OnChanges {
-    @Input() public annotations: InlineAnnotations[];
+    @Input() public annotations: IAnnotatedSourceMessage[];
     @Input() public line: number;
 
     constructor( public reportService: SharedReport) {
@@ -20,21 +20,21 @@ export class InlineAnnotationsComponent implements OnChanges {
         return annotation.properties.map(prop => prop.name).join(', ');
     }
 
-    public openClose(id: string): void {
-        let elem: HTMLElement = document.getElementById(id);
+    public openClose(line: number): void {
+        let elem: HTMLElement = document.getElementById(line.toString());
         elem.classList.toggle('expand');
     }
 
-    public trackAnnotation(index: number, annotation: InlineAnnotations): number {
+    public trackAnnotation(index: number, annotation: IAnnotatedSourceMessage): number {
         return index;
         // return annotation ? annotation.id : undefined;
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.line && !changes.line.firstChange){
-            this.line = changes.line.currentValue;
-        }else if (changes.annotations && !changes.annotations.firstChange){
-            this.annotations = changes.annotations.currentValue;
+        if (changes["line"] && !changes["line"].firstChange){
+            this.line = changes["line"].currentValue;
+        }else if (changes["annotations"] && !changes["annotations"].firstChange){
+            this.annotations = changes["annotations"].currentValue;
         }
     }
 }

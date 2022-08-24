@@ -27,7 +27,7 @@ import os
 from GNAThub import Console, Plugin, Reporter
 
 from shutil import copy2, copytree, rmtree
-from _report import ReportBuilder
+from _report import ReportBuilder, write_js_header
 
 
 class HTMLReport(Plugin, Reporter):
@@ -58,6 +58,17 @@ class HTMLReport(Plugin, Reporter):
 
         return os.path.join(GNAThub.root(), self.name)
 
+    def copy_contents(self, src, dstfile):
+        with open(src, 'r') as srcfile:
+            dstfile.write(srcfile.read())
+
+    def output_xml(self, src, dst):
+        with open(dst, 'w') as dstfile:
+            write_js_header(dst, dstfile)
+            dstfile.write("`")
+            self.copy_contents(src, dstfile)
+            dstfile.write('`')
+
     def verbose_info(self, message):
         if (GNAThub.verbose()):
             self.info(message)
@@ -66,8 +77,8 @@ class HTMLReport(Plugin, Reporter):
         """Generate JSON-encoded representation of the data collected."""
 
         # The output directory for the JSON-encoded report data
-        data_output_dir = os.path.join(self.output_dir, 'data')
-        data_src_output_dir = os.path.join(data_output_dir, 'src')
+        data_output_dir = os.path.join(self.output_dir, 'webui', 'json')
+        src_output_dir = os.path.join(self.output_dir, 'webui', 'source')
 
         try:
             self.info('generate JSON-encoded report')
@@ -93,8 +104,8 @@ class HTMLReport(Plugin, Reporter):
                     self.log.debug('cp "%s" "%s"', path, dest)
                     copy2(path, dest)
 
-            # Create the JSON-encoded report output directory
-            for directory in (data_output_dir, data_src_output_dir):
+            # Create the report output directory
+            for directory in (data_output_dir, src_output_dir):
                 if not os.path.exists(directory):
                     os.makedirs(directory)
 
@@ -104,32 +115,32 @@ class HTMLReport(Plugin, Reporter):
 
             # Generate the JSON-representation of each source of the project.
             for count, source in enumerate(report.iter_sources(), start=1):
-                dest = '{}.json'.format(
-                    os.path.join(data_src_output_dir, source.filename))
+                dest = '{}.js'.format(
+                    os.path.join(src_output_dir, source.filename))
                 source.save_as(dest)
                 self.log.debug('%s: saved as %s', source.filename, dest)
                 Console.progress(count, report.index.source_file_count, False)
 
             # Generate the JSON-encoded report for message navigation.
-            dest = os.path.join(data_output_dir, 'message.json')
+            dest = os.path.join(data_output_dir, 'message.js')
             report.index.message_to_json(dest)
             self.log.debug('message index saved as %s', dest)
             self.verbose_info('HTML report message generated in ' + dest)
 
             # Generate the JSON-encoded report for filter panel.
-            dest = os.path.join(data_output_dir, 'filter.json')
+            dest = os.path.join(data_output_dir, 'filter.js')
             report.index.filter_to_json(dest)
             self.log.debug('filter index saved as %s', dest)
             self.verbose_info('HTML report filter generated in ' + dest)
 
             # Generate the JSON-encoded report for code navigation.
-            dest = os.path.join(data_output_dir, 'code.json')
+            dest = os.path.join(data_output_dir, 'code.js')
             report.index.code_to_json(dest)
             self.log.debug('code index saved as %s', dest)
             self.verbose_info('HTML report code generated in ' + dest)
 
             # Generate the JSON-encoded report for custom review status.
-            dest = os.path.join(data_output_dir, 'custom_status.json')
+            dest = os.path.join(data_output_dir, 'custom_status.js')
             report.index.custom_review_to_json(dest)
             self.log.debug('custom review status saved as %s', dest)
             self.verbose_info(
@@ -140,9 +151,7 @@ class HTMLReport(Plugin, Reporter):
             if os.path.isdir(codepeer_obj_dir):
                 # Call to codepeer_bridge for offline mode
                 self.log.debug("Export info from codepeer_bridge")
-                dest = os.path.join(GNAThub.Project.artifacts_dir(),
-                                    'gnathub', 'html-report',
-                                    'data', 'codepeer_review.xml')
+                dest = os.path.join(data_output_dir, 'codepeer_review.xml')
                 name = 'codepeer_bridge'
                 cmd = ['codepeer_bridge',
                        '--output-dir=' + GNAThub.output_dir(),
@@ -151,31 +160,32 @@ class HTMLReport(Plugin, Reporter):
                 self.log.debug('Codepeer_bridge file generated in %s', dest)
                 self.verbose_info('Codepeer_bridge file generated in ' + dest)
                 GNAThub.Run(name, cmd)
+                js_dest = os.path.join(data_output_dir, 'codepeer_review.js')
+                self.verbose_info('Converting Codepeer_bridge file into' +
+                                  'json file ' + js_dest)
+                self.output_xml(dest, js_dest)
 
                 # Get codepeer_run file
                 copy_file = os.path.join(GNAThub.Project.artifacts_dir(),
                                          'codepeer',
                                          'codepeer_run')
-                dest = os.path.join(GNAThub.Project.artifacts_dir(),
-                                    'gnathub', 'html-report',
-                                    'data')
-                copy2(copy_file, dest)
-                self.log.debug('Codepeer_run file copied in %s', dest)
+                dest = os.path.join(data_output_dir, 'codepeer_run.js')
+                with open(dest, 'w') as dstfile:
+                    write_js_header(dest, dstfile)
+                    self.copy_contents(copy_file, dstfile)
                 self.verbose_info('Codepeer_run file copied in ' + dest)
 
                 # Get race_condition file
-                copy_file = os.path.join(GNAThub.Project.artifacts_dir(),
+                race_file = os.path.join(GNAThub.Project.artifacts_dir(),
                                          'codepeer',
                                          GNAThub.Project.name().lower()
                                          + '.output',
                                          'race_conditions.xml')
-                if os.path.isfile(copy_file):
-                    dest = os.path.join(GNAThub.Project.artifacts_dir(),
-                                        'gnathub', 'html-report',
-                                        'data')
-                    copy2(copy_file, dest)
-                    self.log.debug('%s file copied in %s', copy_file, dest)
-                    self.verbose_info(copy_file + ' file copied in ' + dest)
+                if os.path.isfile(race_file):
+                    dest = os.path.join(data_output_dir, 'race_conditions.js')
+
+                    self.output_xml(race_file, dest)
+                    self.verbose_info(copy_file + ' file copied as js in ' + dest)
 
         except Exception as why:
             self.log.exception('failed to generate the HTML report')

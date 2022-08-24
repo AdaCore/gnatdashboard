@@ -2,6 +2,7 @@ import { IProperty, IMessage, ICountRanking, ISourceNav,
          ISource, IModule, IReviewFilter, IToolFilter,
          ISourceDir, IRankingFilter, IPropertyFilter,
          IRuleFilter, IFilterIndex } from 'gnat';
+import {SharedReport} from "../main-responder.service";
 
 function incMessageCount(id: number, array: any): void {
     array.forEach(function(cell: any): void {
@@ -64,7 +65,7 @@ function initCountRanking(): ICountRanking {
     };
 }
 
-export function updateFilter(reportService: any): void {
+export function updateFilter(reportService: SharedReport): void {
     const tools: [ IToolFilter ] = reportService.filter.tools;
     const rules: [ IRuleFilter ] = reportService.filter.rules;
     const properties: [ IPropertyFilter ] = reportService.filter.properties;

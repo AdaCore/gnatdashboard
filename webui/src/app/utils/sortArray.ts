@@ -1,6 +1,4 @@
-import { ICodeIndex, IModule, ISourceDir,
-         ISourceNav, ISource, IMessageIndex,
-         IMessage, ISort } from 'gnat';
+import {IMessage, IModule, ISort, ISource, ISourceDir, ISourceNav} from 'gnat';
 
 /*
  *  Sort the array containing all the information
@@ -77,10 +75,9 @@ export function sortCodeArray(newFilter: ISort, oldFilter: ISort,
 }
 
 function checkProperty(myArray: any, newFilter: ISort): string {
-    let property: string = myArray[0][newFilter.newSort] != null ?
-        newFilter.newSort : (myArray[0][newFilter.otherSort] != null ?
-                             newFilter.otherSort : null);
-    return property;
+  return myArray[0][newFilter.newSort] != null ?
+      newFilter.newSort : (myArray[0][newFilter.otherSort] != null ?
+        newFilter.otherSort : null);
 }
 
 function sortRanking(a: number, b: number): number{

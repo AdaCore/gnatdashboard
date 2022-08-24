@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { storeFilterItem } from '../utils/dataStorage';
+import {IFilter} from "gnat";
 
 export type Option = {
     id: number,

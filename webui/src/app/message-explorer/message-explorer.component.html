@@ -16,7 +16,7 @@
 
                 <span class="hide-files">
                     <label class="switch">
-                        <input #checkbox type="checkbox" [ngModel]="reportService.showFiles" (ngModelChange)="showFilesChanges()"/>
+                        <input #checkbox type="checkbox" [(ngModel)]="reportService.showFiles" (ngModelChange)="showFilesChanges()"/>
                         <span class="slider"></span>
                     </label>
                     <span>Show all files</span>
@@ -89,7 +89,7 @@
                               *ngIf="source">
                             <span *ngFor="let message of source.messages;trackBy: trackMsg"
                                   class="d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
-                                  [ngClass]="(!this.reportService.showFiles && (message._ui_total_message_count == 0 || ( message._ui_total_message_count == null && message._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
+                                  [ngClass]="(!this.reportService.showFiles && (source._ui_total_message_count == 0 || ( source._ui_total_message_count == null && source._total_message_count == 0)) || message.hide == false) ? 'hideIt' : ''">
                                 <span class="message-line d-inline-block col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pad"
                                       [routerLink]="['/source', source.filename, { line: message.line, id: message.id }]"
                                       [ngClass]="message.ranking.name + ' ' + message.tool + ' ' + (message.user_review ? message.user_review.status_kind : '' )">

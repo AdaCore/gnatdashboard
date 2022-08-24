@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { ErrorDialogComponent } from './error-dialog.component';
 import { BrowserAnimationsModule } from  '@angular/platform-browser/animations';
-import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Injectable } from '@angular/core';
 
 @Injectable()
