@@ -7,9 +7,9 @@ from unittest import TestCase
 from support.mock import GNAThub, Project, Script
 
 
-TEXT_IO = ["a-textio.ads", "a-textio.ads 507:14"]
+TEXT_IO = ["a-textio.ads", "a-textio.ads 566:14"]
 S_IMGINT = ["s-imagei.ads", "s-imagei.ads 65:14"]
-S_SECSTA = ["s-secsta.ads", "s-secsta.ads 326:9"]
+S_SECSTA = ["s-secsta.ads", "s-secsta.ads 314:9"]
 F_ADB = ["f.adb", "f.adb 9:4"]
 F_ADS = ["f.ads"]
 SIMPLE_ADB = ["simple.adb", "simple.adb 19:4", "simple.adb 28:4",
