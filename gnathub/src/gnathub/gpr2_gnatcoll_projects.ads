@@ -57,7 +57,7 @@ package GPR2_GNATCOLL_Projects is
    function Attribute_Value
      (Project        : GPR2.Project.View.Object;
       Attribute_Name : Attribute_Id;
-      Package_Name   : Optional_Package_Id := No_Package;
+      Package_Name   : Package_Id := Project_Level_Scope;
       Index          : String := "";
       Default        : String := "") return String;
    --  GNATCOLL.Projects.Attribute_Value conversion (string attribute)
@@ -65,7 +65,7 @@ package GPR2_GNATCOLL_Projects is
    function Attribute_Value
      (Project        : GPR2.Project.View.Object;
       Attribute_Name : Attribute_Id;
-      Package_Name   : Optional_Package_Id := No_Package;
+      Package_Name   : Package_Id := Project_Level_Scope;
       Index          : String := "")
       return GNAT.Strings.String_List_Access;
    --  GNATCOLL.Projects.Attribute_Value conversion (string list attribute)

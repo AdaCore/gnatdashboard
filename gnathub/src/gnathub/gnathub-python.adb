@@ -638,15 +638,17 @@ package body GNAThub.Python is
 
       Language : constant String := Data.Nth_Arg (1);
 
+      use GPR2.Project.Registry.Attribute;
+
       Spec_Ext : constant String :=
         Property_As_String
-          (Property     => GPR2.Project.Registry.Attribute.Spec_Suffix,
+          (Property     => Naming.Spec_Suffix.Attr,
            Package_Name => GPR2.Project.Registry.Pack.Naming,
            Index        => Language);
 
       Body_Ext : constant String :=
         Property_As_String
-          (Property     => GPR2.Project.Registry.Attribute.Body_Suffix,
+          (Property     => Naming.Body_Suffix.Attr,
            Package_Name => GPR2.Project.Registry.Pack.Naming,
            Index        => Language);
 

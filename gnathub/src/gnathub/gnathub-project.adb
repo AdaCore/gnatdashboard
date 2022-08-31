@@ -62,7 +62,15 @@ package body GNAThub.Project is
    Scenario_Variables : Scenario_Variables_Vector.Vector;
    --  The scenario variables passed on the command line
 
-   Codepeer_Package : constant Package_Id := +"codepeer";
+   Codepeer_Package   : constant Package_Id := +"codepeer";
+   Database_Directory : constant Attribute_Id := +"database_directory";
+   Output_Directory   : constant Attribute_Id := +"output_directory";
+
+   Codepeer_Output_Directory : constant GPR2.Q_Attribute_Id :=
+     (Codepeer_Package, Output_Directory);
+
+   Codepeer_Database_Directory : constant GPR2.Q_Attribute_Id :=
+     (Codepeer_Package, Database_Directory);
 
    package Project_Map is new Ada.Containers.Hashed_Maps
      (Key_Type        => Unbounded_String,
@@ -167,17 +175,12 @@ package body GNAThub.Project is
       Output_Dir : Virtual_File := No_File;
    begin
       if Prj.Has_Package (Codepeer_Package) and then
-        Prj.Has_Attribute
-          (Name => GPR2.Project.Registry.Attribute.Output_Directory,
-           Pack => Codepeer_Package)
+        Prj.Has_Attribute (Codepeer_Output_Directory)
       then
          declare
             Dir : constant Filesystem_String :=
-                    Filesystem_String
-                      (Prj.Attribute
-                         (Name =>
-                            GPR2.Project.Registry.Attribute.Output_Directory,
-                          Pack => Codepeer_Package).Value.Text);
+              Filesystem_String
+                (Prj.Attribute (Codepeer_Output_Directory).Value.Text);
          begin
             Output_Dir := Create_From_Base (Dir, Project_Dir.Full_Name.all);
          end;
@@ -194,18 +197,12 @@ package body GNAThub.Project is
       DB_Dir : Virtual_File := No_File;
    begin
       if Prj.Has_Package (Codepeer_Package) and then
-        Prj.Has_Attribute
-        (Name => GPR2.Project.Registry.Attribute.Database_Directory,
-         Pack => Codepeer_Package)
+        Prj.Has_Attribute (Codepeer_Database_Directory)
       then
          declare
             Dir : constant Filesystem_String :=
-                    Filesystem_String
-                      (Prj.Attribute
-                         (Name =>
-                            GPR2.Project.Registry.Attribute.Database_Directory,
-                          Pack => Optional_Package_Id (Codepeer_Package)
-                         ).Value.Text);
+              Filesystem_String
+                (Prj.Attribute (Codepeer_Database_Directory).Value.Text);
 
          begin
             DB_Dir := Create_From_Base (Dir, Project_Dir.Full_Name.all);
@@ -246,7 +243,7 @@ package body GNAThub.Project is
 
    function Property_As_String
      (Property     : Attribute_Id;
-      Package_Name : Optional_Package_Id := GNATdashboard_Package;
+      Package_Name : Package_Id := GNATdashboard_Package;
       Index        : String := "") return String is
    begin
       return GCP.Attribute_Value
@@ -259,7 +256,7 @@ package body GNAThub.Project is
 
    function Property_As_List
      (Property     : Attribute_Id;
-      Package_Name : Optional_Package_Id := GNATdashboard_Package;
+      Package_Name : Package_Id := GNATdashboard_Package;
       Index        : String := "") return String_List_Access is
    begin
       return GCP.Attribute_Value
@@ -289,9 +286,7 @@ package body GNAThub.Project is
          end if;
 
          GPR2.Project.Registry.Attribute.Add
-           (Name                 => GPR2.Project.Registry.Attribute.Create
-              (Name => Key,
-               Pack => Pack),
+           (Name                 => (Pack, Key),
             Index_Type           => GPR2.Project.Registry.Attribute.No_Index,
             Value                =>
               (if Is_List
@@ -309,13 +304,6 @@ package body GNAThub.Project is
       Local_Repository   : constant GPR2.Attribute_Id := +"Local_Repository";
       Plugins            : constant GPR2.Attribute_Id := +"Plugins";
       Plugins_Off        : constant GPR2.Attribute_Id := +"Plugins_Off";
-
-      Output_Directory   : constant GPR2.Attribute_Id
-                             := GPR2.Project.Registry.Attribute
-                               .Output_Directory;
-      Database_Directory : constant GPR2.Attribute_Id
-                             := GPR2.Project.Registry.Attribute
-                               .Database_Directory;
 
    begin
       Internal_Register (Project_Name);

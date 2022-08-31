@@ -32,18 +32,20 @@ package body GPR2_GNATCOLL_Projects is
    function Attribute_Value
      (Project        : GPR2.Project.View.Object;
       Attribute_Name : Attribute_Id;
-      Package_Name   : Optional_Package_Id := No_Package;
+      Package_Name   : Package_Id := Project_Level_Scope;
       Index          : String := "";
       Default        : String := "") return String is
 
+      Q_Attr_Id : constant GPR2.Q_Attribute_Id :=
+        (Package_Name, Attribute_Name);
+
       Attribute : constant GPR2.Project.Attribute.Object :=
-                    Project.Attribute
-                      (Name   => Attribute_Name,
-                       Pack   => Package_Name,
-                       Index  => (if Index = ""
-                                  then GPR2.Project.Attribute_Index.Undefined
-                                  else GPR2.Project.Attribute_Index.Create
-                                    (Index)));
+        Project.Attribute
+          (Name => Q_Attr_Id,
+           Index  => (if Index = ""
+                      then GPR2.Project.Attribute_Index.Undefined
+                      else GPR2.Project.Attribute_Index.Create
+                        (Index)));
 
       use GPR2.Project.Registry.Attribute;
    begin
@@ -63,7 +65,7 @@ package body GPR2_GNATCOLL_Projects is
    function Attribute_Value
      (Project        : GPR2.Project.View.Object;
       Attribute_Name : Attribute_Id;
-      Package_Name   : Optional_Package_Id := No_Package;
+      Package_Name   : Package_Id := Project_Level_Scope;
       Index          : String := "")
       return GNAT.Strings.String_List_Access is
 
@@ -96,11 +98,13 @@ package body GPR2_GNATCOLL_Projects is
          end if;
       end List;
 
+      Q_Attr_Id : constant GPR2.Q_Attribute_Id :=
+        (Package_Name, Attribute_Name);
+
    begin
       return List
         (Project.Attribute
-           (Name   => Attribute_Name,
-            Pack   => Package_Name,
+           (Name   => Q_Attr_Id,
             Index  => (if Index = ""
                        then GPR2.Project.Attribute_Index.Undefined
                        else GPR2.Project.Attribute_Index.Create
