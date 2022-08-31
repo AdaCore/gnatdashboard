@@ -129,7 +129,7 @@ package GNAThub.Project is
 
    function Property_As_String
      (Property     : GPR2.Attribute_Id;
-      Package_Name : GPR2.Optional_Package_Id := GNATdashboard_Package;
+      Package_Name : Package_Id := GNATdashboard_Package;
       Index        : String := "") return String
      with Pre => Initialized and then Loaded;
    --  Return the given property as a string. Return the empty string if the
@@ -137,7 +137,7 @@ package GNAThub.Project is
 
    function Property_As_List
      (Property     : GPR2.Attribute_Id;
-      Package_Name : GPR2.Optional_Package_Id := GNATdashboard_Package;
+      Package_Name : Package_Id := GNATdashboard_Package;
       Index        : String := "") return String_List_Access
      with Pre => Initialized and then Loaded;
    --  Return the given property as a list. Return an empty list if the
