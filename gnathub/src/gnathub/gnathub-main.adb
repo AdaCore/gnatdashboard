@@ -46,9 +46,6 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
    --  Creates the GNAThub database and initializes it with the project
    --  information. Overrides any existing database if Overwrite is True.
 
-   procedure Execute_Server_Script;
-   --  Executes the server script when --server switch in the command-line.
-
    procedure Execute_Plugin_Runner;
    --  Loads the plugin runner that executes every GNAThub plugin (both core
    --  and user plugins).
@@ -126,24 +123,6 @@ function GNAThub.Main return Ada.Command_Line.Exit_Status is
            Exception_Information (E);
 
    end Create_Project_Directory_Env;
-
-   ---------------------------
-   -- Execute_Server_Script --
-   ---------------------------
-
-   procedure Execute_Server_Script is
-      Server_Script : constant String := Server_Runner.Display_Full_Name;
-      Had_Errors  : Boolean := False;
-   begin
-      Trace (Me, "Server: " & Server_Script);
-      if GNAThub.Configuration.Server then
-         GNAThub.Python.Execute_File (Server_Script, Had_Errors);
-      end if;
-
-      if Had_Errors then
-         raise Fatal_Error with "Execute_server : unexpected errors";
-      end if;
-   end Execute_Server_Script;
 
    ---------------------------
    -- Execute_Plugin_Runner --
@@ -266,30 +245,24 @@ begin
    Trace (Me, "Setup execution environment");
    Create_Project_Directory_Env;
 
-   if GNAThub.Configuration.Server then
-      Trace (Me, "Launch only WEB server "
-             & " (ignore all other command line switches if any)");
-      Execute_Server_Script;
+   if GNAThub.Configuration.Incremental
+     and then not Is_Regular_File (Database_Full_Path)
+   then
+      Warn ("database does not exist but --incremental or --exec used");
+   end if;
+
+   Trace (Me, "Initialize local database");
+   Init_Local_Database
+     (Overwrite =>
+        not (GNAThub.Configuration.Incremental
+               and then Is_Regular_File (Database_Full_Path)));
+
+   if GNAThub.Configuration.Interpreter_Mode then
+      Trace (Me, "Execute user script: " & Script);
+      Execute_User_Script;
    else
-      if GNAThub.Configuration.Incremental
-        and then not Is_Regular_File (Database_Full_Path)
-      then
-         Warn ("database does not exist but --incremental or --exec used");
-      end if;
-
-      Trace (Me, "Initialize local database");
-      Init_Local_Database
-        (Overwrite =>
-           not (GNAThub.Configuration.Incremental
-                and then Is_Regular_File (Database_Full_Path)));
-
-      if GNAThub.Configuration.Interpreter_Mode then
-         Trace (Me, "Execute user script: " & Script);
-         Execute_User_Script;
-      else
-         Trace (Me, "Execute plugin-runner");
-         Execute_Plugin_Runner;
-      end if;
+      Trace (Me, "Execute plugin-runner");
+      Execute_Plugin_Runner;
    end if;
 
    Trace (Me, "Execution completed");

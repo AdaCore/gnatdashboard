@@ -24,7 +24,6 @@ project GNAThub is
       "share/gnathub/core",
       "share/gnathub/core/GNAThub",
       "share/gnathub/core/scripts",
-      "share/gnathub/engine",
       "share/gnathub/extras");
 
    for Main use ("gnathub-main.adb");

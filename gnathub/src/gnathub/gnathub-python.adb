@@ -93,11 +93,9 @@ package body GNAThub.Python is
    U_Process_All_Function     : aliased constant String := "u_process_all";
    Database_Function          : aliased constant String := "database";
    Repositories_Function      : aliased constant String := "repositories";
-   Engine_Repository_Function : aliased constant String := "engine_repository";
    Runners_Only_Function      : aliased constant String := "runners_only";
    Reporters_Only_Function    : aliased constant String := "reporters_only";
    Tool_Args_Function         : constant String         := "tool_args";
-   Server_Port_Function       : aliased constant String := "port";
 
    --  Codepeer WebUI specific repositories
    Object_Codepeer_Dir_Function : aliased constant String :=
@@ -110,7 +108,7 @@ package body GNAThub.Python is
      "dry_run_without_project";
 
    No_Args_Root_Module_Functions :
-     constant array (1 .. 23) of access constant String :=
+     constant array (1 .. 21) of access constant String :=
        (Root_Function'Access,
         Logs_Function'Access,
         HTML_Data_Function'Access,
@@ -127,10 +125,8 @@ package body GNAThub.Python is
         U_Process_All_Function'Access,
         Database_Function'Access,
         Repositories_Function'Access,
-        Engine_Repository_Function'Access,
         Runners_Only_Function'Access,
         Reporters_Only_Function'Access,
-        Server_Port_Function'Access,
         Object_Codepeer_Dir_Function'Access,
         Codepeer_Output_Dir_Function'Access,
         Codepeer_DB_Dir_Function'Access,
@@ -836,12 +832,6 @@ package body GNAThub.Python is
             Set_Return_Value (Data, Property_As_String (Local_Repository));
             Set_Return_Value_Key (Data, "local");
          end if;
-
-      elsif Command = Engine_Repository_Function then
-         Set_Return_Value (Data, Server_Engine_Dir.Display_Full_Name);
-
-      elsif Command = Server_Port_Function then
-         Set_Return_Value (Data, GNAThub.Configuration.Port);
 
       elsif Command = Object_Codepeer_Dir_Function then
          Set_Return_Value (Data, Obj_Codepeer_Dir.Display_Full_Name);

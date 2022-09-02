@@ -188,15 +188,6 @@ def repositories():
     return NotImplemented   # Implemented in Ada
 
 
-def engine_repository():
-    """Return the ``engine`` repository
-
-    :return: the repository path
-    :rtype: str
-    """
-    return NotImplemented   # Implemented in Ada
-
-
 def database():
     """Return the path to the GNAThub SQLite database.
 
