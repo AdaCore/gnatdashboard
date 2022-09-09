@@ -28,6 +28,7 @@ Web Interface Overview
 Let's take a look at the following picture:
 
 .. figure:: images/main.png
+   :width: 100%
    :align: center
 
 There are three parts in the view: Header, Filter and Content.
@@ -77,6 +78,7 @@ Message navigation
 ++++++++++++++++++
 
 .. figure:: images/message_nav.png
+   :width: 100%
    :align: center
 
 This part allows you to see all the messages, grouped by files.
@@ -89,6 +91,7 @@ Project navigation
 ++++++++++++++++++
 
 .. figure:: images/project_nav.png
+   :width: 100%
    :align: center
 
 This part allows you to see all the files, grouped by folders, grouped by project. It is a very useful view when looking at a lot of projects.
@@ -99,6 +102,7 @@ Source view
 +++++++++++
 
 .. figure:: images/source.png
+   :width: 100%
    :align: center
 
 This page is made of two parts:
@@ -131,6 +135,7 @@ If there are already some manual reviews made, then you can see the history icon
 By clicking on it, you will see the ``User review history`` pop-up open:
 
 .. figure:: images/history_review.png
+   :width: 100%
    :align: center
 
 Note that WebUI used to allow adding reviews, but this functionality was removed in CodePeer 23.
