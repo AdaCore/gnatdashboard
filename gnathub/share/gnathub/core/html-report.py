@@ -77,8 +77,8 @@ class HTMLReport(Plugin, Reporter):
         """Generate JSON-encoded representation of the data collected."""
 
         # The output directory for the JSON-encoded report data
-        data_output_dir = os.path.join(self.output_dir, 'webui', 'json')
-        src_output_dir = os.path.join(self.output_dir, 'webui', 'source')
+        data_output_dir = os.path.join(self.output_dir, 'json')
+        src_output_dir = os.path.join(self.output_dir, 'source')
 
         try:
             self.info('generate JSON-encoded report')
