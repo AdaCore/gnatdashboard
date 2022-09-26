@@ -194,7 +194,7 @@ class TestSonarScannerSupport(TestCase):
                         code_smells = int(record['value'])
 
                 self.assertEqual(bugs, 0, 'Not expected metric %s' % str(bugs))
-                self.assertEqual(code_smells, 34, 'Not expected metric %s' % str(code_smells))
+                self.assertEqual(code_smells, 26, 'Not expected metric %s' % str(code_smells))
                 session.close()
 
             # Check if the Sonar Ada plugin is used

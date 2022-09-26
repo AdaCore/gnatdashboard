@@ -20,12 +20,13 @@ RESULTS = sorted([
     'simple.adb 30:24',
     'simple.adb 33:17', 
     'simple.adb 37:8',
-    'simple.adb 43:4'
+    'simple.adb 43:4',
+    'simple.adb 49:4',
 ])
 
 # For .csv content check
-EXPECTED_LINES_FROM_CSV = ['10', '18', '30', '33', '37', '43', '43']
-EXPECTED_COLUMNS_FROM_CSV = ['7', '32', '24', '17', '8', '4', '4']
+EXPECTED_LINES_FROM_CSV = ['10', '18', '30', '33', '37', '43', '43', '49']
+EXPECTED_COLUMNS_FROM_CSV = ['7', '32', '24', '17', '8', '4', '4', '4']
 #EXPECTED_CATEGORIES_FROM_CSV = [
 #    'validity check',
 #    'test always true',
@@ -38,10 +39,11 @@ EXPECTED_CATEGORIES_FROM_CSV = [
     'improper returns (GNATcheck)',
     'dead code',
     'identifier suffixes (GNATcheck)',
-    'identifier prefixes (GNATcheck)']
+    'identifier prefixes (GNATcheck)',
+    'validity check (Infer)']
 
-EXPECTED_RANKINGS_FROM_CSV = ['medium', 'high', 'medium', 'medium', 'medium', 'medium', 'medium']
-EXPECTED_KINDS_FROM_CSV = ['warning', 'check', 'warning', 'warning', 'warning', 'warning', 'warning']
+EXPECTED_RANKINGS_FROM_CSV = ['medium', 'high', 'medium', 'medium', 'medium', 'medium', 'medium', 'high']
+EXPECTED_KINDS_FROM_CSV = ['warning', 'check', 'warning', 'warning', 'warning', 'warning', 'warning', 'check']
 EXPECTED_MESSAGES_FROM_CSV = [
     'identifier casing (GNATcheck): uninitialized does not have casing specified (mixed)',
     'validity check: uninitialized is uninitialized here',
@@ -49,7 +51,8 @@ EXPECTED_MESSAGES_FROM_CSV = [
     'improper returns (GNATcheck): extra return statement',
     'dead code because (1) = (42) - 41',
     'identifier suffixes (GNATcheck): Number does not end with constant suffix _Cst',
-    'identifier prefixes (GNATcheck): Number does not start with constant prefix C_']
+    'identifier prefixes (GNATcheck): Number does not start with constant prefix C_',
+    'validity check (Infer): `uninitialized` is read without initialization during the call to `f.foo`']
 
 class TestCodePeerSupport(TestCase):
     def setUp(self):
